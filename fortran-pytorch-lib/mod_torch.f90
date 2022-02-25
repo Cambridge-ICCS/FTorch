@@ -34,12 +34,12 @@ contains
    ! Torch Tensor API
    function torch_tensor_from_blob(data, ndims, shape, dtype, device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
-      type(c_ptr), value, intent(in)    :: data
-      integer(c_int), value, intent(in) :: ndims
-      integer(c_int64_t), intent(in)    :: shape(*)
-      integer(c_int), value, intent(in) :: dtype
-      integer(c_int), value, intent(in) :: device
-      type(torch_tensor)                :: tensor
+      type(c_ptr), intent(in)        :: data
+      integer(c_int), intent(in)     :: ndims
+      integer(c_int64_t), intent(in) :: shape(*)
+      integer(c_int), intent(in)     :: dtype
+      integer(c_int), intent(in)     :: device
+      type(torch_tensor)             :: tensor
 
       interface
          function torch_from_blob_c(data, ndims, shape, dtype, device) result(tensor) &
@@ -59,11 +59,11 @@ contains
 
    function torch_tensor_ones(ndims, shape, dtype, device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t
-      integer(c_int), value, intent(in) :: ndims
-      integer(c_int64_t), intent(in)    :: shape(*)
-      integer(c_int), value, intent(in) :: dtype
-      integer(c_int), value, intent(in) :: device
-      type(torch_tensor)                :: tensor
+      integer(c_int), intent(in)     :: ndims
+      integer(c_int64_t), intent(in) :: shape(*)
+      integer(c_int), intent(in)     :: dtype
+      integer(c_int), intent(in)     :: device
+      type(torch_tensor)             :: tensor
 
       interface
          function torch_ones_c(ndims, shape, dtype, device) result(tensor) &
@@ -81,7 +81,7 @@ contains
    end function torch_tensor_ones
 
    subroutine torch_tensor_print(tensor)
-      type(torch_tensor), value, intent(in) :: tensor
+      type(torch_tensor), intent(in) :: tensor
 
       interface
          subroutine torch_tensor_print_c(tensor) &
@@ -95,7 +95,7 @@ contains
    end subroutine torch_tensor_print
 
    subroutine torch_tensor_delete(tensor)
-      type(torch_tensor), value, intent(in) :: tensor
+      type(torch_tensor), intent(in) :: tensor
 
       interface
          subroutine torch_tensor_delete_c(tensor) &
@@ -129,9 +129,9 @@ contains
 
    function torch_module_forward(module, input_tensor) result(output_tensor)
       use, intrinsic :: iso_c_binding, only : c_ptr
-      type(torch_module), value, intent(in) :: module
-      type(torch_tensor), value, intent(in) :: input_tensor
-      type(torch_tensor)                    :: output_tensor
+      type(torch_module), intent(in) :: module
+      type(torch_tensor), intent(in) :: input_tensor
+      type(torch_tensor)             :: output_tensor
 
       interface
          function torch_jit_module_forward_c(module, input_tensor) result(output_tensor) &
@@ -147,7 +147,7 @@ contains
    end function torch_module_forward
 
    subroutine torch_module_delete(module)
-      type(torch_module), value, intent(in) :: module
+      type(torch_module), intent(in) :: module
 
       interface
          subroutine torch_jit_module_delete_c(module) &
