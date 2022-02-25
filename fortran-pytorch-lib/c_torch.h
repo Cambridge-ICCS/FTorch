@@ -40,9 +40,6 @@ EXPORT_C torch_tensor_t torch_zeros(const int ndim, const int64_t *shape,
 EXPORT_C torch_tensor_t torch_ones(const int ndim, const int64_t *shape,
                                    const torch_data_t dtype,
                                    const torch_device_t device);
-EXPORT_C void torch_ones2(const int ndim, const int64_t *shape,
-                          const torch_data_t dtype, const torch_device_t device,
-                          torch_tensor_t *out);
 EXPORT_C torch_tensor_t torch_empty(const int ndim, const int64_t *shape,
                                     const torch_data_t dtype,
                                     const torch_device_t device);
