@@ -9,22 +9,24 @@ program inference
    character(len=:), allocatable :: filename
    integer(int32), parameter :: dims = 4
    integer(int64) :: shape(dims) = [1, 3, 224, 224]
-   type(c_ptr) :: model, input, output, input_data
+   type(c_ptr) :: input_data
    real(c_float), allocatable, target :: data(:)
+   type(torch_tensor) :: input, output
+   type(torch_module) :: model
 
    allocate(data(product(shape)))
    data = 1.0d0
    input_data = c_loc(data)
 
    ! Create input tensor
-   input = torch_from_blob(input_data, dims, shape, 6_c_int, 0_c_int)
+   input = torch_tensor_from_blob(input_data, dims, shape, 6_c_int, 0_c_int)
    ! Load ML model
-   model = torch_jit_load(c_char_"../annotated_cpu.pt"//c_null_char)
+   model = torch_module_load(c_char_"../annotated_cpu.pt"//c_null_char)
    ! Deploy
-   output = torch_jit_module_forward(model, input)
+   output = torch_module_forward(model, input)
 
    ! Cleanup
-   call torch_jit_module_delete(model)
+   call torch_module_delete(model)
    call torch_tensor_delete(input)
    call torch_tensor_delete(output)
    deallocate(data)
