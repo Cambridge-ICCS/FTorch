@@ -32,14 +32,15 @@ module mod_torch
 contains
 
    ! Torch Tensor API
+   !> Exposes the given data as a tensor without taking ownership of the original data.
    function torch_tensor_from_blob(data, ndims, shape, dtype, device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
-      type(c_ptr), intent(in)        :: data
-      integer(c_int), intent(in)     :: ndims
-      integer(c_int64_t), intent(in) :: shape(*)
-      integer(c_int), intent(in)     :: dtype
-      integer(c_int), intent(in)     :: device
-      type(torch_tensor)             :: tensor
+      type(c_ptr), intent(in)        :: data       !! Pointer to data
+      integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
+      integer(c_int64_t), intent(in) :: shape(*)   !! Shape of the tensor
+      integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
+      integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      type(torch_tensor)             :: tensor     !! Returned tensor
 
       interface
          function torch_from_blob_c(data, ndims, shape, dtype, device) result(tensor) &
@@ -57,13 +58,14 @@ contains
       tensor%p = torch_from_blob_c(data, ndims, shape, dtype, device)
    end function torch_tensor_from_blob
 
+   !> Returns a tensor filled with the scalar value 1.
    function torch_tensor_ones(ndims, shape, dtype, device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t
-      integer(c_int), intent(in)     :: ndims
-      integer(c_int64_t), intent(in) :: shape(*)
-      integer(c_int), intent(in)     :: dtype
-      integer(c_int), intent(in)     :: device
-      type(torch_tensor)             :: tensor
+      integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
+      integer(c_int64_t), intent(in) :: shape(*)   !! Shape of the tensor
+      integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
+      integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      type(torch_tensor)             :: tensor     !! Returned tensor
 
       interface
          function torch_ones_c(ndims, shape, dtype, device) result(tensor) &
@@ -80,8 +82,9 @@ contains
       tensor%p = torch_ones_c(ndims, shape, dtype, device)
    end function torch_tensor_ones
 
+   !> Prints the contents of a tensor.
    subroutine torch_tensor_print(tensor)
-      type(torch_tensor), intent(in) :: tensor
+      type(torch_tensor), intent(in) :: tensor     !! Input tensor
 
       interface
          subroutine torch_tensor_print_c(tensor) &
@@ -94,8 +97,9 @@ contains
       call torch_tensor_print_c(tensor%p)
    end subroutine torch_tensor_print
 
+   !> Deallocates a tensor.
    subroutine torch_tensor_delete(tensor)
-      type(torch_tensor), intent(in) :: tensor
+      type(torch_tensor), intent(in) :: tensor     !! Input tensor
 
       interface
          subroutine torch_tensor_delete_c(tensor) &
@@ -109,10 +113,11 @@ contains
    end subroutine torch_tensor_delete
 
    ! Torch Module API
+   !> Loads a Torch Script module (pre-trained PyTorch model saved with Torch Script)
    function torch_module_load(filename) result(module)
       use, intrinsic :: iso_c_binding, only : c_char
-      character(c_char), intent(in) :: filename(*)
-      type(torch_module)            :: module
+      character(c_char), intent(in) :: filename(*) !! Filename of Torch Script module
+      type(torch_module)            :: module      !! Returned deserialized module
 
       interface
          function torch_jit_load_c(filename) result(module) &
@@ -127,11 +132,12 @@ contains
       module%p = torch_jit_load_c(filename)
    end function torch_module_load
 
+   !> Performs a forward pass of the module with the input tensor
    function torch_module_forward(module, input_tensor) result(output_tensor)
       use, intrinsic :: iso_c_binding, only : c_ptr
-      type(torch_module), intent(in) :: module
-      type(torch_tensor), intent(in) :: input_tensor
-      type(torch_tensor)             :: output_tensor
+      type(torch_module), intent(in) :: module        !! Module
+      type(torch_tensor), intent(in) :: input_tensor  !! Input tensor
+      type(torch_tensor)             :: output_tensor !! Returned output tensor
 
       interface
          function torch_jit_module_forward_c(module, input_tensor) result(output_tensor) &
@@ -146,8 +152,9 @@ contains
       output_tensor%p = torch_jit_module_forward_c(module%p, input_tensor%p)
    end function torch_module_forward
 
+   !> Deallocates a Torch Script module
    subroutine torch_module_delete(module)
-      type(torch_module), intent(in) :: module
+      type(torch_module), intent(in) :: module     !! Module
 
       interface
          subroutine torch_jit_module_delete_c(module) &
