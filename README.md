@@ -6,7 +6,7 @@ We want to be able to run ML models directly in Fortran. Initially let's assume 
 
 ### PyTorch
 
-See the [fortran-pytorch-lib](https://github.com/Cambridge-ICCS/fortran-ml-bridge#:~:text=Commit%20time-,fortran%2Dpytorch%2Dlib,-Added%20some%20documentation) directory.
+See the [fortran-pytorch-lib](https://github.com/Cambridge-ICCS/fortran-ml-bridge/tree/main/fortran-pytorch-lib) directory.
 
 ### Tensorflow
 
