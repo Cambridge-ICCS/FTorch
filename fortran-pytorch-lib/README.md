@@ -6,10 +6,11 @@ PyTorch provides a C++ API (aka LibTorch) that enables inference and online trai
 
 We have created a minimum C wrapper interface of LibTorch (c_torch.h) that allows us to load and infer a TorchScript model. A Fortran interface (mod_torch) has subsequently been built on top of the C interface. For examples using the C++, C and Fortran interfaces to do inference, see the corresponding ts_inference.* file. A Python script is also provided (p2ts.py) that converts a pre-trained ResNet model to TorchScript and serialises it to a file. This model can be used as the input of the ts_infer_* executables for testing.
 
-## Building
+## Building
 
-These examples have the following pre-requisites:
+These example programs have the following pre-requisites:
 
+* [Python 3](https://www.python.org/downloads/)
 * [PyTorch](https://pytorch.org/)
 * [libtorch](https://pytorch.org/cppdocs/installing.html)
 
