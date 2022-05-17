@@ -24,9 +24,9 @@ To build, do the following in this directory:
 ### Troubleshooting
 
 if `cmake` has a hard time finding your libtorch install you
-can add a line to `CMakeLists.txt` to give a director location, e.g.,
-added before `find_package(Torch REQUIRED)`
+can add a line to `CMakeLists.txt` to give a direct location, e.g.,
+add the following before `find_package(Torch REQUIRED)`
 
      set(Torch_DIR /usr/local/lib/libtorch/share/cmake/Torch)
 
-This assumes `libtorch` has been install in `/usr/local/lib`.
+where the above assumes `libtorch` has been installed in `/usr/local/lib`.
