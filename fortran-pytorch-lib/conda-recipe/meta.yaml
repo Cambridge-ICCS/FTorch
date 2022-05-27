@@ -1,0 +1,35 @@
+{% set name = "fortran-pytorch-bridge" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  path: ../
+
+#source:
+#  git_url: https://github.com/Cambridge-ICCS/fortran-ml-bridge.git
+#  git_depth: 1 # shallow clone
+
+build:
+  number: 0
+  
+requirements:
+  build:
+    - {{ compiler('c') }} # to use conda supplied compiler
+    - {{ compiler('cxx') }} # to use conda supplied compiler
+    - {{ compiler('fortran') }} # to use conda supplied compiler    
+    - python {{PY_VER}}*
+    - cmake
+    - pytorch-cpu
+  run:
+    - python {{PY_VER}}*
+
+about:
+  home: https://github.com/Cambridge-ICCS/fortran-ml-bridge.git
+  summary: Fortran PyTorch Bridge
+
+extra:
+  recipe-maintainers:
+    - AthenaElafrou
