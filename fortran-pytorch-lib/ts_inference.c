@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "c_torch.h"
+#include "ctorch.h"
 
 int main(int argc, const char* argv[])
 {

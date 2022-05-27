@@ -1,7 +1,7 @@
 #include <torch/script.h>
 #include <torch/torch.h>
 
-#include "c_torch.h"
+#include "ctorch.h"
 
 constexpr auto get_dtype(torch_data_t dtype)
 {
