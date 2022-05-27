@@ -1,4 +1,4 @@
-module mod_torch
+module ftorch
 
    use, intrinsic :: iso_c_binding, only: c_int, c_int64_t, c_char, c_ptr, c_null_ptr
    implicit none
@@ -167,4 +167,4 @@ contains
       call torch_jit_module_delete_c(module%p)
    end subroutine torch_module_delete
 
-end module mod_torch
+end module ftorch

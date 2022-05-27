@@ -1,7 +1,7 @@
 program inference
 
    use, intrinsic :: iso_c_binding, only: c_int64_t, c_float, c_char, c_null_char, c_ptr, c_loc
-   use mod_torch
+   use ftorch
 
    implicit none
 
@@ -21,7 +21,7 @@ program inference
    ! Create input tensor
    input_tensor = torch_tensor_from_blob(input_data_ptr, input_dims, input_shape, torch_kFloat32, torch_kCPU)
    ! Load ML model
-   model = torch_module_load(c_char_"../annotated_cpu.pt"//c_null_char)
+   model = torch_module_load(c_char_"annotated_cpu.pt"//c_null_char)
    ! Deploy
    output_tensor = torch_module_forward(model, input_tensor)
 
