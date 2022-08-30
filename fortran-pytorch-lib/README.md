@@ -21,6 +21,12 @@ To build, do the following in this directory:
     cmake ../.
     make
 
+You should then be able to run the test program (written in Fortran and now compiled) in this directory:
+
+    $ ./ts_infer_fortran
+    -1.0526 -0.4629 -0.4567 -1.0881 -0.7655
+    [ CPUFloatType{1,5} ]
+
 ### Troubleshooting
 
 if `cmake` has a hard time finding your libtorch install you
