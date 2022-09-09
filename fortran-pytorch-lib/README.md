@@ -70,5 +70,3 @@ language you wish
      set(Torch_DIR /usr/local/lib/libtorch/share/cmake/Torch)
 
  where the above assumes `libtorch` has been installed in `/usr/local/lib`.
-
--
