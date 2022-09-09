@@ -1,4 +1,4 @@
-We want to be able to run ML models directly in Fortran. Initially let's assume that the model has been trained in some other language (say Python) and saved (e.g. as a SavedModel). We want to run inference on this model without having to call the Python executable. This should be possible by using the existing ML C/C++ interfaces.
+We want to be able to run ML models directly in Fortran. Initially let's assume that the model has been trained in some other language (say Python). We want to run inference on this model without having to call the Python executable. This should be possible by using the existing ML C/C++ interfaces.
 
 # PyTorch
 
@@ -37,12 +37,38 @@ which will return a result of querying the model, e.g:
     -1.0526 -0.4629 -0.4567 -1.0881 -0.7655
     [ CPUFloatType{1,5} ]
 
+Note that the Fortran example have the model filename hard-coded (e.g.
+"annotated_cpu.pt" as the default). Change this and re-compile to address
+the other model outputs.
+
+### Summary of files
+
+The starting point for understand the examples is
+one of the ts_inference.* files, depending on which
+language you wish
+
+* ts_inference.c   - Example of doing inference from C
+* ts_inference.cpp - Example of doing inference from C++
+* ts_inference.f90 - Example of doing inference from Fortran
+* ts_inference.py  - Example of doing inference from Python
+
+* pt2ts.py - Python code to train model
+
+* ctorch.cpp - Wrapper onto PyTorch for C++
+* ctorch.h   - Header file for C++ wrapper
+* ftorch.f90 - Wrapper onto PyTorch for Fortran
+
+* CMakeLists.txt - Provides the cmake build system configuration
+
+
 ### Troubleshooting
 
-if `cmake` has a hard time finding your libtorch install you
-can add a line to `CMakeLists.txt` to give a direct location, e.g.,
-add the following before `find_package(Torch REQUIRED)`
+- If `cmake` has a hard time finding your libtorch install you
+ can add a line to `CMakeLists.txt` to give a direct location, e.g.,
+ add the following before `find_package(Torch REQUIRED)`
 
      set(Torch_DIR /usr/local/lib/libtorch/share/cmake/Torch)
 
-where the above assumes `libtorch` has been installed in `/usr/local/lib`.
+ where the above assumes `libtorch` has been installed in `/usr/local/lib`.
+
+-
