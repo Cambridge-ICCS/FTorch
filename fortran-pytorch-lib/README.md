@@ -21,7 +21,17 @@ To build, do the following in this directory:
     cmake ../.
     make
 
-You should then be able to run the test program (written in Fortran and now compiled) in this directory:
+This will build the separate examples. Next, from this directory, you need
+to run the python code to generate the saved model:
+
+    python3 ../pt2ts.py
+
+This will give you some options about how you want to train the model, and
+will output a saved model as a .pt file. You should then be able to run the test program (written in Fortran and now compiled) in this directory:
+
+    ./ts_infer_fortran
+
+which will return a result of querying the model, e.g:
 
     $ ./ts_infer_fortran
     -1.0526 -0.4629 -0.4567 -1.0881 -0.7655
