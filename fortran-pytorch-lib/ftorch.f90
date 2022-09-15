@@ -133,24 +133,24 @@ contains
    end function torch_module_load
 
    !> Performs a forward pass of the module with the input tensor
-   function torch_module_forward(module, input_tensor) result(output_tensor)
+   subroutine torch_module_forward(module, input_tensor, output_tensor)
       use, intrinsic :: iso_c_binding, only : c_ptr
       type(torch_module), intent(in) :: module        !! Module
       type(torch_tensor), intent(in) :: input_tensor  !! Input tensor
-      type(torch_tensor)             :: output_tensor !! Returned output tensor
+      type(torch_tensor), intent(in) :: output_tensor !! Returned output tensor
 
       interface
-         function torch_jit_module_forward_c(module, input_tensor) result(output_tensor) &
+         subroutine torch_jit_module_forward_c(module, input_tensor, output_tensor) &
             bind(c, name='torch_jit_module_forward')
             use, intrinsic :: iso_c_binding, only : c_ptr
             type(c_ptr), value, intent(in) :: module
             type(c_ptr), value, intent(in) :: input_tensor
-            type(c_ptr)                    :: output_tensor
-         end function torch_jit_module_forward_c
+            type(c_ptr), value, intent(in) :: output_tensor
+         end subroutine torch_jit_module_forward_c
       end interface
 
-      output_tensor%p = torch_jit_module_forward_c(module%p, input_tensor%p)
-   end function torch_module_forward
+      call torch_jit_module_forward_c(module%p, input_tensor%p, output_tensor%p)
+   end subroutine torch_module_forward
 
    !> Deallocates a Torch Script module
    subroutine torch_module_delete(module)

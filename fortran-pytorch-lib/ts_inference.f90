@@ -9,40 +9,41 @@ program inference
 
    ! Set up types of input and output data and the interface with C
    type(torch_module) :: model
-   type(torch_tensor) :: input_tensor, output_tensor
+   type(torch_tensor) :: in_tensor, out_tensor
 
-   real(c_float), allocatable, target :: input_data(:)
-   real(c_float), dimension(:), pointer :: output_data
+   real(c_float), dimension(:,:,:,:), allocatable, target :: in_data
+   real(c_float), dimension(:,:), allocatable, target :: out_data
 
-   type(c_ptr) :: input_data_ptr, output_data_ptr
-
-   integer(c_int), parameter :: input_dims = 4
-   integer(c_int64_t) :: input_shape(input_dims) = [1, 3, 224, 224]
+   integer(c_int), parameter :: in_dims = 4
+   integer(c_int64_t) :: in_shape(in_dims) = [1, 3, 224, 224]
+   integer(c_int), parameter :: out_dims = 2
+   integer(c_int64_t) :: out_shape(out_dims) = [1, 1000]
 
    character(len=:), allocatable :: filename
 
-   ! Allocate one-dimensional input_data array, based on multiplication of all input_dimension sizes
-   allocate(input_data(product(input_shape)))
+   ! Allocate one-dimensional input/output arrays, based on multiplication of all input/output dimension sizes
+   allocate(in_data(in_shape(1), in_shape(2), in_shape(3), in_shape(4)))
+   allocate(out_data(out_shape(1), out_shape(2)))
 
-   ! Initialise every element to 1
-   input_data = 1.0d0
+   ! Initialise data
+   in_data = 1.0d0
 
-   ! Get pointer to the input data (like doing &input_data in C)
-   input_data_ptr = c_loc(input_data)
-
-   ! Create input tensor from the above array
-   input_tensor = torch_tensor_from_blob(input_data_ptr, input_dims, input_shape, torch_kFloat32, torch_kCPU)
+   ! Create input/output tensors from the above arrays
+   in_tensor = torch_tensor_from_blob(c_loc(in_data), in_dims, in_shape, torch_kFloat32, torch_kCPU)
+   out_tensor = torch_tensor_from_blob(c_loc(out_data), out_dims, out_shape, torch_kFloat32, torch_kCPU)
 
    ! Load ML model (edit this line to use different models)
-   model = torch_module_load(c_char_"annotated_cpu.pt"//c_null_char)
+   model = torch_module_load(c_char_"scripted_cpu.pt"//c_null_char)
 
-   ! Deploy
-   output_tensor = torch_module_forward(model, input_tensor)
+   ! Infer
+   call torch_module_forward(model, in_tensor, out_tensor)
+   write (*,*) out_data(1, 1000)
 
    ! Cleanup
    call torch_module_delete(model)
-   call torch_tensor_delete(input_tensor)
-   call torch_tensor_delete(output_tensor)
-   deallocate(input_data)
+   call torch_tensor_delete(in_tensor)
+   call torch_tensor_delete(out_tensor)
+   deallocate(in_data)
+   deallocate(out_data)
 
 end program inference

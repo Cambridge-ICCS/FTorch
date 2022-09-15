@@ -10,8 +10,8 @@ using namespace std::chrono;
 int main(int argc, const char* argv[])
 {
   if (argc != 3) {
-    std::cerr
-        << "Usage: ts2cpp <path-to-exported-script-module> <batch_size>\n";
+    std::cerr << "Usage: ts_infer_cpp <path-to-exported-script-module> "
+                 "<batch_size>\n";
     return -1;
   }
 
@@ -40,7 +40,6 @@ int main(int argc, const char* argv[])
   at::Tensor output = module.forward(inputs).toTensor();
   auto stop = high_resolution_clock::now();
   auto cpu_time = duration_cast<milliseconds>(stop - start);
-  std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << std::endl;
   std::cout << "CPU time: " << cpu_time.count() << " ms" << std::endl;
 
   if (torch::cuda::is_available()) {
@@ -62,7 +61,6 @@ int main(int argc, const char* argv[])
     torch::cuda::synchronize();
     auto stop = high_resolution_clock::now();
     auto gpu_time = duration_cast<milliseconds>(stop - start);
-    std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << std::endl;
     std::cout << "GPU time: " << gpu_time.count() << " ms" << std::endl;
   }
 }
