@@ -39,7 +39,7 @@ def main():
         # Generate a TorchScript CPU model via tracing with dummy input
         model_name = 'traced_cpu.pt'
         print("Generating a TorchScript model on the CPU using tracing...")
-        traced_model_cpu = torch.jit.trace(model, dummy_input)
+        traced_model_cpu = torch.jit.optimize_for_inference(torch.jit.trace(model, dummy_input))
         traced_model_cpu.save(model_name)
         print("Wrote " + model_name)
         output = traced_model_cpu(dummy_input)
