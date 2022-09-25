@@ -28,7 +28,8 @@ def main():
         # Generate a TorchScript CPU model via scripting
         model_name = "scripted_cpu.pt"
         print("Generating a TorchScript model on the CPU using scripting...")
-        scripted_model_cpu = torch.jit.optimize_for_inference(torch.jit.script(model))
+        # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
+        scripted_model_cpu = torch.jit.script(model)
         scripted_model_cpu.save(model_name)
         print("Wrote " + model_name)
         output = scripted_model_cpu(dummy_input)
@@ -39,7 +40,8 @@ def main():
         # Generate a TorchScript CPU model via tracing with dummy input
         model_name = 'traced_cpu.pt'
         print("Generating a TorchScript model on the CPU using tracing...")
-        traced_model_cpu = torch.jit.optimize_for_inference(torch.jit.trace(model, dummy_input))
+        # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
+        traced_model_cpu = torch.jit.trace(model, dummy_input)
         traced_model_cpu.save(model_name)
         print("Wrote " + model_name)
         output = traced_model_cpu(dummy_input)
@@ -55,7 +57,8 @@ def main():
         # Generate a TorchScript GPU model via scripting
         print("Generating a TorchScript model on the GPU using scripting...")
         model_name = 'scripted_gpu.pt'
-        scripted_model_gpu = torch.jit.optimize_for_inference(torch.jit.script(model_gpu))
+        # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
+        scripted_model_gpu = torch.jit.script(model_gpu)
         scripted_model_gpu.save(model_name)
         print("Wrote " + model_name)
         output = scripted_model_gpu(dummy_input_gpu)
@@ -70,7 +73,8 @@ def main():
 
         print("Generating a TorchScript model on the GPU using tracing...")
         model_name = 'traced_gpu.pt'
-        traced_model_gpu = torch.jit.optimize_for_inference(torch.jit.trace(model_gpu, dummy_input_gpu))
+        # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
+        traced_model_gpu = torch.jit.trace(model_gpu, dummy_input_gpu)
         traced_model_gpu.save(model_name)
         print("Wrote " + model_name)
         output = traced_model_gpu(dummy_input_gpu)

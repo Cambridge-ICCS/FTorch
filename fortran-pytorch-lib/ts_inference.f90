@@ -33,7 +33,7 @@ program inference
    out_tensor = torch_tensor_from_blob(c_loc(out_data), out_dims, out_shape, torch_kFloat32, torch_kCPU)
 
    ! Load ML model (edit this line to use different models)
-   model = torch_module_load(c_char_"scripted_cpu.pt"//c_null_char)
+   model = torch_module_load(c_char_"cpu_scripted.pt"//c_null_char)
 
    ! Infer
    call torch_module_forward(model, in_tensor, out_tensor)
