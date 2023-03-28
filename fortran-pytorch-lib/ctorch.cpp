@@ -166,15 +166,21 @@ torch_jit_script_module_t torch_jit_load(const char* filename)
 }
 
 void torch_jit_module_forward(const torch_jit_script_module_t module,
-                              const torch_tensor_t input, torch_tensor_t output)
+                              const torch_tensor_t *inputs, const int nin,
+			      torch_tensor_t output)
 {
+  // Here we cast the pointers we recieved in to Tensor objects
   auto model = static_cast<torch::jit::script::Module*>(module);
-  auto in = static_cast<torch::Tensor*>(input);
+  auto in = reinterpret_cast<torch::Tensor* const *>(inputs);
   auto out = static_cast<torch::Tensor*>(output);
-  std::vector<torch::jit::IValue> inputs;
-  inputs.push_back(*in);
+  // Generate a vector of IValues (placeholders for various Torch types)
+  std::vector<torch::jit::IValue> inputs_vec;
+  // Populate with Tensors pointed at by pointers
+  for (int i=0; i<nin; ++i) {
+    inputs_vec.push_back(*in[i]);
+  }
   try {
-    std::move(*out) = model->forward(inputs).toTensor();
+    std::move(*out) = model->forward(inputs_vec).toTensor();
   } catch (const torch::Error& e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     exit(EXIT_FAILURE);
@@ -183,6 +189,7 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     exit(EXIT_FAILURE);
   }
   // FIXME: this should be the responsibility of the user
+  // TODO: perform this check on all elements(or first and alter rest)?
   if (out->is_cuda())
     torch::cuda::synchronize();
 }
