@@ -46,7 +46,7 @@ EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
 EXPORT_C torch_jit_script_module_t torch_jit_load(const char* filename);
 EXPORT_C void torch_jit_module_forward(const torch_jit_script_module_t module,
                                        const torch_tensor_t *inputs, const int nin,
-			               torch_tensor_t output);
+                                       torch_tensor_t output);
 EXPORT_C void torch_jit_module_delete(torch_jit_script_module_t module);
 
 #endif /* C_TORCH_H*/
