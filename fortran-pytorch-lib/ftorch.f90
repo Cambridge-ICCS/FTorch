@@ -137,7 +137,7 @@ contains
       use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_loc
       type(torch_module), intent(in) :: module        !! Module
       type(torch_tensor), intent(in), dimension(:) :: input_tensors  !! Array of Input tensors
-      type(torch_tensor), intent(in), dimension(:) :: output_tensor !! Returned output tensors
+      type(torch_tensor), intent(in) :: output_tensor !! Returned output tensors
       integer(c_int) ::  n_inputs
 
       integer :: i

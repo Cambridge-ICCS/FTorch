@@ -39,14 +39,16 @@ int main(int argc, const char* argv[])
   float* output_data = (float*)malloc(output_size * sizeof(float));
 
   if (model) {
-    torch_tensor_t input = torch_from_blob(input_data, input_ndim, input_shape,
+    torch_tensor_t inputs[1];
+    inputs[0] = torch_from_blob(input_data, input_ndim, input_shape,
                                            torch_kFloat32, torch_kCPU);
+    const int nin = 1;
     torch_tensor_t output = torch_from_blob(
         output_data, output_ndim, output_shape, torch_kFloat32, torch_kCPU);
-    torch_jit_module_forward(model, input, output);
+    torch_jit_module_forward(model, inputs, nin, output);
     torch_tensor_print(output);
     torch_jit_module_delete(model);
-    torch_tensor_delete(input);
+    torch_tensor_delete(inputs[0]);
     torch_tensor_delete(output);
   }
 

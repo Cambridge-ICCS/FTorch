@@ -171,13 +171,13 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
 {
   // Here we cast the pointers we recieved in to Tensor objects
   auto model = static_cast<torch::jit::script::Module*>(module);
-  auto in = reinterpret_cast<torch::Tensor* const *>(inputs);
+  auto in = reinterpret_cast<torch::Tensor* const*>(inputs);
   auto out = static_cast<torch::Tensor*>(output);
   // Generate a vector of IValues (placeholders for various Torch types)
   std::vector<torch::jit::IValue> inputs_vec;
   // Populate with Tensors pointed at by pointers
   for (int i=0; i<nin; ++i) {
-    inputs_vec.push_back(*in[i]);
+    inputs_vec.push_back(*(in[i]));
   }
   try {
     std::move(*out) = model->forward(inputs_vec).toTensor();
