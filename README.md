@@ -45,7 +45,11 @@ To build and install the library:
     cmake .. -DCMAKE_Fortran_COMPILER=<FC> -DCMAKE_CXX_COMPILER=<CXXC> -DCMAKE_C_COMPILER=<CC> -DCMAKE_INSTALL_PREFIX=</path/to/install/lib/at/> -DTorch_DIR=</path/to/torch>/share/cmake/Torch
     ```  
     where `<FC>`, `<CXXC>`, and `<CC>` are, respectively, a fortran, c++, and C compiler on the system, `</path/to/install/lib/at/>` is the location for the final install, and `</path/to/torch/>` is the path to the libtorch installation - if installed via PyTorch in a venv this will be located at `venv/lib/python3.xx/site-packages/torch`.
-4. 
+4. Make and install the code to the chosen location with:
+    ```
+    make
+    make install
+    ```
 
 
 ## Usage
