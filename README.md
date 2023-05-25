@@ -22,7 +22,7 @@ We provide installation instructions for the libaray as well as instructions and
 
 To install the library requires the following to be installed on the system:
 
-* cmake
+* cmake >= 3.1
 * [libtorch](https://pytorch.org/cppdocs/installing.html) or [PyTorch](https://pytorch.org/)
 * Fortran, C++, and C compilers
 
@@ -32,8 +32,13 @@ To build and install the library:
 
 1. Navigate to the location in which you wish to install the source and run:  
     ```
-    git@github.com:Cambridge-ICCS/fortran-pytorch-lib.git
+    git clone git@github.com:Cambridge-ICCS/fortran-pytorch-lib.git
+    ```  
+    to clone via ssh, or  
     ```
+    git clone https://github.com/Cambridge-ICCS/fortran-pytorch-lib.git
+    ```  
+    to clone via https.
 2. Navigate into the source directory by running:  
     ```
     cd fortran-pytorch-lib/fortran-pytorch-lib/
