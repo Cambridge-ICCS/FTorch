@@ -54,7 +54,11 @@ To build and install the library:
     ```
     make
     make install
-    ```
+    ```  
+    This will place the following directories at `</path/to/install/lib/at/>`:  
+    * `bin/` - contains example executables
+    * `include/` - contains header and mod files
+    * `lib64/` - contains cmake and `.so` files
 
 
 ## Usage
