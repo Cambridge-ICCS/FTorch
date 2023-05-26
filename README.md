@@ -47,9 +47,16 @@ To build and install the library:
     ```
     mkdir build
     cd build
-    cmake .. -DCMAKE_Fortran_COMPILER=<FC> -DCMAKE_CXX_COMPILER=<CXXC> -DCMAKE_C_COMPILER=<CC> -DCMAKE_INSTALL_PREFIX=</path/to/install/lib/at/> -DTorch_DIR=</path/to/torch>/share/cmake/Torch
+    cmake .. -DTorch_DIR=</path/to/torch>/share/cmake/Torch
     ```  
-    where `<FC>`, `<CXXC>`, and `<CC>` are, respectively, a fortran, c++, and C compiler on the system, `</path/to/install/lib/at/>` is the location for the final install, and `</path/to/torch/>` is the path to the libtorch installation - if installed via PyTorch in a venv this will be located at `venv/lib/python3.xx/site-packages/torch`.
+    where `</path/to/torch/>` is the path to the libtorch installation - if installed via PyTorch in a venv this will be located at `venv/lib/python3.xx/site-packages/torch`.
+    The following CMake flags are available and can be passed as arguments through `-D<Option>=<value>`
+    | Option                               | Value                       | Description                                                   |
+    | -------------------------------------| --------------------------- | --------------------------------------------------------------|
+    | `CMAKE_Fortran_COMPILER`             | `ifort` / `gfortran`        | Specify a Fortran compiler to build the library with          |
+    | `CMAKE_C_COMPILER`                   | `icc` / `gcc`               | Specify a C compiler to build the library with                |
+    | `CMAKE_CXX_COMPILER`                 | `icc` / `gcc`               | Specify a C++ compiler to build the library with              |
+    | `CMAKE_INSTALL_PREFIX`               | `</path/to/install/lib/at/>`| Location at which the library files should be installed       |
 4. Make and install the code to the chosen location with:
     ```
     make
