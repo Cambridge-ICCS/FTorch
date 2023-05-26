@@ -13,7 +13,7 @@ We want to run inference on this model without having to call a Python executabl
 To achieve this we use the existing ML C++ interface.
 
 This project provides a library enabling a user to directly couple their PyTorch models to Fortran code.
-We provide installation instructions for the libaray as well as instructions and examples for performing coupling.
+We provide installation instructions for the library as well as instructions and examples for performing coupling.
 
 
 ## Installation
@@ -33,13 +33,13 @@ To build and install the library:
 1. Navigate to the location in which you wish to install the source and run:  
     ```
     git clone git@github.com:Cambridge-ICCS/fortran-pytorch-lib.git
-    ```  
+    ```
     to clone via ssh, or  
     ```
     git clone https://github.com/Cambridge-ICCS/fortran-pytorch-lib.git
-    ```  
+    ```
     to clone via https.
-2. Navigate into the source directory by running:  
+2. Navigate into the library source directory by running:  
     ```
     cd fortran-pytorch-lib/fortran-pytorch-lib/
     ```
@@ -48,8 +48,8 @@ To build and install the library:
     mkdir build
     cd build
     cmake .. -DTorch_DIR=</path/to/torch>/share/cmake/Torch -DCMAKE_BUILD_TYPE=Release
-    ```  
-    where `</path/to/torch/>` is the path to the libtorch installation - if installed via PyTorch in a venv this will be located at `venv/lib/python3.xx/site-packages/torch`.  
+    ```
+    where `</path/to/torch/>` is the path to the libtorch installation - if installed via PyTorch in a python virtual environment (venv) this will be located at `venv/lib/python3.xx/site-packages/torch`.  
     The following CMake flags are available and can be passed as arguments through `-D<Option>=<value>`:
     | Option                               | Value                       | Description                                                   |
     | -------------------------------------| --------------------------- | --------------------------------------------------------------|
@@ -62,7 +62,7 @@ To build and install the library:
     ```
     make
     make install
-    ```  
+    ```
     This will place the following directories at the install location:  
     * `bin/` - contains example executables
     * `include/` - contains header and mod files
@@ -88,6 +88,8 @@ Something like:
 where?
 
 
+## Examples
+
 
 ## License
 
@@ -103,7 +105,7 @@ Contributions and collaborations are welcome.
 For bugs, feature requests, and clear suggestions for improvement please
 [open an issue](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/issues).
 
-If you have built something upon _Fortran-PyTorchLib_ that would be useful to others, or can
+If you have built something upon _Fortran-PyTorch-Lib_ that would be useful to others, or can
 address an [open issue](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/issues), please
 [fork the repository](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/fork) and open a
 pull request.
@@ -112,7 +114,7 @@ pull request.
 ### Code of Conduct
 Everyone participating in the _Fortran-PyTorch-Lib_ project, and in particular in the
 issue tracker, pull requests, and social media activity, is expected to treat other
-people with respect and more generally to follow the guidelines articulated in the
+people with respect and, more generally, to follow the guidelines articulated in the
 [Python Community Code of Conduct](https://www.python.org/psf/codeofconduct/).
 
 
@@ -130,7 +132,7 @@ See [Contributors](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/graphs/
 for a full list.
 
 
-### Used by
+## Used by
 The following projects make use of this code or derivatives in some way:
 
 * [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)
