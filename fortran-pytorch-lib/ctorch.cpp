@@ -189,7 +189,6 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     exit(EXIT_FAILURE);
   }
   // FIXME: this should be the responsibility of the user
-  // TODO: perform this check on all elements(or first and alter rest)?
   if (out->is_cuda())
     torch::cuda::synchronize();
 }
