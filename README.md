@@ -15,6 +15,10 @@ To achieve this we use the existing ML C++ interface.
 This project provides a library enabling a user to directly couple their PyTorch models to Fortran code.
 We provide installation instructions for the library as well as instructions and examples for performing coupling.
 
+Project status: This project is currently in pre-release with documentation and code being prepared for a first release.
+As such there may breaking changes made.
+If you are interested in using this libratu please get in touch.
+
 
 ## Installation
 
