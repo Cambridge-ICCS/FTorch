@@ -47,22 +47,23 @@ To build and install the library:
     ```
     mkdir build
     cd build
-    cmake .. -DTorch_DIR=</path/to/torch>/share/cmake/Torch
+    cmake .. -DTorch_DIR=</path/to/torch>/share/cmake/Torch -DCMAKE_BUILD_TYPE=Release
     ```  
-    where `</path/to/torch/>` is the path to the libtorch installation - if installed via PyTorch in a venv this will be located at `venv/lib/python3.xx/site-packages/torch`.
-    The following CMake flags are available and can be passed as arguments through `-D<Option>=<value>`
+    where `</path/to/torch/>` is the path to the libtorch installation - if installed via PyTorch in a venv this will be located at `venv/lib/python3.xx/site-packages/torch`.  
+    The following CMake flags are available and can be passed as arguments through `-D<Option>=<value>`:
     | Option                               | Value                       | Description                                                   |
     | -------------------------------------| --------------------------- | --------------------------------------------------------------|
     | `CMAKE_Fortran_COMPILER`             | `ifort` / `gfortran`        | Specify a Fortran compiler to build the library with          |
     | `CMAKE_C_COMPILER`                   | `icc` / `gcc`               | Specify a C compiler to build the library with                |
     | `CMAKE_CXX_COMPILER`                 | `icc` / `gcc`               | Specify a C++ compiler to build the library with              |
-    | `CMAKE_INSTALL_PREFIX`               | `</path/to/install/lib/at/>`| Location at which the library files should be installed       |
+    | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html) | `</path/to/install/lib/at/>`| Location at which the library files should be installed. By default this is `/usr/local` |
+    | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)         | `Release` / `Debug`         | Specifies build type.     |
 4. Make and install the code to the chosen location with:
     ```
     make
     make install
     ```  
-    This will place the following directories at `</path/to/install/lib/at/>`:  
+    This will place the following directories at the install location:  
     * `bin/` - contains example executables
     * `include/` - contains header and mod files
     * `lib64/` - contains cmake and `.so` files
@@ -71,6 +72,21 @@ To build and install the library:
 ## Usage
 
 TODO How to link to the library from other code.
+### CMake
+Find FTorch, link to executable
+```
+find_package(FTorch)
+target_link_libraries( <executable> PRIVATE FTorch::ftorch )
+message(STATUS "Building with Fortran PyTorch coupling")
+```
+
+### make
+Something like:
+```
+-I<path/to/library>
+```
+where?
+
 
 
 ## License
