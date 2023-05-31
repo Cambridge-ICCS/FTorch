@@ -132,24 +132,35 @@ contains
       module%p = torch_jit_load_c(filename)
    end function torch_module_load
 
-   !> Performs a forward pass of the module with the input tensor
-   subroutine torch_module_forward(module, input_tensor, output_tensor)
-      use, intrinsic :: iso_c_binding, only : c_ptr
+   !> Performs a forward pass of the module with the input tensors
+   subroutine torch_module_forward(module, input_tensors, n_inputs, output_tensor)
+      use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_loc
       type(torch_module), intent(in) :: module        !! Module
-      type(torch_tensor), intent(in) :: input_tensor  !! Input tensor
-      type(torch_tensor), intent(in) :: output_tensor !! Returned output tensor
+      type(torch_tensor), intent(in), dimension(:) :: input_tensors  !! Array of Input tensors
+      type(torch_tensor), intent(in) :: output_tensor !! Returned output tensors
+      integer(c_int) ::  n_inputs
+
+      integer :: i
+      type(c_ptr), dimension(n_inputs), target  :: input_ptrs
 
       interface
-         subroutine torch_jit_module_forward_c(module, input_tensor, output_tensor) &
+         subroutine torch_jit_module_forward_c(module, input_tensors, n_inputs, &
+                                                        output_tensor) &
             bind(c, name='torch_jit_module_forward')
-            use, intrinsic :: iso_c_binding, only : c_ptr
+            use, intrinsic :: iso_c_binding, only : c_ptr, c_int
             type(c_ptr), value, intent(in) :: module
-            type(c_ptr), value, intent(in) :: input_tensor
+            type(c_ptr), value, intent(in) :: input_tensors
+            integer(c_int), value, intent(in) :: n_inputs
             type(c_ptr), value, intent(in) :: output_tensor
          end subroutine torch_jit_module_forward_c
       end interface
 
-      call torch_jit_module_forward_c(module%p, input_tensor%p, output_tensor%p)
+      ! Assign array of pointers to the input tensors
+      do i = 1, n_inputs
+          input_ptrs(i) = input_tensors(i)%p
+      end do
+      
+      call torch_jit_module_forward_c(module%p, c_loc(input_ptrs), n_inputs, output_tensor%p)
    end subroutine torch_module_forward
 
    !> Deallocates a Torch Script module

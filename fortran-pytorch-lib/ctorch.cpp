@@ -166,15 +166,33 @@ torch_jit_script_module_t torch_jit_load(const char* filename)
 }
 
 void torch_jit_module_forward(const torch_jit_script_module_t module,
-                              const torch_tensor_t input, torch_tensor_t output)
+                              const torch_tensor_t *inputs, const int nin,
+			      torch_tensor_t output)
 {
+  // Here we cast the pointers we recieved in to Tensor objects
   auto model = static_cast<torch::jit::script::Module*>(module);
-  auto in = static_cast<torch::Tensor*>(input);
+  auto in = reinterpret_cast<torch::Tensor* const*>(inputs);
   auto out = static_cast<torch::Tensor*>(output);
-  std::vector<torch::jit::IValue> inputs;
-  inputs.push_back(*in);
+  // Local IValue for checking we are passed types
+  torch::jit::IValue LocalTensor;
+  // Generate a vector of IValues (placeholders for various Torch types)
+  std::vector<torch::jit::IValue> inputs_vec;
+  // Populate with Tensors pointed at by pointers
+  // For each IValue check it is of Tensor type
+  for (int i=0; i<nin; ++i) {
+    LocalTensor = *(in[i]);
+    if (LocalTensor.isTensor()) {
+      inputs_vec.push_back(LocalTensor);
+    }
+    else {
+      std::cerr << "[ERROR]: One of the inputs to torch_jit_module_forward is not a Tensor." << std::endl;
+      exit(EXIT_FAILURE);
+    }
+  }
   try {
-    std::move(*out) = model->forward(inputs).toTensor();
+    // If for some reason the forward method does not return a Tensor it should
+    // raise an error when trying to cast to a Tensor type
+    std::move(*out) = model->forward(inputs_vec).toTensor();
   } catch (const torch::Error& e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     exit(EXIT_FAILURE);

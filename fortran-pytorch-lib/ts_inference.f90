@@ -9,9 +9,11 @@ program inference
 
    ! Set up types of input and output data and the interface with C
    type(torch_module) :: model
-   type(torch_tensor) :: in_tensor, out_tensor
+   type(torch_tensor), dimension(1) :: in_tensor
+   type(torch_tensor) :: out_tensor
 
    real(c_float), dimension(:,:,:,:), allocatable, target :: in_data
+   integer(c_int), parameter :: n_inputs = 1
    real(c_float), dimension(:,:), allocatable, target :: out_data
 
    integer(c_int), parameter :: in_dims = 4
@@ -29,19 +31,19 @@ program inference
    in_data = 1.0d0
 
    ! Create input/output tensors from the above arrays
-   in_tensor = torch_tensor_from_blob(c_loc(in_data), in_dims, in_shape, torch_kFloat32, torch_kCPU)
+   in_tensor(1) = torch_tensor_from_blob(c_loc(in_data), in_dims, in_shape, torch_kFloat32, torch_kCPU)
    out_tensor = torch_tensor_from_blob(c_loc(out_data), out_dims, out_shape, torch_kFloat32, torch_kCPU)
 
    ! Load ML model (edit this line to use different models)
    model = torch_module_load(c_char_"cpu_scripted.pt"//c_null_char)
 
    ! Infer
-   call torch_module_forward(model, in_tensor, out_tensor)
+   call torch_module_forward(model, in_tensor, n_inputs, out_tensor)
    write (*,*) out_data(1, 1000)
 
    ! Cleanup
    call torch_module_delete(model)
-   call torch_tensor_delete(in_tensor)
+   call torch_tensor_delete(in_tensor(1))
    call torch_tensor_delete(out_tensor)
    deallocate(in_data)
    deallocate(out_data)
