@@ -53,19 +53,20 @@ To build and install the library:
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release
     ```
+    It is likely that you will need to provide the `CMAKE_PREFIX_PATH` flag (see below).  
     The following CMake flags are available and can be passed as arguments through `-D<Option>=<Value>`:
     | Option                                                                                            | Value                        | Description                                                   |
     | ------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------|
     | [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `ifort` / `gfortran`         | Specify a Fortran compiler to build the library with          |
     | [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `icc` / `gcc`                | Specify a C compiler to build the library with                |
     | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `icc` / `gcc`                | Specify a C++ compiler to build the library with              |
-    | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`          | Location of Torch installation[^1] |
+    | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`          | Location of Torch installation<sup>1</sup> |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type.                                         |
 
-    [^1]: The path to the Torch installation needs to allow cmake to loate the relevant Torch cmake files.  
+    <sup>1</sup>: _The path to the Torch installation needs to allow cmake to loate the relevant Torch cmake files.  
           If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html) then this should be the absolute path to the unzipped libtorch distribution.  
-          If Torch has been installed as pyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html) then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`
+          If Torch has been installed as pyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html) then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`_
 4. Make and install the code to the chosen location with:
     ```
     make
