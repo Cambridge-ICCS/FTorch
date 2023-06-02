@@ -53,7 +53,7 @@ To build and install the library:
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release
     ```
-    It is likely that you will need to provide the `CMAKE_PREFIX_PATH` flag (see below).  
+    It is likely that you will need to provide at least the `CMAKE_PREFIX_PATH` flag.  
     The following CMake flags are available and can be passed as arguments through `-D<Option>=<Value>`:
     | Option                                                                                            | Value                        | Description                                                   |
     | ------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------|
@@ -80,25 +80,114 @@ To build and install the library:
 
 ## Usage
 
-TODO How to link to the library from other code.
-### CMake
-Find FTorch, link to executable
+In order to use fortran-pytorch users will typically need to follow these steps:
+
+1. Save a PyTorch model as [TorchScript](https://pytorch.org/docs/stable/jit.html).
+2. Write fortran using the fortran-pytorch-lib bindings to use the model from within fortran.
+3. Build and compile the code, linking against fortran-pytorch-lib
+
+
+### 1. TorchScript
+
+The trained PyTorch model needs to be exported to [TorchScript](https://pytorch.org/docs/stable/jit.html).
+This can be done from within your code using the [`jit.script`](https://pytorch.org/docs/stable/generated/torch.jit.script.html#torch.jit.script) or [`jit.trace`](https://pytorch.org/docs/stable/generated/torch.jit.trace.html#torch.jit.trace) functionalities from within python.
+
+If you are not familiar with these we provide a tool `pt2ts.py` as part of this distribution which contains an easily adaptable script to save your PyTorch model as Torch Script.
+
+
+### 2. Fortran
+
+To use the trained Torch model from within fortran we need to import the `ftorch` module and use the binding routines to load the model, convert the data, and run inference.
+
+A very simple example is given below.
+For more detailed documentation please consult the API documentation, source code, and examples.
+
+This minimal snippet loads a saved Torch model, creates inputs consisting of two `10x10` matrices (one of ones, and one of zeros), and runs the model to infer output.
+
+```fortran
+! Import library for interfacing with PyTorch
+use ftorch
+
+implicit none
+
+! Generate an object to hold the Torch model
+type(torch_module) :: model
+
+! Set up types of input and output data and the interface with C
+integer(c_int), parameter :: dims_input = 2
+integer(c_int64_t) :: shape_input(dims_input)
+integer(c_int), parameter :: n_inputs = 2
+type(torch_tensor), dimension(n_inputs), target :: model_input_arr
+integer(c_int), parameter :: dims_output = 1
+integer(c_int64_t) :: shape_output(dims_output)
+type(torch_tensor) :: model_output
+
+! Set up the model inputs as Fortran arrays
+real, dimension(10,10), target  :: input_1, input_2
+real, dimension(5), target   :: output
+
+! Initialise the Torch model to be used
+model = torch_module_load("/path/to/saved/model.pt"//c_null_char)
+
+! Initialise the inputs as Fortran
+input_1 = 0.0
+input_2 = 1.0
+
+! Wrap Fortran data as Torch Tensors
+! There may well be some reshaping required depending on the 
+! structure of the model which is not covered here (see examples)
+shape_input = (/10, 10/)
+shape_output = (/5/)
+model_input_arr(1) = torch_tensor_from_blob(c_loc(input_1), dims_input, shape_input, torch_kFloat64, torch_kCPU)
+model_input_arr(2) = torch_tensor_from_blob(c_loc(input_2), dims_input, shape_input, torch_kFloat64, torch_kCPU)
+model_output = torch_tensor_from_blob(c_loc(output), dims_output, shape_output, torch_kFloat64, torch_kCPU)
+
+! Run model and Infer
+! Again, there may be some reshaping required depending on model design
+call torch_module_forward(model, model_input_arr, n_inputs, model_output)
+
+! Clean up
+call torch_module_delete(model)
+call torch_tensor_delete(model_input_arr(1))
+call torch_tensor_delete(model_input_arr(2))
+call torch_tensor_delete(model_output)
+```
+
+### 3. Build
+
+In order to compile code using this library we need to link against the installation at
+compile time.
+Here we describe how to do this for two approaches, cmake and make.
+
+#### CMake
+To build using cmake we need to find the FTorch installation and link it to the executable.
+
+This can be done by adding the following to the `CMakeLists.txt` file:
 ```
 find_package(FTorch)
 target_link_libraries( <executable> PRIVATE FTorch::ftorch )
 message(STATUS "Building with Fortran PyTorch coupling")
 ```
+and using the `-DFTorch_DIR=</path/to/install/location>` flag when running cmake.
 
-### make
-Something like:
+#### Make
+To build with make we need to include the library when compiling and link the executable
+against it.
+
+To compile with make we need add the following compiler flag when compiling files that
+use ftorch:
 ```
--I<path/to/library>
+FCFLAGS += -I<path/to/install/location>/include
 ```
-where?
+
+When compiling the final executable add the following link flag:
+```
+LDFLAGS += -L<path/to/install/location>/lib64
+```
 
 
 ## Examples
-
+To follow.
 
 ## License
 
