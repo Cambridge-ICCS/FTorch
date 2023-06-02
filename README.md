@@ -5,6 +5,16 @@
 Code and examples for directly calling Pytorch ML models from Fortran.
 
 
+## Contents
+- [Description](#description)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [License](#license)
+- [Contributions](#contributions)
+- [Authors and Acknowledgment](#authors-and-acknowledgments)
+- [Users](#users)
+
 ## Description
 
 It is desirable be able to run machine learning (ML) models directly in Fortran.
