@@ -12,8 +12,8 @@ Code and examples for directly calling Pytorch ML models from Fortran.
 - [Examples](#examples)
 - [License](#license)
 - [Contributions](#contributions)
-- [Authors and Acknowledgment](#authors-and-acknowledgments)
-- [Users](#users)
+- [Authors and Acknowledgment](#authors-and-acknowledgment)
+- [Users](#used-by)
 
 ## Description
 
