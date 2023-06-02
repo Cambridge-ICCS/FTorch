@@ -68,3 +68,18 @@ install(EXPORT ${PROJECT_NAME}
 install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch.mod"
  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}"
  )
+
+# C++ demo
+add_executable(ts_infer_cpp ts_inference.cpp)
+target_link_libraries(ts_infer_cpp ${TORCH_LIBRARIES})
+install(TARGETS ts_infer_cpp DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# C demo
+add_executable(ts_infer_c ts_inference.c)
+target_link_libraries(ts_infer_c ${PROJECT_NAME}::${LIB_NAME})
+install(TARGETS ts_infer_c DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# Fortran demo
+add_executable(ts_infer_fortran ts_inference.f90)
+target_link_libraries(ts_infer_fortran PRIVATE ${PROJECT_NAME}::${LIB_NAME})
+install(TARGETS ts_infer_fortran DESTINATION ${CMAKE_INSTALL_BINDIR})
