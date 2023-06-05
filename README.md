@@ -85,7 +85,6 @@ To build and install the library:
     make install
     ```
     This will place the following directories at the install location:  
-    * `bin/` - contains example executables
     * `include/` - contains header and mod files
     * `lib64/` - contains cmake and `.so` files
 
@@ -104,7 +103,7 @@ In order to use fortran-pytorch users will typically need to follow these steps:
 The trained PyTorch model needs to be exported to [TorchScript](https://pytorch.org/docs/stable/jit.html).
 This can be done from within your code using the [`jit.script`](https://pytorch.org/docs/stable/generated/torch.jit.script.html#torch.jit.script) or [`jit.trace`](https://pytorch.org/docs/stable/generated/torch.jit.trace.html#torch.jit.trace) functionalities from within python.
 
-If you are not familiar with these we provide a tool `pt2ts.py` as part of this distribution which contains an easily adaptable script to save your PyTorch model as Torch Script.
+If you are not familiar with these we provide a tool [`pt2ts.py`](utils/pt2ts.py) as part of this distribution which contains an easily adaptable script to save your PyTorch model as TorchScript.
 
 
 ### 2. Using the model from Fortran
@@ -209,7 +208,9 @@ export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
 
 
 ## Examples
-To follow.
+
+Examples of how to use this library are provided in the [examples directory](examples/).  
+They demonstrate different functionalities and are provided with instructions to modify, build, and run as neccessary.
 
 ## License
 

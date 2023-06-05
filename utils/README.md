@@ -10,9 +10,6 @@ It provides the user with the option to [jit.script](https://pytorch.org/docs/st
 Dependencies:
 - PyTorch
 
-Optional:
-- Torchvision
-
 ### Usage
 1. Create and activate a virtual environment with PyTorch and any dependencied for your model.
 2. Place the `pt2ts.py` script in the save folder as your model files.
