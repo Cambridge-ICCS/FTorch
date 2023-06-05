@@ -4,8 +4,12 @@ cmake_policy (SET CMP0076 NEW)
 
 set(PROJECT_NAME ResNetExample)
 
+# Place executable in source rather than build directory
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "../")
+
 project(${PROJECT_NAME} LANGUAGES Fortran)
 
+# Build in Debug mode if not specified
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
 endif()
