@@ -60,21 +60,20 @@ cmake .. -DFTorchDIR=<path/to/your/installation/of/library> -DCMAKE_BUILD_TYPE=R
 make
 ```
 
-To run the compiled code calling the saved ResNet-18 TorchScript from Fortran move back
-up to the main example directory and run the executable:
+To run the compiled code calling the saved ResNet-18 TorchScript from Fortran run the
+executable with an argument of the saved model file:
 ```
-cd ../
-./resnet_infer_fortran
+./resnet_infer_fortran ../saved_resnet18_model_cpu.pt
 ```
 
 Alternatively we can use `make`, instead of cmake, with the included Makefile.
 However, to do this you will need to modify `Makefile` to link to and include your
-installation of FTorch as described in the main documentation.  
+installation of FTorch as described in the main documentation. Also check that the compiler is the same as the one you built the Library with.  
 You will also likely need to add the location of the `.so` files to your `LD_LIBRARY_PATH`:
 ```
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib64
 make
-./resnet_infer_fortran
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib64
+./resnet_infer_fortran saved_resnet18_model_cpu.pt
 ```
 
 ## Further options

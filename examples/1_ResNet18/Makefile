@@ -1,4 +1,5 @@
 # compiler
+# Note - this should match the compiler that the library was built with
 FC = gfortran
 
 # compile flags
