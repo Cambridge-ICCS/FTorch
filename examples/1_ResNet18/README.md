@@ -82,4 +82,3 @@ make
 To explore the functionalities of this model:
 
 - Try saving the model through tracing rather than scripting by modifying `pt2ts.py`
-- Try building  ``
