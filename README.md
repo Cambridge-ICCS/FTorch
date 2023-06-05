@@ -75,8 +75,10 @@ To build and install the library:
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `DEBUG`, use `RELEASE` for production code|
 
     <sup>1</sup> _The path to the Torch installation needs to allow cmake to locate the relevant Torch cmake files.  
-          If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html) then this should be the absolute path to the unzipped libtorch distribution.
-          If Torch has been installed as pyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html) then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`_
+          If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
+          then this should be the absolute path to the unzipped libtorch distribution.
+          If Torch has been installed as PyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
+          e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
 4. Make and install the code to the chosen location with:
     ```
     make
@@ -115,6 +117,8 @@ For more detailed documentation please consult the API documentation, source cod
 This minimal snippet loads a saved Torch model, creates inputs consisting of two `10x10` matrices (one of ones, and one of zeros), and runs the model to infer output.
 
 ```fortran
+! Import any C bindings as required for this code
+use, intrinsic :: iso_c_binding, only: c_int, c_int64_t, c_null_char, c_loc
 ! Import library for interfacing with PyTorch
 use ftorch
 
@@ -143,7 +147,7 @@ model = torch_module_load("/path/to/saved/model.pt"//c_null_char)
 input_1 = 0.0
 input_2 = 1.0
 
-! Wrap Fortran data as Torch Tensors
+! Wrap Fortran data as no-copy Torch Tensors
 ! There may well be some reshaping required depending on the 
 ! structure of the model which is not covered here (see examples)
 shape_input = (/10, 10/)
@@ -156,6 +160,9 @@ model_output = torch_tensor_from_blob(c_loc(output), dims_output, shape_output, 
 ! Again, there may be some reshaping required depending on model design
 call torch_module_forward(model, model_input_arr, n_inputs, model_output)
 
+! Write out the result of running the model
+write(*,*) output
+
 ! Clean up
 call torch_module_delete(model)
 call torch_tensor_delete(model_input_arr(1))
@@ -165,8 +172,7 @@ call torch_tensor_delete(model_output)
 
 ### 3. Build the code
 
-In order to compile code using this library we need to link against the installation at
-compile time.
+The code now needs to be compiled and linked against our installed library.
 Here we describe how to do this for two build systems, cmake and make.
 
 #### CMake
