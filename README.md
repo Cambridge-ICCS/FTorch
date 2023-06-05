@@ -187,12 +187,18 @@ against it.
 To compile with make we need add the following compiler flag when compiling files that
 use ftorch:
 ```
-FCFLAGS += -I<path/to/install/location>/include
+FCFLAGS += -I<path/to/install/location>/include/ftorch
 ```
 
 When compiling the final executable add the following link flag:
 ```
-LDFLAGS += -L<path/to/install/location>/lib64
+LDFLAGS += -L<path/to/install/location>/lib64 -lftorch
+```
+
+You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
+unless installing in a default location:
+```
+export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
 ```
 
 
