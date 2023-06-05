@@ -127,7 +127,7 @@ type(torch_module) :: model
 integer(c_int), parameter :: dims_input = 2
 integer(c_int64_t) :: shape_input(dims_input)
 integer(c_int), parameter :: n_inputs = 2
-type(torch_tensor), dimension(n_inputs), target :: model_input_arr
+type(torch_tensor), dimension(n_inputs) :: model_input_arr
 integer(c_int), parameter :: dims_output = 1
 integer(c_int64_t) :: shape_output(dims_output)
 type(torch_tensor) :: model_output
