@@ -62,7 +62,7 @@ make
 
 To run the compiled code calling the saved ResNet-18 TorchScript from Fortran:
 ```
-./ts_inference
+./resnet_infer_fortran
 ```
 
 ## Further options
@@ -70,4 +70,3 @@ To run the compiled code calling the saved ResNet-18 TorchScript from Fortran:
 To explore the functionalities of this model:
 
 - Try saving the model through tracing rather than scripting by modifying `pt2ts.py`
-- Try compiling C or C++
