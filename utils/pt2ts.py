@@ -1,88 +1,159 @@
+"""Load a pytorch model and convert it to TorchScript."""
+from typing import Optional
 import torch
-import torch.nn.functional as F
-import torchvision
 
-def main():
+# FPTLIB-TODO
+# Add a module import with your model here:
+# This example assumes the model architecture is in an adjacent module `my_ml_model.py`
+import my_ml_model
 
+
+def script_to_torchscript(
+    model: torch.nn.Module, filename: Optional[str] = "scripted_model.pt"
+) -> None:
+    """
+    Save pyTorch model to TorchScript using scripting.
+
+    Parameters
+    ----------
+    model : torch.NN.Module
+        a pyTorch model
+    filename : str
+        name of file to save to
+    """
+    # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
+    scripted_model = torch.jit.script(model)
+    # print(scripted_model.code)
+    scripted_model.save(filename)
+
+
+def trace_to_torchscript(
+    model: torch.nn.Module,
+    dummy_input: torch.Tensor,
+    filename: Optional[str] = "traced_model.pt",
+) -> None:
+    """
+    Save pyTorch model to TorchScript using tracing.
+
+    Parameters
+    ----------
+    model : torch.NN.Module
+        a pyTorch model
+    dummy_input : torch.Tensor
+        appropriate size Tensor to act as input to model
+    filename : str
+        name of file to save to
+    """
+    # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
+    traced_model = torch.jit.trace(model, dummy_input)
+    # traced_model.save(filename)
+    frozen_model = torch.jit.freeze(traced_model)
+    ## print(frozen_model.graph)
+    ## print(frozen_model.code)
+    frozen_model.save(filename)
+
+
+def load_torchscript(filename: Optional[str] = "saved_model.pt") -> torch.nn.Module:
+    """
+    Load a TorchScript from file.
+
+    Parameters
+    ----------
+    filename : str
+        name of file containing TorchScript model
+    """
+    model = torch.jit.load(filename)
+
+    return model
+
+
+if __name__ == "__main__":
+    # =====================================================
+    # Load model and prepare for saving
+    # =====================================================
+
+    # FPTLIB-TODO
     # Load a pre-trained PyTorch model
-    print("Loading pre-trained ResNet-18 model...")
-    model = torchvision.models.resnet18(pretrained=True)
-    # Switch-off some specific layers/parts of the model that behave
-    # differently during training and inference
-    model.eval()
-    dummy_input = torch.ones(1, 3, 224, 224)
-    output = model(dummy_input)
-    top5 = F.softmax(output, dim=1).topk(5).indices
-    print('PyTorch model top 5 results:\n  {}'.format(top5))
+    # Insert code here to load your model as `trained_model`.
+    # This example assumes my_ml_model has a method `initialize` to load
+    # architecture, weights, and place in inference mode
+    trained_model = my_ml_model.initialize()
 
-    print("\nHow would you like to construct the model?")
-    print(" 1. CPU scripted")
-    print(" 2. CPU traced")
-    print(" 3. GPU scripted")
-    print(" 4. GPU traced")
+    # Switch off specific layers/parts of the model that behave
+    # differently during training and inference.
+    # This may have been done by the user already, so just make sure here.
+    trained_model.eval()
 
-    # Get input from the user, sanitise it and focus on the first character
-    user_input = input("Enter 1, 2, 3, or 4: ")
-    user_input = user_input.strip()[0]
-    if user_input == "1":
-        # Generate a TorchScript CPU model via scripting
-        model_name = "scripted_cpu.pt"
-        print("Generating a TorchScript model on the CPU using scripting...")
-        # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
-        scripted_model_cpu = torch.jit.script(model)
-        scripted_model_cpu.save(model_name)
-        print("Wrote " + model_name)
-        output = scripted_model_cpu(dummy_input)
-        top5 = F.softmax(output, dim=1).topk(5).indices
-        print('TorchScript model top 5 results:\n  {}'.format(top5))
+    # =====================================================
+    # Prepare dummy input and check model runs
+    # =====================================================
 
-    elif user_input == "2":
-        # Generate a TorchScript CPU model via tracing with dummy input
-        model_name = 'traced_cpu.pt'
-        print("Generating a TorchScript model on the CPU using tracing...")
-        # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
-        traced_model_cpu = torch.jit.trace(model, dummy_input)
-        traced_model_cpu.save(model_name)
-        print("Wrote " + model_name)
-        output = traced_model_cpu(dummy_input)
-        top5 = F.softmax(output, dim=1).topk(5).indices
-        print('TorchScript model top 5 results:\n  {}'.format(top5))
+    # FPTLIB-TODO
+    # Generate a dummy input Tensor `dummy_input` to the model of appropriate size.
+    # This example assumes two inputs of size (512x40) and (512x1)
+    trained_model_dummy_input_1 = torch.ones((512, 40), dtype=torch.float64)
+    trained_model_dummy_input_2 = torch.ones((512, 1), dtype=torch.float64)
 
-    elif user_input == "3":
-        device = torch.device('cuda')
-        model_gpu = model.to(device)
-        model_gpu.eval()
-        dummy_input_gpu = dummy_input.to(device)
+    # FPTLIB-TODO
+    # Uncomment the following lines to save for inference on GPU (rather than CPU):
+    # device = torch.device('cuda')
+    # trained_model = trained_model.to(device)
+    # trained_model.eval()
+    # trained_model_dummy_input_1 = trained_model_dummy_input_1.to(device)
+    # trained_model_dummy_input_2 = trained_model_dummy_input_2.to(device)
 
-        # Generate a TorchScript GPU model via scripting
-        print("Generating a TorchScript model on the GPU using scripting...")
-        model_name = 'scripted_gpu.pt'
-        # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
-        scripted_model_gpu = torch.jit.script(model_gpu)
-        scripted_model_gpu.save(model_name)
-        print("Wrote " + model_name)
-        output = scripted_model_gpu(dummy_input_gpu)
-        top5 = F.softmax(output, dim=1).topk(5).indices
-        print('TorchScript model top 5 results:\n  {}'.format(top5))
+    # FPTLIB-TODO
+    # Run model for dummy inputs
+    # If something isn't working This will generate an error
+    trained_model_dummy_output = trained_model(
+        trained_model_dummy_input_1,
+        trained_model_dummy_input_2,
+    )
 
-    elif user_input == "4":
-        device = torch.device('cuda')
-        model_gpu = model.to(device)
-        model_gpu.eval()
-        dummy_input_gpu = dummy_input.to(device)
+    # =====================================================
+    # Save model
+    # =====================================================
 
-        print("Generating a TorchScript model on the GPU using tracing...")
-        model_name = 'traced_gpu.pt'
-        # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
-        traced_model_gpu = torch.jit.trace(model_gpu, dummy_input_gpu)
-        traced_model_gpu.save(model_name)
-        print("Wrote " + model_name)
-        output = traced_model_gpu(dummy_input_gpu)
-        top5 = F.softmax(output, dim=1).topk(5).indices
-        print('TorchScript model top 5 results:\n  {}'.format(top5))
+    # FPTLIB-TODO
+    # Set the name of the file you want to save the torchscript model to:
+    saved_ts_filename = "saved_model.pt"
 
+    # FPTLIB-TODO
+    # Save the pytorch model using either scripting (recommended where possible) or tracing
+    # -----------
+    # Scripting
+    # -----------
+    script_to_torchscript(trained_model, filename=saved_ts_filename)
+
+    # -----------
+    # Tracing
+    # -----------
+    # trace_to_torchscript(trained_model, trained_model_dummy_input, filename=saved_ts_filename)
+
+    # =====================================================
+    # Check model saved OK
+    # =====================================================
+
+    # Load torchscript and run model as a test
+    # FPTLIB-TODO
+    # Scale inputs as above and, if required, move inputs and mode to GPU
+    trained_model_dummy_input_1 = 2.0 * trained_model_dummy_input_1
+    trained_model_dummy_input_2 = 2.0 * trained_model_dummy_input_2
+    trained_model_testing_output = trained_model(
+        trained_model_dummy_input_1,
+        trained_model_dummy_input_2,
+    )
+    ts_model = load_torchscript(filename=saved_ts_filename)
+    ts_model_output = ts_model(
+        trained_model_dummy_input_1,
+        trained_model_dummy_input_2,
+    )
+
+    if torch.all(ts_model_output.eq(trained_model_testing_output)):
+        print("Saved TorchScript model working as expected in a basic test.")
+        print("Users should perform further validation as appropriate.")
     else:
-        print("Invalid input, please type 1, 2, 3 or 4")
-
-if __name__ == '__main__':
-    main()
+        raise RuntimeError(
+            "Saved Torchscript model is not performing as expected.\n"
+            "Consider using scripting if you used tracing, or investigate further."
+        )
