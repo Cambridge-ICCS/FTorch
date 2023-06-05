@@ -8,7 +8,19 @@ A python file is provided that downloads the pretrained
 [ResNet-18](https://pytorch.org/vision/main/models/generated/torchvision.models.resnet18.html)
 model from [TorchVision](https://pytorch.org/vision/stable/index.html).
 
-A modified version of the 
+A modified version of the `pt2ts.py` tool saves this ResNet-18 to TorchScript.
+
+A series of files `resnet_infer_<LANG>` then bind from other languages to run the
+TorchScript ResNet-18 model in inference mode.
+
+## Dependencies
+
+To run this example requires:
+
+- cmake
+- fortran compiler
+- FTorch (installed as described in main package)
+- python3
 
 ## Running
 
@@ -33,13 +45,18 @@ To save the pretrained ResNet-18 model to TorchScript run the modified version o
 python3 pt2ts.py
 ```
 
-To call the saved ResNet-18 model from fortran we need to compile the `ts_inference`
+At this point we no longer require python, so can deactivate the virtual environment:
+```
+deactivate
+```
+
+To call the saved ResNet-18 model from fortran we need to compile the `resnet_infer`
 files.
 This can be done using the included `CMakeLists.txt` as follows:
 ```
 mkdir build
 cd build
-cmake .. -DFTorchDIR=<path/to/your/installation/of/library>
+cmake .. -DFTorchDIR=<path/to/your/installation/of/library> -DCMAKE_BUILD_TYPE=Release
 make
 ```
 
@@ -48,13 +65,9 @@ To run the compiled code calling the saved ResNet-18 TorchScript from Fortran:
 ./ts_inference
 ```
 
-To finish deactivate yoyr virtual environment:
-```
-deactivate
-```
-
 ## Further options
 
 To explore the functionalities of this model:
 
 - Try saving the model through tracing rather than scripting by modifying `pt2ts.py`
+- Try compiling C or C++

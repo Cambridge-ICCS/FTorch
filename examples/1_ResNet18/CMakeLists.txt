@@ -4,7 +4,7 @@ cmake_policy (SET CMP0076 NEW)
 
 set(PROJECT_NAME ResNetExample)
 
-project(${PROJECT_NAME} VERSION ${PACKAGE_VERSION} LANGUAGES Fortran)
+project(${PROJECT_NAME} LANGUAGES Fortran)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
@@ -22,5 +22,5 @@ message(STATUS "Building with Fortran PyTorch coupling")
 #target_link_libraries(ts_infer_c ${PROJECT_NAME}::${LIB_NAME})
 
 # Fortran demo
-add_executable(ts_infer_fortran ts_inference.f90)
-target_link_libraries(ts_infer_fortran PRIVATE FTorch::ftorch)
+add_executable(resnet_infer_fortran resnet_infer_fortran.f90)
+target_link_libraries(resnet_infer_fortran PRIVATE FTorch::ftorch)
