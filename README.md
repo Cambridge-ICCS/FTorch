@@ -26,8 +26,8 @@ This project provides a library enabling a user to directly couple their PyTorch
 We provide installation instructions for the library as well as instructions and examples for performing coupling.
 
 Project status: This project is currently in pre-release with documentation and code being prepared for a first release.
-As such there may breaking changes made.
-If you are interested in using this libratu please get in touch.
+As such breaking changes may be made.
+If you are interested in using this library please get in touch.
 
 
 ## Installation
@@ -67,14 +67,14 @@ To build and install the library:
     The following CMake flags are available and can be passed as arguments through `-D<Option>=<Value>`:
     | Option                                                                                            | Value                        | Description                                                   |
     | ------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------|
-    | [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `ifort` / `gfortran`         | Specify a Fortran compiler to build the library with          |
+    | [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `ifort` / `gfortran`         | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.        |
     | [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `icc` / `gcc`                | Specify a C compiler to build the library with                |
     | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `icc` / `gcc`                | Specify a C++ compiler to build the library with              |
     | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`          | Location of Torch installation<sup>1</sup> |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
-    | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type.                                         |
+    | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `DEBUG`, use `RELEASE` for production code|
 
-    <sup>1</sup> _The path to the Torch installation needs to allow cmake to loate the relevant Torch cmake files.  
+    <sup>1</sup> _The path to the Torch installation needs to allow cmake to locate the relevant Torch cmake files.  
           If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html) then this should be the absolute path to the unzipped libtorch distribution.
           If Torch has been installed as pyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html) then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`_
 4. Make and install the code to the chosen location with:
@@ -93,11 +93,11 @@ To build and install the library:
 In order to use fortran-pytorch users will typically need to follow these steps:
 
 1. Save a PyTorch model as [TorchScript](https://pytorch.org/docs/stable/jit.html).
-2. Write fortran using the fortran-pytorch-lib bindings to use the model from within fortran.
+2. Write Fortran using the fortran-pytorch-lib bindings to use the model from within Fortran.
 3. Build and compile the code, linking against fortran-pytorch-lib
 
 
-### 1. TorchScript
+### 1. Saving the model as TorchScript
 
 The trained PyTorch model needs to be exported to [TorchScript](https://pytorch.org/docs/stable/jit.html).
 This can be done from within your code using the [`jit.script`](https://pytorch.org/docs/stable/generated/torch.jit.script.html#torch.jit.script) or [`jit.trace`](https://pytorch.org/docs/stable/generated/torch.jit.trace.html#torch.jit.trace) functionalities from within python.
@@ -105,9 +105,9 @@ This can be done from within your code using the [`jit.script`](https://pytorch.
 If you are not familiar with these we provide a tool `pt2ts.py` as part of this distribution which contains an easily adaptable script to save your PyTorch model as Torch Script.
 
 
-### 2. Fortran
+### 2. Using the model from Fortran
 
-To use the trained Torch model from within fortran we need to import the `ftorch` module and use the binding routines to load the model, convert the data, and run inference.
+To use the trained Torch model from within Fortran we need to import the `ftorch` module and use the binding routines to load the model, convert the data, and run inference.
 
 A very simple example is given below.
 For more detailed documentation please consult the API documentation, source code, and examples.
@@ -163,14 +163,14 @@ call torch_tensor_delete(model_input_arr(2))
 call torch_tensor_delete(model_output)
 ```
 
-### 3. Build
+### 3. Build the code
 
 In order to compile code using this library we need to link against the installation at
 compile time.
-Here we describe how to do this for two approaches, cmake and make.
+Here we describe how to do this for two build systems, cmake and make.
 
 #### CMake
-To build using cmake we need to find the FTorch installation and link it to the executable.
+If our project were using cmake we would need the following in the `CMakeLists.txt` file to find the FTorch installation and link it to the executable.
 
 This can be done by adding the following to the `CMakeLists.txt` file:
 ```
