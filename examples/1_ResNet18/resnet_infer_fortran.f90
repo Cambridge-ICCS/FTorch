@@ -7,6 +7,9 @@ program inference
 
    implicit none
 
+   integer :: num_args, ix
+   character(len=128), dimension(:), allocatable :: args
+
    ! Set up types of input and output data and the interface with C
    type(torch_module) :: model
    type(torch_tensor), dimension(1) :: in_tensor
@@ -21,7 +24,13 @@ program inference
    integer(c_int), parameter :: out_dims = 2
    integer(c_int64_t) :: out_shape(out_dims) = [1, 1000]
 
-   character(len=:), allocatable :: filename
+   ! Get TorchScript model file as a command line argument
+   num_args = command_argument_count()
+   allocate(args(num_args))
+   do ix = 1, num_args
+       call get_command_argument(ix,args(ix))
+   end do
+
 
    ! Allocate one-dimensional input/output arrays, based on multiplication of all input/output dimension sizes
    allocate(in_data(in_shape(1), in_shape(2), in_shape(3), in_shape(4)))
@@ -35,7 +44,7 @@ program inference
    out_tensor = torch_tensor_from_blob(c_loc(out_data), out_dims, out_shape, torch_kFloat32, torch_kCPU)
 
    ! Load ML model (edit this line to use different models)
-   model = torch_module_load(c_char_"cpu_scripted.pt"//c_null_char)
+   model = torch_module_load(trim(args(1))//c_null_char)
 
    ! Infer
    call torch_module_forward(model, in_tensor, n_inputs, out_tensor)

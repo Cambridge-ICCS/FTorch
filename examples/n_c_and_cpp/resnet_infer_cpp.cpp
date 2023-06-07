@@ -10,7 +10,7 @@ using namespace std::chrono;
 int main(int argc, const char* argv[])
 {
   if (argc != 3) {
-    std::cerr << "Usage: ts_infer_cpp <path-to-exported-script-module> "
+    std::cerr << "Usage: resnet_infer_cpp <path-to-exported-script-module> "
                  "<batch_size>\n";
     return -1;
   }
