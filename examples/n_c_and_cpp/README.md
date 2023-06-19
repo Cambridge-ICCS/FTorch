@@ -68,3 +68,49 @@ To run the compiled code calling the saved ResNet-18 TorchScript from Fortran:
 ./resnet_infer_c
 ./resnet_infer_cpp
 ```
+
+### Summary of files
+
+The starting point for understanding the examples is
+one of the ts_inference.* files, depending on which
+language you wish
+
+* ts_inference.c   - Example of doing inference from C
+* ts_inference.cpp - Example of doing inference from C++
+* ts_inference.f90 - Example of doing inference from Fortran
+* ts_inference.py  - Example of doing inference from Python
+
+* pt2ts.py - Python code to train model
+
+* ctorch.cpp - Wrapper onto PyTorch for C++
+* ctorch.h   - Header file for C++ wrapper
+* ftorch.f90 - Wrapper onto PyTorch for Fortran
+
+* CMakeLists.txt - Provides the cmake build system configuration
+
+
+
+    mkdir build
+    cd build
+    cmake ../.
+    make
+
+This will build the separate examples. Next, from this directory, you need
+to run the python code to generate the saved model:
+
+    python3 ../pt2ts.py
+
+This will give you some options about how you want to train the model, and
+will output a saved model as a .pt file. You should then be able to run the test program (written in Fortran and now compiled) in this directory:
+
+    ./ts_infer_fortran
+
+which will return a result of querying the model, e.g:
+
+    $ ./ts_infer_fortran
+    -1.0526 -0.4629 -0.4567 -1.0881 -0.7655
+    [ CPUFloatType{1,5} ]
+
+Note that the Fortran example have the model filename hard-coded (e.g.
+"annotated_cpu.pt" as the default). Change this and re-compile to address
+the other model outputs.
