@@ -34,11 +34,11 @@ contains
    ! Torch Tensor API
    !> Exposes the given data as a tensor without taking ownership of the original data.
    !> This routine will take an (i, j, k) array and return an (k, j, i) tensor.
-   function torch_tensor_from_blob(data, ndims, shape, dtype, device, layout) result(tensor)
+   function torch_tensor_from_blob(data, ndims, tensor_shape, dtype, device, layout) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
       type(c_ptr), intent(in)        :: data       !! Pointer to data
       integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
-      integer(c_int64_t), intent(in) :: shape(*)   !! Shape of the tensor
+      integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
       integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
       integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
       integer(c_int), intent(in)     :: layout(*)  !! Layout for strides for accessing data
@@ -48,12 +48,12 @@ contains
       integer(c_int64_t)             :: strides(ndims) !! Strides for accessing data
 
       interface
-         function torch_from_blob_c(data, ndims, shape, strides, dtype, device) result(tensor) &
+         function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device) result(tensor) &
             bind(c, name='torch_from_blob')
             use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
             type(c_ptr), value, intent(in)    :: data
             integer(c_int), value, intent(in) :: ndims
-            integer(c_int64_t), intent(in)    :: shape(*)
+            integer(c_int64_t), intent(in)    :: tensor_shape(*)
             integer(c_int64_t), intent(in)    :: strides(*)
             integer(c_int), value, intent(in) :: dtype
             integer(c_int), value, intent(in) :: device
@@ -63,33 +63,33 @@ contains
 
       strides(layout(1)) = 1
       do i = 2, ndims
-        strides(layout(i)) = strides(layout(i-1)) * shape(layout(i-1))
+        strides(layout(i)) = strides(layout(i-1)) * tensor_shape(layout(i-1))
       end do
-      tensor%p = torch_from_blob_c(data, ndims, shape, strides, dtype, device)
+      tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device)
    end function torch_tensor_from_blob
 
    !> Returns a tensor filled with the scalar value 1.
-   function torch_tensor_ones(ndims, shape, dtype, device) result(tensor)
+   function torch_tensor_ones(ndims, tensor_shape, dtype, device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t
       integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
-      integer(c_int64_t), intent(in) :: shape(*)   !! Shape of the tensor
+      integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
       integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
       integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
       type(torch_tensor)             :: tensor     !! Returned tensor
 
       interface
-         function torch_ones_c(ndims, shape, dtype, device) result(tensor) &
+         function torch_ones_c(ndims, tensor_shape, dtype, device) result(tensor) &
             bind(c, name='torch_ones')
             use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
             integer(c_int), value, intent(in) :: ndims
-            integer(c_int64_t), intent(in)    :: shape(*)
+            integer(c_int64_t), intent(in)    :: tensor_shape(*)
             integer(c_int), value, intent(in) :: dtype
             integer(c_int), value, intent(in) :: device
             type(c_ptr)                       :: tensor
          end function torch_ones_c
       end interface
 
-      tensor%p = torch_ones_c(ndims, shape, dtype, device)
+      tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device)
    end function torch_tensor_ones
 
    !> Prints the contents of a tensor.
