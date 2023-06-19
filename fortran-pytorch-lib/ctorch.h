@@ -67,6 +67,7 @@ EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t* shape,
  * @param pointer to the Tensor in memory
  * @param number of dimensions of the Tensor
  * @param shape of the Tensor
+ * @param strides to take through data
  * @param data type of the elements of the Tensor
  * @param device used (cpu, CUDA, etc.)
  * @return Torch Tensor interpretation of the data pointed at
