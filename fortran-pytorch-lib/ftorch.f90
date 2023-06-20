@@ -1,6 +1,8 @@
 module ftorch
 
-   use, intrinsic :: iso_c_binding, only: c_int, c_int64_t, c_char, c_ptr, c_null_ptr
+   use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, c_int64_t, &
+                                          c_float, c_double, c_char, c_ptr, c_null_ptr
+   use iso_fortran_env
    implicit none
 
    type torch_module
@@ -67,6 +69,57 @@ contains
       end do
       tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device)
    end function torch_tensor_from_blob
+
+   !> This routine will take an (i, j, k) array and return an (k, j, i) tensor.
+   function torch_tensor_from_array(data_arr, tensor_shape, device) result(tensor)
+      use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_double, c_loc
+      real(kind=c_double), intent(in), target :: data_arr(*)   !! Fortran array of data
+      integer(c_int64_t), intent(in)   :: tensor_shape(:)   !! Shape of the tensor
+      integer(c_int), intent(in)       :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      type(torch_tensor)               :: tensor     !! Returned tensor
+
+      integer(c_int)                   :: i          !! loop index
+      integer(c_int64_t), allocatable  :: strides(:) !! Strides for accessing data
+      integer(c_int), allocatable      :: layout(:)  !! Layout for strides for accessing data
+      integer(c_int)                   :: ndims      !! Number of dimensions of the tensor
+      integer(c_int)                   :: dtype      !! Data type of the tensor
+
+      interface
+         function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device) result(tensor) &
+            bind(c, name='torch_from_blob')
+            use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
+            type(c_ptr), value, intent(in)    :: data
+            integer(c_int), value, intent(in) :: ndims
+            integer(c_int64_t), intent(in)    :: tensor_shape(*)
+            integer(c_int64_t), intent(in)    :: strides(*)
+            integer(c_int), value, intent(in) :: dtype
+            integer(c_int), value, intent(in) :: device
+            type(c_ptr)                       :: tensor
+         end function torch_from_blob_c
+      end interface
+
+      ndims = size(tensor_shape)
+      dtype = get_torch_dtype(data_arr(1))
+
+      allocate(strides(ndims))
+      allocate(layout(ndims))
+
+      ! Fortran Layout
+      do i=1, ndims
+          layout(i) = i
+      end do
+
+      strides(layout(1)) = 1
+      do i = 2, ndims
+        strides(layout(i)) = strides(layout(i-1)) * tensor_shape(layout(i-1))
+      end do
+
+      tensor%p = torch_from_blob_c(c_loc(data_arr), ndims, tensor_shape, strides, dtype, device)
+
+      deallocate(strides)
+      deallocate(layout)
+
+   end function torch_tensor_from_array
 
    !> Returns a tensor filled with the scalar value 1.
    function torch_tensor_ones(ndims, tensor_shape, dtype, device) result(tensor)
@@ -211,5 +264,45 @@ contains
 
       call torch_jit_module_delete_c(module%p)
    end subroutine torch_module_delete
+
+   !> Map fortran array type to appropriate torch type
+   function get_torch_dtype(array) result(torch_dtype)
+      use, intrinsic :: iso_c_binding, only: c_int8_t, c_int16_t, c_int32_t, c_int64_t, c_float, c_double
+      class(*), intent(in)    :: array       !! Element of array we need the type mapping for
+      integer(c_int)   :: torch_dtype !! Corresponding Torch dtype
+            select type(array)
+                ! REAL types
+                ! Note: Nothing in Fortran maps to torch_kFloat16
+                type is ( real(c_float) )
+                    ! Also covers real(kind=4)
+                    torch_dtype = torch_kFloat32
+                type is ( real(c_double) )
+                    ! Also covers real(kind=8)
+                    torch_dtype = torch_kFloat64
+                ! INTEGER types
+                ! Note: Nothing in Fortran maps to kUint8 (unsigned integer).
+                type is ( integer(c_int8_t) )
+                    ! Also covers integer(kind=1), integer(kind=INT8)
+                    torch_dtype = torch_kInt8
+                type is ( integer(c_int16_t) )
+                    ! Also covers integer(kind=2), integer(kind=INT16)
+                    torch_dtype = torch_kInt16
+                type is ( integer(c_int32_t) )
+                    ! Also covers integer(kind=4), integer(kind=INT32)
+                    torch_dtype = torch_kInt32
+                type is ( integer(c_int64_t) )
+                    ! Also covers integer(kind=8), integer(kind=INT64)
+                    torch_dtype = torch_kInt64
+                ! ! COMPLEX types
+                ! type is ( complex(kind=REAL32) )
+                !     torch_dtype = torch_kInt8
+                ! type is ( complex(kind=REAL64) )
+                !     torch_dtype = torch_kInt8
+                ! ! OTHER types
+                ! type is ( logical )
+                !     torch_dtype = torch_kInt8
+            end select
+
+   end function get_torch_dtype
 
 end module ftorch

@@ -35,6 +35,7 @@ program test_tensor
     end do
   end do
 
+  write(*,*) uuu_flattened
 
   output_tensor = torch_tensor_from_blob(c_loc(uuu_flattened), &
   dims_2D, shape_2D_C, torch_kFloat64, torch_kCPU, layout_F)
@@ -45,4 +46,20 @@ program test_tensor
   dims_2D, shape_2D_F, torch_kFloat64, torch_kCPU, layout_C)
 
   call torch_tensor_print(output_tensor)
+
+  shape_2D_F = shape(uuu_flattened)
+  output_tensor = torch_tensor_from_array(uuu_flattened, shape_2D_F, torch_kCPU)
+
+  call torch_tensor_print(output_tensor)
+
+  ! output_tensor = torch_tensor_zeros( &
+  ! dims_2D, shape_2D_C, torch_kFloat64, torch_kCPU)
+
+  ! call torch_tensor_print(output_tensor)
+
+  ! output_tensor = torch_tensor_ones( &
+  ! dims_2D, shape_2D_C, torch_kFloat64, torch_kCPU)
+
+  ! call torch_tensor_print(output_tensor)
+
 end program test_tensor
