@@ -48,8 +48,12 @@ program test_tensor
   call torch_tensor_print(output_tensor)
 
   shape_2D_F = shape(uuu_flattened)
-  output_tensor = torch_tensor_from_array(uuu_flattened, shape_2D_F, torch_kCPU)
+  output_tensor = torch_tensor_from_array_c_double(uuu_flattened, shape_2D_F, torch_kCPU)
 
+  call torch_tensor_print(output_tensor)
+
+  output_tensor = torch_tensor_from_array(uuu_flattened, shape_2D_F, torch_kCPU)
+  
   call torch_tensor_print(output_tensor)
 
   ! output_tensor = torch_tensor_zeros( &
