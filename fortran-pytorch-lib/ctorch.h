@@ -67,12 +67,14 @@ EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t* shape,
  * @param pointer to the Tensor in memory
  * @param number of dimensions of the Tensor
  * @param shape of the Tensor
+ * @param strides to take through data
  * @param data type of the elements of the Tensor
  * @param device used (cpu, CUDA, etc.)
  * @return Torch Tensor interpretation of the data pointed at
  */
 EXPORT_C torch_tensor_t torch_from_blob(void* data, int ndim,
                                         const int64_t* shape,
+                                        const int64_t* strides,
                                         torch_data_t dtype,
                                         torch_device_t device);
 
@@ -81,6 +83,22 @@ EXPORT_C torch_tensor_t torch_from_blob(void* data, int ndim,
  * @param Torch Tensor to print
  */
 EXPORT_C void torch_tensor_print(const torch_tensor_t tensor);
+
+/**
+ * Function to create a Torch Tensor from memory location given extra information
+ * This is a rework for torch_from_blob that uses strides, and will eventually
+ * replace torch_from_blob.
+ * @param pointer to the Tensor in memory
+ * @param number of dimensions of the Tensor
+ * @param shape of the Tensor
+ * @param data type of the elements of the Tensor
+ * @param device used (cpu, CUDA, etc.)
+ * @return Torch Tensor interpretation of the data pointed at
+ */
+EXPORT_C torch_tensor_t torch_from_blob_f(void* data, int ndim,
+                                        const int64_t* shape,
+                                        torch_data_t dtype,
+                                        torch_device_t device);
 
 /**
  * Function to delete a Torch Tensor to clean up

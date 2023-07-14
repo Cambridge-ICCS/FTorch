@@ -1,6 +1,7 @@
 module ftorch
 
-   use, intrinsic :: iso_c_binding, only: c_int, c_int64_t, c_char, c_ptr, c_null_ptr
+   use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, c_int64_t, &
+                                          c_float, c_double, c_char, c_ptr, c_null_ptr
    implicit none
 
    type torch_module
@@ -29,58 +30,153 @@ module ftorch
       enumerator :: torch_kCUDA = 1
    end enum
 
+   ! Interface for calculating tensor from array for different possible input types
+   interface torch_tensor_from_array
+      module procedure torch_tensor_from_array_c_float
+      module procedure torch_tensor_from_array_c_double
+      ! module procedure torch_tensor_from_array_c_int8_t
+      ! module procedure torch_tensor_from_array_c_int16_t
+      ! module procedure torch_tensor_from_array_c_int32_t
+      ! module procedure torch_tensor_from_array_c_int64_t
+   end interface
+
 contains
 
    ! Torch Tensor API
    !> Exposes the given data as a tensor without taking ownership of the original data.
-   function torch_tensor_from_blob(data, ndims, shape, dtype, device) result(tensor)
+   !> This routine will take an (i, j, k) array and return an (k, j, i) tensor.
+   function torch_tensor_from_blob(data, ndims, tensor_shape, dtype, device, layout) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
       type(c_ptr), intent(in)        :: data       !! Pointer to data
       integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
-      integer(c_int64_t), intent(in) :: shape(*)   !! Shape of the tensor
+      integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
       integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
       integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      integer(c_int), intent(in)     :: layout(*)  !! Layout for strides for accessing data
       type(torch_tensor)             :: tensor     !! Returned tensor
 
+      integer(c_int)                 :: i          !! loop index
+      integer(c_int64_t)             :: strides(ndims) !! Strides for accessing data
+
       interface
-         function torch_from_blob_c(data, ndims, shape, dtype, device) result(tensor) &
+         function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device) result(tensor) &
             bind(c, name='torch_from_blob')
             use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
             type(c_ptr), value, intent(in)    :: data
             integer(c_int), value, intent(in) :: ndims
-            integer(c_int64_t), intent(in)    :: shape(*)
+            integer(c_int64_t), intent(in)    :: tensor_shape(*)
+            integer(c_int64_t), intent(in)    :: strides(*)
             integer(c_int), value, intent(in) :: dtype
             integer(c_int), value, intent(in) :: device
             type(c_ptr)                       :: tensor
          end function torch_from_blob_c
       end interface
 
-      tensor%p = torch_from_blob_c(data, ndims, shape, dtype, device)
+      strides(layout(1)) = 1
+      do i = 2, ndims
+        strides(layout(i)) = strides(layout(i-1)) * tensor_shape(layout(i-1))
+      end do
+      tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device)
    end function torch_tensor_from_blob
 
+   !> This routine will take an (i, j, k) array and return an (k, j, i) tensor
+   !> it is invoked from a set of interfaces `torch_tensor_from_array_dtype`
+   function t_t_from_array(data_arr, tensor_shape, dtype, device) result(tensor)
+      use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_double, c_loc
+      type(c_ptr), intent(in)          :: data_arr       !! Pointer to data
+      integer(c_int64_t), intent(in)   :: tensor_shape(:)   !! Shape of the tensor
+      integer(c_int), intent(in)       :: dtype      !! Data type of the tensor
+      integer(c_int), intent(in)       :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      type(torch_tensor)               :: tensor     !! Returned tensor
+
+      integer(c_int)                   :: i          !! loop index
+      integer(c_int64_t), allocatable  :: strides(:) !! Strides for accessing data
+      integer(c_int), allocatable      :: layout(:)  !! Layout for strides for accessing data
+      integer(c_int)                   :: ndims      !! Number of dimensions of the tensor
+
+      interface
+         function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device) result(tensor) &
+            bind(c, name='torch_from_blob')
+            use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
+            type(c_ptr), value, intent(in)    :: data
+            integer(c_int), value, intent(in) :: ndims
+            integer(c_int64_t), intent(in)    :: tensor_shape(*)
+            integer(c_int64_t), intent(in)    :: strides(*)
+            integer(c_int), value, intent(in) :: dtype
+            integer(c_int), value, intent(in) :: device
+            type(c_ptr)                       :: tensor
+         end function torch_from_blob_c
+      end interface
+
+      ndims = size(tensor_shape)
+
+      allocate(strides(ndims))
+      allocate(layout(ndims))
+
+      ! Fortran Layout
+      do i=1, ndims
+          layout(i) = i
+      end do
+
+      strides(layout(1)) = 1
+      do i = 2, ndims
+        strides(layout(i)) = strides(layout(i-1)) * tensor_shape(layout(i-1))
+      end do
+
+      tensor%p = torch_from_blob_c(data_arr, ndims, tensor_shape, strides, dtype, device)
+
+      deallocate(strides)
+      deallocate(layout)
+
+   end function t_t_from_array
+
    !> Returns a tensor filled with the scalar value 1.
-   function torch_tensor_ones(ndims, shape, dtype, device) result(tensor)
+   function torch_tensor_ones(ndims, tensor_shape, dtype, device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t
       integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
-      integer(c_int64_t), intent(in) :: shape(*)   !! Shape of the tensor
+      integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
       integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
       integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
       type(torch_tensor)             :: tensor     !! Returned tensor
 
       interface
-         function torch_ones_c(ndims, shape, dtype, device) result(tensor) &
+         function torch_ones_c(ndims, tensor_shape, dtype, device) result(tensor) &
             bind(c, name='torch_ones')
             use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
             integer(c_int), value, intent(in) :: ndims
-            integer(c_int64_t), intent(in)    :: shape(*)
+            integer(c_int64_t), intent(in)    :: tensor_shape(*)
             integer(c_int), value, intent(in) :: dtype
             integer(c_int), value, intent(in) :: device
             type(c_ptr)                       :: tensor
          end function torch_ones_c
       end interface
 
-      tensor%p = torch_ones_c(ndims, shape, dtype, device)
+      tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device)
    end function torch_tensor_ones
+
+   !> Returns a tensor filled with the scalar value 0.
+   function torch_tensor_zeros(ndims, tensor_shape, dtype, device) result(tensor)
+      use, intrinsic :: iso_c_binding, only : c_int, c_int64_t
+      integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
+      integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
+      integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
+      integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      type(torch_tensor)             :: tensor     !! Returned tensor
+
+      interface
+         function torch_zeros_c(ndims, tensor_shape, dtype, device) result(tensor) &
+            bind(c, name='torch_zeros')
+            use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
+            integer(c_int), value, intent(in) :: ndims
+            integer(c_int64_t), intent(in)    :: tensor_shape(*)
+            integer(c_int), value, intent(in) :: dtype
+            integer(c_int), value, intent(in) :: device
+            type(c_ptr)                       :: tensor
+         end function torch_zeros_c
+      end interface
+
+      tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device)
+   end function torch_tensor_zeros
 
    !> Prints the contents of a tensor.
    subroutine torch_tensor_print(tensor)
@@ -177,5 +273,33 @@ contains
 
       call torch_jit_module_delete_c(module%p)
    end subroutine torch_module_delete
+
+   ! Series of interface functions
+   function torch_tensor_from_array_c_double(data_arr, tensor_shape, device) result(tensor)
+   !function torch_tensor_from_array_c_double(data_arr, tensor_shape) result(tensor)
+      use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_double, c_loc
+      real(c_double), intent(in), target :: data_arr(*)   !! Fortran array of data
+      ! real(c_double), intent(in), target :: data_arr(*)   !! Fortran array of data
+      integer(c_int64_t), intent(in)   :: tensor_shape(:)   !! Shape of the tensor
+      integer(c_int), parameter :: dtype = torch_kFloat64
+      integer(c_int), intent(in)       :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      type(torch_tensor)               :: tensor     !! Returned tensor
+     
+      
+      tensor = t_t_from_array(c_loc(data_arr), tensor_shape, dtype, device)
+
+   end function torch_tensor_from_array_c_double
+
+   function torch_tensor_from_array_c_float(data_arr, tensor_shape, device) result(tensor)
+      use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
+      real(c_float), intent(in), target :: data_arr(*)   !! Fortran array of data
+      integer(c_int64_t), intent(in)   :: tensor_shape(:)   !! Shape of the tensor
+      integer(c_int), parameter :: dtype = torch_kFloat32
+      integer(c_int), intent(in)       :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      type(torch_tensor)               :: tensor     !! Returned tensor
+     
+     tensor = t_t_from_array(c_loc(data_arr), tensor_shape, dtype, device)
+
+   end function torch_tensor_from_array_c_float
 
 end module ftorch
