@@ -21,8 +21,10 @@ program inference
 
    integer(c_int), parameter :: in_dims = 4
    integer(c_int64_t) :: in_shape(in_dims) = [1, 3, 224, 224]
+   integer(c_int) :: in_layout(in_dims) = [1,2,3,4]
    integer(c_int), parameter :: out_dims = 2
    integer(c_int64_t) :: out_shape(out_dims) = [1, 1000]
+   integer(c_int) :: out_layout(out_dims) = [1,2]
 
    ! Get TorchScript model file as a command line argument
    num_args = command_argument_count()
@@ -40,8 +42,8 @@ program inference
    in_data = 1.0d0
 
    ! Create input/output tensors from the above arrays
-   in_tensor(1) = torch_tensor_from_blob(c_loc(in_data), in_dims, in_shape, torch_kFloat32, torch_kCPU)
-   out_tensor = torch_tensor_from_blob(c_loc(out_data), out_dims, out_shape, torch_kFloat32, torch_kCPU)
+   in_tensor(1) = torch_tensor_from_blob(c_loc(in_data), in_dims, in_shape, torch_kFloat32, torch_kCPU, in_layout)
+   out_tensor = torch_tensor_from_blob(c_loc(out_data), out_dims, out_shape, torch_kFloat32, torch_kCPU, out_layout)
 
    ! Load ML model (edit this line to use different models)
    model = torch_module_load(trim(args(1))//c_null_char)
