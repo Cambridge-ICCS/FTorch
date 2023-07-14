@@ -56,9 +56,10 @@ This can be done using the included `CMakeLists.txt` as follows:
 ```
 mkdir build
 cd build
-cmake .. -DFTorchDIR=<path/to/your/installation/of/library> -DCMAKE_BUILD_TYPE=Release
+cmake .. -DFTorch_DIR=<path/to/your/installation/of/library/>lib/cmake/ -DCMAKE_BUILD_TYPE=Release
 make
 ```
+Make sure that the  `FTorch_DIR` flag points to the `lib/cmake/` folder within the installation of the FTorch library.  
 
 To run the compiled code calling the saved ResNet-18 TorchScript from Fortran run the
 executable with an argument of the saved model file:
