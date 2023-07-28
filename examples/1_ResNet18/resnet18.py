@@ -17,7 +17,7 @@ def initialize():
 
     # Load a pre-trained PyTorch model
     print("Loading pre-trained ResNet-18 model...", end="")
-    model = torchvision.models.resnet18(pretrained=True)
+    model = torchvision.models.resnet18(weights="IMAGENET1K_V1")
     print("done.")
 
     # Switch-off some specific layers/parts of the model that behave
