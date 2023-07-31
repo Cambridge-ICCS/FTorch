@@ -20,7 +20,7 @@ Code and examples for directly calling Pytorch ML models from Fortran.
 It is desirable be able to run machine learning (ML) models directly in Fortran.
 Such models are often trained in some other language (say Python) using popular frameworks (say PyTorch) and saved.
 We want to run inference on this model without having to call a Python executable.
-To achieve this we use the existing ML C++ interface.
+To achieve this we use the existing Torch C++ interface.
 
 This project provides a library enabling a user to directly couple their PyTorch models to Fortran code.
 We provide installation instructions for the library as well as instructions and examples for performing coupling.
@@ -53,7 +53,7 @@ To build and install the library:
     git clone https://github.com/Cambridge-ICCS/fortran-pytorch-lib.git
     ```
     to clone via https.  
-2. Navigate into the library source directory by running:  
+2. Navigate into the library directory by running:  
     ```
     cd fortran-pytorch-lib/fortran-pytorch-lib/
     ```
@@ -72,7 +72,7 @@ To build and install the library:
     | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `icc` / `gcc`                | Specify a C++ compiler to build the library with              |
     | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`          | Location of Torch installation<sup>1</sup> |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
-    | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `DEBUG`, use `RELEASE` for production code|
+    | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
 
     <sup>1</sup> _The path to the Torch installation needs to allow cmake to locate the relevant Torch cmake files.  
           If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
@@ -85,8 +85,8 @@ To build and install the library:
     make install
     ```
     This will place the following directories at the install location:  
-    * `include/` - contains header and mod files
-    * `lib64/` - contains cmake and `.so` files
+    * `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
+    * `CMAKE_INSTALL_PREFIX/lib64/` - contains `cmake` directory and `.so` files
 
 
 ## Usage
@@ -210,7 +210,7 @@ export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
 ## Examples
 
 Examples of how to use this library are provided in the [examples directory](examples/).  
-They demonstrate different functionalities and are provided with instructions to modify, build, and run as neccessary.
+They demonstrate different functionalities and are provided with instructions to modify, build, and run as necessary.
 
 ## License
 
