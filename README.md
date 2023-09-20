@@ -37,8 +37,10 @@ If you are interested in using this library please get in touch.
 To install the library requires the following to be installed on the system:
 
 * cmake >= 3.1
-* [libtorch](https://pytorch.org/cppdocs/installing.html) or [PyTorch](https://pytorch.org/)
-* Fortran, C++, and C compilers
+* [libtorch](https://pytorch.org/cppdocs/installing.html)<sup>*</sup> or [PyTorch](https://pytorch.org/)
+* Fortran, C++ (must fully support C++17), and C compilers
+
+<sup>*</sup> _The minimal example provided downloads the CPU-only Linux Nightly binary. [Alternative versions](https://pytorch.org/get-started/locally/) may be required._
 
 ### Library installation
 
