@@ -88,13 +88,14 @@ def run_model(model):
     )
     data = urllib.request.urlopen(url)
     for _ in data:
-        categories = [s.strip() for s in data]
+        categories = [s.strip().decode("utf-8") for s in data]
 
     # Show top categories per image
     top5_prob, top5_catid = torch.topk(probabilities, 5)
     print("\nTop 5 results:\n")
     for i in range(top5_prob.size(0)):
-        print(categories[top5_catid[i]], top5_prob[i].item())
+        id = top5_catid[i]
+        print(f"{categories[id]} (id={id}): probability = {top5_prob[i].item()}")
 
 
 if __name__ == "__main__":
