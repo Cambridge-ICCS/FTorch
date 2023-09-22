@@ -35,6 +35,7 @@ contains
       real(wp), dimension(:,:,:,:), allocatable, target :: in_data
       integer(c_int), parameter :: n_inputs = 1
       real(wp), dimension(:,:), allocatable, target :: out_data
+      real(wp), dimension(:,:), allocatable, target :: probabilities
 
       integer(c_int), parameter :: in_dims = 4
       integer(c_int64_t) :: in_shape(in_dims) = [1, 3, 224, 224]
@@ -58,6 +59,7 @@ contains
       ! Allocate one-dimensional input/output arrays, based on multiplication of all input/output dimension sizes
       allocate(in_data(in_shape(1), in_shape(2), in_shape(3), in_shape(4)))
       allocate(out_data(out_shape(1), out_shape(2)))
+      allocate(probabilities(out_shape(1), out_shape(2)))
 
       call load_data(filename, N, in_data, in_dims, in_shape)
 
@@ -71,9 +73,10 @@ contains
       ! Infer
       call torch_module_forward(model, in_tensor, n_inputs, out_tensor)
 
-      ! Output results
-      write (*,*) "Max output: ", maxval(out_data)
-      write (*,*) "Index: ", maxloc(out_data)
+      ! Calculate probabilities output results
+      call calc_probs(out_data, probabilities, out_dims, out_shape)
+      write (*,*) "Max probability: ", maxval(probabilities)
+      write (*,*) "Index: ", maxloc(probabilities)
 
       ! Cleanup
       call torch_module_delete(model)
@@ -128,5 +131,32 @@ contains
       end do
 
    end subroutine load_data
+
+   subroutine calc_probs(out_data, probabilities, out_dims, out_shape)
+
+      implicit none
+
+      integer(c_int), intent(in) :: out_dims
+      integer(c_int64_t), intent(in) :: out_shape(out_dims)
+      real(wp), dimension(:,:), allocatable, target, intent(in) :: out_data
+      real(wp), dimension(:,:), allocatable, target, intent(inout) :: probabilities
+      real(wp) :: sum
+      integer :: i, j
+
+      sum = 0.
+      do i = 1, out_shape(1)
+         do j = 1, out_shape(2)
+            probabilities(i, j) = exp(out_data(i, j))
+            sum = sum + exp(out_data(i, j))
+         end do
+      end do
+
+      do i = 1, out_shape(1)
+         do j = 1, out_shape(2)
+            probabilities(i, j) = probabilities(i, j) / sum
+         end do
+      end do
+
+   end subroutine calc_probs
 
 end program inference
