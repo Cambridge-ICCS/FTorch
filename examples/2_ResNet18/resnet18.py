@@ -62,25 +62,15 @@ def run_model(model):
     input_batch = input_tensor.unsqueeze(0)
 
     print("Saving input batch...", end="")
-    tensor_shape = input_batch.shape
-    np.savetxt(
-        "image_tensor.txt",
-        input_batch.numpy().reshape(
-            (tensor_shape[1], tensor_shape[2] * tensor_shape[3])
-        ),
-    )
+    dtype = np.float32
+    np_input = np.array(input_batch.numpy().flatten(), dtype=dtype)
+    np_input.tofile("image_tensor.dat")
 
     # Check saved correctly
-    read_array = np.zeros(tensor_shape)
-    with open("image_tensor.txt") as f:
-        lines = f.readlines()
-        for i, line in enumerate(lines):
-            data = line.split(" ")
-            read_array[0, i, :, :] = np.array(data).reshape(
-                (tensor_shape[2], tensor_shape[3])
-            )
+    tensor_shape = input_batch.shape
+    np_data = np.fromfile("image_tensor.dat", dtype=dtype).reshape(tensor_shape)
 
-    assert np.array_equal(read_array, input_batch.numpy()) is True
+    assert np.array_equal(np_data, input_batch.numpy()) is True
     print("done.")
 
     print("Running ResNet-18 model for input...", end="")
