@@ -8,14 +8,23 @@ import urllib
 
 
 # Initialize everything
-def initialize() -> torch.nn.Module:
+def initialize(wp: type) -> torch.nn.Module:
     """
     Download pre-trained ResNet-18 model and prepare for inference.
+
+    Parameters
+    ----------
+    wp: type
+        Data type of input tensor.
 
     Returns
     -------
     model: torch.nn.Module
+        Pretrained ResNet-18 model
     """
+
+    # Set working precision
+    torch.set_default_dtype(wp)
 
     # Load a pre-trained PyTorch model
     print("Loading pre-trained ResNet-18 model...", end="")
@@ -29,13 +38,16 @@ def initialize() -> torch.nn.Module:
     return model
 
 
-def run_model(model: torch.nn.Module):
+def run_model(model: torch.nn.Module, wp: type):
     """
     Run the pre-trained ResNet-18 with an example image of a dog.
 
     Parameters
     ----------
     model: torch.nn.Module
+        Pretrained model to run.
+    wp: type
+        Data type to save input tensor.
     """
 
     print("Downloading image...", end="")
@@ -64,13 +76,12 @@ def run_model(model: torch.nn.Module):
     input_batch = input_tensor.unsqueeze(0)
 
     print("Saving input batch...", end="")
-    dtype = np.float32
-    np_input = np.array(input_batch.numpy().flatten(), dtype=dtype)
+    np_input = np.array(input_batch.numpy().flatten(), dtype=wp)
     np_input.tofile("data/image_tensor.dat")
 
     # Check saved correctly
     tensor_shape = input_batch.shape
-    np_data = np.fromfile("data/image_tensor.dat", dtype=dtype).reshape(tensor_shape)
+    np_data = np.fromfile("data/image_tensor.dat", dtype=wp).reshape(tensor_shape)
 
     assert np.array_equal(np_data, input_batch.numpy()) is True
     print("done.")
@@ -101,5 +112,14 @@ def run_model(model: torch.nn.Module):
 
 
 if __name__ == "__main__":
-    rn_model = initialize()
-    run_model(rn_model)
+    wp = np.float32
+
+    if wp == np.float32:
+        wp_torch = torch.float32
+    elif wp == np.float64:
+        wp_torch = torch.float64
+    else:
+        raise ValueError("`wp` must be of type `np.float32` or `np.float64`")
+
+    rn_model = initialize(wp_torch)
+    run_model(rn_model, wp)

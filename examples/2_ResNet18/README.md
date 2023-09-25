@@ -39,7 +39,7 @@ You can check that everything is working by running `resnet18.py`:
 python3 resnet18.py
 ```
 
-It should produce the result:
+When using single precision, it should produce the result:
 
 ```
 Top 5 results:

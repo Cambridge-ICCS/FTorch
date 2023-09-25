@@ -1,20 +1,14 @@
-module precisn
-   use, intrinsic :: iso_c_binding, only: c_float
-   implicit none
-   private
-   integer, parameter:: wp = c_float
-   public wp
-end module precisn
-
 program inference
 
    ! Imports primitives used to interface with C
-   use, intrinsic :: iso_c_binding, only: c_int64_t, c_null_char, c_loc
+   use, intrinsic :: iso_c_binding, only: sp=>c_float, dp=>c_double, c_int64_t, c_null_char, c_loc
    ! Import our library for interfacing with PyTorch
    use ftorch
-   use precisn, only: wp
 
    implicit none
+
+   integer, parameter :: wp = sp
+   integer, parameter :: torch_wp = torch_kFloat32
 
    call main()
 
@@ -55,7 +49,7 @@ contains
 
       ! Outputs
       integer :: index(2)
-      real :: probability
+      real(wp) :: probability
 
       ! Get TorchScript model file as a command line argument
       num_args = command_argument_count()
@@ -73,8 +67,8 @@ contains
       call load_data(filename, N, in_data, in_dims, in_shape)
 
       ! Create input/output tensors from the above arrays
-      in_tensor(1) = torch_tensor_from_blob(c_loc(in_data), in_dims, in_shape, torch_kFloat32, torch_kCPU, in_layout)
-      out_tensor = torch_tensor_from_blob(c_loc(out_data), out_dims, out_shape, torch_kFloat32, torch_kCPU, out_layout)
+      in_tensor(1) = torch_tensor_from_blob(c_loc(in_data), in_dims, in_shape, torch_wp, torch_kCPU, in_layout)
+      out_tensor = torch_tensor_from_blob(c_loc(out_data), out_dims, out_shape, torch_wp, torch_kCPU, out_layout)
 
       ! Load ML model (edit this line to use different models)
       model = torch_module_load(trim(args(1))//c_null_char)
