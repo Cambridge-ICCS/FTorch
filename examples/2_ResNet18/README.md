@@ -34,10 +34,22 @@ pip install -r requirements.txt
 ```
 
 You can check that everything is working by running `resnet18.py`:
+
 ```
 python3 resnet18.py
 ```
-it should produce the result `tensor([[623, 499, 596, 111, 813]])`.
+
+It should produce the result:
+
+```
+Top 5 results:
+
+Samoyed (id=258): probability = 0.8846225142478943
+Arctic fox (id=279): probability = 0.045805174857378006
+white wolf (id=270): probability = 0.0442761555314064
+Pomeranian (id=259): probability = 0.005621383432298899
+Great Pyrenees (id=257): probability = 0.004652013536542654
+```
 
 To save the pretrained ResNet-18 model to TorchScript run the modified version of the
 `pt2ts.py` tool :
@@ -66,6 +78,15 @@ executable with an argument of the saved model file:
 ```
 ./resnet_infer_fortran ../saved_resnet18_model_cpu.pt
 ```
+
+This should produce the same top result:
+
+```
+ Top result
+
+ Samoyed (id=         259 ), : probability =  0.884623706
+```
+
 
 Alternatively we can use `make`, instead of cmake, with the included Makefile.
 However, to do this you will need to modify `Makefile` to link to and include your
