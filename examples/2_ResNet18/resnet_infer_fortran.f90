@@ -173,22 +173,13 @@ contains
       integer(c_int64_t), intent(in) :: out_shape(out_dims)
       real(c_wp), dimension(:,:), allocatable, target, intent(in) :: out_data
       real(c_wp), dimension(:,:), allocatable, target, intent(inout) :: probabilities
-      real(c_wp) :: sum
+      real(c_wp) :: prob_sum
       integer :: i, j
 
-      sum = 0.
-      do i = 1, out_shape(1)
-         do j = 1, out_shape(2)
-            probabilities(i, j) = exp(out_data(i, j))
-            sum = sum + exp(out_data(i, j))
-         end do
-      end do
-
-      do i = 1, out_shape(1)
-         do j = 1, out_shape(2)
-            probabilities(i, j) = probabilities(i, j) / sum
-         end do
-      end do
+      ! Apply softmax function to calculate probabilties
+      probabilities = exp(out_data)
+      prob_sum = sum(probabilities)
+      probabilities = probabilities / prob_sum
 
    end subroutine calc_probs
 
