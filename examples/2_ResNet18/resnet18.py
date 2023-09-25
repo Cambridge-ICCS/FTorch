@@ -87,8 +87,7 @@ def run_model(model):
         "imagenet_classes.txt",
     )
     data = urllib.request.urlopen(url)
-    for _ in data:
-        categories = [s.strip().decode("utf-8") for s in data]
+    categories = [s.strip().decode("utf-8") for s in data]
 
     # Show top categories per image
     top5_prob, top5_catid = torch.topk(probabilities, 5)
