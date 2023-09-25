@@ -8,13 +8,13 @@ import urllib
 
 
 # Initialize everything
-def initialize():
+def initialize() -> torch.nn.Module:
     """
     Download pre-trained ResNet-18 model and prepare for inference.
 
     Returns
     -------
-    model : torch.nn.Module
+    model: torch.nn.Module
     """
 
     # Load a pre-trained PyTorch model
@@ -29,13 +29,13 @@ def initialize():
     return model
 
 
-def run_model(model):
+def run_model(model: torch.nn.Module):
     """
     Run the pre-trained ResNet-18 with an example image of a dog.
 
     Parameters
     ----------
-    model : torch.nn.Module
+    model: torch.nn.Module
     """
 
     print("Downloading image...", end="")
@@ -46,7 +46,9 @@ def run_model(model):
     urllib.request.urlretrieve(url, filename)
     print("done.")
 
-    # Transform image into the  form expected by the model
+    # Transform image into the form expected by the pre-trained model, using the mean
+    # and standard deviation from the ImageNet dataset
+    # See: https://pytorch.org/vision/0.8/models.html
     input_image = Image.open(filename)
     preprocess = torchvision.transforms.Compose(
         [
