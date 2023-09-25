@@ -7,7 +7,9 @@ program inference
 
    implicit none
 
-   integer, parameter :: wp = sp
+   ! Define working precision for C primitives
+   ! Precision must match `wp` in resnet18.py and `wp_torch` in pt2ts.py 
+   integer, parameter :: c_wp = sp
    integer, parameter :: torch_wp = torch_kFloat32
 
    call main()
@@ -26,10 +28,10 @@ contains
       type(torch_tensor), dimension(1) :: in_tensor
       type(torch_tensor) :: out_tensor
 
-      real(wp), dimension(:,:,:,:), allocatable, target :: in_data
+      real(c_wp), dimension(:,:,:,:), allocatable, target :: in_data
       integer(c_int), parameter :: n_inputs = 1
-      real(wp), dimension(:,:), allocatable, target :: out_data
-      real(wp), dimension(:,:), allocatable, target :: probabilities
+      real(c_wp), dimension(:,:), allocatable, target :: out_data
+      real(c_wp), dimension(:,:), allocatable, target :: probabilities
       character(len=100), dimension(:), allocatable, target :: categories
 
       integer(c_int), parameter :: in_dims = 4
@@ -49,7 +51,7 @@ contains
 
       ! Outputs
       integer :: index(2)
-      real(wp) :: probability
+      real(c_wp) :: probability
 
       ! Get TorchScript model file as a command line argument
       num_args = command_argument_count()
@@ -102,12 +104,12 @@ contains
 
       character(len=*), intent(in) :: filename
       integer, intent(in) :: N
-      real(wp), dimension(:,:,:,:), allocatable, target, intent(inout) :: in_data
+      real(c_wp), dimension(:,:,:,:), allocatable, target, intent(inout) :: in_data
 
       integer(c_int), intent(in) :: in_dims
       integer(c_int64_t), intent(in) :: in_shape(in_dims)
 
-      real(wp) :: flat_data(N)
+      real(c_wp) :: flat_data(N)
       integer :: ios, count, idx_1, idx_2, idx_3, idx_4
       character(len=100) :: ioerrmsg
 
@@ -169,9 +171,9 @@ contains
 
       integer(c_int), intent(in) :: out_dims
       integer(c_int64_t), intent(in) :: out_shape(out_dims)
-      real(wp), dimension(:,:), allocatable, target, intent(in) :: out_data
-      real(wp), dimension(:,:), allocatable, target, intent(inout) :: probabilities
-      real(wp) :: sum
+      real(c_wp), dimension(:,:), allocatable, target, intent(in) :: out_data
+      real(c_wp), dimension(:,:), allocatable, target, intent(inout) :: probabilities
+      real(c_wp) :: sum
       integer :: i, j
 
       sum = 0.
