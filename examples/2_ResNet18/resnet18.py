@@ -41,7 +41,7 @@ def run_model(model: torch.nn.Module):
     print("Downloading image...", end="")
     url, filename = (
         "https://github.com/pytorch/hub/raw/e55b003/images/dog.jpg",
-        "dog.jpg",
+        "data/dog.jpg",
     )
     urllib.request.urlretrieve(url, filename)
     print("done.")
@@ -66,11 +66,11 @@ def run_model(model: torch.nn.Module):
     print("Saving input batch...", end="")
     dtype = np.float32
     np_input = np.array(input_batch.numpy().flatten(), dtype=dtype)
-    np_input.tofile("image_tensor.dat")
+    np_input.tofile("data/image_tensor.dat")
 
     # Check saved correctly
     tensor_shape = input_batch.shape
-    np_data = np.fromfile("image_tensor.dat", dtype=dtype).reshape(tensor_shape)
+    np_data = np.fromfile("data/image_tensor.dat", dtype=dtype).reshape(tensor_shape)
 
     assert np.array_equal(np_data, input_batch.numpy()) is True
     print("done.")
@@ -83,13 +83,14 @@ def run_model(model: torch.nn.Module):
     #  Run a softmax to get probabilities
     probabilities = torch.nn.functional.softmax(output[0], dim=0)
 
-    # Download ImageNet labels
+    # Download and save ImageNet labels
     url, filename = (
         "https://raw.githubusercontent.com/pytorch/hub/e55b003/imagenet_classes.txt",
         "imagenet_classes.txt",
     )
     data = urllib.request.urlopen(url)
     categories = [s.strip().decode("utf-8") for s in data]
+    np.savetxt('data/categories.txt', categories, fmt="%s")
 
     # Show top categories per image
     top5_prob, top5_catid = torch.topk(probabilities, 5)

@@ -36,6 +36,7 @@ contains
       integer(c_int), parameter :: n_inputs = 1
       real(wp), dimension(:,:), allocatable, target :: out_data
       real(wp), dimension(:,:), allocatable, target :: probabilities
+      character(len=100), dimension(:), allocatable, target :: categories
 
       integer(c_int), parameter :: in_dims = 4
       integer(c_int64_t) :: in_shape(in_dims) = [1, 3, 224, 224]
@@ -45,9 +46,16 @@ contains
       integer(c_int) :: out_layout(out_dims) = [1,2]
 
       ! File containing input tensor binary
-      character(len=*), parameter :: filename = '../image_tensor.dat'
-      ! Length of tensor
+      character(len=*), parameter :: filename = '../data/image_tensor.dat'
+      character(len=*), parameter :: filename_cats = '../data/categories.txt'
+
+      ! Length of tensor and number of categories
       integer, parameter :: N = 150528
+      integer, parameter :: N_cats = 1000
+
+      ! Outputs
+      integer :: index(2)
+      real :: probability
 
       ! Get TorchScript model file as a command line argument
       num_args = command_argument_count()
@@ -60,6 +68,7 @@ contains
       allocate(in_data(in_shape(1), in_shape(2), in_shape(3), in_shape(4)))
       allocate(out_data(out_shape(1), out_shape(2)))
       allocate(probabilities(out_shape(1), out_shape(2)))
+      allocate(categories(N_cats))
 
       call load_data(filename, N, in_data, in_dims, in_shape)
 
@@ -73,10 +82,16 @@ contains
       ! Infer
       call torch_module_forward(model, in_tensor, n_inputs, out_tensor)
 
-      ! Calculate probabilities output results
+      ! Load categories
+      call load_categories(filename_cats, N_cats, categories)
+
+      ! Calculate probabilities and output results
       call calc_probs(out_data, probabilities, out_dims, out_shape)
-      write (*,*) "Max probability: ", maxval(probabilities)
-      write (*,*) "Index: ", maxloc(probabilities)
+      index = maxloc(probabilities)
+      probability = maxval(probabilities)
+      write (*,*) "Top result"
+      write (*,*) ""
+      write (*,*) trim(categories(index(2))), " (id=", index(2), "), : probability =", probability
 
       ! Cleanup
       call torch_module_delete(model)
@@ -131,6 +146,28 @@ contains
       end do
 
    end subroutine load_data
+
+   subroutine load_categories(filename_cats, N_cats, categories)
+
+      implicit none
+
+      character(len=*), intent(in) :: filename_cats
+      integer, intent(in) :: N_cats
+      character(len=100), dimension(:), allocatable, target, intent(inout) :: categories
+
+      integer :: ios, i
+      character(len=100) :: ioerrmsg
+
+      open (unit=11, file=filename_cats, form='formatted', access='stream', action='read', iostat=ios, iomsg=ioerrmsg)
+      if (ios /= 0) then
+        print *, ioerrmsg
+        stop 1
+      end if
+
+      read(11, '(a)') categories
+      close(11)
+
+   end subroutine load_categories
 
    subroutine calc_probs(out_data, probabilities, out_dims, out_shape)
 
