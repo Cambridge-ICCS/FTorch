@@ -76,13 +76,15 @@ def run_model(model: torch.nn.Module, wp: type):
     input_batch = input_tensor.unsqueeze(0)
 
     print("Saving input batch...", end="")
-    np_input = np.array(input_batch.numpy().flatten(), dtype=wp)
+    # Transpose input before saving so order consistent with Fortran
+    np_input = np.array(input_batch.numpy().transpose().flatten(), dtype=wp)
     np_input.tofile("data/image_tensor.dat")
 
     # Check saved correctly
-    tensor_shape = input_batch.shape
-    np_data = np.fromfile("data/image_tensor.dat", dtype=wp).reshape(tensor_shape)
-
+    tensor_shape = np.array(input_batch.numpy()).transpose().shape
+    np_data = np.fromfile("data/image_tensor.dat", dtype=wp)
+    np_data = np_data.reshape(tensor_shape)
+    np_data = np_data.transpose()
     assert np.array_equal(np_data, input_batch.numpy()) is True
     print("done.")
 

@@ -8,7 +8,7 @@ program inference
    implicit none
 
    ! Define working precision for C primitives
-   ! Precision must match `wp` in resnet18.py and `wp_torch` in pt2ts.py 
+   ! Precision must match `wp` in resnet18.py and `wp_torch` in pt2ts.py
    integer, parameter :: c_wp = sp
    integer, parameter :: torch_wp = torch_kFloat32
 
@@ -128,18 +128,9 @@ contains
 
       close(10)
 
-      ! Initialise data
-      count = 1
-      do idx_1 = 1, in_shape(1)
-         do idx_2 = 1, in_shape(2)
-            do idx_3 = 1, in_shape(3)
-               do idx_4 = 1, in_shape(4)
-                  in_data(idx_1, idx_2, idx_3, idx_4) = flat_data(count)
-                  count = count + 1
-               end do
-            end do
-         end do
-      end do
+      ! Reshape data to tensor input shape
+      ! This assumes the data from Python was transposed before saving
+      in_data = reshape(flat_data, shape(in_data))
 
    end subroutine load_data
 
