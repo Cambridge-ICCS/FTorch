@@ -4,7 +4,6 @@ import numpy as np
 from PIL import Image
 import torch
 import torchvision
-import urllib
 
 
 # Initialize everything
@@ -49,19 +48,11 @@ def run_model(model: torch.nn.Module, wp: type):
     wp: type
         Data type to save input tensor.
     """
-
-    print("Downloading image...", end="")
-    url, filename = (
-        "https://github.com/pytorch/hub/raw/e55b003/images/dog.jpg",
-        "data/dog.jpg",
-    )
-    urllib.request.urlretrieve(url, filename)
-    print("done.")
-
     # Transform image into the form expected by the pre-trained model, using the mean
     # and standard deviation from the ImageNet dataset
     # See: https://pytorch.org/vision/0.8/models.html
-    input_image = Image.open(filename)
+    image_filename = "data/dog.jpg"
+    input_image = Image.open(image_filename)
     preprocess = torchvision.transforms.Compose(
         [
             torchvision.transforms.Resize(256),
@@ -96,14 +87,9 @@ def run_model(model: torch.nn.Module, wp: type):
     #  Run a softmax to get probabilities
     probabilities = torch.nn.functional.softmax(output[0], dim=0)
 
-    # Download and save ImageNet labels
-    url, filename = (
-        "https://raw.githubusercontent.com/pytorch/hub/e55b003/imagenet_classes.txt",
-        "imagenet_classes.txt",
-    )
-    data = urllib.request.urlopen(url)
-    categories = [s.strip().decode("utf-8") for s in data]
-    np.savetxt('data/categories.txt', categories, fmt="%s")
+    # Read ImageNet labels from text file
+    cats_filename = "data/categories.txt"
+    categories = np.genfromtxt(cats_filename, dtype=str, delimiter="\n")
 
     # Show top categories per image
     top5_prob, top5_catid = torch.topk(probabilities, 5)

@@ -98,6 +98,29 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib64
 ./resnet_infer_fortran saved_resnet18_model_cpu.pt
 ```
 
+## Trying your own data
+
+Alternative images and labels can be tested by modifying the following:
+
+```python
+import urllib
+
+# Download a new image of a dog
+url, filename = (
+    "https://github.com/pytorch/vision/raw/v0.15.1/gallery/assets/dog1.jpg",
+    "data/dog2.jpg",
+)
+urllib.request.urlretrieve(url, filename)
+
+# Download ImageNet labels
+url, filename = (
+    "https://raw.githubusercontent.com/pytorch/hub/e55b003/imagenet_classes.txt",
+    "imagenet_classes.txt",
+)
+data = urllib.request.urlopen(url)
+categories = [s.strip().decode("utf-8") for s in data]
+```
+
 ## Further options
 
 To explore the functionalities of this model:
