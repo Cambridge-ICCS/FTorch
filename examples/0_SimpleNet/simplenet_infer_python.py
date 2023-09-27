@@ -22,7 +22,7 @@ def deploy(saved_model, device, batch_size=1):
         result of running inference on model with Tensor of ones
     """
 
-    input_tensor = torch.ones(batch_size, 5)
+    input_tensor = torch.tensor([0.0, 1.0, 2.0, 3.0, 4.0]).repeat(batch_size, 1)
 
     if device == "cpu":
         # Load saved TorchScript model
