@@ -35,7 +35,7 @@ program inference
    allocate(out_data(tensor_shape(1)))
 
    ! Initialise data
-   in_data = 1.0d0
+   in_data = [0.0, 1.0, 2.0, 3.0, 4.0]
 
    ! Create input/output tensors from the above arrays
    in_tensor(1) = torch_tensor_from_blob(c_loc(in_data), tensor_dims, tensor_shape, torch_kFloat32, torch_kCPU, tensor_layout)

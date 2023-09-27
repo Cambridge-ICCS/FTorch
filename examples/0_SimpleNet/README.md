@@ -29,7 +29,7 @@ To run this example requires:
 ## Running
 
 To run this example install fortran-pytorch-lib as described in the main documentation.
-Then from this directory create a virtual environment an install the neccessary python
+Then from this directory create a virtual environment an install the necessary python
 modules:
 ```
 python3 -m venv venv
@@ -41,12 +41,26 @@ You can check that everything is working by running `simplenet.py`:
 ```
 python3 simplenet.py
 ```
-it should produce the result `tensor([[0, 2, 4, 6, 8]])`.
+This defines the net and runs it with an input tensor [0.0, 1.0, 2.0, 3.0, 4.0] to produce the result:
+```
+tensor([[0, 2, 4, 6, 8]])
+```
 
 To save the SimpleNet model to TorchScript run the modified version of the
 `pt2ts.py` tool :
 ```
 python3 pt2ts.py
+```
+which will generate `saved_simplenet_model_cpu.pt` - the TorchScript instance of the net.
+
+You can check that everything is working by running the `simplenet_infer_python.py` script:
+```
+python3 simplenet_infer_python.py
+```
+This reads the model in from the TorchScript file and runs it with an input tensor
+[0.0, 1.0, 2.0, 3.0, 4.0] to produce the result:
+```
+tensor([[0, 2, 4, 6, 8]])
 ```
 
 At this point we no longer require python, so can deactivate the virtual environment:
@@ -71,6 +85,11 @@ executable with an argument of the saved model file:
 ./simplenet_infer_fortran ../saved_simplenet_model_cpu.pt
 ```
 
+This runs the model with the array `[0.0, 1.0, 2.0, 3.0, 4.0]` should produce the output:
+```
+   0.00000000       2.00000000       4.00000000       6.00000000       8.00000000
+```
+
 Alternatively we can use `make`, instead of cmake, with the included Makefile.
 However, to do this you will need to modify `Makefile` to link to and include your
 installation of FTorch as described in the main documentation. Also check that the compiler is the same as the one you built the Library with.
@@ -79,7 +98,8 @@ make
 ./simplenet_infer_fortran saved_simplenet_model_cpu.pt
 ```
 
-You will also likely need to add the location of the `.so` or `.dylib` files to your `LD_LIBRARY_PATH`:
+You will also likely need to add the location of the dynamic library files
+(`.so` or `.dylib` files) that we will link against at runtime to your `LD_LIBRARY_PATH`:
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib
 ```
