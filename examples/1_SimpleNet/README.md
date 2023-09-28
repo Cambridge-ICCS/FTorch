@@ -1,4 +1,4 @@
-# Example 0 - SimpleNet
+# Example 1 - SimpleNet
 
 This example provides a simple but complete demonstration of how to use the library.
 
