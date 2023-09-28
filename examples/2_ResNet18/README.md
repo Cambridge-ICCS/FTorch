@@ -119,6 +119,9 @@ urllib.request.urlretrieve(url, filename)
 
 `image_filename` in resnet18.py and resnet_infer_python.py must then be modified to match the name of this new file.
 
+`expected_prob` in resnet_infer_fortran.f90 and resnet_infer_python.py are also specific to the pre-downloaded example image, so either their values should be updated, or the assertions should be removed.
+
+
 Note that the ImageNet labels can be downloaded and accessed similarly, using:
 
 ```python

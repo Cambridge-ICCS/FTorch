@@ -59,10 +59,11 @@ def check_results(output: torch.Tensor) -> None:
     output: torch.Tensor
         Output from ResNet-18.
     """
+    expected_prob = 0.8846225142478943
     #  Run a softmax to get probabilities
     assert isclose(
         torch.max(torch.nn.functional.softmax(output[0], dim=0)),
-        0.8846225142478943,
+        expected_prob,
         abs_tol=1e-8,
     )
 
