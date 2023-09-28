@@ -1,8 +1,10 @@
-# Fortran-PyTorch-lib
+# FTorch
+## _A library for coupling (Py)Torch Machine Learning models to Fortran_
 
 ![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/fortran-pytorch-lib)
 
-Code and examples for directly calling Pytorch ML models from Fortran.
+This repository contains code, utilities, and examples for directly calling PyTorch ML
+models from Fortran.
 
 
 ## Contents
@@ -29,6 +31,7 @@ Project status: This project is currently in pre-release with documentation and 
 As such breaking changes may be made.
 If you are interested in using this library please get in touch.
 
+_For a similar approach to calling TensorFlow models from Fortran please see [Fortran-TF-lib](https://github.com/Cambridge-ICCS/fortran-tf-lib)._
 
 ## Installation
 
@@ -94,8 +97,8 @@ To build and install the library:
 In order to use fortran-pytorch users will typically need to follow these steps:
 
 1. Save a PyTorch model as [TorchScript](https://pytorch.org/docs/stable/jit.html).
-2. Write Fortran using the fortran-pytorch-lib bindings to use the model from within Fortran.
-3. Build and compile the code, linking against fortran-pytorch-lib
+2. Write Fortran using the FTorch bindings to use the model from within Fortran.
+3. Build and compile the code, linking against the FTorch library
 
 
 ### 1. Saving the model as TorchScript
@@ -216,7 +219,7 @@ They demonstrate different functionalities and are provided with instructions to
 
 Copyright &copy; ICCS
 
-*Fortran-PyTorch-Lib* is distributed under the [MIT Licence](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/blob/main/LICENSE).
+*FTorch* is distributed under the [MIT Licence](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/blob/main/LICENSE).
 
 
 ## Contributions
@@ -226,7 +229,7 @@ Contributions and collaborations are welcome.
 For bugs, feature requests, and clear suggestions for improvement please
 [open an issue](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/issues).
 
-If you have built something upon _Fortran-PyTorch-Lib_ that would be useful to others, or can
+If you have built something upon _FTorch_ that would be useful to others, or can
 address an [open issue](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/issues), please
 [fork the repository](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/fork) and open a
 pull request.
@@ -241,7 +244,7 @@ people with respect and, more generally, to follow the guidelines articulated in
 
 ## Authors and Acknowledgment
 
-*Fortran-PyTorch-Lib* is written and maintained by the [ICCS](https://github.com/Cambridge-ICCS)
+*FTorch* is written and maintained by the [ICCS](https://github.com/Cambridge-ICCS)
 
 Notable contributors to this project are:
 
