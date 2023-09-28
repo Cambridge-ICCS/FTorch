@@ -98,21 +98,30 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib64
 ./resnet_infer_fortran saved_resnet18_model_cpu.pt
 ```
 
-## Trying your own data
+## Further options
 
-Alternative images and labels can be tested by modifying the following:
+To explore the functionalities of this model:
+
+- Try saving the model through tracing rather than scripting by modifying `pt2ts.py`
+- Try changing the input image. For example, running the following code will download an alternative image of a dog from [pytorch/vision](https://github.com/pytorch/vision/tree/v0.15.2/gallery/assets), saving it in the `data` directory:
 
 ```python
 import urllib
 
-# Download a new image of a dog
 url, filename = (
     "https://github.com/pytorch/vision/raw/v0.15.1/gallery/assets/dog1.jpg",
     "data/dog2.jpg",
 )
 urllib.request.urlretrieve(url, filename)
+```
 
-# Download ImageNet labels
+`image_filename` in resnet18.py and resnet_infer_python.py must then be modified to match the name of this new file.
+
+Note that the ImageNet labels can be downloaded and accessed similarly, using:
+
+```python
+import urllib
+
 url, filename = (
     "https://raw.githubusercontent.com/pytorch/hub/e55b003/imagenet_classes.txt",
     "imagenet_classes.txt",
@@ -120,12 +129,6 @@ url, filename = (
 data = urllib.request.urlopen(url)
 categories = [s.strip().decode("utf-8") for s in data]
 ```
-
-## Further options
-
-To explore the functionalities of this model:
-
-- Try saving the model through tracing rather than scripting by modifying `pt2ts.py`
 
 ## When to transpose arrays?
 
