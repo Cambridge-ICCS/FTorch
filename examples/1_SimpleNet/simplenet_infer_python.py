@@ -3,14 +3,14 @@
 import torch
 
 
-def deploy(saved_model, device, batch_size=1):
+def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     """
     Load TorchScript SimpleNet and run inference with example Tensor.
 
     Parameters
     ----------
     saved_model : str
-        location of ResNet-18 saved to Torchscript
+        location of SimpleNet model saved to Torchscript
     device : str
         Torch device to run model on, 'cpu' or 'cuda'
     batch_size : int
