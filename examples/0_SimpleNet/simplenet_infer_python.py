@@ -1,11 +1,11 @@
-"""Load SimpleNet saved to TorchScript and run inference with ones."""
+"""Load saved SimpleNet to TorchScript and run inference example."""
 
 import torch
 
 
 def deploy(saved_model, device, batch_size=1):
     """
-    Load TorchScript SimpleNet and run inference with Tensor of ones.
+    Load TorchScript SimpleNet and run inference with example Tensor.
 
     Parameters
     ----------
@@ -19,7 +19,7 @@ def deploy(saved_model, device, batch_size=1):
     Returns
     -------
     output : torch.Tensor
-        result of running inference on model with Tensor of ones
+        result of running inference on model with example Tensor input
     """
 
     input_tensor = torch.tensor([0.0, 1.0, 2.0, 3.0, 4.0]).repeat(batch_size, 1)

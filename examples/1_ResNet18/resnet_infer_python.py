@@ -43,7 +43,6 @@ def deploy(saved_model, device, batch_size=1):
 
 
 if __name__ == "__main__":
-
     saved_model_file = "saved_resnet18_model_cpu.pt"
 
     device_to_run = "cpu"
