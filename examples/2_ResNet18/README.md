@@ -1,4 +1,4 @@
-# Example 1 - ResNet-18
+# Example 2 - ResNet-18
 
 This example provides a simple but complete demonstration of how to use the library.
 
