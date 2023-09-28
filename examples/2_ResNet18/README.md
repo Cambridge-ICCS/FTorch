@@ -1,6 +1,8 @@
 # Example 2 - ResNet-18
 
-This example provides a simple but complete demonstration of how to use the library.
+This example provides a more realistic demonstration of how to use the library, using ResNet-18 to classify an image.
+
+As the input to this model is four-dimensional (batch size, colour, x, y), care must be taken dealing with the data array in Python and Fortran. See [When to transpose arrays](#when-to-transpose-arrays) for more details.
 
 ## Description
 
