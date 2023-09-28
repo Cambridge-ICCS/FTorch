@@ -7,14 +7,14 @@ import torchvision
 
 
 # Initialize everything
-def initialize(wp: type) -> torch.nn.Module:
+def initialize(precision: torch.dtype) -> torch.nn.Module:
     """
     Download pre-trained ResNet-18 model and prepare for inference.
 
     Parameters
     ----------
-    wp: type
-        Data type of input tensor.
+    precision: torch.dtype
+        Sets the working precision of the model.
 
     Returns
     -------
@@ -23,7 +23,7 @@ def initialize(wp: type) -> torch.nn.Module:
     """
 
     # Set working precision
-    torch.set_default_dtype(wp)
+    torch.set_default_dtype(precision)
 
     # Load a pre-trained PyTorch model
     print("Loading pre-trained ResNet-18 model...", end="")
@@ -37,7 +37,7 @@ def initialize(wp: type) -> torch.nn.Module:
     return model
 
 
-def run_model(model: torch.nn.Module, wp: type):
+def run_model(model: torch.nn.Module, precision: type) -> None:
     """
     Run the pre-trained ResNet-18 with an example image of a dog.
 
@@ -45,8 +45,8 @@ def run_model(model: torch.nn.Module, wp: type):
     ----------
     model: torch.nn.Module
         Pretrained model to run.
-    wp: type
-        Data type to save input tensor.
+    precision: type
+        NumPy data type to save input tensor.
     """
     # Transform image into the form expected by the pre-trained model, using the mean
     # and standard deviation from the ImageNet dataset
@@ -68,12 +68,20 @@ def run_model(model: torch.nn.Module, wp: type):
 
     print("Saving input batch...", end="")
     # Transpose input before saving so order consistent with Fortran
-    np_input = np.array(input_batch.numpy().transpose().flatten(), dtype=wp)
+    np_input = np.array(
+        input_batch.numpy().transpose().flatten(), dtype=precision
+    )  # type: np.typing.NDArray
+
+    # Save data as binary
     np_input.tofile("data/image_tensor.dat")
 
-    # Check saved correctly
+    # Load saved data to check it was saved correctly
+    np_data = np.fromfile(
+        "data/image_tensor.dat", dtype=precision
+    )  # type: np.typing.NDArray
+
+    # Reshape to original tensor shape
     tensor_shape = np.array(input_batch.numpy()).transpose().shape
-    np_data = np.fromfile("data/image_tensor.dat", dtype=wp)
     np_data = np_data.reshape(tensor_shape)
     np_data = np_data.transpose()
     assert np.array_equal(np_data, input_batch.numpy()) is True
@@ -84,6 +92,17 @@ def run_model(model: torch.nn.Module, wp: type):
         output = model(input_batch)
     print("done.")
 
+    print_top_results(output)
+
+
+def print_top_results(output: torch.Tensor) -> None:
+    """Prints top 5 results
+
+    Parameters
+    ----------
+    output: torch.Tensor
+        Output from ResNet-18.
+    """
     #  Run a softmax to get probabilities
     probabilities = torch.nn.functional.softmax(output[0], dim=0)
 
@@ -95,19 +114,21 @@ def run_model(model: torch.nn.Module, wp: type):
     top5_prob, top5_catid = torch.topk(probabilities, 5)
     print("\nTop 5 results:\n")
     for i in range(top5_prob.size(0)):
-        id = top5_catid[i]
-        print(f"{categories[id]} (id={id}): probability = {top5_prob[i].item()}")
+        cat_id = top5_catid[i]
+        print(
+            f"{categories[cat_id]} (id={cat_id}): probability = {top5_prob[i].item()}"
+        )
 
 
 if __name__ == "__main__":
-    wp = np.float32
+    np_precision = np.float32
 
-    if wp == np.float32:
-        wp_torch = torch.float32
-    elif wp == np.float64:
-        wp_torch = torch.float64
+    if np_precision == np.float32:
+        torch_precision = torch.float32
+    elif np_precision == np.float64:
+        torch_precision = torch.float64
     else:
-        raise ValueError("`wp` must be of type `np.float32` or `np.float64`")
+        raise ValueError("`np_precision` must be of type `np.float32` or `np.float64`")
 
-    rn_model = initialize(wp_torch)
-    run_model(rn_model, wp)
+    rn_model = initialize(torch_precision)
+    run_model(rn_model, np_precision)

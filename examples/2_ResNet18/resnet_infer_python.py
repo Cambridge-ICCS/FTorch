@@ -2,6 +2,7 @@
 
 import numpy as np
 import torch
+from resnet18 import print_top_results
 
 
 def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
@@ -22,7 +23,7 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     output : torch.Tensor
         result of running inference on model with Tensor of ones
     """
-    transposed_shape = [224, 224, 3, 1]
+    transposed_shape = [224, 224, 3, batch_size]
     precision = np.float32
 
     np_data = np.fromfile("data/image_tensor.dat", dtype=precision)
@@ -48,31 +49,6 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     return output
 
 
-def print_top_results(output: torch.Tensor) -> None:
-    """Prints top 5 results
-
-    Parameters
-    ----------
-    output: torch.Tensor
-        Output from ResNet-18.
-    """
-    #  Run a softmax to get probabilities
-    probabilities = torch.nn.functional.softmax(output[0], dim=0)
-
-    # Read ImageNet labels from text file
-    cats_filename = "data/categories.txt"
-    categories = np.genfromtxt(cats_filename, dtype=str, delimiter="\n")
-
-    # Show top categories per image
-    top5_prob, top5_catid = torch.topk(probabilities, 5)
-    print("\nTop 5 results:\n")
-    for i in range(top5_prob.size(0)):
-        cat_id = top5_catid[i]
-        print(
-            f"{categories[cat_id]} (id={cat_id}): probability = {top5_prob[i].item()}"
-        )
-
-
 if __name__ == "__main__":
     saved_model_file = "saved_resnet18_model_cpu.pt"
 
@@ -81,5 +57,5 @@ if __name__ == "__main__":
 
     batch_size_to_run = 1
 
-    output = deploy(saved_model_file, device_to_run, batch_size_to_run)
-    print_top_results(output)
+    result = deploy(saved_model_file, device_to_run, batch_size_to_run)
+    print_top_results(result)

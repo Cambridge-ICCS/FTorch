@@ -1,6 +1,7 @@
 """Load ResNet-18 saved to TorchScript and run inference with ones."""
 
 import torch
+from PIL import Image
 
 
 def deploy(saved_model, device, batch_size=1):
@@ -22,7 +23,20 @@ def deploy(saved_model, device, batch_size=1):
         result of running inference on model with Tensor of ones
     """
 
-    input_tensor = torch.ones(batch_size, 3, 224, 224)
+    image_filename = "data/dog.jpg"
+    input_image = Image.open(image_filename)
+    preprocess = torchvision.transforms.Compose(
+        [
+            torchvision.transforms.Resize(256),
+            torchvision.transforms.CenterCrop(224),
+            torchvision.transforms.ToTensor(),
+            torchvision.transforms.Normalize(
+                mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+            ),
+        ]
+    )
+    input_tensor = preprocess(input_image)
+    input_batch = input_tensor.unsqueeze(0)
 
     if device == "cpu":
         # Load saved TorchScript model
@@ -43,7 +57,6 @@ def deploy(saved_model, device, batch_size=1):
 
 
 if __name__ == "__main__":
-
     saved_model_file = "saved_resnet18_model_cpu.pt"
 
     device_to_run = "cpu"
