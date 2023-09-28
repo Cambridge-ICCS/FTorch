@@ -1,5 +1,6 @@
 # FTorch
-## _A library for coupling (Py)Torch Machine Learning models to Fortran_
+
+**_A library for coupling (Py)Torch machine learning models to Fortran_**
 
 ![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/fortran-pytorch-lib)
 
