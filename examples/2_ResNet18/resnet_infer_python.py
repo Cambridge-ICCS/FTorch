@@ -1,5 +1,6 @@
 """Load ResNet-18 saved to TorchScript and run inference with an example image."""
 
+from math import isclose
 import numpy as np
 import torch
 from resnet18 import print_top_results
@@ -49,6 +50,23 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     return output
 
 
+def check_results(output: torch.Tensor) -> None:
+    """
+    Compare top model output to expected result.
+
+    Parameters
+    ----------
+    output: torch.Tensor
+        Output from ResNet-18.
+    """
+    #  Run a softmax to get probabilities
+    assert isclose(
+        torch.max(torch.nn.functional.softmax(output[0], dim=0)),
+        0.8846225142478943,
+        abs_tol=1e-8,
+    )
+
+
 if __name__ == "__main__":
     saved_model_file = "saved_resnet18_model_cpu.pt"
 
@@ -59,3 +77,4 @@ if __name__ == "__main__":
 
     result = deploy(saved_model_file, device_to_run, batch_size_to_run)
     print_top_results(result)
+    check_results(result)

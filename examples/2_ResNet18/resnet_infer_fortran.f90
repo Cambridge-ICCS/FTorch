@@ -1,15 +1,17 @@
 program inference
 
    ! Imports primitives used to interface with C
-   use, intrinsic :: iso_c_binding, only: sp=>c_float, dp=>c_double, c_int64_t, c_null_char, c_loc
+   use, intrinsic :: iso_c_binding, only: c_sp=>c_float, c_dp=>c_double, c_int64_t, c_null_char, c_loc
+   use, intrinsic :: iso_fortran_env, only : sp => real32, dp => real64
    ! Import our library for interfacing with PyTorch
-   use ftorch
+   use :: ftorch
 
    implicit none
 
    ! Define working precision for C primitives
    ! Precision must match `wp` in resnet18.py and `wp_torch` in pt2ts.py
-   integer, parameter :: c_wp = sp
+   integer, parameter :: c_wp = c_sp
+   integer, parameter :: wp = sp
    integer, parameter :: torch_wp = torch_kFloat32
 
    call main()
@@ -31,8 +33,6 @@ contains
       real(c_wp), dimension(:,:,:,:), allocatable, target :: in_data
       integer(c_int), parameter :: n_inputs = 1
       real(c_wp), dimension(:,:), allocatable, target :: out_data
-      real(c_wp), dimension(:,:), allocatable, target :: probabilities
-      character(len=100), dimension(:), allocatable, target :: categories
 
       integer(c_int), parameter :: in_dims = 4
       integer(c_int64_t) :: in_shape(in_dims) = [1, 3, 224, 224]
@@ -41,8 +41,9 @@ contains
       integer(c_int64_t) :: out_shape(out_dims) = [1, 1000]
       integer(c_int) :: out_layout(out_dims) = [1,2]
 
-      ! File containing input tensor binary
+      ! Binary file containing input tensor
       character(len=*), parameter :: filename = '../data/image_tensor.dat'
+      ! Text file containing categories
       character(len=*), parameter :: filename_cats = '../data/categories.txt'
 
       ! Length of tensor and number of categories
@@ -51,7 +52,10 @@ contains
 
       ! Outputs
       integer :: index(2)
-      real(c_wp) :: probability
+      real(wp), dimension(:,:), allocatable, target :: probabilities
+      real(wp), parameter :: expected_prob = 0.8846225142478943
+      character(len=100) :: categories(N_cats)
+      real(wp) :: probability
 
       ! Get TorchScript model file as a command line argument
       num_args = command_argument_count()
@@ -64,7 +68,6 @@ contains
       allocate(in_data(in_shape(1), in_shape(2), in_shape(3), in_shape(4)))
       allocate(out_data(out_shape(1), out_shape(2)))
       allocate(probabilities(out_shape(1), out_shape(2)))
-      allocate(categories(N_cats))
 
       call load_data(filename, N, in_data, in_dims, in_shape)
 
@@ -85,6 +88,10 @@ contains
       call calc_probs(out_data, probabilities, out_dims, out_shape)
       index = maxloc(probabilities)
       probability = maxval(probabilities)
+
+      ! Check top probability matches expected value
+      call assert_real(probability, expected_prob, test_name="Check probability", rtol_opt=1e-5)
+
       write (*,*) "Top result"
       write (*,*) ""
       write (*,*) trim(categories(index(2))), " (id=", index(2), "), : probability =", probability
@@ -140,7 +147,7 @@ contains
 
       character(len=*), intent(in) :: filename_cats
       integer, intent(in) :: N_cats
-      character(len=100), dimension(:), allocatable, target, intent(inout) :: categories
+      character(len=100), intent(inout) :: categories(N_cats)
 
       integer :: ios, i
       character(len=100) :: ioerrmsg
@@ -163,8 +170,8 @@ contains
       integer(c_int), intent(in) :: out_dims
       integer(c_int64_t), intent(in) :: out_shape(out_dims)
       real(c_wp), dimension(:,:), allocatable, target, intent(in) :: out_data
-      real(c_wp), dimension(:,:), allocatable, target, intent(inout) :: probabilities
-      real(c_wp) :: prob_sum
+      real(wp), dimension(:,:), allocatable, target, intent(inout) :: probabilities
+      real(wp) :: prob_sum
       integer :: i, j
 
       ! Apply softmax function to calculate probabilties
@@ -173,5 +180,35 @@ contains
       probabilities = probabilities / prob_sum
 
    end subroutine calc_probs
+
+   subroutine assert_real(a, b, test_name, rtol_opt)
+
+      implicit none
+
+      character(len=*) :: test_name
+      real, intent(in) :: a, b
+      real, optional :: rtol_opt
+      real :: relative_error, rtol
+
+      character(len=15) :: pass, fail
+
+      fail = char(27)//'[31m'//'FAILED'//char(27)//'[0m'
+      pass = char(27)//'[32m'//'PASSED'//char(27)//'[0m'
+
+      if (.not. present(rtol_opt)) then
+        rtol = 1e-5
+      else
+         rtol = rtol_opt
+      end if
+
+      relative_error = abs(a/b - 1.)
+
+      if (relative_error > rtol) then
+        write(*, '(A, " :: [", A, "] maximum relative error = ", E11.4)') fail, trim(test_name), relative_error
+      else
+        write(*, '(A, " :: [", A, "] maximum relative error = ", E11.4)') pass, trim(test_name), relative_error
+      end if
+
+    end subroutine assert_real
 
 end program inference
