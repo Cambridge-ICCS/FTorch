@@ -52,7 +52,7 @@ contains
 
       ! Outputs
       integer :: index(2)
-      real(wp), dimension(:,:), allocatable, target :: probabilities
+      real(wp), dimension(:,:), allocatable :: probabilities
       real(wp), parameter :: expected_prob = 0.8846225142478943
       character(len=100) :: categories(N_cats)
       real(wp) :: probability
@@ -102,6 +102,8 @@ contains
       call torch_tensor_delete(out_tensor)
       deallocate(in_data)
       deallocate(out_data)
+      deallocate(probabilities)
+      deallocate(args)
 
    end subroutine main
 
@@ -111,7 +113,7 @@ contains
 
       character(len=*), intent(in) :: filename
       integer, intent(in) :: N
-      real(c_wp), dimension(:,:,:,:), allocatable, target, intent(inout) :: in_data
+      real(c_wp), dimension(:,:,:,:), intent(out) :: in_data
 
       integer(c_int), intent(in) :: in_dims
       integer(c_int64_t), intent(in) :: in_shape(in_dims)
@@ -147,7 +149,7 @@ contains
 
       character(len=*), intent(in) :: filename_cats
       integer, intent(in) :: N_cats
-      character(len=100), intent(inout) :: categories(N_cats)
+      character(len=100), intent(out) :: categories(N_cats)
 
       integer :: ios, i
       character(len=100) :: ioerrmsg
@@ -169,8 +171,8 @@ contains
 
       integer(c_int), intent(in) :: out_dims
       integer(c_int64_t), intent(in) :: out_shape(out_dims)
-      real(c_wp), dimension(:,:), allocatable, target, intent(in) :: out_data
-      real(wp), dimension(:,:), allocatable, target, intent(inout) :: probabilities
+      real(c_wp), dimension(:,:), intent(in) :: out_data
+      real(wp), dimension(:,:), intent(out) :: probabilities
       real(wp) :: prob_sum
       integer :: i, j
 
