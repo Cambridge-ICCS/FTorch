@@ -17,7 +17,7 @@ Code and examples for directly calling Pytorch ML models from Fortran.
 
 ## Description
 
-It is desirable be able to run machine learning (ML) models directly in Fortran.
+It is desirable to be able to run machine learning (ML) models directly in Fortran.
 Such models are often trained in some other language (say Python) using popular frameworks (say PyTorch) and saved.
 We want to run inference on this model without having to call a Python executable.
 To achieve this we use the existing Torch C++ interface.
@@ -93,7 +93,7 @@ To build and install the library:
 
 ## Usage
 
-In order to use fortran-pytorch users will typically need to follow these steps:
+In order to use FTorch users will typically need to follow these steps:
 
 1. Save a PyTorch model as [TorchScript](https://pytorch.org/docs/stable/jit.html).
 2. Write Fortran using the fortran-pytorch-lib bindings to use the model from within Fortran.
@@ -180,7 +180,7 @@ Here we describe how to do this for two build systems, cmake and make.
 If our project were using cmake we would need the following in the `CMakeLists.txt` file to find the FTorch installation and link it to the executable.
 
 This can be done by adding the following to the `CMakeLists.txt` file:
-```
+```CMake
 find_package(FTorch)
 target_link_libraries( <executable> PRIVATE FTorch::ftorch )
 message(STATUS "Building with Fortran PyTorch coupling")
