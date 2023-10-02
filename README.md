@@ -2,7 +2,7 @@
 
 **_A library for coupling (Py)Torch machine learning models to Fortran_**
 
-![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/fortran-pytorch-lib)
+![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/FTorch)
 
 This repository contains code, utilities, and examples for directly calling PyTorch ML
 models from Fortran.
@@ -50,16 +50,16 @@ To build and install the library:
 
 1. Navigate to the location in which you wish to install the source and run:  
     ```
-    git clone git@github.com:Cambridge-ICCS/fortran-pytorch-lib.git
+    git clone git@github.com:Cambridge-ICCS/FTorch.git
     ```
     to clone via ssh, or  
     ```
-    git clone https://github.com/Cambridge-ICCS/fortran-pytorch-lib.git
+    git clone https://github.com/Cambridge-ICCS/FTorch.git
     ```
     to clone via https.  
 2. Navigate into the library source directory by running:  
     ```
-    cd fortran-pytorch-lib/fortran-pytorch-lib/
+    cd FTorch/src/
     ```
 3. Create a `build` directory and execute cmake from within it using the relevant flags:  
     ```
@@ -220,7 +220,7 @@ They demonstrate different functionalities and are provided with instructions to
 
 Copyright &copy; ICCS
 
-*FTorch* is distributed under the [MIT Licence](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/blob/main/LICENSE).
+*FTorch* is distributed under the [MIT Licence](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE).
 
 
 ## Contributions
@@ -228,16 +228,16 @@ Copyright &copy; ICCS
 Contributions and collaborations are welcome.
 
 For bugs, feature requests, and clear suggestions for improvement please
-[open an issue](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/issues).
+[open an issue](https://github.com/Cambridge-ICCS/FTorch/issues).
 
 If you have built something upon _FTorch_ that would be useful to others, or can
-address an [open issue](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/issues), please
-[fork the repository](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/fork) and open a
+address an [open issue](https://github.com/Cambridge-ICCS/FTorch/issues), please
+[fork the repository](https://github.com/Cambridge-ICCS/FTorch/fork) and open a
 pull request.
 
 
 ### Code of Conduct
-Everyone participating in the _Fortran-PyTorch-Lib_ project, and in particular in the
+Everyone participating in the _FTorch_ project, and in particular in the
 issue tracker, pull requests, and social media activity, is expected to treat other
 people with respect and, more generally, to follow the guidelines articulated in the
 [Python Community Code of Conduct](https://www.python.org/psf/codeofconduct/).
@@ -253,7 +253,7 @@ Notable contributors to this project are:
 * [**@jatkinson1000**](https://github.com/jatkinson1000)
 * [**@SimonClifford**](https://github.com/SimonClifford)
 
-See [Contributors](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/graphs/contributors)
+See [Contributors](https://github.com/Cambridge-ICCS/FTorch/graphs/contributors)
 for a full list.
 
 
