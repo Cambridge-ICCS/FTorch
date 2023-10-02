@@ -76,12 +76,14 @@ if __name__ == "__main__":
     # Load model and prepare for saving
     # =====================================================
 
+    precision = torch.float32
+
     # FPTLIB-TODO
     # Load a pre-trained PyTorch model
     # Insert code here to load your model as `trained_model`.
     # This example assumes my_ml_model has a method `initialize` to load
     # architecture, weights, and place in inference mode
-    trained_model = resnet18.initialize()
+    trained_model = resnet18.initialize(precision)
 
     # Switch off specific layers/parts of the model that behave
     # differently during training and inference.
