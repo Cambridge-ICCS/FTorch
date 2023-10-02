@@ -28,7 +28,7 @@ To run this example requires:
 
 ## Running
 
-To run this example install fortran-pytorch-lib as described in the main documentation.
+To run this example install FTorch as described in the main documentation.
 Then from this directory create a virtual environment an install the necessary python
 modules:
 ```
