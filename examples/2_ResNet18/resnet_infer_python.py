@@ -1,12 +1,14 @@
-"""Load ResNet-18 saved to TorchScript and run inference with ones."""
+"""Load ResNet-18 saved to TorchScript and run inference with an example image."""
 
+from math import isclose
+import numpy as np
 import torch
-from PIL import Image
+from resnet18 import print_top_results
 
 
-def deploy(saved_model, device, batch_size=1):
+def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     """
-    Load TorchScript ResNet-18 and run inference with Tensor of ones.
+    Load TorchScript ResNet-18 and run inference with Tensor from example image.
 
     Parameters
     ----------
@@ -22,21 +24,13 @@ def deploy(saved_model, device, batch_size=1):
     output : torch.Tensor
         result of running inference on model with Tensor of ones
     """
+    transposed_shape = [224, 224, 3, batch_size]
+    precision = np.float32
 
-    image_filename = "data/dog.jpg"
-    input_image = Image.open(image_filename)
-    preprocess = torchvision.transforms.Compose(
-        [
-            torchvision.transforms.Resize(256),
-            torchvision.transforms.CenterCrop(224),
-            torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(
-                mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-            ),
-        ]
-    )
-    input_tensor = preprocess(input_image)
-    input_batch = input_tensor.unsqueeze(0)
+    np_data = np.fromfile("data/image_tensor.dat", dtype=precision)
+    np_data = np_data.reshape(transposed_shape)
+    np_data = np_data.transpose()
+    input_tensor = torch.from_numpy(np_data)
 
     if device == "cpu":
         # Load saved TorchScript model
@@ -56,14 +50,32 @@ def deploy(saved_model, device, batch_size=1):
     return output
 
 
+def check_results(output: torch.Tensor) -> None:
+    """
+    Compare top model output to expected result.
+
+    Parameters
+    ----------
+    output: torch.Tensor
+        Output from ResNet-18.
+    """
+    expected_prob = 0.8846225142478943
+    #  Run a softmax to get probabilities
+    assert isclose(
+        torch.max(torch.nn.functional.softmax(output[0], dim=0)),
+        expected_prob,
+        abs_tol=1e-8,
+    )
+
+
 if __name__ == "__main__":
     saved_model_file = "saved_resnet18_model_cpu.pt"
 
     device_to_run = "cpu"
-    # device = "cuda"
+    # device_to_run = "cuda"
 
     batch_size_to_run = 1
 
     result = deploy(saved_model_file, device_to_run, batch_size_to_run)
-
-    print(result[:, 0:5])
+    print_top_results(result)
+    check_results(result)

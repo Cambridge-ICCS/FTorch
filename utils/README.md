@@ -1,4 +1,4 @@
-# Fortran-PyTorch-lib: Utils
+# FTorch: Utils
 
 This directory contains useful utilities for users of the library.
 

@@ -1,8 +1,11 @@
-# Fortran-PyTorch-lib
+# FTorch
 
-![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/fortran-pytorch-lib)
+**_A library for coupling (Py)Torch machine learning models to Fortran_**
 
-Code and examples for directly calling Pytorch ML models from Fortran.
+![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/FTorch)
+
+This repository contains code, utilities, and examples for directly calling PyTorch ML
+models from Fortran.
 
 
 ## Contents
@@ -29,6 +32,7 @@ Project status: This project is currently in pre-release with documentation and 
 As such breaking changes may be made.
 If you are interested in using this library please get in touch.
 
+_For a similar approach to calling TensorFlow models from Fortran please see [Fortran-TF-lib](https://github.com/Cambridge-ICCS/fortran-tf-lib)._
 
 ## Installation
 
@@ -48,16 +52,16 @@ To build and install the library:
 
 1. Navigate to the location in which you wish to install the source and run:  
     ```
-    git clone git@github.com:Cambridge-ICCS/fortran-pytorch-lib.git
+    git clone git@github.com:Cambridge-ICCS/FTorch.git
     ```
     to clone via ssh, or  
     ```
-    git clone https://github.com/Cambridge-ICCS/fortran-pytorch-lib.git
+    git clone https://github.com/Cambridge-ICCS/FTorch.git
     ```
     to clone via https.  
 2. Navigate into the library directory by running:  
     ```
-    cd fortran-pytorch-lib/fortran-pytorch-lib/
+    cd FTorch/src/
     ```
 3. Create a `build` directory and execute cmake from within it using the relevant flags:  
     ```
@@ -71,8 +75,8 @@ To build and install the library:
     | ------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------|
     | [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `ifort` / `gfortran`         | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.        |
     | [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `icc` / `gcc`                | Specify a C compiler to build the library with                |
-    | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `icc` / `gcc`                | Specify a C++ compiler to build the library with              |
-    | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`          | Location of Torch installation<sup>1</sup> |
+    | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `icpc` / `g++`               | Specify a C++ compiler to build the library with              |
+    | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`       | Location of Torch installation<sup>1</sup>                    |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
 
@@ -96,8 +100,8 @@ To build and install the library:
 In order to use FTorch users will typically need to follow these steps:
 
 1. Save a PyTorch model as [TorchScript](https://pytorch.org/docs/stable/jit.html).
-2. Write Fortran using the fortran-pytorch-lib bindings to use the model from within Fortran.
-3. Build and compile the code, linking against fortran-pytorch-lib
+2. Write Fortran using the FTorch bindings to use the model from within Fortran.
+3. Build and compile the code, linking against the FTorch library
 
 
 ### 1. Saving the model as TorchScript
@@ -218,7 +222,7 @@ They demonstrate different functionalities and are provided with instructions to
 
 Copyright &copy; ICCS
 
-*Fortran-PyTorch-Lib* is distributed under the [MIT Licence](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/blob/main/LICENSE).
+*FTorch* is distributed under the [MIT Licence](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE).
 
 
 ## Contributions
@@ -226,16 +230,16 @@ Copyright &copy; ICCS
 Contributions and collaborations are welcome.
 
 For bugs, feature requests, and clear suggestions for improvement please
-[open an issue](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/issues).
+[open an issue](https://github.com/Cambridge-ICCS/FTorch/issues).
 
-If you have built something upon _Fortran-PyTorch-Lib_ that would be useful to others, or can
-address an [open issue](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/issues), please
-[fork the repository](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/fork) and open a
+If you have built something upon _FTorch_ that would be useful to others, or can
+address an [open issue](https://github.com/Cambridge-ICCS/FTorch/issues), please
+[fork the repository](https://github.com/Cambridge-ICCS/FTorch/fork) and open a
 pull request.
 
 
 ### Code of Conduct
-Everyone participating in the _Fortran-PyTorch-Lib_ project, and in particular in the
+Everyone participating in the _FTorch_ project, and in particular in the
 issue tracker, pull requests, and social media activity, is expected to treat other
 people with respect and, more generally, to follow the guidelines articulated in the
 [Python Community Code of Conduct](https://www.python.org/psf/codeofconduct/).
@@ -243,7 +247,7 @@ people with respect and, more generally, to follow the guidelines articulated in
 
 ## Authors and Acknowledgment
 
-*Fortran-PyTorch-Lib* is written and maintained by the [ICCS](https://github.com/Cambridge-ICCS)
+*FTorch* is written and maintained by the [ICCS](https://github.com/Cambridge-ICCS)
 
 Notable contributors to this project are:
 
@@ -251,7 +255,7 @@ Notable contributors to this project are:
 * [**@jatkinson1000**](https://github.com/jatkinson1000)
 * [**@SimonClifford**](https://github.com/SimonClifford)
 
-See [Contributors](https://github.com/Cambridge-ICCS/fortran-pytorch-lib/graphs/contributors)
+See [Contributors](https://github.com/Cambridge-ICCS/FTorch/graphs/contributors)
 for a full list.
 
 

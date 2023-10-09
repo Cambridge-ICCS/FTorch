@@ -1,16 +1,16 @@
-"""Load ResNet-18 saved to TorchScript and run inference with ones."""
+"""Load saved SimpleNet to TorchScript and run inference example."""
 
 import torch
 
 
-def deploy(saved_model, device, batch_size=1):
+def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     """
-    Load TorchScript ResNet-18 and run inference with Tensor of ones.
+    Load TorchScript SimpleNet and run inference with example Tensor.
 
     Parameters
     ----------
     saved_model : str
-        location of ResNet-18 saved to Torchscript
+        location of SimpleNet model saved to Torchscript
     device : str
         Torch device to run model on, 'cpu' or 'cuda'
     batch_size : int
@@ -19,10 +19,10 @@ def deploy(saved_model, device, batch_size=1):
     Returns
     -------
     output : torch.Tensor
-        result of running inference on model with Tensor of ones
+        result of running inference on model with example Tensor input
     """
 
-    input_tensor = torch.ones(batch_size, 3, 224, 224)
+    input_tensor = torch.tensor([0.0, 1.0, 2.0, 3.0, 4.0]).repeat(batch_size, 1)
 
     if device == "cpu":
         # Load saved TorchScript model
@@ -43,14 +43,14 @@ def deploy(saved_model, device, batch_size=1):
 
 
 if __name__ == "__main__":
-
-    saved_model_file = "saved_resnet18_model_cpu.pt"
+    saved_model_file = "saved_simplenet_model_cpu.pt"
 
     device_to_run = "cpu"
     # device = "cuda"
 
     batch_size_to_run = 1
 
-    result = deploy(saved_model_file, device_to_run, batch_size_to_run)
+    with torch.no_grad():
+        result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
-    print(result[:, 0:5])
+    print(result)
