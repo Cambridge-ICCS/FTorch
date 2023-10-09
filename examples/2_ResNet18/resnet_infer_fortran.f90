@@ -47,11 +47,11 @@ contains
       character(len=*), parameter :: filename_cats = '../data/categories.txt'
 
       ! Length of tensor and number of categories
-      integer, parameter :: N = 150528
+      integer, parameter :: tensor_length = 150528
       integer, parameter :: N_cats = 1000
 
       ! Outputs
-      integer :: index(2)
+      integer :: idx(2)
       real(wp), dimension(:,:), allocatable :: probabilities
       real(wp), parameter :: expected_prob = 0.8846225142478943
       character(len=100) :: categories(N_cats)
@@ -69,7 +69,7 @@ contains
       allocate(out_data(out_shape(1), out_shape(2)))
       allocate(probabilities(out_shape(1), out_shape(2)))
 
-      call load_data(filename, N, in_data, in_dims, in_shape)
+      call load_data(filename, tensor_length, in_data)
 
       ! Create input/output tensors from the above arrays
       in_tensor(1) = torch_tensor_from_blob(c_loc(in_data), in_dims, in_shape, torch_wp, torch_kCPU, in_layout)
@@ -85,8 +85,8 @@ contains
       call load_categories(filename_cats, N_cats, categories)
 
       ! Calculate probabilities and output results
-      call calc_probs(out_data, probabilities, out_dims, out_shape)
-      index = maxloc(probabilities)
+      call calc_probs(out_data, probabilities)
+      idx = maxloc(probabilities)
       probability = maxval(probabilities)
 
       ! Check top probability matches expected value
@@ -107,19 +107,16 @@ contains
 
    end subroutine main
 
-   subroutine load_data(filename, N, in_data, in_dims, in_shape)
+   subroutine load_data(filename, tensor_length, in_data)
 
       implicit none
 
       character(len=*), intent(in) :: filename
-      integer, intent(in) :: N
+      integer, intent(in) :: tensor_length
       real(c_wp), dimension(:,:,:,:), intent(out) :: in_data
 
-      integer(c_int), intent(in) :: in_dims
-      integer(c_int64_t), intent(in) :: in_shape(in_dims)
-
-      real(c_wp) :: flat_data(N)
-      integer :: ios, count, idx_1, idx_2, idx_3, idx_4
+      real(c_wp) :: flat_data(tensor_length)
+      integer :: ios
       character(len=100) :: ioerrmsg
 
       ! Read input tensor from Python script
@@ -151,7 +148,7 @@ contains
       integer, intent(in) :: N_cats
       character(len=100), intent(out) :: categories(N_cats)
 
-      integer :: ios, i
+      integer :: ios
       character(len=100) :: ioerrmsg
 
       open (unit=11, file=filename_cats, form='formatted', access='stream', action='read', iostat=ios, iomsg=ioerrmsg)
@@ -165,16 +162,13 @@ contains
 
    end subroutine load_categories
 
-   subroutine calc_probs(out_data, probabilities, out_dims, out_shape)
+   subroutine calc_probs(out_data, probabilities)
 
       implicit none
 
-      integer(c_int), intent(in) :: out_dims
-      integer(c_int64_t), intent(in) :: out_shape(out_dims)
       real(c_wp), dimension(:,:), intent(in) :: out_data
       real(wp), dimension(:,:), intent(out) :: probabilities
       real(wp) :: prob_sum
-      integer :: i, j
 
       ! Apply softmax function to calculate probabilties
       probabilities = exp(out_data)
@@ -211,6 +205,6 @@ contains
         write(*, '(A, " :: [", A, "] maximum relative error = ", E11.4)') pass, trim(test_name), relative_error
       end if
 
-    end subroutine assert_real
+   end subroutine assert_real
 
 end program inference
