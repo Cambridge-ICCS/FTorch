@@ -20,10 +20,10 @@ models from Fortran.
 
 ## Description
 
-It is desirable be able to run machine learning (ML) models directly in Fortran.
+It is desirable to be able to run machine learning (ML) models directly in Fortran.
 Such models are often trained in some other language (say Python) using popular frameworks (say PyTorch) and saved.
 We want to run inference on this model without having to call a Python executable.
-To achieve this we use the existing ML C++ interface.
+To achieve this we use the existing Torch C++ interface.
 
 This project provides a library enabling a user to directly couple their PyTorch models to Fortran code.
 We provide installation instructions for the library as well as instructions and examples for performing coupling.
@@ -41,8 +41,10 @@ _For a similar approach to calling TensorFlow models from Fortran please see [Fo
 To install the library requires the following to be installed on the system:
 
 * cmake >= 3.1
-* [libtorch](https://pytorch.org/cppdocs/installing.html) or [PyTorch](https://pytorch.org/)
-* Fortran, C++, and C compilers
+* [libtorch](https://pytorch.org/cppdocs/installing.html)<sup>*</sup> or [PyTorch](https://pytorch.org/)
+* Fortran, C++ (must fully support C++17), and C compilers
+
+<sup>*</sup> _The minimal example provided downloads the CPU-only Linux Nightly binary. [Alternative versions](https://pytorch.org/get-started/locally/) may be required._
 
 ### Library installation
 
@@ -57,7 +59,7 @@ To build and install the library:
     git clone https://github.com/Cambridge-ICCS/FTorch.git
     ```
     to clone via https.  
-2. Navigate into the library source directory by running:  
+2. Navigate into the library directory by running:  
     ```
     cd FTorch/src/
     ```
@@ -76,7 +78,7 @@ To build and install the library:
     | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `icpc` / `g++`               | Specify a C++ compiler to build the library with              |
     | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`       | Location of Torch installation<sup>1</sup>                    |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
-    | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `DEBUG`, use `RELEASE` for production code|
+    | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
 
     <sup>1</sup> _The path to the Torch installation needs to allow cmake to locate the relevant Torch cmake files.  
           If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
@@ -89,13 +91,13 @@ To build and install the library:
     make install
     ```
     This will place the following directories at the install location:  
-    * `include/` - contains header and mod files
-    * `lib64/` - contains cmake and `.so` files
+    * `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
+    * `CMAKE_INSTALL_PREFIX/lib64/` - contains `cmake` directory and `.so` files
 
 
 ## Usage
 
-In order to use fortran-pytorch users will typically need to follow these steps:
+In order to use FTorch users will typically need to follow these steps:
 
 1. Save a PyTorch model as [TorchScript](https://pytorch.org/docs/stable/jit.html).
 2. Write Fortran using the FTorch bindings to use the model from within Fortran.
@@ -182,7 +184,7 @@ Here we describe how to do this for two build systems, cmake and make.
 If our project were using cmake we would need the following in the `CMakeLists.txt` file to find the FTorch installation and link it to the executable.
 
 This can be done by adding the following to the `CMakeLists.txt` file:
-```
+```CMake
 find_package(FTorch)
 target_link_libraries( <executable> PRIVATE FTorch::ftorch )
 message(STATUS "Building with Fortran PyTorch coupling")
@@ -214,7 +216,7 @@ export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
 ## Examples
 
 Examples of how to use this library are provided in the [examples directory](examples/).  
-They demonstrate different functionalities and are provided with instructions to modify, build, and run as neccessary.
+They demonstrate different functionalities and are provided with instructions to modify, build, and run as necessary.
 
 ## License
 
