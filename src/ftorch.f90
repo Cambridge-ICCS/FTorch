@@ -225,7 +225,7 @@ contains
       end interface
 
       ! Need to append c_null_char at end of filename
-      module%p = torch_jit_load_c(filename//c_null_char)
+      module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char)
    end function torch_module_load
 
    !> Performs a forward pass of the module with the input tensors
