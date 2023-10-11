@@ -76,7 +76,7 @@ contains
       out_tensor = torch_tensor_from_blob(c_loc(out_data), out_dims, out_shape, torch_wp, torch_kCPU, out_layout)
 
       ! Load ML model (edit this line to use different models)
-      model = torch_module_load(trim(args(1)))
+      model = torch_module_load(args(1))
 
       ! Infer
       call torch_module_forward(model, in_tensor, n_inputs, out_tensor)
