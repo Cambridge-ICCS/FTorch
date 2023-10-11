@@ -94,7 +94,7 @@ contains
 
       write (*,*) "Top result"
       write (*,*) ""
-      write (*,*) trim(categories(index(2))), " (id=", index(2), "), : probability =", probability
+      write (*,*) trim(categories(idx(2))), " (id=", idx(2), "), : probability =", probability
 
       ! Cleanup
       call torch_module_delete(model)
