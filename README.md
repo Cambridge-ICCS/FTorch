@@ -123,7 +123,7 @@ This minimal snippet loads a saved Torch model, creates inputs consisting of two
 
 ```fortran
 ! Import any C bindings as required for this code
-use, intrinsic :: iso_c_binding, only: c_int, c_int64_t, c_null_char, c_loc
+use, intrinsic :: iso_c_binding, only: c_int, c_int64_t, c_loc
 ! Import library for interfacing with PyTorch
 use ftorch
 
@@ -146,7 +146,7 @@ real, dimension(10,10), target  :: input_1, input_2
 real, dimension(5), target   :: output
 
 ! Initialise the Torch model to be used
-model = torch_module_load("/path/to/saved/model.pt"//c_null_char)
+model = torch_module_load("/path/to/saved/model.pt")
 
 ! Initialise the inputs as Fortran
 input_1 = 0.0

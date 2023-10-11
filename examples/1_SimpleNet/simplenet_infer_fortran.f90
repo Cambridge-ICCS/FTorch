@@ -1,7 +1,7 @@
 program inference
 
    ! Imports primitives used to interface with C
-   use, intrinsic :: iso_c_binding, only: c_int64_t, c_float, c_char, c_null_char, c_ptr, c_loc
+   use, intrinsic :: iso_c_binding, only: c_int64_t, c_float, c_char, c_ptr, c_loc
    ! Import our library for interfacing with PyTorch
    use ftorch
 
@@ -42,7 +42,7 @@ program inference
    out_tensor = torch_tensor_from_blob(c_loc(out_data), tensor_dims, tensor_shape, torch_kFloat32, torch_kCPU, tensor_layout)
 
    ! Load ML model (edit this line to use different models)
-   model = torch_module_load(trim(args(1))//c_null_char)
+   model = torch_module_load(args(1))
 
    ! Infer
    call torch_module_forward(model, in_tensor, n_inputs, out_tensor)

@@ -211,8 +211,8 @@ contains
    ! Torch Module API
    !> Loads a Torch Script module (pre-trained PyTorch model saved with Torch Script)
    function torch_module_load(filename) result(module)
-      use, intrinsic :: iso_c_binding, only : c_char
-      character(c_char), intent(in) :: filename(*) !! Filename of Torch Script module
+      use, intrinsic :: iso_c_binding, only : c_null_char
+      character(*), intent(in) :: filename !! Filename of Torch Script module
       type(torch_module)            :: module      !! Returned deserialized module
 
       interface
@@ -225,7 +225,7 @@ contains
       end interface
 
       ! Need to append c_null_char at end of filename
-      module%p = torch_jit_load_c(filename)
+      module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char)
    end function torch_module_load
 
    !> Performs a forward pass of the module with the input tensors

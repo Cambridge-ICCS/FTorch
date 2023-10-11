@@ -1,5 +1,5 @@
 program test_tensor
-  use, intrinsic :: iso_c_binding, only: c_int64_t, c_float, c_char, c_null_char, c_ptr, c_loc
+  use, intrinsic :: iso_c_binding, only: c_int64_t, c_float, c_char, c_ptr, c_loc
   use ftorch
   implicit none
 
