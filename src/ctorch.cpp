@@ -150,7 +150,7 @@ torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
     tensor = new torch::Tensor;
     *tensor = torch::from_blob(
         data, vshape, vstrides,
-        torch::dtype(get_dtype(dtype)).device(get_device(device)));
+        torch::dtype(get_dtype(dtype))).to(get_device(device));
 
   } catch (const torch::Error& e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
