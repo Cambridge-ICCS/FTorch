@@ -98,7 +98,7 @@ To build and install the library:
           then this should be the absolute path to the unzipped libtorch distribution.
           If Torch has been installed as PyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
           e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
-		  You can find the location of your torch install by importing torch from your python envorinment (`import torch`) and running `print(torch.__file__)`_
+		  You can find the location of your torch install by importing torch from your python environment (`import torch`) and running `print(torch.__file__)`_
 		  
 4. Make and install the code to the chosen location with either:
     ```
