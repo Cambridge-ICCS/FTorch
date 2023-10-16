@@ -48,10 +48,15 @@ To install the library requires the following to be installed on the system:
 
 #### Windows Support
 
-If building in a windows environment then you can either
-1) Use WSL2 in which case the build process is the same as for Linux environment
-2) Use the Intel Fortran Compiler and build with Visual Studio in which case you must install Visual Studio followed by Intel OneAPI Base and HPC toolkit (ensure that the Intel Fortran compiler and VS integration is selected in the latter). 
-3) Use GNU Fortran compiler with MinGW (not tested)
+If building in a windows environment then you can either:
+
+1) Use [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) (WSL)  
+   In this case the build process is the same as for Linux environment.
+2) Use Visual Studio and the Intel Fortran Compiler  
+   In this case you must install [Visual Studio](https://visualstudio.microsoft.com/) followed by [Intel OneAPI Base and HPC toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html) (ensure that the Intel Fortran compiler and VS integration is selected in the latter). 
+
+Note that libTorch is not supported for the GNU Fortran compiler with MinGW.
+
 
 ### Library installation
 
@@ -80,18 +85,19 @@ To build and install the library:
     The following CMake flags are available and can be passed as arguments through `-D<Option>=<Value>`:
     | Option                                                                                            | Value                        | Description                                                   |
     | ------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------|
-    | [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `ifort` / `gfortran`         | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.        |
-    | [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `icc` / `gcc`                | Specify a C compiler to build the library with                |
-    | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `icpc` / `g++`               | Specify a C++ compiler to build the library with              |
-    | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`       | Location of Torch installation<sup>1</sup>                    |
+    | [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `ifort` / `gfortran`         | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup>1</sup>        |
+    | [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `icc` / `gcc`                | Specify a C compiler to build the library with.<sup>1</sup>                |
+    | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `icpc` / `g++`               | Specify a C++ compiler to build the library with.<sup>1</sup>              |
+    | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`       | Location of Torch installation<sup>2</sup>                    |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
 
-    <sup>1</sup> _The path to the Torch installation needs to allow cmake to locate the relevant Torch cmake files.  
+    <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
+    <sup>2</sup> _The path to the Torch installation needs to allow cmake to locate the relevant Torch cmake files.  
           If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
           then this should be the absolute path to the unzipped libtorch distribution.
           If Torch has been installed as PyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
-          e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.
+          e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
 		  You can find the location of your torch install by importing torch from your python envorinment (`import torch`) and running `print(torch.__file__)`_
 		  
 4. Make and install the code to the chosen location with either:
