@@ -63,20 +63,20 @@ Note that libTorch is not supported for the GNU Fortran compiler with MinGW.
 To build and install the library:
 
 1. Navigate to the location in which you wish to install the source and run:  
-    ```
+    ```bash
     git clone git@github.com:Cambridge-ICCS/FTorch.git
     ```
     to clone via ssh, or  
-    ```
+    ```bash
     git clone https://github.com/Cambridge-ICCS/FTorch.git
     ```
     to clone via https.  
 2. Navigate into the library directory by running:  
-    ```
+    ```bash
     cd FTorch/src/
     ```
 3. Create a `build` directory and execute cmake from within it using the relevant flags:  
-    ```
+    ```bash
     mkdir build
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release
@@ -100,20 +100,29 @@ To build and install the library:
           e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
 		  You can find the location of your torch install by importing torch from your python environment (`import torch`) and running `print(torch.__file__)`_
 		  
-4. Make and install the code to the chosen location with either:
+4. Make and install the library to the desired location with either:
+	```bash
+    cmake --build . --target install
     ```
+    or, if you want to separate these steps:
+    ```bash
     cmake --build .
+    cmake --install .
     ```
-	or (to make and build)
-	```
-    cmake --build . --target INSTALL
+
+    Note: If you are using cmake<3.15 then you will need to build and install separately
+    using the make system specific commands.
+    For example, if using `make` on UNIX this would be:
+    ```bash
+    make
+    make install
     ```
-	
-    The latter will place the following directories at the install location:  
+
+    Installation will place the following directories at the install location:  
     * `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
     * `CMAKE_INSTALL_PREFIX/lib64/` - contains `cmake` directory and `.so` files
 	
-	*Note: In a windows environment this will require administrator privileges for the default install location.*
+	_Note: In a Windows environment this will require administrator privileges for the default install location._
 
 ## Usage
 
@@ -217,18 +226,18 @@ against it.
 
 To compile with make we need add the following compiler flag when compiling files that
 use ftorch:
-```
+```makefile
 FCFLAGS += -I<path/to/install/location>/include/ftorch
 ```
 
 When compiling the final executable add the following link flag:
-```
+```makefile
 LDFLAGS += -L<path/to/install/location>/lib64 -lftorch
 ```
 
 You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
 unless installing in a default location:
-```
+```makefile
 export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
 ```
 
