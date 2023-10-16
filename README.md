@@ -46,6 +46,13 @@ To install the library requires the following to be installed on the system:
 
 <sup>*</sup> _The minimal example provided downloads the CPU-only Linux Nightly binary. [Alternative versions](https://pytorch.org/get-started/locally/) may be required._
 
+#### Windows Support
+
+If building in a windows environment then you can either
+1) Use WSL2 in which case the build process is the same as for Linux environment
+2) Use the Intel Fortran Compiler and build with Visual Studio in which case you must install Visual Studio followed by Intel OneAPI Base and HPC toolkit (ensure that the Intel Fortran compiler and VS integration is selected in the latter). 
+3) Use GNU Fortran compiler with MinGW (not tested)
+
 ### Library installation
 
 To build and install the library:
@@ -84,16 +91,23 @@ To build and install the library:
           If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
           then this should be the absolute path to the unzipped libtorch distribution.
           If Torch has been installed as PyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
-          e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
-4. Make and install the code to the chosen location with:
+          e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.
+		  You can find the location of your torch install by importing torch from your python envorinment (`import torch`) and running `print(torch.__file__)`_
+		  
+4. Make and install the code to the chosen location with either:
     ```
-    make
-    make install
+    cmake --build .
     ```
-    This will place the following directories at the install location:  
+	or (to make and build)
+	```
+    cmake --build . --target INSTALL
+    ```
+	
+    The latter will place the following directories at the install location:  
     * `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
     * `CMAKE_INSTALL_PREFIX/lib64/` - contains `cmake` directory and `.so` files
-
+	
+	*Note: In a windows environment this will require administrator privileges for the default install location.*
 
 ## Usage
 
