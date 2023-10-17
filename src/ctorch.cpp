@@ -52,7 +52,7 @@ torch_tensor_t torch_zeros(int ndim, const int64_t* shape, torch_data_t dtype,
     c10::IntArrayRef vshape(shape, ndim);
     tensor = new torch::Tensor;
     *tensor = torch::zeros(
-        vshape, torch::dtype(get_dtype(dtype)).device(get_device(device)));
+        vshape, torch::dtype(get_dtype(dtype))).to(get_device(device));
   } catch (const torch::Error& e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -74,7 +74,7 @@ torch_tensor_t torch_ones(int ndim, const int64_t* shape, torch_data_t dtype,
     c10::IntArrayRef vshape(shape, ndim);
     tensor = new torch::Tensor;
     *tensor = torch::ones(
-        vshape, torch::dtype(get_dtype(dtype)).device(get_device(device)));
+        vshape, torch::dtype(get_dtype(dtype))).to(get_device(device));
   } catch (const torch::Error& e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -96,7 +96,7 @@ torch_tensor_t torch_empty(int ndim, const int64_t* shape, torch_data_t dtype,
     c10::IntArrayRef vshape(shape, ndim);
     tensor = new torch::Tensor;
     *tensor = torch::empty(
-        vshape, torch::dtype(get_dtype(dtype)).device(get_device(device)));
+        vshape, torch::dtype(get_dtype(dtype))).to(get_device(device));
   } catch (const torch::Error& e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -122,7 +122,7 @@ torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
     tensor = new torch::Tensor;
     *tensor = torch::from_blob(
         data, vshape,
-        torch::dtype(get_dtype(dtype)).device(get_device(device)));
+        torch::dtype(get_dtype(dtype))).to(get_device(device));
   } catch (const torch::Error& e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
