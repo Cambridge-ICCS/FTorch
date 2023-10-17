@@ -230,9 +230,6 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     std::cerr << "[ERROR]: " << e.what() << std::endl;
     exit(EXIT_FAILURE);
   }
-  // FIXME: this should be the responsibility of the user
-  if (out->is_cuda())
-    torch::cuda::synchronize();
 }
 
 void torch_jit_module_delete(torch_jit_script_module_t module)
