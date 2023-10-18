@@ -223,7 +223,7 @@ export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
 
 ### 4. Running on GPUs
 
-In order to run a model on a GPU, a few changes must be made:
+In order to run a model on a GPU, a two main changes are required:
 
 1. When saving your TorchScript model, ensure that is is on the GPU. For example, when using [pt2ts.py](utils/pt2ts.py), this can be done by uncommenting the following lines:
 
@@ -239,7 +239,7 @@ Note: this also moves the dummy input tensors to the GPU. This is not necessary 
 
 
 2. When calling `torch_tensor_from_blob` in Fortran, the device for the input tensor(s), but not the output tensor(s),
-   should be set to `torch_kCUDA`, rather than `torch_kCPU`, to ensure that the inputs are on the same device as the model.
+   should be set to `torch_kCUDA`, rather than `torch_kCPU`. This ensures that the inputs are on the same device as the model.
 
 
 ## Examples
