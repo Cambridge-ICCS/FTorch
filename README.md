@@ -225,7 +225,7 @@ export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
 
 In order to run a model on a GPU, a two main changes are required:
 
-1. When saving your TorchScript model, ensure that is is on the GPU. For example, when using [pt2ts.py](utils/pt2ts.py), this can be done by uncommenting the following lines:
+1. When saving your TorchScript model, ensure that it is on the GPU. For example, when using [pt2ts.py](utils/pt2ts.py), this can be done by uncommenting the following lines:
 
 ```
 device = torch.device('cuda')
