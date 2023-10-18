@@ -79,12 +79,21 @@ To build and install the library:
     | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`       | Location of Torch installation<sup>1</sup>                    |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
+    | `CMAKE_ENABLE_CUDA`                                                                               | `TRUE` / `FALSE`             | Specifies whether to check for an enable CUDA<sup>2</sup> |
 
     <sup>1</sup> _The path to the Torch installation needs to allow cmake to locate the relevant Torch cmake files.  
           If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
           then this should be the absolute path to the unzipped libtorch distribution.
           If Torch has been installed as PyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
           e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
+
+    <sup>2</sup> _This is often overridden by PyTorch. To ensure a CPU or GPU only version, use one of:
+          `pip install torch --index-url https://download.pytorch.org/whl/cpu`
+          or
+          `pip install torch --index-url https://download.pytorch.org/whl/cu118`
+          (for CUDA 11.8) respectively._
+
+
 4. Make and install the code to the chosen location with:
     ```
     make
