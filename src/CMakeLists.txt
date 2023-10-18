@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(CheckLanguage)
-if(CMAKE_ENABLE_CUDA)
+if(ENABLE_CUDA)
   check_language(CUDA)
   if(CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
