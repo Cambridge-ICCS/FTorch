@@ -79,12 +79,21 @@ To build and install the library:
     | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`       | Location of Torch installation<sup>1</sup>                    |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
+    | `ENABLE_CUDA`                                                                                     | `TRUE` / `FALSE`             | Specifies whether to check for and enable CUDA<sup>2</sup> |
 
     <sup>1</sup> _The path to the Torch installation needs to allow cmake to locate the relevant Torch cmake files.  
           If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
           then this should be the absolute path to the unzipped libtorch distribution.
           If Torch has been installed as PyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
           e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
+
+    <sup>2</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU or GPU only version is installed, e.g.
+          `pip install torch --index-url https://download.pytorch.org/whl/cpu`
+          or
+          `pip install torch --index-url https://download.pytorch.org/whl/cu118`
+          (for CUDA 11.8). URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
+
+
 4. Make and install the code to the chosen location with:
     ```
     make
@@ -211,6 +220,26 @@ unless installing in a default location:
 ```
 export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
 ```
+
+### 4. Running on GPUs
+
+In order to run a model on GPU, two main changes are required:
+
+1. When saving your TorchScript model, ensure that it is on the GPU. For example, when using [pt2ts.py](utils/pt2ts.py), this can be done by uncommenting the following lines:
+
+```
+device = torch.device('cuda')
+trained_model = trained_model.to(device)
+trained_model.eval()
+trained_model_dummy_input_1 = trained_model_dummy_input_1.to(device)
+trained_model_dummy_input_2 = trained_model_dummy_input_2.to(device)
+```
+
+Note: this also moves the dummy input tensors to the GPU. This is not necessary for saving the model, but the tensors must also be on the GPU to test that the models runs.
+
+
+2. When calling `torch_tensor_from_blob` in Fortran, the device for the input tensor(s), but not the output tensor(s),
+   should be set to `torch_kCUDA`, rather than `torch_kCPU`. This ensures that the inputs are on the same device as the model.
 
 
 ## Examples

@@ -51,7 +51,7 @@ contains
       integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
       integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
       integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
-      integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kCUDA)
       integer(c_int), intent(in)     :: layout(*)  !! Layout for strides for accessing data
       type(torch_tensor)             :: tensor     !! Returned tensor
 
@@ -86,7 +86,7 @@ contains
       type(c_ptr), intent(in)          :: data_arr       !! Pointer to data
       integer(c_int64_t), intent(in)   :: tensor_shape(:)   !! Shape of the tensor
       integer(c_int), intent(in)       :: dtype      !! Data type of the tensor
-      integer(c_int), intent(in)       :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      integer(c_int), intent(in)       :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kCUDA)
       type(torch_tensor)               :: tensor     !! Returned tensor
 
       integer(c_int)                   :: i          !! loop index
@@ -136,7 +136,7 @@ contains
       integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
       integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
       integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
-      integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kCUDA)
       type(torch_tensor)             :: tensor     !! Returned tensor
 
       interface
@@ -160,7 +160,7 @@ contains
       integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
       integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
       integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
-      integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kCUDA)
       type(torch_tensor)             :: tensor     !! Returned tensor
 
       interface
@@ -282,7 +282,7 @@ contains
       ! real(c_double), intent(in), target :: data_arr(*)   !! Fortran array of data
       integer(c_int64_t), intent(in)   :: tensor_shape(:)   !! Shape of the tensor
       integer(c_int), parameter :: dtype = torch_kFloat64
-      integer(c_int), intent(in)       :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      integer(c_int), intent(in)       :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kCUDA)
       type(torch_tensor)               :: tensor     !! Returned tensor
      
       
@@ -295,7 +295,7 @@ contains
       real(c_float), intent(in), target :: data_arr(*)   !! Fortran array of data
       integer(c_int64_t), intent(in)   :: tensor_shape(:)   !! Shape of the tensor
       integer(c_int), parameter :: dtype = torch_kFloat32
-      integer(c_int), intent(in)       :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kGPU)
+      integer(c_int), intent(in)       :: device     !! Device on which the tensor will live on (torch_kCPU or torch_kCUDA)
       type(torch_tensor)               :: tensor     !! Returned tensor
      
      tensor = t_t_from_array(c_loc(data_arr), tensor_shape, dtype, device)
