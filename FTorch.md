@@ -5,6 +5,7 @@ author: ICCS Cambridge
 license: mit
 github: https://github.com/Cambridge-ICCS
 project_github: https://github.com/Cambridge-ICCS/FTorch
+page_dir: pages
 src_dir: ./src
          ./utils
 output_dir: ./doc
