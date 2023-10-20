@@ -48,7 +48,8 @@ jobs:
           dry-run: true    # Don't actually push to pages, just test if we can
 
       - name: Deploy Documentation for master
-        if: github.ref == 'refs/heads/main'
+        # if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/API-docs'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages # The branch the action should deploy to.
