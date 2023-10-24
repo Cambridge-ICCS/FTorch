@@ -89,6 +89,7 @@
           </ul>
           <hr>
           <nav class="nav nav-pills flex-column">
+              <a class="nav-link" href="../page/LICENSE.html">FTorch License</a>
               <a class="nav-link active disabled" href="../page/cmake.html">CMake Build Process</a>
               <a class="nav-link" href="../page/transposing.html">When to transpose data</a>
               <a class="nav-link" href="../page/troubleshooting.html">Troubleshooting</a>
@@ -97,7 +98,17 @@
       </div>
 
     <div class="col-9" id='text'>
-      <p>Installation of FTorch is done by CMake.</p>
+      <div class="toc">
+<ul>
+<li><a href="#basic-instructions">Basic instructions</a></li>
+<li><a href="#cmake-build-options">CMake build options</a><ul>
+<li><a href="#ftorch-library">FTorch Library</a></li>
+<li><a href="#other-projects">Other Projects</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Installation of FTorch is done by CMake.</p>
 <p>This is controlled by the <code>CMakeLists.txt</code> file in <code>src/</code>.</p>
 <h2 id="basic-instructions">Basic instructions</h2>
 <p>To build the library, first clone it from github to your local machine and then run:</p>
@@ -117,6 +128,7 @@ from the table below in <a href="#cmake-build-options">CMake build options</a>
 </code></pre></div>
 
 <h2 id="cmake-build-options">CMake build options</h2>
+<h3 id="ftorch-library">FTorch Library</h3>
 <p>It is likely that you will need to provide at least the <code>CMAKE_PREFIX_PATH</code> flag.<br>
 The following CMake flags are available and can be passed as arguments through <code>-D&lt;Option&gt;=&lt;Value&gt;</code>:</p>
 <table>
@@ -177,8 +189,33 @@ The following CMake flags are available and can be passed as arguments through <
       (for CUDA 11.8). URLs for alternative versions can be found <a href="https://pytorch.org/get-started/locally/">here</a>.</em></p>
 <p>For example, to build on a unix system using the gnu compilers and install to <code>$HOME/FTorchbin/</code>
 we would need to run:</p>
-<div class="codehilite"><pre><span></span><code>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span>-DCMAKE_Fortran_COMPILER<span class="o">=</span>gfortran<span class="w"> </span>-DCMAKE_C_COMPILER<span class="o">=</span>icc<span class="w"> </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>icpc<span class="w"> </span>-DCMAKE_PREFIX_PATH<span class="o">=</span>/path/to/venv/lib/python3.11/site-packages/torch/<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>~/FTorchbin
 </code></pre></div>
+
+<p>Once this completes you should be able to generate the code and install using:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>install
+</code></pre></div>
+
+<p>or, if you want to separate these into two steps:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.
+cmake<span class="w"> </span>--install<span class="w"> </span>.
+</code></pre></div>
+
+<p>Note: If you are using cmake&lt;3.15 then you will need to build and install separately
+using the make system specific commands.
+For example, if using <code>make</code> on UNIX this would be:</p>
+<div class="codehilite"><pre><span></span><code>make
+make<span class="w"> </span>install
+</code></pre></div>
+
+<p>Installation will place the following directories at the install location:</p>
+<ul>
+<li><code>CMAKE_INSTALL_PREFIX/include/</code> - contains header and mod files</li>
+<li><code>CMAKE_INSTALL_PREFIX/lib64/</code> - contains <code>cmake</code> directory and <code>.so</code> files</li>
+</ul>
+<p><em>Note: In a Windows environment this will require administrator privileges for the default install location.</em></p>
+<h3 id="other-projects">Other Projects</h3>
+<p>[WIP]</p>
     </div>
   </div>
       <hr>
