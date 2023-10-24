@@ -25,8 +25,6 @@ md_extensions: markdown.extensions.toc
 
 --------------------
 
-This is the FTorch project.
-
 [TOC]
 
 Brief description
@@ -42,16 +40,28 @@ There are also installation instructions for the library and examples of perform
 
 We support running on both CPU and GPU, and have tested the library on UNIX and Windows based operating systems
 
+Presentations
+-------------
+
+The following presentations contain information about FTorch:
+
+* Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran  
+  RSECon23  
+  [Slides](https://jackatkinson.net/slides/RSECon23/RSECon23.html)
+
 
 License
 -------
 
 The FTorch source code, related files and documentation are
-distributed under an MIT license.  See the
-[LICENSE](d)
-file for more details.
+distributed under an [MIT License which can be viewed here](page/LICENSE.html).
 
 
 Projects using FTorch
 ---------------------
 
+The following projects make use of FTorch.  
+If you use our library in your work please let us know.
+
+* [MiMA Machine Learning - DataWave](https://github.com/DataWaveProject/MiMA-machine-learning)  
+  Using FTorch to couple a neural net parameterisation of gravity waves to an atmospheric model.

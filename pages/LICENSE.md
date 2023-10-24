@@ -1,0 +1,3 @@
+title: FTorch License
+
+{!LICENSE!}

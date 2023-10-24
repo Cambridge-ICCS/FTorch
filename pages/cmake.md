@@ -1,5 +1,7 @@
 title: CMake Build Process
 
+[TOC]
+
 Installation of FTorch is done by CMake.
 
 This is controlled by the `CMakeLists.txt` file in `src/`.
@@ -26,6 +28,8 @@ cmake --build . --target install
 ```
 
 ## CMake build options
+
+### FTorch Library
 
 It is likely that you will need to provide at least the `CMAKE_PREFIX_PATH` flag.  
 The following CMake flags are available and can be passed as arguments through `-D<Option>=<Value>`:
@@ -55,7 +59,36 @@ The following CMake flags are available and can be passed as arguments through `
 
 For example, to build on a unix system using the gnu compilers and install to `$HOME/FTorchbin/`
 we would need to run:
+```bash
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=gfortran -DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=icpc -DCMAKE_PREFIX_PATH=/path/to/venv/lib/python3.11/site-packages/torch/ -DCMAKE_INSTALL_PREFIX=~/FTorchbin
 ```
 
+Once this completes you should be able to generate the code and install using:
+```bash
+cmake --build . --target install
+```
+or, if you want to separate these into two steps:
+```bash
+cmake --build .
+cmake --install .
 ```
 
+Note: If you are using cmake<3.15 then you will need to build and install separately
+using the make system specific commands.
+For example, if using `make` on UNIX this would be:
+```bash
+make
+make install
+```
+
+Installation will place the following directories at the install location:
+
+* `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
+* `CMAKE_INSTALL_PREFIX/lib64/` - contains `cmake` directory and `.so` files
+
+_Note: In a Windows environment this will require administrator privileges for the default install location._
+
+
+### Other Projects
+
+[WIP]
