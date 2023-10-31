@@ -1,5 +1,13 @@
 title: When to transpose data
 
+Transposition of data between Fortran and C can lead to a lot of unneccessary confusion.
+The FTorch library looks after this for you with the
+[`torch_tensor_from_array()`](doc/proc/torch_tensor_from_array.html) function which
+allows you to index a tensor in Torch in **exactly the same way** as you would in Fortran.
+
+If you wish to do something different to this then there are more complex functions
+available and we describe here how and when to use them.
+
 [TOC]
 
 ## Introduction - row- vs. column-major
@@ -76,7 +84,9 @@ to our Torch net is correct as we expect.
 
 There are a few approaches we can take to address this.  
 The first two of these are listed for conceptual purposes, whilst we advise handling
-this in practice by using the `layout` argument presented in
+this in practice by using the `torch_tensor_from_array` function described in 
+[4) below](#4-use-torch_tensor_from_array) or, if this is not suitable, the
+the `layout` argument for `torch_tensor_from_blob` presented in
 [3) below](#3-use-the-layout-argument-in-torch_tensor_from_blob).
 
 #### 1) Transpose before passing
@@ -92,8 +102,12 @@ function.
 
 For larger arrays we are required to use the
 ['reshape()'](https://gcc.gnu.org/onlinedocs/gfortran/RESHAPE.html) intrinsic to swap
-the order of the indices.
-TODO: Example for 3 or 3D matrix
+the order of the indices.  
+For example, if we had a 3x4x5 matrix \(A\) we would need to call
+```
+A_to_torch = reshape(A, shape=[5, 4, 3], order=[3, 2, 1])
+```
+which could then be read by Torch as a 3x4x5 tensor.
 
 We would, of course, need to remember to transpose/reshape any output of the model
 as required.
@@ -114,13 +128,13 @@ as its input tensor meaning we can simply write from Fortran and read to Torch.
 
 However, this requires foresight and may not be intuitive - we would like to be indexing
 data in the same way in both Fortran and Torch.
-Not doing so could leave us open to introfucing bugs.
+Not doing so could leave us open to introducing bugs.
 
 #### 3) Use the `layout` argument in `torch_tensor_from_blob`
 In the [documentation for torch_tensor_from_blob](doc/proc/torch_tensor_from_blob.html)
 there is a `layout` argument.
 
-This tells us how data output by Fortran should be read by Torch.
+This tells us how data output by Fortran should be read/accessed by Torch.
 
 TODO: Finish this
 passing `layout = [1, 2]` means that the data will be read in the correct indices by
@@ -128,6 +142,31 @@ Torch.
 
 Tells us which order to read the indices in.
 i.e. `[1, 2]` will read `i` then `j`.
+
+#### 4) Use `torch_tensor_from_array`
+
+By far the easiest way to deal with the issue is not to worry about it at all!
+
+As described at the top of this page, by using the
+[torch_tensor_from_array](doc/proc/torch_tensor_from_array.html) function
+you can take data from Fortran and send it to Torch to be indexed in exactly
+the same way.
+
+i.e. if the Fortran array `A`
+$$
+\begin{pmatrix}
+a & b \\
+c & d
+\end{pmatrix}
+$$
+is passed as `torch_tensor_from_array(A, )`
+the resulting Tensor will be read by Torch as 
+
+
+
+
+This is achieved by wrapping the `torch_tensor_from_blob` function to automatically
+generate strides assuming this is what should happen.
 
 
 ## Advanced use
