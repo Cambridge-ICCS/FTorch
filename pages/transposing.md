@@ -1,15 +1,142 @@
 title: When to transpose data
 
-In the ResNet18 example, it was expected that the shape and indices of `in_data` in resnet_infer_fortran.f90 match that of `input_batch` in resnet18.py, i.e. `in_data(i, j, k, l) ==  input_batch[i, j, k, l]`.
+[TOC]
 
-Since C is row-major (rows are contiguous in memory), whereas Fortran is column-major (columns are contiguous), it is therefore necessary to perform a transpose when converting from the NumPy array to the Fortran array to ensure that their indices are consistent.
+## Introduction - row- vs. column-major
 
-In this example code, the NumPy array is transposed before being flattened and saved to binary, allowing Fortran to `reshape` the flatted array into the correct order.
+Astute users will note that Fortran is a
+[column-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order)
+language whilst C, C++, and Python are 
+[row-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order).
 
-An alternative would be to save the NumPy array with its original shape, but perform a transpose during or after reading the data into Fortran, e.g. using:
+This means that the matrix/tensor in Fortran
+$$
+\begin{pmatrix}
+a_{11} & a_{12} \\
+a_{21} & a_{22}
+\end{pmatrix}
+=
+\begin{pmatrix}
+a & b \\
+c & d
+\end{pmatrix}
+$$
+will appear in
+[contiguous memory](https://en.wikipedia.org/wiki/Memory_management_(operating_systems))
+on the computer as 
+$$
+\begin{pmatrix}
+a_{11} & a_{21} & a_{12} & a_{22}
+\end{pmatrix}
+=
+\begin{pmatrix}
+a & c & b & d
+\end{pmatrix}
+$$
+with the order of elements decided by moving down the columns before progressing in the
+row dimension.  
+In contrast, the same matrix/tensor defined in a row-major language will appear in
+contiguous memory as
+$$
+\begin{pmatrix}
+a_{11} & a_{12} & a_{21} & a_{22}
+\end{pmatrix}
+=
+\begin{pmatrix}
+a & b & c & d
+\end{pmatrix}
+$$
+reading along each row before progressing down the column dimension.
 
-```
-in_data = reshape(flat_data, shape(in_data), order=(4,3,2,1))
-```
 
-For more general use, it should be noted that the function used to create the input tensor from `input_batch`, `torch_tensor_from_blob`, performs a further transpose, which is required to allow the tensor to interact correctly with the model.
+## Why does this matter?
+
+This matters for FTorch because a key feature is no-copy memory transfer between Fortran
+and Torch.
+To do this the Fortran data that will be used in Torch is stored in memory and a
+[pointer](https://en.wikipedia.org/wiki/Pointer_(computer_programming)) to the first
+element, \(a\) provided to Torch.
+
+Now, if Torch were to take this block of memory and interpret it as as a 2x2 matrix it
+would be read in as
+$$
+\begin{pmatrix}
+a & c \\
+b & d
+\end{pmatrix}
+$$
+which is the [transpose](https://en.wikipedia.org/wiki/Transpose) of the
+matrix we had in Fortran; likely not what we were expecting!
+
+This means we need to be careful when passing data to make sure that what we read in
+to our Torch net is correct as we expect.
+
+
+## What can we do?
+
+There are a few approaches we can take to address this.  
+The first two of these are listed for conceptual purposes, whilst we advise handling
+this in practice by using the `layout` argument presented in
+[3) below](#3-use-the-layout-argument-in-torch_tensor_from_blob).
+
+#### 1) Transpose before passing
+As seen from the above example, writing out from Fortran and reading directly in to
+Torch results in us recieving the transpose.
+
+Therefore we could transpose out Fortran data immediately before passing it to Torch.
+As a result we will read in to Torch indexed the same as in Fortran pre-transposition.
+
+For arrays of dimension 2 this can be done using the intrinsic
+[`transpose()`](https://gcc.gnu.org/onlinedocs/gcc-12.1.0/gfortran/TRANSPOSE.html)
+function.
+
+For larger arrays we are required to use the
+['reshape()'](https://gcc.gnu.org/onlinedocs/gfortran/RESHAPE.html) intrinsic to swap
+the order of the indices.
+TODO: Example for 3 or 3D matrix
+
+We would, of course, need to remember to transpose/reshape any output of the model
+as required.
+
+However, the transposition process involves creating a copy of the Fortran data.
+For large matrices/tensors this can become expensive.
+It would be better if we can pass data without having to transpose beforehand.
+
+#### 2) Design nets to use transpose
+Alternatively we could design our net to use
+$$
+\begin{pmatrix}
+a & c \\
+b & d
+\end{pmatrix}
+$$
+as its input tensor meaning we can simply write from Fortran and read to Torch.
+
+However, this requires foresight and may not be intuitive - we would like to be indexing
+data in the same way in both Fortran and Torch.
+Not doing so could leave us open to introfucing bugs.
+
+#### 3) Use the `layout` argument in `torch_tensor_from_blob`
+In the [documentation for torch_tensor_from_blob](doc/proc/torch_tensor_from_blob.html)
+there is a `layout` argument.
+
+This tells us how data output by Fortran should be read by Torch.
+
+TODO: Finish this
+passing `layout = [1, 2]` means that the data will be read in the correct indices by
+Torch.
+
+Tells us which order to read the indices in.
+i.e. `[1, 2]` will read `i` then `j`.
+
+
+## Advanced use
+
+Those experienced with C will perhaps have noticed that there are further freedoms
+available beyond those presented above.
+
+[WIP]
+
+Always stride, or is there a transpose tradeoff?
+
+
