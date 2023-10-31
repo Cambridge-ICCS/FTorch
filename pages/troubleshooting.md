@@ -15,6 +15,7 @@ If you need
 
 Use Visual Studio and the Intel Fortran Compiler  
 In this case you must install 
+
 * [Visual Studio](https://visualstudio.microsoft.com/)
 * [Intel OneAPI Base and HPC toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html) (ensure that the Intel Fortran compiler and VS integration is selected).
 

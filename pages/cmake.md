@@ -1,4 +1,4 @@
-title: CMake Build Process
+title: Installation and Build Process
 
 [TOC]
 
@@ -24,7 +24,7 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 
 Finally build and install the library:
 ```bash
-cmake --build . --target install
+cmake --build . --target install --config Release
 ```
 
 ## CMake build options
@@ -65,12 +65,12 @@ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=gfortran -DCMAKE_C_
 
 Once this completes you should be able to generate the code and install using:
 ```bash
-cmake --build . --target install
+cmake --build . --target install --config Release
 ```
 or, if you want to separate these into two steps:
 ```bash
 cmake --build .
-cmake --install .
+cmake --install . --config Release
 ```
 
 Note: If you are using cmake<3.15 then you will need to build and install separately
@@ -83,12 +83,47 @@ make install
 
 Installation will place the following directories at the install location:
 
-* `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
+* `CMAKE_INSTALL_PREFIX/include/` - contains C header and Fortran mod files
 * `CMAKE_INSTALL_PREFIX/lib64/` - contains `cmake` directory and `.so` files
 
 _Note: In a Windows environment this will require administrator privileges for the default install location._
 
 
-### Other Projects
+### Other projects using CMake
 
-[WIP]
+We generally advise building projects that make use of FTorch with CMake where possible.
+
+If doing this you need to include the following in the `CMakeLists.txt` file to
+find the FTorch installation and link it to the executable.
+
+```CMake
+find_package(FTorch)
+target_link_libraries( <executable> PRIVATE FTorch::ftorch )
+message(STATUS "Building with Fortran PyTorch coupling")
+```
+
+You will then need to use the `-DFTorch_DIR=</path/to/install/location>` flag
+when running cmake.
+
+
+## Building other projects with make
+
+To build a project with make you need to include the FTorch library when compiling
+and link the executable against it.
+
+To compile with make add the following compiler flag when compiling files that
+use ftorch:
+```
+FCFLAGS += -I<path/to/install/location>/include/ftorch
+```
+
+When compiling the final executable add the following link flag:
+```
+LDFLAGS += -L<path/to/install/location>/lib64 -lftorch
+```
+
+You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
+unless installing in a default location:
+```
+export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
+```
