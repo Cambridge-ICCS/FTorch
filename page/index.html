@@ -89,7 +89,9 @@
           <hr>
           <nav class="nav nav-pills flex-column">
               <a class="nav-link" href="../page/LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="../page/cmake.html">CMake Build Process</a>
+              <a class="nav-link" href="../page/cmake.html">Installation and Build Process</a>
+              <a class="nav-link" href="../page/examples.html">Examples</a>
+              <a class="nav-link" href="../page/gpu.html">GPU Support</a>
               <a class="nav-link" href="../page/transposing.html">When to transpose data</a>
               <a class="nav-link" href="../page/troubleshooting.html">Troubleshooting</a>
           </nav>
@@ -99,27 +101,9 @@
     <div class="col-9" id='text'>
       <div class="toc">
 <ul>
-<li><a href="#gpu-support">GPU Support</a></li>
 <li><a href="#useful-resources">Useful resources</a></li>
 </ul>
 </div>
-<h2 id="gpu-support">GPU Support</h2>
-<p>In order to run a model on GPU, two main changes are required:</p>
-<p>1) When saving your TorchScript model, ensure that it is on the GPU.
-For example, when using <a href="utils/pt2ts.py">pt2ts.py</a>, this can be done by
-uncommenting the following lines:  </p>
-<div class="codehilite"><pre><span></span><code><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
-<span class="n">trained_model</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-<span class="n">trained_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-<span class="n">trained_model_dummy_input_1</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_1</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-<span class="n">trained_model_dummy_input_2</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-</code></pre></div>
-
-<p>Note: this also moves the dummy input tensors to the GPU. This is not necessary for
-saving the model, but the tensors must also be on the GPU to test that the models runs.</p>
-<p>2) When calling <code>torch_tensor_from_blob</code> in Fortran, the device for the input tensor(s),
-   but not the output tensor(s), should be set to <code>torch_kCUDA</code>, rather than
-   <code>torch_kCPU</code>. This ensures that the inputs are on the same device as the model.</p>
 <h2 id="useful-resources">Useful resources</h2>
 <ul>
 <li><a href="https://pytorch.org/cppdocs/api/library_root.html">The libtorch API</a></li>

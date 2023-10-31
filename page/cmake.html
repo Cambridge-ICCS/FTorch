@@ -8,7 +8,7 @@
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
-    <title>CMake Build Process &ndash; FTorch</title>
+    <title>Installation and Build Process &ndash; FTorch</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -60,7 +60,7 @@
 
     <div class="container">
   <div class="row">
-    <h1>CMake Build Process</h1>
+    <h1>Installation and Build Process</h1>
     <div class="container p-2 mb-4 bg-light border rounded-3">
       <div class="row align-items-center justify-content-between">
         <div class="col">
@@ -71,7 +71,7 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
                 <li class="breadcrumb-item"><a href='../page/index.html'>Other documentation</a></li>
-              <li class="breadcrumb-item active" aria-current="page">CMake Build Process</li>
+              <li class="breadcrumb-item active" aria-current="page">Installation and Build Process</li>
             </ol>
           </nav>
         </div>
@@ -90,7 +90,9 @@
           <hr>
           <nav class="nav nav-pills flex-column">
               <a class="nav-link" href="../page/LICENSE.html">FTorch License</a>
-              <a class="nav-link active disabled" href="../page/cmake.html">CMake Build Process</a>
+              <a class="nav-link active disabled" href="../page/cmake.html">Installation and Build Process</a>
+              <a class="nav-link" href="../page/examples.html">Examples</a>
+              <a class="nav-link" href="../page/gpu.html">GPU Support</a>
               <a class="nav-link" href="../page/transposing.html">When to transpose data</a>
               <a class="nav-link" href="../page/troubleshooting.html">Troubleshooting</a>
           </nav>
@@ -103,9 +105,10 @@
 <li><a href="#basic-instructions">Basic instructions</a></li>
 <li><a href="#cmake-build-options">CMake build options</a><ul>
 <li><a href="#ftorch-library">FTorch Library</a></li>
-<li><a href="#other-projects">Other Projects</a></li>
+<li><a href="#other-projects-using-cmake">Other projects using CMake</a></li>
 </ul>
 </li>
+<li><a href="#building-other-projects-with-make">Building other projects with make</a></li>
 </ul>
 </div>
 <p>Installation of FTorch is done by CMake.</p>
@@ -124,7 +127,7 @@ from the table below in <a href="#cmake-build-options">CMake build options</a>
 </code></pre></div>
 
 <p>Finally build and install the library:</p>
-<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>install
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>install<span class="w"> </span>--config<span class="w"> </span>Release
 </code></pre></div>
 
 <h2 id="cmake-build-options">CMake build options</h2>
@@ -193,12 +196,12 @@ we would need to run:</p>
 </code></pre></div>
 
 <p>Once this completes you should be able to generate the code and install using:</p>
-<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>install
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>install<span class="w"> </span>--config<span class="w"> </span>Release
 </code></pre></div>
 
 <p>or, if you want to separate these into two steps:</p>
 <div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.
-cmake<span class="w"> </span>--install<span class="w"> </span>.
+cmake<span class="w"> </span>--install<span class="w"> </span>.<span class="w"> </span>--config<span class="w"> </span>Release
 </code></pre></div>
 
 <p>Note: If you are using cmake&lt;3.15 then you will need to build and install separately
@@ -210,12 +213,37 @@ make<span class="w"> </span>install
 
 <p>Installation will place the following directories at the install location:</p>
 <ul>
-<li><code>CMAKE_INSTALL_PREFIX/include/</code> - contains header and mod files</li>
+<li><code>CMAKE_INSTALL_PREFIX/include/</code> - contains C header and Fortran mod files</li>
 <li><code>CMAKE_INSTALL_PREFIX/lib64/</code> - contains <code>cmake</code> directory and <code>.so</code> files</li>
 </ul>
 <p><em>Note: In a Windows environment this will require administrator privileges for the default install location.</em></p>
-<h3 id="other-projects">Other Projects</h3>
-<p>[WIP]</p>
+<h3 id="other-projects-using-cmake">Other projects using CMake</h3>
+<p>We generally advise building projects that make use of FTorch with CMake where possible.</p>
+<p>If doing this you need to include the following in the <code>CMakeLists.txt</code> file to
+find the FTorch installation and link it to the executable.</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">find_package</span><span class="p">(</span><span class="s">FTorch</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="w"> </span><span class="s">&lt;executable&gt;</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">FTorch::ftorch</span><span class="w"> </span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s">STATUS</span><span class="w"> </span><span class="s2">&quot;Building with Fortran PyTorch coupling&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>You will then need to use the <code>-DFTorch_DIR=&lt;/path/to/install/location&gt;</code> flag
+when running cmake.</p>
+<h2 id="building-other-projects-with-make">Building other projects with make</h2>
+<p>To build a project with make you need to include the FTorch library when compiling
+and link the executable against it.</p>
+<p>To compile with make add the following compiler flag when compiling files that
+use ftorch:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">FCFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="o">-</span><span class="nv">I</span><span class="o">&lt;</span><span class="nv">path</span><span class="o">/</span><span class="nv">to</span><span class="o">/</span><span class="nv">install</span><span class="o">/</span><span class="nv">location</span><span class="o">&gt;/</span><span class="k">include</span><span class="o">/</span><span class="nv">ftorch</span>
+</code></pre></div>
+
+<p>When compiling the final executable add the following link flag:</p>
+<div class="codehilite"><pre><span></span><code>LDFLAGS += -L&lt;path/to/install/location&gt;/lib64 -lftorch
+</code></pre></div>
+
+<p>You may also need to add the location of the <code>.so</code> files to your <code>LD_LIBRARY_PATH</code>
+unless installing in a default location:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">LD_LIBRARY_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">LD_LIBRARY_PATH</span><span class="p">:</span><span class="o">&lt;</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">installation</span><span class="o">&gt;/</span><span class="n">lib64</span>
+</code></pre></div>
     </div>
   </div>
       <hr>
