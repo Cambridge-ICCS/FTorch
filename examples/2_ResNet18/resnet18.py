@@ -4,7 +4,9 @@ import numpy as np
 from PIL import Image
 import torch
 import torchvision
-
+import argparse
+import matplotlib.pyplot as plt
+import cv2
 
 # Initialize everything
 def initialize(precision: torch.dtype) -> torch.nn.Module:
@@ -63,6 +65,15 @@ def run_model(model: torch.nn.Module, precision: type) -> None:
             ),
         ]
     )
+      # Show the input image
+    plt.figure(figsize=(6, 6))
+    plt.imshow(input_image)
+    plt.title("Input Image")
+    plt.axis('off')
+    plt.show()
+
+
+    
     input_tensor = preprocess(input_image)
     input_batch = input_tensor.unsqueeze(0)
 
@@ -94,7 +105,7 @@ def run_model(model: torch.nn.Module, precision: type) -> None:
 
     print_top_results(output)
 
-
+"""
 def print_top_results(output: torch.Tensor) -> None:
     """Prints top 5 results
 
@@ -118,10 +129,10 @@ def print_top_results(output: torch.Tensor) -> None:
         print(
             f"{categories[cat_id]} (id={cat_id}): probability = {top5_prob[i].item()}"
         )
-
+"""
 
 if __name__ == "__main__":
-    np_precision = np.float32
+ """   np_precision = np.float32
 
     if np_precision == np.float32:
         torch_precision = torch.float32
@@ -132,3 +143,24 @@ if __name__ == "__main__":
 
     rn_model = initialize(torch_precision)
     run_model(rn_model, np_precision)
+"""
+
+    # Create an argument parser
+    parser = argparse.ArgumentParser(description="ResNet-18 Image Classification")
+    parser.add_argument("image_filename", help="Path to the input image file")
+    parser.add_argument(
+        "--precision",
+        choices=["float32", "float64"],
+        default="float32",
+        help="Working precision (default: float32)",
+    )
+
+    args = parser.parse_args()
+
+    # Map precision argument to torch data type
+    precision_map = {"float32": torch.float32, "float64": torch.float64}
+    np_precision = np.float32 if args.precision == "float32" else np.float64
+    torch_precision = precision_map[args.precision]
+
+    rn_model = initialize(torch_precision)
+    run_model(rn_model, np_precision, args.image_filename)
