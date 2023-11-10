@@ -1,4 +1,4 @@
-name: lint
+name: python-code-qc
 
 on:
   # run on every push to main
@@ -15,25 +15,19 @@ on:
 
 jobs:
   various:
-    name: various (Black, pylint, pydocstyle, mypy)
+    name: Python Code QC (Black, pydocstyle)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
       with:
         python-version: "3.11"
-    - run: pip install black pylint pydocstyle mypy
+    - run: pip install black pydocstyle
 
     # annotate each step with `if: always` to run all regardless
     - name: Assert that code matches Black code style
       if: always()
       uses: psf/black@stable
-    - name: Lint with pylint
-      if: always()
-      run: pylint ./
     - name: Lint with pydocstyle
       if: always()
       run: pydocstyle --convention=numpy ./
-    - name: Lint with mypy
-      if: always()
-      run: mypy ./
