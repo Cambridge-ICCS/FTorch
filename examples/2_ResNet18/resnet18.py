@@ -21,7 +21,6 @@ def initialize(precision: torch.dtype) -> torch.nn.Module:
     model: torch.nn.Module
         Pretrained ResNet-18 model
     """
-
     # Set working precision
     torch.set_default_dtype(precision)
 
@@ -96,7 +95,7 @@ def run_model(model: torch.nn.Module, precision: type) -> None:
 
 
 def print_top_results(output: torch.Tensor) -> None:
-    """Prints top 5 results
+    """Print top 5 results.
 
     Parameters
     ----------

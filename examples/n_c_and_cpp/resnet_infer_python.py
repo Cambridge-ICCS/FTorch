@@ -22,7 +22,6 @@ def deploy(saved_model, device, batch_size=1):
     output : torch.Tensor
         result of running inference on model with Tensor of ones
     """
-
     image_filename = "data/dog.jpg"
     input_image = Image.open(image_filename)
     preprocess = torchvision.transforms.Compose(
