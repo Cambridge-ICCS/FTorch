@@ -1,18 +1,12 @@
 program inference
 
-   ! Imports primitives used to interface with C
-   use, intrinsic :: iso_c_binding, only: c_sp=>c_float, c_dp=>c_double, c_int64_t, c_loc
-   use, intrinsic :: iso_fortran_env, only : sp => real32, dp => real64
+   use, intrinsic :: iso_fortran_env, only : sp => real32
    ! Import our library for interfacing with PyTorch
    use :: ftorch
 
    implicit none
 
-   ! Define working precision for C primitives
-   ! Precision must match `wp` in resnet18.py and `wp_torch` in pt2ts.py
-   integer, parameter :: c_wp = c_sp
    integer, parameter :: wp = sp
-   integer, parameter :: torch_wp = torch_kFloat32
 
    call main()
 
@@ -25,21 +19,21 @@ contains
       integer :: num_args, ix
       character(len=128), dimension(:), allocatable :: args
 
-      ! Set up types of input and output data and the interface with C
+      ! Set up types of input and output data
       type(torch_module) :: model
       type(torch_tensor), dimension(1) :: in_tensor
       type(torch_tensor) :: out_tensor
 
-      real(c_wp), dimension(:,:,:,:), allocatable, target :: in_data
-      integer(c_int), parameter :: n_inputs = 1
-      real(c_wp), dimension(:,:), allocatable, target :: out_data
+      real(wp), dimension(:,:,:,:), allocatable, target :: in_data
+      real(wp), dimension(:,:), allocatable, target :: out_data
+      integer, parameter :: n_inputs = 1
 
-      integer(c_int), parameter :: in_dims = 4
-      integer(c_int64_t) :: in_shape(in_dims) = [1, 3, 224, 224]
-      integer(c_int) :: in_layout(in_dims) = [1,2,3,4]
-      integer(c_int), parameter :: out_dims = 2
-      integer(c_int64_t) :: out_shape(out_dims) = [1, 1000]
-      integer(c_int) :: out_layout(out_dims) = [1,2]
+      integer, parameter :: in_dims = 4
+      integer :: in_shape(in_dims) = [1, 3, 224, 224]
+      integer :: in_layout(in_dims) = [1,2,3,4]
+      integer, parameter :: out_dims = 2
+      integer :: out_shape(out_dims) = [1, 1000]
+      integer :: out_layout(out_dims) = [1,2]
 
       ! Binary file containing input tensor
       character(len=*), parameter :: filename = '../data/image_tensor.dat'
@@ -72,8 +66,9 @@ contains
       call load_data(filename, tensor_length, in_data)
 
       ! Create input/output tensors from the above arrays
-      in_tensor(1) = torch_tensor_from_blob(c_loc(in_data), in_dims, in_shape, torch_wp, torch_kCPU, in_layout)
-      out_tensor = torch_tensor_from_blob(c_loc(out_data), out_dims, out_shape, torch_wp, torch_kCPU, out_layout)
+      in_tensor(1) = torch_tensor_from_array(in_data, in_layout, torch_kCPU)
+
+      out_tensor = torch_tensor_from_array(out_data, out_layout, torch_kCPU)
 
       ! Load ML model (edit this line to use different models)
       model = torch_module_load(args(1))
@@ -113,9 +108,9 @@ contains
 
       character(len=*), intent(in) :: filename
       integer, intent(in) :: tensor_length
-      real(c_wp), dimension(:,:,:,:), intent(out) :: in_data
+      real(wp), dimension(:,:,:,:), intent(out) :: in_data
 
-      real(c_wp) :: flat_data(tensor_length)
+      real(wp) :: flat_data(tensor_length)
       integer :: ios
       character(len=100) :: ioerrmsg
 
@@ -166,7 +161,7 @@ contains
 
       implicit none
 
-      real(c_wp), dimension(:,:), intent(in) :: out_data
+      real(wp), dimension(:,:), intent(in) :: out_data
       real(wp), dimension(:,:), intent(out) :: probabilities
       real(wp) :: prob_sum
 
