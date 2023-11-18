@@ -1,0 +1,25 @@
+name: fypp-checks
+
+on:
+  # run on every push
+  push:
+  # run on every push (not commit) to a PR, plus open/reopen
+  pull_request:
+    types:
+    - synchronize
+    - opened
+    - reopened
+
+jobs:
+  various:
+    name: FYPP checks - run pre-commit hook in repo
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    - run: pip install fypp
+
+    - name: Check pre-commit hook
+      run: ./pre-commit
