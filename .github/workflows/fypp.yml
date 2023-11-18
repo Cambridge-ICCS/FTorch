@@ -22,4 +22,5 @@ jobs:
     - run: pip install fypp
 
     - name: Check pre-commit hook
-      run: ./pre-commit
+      run: chmod +x pre-commit
+           ./pre-commit
