@@ -34,30 +34,30 @@ module ftorch
 
   ! Interface for calculating tensor from array for different possible input types
   interface torch_tensor_from_array
-    module procedure torch_tensor_from_array_int8_1
-    module procedure torch_tensor_from_array_int8_2
-    module procedure torch_tensor_from_array_int8_3
-    module procedure torch_tensor_from_array_int8_4
-    module procedure torch_tensor_from_array_int16_1
-    module procedure torch_tensor_from_array_int16_2
-    module procedure torch_tensor_from_array_int16_3
-    module procedure torch_tensor_from_array_int16_4
-    module procedure torch_tensor_from_array_int32_1
-    module procedure torch_tensor_from_array_int32_2
-    module procedure torch_tensor_from_array_int32_3
-    module procedure torch_tensor_from_array_int32_4
-    module procedure torch_tensor_from_array_int64_1
-    module procedure torch_tensor_from_array_int64_2
-    module procedure torch_tensor_from_array_int64_3
-    module procedure torch_tensor_from_array_int64_4
-    module procedure torch_tensor_from_array_real32_1
-    module procedure torch_tensor_from_array_real32_2
-    module procedure torch_tensor_from_array_real32_3
-    module procedure torch_tensor_from_array_real32_4
-    module procedure torch_tensor_from_array_real64_1
-    module procedure torch_tensor_from_array_real64_2
-    module procedure torch_tensor_from_array_real64_3
-    module procedure torch_tensor_from_array_real64_4
+    module procedure torch_tensor_from_array_int8_1d
+    module procedure torch_tensor_from_array_int8_2d
+    module procedure torch_tensor_from_array_int8_3d
+    module procedure torch_tensor_from_array_int8_4d
+    module procedure torch_tensor_from_array_int16_1d
+    module procedure torch_tensor_from_array_int16_2d
+    module procedure torch_tensor_from_array_int16_3d
+    module procedure torch_tensor_from_array_int16_4d
+    module procedure torch_tensor_from_array_int32_1d
+    module procedure torch_tensor_from_array_int32_2d
+    module procedure torch_tensor_from_array_int32_3d
+    module procedure torch_tensor_from_array_int32_4d
+    module procedure torch_tensor_from_array_int64_1d
+    module procedure torch_tensor_from_array_int64_2d
+    module procedure torch_tensor_from_array_int64_3d
+    module procedure torch_tensor_from_array_int64_4d
+    module procedure torch_tensor_from_array_real32_1d
+    module procedure torch_tensor_from_array_real32_2d
+    module procedure torch_tensor_from_array_real32_3d
+    module procedure torch_tensor_from_array_real32_4d
+    module procedure torch_tensor_from_array_real64_1d
+    module procedure torch_tensor_from_array_real64_2d
+    module procedure torch_tensor_from_array_real64_3d
+    module procedure torch_tensor_from_array_real64_4d
   end interface
 
   interface
@@ -244,7 +244,7 @@ contains
     end subroutine torch_module_delete
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int8_1(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int8_1d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int8
 
@@ -272,10 +272,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int8_1
+    end function torch_tensor_from_array_int8_1d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int8_2(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int8_2d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int8
 
@@ -303,10 +303,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int8_2
+    end function torch_tensor_from_array_int8_2d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int8_3(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int8_3d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int8
 
@@ -334,10 +334,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int8_3
+    end function torch_tensor_from_array_int8_3d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int8_4(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int8_4d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int8
 
@@ -365,10 +365,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int8_4
+    end function torch_tensor_from_array_int8_4d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int16_1(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int16_1d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int16
 
@@ -396,10 +396,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int16_1
+    end function torch_tensor_from_array_int16_1d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int16_2(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int16_2d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int16
 
@@ -427,10 +427,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int16_2
+    end function torch_tensor_from_array_int16_2d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int16_3(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int16_3d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int16
 
@@ -458,10 +458,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int16_3
+    end function torch_tensor_from_array_int16_3d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int16_4(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int16_4d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int16
 
@@ -489,10 +489,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int16_4
+    end function torch_tensor_from_array_int16_4d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int32_1(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int32_1d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int32
 
@@ -520,10 +520,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int32_1
+    end function torch_tensor_from_array_int32_1d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int32_2(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int32_2d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int32
 
@@ -551,10 +551,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int32_2
+    end function torch_tensor_from_array_int32_2d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int32_3(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int32_3d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int32
 
@@ -582,10 +582,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int32_3
+    end function torch_tensor_from_array_int32_3d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int32_4(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int32_4d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int32
 
@@ -613,10 +613,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int32_4
+    end function torch_tensor_from_array_int32_4d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int64_1(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int64_1d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int64
 
@@ -644,10 +644,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int64_1
+    end function torch_tensor_from_array_int64_1d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int64_2(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int64_2d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int64
 
@@ -675,10 +675,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int64_2
+    end function torch_tensor_from_array_int64_2d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int64_3(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int64_3d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int64
 
@@ -706,10 +706,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int64_3
+    end function torch_tensor_from_array_int64_3d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_int64_4(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_int64_4d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : int64
 
@@ -737,10 +737,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_int64_4
+    end function torch_tensor_from_array_int64_4d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_real32_1(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_real32_1d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : real32
 
@@ -768,10 +768,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_real32_1
+    end function torch_tensor_from_array_real32_1d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_real32_2(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_real32_2d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : real32
 
@@ -799,10 +799,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_real32_2
+    end function torch_tensor_from_array_real32_2d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_real32_3(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_real32_3d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : real32
 
@@ -830,10 +830,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_real32_3
+    end function torch_tensor_from_array_real32_3d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_real32_4(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_real32_4d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : real32
 
@@ -861,10 +861,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_real32_4
+    end function torch_tensor_from_array_real32_4d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_real64_1(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_real64_1d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : real64
 
@@ -892,10 +892,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_real64_1
+    end function torch_tensor_from_array_real64_1d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_real64_2(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_real64_2d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : real64
 
@@ -923,10 +923,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_real64_2
+    end function torch_tensor_from_array_real64_2d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_real64_3(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_real64_3d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : real64
 
@@ -954,10 +954,10 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_real64_3
+    end function torch_tensor_from_array_real64_3d
 
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_real64_4(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_real64_4d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : real64
 
@@ -985,7 +985,7 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_real64_4
+    end function torch_tensor_from_array_real64_4d
 
 
   end module ftorch

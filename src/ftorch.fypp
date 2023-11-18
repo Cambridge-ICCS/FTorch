@@ -53,7 +53,7 @@ module ftorch
   interface torch_tensor_from_array
     #:for PREC in PRECISIONS
     #:for RANK in RANKS
-    module procedure torch_tensor_from_array_${PREC}$_${RANK}$
+    module procedure torch_tensor_from_array_${PREC}$_${RANK}$d
     #:endfor
     #:endfor
   end interface
@@ -244,7 +244,7 @@ contains
     #:for PREC in PRECISIONS
     #:for RANK in RANKS
     !> return a torch tensor pointing to data_in array
-    function torch_tensor_from_array_${PREC}$_${RANK}$(data_in, layout, c_device) result(tensor)
+    function torch_tensor_from_array_${PREC}$_${RANK}$d(data_in, layout, c_device) result(tensor)
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
       use, intrinsic :: iso_fortran_env, only : ${PREC}$
 
@@ -272,7 +272,7 @@ contains
 
       tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
 
-    end function torch_tensor_from_array_${PREC}$_${RANK}$
+    end function torch_tensor_from_array_${PREC}$_${RANK}$d
 
     #:endfor
     #:endfor
