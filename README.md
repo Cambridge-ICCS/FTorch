@@ -128,11 +128,10 @@ To use the trained Torch model from within Fortran we need to import the `ftorch
 A very simple example is given below.
 For more detailed documentation please consult the API documentation, source code, and examples.
 
-This minimal snippet loads a saved Torch model, creates inputs consisting of two `10x10` matrices (one of ones, and one of zeros), and runs the model to infer output.
+This minimal snippet loads a saved Torch model, creates an input consisting of a `10x10` matrix of ones, and runs the model to infer output.  
+This is illustrative only, and we recommend following the [examples](examples/) before writing your own code to explore more features.
 
 ```fortran
-! Import any C bindings as required for this code
-use, intrinsic :: iso_c_binding, only: c_int, c_int64_t, c_loc
 ! Import library for interfacing with PyTorch
 use ftorch
 
@@ -141,34 +140,30 @@ implicit none
 ! Generate an object to hold the Torch model
 type(torch_module) :: model
 
-! Set up types of input and output data and the interface with C
-integer(c_int), parameter :: dims_input = 2
-integer(c_int64_t) :: shape_input(dims_input)
-integer(c_int), parameter :: n_inputs = 2
+! Set up types of input and output data
+integer, parameter :: n_inputs = 1
 type(torch_tensor), dimension(n_inputs) :: model_input_arr
-integer(c_int), parameter :: dims_output = 1
-integer(c_int64_t) :: shape_output(dims_output)
 type(torch_tensor) :: model_output
 
-! Set up the model inputs as Fortran arrays
-real, dimension(10,10), target  :: input_1, input_2
+! Set up the model input and output as Fortran arrays
+real, dimension(10,10), target  :: input
 real, dimension(5), target   :: output
+
+! Set up number of dimensions of input tensor and axis order
+integer, parameter :: in_dims = 2
+integer :: in_layout(in_dims) = [1,2]
 
 ! Initialise the Torch model to be used
 model = torch_module_load("/path/to/saved/model.pt")
 
-! Initialise the inputs as Fortran
-input_1 = 0.0
-input_2 = 1.0
+! Initialise the inputs as Fortran array of ones
+input = 1.0
 
 ! Wrap Fortran data as no-copy Torch Tensors
 ! There may well be some reshaping required depending on the 
 ! structure of the model which is not covered here (see examples)
-shape_input = (/10, 10/)
-shape_output = (/5/)
-model_input_arr(1) = torch_tensor_from_blob(c_loc(input_1), dims_input, shape_input, torch_kFloat64, torch_kCPU)
-model_input_arr(2) = torch_tensor_from_blob(c_loc(input_2), dims_input, shape_input, torch_kFloat64, torch_kCPU)
-model_output = torch_tensor_from_blob(c_loc(output), dims_output, shape_output, torch_kFloat64, torch_kCPU)
+model_input_arr(1) = torch_tensor_from_array(input, in_layout, torch_kCPU)
+model_output = torch_tensor_from_array(output, out_layout, torch_kCPU)
 
 ! Run model and Infer
 ! Again, there may be some reshaping required depending on model design
@@ -180,7 +175,6 @@ write(*,*) output
 ! Clean up
 call torch_module_delete(model)
 call torch_tensor_delete(model_input_arr(1))
-call torch_tensor_delete(model_input_arr(2))
 call torch_tensor_delete(model_output)
 ```
 
