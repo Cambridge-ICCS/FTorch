@@ -24,9 +24,9 @@ module ftorch
     type(c_ptr) :: p = c_null_ptr  !! pointer to the tensor in memory
   end type torch_tensor
 
-  !| Enumerator for Torch data types
-  !  From c_torch.h (torch_data_t)
-  !  Note that torch_kUInt8 and torch_kFloat16 are not sypported in Fortran
+  !| Enumerator for Torch data types  
+  !  From c_torch.h (torch_data_t)  
+  !  Note that 0 `torch_kUInt8` and 5 `torch_kFloat16` are not sypported in Fortran
   enum, bind(c)
     enumerator :: torch_kUInt8 = 0 ! not supported in Fortran
     enumerator :: torch_kInt8 = 1
@@ -39,7 +39,7 @@ module ftorch
   end enum
 
 
-  !| Enumerator for Torch devices
+  !| Enumerator for Torch devices  
   !  From c_torch.h (torch_device_t)
   enum, bind(c)
     enumerator :: torch_kCPU = 0
