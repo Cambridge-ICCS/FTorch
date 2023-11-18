@@ -3,12 +3,6 @@ name: fypp-checks
 on:
   # run on every push
   push:
-  # run on every push (not commit) to a PR, plus open/reopen
-  pull_request:
-    types:
-    - synchronize
-    - opened
-    - reopened
 
 jobs:
   various:
