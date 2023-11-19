@@ -75,15 +75,15 @@ To build and install the library:
     ```bash
     cd FTorch/src/
     ```
-3. Create a `build` directory and execute cmake from within it using the relevant flags (see below):  
+3. Create a `build` directory and execute cmake from within it using the relevant options (see below):  
     ```bash
     mkdir build
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release
     ```
-    If building on windows you will need to add `-G "NMake Makefiles"` to the `cmake` command.
+    If building on Windows you will need to add `-G "NMake Makefiles"` to the `cmake` command.
     
-    The following CMake flags are available and can be passed as arguments through `-D<Option>=<Value>`:
+    The following table of CMake options are available to be passed as arguments to `cmake` through `-D<Option>=<Value>`.  
     It is likely that you will need to provide at least `CMAKE_PREFIX_PATH`.  
     | Option                                                                                            | Value                        | Description                                                   |
     | ------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------|
@@ -95,6 +95,7 @@ To build and install the library:
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
 
     <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
+
     <sup>2</sup> _The path to the Torch installation needs to allow cmake to locate the relevant Torch cmake files.  
           If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
           then this should be the absolute path to the unzipped libtorch distribution.
