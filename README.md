@@ -189,7 +189,10 @@ find_package(FTorch)
 target_link_libraries( <executable> PRIVATE FTorch::ftorch )
 message(STATUS "Building with Fortran PyTorch coupling")
 ```
-and using the `-DFTorch_DIR=</path/to/install/location>` flag when running cmake.
+and using the `-DCMAKE_PREFIX_PATH=</path/to/install/location>` flag when running cmake.  
+Note: If you used the `CMAKE_INSTALL_PREFIX` argument when
+[building and installing the library](#libaray-installation) above then you should use
+the same path for `</path/to/install/location>`.
 
 #### Make
 To build with make we need to include the library when compiling and link the executable
@@ -203,13 +206,13 @@ FCFLAGS += -I<path/to/install/location>/include/ftorch
 
 When compiling the final executable add the following link flag:
 ```
-LDFLAGS += -L<path/to/install/location>/lib64 -lftorch
+LDFLAGS += -L<path/to/install/location>/lib* -lftorch
 ```
 
 You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
 unless installing in a default location:
 ```
-export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
+export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/install/location>/lib*
 ```
 
 
