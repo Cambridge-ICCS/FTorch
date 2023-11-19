@@ -75,14 +75,16 @@ To build and install the library:
     ```bash
     cd FTorch/src/
     ```
-3. Create a `build` directory and execute cmake from within it using the relevant flags:  
+3. Create a `build` directory and execute cmake from within it using the relevant flags (see below):  
     ```bash
     mkdir build
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release
     ```
-    It is likely that you will need to provide at least the `CMAKE_PREFIX_PATH` flag.  
+    If building on windows you will need to add `-G "NMake Makefiles"` to the `cmake` command.
+    
     The following CMake flags are available and can be passed as arguments through `-D<Option>=<Value>`:
+    It is likely that you will need to provide at least `CMAKE_PREFIX_PATH`.  
     | Option                                                                                            | Value                        | Description                                                   |
     | ------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------|
     | [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `ifort` / `gfortran`         | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup>1</sup>        |
