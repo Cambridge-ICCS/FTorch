@@ -92,7 +92,7 @@ To build and install the library:
     ```
     This will place the following directories at the install location:  
     * `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
-    * `CMAKE_INSTALL_PREFIX/lib64/` - contains `cmake` directory and `.so` files
+    * `CMAKE_INSTALL_PREFIX/lib/` - contains `cmake` directory and `.so` files
 
 
 ## Usage
@@ -206,13 +206,13 @@ FCFLAGS += -I<path/to/install/location>/include/ftorch
 
 When compiling the final executable add the following link flag:
 ```
-LDFLAGS += -L<path/to/install/location>/lib* -lftorch
+LDFLAGS += -L<path/to/install/location>/lib -lftorch
 ```
 
 You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
 unless installing in a default location:
 ```
-export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/install/location>/lib*
+export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/install/location>/lib
 ```
 
 

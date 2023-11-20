@@ -95,7 +95,7 @@ installation of FTorch as described in the main documentation. Also check that t
 You will also likely need to add the location of the `.so` files to your `LD_LIBRARY_PATH`:
 ```
 make
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib
 ./resnet_infer_fortran saved_resnet18_model_cpu.pt
 ```
 
