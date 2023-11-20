@@ -229,18 +229,18 @@ against it.
 
 To compile with make we need add the following compiler flag when compiling files that
 use ftorch:
-```makefile
+```bash
 FCFLAGS += -I<path/to/install/location>/include/ftorch
 ```
 
 When compiling the final executable add the following link flag:
-```makefile
+```bash
 LDFLAGS += -L<path/to/install/location>/lib64 -lftorch
 ```
 
 You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
 unless installing in a default location:
-```makefile
+```bash
 export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
 ```
 
