@@ -152,6 +152,8 @@ real, dimension(5), target   :: output
 ! Set up number of dimensions of input tensor and axis order
 integer, parameter :: in_dims = 2
 integer :: in_layout(in_dims) = [1,2]
+integer, parameter :: out_dims = 1
+integer :: out_layout(out_dims) = [1]
 
 ! Initialise the Torch model to be used
 model = torch_module_load("/path/to/saved/model.pt")
