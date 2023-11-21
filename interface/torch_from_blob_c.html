@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,7 +9,7 @@
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
-    <title>torch_tensor_from_array_c_double &ndash; FTorch</title>
+    <title>torch_from_blob_c &ndash; FTorch</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -60,8 +61,8 @@
 
     <div class="container">
   <div class="row">
-    <h1>torch_tensor_from_array_c_double
-      <small>Function</small>
+    <h1>torch_from_blob_c
+      <small>Interface</small>
       
     </h1>
       <div class="container p-2 mb-4 bg-light border rounded-3">
@@ -73,7 +74,7 @@
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-html="true"
-                 title=" 4.7% of total for procedures.">9 statements</a>
+                 title=" 2.0% of total for procedures.">12 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -87,7 +88,7 @@
           <ol class="breadcrumb justify-content-end mb-0">
                 <li class="breadcrumb-item"><a href='../sourcefile/ftorch.f90.html'>ftorch.f90</a></li>
                 <li class="breadcrumb-item"><a href='../module/ftorch.html'>ftorch</a></li>
-            <li class="breadcrumb-item active" aria-current="page">torch_tensor_from_array_c_double</li>
+            <li class="breadcrumb-item active" aria-current="page">torch_from_blob_c</li>
           </ol>
         </nav>
       </div>
@@ -125,36 +126,19 @@
   
   
   
-    <div class="card card-primary">
-      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
-      <div class="list-group">
-        <a class="list-group-item" href="../proc/torch_tensor_from_array_c_double.html#src">torch_tensor_from_array_c_double</a>
-      </div>
-    </div>
 
+    <em>None</em>
 
   </div>
 
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public  function torch_tensor_from_array_c_double(data_arr, tensor_shape, device) result(tensor)  
-</h2>
-        <div class="card mb-4">
-      <h3 class="card-header card-title bg-light">Uses</h3>
-      <div class="card-body">
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <ul class="list-inline">
-                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
-              </ul>
-            </li>
-        </ul>
-      </div>
-    </div>
+      <h2>interface <br>
+      public  function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device) result(tensor_p) bind(c, name = 'torch_from_blob')  
+</h2>    
 
-
-
+    
 
     <h3>Arguments</h3>
         <table class="table table-striped varlist">
@@ -169,22 +153,37 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-data_arr~2"></span>
-              real(kind=c_double),
+              <span class="anchor" id="variable-data~2"></span>
+              type(c_ptr),
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              value
             </td>
             <td>::</td>
-            <td><strong>data_arr</strong>(*)</td>
+            <td><strong>data</strong></td>
             <td>
-                <p>Fortran array of data</p>
+                
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor_shape~5"></span>
+              <span class="anchor" id="variable-ndims~28"></span>
+              integer(kind=c_int),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>ndims</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor_shape~4"></span>
               integer(kind=c_int64_t),
             </td>
 <td>intent(in)</td>
@@ -192,69 +191,65 @@
               
             </td>
             <td>::</td>
-            <td><strong>tensor_shape</strong>(:)</td>
+            <td><strong>tensor_shape</strong>(*)</td>
             <td>
-                <p>Shape of the tensor</p>
+                
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device~5"></span>
-              integer(kind=c_int),
+              <span class="anchor" id="variable-strides~26"></span>
+              integer(kind=c_int64_t),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
               
             </td>
             <td>::</td>
+            <td><strong>strides</strong>(*)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dtype~4"></span>
+              integer(kind=c_int),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>dtype</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-device~4"></span>
+              integer(kind=c_int),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
             <td><strong>device</strong></td>
             <td>
-                <p>Device on which the tensor will live on (torch_kCPU or torch_kGPU)</p>
+                
             </td>
         </tr>
     </tbody>
   </table>
 
-      <h3>Return Value
-        <small>
-          <span class="anchor" id="variable-tensor~7"></span>
-          type(<a href='../type/torch_tensor.html'>torch_tensor</a>)
-        </small>
-      </h3>
-      <p>Returned tensor</p>
+      <h3>Return Value <span class="anchor" id="variable-tensor_p"></span><small>type(c_ptr)</small></h3>
+    
     <br>
 
-
-    
-    
-
-    
-    
-
-
-
-    
-    <section>
-    <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">function </span><span class="n">torch_tensor_from_array_c_double</span><span class="p">(</span><span class="n">data_arr</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">,</span><span class="w"> </span><span class="n">device</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
-<span class="w">      </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int64_t</span><span class="p">,</span><span class="w"> </span><span class="kt">c_double</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span>
-<span class="nb">      </span><span class="kt">real</span><span class="p">(</span><span class="kt">c_double</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">data_arr</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w">   </span><span class="c">!! Fortran array of data</span>
-<span class="w">      </span><span class="c">! real(c_double), intent(in), target :: data_arr(*)   !! Fortran array of data</span>
-<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int64_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(:)</span><span class="w">   </span><span class="c">!! Shape of the tensor</span>
-<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dtype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_kFloat64</span>
-<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">       </span><span class="kd">::</span><span class="w"> </span><span class="n">device</span><span class="w">     </span><span class="c">!! Device on which the tensor will live on (torch_kCPU or torch_kGPU)</span>
-<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">)</span><span class="w">               </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w">     </span><span class="c">!! Returned tensor</span>
-
-<span class="w">      </span><span class="n">tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_t_from_array</span><span class="p">(</span><span class="nb">c_loc</span><span class="p">(</span><span class="n">data_arr</span><span class="p">),</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">,</span><span class="w"> </span><span class="n">dtype</span><span class="p">,</span><span class="w"> </span><span class="n">device</span><span class="p">)</span>
-
-<span class="w">   </span><span class="k">end function </span><span class="n">torch_tensor_from_array_c_double</span>
-</pre></div>
-
-    </section>
-    <br>
-    
-    </div>
-  </div>
+ </div>
+</div>
 
       <hr>
     </div> <!-- /container -->
