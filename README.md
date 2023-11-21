@@ -192,9 +192,9 @@ target_link_libraries( <executable> PRIVATE FTorch::ftorch )
 message(STATUS "Building with Fortran PyTorch coupling")
 ```
 and using the `-DCMAKE_PREFIX_PATH=</path/to/install/location>` flag when running cmake.  
-Note: If you used the `CMAKE_INSTALL_PREFIX` argument when
+_Note: If you used the `CMAKE_INSTALL_PREFIX` argument when
 [building and installing the library](#library-installation) above then you should use
-the same path for `</path/to/install/location>`.
+the same path for `</path/to/install/location>`._
 
 #### Make
 To build with make we need to include the library when compiling and link the executable
