@@ -95,7 +95,7 @@ contains
   ! Torch Tensor API
   !| Exposes the given data as a tensor without taking ownership of the original data.
   !  This routine will take an (i, j, k) array and return an (k, j, i) tensor.
-  function torch_tensor_from_blob(data, ndims, tensor_shape, dtype, device, layout) result(tensor)
+  function torch_tensor_from_blob(data, layout, ndims, tensor_shape, dtype, device) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
     type(c_ptr), intent(in)        :: data       !! Pointer to data
     integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
