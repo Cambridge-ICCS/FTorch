@@ -193,7 +193,7 @@ message(STATUS "Building with Fortran PyTorch coupling")
 ```
 and using the `-DCMAKE_PREFIX_PATH=</path/to/install/location>` flag when running cmake.  
 Note: If you used the `CMAKE_INSTALL_PREFIX` argument when
-[building and installing the library](#libaray-installation) above then you should use
+[building and installing the library](#library-installation) above then you should use
 the same path for `</path/to/install/location>`.
 
 #### Make
