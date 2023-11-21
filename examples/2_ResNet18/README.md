@@ -70,10 +70,9 @@ This can be done using the included `CMakeLists.txt` as follows:
 ```
 mkdir build
 cd build
-cmake .. -DFTorch_DIR=<path/to/your/installation/of/library/>lib/cmake/ -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
-Make sure that the  `FTorch_DIR` flag points to the `lib/cmake/` folder within the installation of the FTorch library.  
 
 To run the compiled code calling the saved ResNet-18 TorchScript from Fortran run the
 executable with an argument of the saved model file:
@@ -96,7 +95,7 @@ installation of FTorch as described in the main documentation. Also check that t
 You will also likely need to add the location of the `.so` files to your `LD_LIBRARY_PATH`:
 ```
 make
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib
 ./resnet_infer_fortran saved_resnet18_model_cpu.pt
 ```
 

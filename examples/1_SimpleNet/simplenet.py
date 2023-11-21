@@ -1,4 +1,4 @@
-"""Module defining a simple PyTorch 'Net' for coupling to Fortran. """
+"""Module defining a simple PyTorch 'Net' for coupling to Fortran."""
 import torch
 from torch import nn
 
@@ -15,7 +15,6 @@ class SimpleNet(nn.Module):
         Consists of a single Linear layer with weights predefined to
         multiply the input by 2.
         """
-
         super().__init__()
         self._fwd_seq = nn.Sequential(
             nn.Linear(5, 5, bias=False),
@@ -38,7 +37,6 @@ class SimpleNet(nn.Module):
             batch scaled by 2.
 
         """
-
         return self._fwd_seq(batch)
 
 

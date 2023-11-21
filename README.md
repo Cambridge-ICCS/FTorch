@@ -93,6 +93,7 @@ To build and install the library:
     | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`       | Location of Torch installation<sup>2</sup>                    |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
+    | `ENABLE_CUDA`                                                                                     | `TRUE` / `FALSE`             | Specifies whether to check for and enable CUDA<sup>2</sup> |
 
     <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
 
@@ -123,9 +124,11 @@ To build and install the library:
 
     Installation will place the following directories at the install location:  
     * `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
-    * `CMAKE_INSTALL_PREFIX/lib64/` - contains `cmake` directory and `.so` files
-	
+    * `CMAKE_INSTALL_PREFIX/lib/` - contains `cmake` directory and `.so` files  
+    _Note: depending on your system and architecture `lib` may be `lib64`, and 
+    you may have `.dll` files or similar._  
 	_Note: In a Windows environment this will require administrator privileges for the default install location._
+
 
 ## Usage
 
@@ -221,7 +224,10 @@ find_package(FTorch)
 target_link_libraries( <executable> PRIVATE FTorch::ftorch )
 message(STATUS "Building with Fortran PyTorch coupling")
 ```
-and using the `-DFTorch_DIR=</path/to/install/location>` flag when running cmake.
+and using the `-DCMAKE_PREFIX_PATH=</path/to/install/location>` flag when running cmake.  
+_Note: If you used the `CMAKE_INSTALL_PREFIX` argument when
+[building and installing the library](#library-installation) above then you should use
+the same path for `</path/to/install/location>`._
 
 #### Make
 To build with make we need to include the library when compiling and link the executable
@@ -235,14 +241,35 @@ FCFLAGS += -I<path/to/install/location>/include/ftorch
 
 When compiling the final executable add the following link flag:
 ```bash
-LDFLAGS += -L<path/to/install/location>/lib64 -lftorch
+LDFLAGS += -L<path/to/install/location>/lib -lftorch
 ```
 
 You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
 unless installing in a default location:
 ```bash
-export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
+export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/install/location>/lib
 ```
+_Note: depending on your system and architecture `lib` may be `lib64` or something similar._
+
+### 4. Running on GPUs
+
+In order to run a model on GPU, two main changes are required:
+
+1. When saving your TorchScript model, ensure that it is on the GPU. For example, when using [pt2ts.py](utils/pt2ts.py), this can be done by uncommenting the following lines:
+
+```
+device = torch.device('cuda')
+trained_model = trained_model.to(device)
+trained_model.eval()
+trained_model_dummy_input_1 = trained_model_dummy_input_1.to(device)
+trained_model_dummy_input_2 = trained_model_dummy_input_2.to(device)
+```
+
+Note: this also moves the dummy input tensors to the GPU. This is not necessary for saving the model, but the tensors must also be on the GPU to test that the models runs.
+
+
+2. When calling `torch_tensor_from_blob` in Fortran, the device for the input tensor(s), but not the output tensor(s),
+   should be set to `torch_kCUDA`, rather than `torch_kCPU`. This ensures that the inputs are on the same device as the model.
 
 
 ## Examples

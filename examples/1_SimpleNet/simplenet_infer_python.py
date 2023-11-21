@@ -21,7 +21,6 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     output : torch.Tensor
         result of running inference on model with example Tensor input
     """
-
     input_tensor = torch.tensor([0.0, 1.0, 2.0, 3.0, 4.0]).repeat(batch_size, 1)
 
     if device == "cpu":

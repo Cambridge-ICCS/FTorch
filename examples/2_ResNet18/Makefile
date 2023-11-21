@@ -6,7 +6,7 @@ FC = gfortran
 FCFLAGS = -O3 -I</path/to/installation>/include/ftorch
 
 # link flags
-LDFLAGS = -L</path/to/installation>/lib64/ -lftorch
+LDFLAGS = -L</path/to/installation>/lib/ -lftorch
 
 PROGRAM = resnet_infer_fortran
 SRC = resnet_infer_fortran.f90

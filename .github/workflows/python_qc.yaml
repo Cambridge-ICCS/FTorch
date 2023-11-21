@@ -1,0 +1,32 @@
+name: python-code-qc
+
+on:
+  # run on every push to main
+  push:
+    branches:
+    - main
+  # run on every push (not commit) to a PR, plus open/reopen
+  pull_request:
+    types:
+    - synchronize
+    - opened
+    - reopened
+
+jobs:
+  various:
+    name: Python Code QC (Black, pydocstyle)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    - run: pip install black pydocstyle
+
+    # annotate each step with `if: always` to run all regardless
+    - name: Assert that code matches Black code style
+      if: always()
+      uses: psf/black@stable
+    - name: Lint with pydocstyle
+      if: always()
+      run: pydocstyle --convention=numpy ./
