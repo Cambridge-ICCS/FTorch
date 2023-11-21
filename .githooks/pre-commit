@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# A hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+
+# Fail immediately at first issue with the relevant exit status.
+set -eo pipefail
+
+# ===================================================================
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+	against=HEAD
+else
+	# Initial commit: diff against an empty tree object
+	against=$(git hash-object -t tree /dev/null)
+fi
+
+# ===================================================================
+
+# Check that ftorch.90 is not modified and staged alone.
+git diff --cached --name-only | if grep --quiet "ftorch.f90"; then
+  git diff --cached --name-only | if ! grep --quiet "ftorch.fypp"; then
+    cat <<\EOF
+Error: File ftorch.f90 has been modified and staged without ftorch.fypp being changed.
+ftorch.90 should be generated from ftorch.fypp using fypp.
+Please restore ftorch.f90 and make your modifications to ftorch.fypp instead.
+EOF
+    exit 1
+  fi
+fi
+
+# Check to see if ftorch.fypp has been modified AND is staged.
+git diff --cached --name-only | if grep --quiet "ftorch.fypp"; then
+
+  # Check that ftorch.90 is also modified and staged.
+  git diff --cached --name-only | if ! grep --quiet "ftorch.f90"; then
+    cat <<\EOF
+Error: File ftorch.fypp has been modified and staged, but ftorch.f90 has not.
+ftorch.90 should be generated from ftorch.fypp and both committed together.
+Please run fypp on ftorch.fypp to generate ftorch.f90 and commit together.
+EOF
+    exit 1
+  else
+    # Check fypp available, and raise error and exit if not.
+    if ! command -v fypp &> /dev/null; then
+      cat <<\EOF
+echo "Error: Could not find fypp to run on ftorch.fypp.
+Please install fypp using "pip install fypp" and then try committing again.
+EOF
+      exit 1
+    fi
+
+    # If fypp is available and both .f90 and .fypp staged, check they match.
+    fypp src/ftorch.fypp src/ftorch.f90_tmp
+    if ! diff -q "src/ftorch.f90" "src/ftorch.f90_tmp" &> /dev/null; then
+      rm src/ftorch.f90_tmp
+      cat <<\EOF
+Error: The code in ftorch.f90 does not match that expected from ftorch.fypp.
+Please re-run fypp on ftorch.fypp to ensure consistency before committing.
+EOF
+      exit 1
+    else
+      rm src/ftorch.f90_tmp
+    fi
+  fi
+fi
