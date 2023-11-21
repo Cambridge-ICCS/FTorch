@@ -81,7 +81,8 @@ To build and install the library:
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release
     ```
-    If building on Windows you will need to add `-G "NMake Makefiles"` to the `cmake` command.
+    If building on Windows you will need to add `-G "NMake Makefiles"` to the `cmake` command. Also you will need to load the
+    intel fortran compilers using `setvars.bat` which is found in the Intel compiler install directory.
     
     The following table of CMake options are available to be passed as arguments to `cmake` through `-D<Option>=<Value>`.  
     It is likely that you will need to provide at least `CMAKE_PREFIX_PATH`.  
