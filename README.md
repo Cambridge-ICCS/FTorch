@@ -242,6 +242,7 @@ FCFLAGS += -I<path/to/install/location>/include/ftorch
 When compiling the final executable add the following link flag:
 ```bash
 LDFLAGS += -L<path/to/install/location>/lib -lftorch
+=======
 ```
 
 You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
