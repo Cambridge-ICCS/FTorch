@@ -229,12 +229,12 @@ against it.
 
 To compile with make we need add the following compiler flag when compiling files that
 use ftorch:
-```bash
+```makefile
 FCFLAGS += -I<path/to/install/location>/include/ftorch
 ```
 
 When compiling the final executable add the following link flag:
-```bash
+```makefile
 LDFLAGS += -L<path/to/install/location>/lib64 -lftorch
 ```
 
