@@ -96,21 +96,22 @@ if __name__ == "__main__":
 
     # FPTLIB-TODO
     # Generate a dummy input Tensor `dummy_input` to the model of appropriate size.
-    # This example assumes two inputs of size (512x40) and (512x1)
-    trained_model_dummy_input_1 = torch.ones(1, 3, 224, 224)
+    # This example assumes one input of size (1x3x244x244) -- one RGB (3) image
+    # of resolution 244x244 in a batch size of 1.
+    trained_model_dummy_input = torch.ones(1, 3, 224, 224)
 
     # FPTLIB-TODO
     # Uncomment the following lines to save for inference on GPU (rather than CPU):
     # device = torch.device('cuda')
     # trained_model = trained_model.to(device)
     # trained_model.eval()
-    # trained_model_dummy_input_1 = trained_model_dummy_input_1.to(device)
+    # trained_model_dummy_input = trained_model_dummy_input.to(device)
 
     # FPTLIB-TODO
     # Run model for dummy inputs
     # If something isn't working This will generate an error
     trained_model_dummy_output = trained_model(
-        trained_model_dummy_input_1,
+        trained_model_dummy_input,
     )
 
     # =====================================================
@@ -142,13 +143,13 @@ if __name__ == "__main__":
     # Load torchscript and run model as a test
     # FPTLIB-TODO
     # Scale inputs as above and, if required, move inputs and mode to GPU
-    trained_model_dummy_input_1 = 2.0 * trained_model_dummy_input_1
+    trained_model_dummy_input = 2.0 * trained_model_dummy_input
     trained_model_testing_output = trained_model(
-        trained_model_dummy_input_1,
+        trained_model_dummy_input,
     )
     ts_model = load_torchscript(filename=saved_ts_filename)
     ts_model_output = ts_model(
-        trained_model_dummy_input_1,
+        trained_model_dummy_input,
     )
 
     if torch.all(ts_model_output.eq(trained_model_testing_output)):
