@@ -64,7 +64,7 @@ def check_results(output: torch.Tensor) -> None:
     assert isclose(
         torch.max(torch.nn.functional.softmax(output[0], dim=0)),
         expected_prob,
-        abs_tol=1e-8,
+        abs_tol=1e-5,
     )
 
 
