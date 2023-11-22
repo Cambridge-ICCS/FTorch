@@ -75,7 +75,7 @@ This can be done using the included `CMakeLists.txt` as follows:
 mkdir build
 cd build
 cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> -DCMAKE_BUILD_TYPE=Release
-make
+cmake --build .
 ```
 
 To run the compiled code calling the saved SimpleNet TorchScript from Fortran run the
