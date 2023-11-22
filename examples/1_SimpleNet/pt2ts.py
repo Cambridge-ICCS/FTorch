@@ -100,7 +100,6 @@ if __name__ == "__main__":
     # trained_model = trained_model.to(device)
     # trained_model.eval()
     # trained_model_dummy_input_1 = trained_model_dummy_input_1.to(device)
-    # trained_model_dummy_input_2 = trained_model_dummy_input_2.to(device)
 
     # FPTLIB-TODO
     # Run model for dummy inputs
