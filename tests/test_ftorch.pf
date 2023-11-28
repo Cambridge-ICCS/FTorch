@@ -1,0 +1,28 @@
+@test
+subroutine test_torch_from_blob()
+  use pfunit_mod
+  use ftorch
+  use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_loc
+  use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, c_int64_t, &
+                                         c_float, c_double, c_char, c_ptr, c_null_ptr
+
+  implicit none
+
+  ! generate test data for torch_tensor_from_blob
+  integer(c_int), parameter :: ndims = 2
+  integer(c_int64_t), parameter :: tensor_shape(ndims)  = [2,3] ! 2 rows, 3 columns
+  integer(kind = 4), target :: data1(2,3)  = reshape([1,2,3,4,5,6], [2,3])  ! 2 rows, 3 columns
+  integer(c_int), parameter :: layout(ndims) = [1, 1]
+  integer(c_int) :: dtype  = torch_kInt32
+  integer(c_int) :: device = torch_kCPU
+
+  type(torch_tensor) :: tensor
+  integer(kind = 4) :: data2(2,3) = reshape([1,2,3,4,5,6], [3,2]) ! 3 columns, 2 rows (after reshape)
+
+  ! Smoke test
+  tensor = torch_tensor_from_blob(c_loc(data1), ndims, tensor_shape, layout, dtype, device)
+
+  ! TODO: would be good to try to compare the data in the tensor to the data in data1
+
+  !@assertEqual(tensor, data2)
+end subroutine test_torch_from_blob
