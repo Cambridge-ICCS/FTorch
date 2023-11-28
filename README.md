@@ -104,6 +104,8 @@ To build and install the library:
           If Torch has been installed as PyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
           e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
 		  You can find the location of your torch install by importing torch from your python environment (`import torch`) and running `print(torch.__file__)`_
+
+	  Note __Mac OS X users__ are more likely to have success using the approach of pointing cmake at python install of PyTorch.
 		  
 4. Make and install the library to the desired location with either:
 	```bash
