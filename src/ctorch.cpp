@@ -59,6 +59,16 @@ const auto get_device(torch_device_t device_type, int device_index)
   }
 }
 
+void set_is_training(torch_jit_script_module_t module, const bool is_training)
+{
+  auto model = static_cast<torch::jit::script::Module*>(module);
+  if (is_training) {
+    model->train();
+  } else {
+    model->eval();
+  }
+}
+
 torch_tensor_t torch_zeros(int ndim, const int64_t* shape, torch_data_t dtype,
                            torch_device_t device_type, int device_index = -1, const bool requires_grad)
 {
@@ -197,11 +207,7 @@ torch_jit_script_module_t torch_jit_load(const char* filename,
     delete module;
     exit(EXIT_FAILURE);
   }
-  if (is_training) {
-    module->train();
-  } else {
-    module->eval();
-  }
+  set_is_training(module, is_training);
 
   return module;
 }
