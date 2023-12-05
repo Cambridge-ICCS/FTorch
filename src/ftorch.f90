@@ -278,13 +278,13 @@ contains
     character(*), intent(in)   :: filename !! Filename of TorchScript module
     integer(c_int), optional, intent(in) :: device_type !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index !! device index to use for `torch_kCUDA` case
-    logical(c_bool), optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-    logical(c_bool), optional, intent(in) :: is_training_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: is_training_opt  !! Whether gradients need to be computed for the created tensor
     type(torch_module)         :: module   !! Returned deserialized module
     integer(c_int) :: device_type_value
     integer(c_int) :: device_index_value
-    logical(c_bool) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-    logical(c_bool) :: is_training  !! Whether the model is being trained, rather than evaluated
+    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: is_training  !! Whether the model is being trained, rather than evaluated
 
     interface
       function torch_jit_load_c(filename, device_type, device_index, requires_grad, is_training) result(module) &
@@ -314,19 +314,19 @@ contains
     endif
 
     if (.not. present(requires_grad_opt)) then
-      requires_grad = logical(.false., c_bool)
+      requires_grad = .false.
     else
       requires_grad = requires_grad_opt
     end if
 
     if (.not. present(is_training_opt)) then
-      is_training = logical(.false., c_bool)
+      is_training = .false.
     else
       is_training = is_training_opt
     end if
 
     ! Need to append c_null_char at end of filename
-    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char, device_type_value, device_index_value, requires_grad, is_training)
+    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char, device_type_value, device_index_value, logical(requires_grad, c_bool), logical(is_training, c_bool))
   end function torch_module_load
 
   !> Performs a forward pass of the module with the input tensors
@@ -335,9 +335,9 @@ contains
     type(torch_module), intent(in) :: module        !! Module
     type(torch_tensor), intent(in), dimension(:) :: input_tensors  !! Array of Input tensors
     type(torch_tensor), intent(in) :: output_tensor !! Returned output tensors
-    logical(c_bool), optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
     integer(c_int) ::  n_inputs
-    logical(c_bool) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     integer :: i
     type(c_ptr), dimension(n_inputs), target  :: input_ptrs
@@ -356,7 +356,7 @@ contains
     end interface
 
     if (.not. present(requires_grad_opt)) then
-      requires_grad = logical(.false., c_bool)
+      requires_grad = .false.
     else
       requires_grad = requires_grad_opt
     end if
@@ -366,7 +366,7 @@ contains
       input_ptrs(i) = input_tensors(i)%p
     end do
 
-    call torch_jit_module_forward_c(module%p, c_loc(input_ptrs), n_inputs, output_tensor%p, requires_grad)
+    call torch_jit_module_forward_c(module%p, c_loc(input_ptrs), n_inputs, output_tensor%p, logical(requires_grad, c_bool))
   end subroutine torch_module_forward
 
   !> Deallocates a TorchScript module
