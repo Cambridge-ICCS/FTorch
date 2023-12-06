@@ -6,6 +6,7 @@ import torch
 import torchvision
 import argparse
 
+
 # Initialize everything
 def initialize(precision: torch.dtype) -> torch.nn.Module:
     """
@@ -21,7 +22,6 @@ def initialize(precision: torch.dtype) -> torch.nn.Module:
     model: torch.nn.Module
         Pretrained ResNet-18 model
     """
-
     # Set working precision
     torch.set_default_dtype(precision)
 
@@ -35,22 +35,8 @@ def initialize(precision: torch.dtype) -> torch.nn.Module:
     model.eval()
 
     return model
-    
-def run_model(model: torch.nn.Module, precision: type, image_filename: str, categories_filename: str) -> None:
- """
-    Run the pre-trained ResNet-18 with an example image of a dog.
 
-    Parameters
-    ----------
-    model: torch.nn.Module
-        Pretrained model to run.
-    precision: type
-        NumPy data type to save input tensor.
-    """
-    # Transform image into the form expected by the pre-trained model, using the mean
-    # and standard deviation from the ImageNet dataset
-    # See: https://pytorch.org/vision/0.8/models.html
-    # image_filename = "data/dog.jpg"
+def run_model(model: torch.nn.Module, precision: type, image_filename: str, categories_filename: str) -> None:
     input_image = Image.open(image_filename)
     preprocess = torchvision.transforms.Compose(
         [
@@ -91,23 +77,23 @@ def run_model(model: torch.nn.Module, precision: type, image_filename: str, cate
         output = model(input_batch)
     print("done.")
 
-    print_top_results(output, categories_filename)
+    print_top_results(output)
 
-def print_top_results(output: torch.Tensor, categories_filename: str) -> None:
+
+def print_top_results(output: torch.Tensor) -> None:
     """Print top 5 results.
 
     Parameters
     ----------
     output: torch.Tensor
         Output from ResNet-18.
-    categories_filename: str
-        Path to the ImageNet categories file.
     """
     #  Run a softmax to get probabilities
     probabilities = torch.nn.functional.softmax(output[0], dim=0)
 
     # Read ImageNet labels from text file
-    categories = np.genfromtxt(categories_filename, dtype=str, delimiter="\n")
+    cats_filename = "data/categories.txt"
+    categories = np.genfromtxt(cats_filename, dtype=str, delimiter="\n")
 
     # Show top categories per image
     top5_prob, top5_catid = torch.topk(probabilities, 5)
@@ -119,11 +105,12 @@ def print_top_results(output: torch.Tensor, categories_filename: str) -> None:
         )
 
 
+
 if __name__ == "__main__":
     # Define command-line arguments
     parser = argparse.ArgumentParser(description="ResNet-18 Image Classification")
     parser.add_argument("image_path", type=str, help="Path to the input image file")
-    parser.add_argument("categories_file", type=str, help="Path to the ImageNet categories file")
+
     parser.add_argument(
         "--precision",
         choices=["fp32", "fp64"],
@@ -149,4 +136,4 @@ if __name__ == "__main__":
         raise ValueError("Precision must be 'fp32' or 'fp64'")
 
     rn_model = initialize(torch_precision)
-    run_model(rn_model, np_precision, args.image_path, args.categories_file)
+    run_model(rn_model, np_precision, args.image_path,"data/categories.txt")
