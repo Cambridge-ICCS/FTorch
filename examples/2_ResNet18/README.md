@@ -11,7 +11,7 @@ To utilize the ResNet-18 example from FTorch, you can run the provided Python sc
 A python file is provided that downloads the pretrained[ResNet-18 (https://pytorch.org/vision/main/models/generated/torchvision.models.resnet18.html)
 model from [TorchVision](https://pytorch.org/vision/stable/index.html).
 
-A modified version of the `pt2ts.py` tool saves this ResNet-18 to TorchScript.
+A modified version of the pt2ts.py tool saves this ResNet-18 to TorchScript.
 
 A series of files `resnet_infer_<LANG>` then bind from other languages to run the
 TorchScript ResNet-18 model in inference mode.
@@ -39,13 +39,13 @@ pip install -r requirements.txt
 You can run the provided resnet18.py script from the command line:
 
 ```
-python resnet18.py /path/to/your/image.jpg --precision fp32 --model_type resnet18
+python3 resnet18.py "./data/dog.jpg" --precision fp32 
 ```
 
-Replace /path/to/your/image.jpg with the path to the image you want to classify.
-Options: --precision: Specify the working precision. Choose between "fp32" (single precision) or "fp64" (double precision). 
-The default is "fp32". --model_type: Specify the model type. In this case, it's "resnet18".
+Image path ./data/dog.jpg to  classify.
 
+Options: --precision: Specify the working precision. Choose between "fp32" (single precision) or "fp64" (double precision). 
+The default is "fp32".  
 ```
 Top 5 results:
 
