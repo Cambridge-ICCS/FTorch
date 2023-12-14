@@ -36,7 +36,20 @@ def initialize(precision: torch.dtype) -> torch.nn.Module:
 
     return model
 
-def run_model(model: torch.nn.Module, precision: type, image_filename: str, categories_filename: str) -> None:
+def run_model(model: torch.nn.Module, precision: type, image_filename: str) -> None:
+    """
+    Run the pre-trained ResNet-18 with an example image of a dog.
+
+    Parameters
+    ----------
+    model: torch.nn.Module
+        Pretrained model to run.
+    precision: type
+        NumPy data type to save input tensor.
+    """
+    # Transform image into the form expected by the pre-trained model, using the mean
+    # and standard deviation from the ImageNet dataset
+    # See: https://pytorch.org/vision/0.8/models.html
     input_image = Image.open(image_filename)
     preprocess = torchvision.transforms.Compose(
         [
@@ -58,11 +71,11 @@ def run_model(model: torch.nn.Module, precision: type, image_filename: str, cate
     )  # type: np.typing.NDArray
 
     # Save data as binary
-    np_input.tofile("image_tensor.dat")
+    np_input.tofile("data/image_tensor.dat")
 
     # Load saved data to check it was saved correctly
     np_data = np.fromfile(
-        "image_tensor.dat", dtype=precision
+        "data/image_tensor.dat", dtype=precision
     )  # type: np.typing.NDArray
 
     # Reshape to original tensor shape
@@ -117,12 +130,6 @@ if __name__ == "__main__":
         default="fp32",
         help="Working precision (default: fp32)",
     )
-    parser.add_argument(
-        "--model_type",
-        choices=["resnet18"],
-        default="resnet18",
-        help="Model type (default: resnet18)",
-    )
     args = parser.parse_args()
 
     # Map command-line precision argument to NumPy and Torch data types
@@ -136,4 +143,4 @@ if __name__ == "__main__":
         raise ValueError("Precision must be 'fp32' or 'fp64'")
 
     rn_model = initialize(torch_precision)
-    run_model(rn_model, np_precision, args.image_path,"data/categories.txt")
+    run_model(rn_model, np_precision, args.image_path )
