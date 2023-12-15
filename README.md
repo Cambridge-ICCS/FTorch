@@ -313,6 +313,8 @@ Notable contributors to this project are:
 * [**@athelaf**](https://github.com/athelaf)
 * [**@jatkinson1000**](https://github.com/jatkinson1000)
 * [**@SimonClifford**](https://github.com/SimonClifford)
+* [**@ElliottKasoar**](https://github.com/ElliottKasoar)
+* [**@TomMelt**](https://github.com/TomMelt)
 
 See [Contributors](https://github.com/Cambridge-ICCS/FTorch/graphs/contributors)
 for a full list.
