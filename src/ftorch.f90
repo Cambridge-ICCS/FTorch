@@ -41,10 +41,10 @@ module ftorch
 
   !| Enumerator for Torch devices  
   !  From c_torch.h (torch_device_t)
-  enum, bind(c)
-    enumerator :: torch_kCPU = 0
-    enumerator :: torch_kCUDA = 1
-  end enum
+  !enum, bind(c)
+  !  enumerator :: torch_kCPU = 0
+  !  enumerator :: torch_kCUDA = 1
+  !end enum
 
   !> Interface for directing `torch_tensor_from_array` to possible input types and ranks
   interface torch_tensor_from_array
@@ -195,22 +195,24 @@ contains
 
   ! Torch Module API
   !> Loads a Torch Script module (pre-trained PyTorch model saved with Torch Script)
-  function torch_module_load(filename) result(module)
-    use, intrinsic :: iso_c_binding, only : c_null_char
-    character(*), intent(in) :: filename !! Filename of Torch Script module
+  function torch_module_load(filename, device) result(module)
+    use, intrinsic :: iso_c_binding, only : c_null_char, c_int
+    character(*), intent(in)      :: filename !! Filename of Torch Script module
+    integer(c_int), intent(in)    :: device 
     type(torch_module)            :: module      !! Returned deserialized module
 
     interface
-      function torch_jit_load_c(filename) result(module) &
+      function torch_jit_load_c(filename, device) result(module) &
           bind(c, name = 'torch_jit_load')
-        use, intrinsic :: iso_c_binding, only : c_char, c_ptr
-        character(c_char), intent(in) :: filename(*)
-        type(c_ptr)                   :: module
+        use, intrinsic :: iso_c_binding, only : c_char, c_int, c_ptr
+        character(c_char), intent(in)     :: filename(*)
+        integer(c_int), value, intent(in) :: device
+        type(c_ptr)                       :: module
       end function torch_jit_load_c
     end interface
 
     ! Need to append c_null_char at end of filename
-    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char)
+    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char, device)
   end function torch_module_load
 
   !> Performs a forward pass of the module with the input tensors

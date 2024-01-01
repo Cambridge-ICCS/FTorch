@@ -26,7 +26,7 @@ typedef enum {
 } torch_data_t;
 
 // Device types
-typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
+//typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
 
 
 // =====================================================================================
@@ -40,7 +40,7 @@ typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
  * @param device used (cpu, CUDA, etc.)
  */
 EXPORT_C torch_tensor_t torch_zeros(int ndim, const int64_t* shape,
-                                    torch_data_t dtype, torch_device_t device);
+                                    torch_data_t dtype, int device);
 
 /**
  * Function to generate a Torch Tensor of ones
@@ -50,7 +50,7 @@ EXPORT_C torch_tensor_t torch_zeros(int ndim, const int64_t* shape,
  * @param device used (cpu, CUDA, etc.)
  */
 EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t* shape,
-                                   torch_data_t dtype, torch_device_t device);
+                                   torch_data_t dtype, int device);
 
 /**
  * Function to generate an empty Torch Tensor
@@ -60,7 +60,7 @@ EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t* shape,
  * @param device used (cpu, CUDA, etc.)
  */
 EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t* shape,
-                                    torch_data_t dtype, torch_device_t device);
+                                    torch_data_t dtype, int device);
 
 /**
  * Function to create a Torch Tensor from memory location given extra information
@@ -76,7 +76,7 @@ EXPORT_C torch_tensor_t torch_from_blob(void* data, int ndim,
                                         const int64_t* shape,
                                         const int64_t* strides,
                                         torch_data_t dtype,
-                                        torch_device_t device);
+                                        int device);
 
 /**
  * Function to print out a Torch Tensor
@@ -98,7 +98,7 @@ EXPORT_C void torch_tensor_print(const torch_tensor_t tensor);
 EXPORT_C torch_tensor_t torch_from_blob_f(void* data, int ndim,
                                         const int64_t* shape,
                                         torch_data_t dtype,
-                                        torch_device_t device);
+                                        int device);
 
 /**
  * Function to delete a Torch Tensor to clean up
@@ -115,7 +115,7 @@ EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
  * @param filename where TorchScript description of model is stored
  * @return Torch Module loaded in from file
  */
-EXPORT_C torch_jit_script_module_t torch_jit_load(const char* filename);
+EXPORT_C torch_jit_script_module_t torch_jit_load(const char* filename, const int device);
 
 /**
  * Function to run the `forward` method of a Torch Module
