@@ -1,8 +1,15 @@
 name: fypp-checks
 
 on:
-  # run on every push
+  # run on every push - doesn't work on forks
   push:
+  # run on every push (not commit) to a PR, plus open/reopen
+  pull_request:
+    types:
+    - synchronize
+    - opened
+    - reopened
+
 
 jobs:
   various:
