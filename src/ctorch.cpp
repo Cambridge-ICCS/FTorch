@@ -1,6 +1,5 @@
 #include <torch/script.h>
 #include <torch/torch.h>
-#include <string>
 
 #include "ctorch.h"
 
