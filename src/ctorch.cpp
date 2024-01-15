@@ -43,9 +43,20 @@ constexpr auto get_device(torch_device_t device)
   }
 }
 
-torch_tensor_t torch_zeros(int ndim, const int64_t* shape, torch_data_t dtype,
-                           torch_device_t device)
+void set_is_training(torch_jit_script_module_t module, const bool is_training)
 {
+  auto model = static_cast<torch::jit::script::Module*>(module);
+  if (is_training) {
+    model->train();
+  } else {
+    model->eval();
+  }
+}
+
+torch_tensor_t torch_zeros(int ndim, const int64_t* shape, torch_data_t dtype,
+                           torch_device_t device, const bool requires_grad)
+{
+  torch::AutoGradMode enable_grad(requires_grad);
   torch::Tensor* tensor = nullptr;
   try {
     // This doesn't throw if shape and dimensions are incompatible
@@ -66,8 +77,9 @@ torch_tensor_t torch_zeros(int ndim, const int64_t* shape, torch_data_t dtype,
 }
 
 torch_tensor_t torch_ones(int ndim, const int64_t* shape, torch_data_t dtype,
-                          torch_device_t device)
+                          torch_device_t device, const bool requires_grad)
 {
+  torch::AutoGradMode enable_grad(requires_grad);
   torch::Tensor* tensor = nullptr;
   try {
     // This doesn't throw if shape and dimensions are incompatible
@@ -88,8 +100,9 @@ torch_tensor_t torch_ones(int ndim, const int64_t* shape, torch_data_t dtype,
 }
 
 torch_tensor_t torch_empty(int ndim, const int64_t* shape, torch_data_t dtype,
-                           torch_device_t device)
+                           torch_device_t device, const bool requires_grad)
 {
+  torch::AutoGradMode enable_grad(requires_grad);
   torch::Tensor* tensor = nullptr;
   try {
     // This doesn't throw if shape and dimensions are incompatible
@@ -109,38 +122,12 @@ torch_tensor_t torch_empty(int ndim, const int64_t* shape, torch_data_t dtype,
   return tensor;
 }
 
-/*
-// Exposes the given data as a Tensor without taking ownership of the original
-// data
-torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
-                               torch_data_t dtype, torch_device_t device)
-{
-  torch::Tensor* tensor = nullptr;
-  try {
-    // This doesn't throw if shape and dimensions are incompatible
-    c10::IntArrayRef vshape(shape, ndim);
-    tensor = new torch::Tensor;
-    *tensor = torch::from_blob(
-        data, vshape,
-        torch::dtype(get_dtype(dtype))).to(get_device(device));
-  } catch (const torch::Error& e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
-  } catch (const std::exception& e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
-  }
-  return tensor;
-}
-
-*/
 // New version of torch_from_blob that uses strides
 torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
                                const int64_t* strides, torch_data_t dtype,
-                               torch_device_t device)
+                               torch_device_t device, const bool requires_grad)
 {
+  torch::AutoGradMode enable_grad(requires_grad);
   torch::Tensor* tensor = nullptr;
 
   try {
@@ -176,8 +163,11 @@ void torch_tensor_delete(torch_tensor_t tensor)
   delete t;
 }
 
-torch_jit_script_module_t torch_jit_load(const char* filename)
+torch_jit_script_module_t torch_jit_load(const char* filename,
+                                         const bool requires_grad,
+                                         const bool is_training)
 {
+  torch::AutoGradMode enable_grad(requires_grad);
   torch::jit::script::Module* module = nullptr;
   try {
     module = new torch::jit::script::Module;
@@ -191,14 +181,16 @@ torch_jit_script_module_t torch_jit_load(const char* filename)
     delete module;
     exit(EXIT_FAILURE);
   }
+  set_is_training(module, is_training);
 
   return module;
 }
 
 void torch_jit_module_forward(const torch_jit_script_module_t module,
                               const torch_tensor_t *inputs, const int nin,
-			      torch_tensor_t output)
+			      torch_tensor_t output, const bool requires_grad)
 {
+  torch::AutoGradMode enable_grad(requires_grad);
   // Here we cast the pointers we recieved in to Tensor objects
   auto model = static_cast<torch::jit::script::Module*>(module);
   auto in = reinterpret_cast<torch::Tensor* const*>(inputs);
