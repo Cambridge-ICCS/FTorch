@@ -1,4 +1,5 @@
 """Module defining a simple PyTorch 'Net' for coupling to Fortran."""
+
 import torch
 from torch import nn
 
