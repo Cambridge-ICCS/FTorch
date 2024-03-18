@@ -109,33 +109,6 @@ torch_tensor_t torch_empty(int ndim, const int64_t* shape, torch_data_t dtype,
   return tensor;
 }
 
-/*
-// Exposes the given data as a Tensor without taking ownership of the original
-// data
-torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
-                               torch_data_t dtype, torch_device_t device)
-{
-  torch::Tensor* tensor = nullptr;
-  try {
-    // This doesn't throw if shape and dimensions are incompatible
-    c10::IntArrayRef vshape(shape, ndim);
-    tensor = new torch::Tensor;
-    *tensor = torch::from_blob(
-        data, vshape,
-        torch::dtype(get_dtype(dtype))).to(get_device(device));
-  } catch (const torch::Error& e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
-  } catch (const std::exception& e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
-  }
-  return tensor;
-}
-
-*/
 // New version of torch_from_blob that uses strides
 torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
                                const int64_t* strides, torch_data_t dtype,
