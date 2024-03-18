@@ -109,7 +109,8 @@ torch_tensor_t torch_empty(int ndim, const int64_t* shape, torch_data_t dtype,
   return tensor;
 }
 
-// New version of torch_from_blob that uses strides
+// Exposes the given data as a Tensor without taking ownership of the original
+// data
 torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
                                const int64_t* strides, torch_data_t dtype,
                                torch_device_t device)
