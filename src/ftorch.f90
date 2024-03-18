@@ -194,10 +194,10 @@ contains
   end subroutine torch_tensor_delete
 
   ! Torch Module API
-  !> Loads a Torch Script module (pre-trained PyTorch model saved with Torch Script)
+  !> Loads a TorchScript module (pre-trained PyTorch model saved with TorchScript)
   function torch_module_load(filename) result(module)
     use, intrinsic :: iso_c_binding, only : c_null_char
-    character(*), intent(in) :: filename !! Filename of Torch Script module
+    character(*), intent(in) :: filename !! Filename of TorchScript module
     type(torch_module)            :: module      !! Returned deserialized module
 
     interface
@@ -244,7 +244,7 @@ contains
     call torch_jit_module_forward_c(module%p, c_loc(input_ptrs), n_inputs, output_tensor%p)
   end subroutine torch_module_forward
 
-  !> Deallocates a Torch Script module
+  !> Deallocates a TorchScript module
   subroutine torch_module_delete(module)
     type(torch_module), intent(in) :: module     !! Module to deallocate
 
