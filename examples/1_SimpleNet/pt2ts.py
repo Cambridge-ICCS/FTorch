@@ -1,4 +1,5 @@
 """Load a pytorch model and convert it to TorchScript."""
+
 from typing import Optional
 import torch
 
