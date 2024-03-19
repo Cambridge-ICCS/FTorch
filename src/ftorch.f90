@@ -213,8 +213,8 @@ contains
           bind(c, name = 'torch_jit_load')
         use, intrinsic :: iso_c_binding, only : c_char, c_int, c_ptr
         character(c_char), intent(in) :: filename(*)
-        integer(c_int), intent(in)    :: device
-        integer(c_int), intent(in)    :: device_number
+        integer(c_int), value, intent(in)    :: device
+        integer(c_int), value, intent(in)    :: device_number
         type(c_ptr)                   :: module
       end function torch_jit_load_c
     end interface

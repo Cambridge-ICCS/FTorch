@@ -110,8 +110,8 @@ EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
  * @return Torch Module loaded in from file
  */
 EXPORT_C torch_jit_script_module_t torch_jit_load(const char* filename,
-                                                  torch_device_t device,
-                                                  int device_number);
+                                                  const torch_device_t device,
+                                                  const int device_number);
 
 /**
  * Function to run the `forward` method of a Torch Module
