@@ -62,9 +62,11 @@ EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t* shape,
  * @param shape of the Tensor
  * @param data type of the elements of the Tensor
  * @param device used (cpu, CUDA, etc.)
+ * @param device number for the CUDA case
  */
 EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t* shape,
-                                    torch_data_t dtype, torch_device_t device);
+                                    torch_data_t dtype, torch_device_t device,
+                                    int device_number);
 
 /**
  * Function to create a Torch Tensor from memory location given extra information
