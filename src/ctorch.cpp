@@ -44,7 +44,14 @@ const auto get_device(torch_device_t device, int device_number)
     }
     return torch::Device(torch::kCPU);
   case torch_kCUDA:
-    return torch::Device(torch::kCUDA);
+    if (device_number < torch::cuda::device_count()) {
+      return torch::Device(torch::kCUDA, device_number);
+    } else {
+      std::cerr << "[ERROR]: device number " << device_number
+                << " exceeds device count " << torch::cuda::device_count()
+                << ", using zero instead" << std::endl;
+      return torch::Device(torch::kCUDA);
+    }
   default:
     std::cerr << "[ERROR]: unknown device type, setting to torch_kCPU"
               << std::endl;
