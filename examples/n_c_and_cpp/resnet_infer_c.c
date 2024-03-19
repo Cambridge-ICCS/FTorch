@@ -28,7 +28,7 @@ int main(int argc, const char* argv[])
   output_shape[0] = batch_size;
   output_shape[1] = 1000;
 
-  torch_jit_script_module_t model = torch_jit_load(argv[1]);
+  torch_jit_script_module_t model = torch_jit_load(argv[1], torch_kCPU, 0);
   int64_t input_size
       = input_shape[0] * input_shape[1] * input_shape[2] * input_shape[3];
   float* input_data = (float*)malloc(input_size * sizeof(float));

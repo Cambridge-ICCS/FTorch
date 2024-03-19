@@ -166,12 +166,14 @@ void torch_tensor_delete(torch_tensor_t tensor)
   delete t;
 }
 
-torch_jit_script_module_t torch_jit_load(const char* filename)
+torch_jit_script_module_t torch_jit_load(const char* filename,
+                                         const torch_device_t device,
+                                         const int device_number)
 {
   torch::jit::script::Module* module = nullptr;
   try {
     module = new torch::jit::script::Module;
-    *module = torch::jit::load(filename);
+    *module = torch::jit::load(filename, get_device(device, device_number));
   } catch (const torch::Error& e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete module;

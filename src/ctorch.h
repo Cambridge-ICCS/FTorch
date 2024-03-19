@@ -105,9 +105,13 @@ EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
 /**
  * Function to load in a Torch model from a TorchScript file and store in a Torch Module
  * @param filename where TorchScript description of model is stored
+ * @param device used (cpu, CUDA, etc.)
+ * @param device number for the CUDA case
  * @return Torch Module loaded in from file
  */
-EXPORT_C torch_jit_script_module_t torch_jit_load(const char* filename);
+EXPORT_C torch_jit_script_module_t torch_jit_load(const char* filename,
+                                                  torch_device_t device,
+                                                  int device_number);
 
 /**
  * Function to run the `forward` method of a Torch Module

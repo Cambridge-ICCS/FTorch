@@ -201,22 +201,26 @@ contains
 
   ! Torch Module API
   !> Loads a TorchScript module (pre-trained PyTorch model saved with TorchScript)
-  function torch_module_load(filename) result(module)
-    use, intrinsic :: iso_c_binding, only : c_null_char
-    character(*), intent(in) :: filename !! Filename of TorchScript module
-    type(torch_module)            :: module      !! Returned deserialized module
+  function torch_module_load(filename, device, device_number) result(module)
+    use, intrinsic :: iso_c_binding, only : c_int, c_null_char
+    character(*), intent(in)   :: filename !! Filename of TorchScript module
+    integer(c_int), intent(in) :: device   !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number     !! Device number to use for `torch_kCUDA` case
+    type(torch_module)         :: module   !! Returned deserialized module
 
     interface
-      function torch_jit_load_c(filename) result(module) &
+      function torch_jit_load_c(filename, device, device_number) result(module) &
           bind(c, name = 'torch_jit_load')
-        use, intrinsic :: iso_c_binding, only : c_char, c_ptr
+        use, intrinsic :: iso_c_binding, only : c_char, c_int, c_ptr
         character(c_char), intent(in) :: filename(*)
+        integer(c_int), intent(in)    :: device
+        integer(c_int), intent(in)    :: device_number
         type(c_ptr)                   :: module
       end function torch_jit_load_c
     end interface
 
     ! Need to append c_null_char at end of filename
-    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char)
+    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char, device, device_number)
   end function torch_module_load
 
   !> Performs a forward pass of the module with the input tensors
