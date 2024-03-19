@@ -82,10 +82,9 @@ torch_tensor_t torch_zeros(int ndim, const int64_t* shape, torch_data_t dtype,
 }
 
 torch_tensor_t torch_ones(int ndim, const int64_t* shape, torch_data_t dtype,
-                          torch_device_t device)
+                          torch_device_t device, int device_number)
 {
   torch::Tensor* tensor = nullptr;
-  int device_number = 0;
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
