@@ -286,7 +286,7 @@ contains
     ${f_type(PREC)}$(kind=${PREC}$), intent(in), target :: data_in${ranksuffix(RANK)}$   !! Input data that tensor will point at
     integer, intent(in)        :: layout(${RANK}$) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
+    integer(c_int), optional, intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -297,6 +297,7 @@ contains
     integer(c_int64_t)        :: strides(${RANK}$)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = ${RANK}$                   !! Number of dimension of input data
     integer                   :: i
+    integer(c_int)            :: device_number_value
 
     c_tensor_shape = shape(data_in)
 
@@ -305,7 +306,14 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
+    ! Process optional arguments
+    if (present(device_number)) then
+      device_number_value = device_number
+    else
+      device_number_value = 0
+    endif
+
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number_value)
 
   end function torch_tensor_from_array_${PREC}$_${RANK}$d
 
