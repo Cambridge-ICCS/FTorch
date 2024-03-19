@@ -100,8 +100,9 @@ contains
     integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
     integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), intent(in)     :: device_number     !! Device number to use for `torch_kCUDA` case
+    integer(c_int), optional, intent(in) :: device_number     !! Device number to use for `torch_kCUDA` case
     type(torch_tensor)             :: tensor     !! Returned tensor
+    integer(c_int)                 :: device_number_value  !! Device number used
 
     interface
       function torch_zeros_c(ndims, tensor_shape, dtype, device, device_number) result(tensor) &
@@ -116,7 +117,14 @@ contains
       end function torch_zeros_c
     end interface
 
-    tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device, device_number)
+    ! Process optional arguments
+    if (present(device_number)) then
+      device_number_value = device_number
+    else
+      device_number_value = 0
+    endif
+
+    tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device, device_number_value)
   end function torch_tensor_zeros
 
   !> Returns a tensor filled with the scalar value 1.
@@ -126,8 +134,9 @@ contains
     integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
     integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), intent(in)     :: device_number     !! Device number to use for `torch_kCUDA` case
+    integer(c_int), optional, intent(in) :: device_number     !! Device number to use for `torch_kCUDA` case
     type(torch_tensor)             :: tensor     !! Returned tensor
+    integer(c_int)                 :: device_number_value  !! Device number used
 
     interface
       function torch_ones_c(ndims, tensor_shape, dtype, device, device_number) result(tensor) &
@@ -142,7 +151,14 @@ contains
       end function torch_ones_c
     end interface
 
-    tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device, device_number)
+    ! Process optional arguments
+    if (present(device_number)) then
+      device_number_value = device_number
+    else
+      device_number_value = 0
+    endif
+
+    tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device, device_number_value)
   end function torch_tensor_ones
 
   ! Torch Tensor API
@@ -155,18 +171,27 @@ contains
     integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
     integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), intent(in)     :: device_number     !! Device number to use for `torch_kCUDA` case
+    integer(c_int), optional, intent(in) :: device_number     !! Device number to use for `torch_kCUDA` case
     integer(c_int), intent(in)     :: layout(*)  !! Layout for strides for accessing data
     type(torch_tensor)             :: tensor     !! Returned tensor
 
     integer(c_int)                 :: i          !! loop index
     integer(c_int64_t)             :: strides(ndims) !! Strides for accessing data
+    integer(c_int)                 :: device_number_value  !! Device number used
 
     strides(layout(1)) = 1
     do i = 2, ndims
       strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
     end do
-    tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device, device_number)
+
+    ! Process optional arguments
+    if (present(device_number)) then
+      device_number_value = device_number
+    else
+      device_number_value = 0
+    endif
+
+    tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device, device_number_value)
   end function torch_tensor_from_blob
 
   !> Prints the contents of a tensor.
