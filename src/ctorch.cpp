@@ -33,6 +33,10 @@ const auto get_device(torch_device_t device, int device_number)
 {
   switch (device) {
   case torch_kCPU:
+    if (device_number > 0) {
+      std::cerr << "[ERROR]: device number unsupported for CPU-only runs"
+                << std::endl;
+    }
     return torch::Device(torch::kCPU);
   case torch_kCUDA:
     return torch::Device(torch::kCUDA);
