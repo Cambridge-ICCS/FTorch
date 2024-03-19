@@ -75,7 +75,7 @@ module ftorch
   end interface
 
   interface
-    function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device) result(tensor_p) &
+    function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device, device_number) result(tensor_p) &
                                bind(c, name = 'torch_from_blob')
       use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
 
@@ -86,6 +86,7 @@ module ftorch
       integer(c_int64_t), intent(in)    :: strides(*)
       integer(c_int), value, intent(in) :: dtype
       integer(c_int), value, intent(in) :: device
+      integer(c_int), value, intent(in) :: device_number
       type(c_ptr)                       :: tensor_p
     end function torch_from_blob_c
   end interface
@@ -147,13 +148,14 @@ contains
   ! Torch Tensor API
   !| Exposes the given data as a tensor without taking ownership of the original data.
   !  This routine will take an (i, j, k) array and return an (k, j, i) tensor.
-  function torch_tensor_from_blob(data, ndims, tensor_shape, layout, dtype, device) result(tensor)
+  function torch_tensor_from_blob(data, ndims, tensor_shape, layout, dtype, device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
     type(c_ptr), intent(in)        :: data       !! Pointer to data
     integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
     integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
     integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in)     :: device_number     !! Device number to use for `torch_kCUDA` case
     integer(c_int), intent(in)     :: layout(*)  !! Layout for strides for accessing data
     type(torch_tensor)             :: tensor     !! Returned tensor
 
@@ -164,7 +166,7 @@ contains
     do i = 2, ndims
       strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
     end do
-    tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device)
+    tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device, device_number)
   end function torch_tensor_from_blob
 
   !> Prints the contents of a tensor.
@@ -264,7 +266,7 @@ contains
   end subroutine torch_module_delete
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
-  function torch_tensor_from_array_int8_1d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int8_1d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -272,6 +274,7 @@ contains
     integer(kind=int8), intent(in), target :: data_in(:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -290,12 +293,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int8_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int8`
-  function torch_tensor_from_array_int8_2d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int8_2d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -303,6 +306,7 @@ contains
     integer(kind=int8), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -321,12 +325,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int8_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int8`
-  function torch_tensor_from_array_int8_3d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int8_3d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -334,6 +338,7 @@ contains
     integer(kind=int8), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -352,12 +357,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int8_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int8`
-  function torch_tensor_from_array_int8_4d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int8_4d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -365,6 +370,7 @@ contains
     integer(kind=int8), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -383,12 +389,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int8_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int16`
-  function torch_tensor_from_array_int16_1d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int16_1d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -396,6 +402,7 @@ contains
     integer(kind=int16), intent(in), target :: data_in(:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -414,12 +421,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int16_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int16`
-  function torch_tensor_from_array_int16_2d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int16_2d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -427,6 +434,7 @@ contains
     integer(kind=int16), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -445,12 +453,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int16_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int16`
-  function torch_tensor_from_array_int16_3d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int16_3d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -458,6 +466,7 @@ contains
     integer(kind=int16), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -476,12 +485,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int16_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int16`
-  function torch_tensor_from_array_int16_4d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int16_4d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -489,6 +498,7 @@ contains
     integer(kind=int16), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -507,12 +517,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int16_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int32`
-  function torch_tensor_from_array_int32_1d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int32_1d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -520,6 +530,7 @@ contains
     integer(kind=int32), intent(in), target :: data_in(:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -538,12 +549,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int32_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int32`
-  function torch_tensor_from_array_int32_2d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int32_2d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -551,6 +562,7 @@ contains
     integer(kind=int32), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -569,12 +581,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int32_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int32`
-  function torch_tensor_from_array_int32_3d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int32_3d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -582,6 +594,7 @@ contains
     integer(kind=int32), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -600,12 +613,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int32_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int32`
-  function torch_tensor_from_array_int32_4d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int32_4d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -613,6 +626,7 @@ contains
     integer(kind=int32), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -631,12 +645,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int32_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int64`
-  function torch_tensor_from_array_int64_1d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int64_1d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -644,6 +658,7 @@ contains
     integer(kind=int64), intent(in), target :: data_in(:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -662,12 +677,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int64_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int64`
-  function torch_tensor_from_array_int64_2d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int64_2d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -675,6 +690,7 @@ contains
     integer(kind=int64), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -693,12 +709,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int64_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int64`
-  function torch_tensor_from_array_int64_3d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int64_3d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -706,6 +722,7 @@ contains
     integer(kind=int64), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -724,12 +741,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int64_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int64`
-  function torch_tensor_from_array_int64_4d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_int64_4d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -737,6 +754,7 @@ contains
     integer(kind=int64), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -755,12 +773,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_int64_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real32`
-  function torch_tensor_from_array_real32_1d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_real32_1d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -768,6 +786,7 @@ contains
     real(kind=real32), intent(in), target :: data_in(:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -786,12 +805,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_real32_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real32`
-  function torch_tensor_from_array_real32_2d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_real32_2d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -799,6 +818,7 @@ contains
     real(kind=real32), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -817,12 +837,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_real32_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real32`
-  function torch_tensor_from_array_real32_3d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_real32_3d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -830,6 +850,7 @@ contains
     real(kind=real32), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -848,12 +869,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_real32_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real32`
-  function torch_tensor_from_array_real32_4d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_real32_4d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -861,6 +882,7 @@ contains
     real(kind=real32), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -879,12 +901,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_real32_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real64`
-  function torch_tensor_from_array_real64_1d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_real64_1d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -892,6 +914,7 @@ contains
     real(kind=real64), intent(in), target :: data_in(:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -910,12 +933,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_real64_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real64`
-  function torch_tensor_from_array_real64_2d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_real64_2d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -923,6 +946,7 @@ contains
     real(kind=real64), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -941,12 +965,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_real64_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real64`
-  function torch_tensor_from_array_real64_3d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_real64_3d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -954,6 +978,7 @@ contains
     real(kind=real64), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -972,12 +997,12 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_real64_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real64`
-  function torch_tensor_from_array_real64_4d(data_in, layout, c_device) result(tensor)
+  function torch_tensor_from_array_real64_4d(data_in, layout, c_device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -985,6 +1010,7 @@ contains
     real(kind=real64), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device         !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in) :: device_number    !! Device number to use for `torch_kCUDA` case
 
     ! output tensory
     type(torch_tensor) :: tensor     !! Returned tensor
@@ -1003,7 +1029,7 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device)
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device, device_number)
 
   end function torch_tensor_from_array_real64_4d
 

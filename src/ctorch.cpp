@@ -129,10 +129,9 @@ torch_tensor_t torch_empty(int ndim, const int64_t* shape, torch_data_t dtype,
 // data
 torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
                                const int64_t* strides, torch_data_t dtype,
-                               torch_device_t device)
+                               torch_device_t device, int device_number)
 {
   torch::Tensor* tensor = nullptr;
-  int device_number = 0;
 
   try {
     // This doesn't throw if shape and dimensions are incompatible

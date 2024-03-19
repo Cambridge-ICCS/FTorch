@@ -76,13 +76,15 @@ EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t* shape,
  * @param strides to take through data
  * @param data type of the elements of the Tensor
  * @param device used (cpu, CUDA, etc.)
+ * @param device number for the CUDA case
  * @return Torch Tensor interpretation of the data pointed at
  */
 EXPORT_C torch_tensor_t torch_from_blob(void* data, int ndim,
                                         const int64_t* shape,
                                         const int64_t* strides,
                                         torch_data_t dtype,
-                                        torch_device_t device);
+                                        torch_device_t device,
+                                        int device_number);
 
 /**
  * Function to print out a Torch Tensor
