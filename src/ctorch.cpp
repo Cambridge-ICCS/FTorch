@@ -29,17 +29,17 @@ constexpr auto get_dtype(torch_data_t dtype)
   }
 }
 
-constexpr auto get_device(torch_device_t device)
+const auto get_device(torch_device_t device)
 {
   switch (device) {
   case torch_kCPU:
-    return torch::kCPU;
+    return torch::Device(torch::kCPU);
   case torch_kCUDA:
-    return torch::kCUDA;
+    return torch::Device(torch::kCUDA);
   default:
     std::cerr << "[ERROR]: unknown device type, setting to torch_kCPU"
               << std::endl;
-    return torch::kCPU;
+    return torch::Device(torch::kCPU);
   }
 }
 
