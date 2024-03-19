@@ -31,6 +31,11 @@ constexpr auto get_dtype(torch_data_t dtype)
 
 const auto get_device(torch_device_t device, int device_number)
 {
+  if (device_number < 0) {
+    std::cerr << "[ERROR]: device number must be non-negative, using zero instead"
+              << std::endl;
+    device_number = 0;
+  }
   switch (device) {
   case torch_kCPU:
     if (device_number > 0) {
