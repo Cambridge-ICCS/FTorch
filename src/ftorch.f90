@@ -205,8 +205,9 @@ contains
     use, intrinsic :: iso_c_binding, only : c_int, c_null_char
     character(*), intent(in)   :: filename !! Filename of TorchScript module
     integer(c_int), intent(in) :: device   !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), intent(in) :: device_number     !! Device number to use for `torch_kCUDA` case
+    integer(c_int), optional, intent(in) :: device_number     !! Device number to use for `torch_kCUDA` case
     type(torch_module)         :: module   !! Returned deserialized module
+    integer(c_int) :: device_number_value
 
     interface
       function torch_jit_load_c(filename, device, device_number) result(module) &
@@ -219,8 +220,15 @@ contains
       end function torch_jit_load_c
     end interface
 
+    ! Process optional arguments
+    if (present(device_number)) then
+      device_number_value = device_number
+    else
+      device_number_value = 0
+    endif
+
     ! Need to append c_null_char at end of filename
-    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char, device, device_number)
+    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char, device, device_number_value)
   end function torch_module_load
 
   !> Performs a forward pass of the module with the input tensors
