@@ -40,7 +40,7 @@ program inference
    out_tensor = torch_tensor_from_array(out_data, tensor_layout, torch_kCPU)
 
    ! Load ML model
-   model = torch_module_load(args(1), torch_kCPU)
+   model = torch_module_load(args(1))
 
    ! Infer
    call torch_module_forward(model, in_tensor, n_inputs, out_tensor)
