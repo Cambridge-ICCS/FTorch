@@ -91,27 +91,29 @@ module ftorch
 contains
 
   !> Returns a tensor filled with the scalar value 0.
-  function torch_tensor_zeros(ndims, tensor_shape, dtype, device) result(tensor)
+  function torch_tensor_zeros(ndims, tensor_shape, dtype, device, device_number) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t
     integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
     integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
     integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)     :: device     !! Device on which the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in)     :: device_number     !! Device number to use for `torch_kCUDA` case
     type(torch_tensor)             :: tensor     !! Returned tensor
 
     interface
-      function torch_zeros_c(ndims, tensor_shape, dtype, device) result(tensor) &
+      function torch_zeros_c(ndims, tensor_shape, dtype, device, device_number) result(tensor) &
           bind(c, name = 'torch_zeros')
         use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
         integer(c_int), value, intent(in) :: ndims
         integer(c_int64_t), intent(in)    :: tensor_shape(*)
         integer(c_int), value, intent(in) :: dtype
         integer(c_int), value, intent(in) :: device
+        integer(c_int), value, intent(in) :: device_number
         type(c_ptr)                       :: tensor
       end function torch_zeros_c
     end interface
 
-    tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device)
+    tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device, device_number)
   end function torch_tensor_zeros
 
   !> Returns a tensor filled with the scalar value 1.
