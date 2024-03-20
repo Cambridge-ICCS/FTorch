@@ -276,7 +276,7 @@ contains
     endif
     if (present(device_index)) then
       device_index_value = device_index
-    else if (device_type == torch_kCPU) then
+    else if (device_type_value == torch_kCPU) then
       device_index_value = -1
     else
       device_index_value = 0
