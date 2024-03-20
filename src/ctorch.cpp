@@ -31,24 +31,19 @@ constexpr auto get_dtype(torch_data_t dtype)
 
 const auto get_device(torch_device_t device_type, int device_index)
 {
-  if (device_index < 0) {
-    std::cerr << "[ERROR]: device index must be non-negative, using zero instead"
-              << std::endl;
-    device_index = 0;
-  }
   switch (device_type) {
   case torch_kCPU:
-    if (device_index > 0) {
+    if (device_index != -1) {
       std::cerr << "[ERROR]: device index unsupported for CPU-only runs"
                 << std::endl;
     }
     return torch::Device(torch::kCPU);
   case torch_kCUDA:
-    if (device_index < torch::cuda::device_count()) {
+    if (device_index >= 0 && device_index < torch::cuda::device_count()) {
       return torch::Device(torch::kCUDA, device_index);
     } else {
-      std::cerr << "[ERROR]: device index " << device_index
-                << " exceeds device count " << torch::cuda::device_count()
+      std::cerr << "[ERROR]: invalid device index " << device_index
+                << " for device count " << torch::cuda::device_count()
                 << ", using zero instead" << std::endl;
       return torch::Device(torch::kCUDA);
     }

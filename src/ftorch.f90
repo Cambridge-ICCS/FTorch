@@ -120,6 +120,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -154,6 +156,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -187,6 +191,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -268,10 +274,12 @@ contains
     if (present(device_type)) then
       device_type_value = device_type
     else
-      device_type_value = 0
+      device_type_value = torch_kCPU
     endif
     if (present(device_index)) then
       device_index_value = device_index
+    else if (device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -358,6 +366,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -398,6 +408,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -438,6 +450,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -478,6 +492,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -518,6 +534,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -558,6 +576,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -598,6 +618,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -638,6 +660,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -678,6 +702,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -718,6 +744,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -758,6 +786,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -798,6 +828,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -838,6 +870,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -878,6 +912,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -918,6 +954,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -958,6 +996,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -998,6 +1038,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -1038,6 +1080,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -1078,6 +1122,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -1118,6 +1164,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -1158,6 +1206,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -1198,6 +1248,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -1238,6 +1290,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
@@ -1278,6 +1332,8 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
+    else if (c_device_type == torch_kCPU) then
+      device_index_value = -1
     else
       device_index_value = 0
     endif
