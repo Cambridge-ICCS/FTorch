@@ -160,6 +160,12 @@ void torch_tensor_print(const torch_tensor_t tensor)
   std::cout << *t << std::endl;
 }
 
+int torch_tensor_get_device_index(const torch_tensor_t tensor)
+{
+  auto t = reinterpret_cast<torch::Tensor*>(tensor);
+  return t->device().index();
+}
+
 void torch_tensor_delete(torch_tensor_t tensor)
 {
   auto t = reinterpret_cast<torch::Tensor*>(tensor);
