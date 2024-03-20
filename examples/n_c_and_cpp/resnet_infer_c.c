@@ -28,7 +28,7 @@ int main(int argc, const char* argv[])
   output_shape[0] = batch_size;
   output_shape[1] = 1000;
 
-  torch_jit_script_module_t model = torch_jit_load(argv[1], torch_kCPU, 0);
+  torch_jit_script_module_t model = torch_jit_load(argv[1]);
   int64_t input_size
       = input_shape[0] * input_shape[1] * input_shape[2] * input_shape[3];
   float* input_data = (float*)malloc(input_size * sizeof(float));
@@ -41,10 +41,10 @@ int main(int argc, const char* argv[])
   if (model) {
     torch_tensor_t inputs[1];
     inputs[0] = torch_from_blob(input_data, input_ndim, input_shape,
-                                           torch_kFloat32, torch_kCPU, 0);
+                                           torch_kFloat32, torch_kCPU);
     const int nin = 1;
     torch_tensor_t output = torch_from_blob(
-        output_data, output_ndim, output_shape, torch_kFloat32, torch_kCPU, 0);
+        output_data, output_ndim, output_shape, torch_kFloat32, torch_kCPU);
     torch_jit_module_forward(model, inputs, nin, output);
     torch_tensor_print(output);
     torch_jit_module_delete(model);

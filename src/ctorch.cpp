@@ -55,7 +55,7 @@ const auto get_device(torch_device_t device_type, int device_index)
 }
 
 torch_tensor_t torch_zeros(int ndim, const int64_t* shape, torch_data_t dtype,
-                           torch_device_t device_type, int device_index)
+                           torch_device_t device_type, int device_index = -1)
 {
   torch::Tensor* tensor = nullptr;
   try {
@@ -77,7 +77,7 @@ torch_tensor_t torch_zeros(int ndim, const int64_t* shape, torch_data_t dtype,
 }
 
 torch_tensor_t torch_ones(int ndim, const int64_t* shape, torch_data_t dtype,
-                          torch_device_t device_type, int device_index)
+                          torch_device_t device_type, int device_index = -1)
 {
   torch::Tensor* tensor = nullptr;
   try {
@@ -99,7 +99,7 @@ torch_tensor_t torch_ones(int ndim, const int64_t* shape, torch_data_t dtype,
 }
 
 torch_tensor_t torch_empty(int ndim, const int64_t* shape, torch_data_t dtype,
-                           torch_device_t device_type, int device_index)
+                           torch_device_t device_type, int device_index = -1)
 {
   torch::Tensor* tensor = nullptr;
   try {
@@ -124,7 +124,7 @@ torch_tensor_t torch_empty(int ndim, const int64_t* shape, torch_data_t dtype,
 // data
 torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
                                const int64_t* strides, torch_data_t dtype,
-                               torch_device_t device_type, int device_index)
+                               torch_device_t device_type, int device_index = -1)
 {
   torch::Tensor* tensor = nullptr;
 
@@ -168,8 +168,8 @@ void torch_tensor_delete(torch_tensor_t tensor)
 }
 
 torch_jit_script_module_t torch_jit_load(const char* filename,
-                                         const torch_device_t device_type,
-                                         const int device_index)
+                                         const torch_device_t device_type = torch_kCPU,
+                                         const int device_index = -1)
 {
   torch::jit::script::Module* module = nullptr;
   try {
