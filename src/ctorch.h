@@ -38,11 +38,11 @@ typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
  * @param shape of the Tensor
  * @param data type of the elements of the Tensor
  * @param device used (cpu, CUDA, etc.)
- * @param device number for the CUDA case
+ * @param device index for the CUDA case
  */
 EXPORT_C torch_tensor_t torch_zeros(int ndim, const int64_t* shape,
                                     torch_data_t dtype, torch_device_t device,
-                                    int device_number);
+                                    int device_index);
 
 /**
  * Function to generate a Torch Tensor of ones
@@ -50,11 +50,11 @@ EXPORT_C torch_tensor_t torch_zeros(int ndim, const int64_t* shape,
  * @param shape of the Tensor
  * @param data type of the elements of the Tensor
  * @param device used (cpu, CUDA, etc.)
- * @param device number for the CUDA case
+ * @param device index for the CUDA case
  */
 EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t* shape,
                                    torch_data_t dtype, torch_device_t device,
-                                   int device_number);
+                                   int device_index);
 
 /**
  * Function to generate an empty Torch Tensor
@@ -62,11 +62,11 @@ EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t* shape,
  * @param shape of the Tensor
  * @param data type of the elements of the Tensor
  * @param device used (cpu, CUDA, etc.)
- * @param device number for the CUDA case
+ * @param device index for the CUDA case
  */
 EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t* shape,
                                     torch_data_t dtype, torch_device_t device,
-                                    int device_number);
+                                    int device_index);
 
 /**
  * Function to create a Torch Tensor from memory location given extra information
@@ -76,7 +76,7 @@ EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t* shape,
  * @param strides to take through data
  * @param data type of the elements of the Tensor
  * @param device used (cpu, CUDA, etc.)
- * @param device number for the CUDA case
+ * @param device index for the CUDA case
  * @return Torch Tensor interpretation of the data pointed at
  */
 EXPORT_C torch_tensor_t torch_from_blob(void* data, int ndim,
@@ -84,7 +84,7 @@ EXPORT_C torch_tensor_t torch_from_blob(void* data, int ndim,
                                         const int64_t* strides,
                                         torch_data_t dtype,
                                         torch_device_t device,
-                                        int device_number);
+                                        int device_index);
 
 /**
  * Function to print out a Torch Tensor
@@ -113,12 +113,12 @@ EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
  * Function to load in a Torch model from a TorchScript file and store in a Torch Module
  * @param filename where TorchScript description of model is stored
  * @param device used (cpu, CUDA, etc.)
- * @param device number for the CUDA case
+ * @param device index for the CUDA case
  * @return Torch Module loaded in from file
  */
 EXPORT_C torch_jit_script_module_t torch_jit_load(const char* filename,
                                                   const torch_device_t device,
-                                                  const int device_number);
+                                                  const int device_index);
 
 /**
  * Function to run the `forward` method of a Torch Module
