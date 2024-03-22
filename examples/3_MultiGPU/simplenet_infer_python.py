@@ -21,6 +21,7 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     output : torch.Tensor
         result of running inference on model with example Tensor input
     """
+    # TODO: Different input on different GPUs
     input_tensor = torch.tensor([0.0, 1.0, 2.0, 3.0, 4.0]).repeat(batch_size, 1)
 
     if device == "cpu":
@@ -42,9 +43,10 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 
 
 if __name__ == "__main__":
-    saved_model_file = "saved_simplenet_model_cpu.pt"
+    saved_model_file = "saved_simplenet_model_cuda.pt"
 
-    device_to_run = "cpu"
+    # TODO: cuda:{device_index}
+    device_to_run = "cuda"
 
     batch_size_to_run = 1
 
