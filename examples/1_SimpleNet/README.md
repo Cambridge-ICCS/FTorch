@@ -9,7 +9,7 @@ covered in later examples.
 
 ## Description
 
-A python file `simplenet.py` is provided that defines a very simple pytorch 'net' that takes an input
+A python file `simplenet.py` is provided that defines a very simple PyTorch 'net' that takes an input
 vector of length 5 and applies a single `Linear` layer to multiply it by 2.
 
 A modified version of the `pt2ts.py` tool saves this simple net to TorchScript.
@@ -29,7 +29,7 @@ To run this example requires:
 ## Running
 
 To run this example install FTorch as described in the main documentation.
-Then from this directory create a virtual environment an install the necessary python
+Then from this directory create a virtual environment and install the necessary python
 modules:
 ```
 python3 -m venv venv
@@ -47,7 +47,7 @@ tensor([[0, 2, 4, 6, 8]])
 ```
 
 To save the SimpleNet model to TorchScript run the modified version of the
-`pt2ts.py` tool :
+`pt2ts.py` tool:
 ```
 python3 pt2ts.py
 ```
