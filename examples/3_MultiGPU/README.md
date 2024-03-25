@@ -106,6 +106,9 @@ permutation of) the output:
 3: [  6.0,  8.0, 10.0, 12.0, 14.0]
 ```
 
-# TODO: Make rather than CMake
-
-# TODO: Further options
+Alternatively, we can use `make`, instead of cmake, copying the Makefile over from the
+first example:
+```
+cp ../1_SimpleNet/Makefile .
+```
+See the instructions in that example directory for further details.
