@@ -28,7 +28,11 @@ program inference
    type(torch_tensor), dimension(1) :: in_tensor
    type(torch_tensor) :: out_tensor
 
-   ! TODO: MPI setup
+   ! MPI configuration
+   integer :: rank, ierr, i
+
+   call mpi_init(ierr)
+   call mpi_comm_rank(mpi_comm_world, rank, ierr)
 
    ! Get TorchScript model file as a command line argument
    num_args = command_argument_count()
@@ -38,22 +42,18 @@ program inference
    end do
 
    ! Initialise data
-   ! TODO: Different inputs for different ranks
-   in_data = [0.0, 1.0, 2.0, 3.0, 4.0]
+   in_data = [(rank + i, i=0,4)]
 
    ! Create Torch input/output tensors from the above arrays
-   ! TODO: Use GPU
-   in_tensor(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCPU)
-   out_tensor = torch_tensor_from_array(out_data, tensor_layout, torch_kCPU)
+   in_tensor(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCUDA, device_index=rank)
+   out_tensor = torch_tensor_from_array(out_data, tensor_layout, torch_kCUDA, device_index=rank)
 
    ! Load ML model
-   ! TODO: Use GPU
-   model = torch_module_load(args(1))
+   model = torch_module_load(args(1), device_type=torch_kCUDA, device_index=rank)
 
    ! Infer
    call torch_module_forward(model, in_tensor, n_inputs, out_tensor)
-   ! TODO: Write rank, too
-   write (*,*) out_data(:)
+   write (*,*) rank, ":", out_data(:)
 
    ! Cleanup
    call torch_module_delete(model)

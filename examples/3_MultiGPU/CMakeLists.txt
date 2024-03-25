@@ -12,8 +12,10 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 find_package(FTorch)
+find_package(MPI REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Fortran example
 add_executable(simplenet_infer_fortran simplenet_infer_fortran.f90)
 target_link_libraries(simplenet_infer_fortran PRIVATE FTorch::ftorch)
+target_link_libraries(simplenet_infer_fortran PRIVATE MPI::MPI_Fortran)
