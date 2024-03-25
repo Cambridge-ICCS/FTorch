@@ -69,10 +69,10 @@ This reads the model in from the TorchScript file and runs it with an different 
 tensor on each GPU device: [0.0, 1.0, 2.0, 3.0, 4.0], plus the device index in each
 entry. The result should be (some permutation of):
 ```
-0: tensor([[0, 2, 4, 6, 8]])
-1: tensor([[2, 4, 6, 8, 10]])
-2: tensor([[4, 6, 8, 10, 12]])
-3: tensor([[6, 8, 10, 12, 14]])
+0: tensor([[0., 2., 4., 6., 8.]])
+1: tensor([[ 2., 4.,  6.,  8., 10.]])
+2: tensor([[ 4., 6.,  8., 10., 12.]])
+3: tensor([[ 6., 8., 10., 12., 14.]])
 ```
 
 At this point we no longer require python, so can deactivate the virtual environment:
@@ -97,7 +97,14 @@ processes, if required:
 mpiexec -np 4 ./simplenet_infer_fortran ../saved_simplenet_model_cuda.pt
 ```
 
-# TODO: Running
+This runs the model with the same inputs as described above and should produce (some
+permutation of) the output:
+```
+0: [  0.0,  2.0,  4.0,  6.0,  8.0]
+1: [  2.0,  4.0,  6.0,  8.0, 10.0]
+2: [  4.0,  6.0,  8.0, 10.0, 12.0]
+3: [  6.0,  8.0, 10.0, 12.0, 14.0]
+```
 
 # TODO: Make rather than CMake
 

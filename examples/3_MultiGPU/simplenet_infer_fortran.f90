@@ -53,7 +53,8 @@ program inference
 
    ! Infer
    call torch_module_forward(model, in_tensor, n_inputs, out_tensor)
-   write (*,*) rank, ":", out_data(:)
+   write (6,100) rank, ": [", out_data(:), "]"
+   100 format(i1,a3,4(f5.1,","),f5.1,a1)
 
    ! Cleanup
    call torch_module_delete(model)
