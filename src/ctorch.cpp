@@ -23,7 +23,7 @@ constexpr auto get_dtype(torch_data_t dtype)
   case torch_kFloat64:
     return torch::kFloat64;
   default:
-    std::cerr << "[ERROR]: unknown data type, setting to torch_kFloat32"
+    std::cerr << "[WARNING]: unknown data type, setting to torch_kFloat32"
               << std::endl;
     return torch::kFloat32;
   }
@@ -34,21 +34,26 @@ const auto get_device(torch_device_t device_type, int device_index)
   switch (device_type) {
   case torch_kCPU:
     if (device_index != -1) {
-      std::cerr << "[ERROR]: device index unsupported for CPU-only runs"
+      std::cerr << "[WARNING]: device index unused for CPU-only runs"
                 << std::endl;
     }
     return torch::Device(torch::kCPU);
   case torch_kCUDA:
+    if (device_index == -1) {
+      std::cerr << "[WARNING]: device index unset, setting to zero"
+                << std::endl;
+      device_index = 0;
+    }
     if (device_index >= 0 && device_index < torch::cuda::device_count()) {
       return torch::Device(torch::kCUDA, device_index);
     } else {
       std::cerr << "[ERROR]: invalid device index " << device_index
                 << " for device count " << torch::cuda::device_count()
-                << ", using zero instead" << std::endl;
-      return torch::Device(torch::kCUDA);
+                << std::endl;
+      exit(EXIT_FAILURE);
     }
   default:
-    std::cerr << "[ERROR]: unknown device type, setting to torch_kCPU"
+    std::cerr << "[WARNING]: unknown device type, setting to torch_kCPU"
               << std::endl;
     return torch::Device(torch::kCPU);
   }
