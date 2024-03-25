@@ -51,11 +51,12 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 if __name__ == "__main__":
     saved_model_file = "saved_simplenet_model_cuda.pt"
 
-    device_to_run = f"cuda:{MPI.COMM_WORLD.rank}"
+    rank = MPI.COMM_WORLD.rank
+    device_to_run = f"cuda:{rank}"
 
     batch_size_to_run = 1
 
     with torch.no_grad():
         result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
-    print(result)
+    print(f"{rank}: {result}")

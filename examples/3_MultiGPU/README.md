@@ -59,14 +59,20 @@ network. The only difference with the earlier example is that the model is built
 be run using CUDA rather than on CPU.
 
 You can check that everything is working by running the `simplenet_infer_python.py`
-script:
+script. It's set up with MPI such that a different GPU device is associated with each
+MPI rank. If you have four GPUs available then use the following, otherwise adjust the
+number of MPI ranks.
 ```
-python3 simplenet_infer_python.py
+mpiexec -np 4 python3 simplenet_infer_python.py
 ```
-This reads the model in from the TorchScript file and runs it with an input tensor
-[0.0, 1.0, 2.0, 3.0, 4.0] to produce the result:
+This reads the model in from the TorchScript file and runs it with an different input
+tensor on each GPU device: [0.0, 1.0, 2.0, 3.0, 4.0], plus the device index in each
+entry. The result should be (some permutation of):
 ```
-tensor([[0, 2, 4, 6, 8]])
+0: tensor([[0, 2, 4, 6, 8]])
+1: tensor([[2, 4, 6, 8, 10]])
+2: tensor([[4, 6, 8, 10, 12]])
+3: tensor([[6, 8, 10, 12, 14]])
 ```
 
 At this point we no longer require python, so can deactivate the virtual environment:
@@ -80,15 +86,15 @@ need to use an MPI-enabled Fortran compiler:
 ```
 mkdir build
 cd build
-cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> \
-	-DCMAKE_Fortran_COMPILER=<your/mpif90/compiler> -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
 
 To run the compiled code calling the saved SimpleNet TorchScript from Fortran, run the
-executable with an argument of the saved model file:
+executable with an argument of the saved model file. Again, adjust the number of MPI
+processes, if required:
 ```
-./simplenet_infer_fortran ../saved_simplenet_model_cuda.pt
+mpiexec -np 4 ./simplenet_infer_fortran ../saved_simplenet_model_cuda.pt
 ```
 
 # TODO: Running
