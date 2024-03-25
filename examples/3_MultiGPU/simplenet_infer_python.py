@@ -42,6 +42,9 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         output_gpu = model.forward(input_tensor_gpu)
         output = output_gpu.to(torch.device("cpu"))
 
+    else:
+        raise ValueError(f"Device '{device}' not recognised.")
+
     return output
 
 
