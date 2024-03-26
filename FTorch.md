@@ -45,10 +45,12 @@ Presentations
 
 The following presentations contain information about FTorch:
 
-* Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran  
-  RSECon23  
-  [Slides](https://jackatkinson.net/slides/RSECon23/RSECon23.html)
-
+* Reducing the overheads for coupling PyTorch machine learning models to Fortran\
+  ML & DL Seminars, LSCE, IPSL, Paris - November 2023\
+  [Slides](IPSL_FTorch/IPSL_FTorch.html) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
+* Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran\
+  RSECon23, Swansea - September 2023\
+  [Slides](https://jackatkinson.net/slides/RSECon23/RSECon23.html) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
 
 License
 -------
@@ -63,5 +65,12 @@ Projects using FTorch
 The following projects make use of FTorch.  
 If you use our library in your work please let us know.
 
-* [MiMA Machine Learning - DataWave](https://github.com/DataWaveProject/MiMA-machine-learning)  
-  Using FTorch to couple a neural net parameterisation of gravity waves to an atmospheric model.
+* [M2LInES CAM-ML](https://github.com/m2lines/CAM-ML)\
+  Using FTorch to couple a neural net parameterisation of convection to the CAM
+  atmospheric model in CESM.
+* [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/)\
+  Using FTorch to couple neural net parameterisations of gravity waves to the CAM
+  atmospheric model in CESM.
+* [MiMA Machine Learning](https://github.com/DataWaveProject/MiMA-machine-learning)\
+  Using FTorch to couple a neural net parameterisation of gravity waves to the MiMA
+  atmospheric model.
