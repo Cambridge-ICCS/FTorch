@@ -105,7 +105,7 @@
     <div class="col-9" id='text'>
       <p>Transposition of data between Fortran and C can lead to a lot of unneccessary confusion.
 The FTorch library looks after this for you with the
-<a href="../proc/torch_tensor_from_array.html"><code>torch_tensor_from_array()</code></a> function which
+<a href="../interface/torch_tensor_from_array.html"><code>torch_tensor_from_array()</code></a> function which
 allows you to index a tensor in Torch in <strong>exactly the same way</strong> as you would in Fortran.</p>
 <p>If you wish to do something different to this then there are more complex functions
 available and we describe here how and when to use them.</p>
@@ -116,11 +116,10 @@ available and we describe here how and when to use them.</p>
 <li><a href="#what-can-we-do">What can we do?</a><ul>
 <li><a href="#1-transpose-before-passing">1) Transpose before passing</a></li>
 <li><a href="#2-design-nets-to-use-transpose">2) Design nets to use transpose</a></li>
-<li><a href="#3-use-the-layout-argument-in-torch_tensor_from_blob">3) Use the layout argument in torch_tensor_from_blob</a></li>
-<li><a href="#4-use-torch_tensor_from_array">4) Use torch_tensor_from_array</a></li>
+<li><a href="#3-use-the-layout-argument-in-torch_tensor_from_array">3) Use the layout argument in torch_tensor_from_array</a></li>
 </ul>
 </li>
-<li><a href="#advanced-use">Advanced use</a></li>
+<li><a href="#advanced-use-with-torch_tensor_from_blob">Advanced use with torch_tensor_from_blob</a></li>
 </ul>
 </div>
 <h2 id="introduction-row-vs-column-major">Introduction - row- vs. column-major</h2>
@@ -186,11 +185,9 @@ matrix we had in Fortran; likely not what we were expecting!</p>
 to our Torch net is correct as we expect.</p>
 <h2 id="what-can-we-do">What can we do?</h2>
 <p>There are a few approaches we can take to address this.<br>
-The first two of these are listed for conceptual purposes, whilst we advise handling
-this in practice by using the <code>torch_tensor_from_array</code> function described in 
-<a href="#4-use-torch_tensor_from_array">4) below</a> or, if this is not suitable, the
-the <code>layout</code> argument for <code>torch_tensor_from_blob</code> presented in
-<a href="#3-use-the-layout-argument-in-torch_tensor_from_blob">3) below</a>.</p>
+The first two of these are listed for conceptual purposes, whilst in practice we
+advise handling this using the <code>torch_tensor_from_array</code> function described in 
+<a href="#3-use-the-layout-argument-in-torch_tensor_from_array">3) below</a>.</p>
 <h4 id="1-transpose-before-passing">1) Transpose before passing</h4>
 <p>As seen from the above example, writing out from Fortran and reading directly in to
 Torch results in us recieving the transpose.</p>
@@ -224,21 +221,20 @@ as its input tensor meaning we can simply write from Fortran and read to Torch.<
 <p>However, this requires foresight and may not be intuitive - we would like to be indexing
 data in the same way in both Fortran and Torch.
 Not doing so could leave us open to introducing bugs.</p>
-<h4 id="3-use-the-layout-argument-in-torch_tensor_from_blob">3) Use the <code>layout</code> argument in <code>torch_tensor_from_blob</code></h4>
-<p>In the <a href="../proc/torch_tensor_from_blob.html">documentation for torch_tensor_from_blob</a>
-there is a <code>layout</code> argument.</p>
-<p>This tells us how data output by Fortran should be read/accessed by Torch.</p>
-<p>TODO: Finish this
-passing <code>layout = [1, 2]</code> means that the data will be read in the correct indices by
-Torch.</p>
-<p>Tells us which order to read the indices in.
-i.e. <code>[1, 2]</code> will read <code>i</code> then <code>j</code>.</p>
-<h4 id="4-use-torch_tensor_from_array">4) Use <code>torch_tensor_from_array</code></h4>
+<h4 id="3-use-the-layout-argument-in-torch_tensor_from_array">3) Use the <code>layout</code> argument in <code>torch_tensor_from_array</code></h4>
 <p>By far the easiest way to deal with the issue is not to worry about it at all!</p>
 <p>As described at the top of this page, by using the
-<a href="../proc/torch_tensor_from_array.html">torch_tensor_from_array</a> function
-you can take data from Fortran and send it to Torch to be indexed in exactly
-the same way.</p>
+<a href="../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> function
+we can make use of the <code>layout</code> argument.
+This allows us to take data from Fortran and send it to Torch to be indexed in exactly
+the same way by using strided access based on the shape of the array.</p>
+<p>It takes the form of an array specifying which order to read the indices in.
+i.e. <code>[1, 2]</code> will read <code>i</code> then <code>j</code>.
+By passing <code>layout = [1, 2]</code> the data will be read into the correct indices by
+Torch.</p>
+<p>This is achieved by wrapping the <code>torch_tensor_from_blob</code> function to automatically
+generate strides assuming that a straightforward conversion between
+row- and column-major is what should happen.</p>
 <p>i.e. if the Fortran array <code>A</code>
 <script type="math/tex; mode=display">
 \begin{pmatrix}
@@ -246,15 +242,30 @@ a & b \\
 c & d
 \end{pmatrix}
 </script>
-is passed as <code>torch_tensor_from_array(A, )</code>
-the resulting Tensor will be read by Torch as </p>
-<p>This is achieved by wrapping the <code>torch_tensor_from_blob</code> function to automatically
-generate strides assuming this is what should happen.</p>
-<h2 id="advanced-use">Advanced use</h2>
-<p>Those experienced with C will perhaps have noticed that there are further freedoms
-available beyond those presented above.</p>
-<p>[WIP]</p>
-<p>Always stride, or is there a transpose tradeoff?</p>
+is passed as <code>torch_tensor_from_array(A, [1, 2], torch_device)</code>
+the resulting Tensor will be read by Torch as 
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+a & b \\
+c & d
+\end{pmatrix}
+</script>
+</p>
+<blockquote>
+<p>Note: <em>If, for some reason, we did want a different, transposed layout in Torch we
+could use <code>torch_tensor_from_array(A, [2, 1], torch_device)</code> to get:</em>
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+a & c \\
+b & d
+\end{pmatrix}
+</script>
+</p>
+</blockquote>
+<h2 id="advanced-use-with-torch_tensor_from_blob">Advanced use with <code>torch_tensor_from_blob</code></h2>
+<p>For more advanced options for manipulating and controlling data access when passing
+between Fortran and Torch see the more powerful but more complex
+<a href="../proc/torch_tensor_from_blob.html">torch_tensor_from_blob function</a></p>
     </div>
   </div>
       <hr>
