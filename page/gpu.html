@@ -111,20 +111,28 @@
 <h2 id="gpu-support">GPU Support</h2>
 <p>In order to run a model on GPU, two main changes are required:</p>
 <p>1) When saving your TorchScript model, ensure that it is on the GPU.
-For example, when using <a href="utils/pt2ts.py">pt2ts.py</a>, this can be done by
-uncommenting the following lines:  </p>
-<div class="codehilite"><pre><span></span><code><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+For example, when using
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py"><code>pt2ts.py</code></a>,
+this can be done by uncommenting the following lines:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
 <span class="n">trained_model</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 <span class="n">trained_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 <span class="n">trained_model_dummy_input_1</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_1</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 <span class="n">trained_model_dummy_input_2</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 </code></pre></div>
 
-<p>Note: this also moves the dummy input tensors to the GPU. This is not necessary for
-saving the model, but the tensors must also be on the GPU to test that the models runs.</p>
-<p>2) When calling <code>torch_tensor_from_blob</code> in Fortran, the device for the input tensor(s),
-   but not the output tensor(s), should be set to <code>torch_kCUDA</code>, rather than
-   <code>torch_kCPU</code>. This ensures that the inputs are on the same device as the model.</p>
+<blockquote>
+<p>Note: <em>This code also moves the dummy input tensors to the GPU.
+Whilst not necessary for saving the model, but the tensors must also be on the GPU
+to test that the models runs.</em></p>
+</blockquote>
+<p>2) When calling <code>torch_tensor_from_array</code> in Fortran, the device for the input
+   tensor(s) should be set to <code>torch_kCUDA</code>, rather than <code>torch_kCPU</code>.
+   This ensures that the inputs are on the same device as the model.</p>
+<blockquote>
+<p>Note: <em>You do <strong>not</strong> need to change the device for the output tensors as we
+want them to be on the CPU for subsequent use in Fortran.</em></p>
+</blockquote>
     </div>
   </div>
       <hr>

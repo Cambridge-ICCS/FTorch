@@ -105,20 +105,170 @@
     <div class="col-9" id='text'>
       <div class="toc">
 <ul>
-<li><a href="#generic-example">Generic example</a></li>
+<li><a href="#generic-example">Generic example</a><ul>
+<li><a href="#overview-of-the-interfacing-process">Overview of the interfacing process</a><ul>
+<li><a href="#1-saving-the-model-as-torchscript">1. Saving the model as TorchScript</a></li>
+<li><a href="#2-using-the-model-from-fortran">2. Using the model from Fortran</a></li>
+<li><a href="#3-build-the-code">3. Build the code</a><ul>
+<li><a href="#cmake">CMake</a></li>
+<li><a href="#make">Make</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#running-on-gpus">Running on GPUs</a></li>
+</ul>
+</li>
 <li><a href="#worked-examples">Worked examples</a><ul>
-<li><a href="#1-simple">1) Simple</a></li>
+<li><a href="#1-simplenet">1) SimpleNet</a></li>
 <li><a href="#2-resnet">2) Resnet</a></li>
-<li><a href="#3">3)</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <h2 id="generic-example">Generic example</h2>
+<h3 id="overview-of-the-interfacing-process">Overview of the interfacing process</h3>
+<p>In order to use FTorch users will typically need to follow these steps:</p>
+<ol>
+<li>Save a PyTorch model as <a href="https://pytorch.org/docs/stable/jit.html">TorchScript</a>.</li>
+<li>Write Fortran using the FTorch bindings to use the model from within Fortran.</li>
+<li>Build and compile the code, linking against the FTorch library</li>
+</ol>
+<p>These are outlined in detail below.</p>
+<h4 id="1-saving-the-model-as-torchscript">1. Saving the model as TorchScript</h4>
+<p>The trained PyTorch model needs to be exported to
+<a href="https://pytorch.org/docs/stable/jit.html">TorchScript</a>.
+This can be done from within your code using the
+<a href="https://pytorch.org/docs/stable/generated/torch.jit.script.html#torch.jit.script"><code>jit.script</code></a>
+or
+<a href="https://pytorch.org/docs/stable/generated/torch.jit.trace.html#torch.jit.trace"><code>jit.trace</code></a>
+functionalities from within python.</p>
+<p>If you are not familiar with these we provide a tool
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py"><code>pt2ts.py</code></a>
+as part of this distribution which contains an easily adaptable script to save your
+PyTorch model as TorchScript.</p>
+<h4 id="2-using-the-model-from-fortran">2. Using the model from Fortran</h4>
+<p>To use the trained Torch model from within Fortran we need to import the <code>ftorch</code>
+module and use the binding routines to load the model, convert the data,
+and run inference.
+A very simple example is given below.</p>
+<p>This minimal snippet loads a saved Torch model, creates an input consisting of a
+<code>10x10</code> matrix of ones, and runs the model to infer output.<br>
+This is for illustrative purposes only, and we recommend following the
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples">examples</a>
+before writing your own code to fully explore the features.</p>
+<div class="codehilite"><pre><span></span><code><span class="c">! Import library for interfacing with PyTorch</span>
+<span class="k">use </span><span class="n">ftorch</span>
+
+<span class="k">implicit none</span>
+
+<span class="c">! Generate an object to hold the Torch model</span>
+<span class="k">type</span><span class="p">(</span><span class="n">torch_module</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span>
+
+<span class="c">! Set up types of input and output data</span>
+<span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model_input_arr</span>
+<span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model_output</span>
+
+<span class="c">! Set up the model input and output as Fortran arrays</span>
+<span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">input</span>
+<span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">output</span>
+
+<span class="c">! Set up number of dimensions of input tensor and axis order</span>
+<span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">in_dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">in_layout</span><span class="p">(</span><span class="n">in_dims</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">out_dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">out_layout</span><span class="p">(</span><span class="n">out_dims</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c">! Initialise the Torch model to be used</span>
+<span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_module_load</span><span class="p">(</span><span class="s2">&quot;/path/to/saved/model.pt&quot;</span><span class="p">)</span>
+
+<span class="c">! Initialise the inputs as Fortran array of ones</span>
+<span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
+
+<span class="c">! Wrap Fortran data as no-copy Torch Tensors</span>
+<span class="c">! There may well be some reshaping required depending on the </span>
+<span class="c">! structure of the model which is not covered here (see examples)</span>
+<span class="n">model_input_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">in_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+<span class="n">model_output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">out_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+
+<span class="c">! Run model and Infer</span>
+<span class="c">! Again, there may be some reshaping required depending on model design</span>
+<span class="k">call </span><span class="n">torch_module_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">model_input_arr</span><span class="p">,</span><span class="w"> </span><span class="n">n_inputs</span><span class="p">,</span><span class="w"> </span><span class="n">model_output</span><span class="p">)</span>
+
+<span class="c">! Write out the result of running the model</span>
+<span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">output</span>
+
+<span class="c">! Clean up</span>
+<span class="k">call </span><span class="n">torch_module_delete</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">model_input_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">call </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">model_output</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="3-build-the-code">3. Build the code</h4>
+<p>The code now needs to be compiled and linked against our installed library.
+Here we describe how to do this for two build systems, CMake and make.</p>
+<h5 id="cmake">CMake</h5>
+<p>If our project were using cmake we would need the following in the <code>CMakeLists.txt</code>
+file to find the FTorch installation and link it to the executable.</p>
+<p>This can be done by adding the following to the <code>CMakeLists.txt</code> file:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">find_package</span><span class="p">(</span><span class="s">FTorch</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="w"> </span><span class="s">&lt;executable&gt;</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">FTorch::ftorch</span><span class="w"> </span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s">STATUS</span><span class="w"> </span><span class="s2">&quot;Building with Fortran PyTorch coupling&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>and using the <code>-DCMAKE_PREFIX_PATH=&lt;/path/to/install/location&gt;</code> flag when running cmake.  </p>
+<blockquote>
+<p>Note: <em>If you used the <code>CMAKE_INSTALL_PREFIX</code> argument when
+<a href="https://cambridge-iccs.github.io/FTorch/page/cmake.html">building and installing the library</a>
+then you should use the same path for <code>&lt;/path/to/install/location&gt;</code>.</em></p>
+</blockquote>
+<h5 id="make">Make</h5>
+<p>To build with make we need to include the library when compiling and link the executable
+against it.</p>
+<p>To compile with make we need add the following compiler flag when compiling files that
+use ftorch:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">FCFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="o">-</span><span class="nv">I</span><span class="o">&lt;</span><span class="nv">path</span><span class="o">/</span><span class="nv">to</span><span class="o">/</span><span class="nv">install</span><span class="o">/</span><span class="nv">location</span><span class="o">&gt;/</span><span class="k">include</span><span class="o">/</span><span class="nv">ftorch</span>
+</code></pre></div>
+
+<p>When compiling the final executable add the following link flag:</p>
+<div class="codehilite"><pre><span></span><code>LDFLAGS += -L&lt;path/to/install/location&gt;/lib -lftorch
+</code></pre></div>
+
+<p>You may also need to add the location of the <code>.so</code> files to your <code>LD_LIBRARY_PATH</code>
+unless installing in a default location:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">LD_LIBRARY_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">LD_LIBRARY_PATH</span><span class="p">:</span><span class="o">&lt;</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">location</span><span class="o">&gt;/</span><span class="n">lib</span>
+</code></pre></div>
+
+<blockquote>
+<p>Note: <em>Depending on your system and architecture <code>lib</code> may be <code>lib64</code> or something similar.</em></p>
+</blockquote>
+<h3 id="running-on-gpus">Running on GPUs</h3>
+<p>In order to run a model on GPU, two main changes to the above process are required:</p>
+<ol>
+<li>When saving your TorchScript model, ensure that it is on the GPU.</li>
+<li>When calling <code>torch_tensor_from_array</code> in Fortran, the device for the input
+   tensor(s) should be set to <code>torch_kCUDA</code>, rather than <code>torch_kCPU</code>.</li>
+</ol>
+<p>For more information refer to the <a href="gpu.html">GPU Documentation</a></p>
 <h2 id="worked-examples">Worked examples</h2>
-<h4 id="1-simple">1) Simple</h4>
+<p>The repository comes with a number of documented
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples">worked examples</a>.</p>
+<p>These are designed to introduce users to FTorch and how to use the various features.</p>
+<h4 id="1-simplenet">1) SimpleNet</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/1_SimpleNet">This worked example</a>
+provides a simple but complete demonstration of how to use the library.
+It uses simple PyTorch 'net' that takes an input vector of length 5 and applies a single
+Linear layer to multiply it by 2.
+The aim is to demonstrate the most basic features of coupling before worrying about
+more complex issues that are covered in later examples.</p>
 <h4 id="2-resnet">2) Resnet</h4>
-<h4 id="3">3)</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/2_ResNet18">This worked example</a>
+provides a more realistic demonstration of how to use the library,
+using ResNet-18 to classify an image.
+As the input to this model is four-dimensional (batch size, colour, x, y),
+care must be taken dealing with the data array in Python and Fortran.
+See <a href="transposing.html">when to transpose arrays</a> for more details.</p>
     </div>
   </div>
       <hr>
