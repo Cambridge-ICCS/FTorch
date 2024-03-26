@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,7 +19,8 @@
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -351,7 +354,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-data~2"></span>
+              <span class="anchor" id="variable-data"></span>
               type(c_ptr),
             </td>
 <td>intent(in),</td>
@@ -366,7 +369,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-ndims~28"></span>
+              <span class="anchor" id="variable-ndims"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in),</td>
@@ -381,7 +384,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor_shape~4"></span>
+              <span class="anchor" id="variable-tensor_shape"></span>
               integer(kind=c_int64_t),
             </td>
 <td>intent(in)</td>
@@ -396,7 +399,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-strides~26"></span>
+              <span class="anchor" id="variable-strides"></span>
               integer(kind=c_int64_t),
             </td>
 <td>intent(in)</td>
@@ -411,7 +414,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-dtype~4"></span>
+              <span class="anchor" id="variable-dtype"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in),</td>
@@ -426,7 +429,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device~4"></span>
+              <span class="anchor" id="variable-device"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in),</td>
@@ -2351,11 +2354,11 @@
         <section>
           <h2>Functions</h2>
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_module_load"></span><h3>public  function <a href='../proc/torch_module_load.html'>torch_module_load</a>(filename) result(module)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_module_load"></span> <h3>public  function <a href='../proc/torch_module_load.html'>torch_module_load</a>(filename) result(module)  
 </h3></div>
     <div class="card-body">
           
-  <p>Loads a Torch Script module (pre-trained PyTorch model saved with Torch Script)</p>
+  <p>Loads a TorchScript module (pre-trained PyTorch model saved with TorchScript)</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -2380,7 +2383,7 @@
             <td>::</td>
             <td><strong>filename</strong></td>
             <td>
-<p>Filename of Torch Script module</p>
+<p>Filename of TorchScript module</p>
             </td>
         </tr>
     </tbody>
@@ -2396,7 +2399,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_1d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int16_1d.html'>torch_tensor_from_array_int16_1d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_1d.html'>torch_tensor_from_array_int16_1d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2471,7 +2474,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_2d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int16_2d.html'>torch_tensor_from_array_int16_2d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_2d.html'>torch_tensor_from_array_int16_2d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2546,7 +2549,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_3d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int16_3d.html'>torch_tensor_from_array_int16_3d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_3d.html'>torch_tensor_from_array_int16_3d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2621,7 +2624,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_4d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int16_4d.html'>torch_tensor_from_array_int16_4d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_4d.html'>torch_tensor_from_array_int16_4d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2696,7 +2699,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_1d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int32_1d.html'>torch_tensor_from_array_int32_1d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_1d.html'>torch_tensor_from_array_int32_1d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2771,7 +2774,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_2d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int32_2d.html'>torch_tensor_from_array_int32_2d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_2d.html'>torch_tensor_from_array_int32_2d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2846,7 +2849,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_3d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int32_3d.html'>torch_tensor_from_array_int32_3d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_3d.html'>torch_tensor_from_array_int32_3d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2921,7 +2924,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_4d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int32_4d.html'>torch_tensor_from_array_int32_4d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_4d.html'>torch_tensor_from_array_int32_4d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2996,7 +2999,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_1d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int64_1d.html'>torch_tensor_from_array_int64_1d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_1d.html'>torch_tensor_from_array_int64_1d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3071,7 +3074,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_2d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int64_2d.html'>torch_tensor_from_array_int64_2d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_2d.html'>torch_tensor_from_array_int64_2d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3146,7 +3149,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_3d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int64_3d.html'>torch_tensor_from_array_int64_3d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_3d.html'>torch_tensor_from_array_int64_3d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3221,7 +3224,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_4d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int64_4d.html'>torch_tensor_from_array_int64_4d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_4d.html'>torch_tensor_from_array_int64_4d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3296,7 +3299,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_1d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int8_1d.html'>torch_tensor_from_array_int8_1d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_1d.html'>torch_tensor_from_array_int8_1d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3371,7 +3374,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_2d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int8_2d.html'>torch_tensor_from_array_int8_2d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_2d.html'>torch_tensor_from_array_int8_2d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3446,7 +3449,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_3d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int8_3d.html'>torch_tensor_from_array_int8_3d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_3d.html'>torch_tensor_from_array_int8_3d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3521,7 +3524,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_4d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_int8_4d.html'>torch_tensor_from_array_int8_4d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_4d.html'>torch_tensor_from_array_int8_4d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3596,7 +3599,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_1d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_real32_1d.html'>torch_tensor_from_array_real32_1d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_1d.html'>torch_tensor_from_array_real32_1d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3671,7 +3674,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_2d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_real32_2d.html'>torch_tensor_from_array_real32_2d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_2d.html'>torch_tensor_from_array_real32_2d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3746,7 +3749,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_3d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_real32_3d.html'>torch_tensor_from_array_real32_3d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_3d.html'>torch_tensor_from_array_real32_3d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3821,7 +3824,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_4d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_real32_4d.html'>torch_tensor_from_array_real32_4d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_4d.html'>torch_tensor_from_array_real32_4d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3896,7 +3899,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_1d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_real64_1d.html'>torch_tensor_from_array_real64_1d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_1d.html'>torch_tensor_from_array_real64_1d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -3971,7 +3974,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_2d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_real64_2d.html'>torch_tensor_from_array_real64_2d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_2d.html'>torch_tensor_from_array_real64_2d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -4046,7 +4049,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_3d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_real64_3d.html'>torch_tensor_from_array_real64_3d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_3d.html'>torch_tensor_from_array_real64_3d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -4121,7 +4124,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_4d"></span><h3>public  function <a href='../proc/torch_tensor_from_array_real64_4d.html'>torch_tensor_from_array_real64_4d</a>(data_in, layout, c_device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_4d.html'>torch_tensor_from_array_real64_4d</a>(data_in, layout, c_device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -4196,7 +4199,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_blob"></span><h3>public  function <a href='../proc/torch_tensor_from_blob.html'>torch_tensor_from_blob</a>(data, ndims, tensor_shape, layout, dtype, device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_blob"></span> <h3>public  function <a href='../proc/torch_tensor_from_blob.html'>torch_tensor_from_blob</a>(data, ndims, tensor_shape, layout, dtype, device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -4216,7 +4219,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-data"></span>
+              <span class="anchor" id="variable-data~2"></span>
               type(c_ptr),
             </td>
 <td>intent(in)</td>
@@ -4231,7 +4234,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-ndims"></span>
+              <span class="anchor" id="variable-ndims~6"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -4246,7 +4249,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor_shape"></span>
+              <span class="anchor" id="variable-tensor_shape~6"></span>
               integer(kind=c_int64_t),
             </td>
 <td>intent(in)</td>
@@ -4276,7 +4279,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-dtype"></span>
+              <span class="anchor" id="variable-dtype~6"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -4291,7 +4294,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device"></span>
+              <span class="anchor" id="variable-device~6"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -4317,11 +4320,101 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_ones"></span><h3>public  function <a href='../proc/torch_tensor_ones.html'>torch_tensor_ones</a>(ndims, tensor_shape, dtype, device) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_ones"></span> <h3>public  function <a href='../proc/torch_tensor_ones.html'>torch_tensor_ones</a>(ndims, tensor_shape, dtype, device) result(tensor)  
 </h3></div>
     <div class="card-body">
           
   <p>Returns a tensor filled with the scalar value 1.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ndims~4"></span>
+              integer(kind=c_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ndims</strong></td>
+            <td>
+<p>Number of dimensions of the tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor_shape~4"></span>
+              integer(kind=c_int64_t),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor_shape</strong>(*)</td>
+            <td>
+<p>Shape of the tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dtype~4"></span>
+              integer(kind=c_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dtype</strong></td>
+            <td>
+<p>Data type of the tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-device~4"></span>
+              integer(kind=c_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>device</strong></td>
+            <td>
+<p>Device on which the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/torch_tensor.html'>torch_tensor</a>)</small>
+    </h4>
+    <p>Returned tensor</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_zeros"></span> <h3>public  function <a href='../proc/torch_tensor_zeros.html'>torch_tensor_zeros</a>(ndims, tensor_shape, dtype, device) result(tensor)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Returns a tensor filled with the scalar value 0.</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -4406,107 +4499,17 @@
     </div>
   </div>
 
-              <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_zeros"></span><h3>public  function <a href='../proc/torch_tensor_zeros.html'>torch_tensor_zeros</a>(ndims, tensor_shape, dtype, device) result(tensor)  
-</h3></div>
-    <div class="card-body">
-          
-  <p>Returns a tensor filled with the scalar value 0.</p>
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-ndims~3"></span>
-              integer(kind=c_int),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>ndims</strong></td>
-            <td>
-<p>Number of dimensions of the tensor</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-tensor_shape~3"></span>
-              integer(kind=c_int64_t),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>tensor_shape</strong>(*)</td>
-            <td>
-<p>Shape of the tensor</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-dtype~3"></span>
-              integer(kind=c_int),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>dtype</strong></td>
-            <td>
-<p>Data type of the tensor</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-device~3"></span>
-              integer(kind=c_int),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>device</strong></td>
-            <td>
-<p>Device on which the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>type(<a href='../type/torch_tensor.html'>torch_tensor</a>)</small>
-    </h4>
-    <p>Returned tensor</p>
-
-    </div>
-  </div>
-
         </section>
         <br>
 
         <section>
           <h2>Subroutines</h2>
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_module_delete"></span><h3>public  subroutine <a href='../proc/torch_module_delete.html'>torch_module_delete</a>(module)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_module_delete"></span> <h3>public  subroutine <a href='../proc/torch_module_delete.html'>torch_module_delete</a>(module)  
 </h3></div>
     <div class="card-body">
           
-  <p>Deallocates a Torch Script module</p>
+  <p>Deallocates a TorchScript module</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -4521,7 +4524,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-module~3"></span>
+              <span class="anchor" id="variable-module~5"></span>
               type(<a href='../type/torch_module.html'>torch_module</a>),
             </td>
 <td>intent(in)</td>
@@ -4542,7 +4545,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_module_forward"></span><h3>public  subroutine <a href='../proc/torch_module_forward.html'>torch_module_forward</a>(module, input_tensors, n_inputs, output_tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_module_forward"></span> <h3>public  subroutine <a href='../proc/torch_module_forward.html'>torch_module_forward</a>(module, input_tensors, n_inputs, output_tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -4561,7 +4564,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-module~2"></span>
+              <span class="anchor" id="variable-module~3"></span>
               type(<a href='../type/torch_module.html'>torch_module</a>),
             </td>
 <td>intent(in)</td>
@@ -4627,7 +4630,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_delete"></span><h3>public  subroutine <a href='../proc/torch_tensor_delete.html'>torch_tensor_delete</a>(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_delete"></span> <h3>public  subroutine <a href='../proc/torch_tensor_delete.html'>torch_tensor_delete</a>(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -4646,7 +4649,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~5"></span>
+              <span class="anchor" id="variable-tensor~8"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -4667,7 +4670,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_print"></span><h3>public  subroutine <a href='../proc/torch_tensor_print.html'>torch_tensor_print</a>(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_print"></span> <h3>public  subroutine <a href='../proc/torch_tensor_print.html'>torch_tensor_print</a>(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -4686,7 +4689,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~4"></span>
+              <span class="anchor" id="variable-tensor~6"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -4719,7 +4722,7 @@
     <footer>
       <div class="container">
         <div class="row justify-content-between">
-          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2023 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
 </p>
           </div>
           <div class="col">

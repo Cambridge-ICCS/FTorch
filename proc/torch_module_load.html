@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,7 +19,8 @@
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -154,7 +157,7 @@
     </div>
 
 
-    <p>Loads a Torch Script module (pre-trained PyTorch model saved with Torch Script)</p>
+    <p>Loads a TorchScript module (pre-trained PyTorch model saved with TorchScript)</p>
 
 
     <h3>Arguments</h3>
@@ -180,7 +183,7 @@
             <td>::</td>
             <td><strong>filename</strong></td>
             <td>
-                <p>Filename of Torch Script module</p>
+                <p>Filename of TorchScript module</p>
             </td>
         </tr>
     </tbody>
@@ -209,7 +212,7 @@
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">function </span><span class="n">torch_module_load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="k">module</span><span class="p">)</span>
 <span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nb">c_null_char</span>
-<span class="nb">    </span><span class="kt">character</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="w"> </span><span class="c">!! Filename of Torch Script module</span>
+<span class="nb">    </span><span class="kt">character</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="w"> </span><span class="c">!! Filename of TorchScript module</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_module</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="k">module</span><span class="w">      </span><span class="c">!! Returned deserialized module</span>
 
 <span class="w">    </span><span class="k">interface</span>
@@ -237,7 +240,7 @@
     <footer>
       <div class="container">
         <div class="row justify-content-between">
-          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2023 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
 </p>
           </div>
           <div class="col">

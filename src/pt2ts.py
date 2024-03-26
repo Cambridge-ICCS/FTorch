@@ -1,4 +1,5 @@
-"""Load a pytorch model and convert it to TorchScript."""
+"""Load a PyTorch model and convert it to TorchScript."""
+
 from typing import Optional
 import torch
 
@@ -12,12 +13,12 @@ def script_to_torchscript(
     model: torch.nn.Module, filename: Optional[str] = "scripted_model.pt"
 ) -> None:
     """
-    Save pyTorch model to TorchScript using scripting.
+    Save PyTorch model to TorchScript using scripting.
 
     Parameters
     ----------
     model : torch.NN.Module
-        a pyTorch model
+        a PyTorch model
     filename : str
         name of file to save to
     """
@@ -33,12 +34,12 @@ def trace_to_torchscript(
     filename: Optional[str] = "traced_model.pt",
 ) -> None:
     """
-    Save pyTorch model to TorchScript using tracing.
+    Save PyTorch model to TorchScript using tracing.
 
     Parameters
     ----------
     model : torch.NN.Module
-        a pyTorch model
+        a PyTorch model
     dummy_input : torch.Tensor
         appropriate size Tensor to act as input to model
     filename : str
@@ -119,7 +120,7 @@ if __name__ == "__main__":
     saved_ts_filename = "saved_model.pt"
 
     # FPTLIB-TODO
-    # Save the pytorch model using either scripting (recommended where possible) or tracing
+    # Save the PyTorch model using either scripting (recommended where possible) or tracing
     # -----------
     # Scripting
     # -----------

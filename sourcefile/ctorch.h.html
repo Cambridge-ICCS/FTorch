@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,7 +19,8 @@
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -221,56 +224,40 @@
 <a id="ln-85" name="ln-85" href="#ln-85"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_print</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
 <a id="ln-86" name="ln-86" href="#ln-86"></a>
 <a id="ln-87" name="ln-87" href="#ln-87"></a><span class="cm">/**</span>
-<a id="ln-88" name="ln-88" href="#ln-88"></a><span class="cm"> * Function to create a Torch Tensor from memory location given extra information</span>
-<a id="ln-89" name="ln-89" href="#ln-89"></a><span class="cm"> * This is a rework for torch_from_blob that uses strides, and will eventually</span>
-<a id="ln-90" name="ln-90" href="#ln-90"></a><span class="cm"> * replace torch_from_blob.</span>
-<a id="ln-91" name="ln-91" href="#ln-91"></a><span class="cm"> * @param pointer to the Tensor in memory</span>
-<a id="ln-92" name="ln-92" href="#ln-92"></a><span class="cm"> * @param number of dimensions of the Tensor</span>
-<a id="ln-93" name="ln-93" href="#ln-93"></a><span class="cm"> * @param shape of the Tensor</span>
-<a id="ln-94" name="ln-94" href="#ln-94"></a><span class="cm"> * @param data type of the elements of the Tensor</span>
-<a id="ln-95" name="ln-95" href="#ln-95"></a><span class="cm"> * @param device used (cpu, CUDA, etc.)</span>
-<a id="ln-96" name="ln-96" href="#ln-96"></a><span class="cm"> * @return Torch Tensor interpretation of the data pointed at</span>
-<a id="ln-97" name="ln-97" href="#ln-97"></a><span class="cm"> */</span>
-<a id="ln-98" name="ln-98" href="#ln-98"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">torch_from_blob_f</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ndim</span><span class="p">,</span>
-<a id="ln-99" name="ln-99" href="#ln-99"></a><span class="w">                                        </span><span class="k">const</span><span class="w"> </span><span class="kt">int64_t</span><span class="o">*</span><span class="w"> </span><span class="n">shape</span><span class="p">,</span>
-<a id="ln-100" name="ln-100" href="#ln-100"></a><span class="w">                                        </span><span class="n">torch_data_t</span><span class="w"> </span><span class="n">dtype</span><span class="p">,</span>
-<a id="ln-101" name="ln-101" href="#ln-101"></a><span class="w">                                        </span><span class="n">torch_device_t</span><span class="w"> </span><span class="n">device</span><span class="p">);</span>
-<a id="ln-102" name="ln-102" href="#ln-102"></a>
-<a id="ln-103" name="ln-103" href="#ln-103"></a><span class="cm">/**</span>
-<a id="ln-104" name="ln-104" href="#ln-104"></a><span class="cm"> * Function to delete a Torch Tensor to clean up</span>
-<a id="ln-105" name="ln-105" href="#ln-105"></a><span class="cm"> * @param Torch Tensor to delete</span>
-<a id="ln-106" name="ln-106" href="#ln-106"></a><span class="cm"> */</span>
-<a id="ln-107" name="ln-107" href="#ln-107"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
-<a id="ln-108" name="ln-108" href="#ln-108"></a>
-<a id="ln-109" name="ln-109" href="#ln-109"></a>
-<a id="ln-110" name="ln-110" href="#ln-110"></a><span class="c1">// =====================================================================================</span>
-<a id="ln-111" name="ln-111" href="#ln-111"></a><span class="c1">// Module API</span>
-<a id="ln-112" name="ln-112" href="#ln-112"></a><span class="c1">// =====================================================================================</span>
-<a id="ln-113" name="ln-113" href="#ln-113"></a><span class="cm">/**</span>
-<a id="ln-114" name="ln-114" href="#ln-114"></a><span class="cm"> * Function to load in a Torch model from a TorchScript file and store in a Torch Module</span>
-<a id="ln-115" name="ln-115" href="#ln-115"></a><span class="cm"> * @param filename where TorchScript description of model is stored</span>
-<a id="ln-116" name="ln-116" href="#ln-116"></a><span class="cm"> * @return Torch Module loaded in from file</span>
-<a id="ln-117" name="ln-117" href="#ln-117"></a><span class="cm"> */</span>
-<a id="ln-118" name="ln-118" href="#ln-118"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">torch_jit_load</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">filename</span><span class="p">);</span>
-<a id="ln-119" name="ln-119" href="#ln-119"></a>
-<a id="ln-120" name="ln-120" href="#ln-120"></a><span class="cm">/**</span>
-<a id="ln-121" name="ln-121" href="#ln-121"></a><span class="cm"> * Function to run the `forward` method of a Torch Module</span>
-<a id="ln-122" name="ln-122" href="#ln-122"></a><span class="cm"> * @param Torch Module containing the model</span>
-<a id="ln-123" name="ln-123" href="#ln-123"></a><span class="cm"> * @param vector of Torch Tensors as inputs to the model</span>
-<a id="ln-124" name="ln-124" href="#ln-124"></a><span class="cm"> * @param number of input Tensors in the input vector</span>
-<a id="ln-125" name="ln-125" href="#ln-125"></a><span class="cm"> * @param the output Tensor from running the model</span>
-<a id="ln-126" name="ln-126" href="#ln-126"></a><span class="cm"> */</span>
-<a id="ln-127" name="ln-127" href="#ln-127"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_forward</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">,</span>
-<a id="ln-128" name="ln-128" href="#ln-128"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nin</span><span class="p">,</span>
-<a id="ln-129" name="ln-129" href="#ln-129"></a><span class="w">                                       </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
-<a id="ln-130" name="ln-130" href="#ln-130"></a>
-<a id="ln-131" name="ln-131" href="#ln-131"></a><span class="cm">/**</span>
-<a id="ln-132" name="ln-132" href="#ln-132"></a><span class="cm"> * Function to delete a Torch Module to clean up</span>
-<a id="ln-133" name="ln-133" href="#ln-133"></a><span class="cm"> * @param Torch Module to delete</span>
-<a id="ln-134" name="ln-134" href="#ln-134"></a><span class="cm"> */</span>
-<a id="ln-135" name="ln-135" href="#ln-135"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_delete</span><span class="p">(</span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
-<a id="ln-136" name="ln-136" href="#ln-136"></a>
-<a id="ln-137" name="ln-137" href="#ln-137"></a><span class="cp">#endif </span><span class="cm">/* C_TORCH_H*/</span>
+<a id="ln-88" name="ln-88" href="#ln-88"></a><span class="cm"> * Function to delete a Torch Tensor to clean up</span>
+<a id="ln-89" name="ln-89" href="#ln-89"></a><span class="cm"> * @param Torch Tensor to delete</span>
+<a id="ln-90" name="ln-90" href="#ln-90"></a><span class="cm"> */</span>
+<a id="ln-91" name="ln-91" href="#ln-91"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
+<a id="ln-92" name="ln-92" href="#ln-92"></a>
+<a id="ln-93" name="ln-93" href="#ln-93"></a>
+<a id="ln-94" name="ln-94" href="#ln-94"></a><span class="c1">// =====================================================================================</span>
+<a id="ln-95" name="ln-95" href="#ln-95"></a><span class="c1">// Module API</span>
+<a id="ln-96" name="ln-96" href="#ln-96"></a><span class="c1">// =====================================================================================</span>
+<a id="ln-97" name="ln-97" href="#ln-97"></a><span class="cm">/**</span>
+<a id="ln-98" name="ln-98" href="#ln-98"></a><span class="cm"> * Function to load in a Torch model from a TorchScript file and store in a Torch Module</span>
+<a id="ln-99" name="ln-99" href="#ln-99"></a><span class="cm"> * @param filename where TorchScript description of model is stored</span>
+<a id="ln-100" name="ln-100" href="#ln-100"></a><span class="cm"> * @return Torch Module loaded in from file</span>
+<a id="ln-101" name="ln-101" href="#ln-101"></a><span class="cm"> */</span>
+<a id="ln-102" name="ln-102" href="#ln-102"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">torch_jit_load</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">filename</span><span class="p">);</span>
+<a id="ln-103" name="ln-103" href="#ln-103"></a>
+<a id="ln-104" name="ln-104" href="#ln-104"></a><span class="cm">/**</span>
+<a id="ln-105" name="ln-105" href="#ln-105"></a><span class="cm"> * Function to run the `forward` method of a Torch Module</span>
+<a id="ln-106" name="ln-106" href="#ln-106"></a><span class="cm"> * @param Torch Module containing the model</span>
+<a id="ln-107" name="ln-107" href="#ln-107"></a><span class="cm"> * @param vector of Torch Tensors as inputs to the model</span>
+<a id="ln-108" name="ln-108" href="#ln-108"></a><span class="cm"> * @param number of input Tensors in the input vector</span>
+<a id="ln-109" name="ln-109" href="#ln-109"></a><span class="cm"> * @param the output Tensor from running the model</span>
+<a id="ln-110" name="ln-110" href="#ln-110"></a><span class="cm"> */</span>
+<a id="ln-111" name="ln-111" href="#ln-111"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_forward</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">,</span>
+<a id="ln-112" name="ln-112" href="#ln-112"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nin</span><span class="p">,</span>
+<a id="ln-113" name="ln-113" href="#ln-113"></a><span class="w">                                       </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<a id="ln-114" name="ln-114" href="#ln-114"></a>
+<a id="ln-115" name="ln-115" href="#ln-115"></a><span class="cm">/**</span>
+<a id="ln-116" name="ln-116" href="#ln-116"></a><span class="cm"> * Function to delete a Torch Module to clean up</span>
+<a id="ln-117" name="ln-117" href="#ln-117"></a><span class="cm"> * @param Torch Module to delete</span>
+<a id="ln-118" name="ln-118" href="#ln-118"></a><span class="cm"> */</span>
+<a id="ln-119" name="ln-119" href="#ln-119"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_delete</span><span class="p">(</span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
+<a id="ln-120" name="ln-120" href="#ln-120"></a>
+<a id="ln-121" name="ln-121" href="#ln-121"></a><span class="cp">#endif </span><span class="cm">/* C_TORCH_H*/</span>
 </pre></div>
 
       </section>
@@ -282,7 +269,7 @@
     <footer>
       <div class="container">
         <div class="row justify-content-between">
-          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2023 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
 </p>
           </div>
           <div class="col">

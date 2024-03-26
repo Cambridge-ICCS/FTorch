@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,7 +20,8 @@
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -66,8 +69,12 @@
 			 <table class="table">
 			 <thead><tr><th>Module</th><th>Source File</th><th>Description</th></tr></thead>
 			 <tbody>
-			   <tr class="active"><td><a href='../module/ftorch.html'>ftorch</a></td><td><a href='../sourcefile/ftorch.f90.html'>ftorch.f90</a></td><td><p>Main module for FTorch containing types and procedures.
- Generated from <code>ftorch.fypp</code> using the <a href="https://fypp.readthedocs.io/en/stable/index.html">fypp Fortran preprocessor</a>.</p><a href="../module/ftorch.html" class="pull-right"><emph>Read more&hellip;</emph></a></td></tr>
+			   <tr class="active">
+                 <td><a href='../module/ftorch.html'>ftorch</a></td>
+                 <td><a href='../sourcefile/ftorch.f90.html'>ftorch.f90</a></td>
+                 <td><p>Main module for FTorch containing types and procedures.
+ Generated from <code>ftorch.fypp</code> using the <a href="https://fypp.readthedocs.io/en/stable/index.html">fypp Fortran preprocessor</a>.</p><a href="../module/ftorch.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
 <!--active-->			 </tbody></table>
              
         </div>
@@ -77,7 +84,7 @@
     <footer>
       <div class="container">
         <div class="row justify-content-between">
-          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2023 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
 </p>
           </div>
           <div class="col">

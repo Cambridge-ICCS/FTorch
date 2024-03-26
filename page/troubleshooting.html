@@ -1,3 +1,5 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,7 +19,8 @@
     <link href="../css/local.css" rel="stylesheet">
       <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -34,7 +37,7 @@
 
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="../page/index.html">Other documentation</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html">Other documentation</a></li>
                   <li class="nav-item">
                     <a class="nav-link" href="../lists/files.html">Source Files</a>
                   </li>
@@ -70,7 +73,7 @@
         <div class="col">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='../page/index.html'>Other documentation</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Other documentation</a></li>
               <li class="breadcrumb-item active" aria-current="page">Troubleshooting</li>
             </ol>
           </nav>
@@ -84,17 +87,17 @@
         <div class="card card-body bg-light" id="sidebar-toc">
           <ul class="nav flex-column align-items">
             <li class="nav-item">
-              <a class="nav-link" href="../page/index.html">Other documentation</a>
+              <a class="nav-link" href="index.html">Other documentation</a>
             </li>
           </ul>
           <hr>
           <nav class="nav nav-pills flex-column">
-              <a class="nav-link" href="../page/LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="../page/cmake.html">Installation and Build Process</a>
-              <a class="nav-link" href="../page/examples.html">Examples</a>
-              <a class="nav-link" href="../page/gpu.html">GPU Support</a>
-              <a class="nav-link" href="../page/transposing.html">When to transpose data</a>
-              <a class="nav-link active disabled" href="../page/troubleshooting.html">Troubleshooting</a>
+              <a class="nav-link" href="LICENSE.html">FTorch License</a>
+              <a class="nav-link" href="cmake.html">Installation and Build Process</a>
+              <a class="nav-link" href="examples.html">Examples</a>
+              <a class="nav-link" href="gpu.html">GPU Support</a>
+              <a class="nav-link" href="transposing.html">When to transpose data</a>
+              <a class="nav-link active disabled" href="troubleshooting.html">Troubleshooting</a>
           </nav>
         </div>
       </div>
@@ -108,25 +111,55 @@
 <li><a href="#mingw">MinGW</a></li>
 </ul>
 </li>
+<li><a href="#apple-silicon">Apple Silicon</a></li>
 </ul>
 </div>
 <h2 id="windows">Windows</h2>
 <p>If possible we recommend using the <a href="https://learn.microsoft.com/en-us/windows/wsl/">Windows Subsystem for Linux</a> (WSL) to build the library.
 In this case the build process is the same as for a Linux environment.</p>
-<p>If you need </p>
+<p>If you need to build in native Windows please read the following information:</p>
 <h3 id="visual-studio">Visual Studio</h3>
-<p>Use Visual Studio and the Intel Fortran Compiler<br>
+<p>It is possible to build using Visual Studio and the Intel Fortran Compiler<br>
 In this case you must install </p>
 <ul>
 <li><a href="https://visualstudio.microsoft.com/">Visual Studio</a></li>
 <li><a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html">Intel OneAPI Base and HPC toolkit</a> (ensure that the Intel Fortran compiler and VS integration is selected).</li>
 </ul>
-<p>You should then be able to build from CMD following the </p>
+<p>You will then need to load the intel Fortran compilers using <code>setvars.bat</code>
+which is found in the Intel compiler install directory (see the 
+<a href="https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/use-the-setvars-script-with-windows.html">intel docs</a>)
+for more details.\
+From CMD this can be done with:</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
+</code></pre></div>
+
+<p>Finally you will need to add <code>-G "NMake Makefiles"</code> to the cmake command in the
+<a href="cmake.html">regular install instructions</a>.\
+So the basic command to build from CMD becomes:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\melt\Downloads\libtorch-win-shared-with-deps-2.1.0+cpu\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
+<span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">build</span><span class="w"> </span><span class="o">.</span>
+<span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">install</span><span class="w"> </span><span class="o">.</span>
+</code></pre></div>
+
+<p>If using powershell the setvars and build commands become:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cmd</span><span class="w"> </span><span class="o">/</span><span class="n">k</span><span class="w"> </span><span class="s1">&#39;&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot; &amp;&amp; powershell&#39;</span>
+<span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\melt\Downloads\libtorch-win-shared-with-deps-2.1.0+cpu\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
+<span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">build</span><span class="w"> </span><span class="o">.</span>
+<span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">install</span><span class="w"> </span><span class="o">.</span>
+</code></pre></div>
+
 <h3 id="mingw">MinGW</h3>
 <p>It may be tempting to build on Windows using MinGW.
 However, <a href="https://github.com/pytorch/pytorch/issues/15099">libtorch does not currently support MinGW</a>.
 Instead please build using Visual Studio and the intel fortran compiler (ifort) as
 detailed in the project README.</p>
+<h2 id="apple-silicon">Apple Silicon</h2>
+<p>At the time of writing, libtorch is currently only officially available for x86
+architectures (according to <a href="https://pytorch.org/">pytorch.org</a>).
+However, the version of PyTorch provided by pip install provides an ARM binary
+for libtorch which works on Apple Silicon.
+Therefore you should <code>pip install torch</code> in this situation and follow the guidance
+on locating Torch within a virtual environment (venv) for CMake.</p>
     </div>
   </div>
       <hr>
@@ -134,7 +167,7 @@ detailed in the project README.</p>
     <footer>
       <div class="container">
         <div class="row justify-content-between">
-          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2023 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
 </p>
           </div>
           <div class="col">
