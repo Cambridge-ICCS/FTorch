@@ -24,10 +24,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -47,7 +47,7 @@ jobs:
           folder: doc      # The folder the action should deploy.
           dry-run: true    # Don't actually push to pages, just test if we can
 
-      - name: Deploy Documentation for master
+      - name: Deploy Documentation for main
         # if: github.ref == 'refs/heads/main'
         if: github.ref == 'refs/heads/API-docs'
         uses: JamesIves/github-pages-deploy-action@v4
