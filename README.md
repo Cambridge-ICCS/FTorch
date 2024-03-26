@@ -15,6 +15,7 @@ significantly more detailed than this README.
 - [Description](#description)
 - [Installation](#installation)
 - [Usage](#usage)
+- [GPU Support](#gpu-support)
 - [Examples](#examples)
 - [License](#license)
 - [Contributions](#contributions)
@@ -169,7 +170,7 @@ To run on GPU requires a CUDA-compatible installation of libtorch and two main
 adaptations to the code:
 
 1. When saving a TorchScript model, ensure that it is on the GPU
-2. When calling `torch_tensor_from_blob` in Fortran, set the device for the input
+2. When using FTorch in Fortran, set the device for the input
    tensor(s) to `torch_kCUDA`, rather than `torch_kCPU`.
 
 For detailed guidance about running on GPU please see the
@@ -178,8 +179,8 @@ For detailed guidance about running on GPU please see the
 ## Examples
 
 Examples of how to use this library are provided in the [examples directory](examples/).  
-They demonstrate different functionalities and are provided with instructions to
-modify, build, and run as necessary.
+They demonstrate different functionalities of the code and are provided with
+instructions to modify, build, and run as necessary.
 
 
 ## License
