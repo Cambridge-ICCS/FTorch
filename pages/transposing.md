@@ -2,7 +2,7 @@ title: When to transpose data
 
 Transposition of data between Fortran and C can lead to a lot of unneccessary confusion.
 The FTorch library looks after this for you with the
-[`torch_tensor_from_array()`](doc/proc/torch_tensor_from_array.html) function which
+[`torch_tensor_from_array()`](doc/interface/torch_tensor_from_array.html) function which
 allows you to index a tensor in Torch in **exactly the same way** as you would in Fortran.
 
 If you wish to do something different to this then there are more complex functions
@@ -83,11 +83,9 @@ to our Torch net is correct as we expect.
 ## What can we do?
 
 There are a few approaches we can take to address this.  
-The first two of these are listed for conceptual purposes, whilst we advise handling
-this in practice by using the `torch_tensor_from_array` function described in 
-[4) below](#4-use-torch_tensor_from_array) or, if this is not suitable, the
-the `layout` argument for `torch_tensor_from_blob` presented in
-[3) below](#3-use-the-layout-argument-in-torch_tensor_from_blob).
+The first two of these are listed for conceptual purposes, whilst in practice we
+advise handling this using the `torch_tensor_from_array` function described in 
+[3) below](#3-use-the-layout-argument-in-torch_tensor_from_array).
 
 #### 1) Transpose before passing
 As seen from the above example, writing out from Fortran and reading directly in to
@@ -130,27 +128,24 @@ However, this requires foresight and may not be intuitive - we would like to be 
 data in the same way in both Fortran and Torch.
 Not doing so could leave us open to introducing bugs.
 
-#### 3) Use the `layout` argument in `torch_tensor_from_blob`
-In the [documentation for torch_tensor_from_blob](doc/proc/torch_tensor_from_blob.html)
-there is a `layout` argument.
-
-This tells us how data output by Fortran should be read/accessed by Torch.
-
-TODO: Finish this
-passing `layout = [1, 2]` means that the data will be read in the correct indices by
-Torch.
-
-Tells us which order to read the indices in.
-i.e. `[1, 2]` will read `i` then `j`.
-
-#### 4) Use `torch_tensor_from_array`
+#### 3) Use the `layout` argument in `torch_tensor_from_array`
 
 By far the easiest way to deal with the issue is not to worry about it at all!
 
 As described at the top of this page, by using the
-[torch_tensor_from_array](doc/proc/torch_tensor_from_array.html) function
-you can take data from Fortran and send it to Torch to be indexed in exactly
-the same way.
+[torch_tensor_from_array](doc/interface/torch_tensor_from_array.html) function
+we can make use of the `layout` argument.
+This allows us to take data from Fortran and send it to Torch to be indexed in exactly
+the same way by using strided access based on the shape of the array.
+
+It takes the form of an array specifying which order to read the indices in.
+i.e. `[1, 2]` will read `i` then `j`.
+By passing `layout = [1, 2]` the data will be read into the correct indices by
+Torch.
+
+This is achieved by wrapping the `torch_tensor_from_blob` function to automatically
+generate strides assuming that a straightforward conversion between
+row- and column-major is what should happen.
 
 i.e. if the Fortran array `A`
 $$
@@ -159,23 +154,26 @@ a & b \\
 c & d
 \end{pmatrix}
 $$
-is passed as `torch_tensor_from_array(A, )`
+is passed as `torch_tensor_from_array(A, [1, 2], torch_device)`
 the resulting Tensor will be read by Torch as 
+$$
+\begin{pmatrix}
+a & b \\
+c & d
+\end{pmatrix}
+$$
 
+> Note: _If, for some reason, we did want a different, transposed layout in Torch we
+> could use `torch_tensor_from_array(A, [2, 1], torch_device)` to get:_
+> $$
+> \begin{pmatrix}
+> a & c \\
+> b & d
+> \end{pmatrix}
+> $$
 
+## Advanced use with `torch_tensor_from_blob`
 
-
-This is achieved by wrapping the `torch_tensor_from_blob` function to automatically
-generate strides assuming this is what should happen.
-
-
-## Advanced use
-
-Those experienced with C will perhaps have noticed that there are further freedoms
-available beyond those presented above.
-
-[WIP]
-
-Always stride, or is there a transpose tradeoff?
-
-
+For more advanced options for manipulating and controlling data access when passing
+between Fortran and Torch see the more powerful but more complex
+[torch_tensor_from_blob function](doc/proc/torch_tensor_from_blob.html)
