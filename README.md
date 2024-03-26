@@ -7,6 +7,9 @@
 This repository contains code, utilities, and examples for directly calling PyTorch ML
 models from Fortran.
 
+For full API and user documentation please see the
+[online documentation](https://cambridge-iccs.github.io/FTorch/) which is 
+significantly more detailed than this README.
 
 ## Contents
 - [Description](#description)
@@ -21,14 +24,27 @@ models from Fortran.
 ## Description
 
 It is desirable to be able to run machine learning (ML) models directly in Fortran.
-Such models are often trained in some other language (say Python) using popular frameworks (say PyTorch) and saved.
+Such models are often trained in some other language (say Python) using popular
+frameworks (say PyTorch) and saved.
 We want to run inference on this model without having to call a Python executable.
 To achieve this we use the existing Torch C++ interface.
 
-This project provides a library enabling a user to directly couple their PyTorch models to Fortran code.
-We provide installation instructions for the library as well as instructions and examples for performing coupling.
+This project provides a library enabling a user to directly couple their PyTorch
+models to Fortran code.
+We provide installation instructions for the library as well as instructions and
+examples for performing coupling.
 
-Project status: This project is currently in pre-release with documentation and code being prepared for a first release.
+The following presentations provide an introduction and overview of _FTorch_:
+
+* Reducing the overheads for coupling PyTorch machine learning models to Fortran\
+  ML & DL Seminars, LSCE, IPSL, Paris - November 2023\
+  [Slides](IPSL_FTorch/IPSL_FTorch.html) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
+* Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran\
+  RSECon23, Swansea - September 2023\
+  [Slides](https://jackatkinson.net/slides/RSECon23/RSECon23.html) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
+
+Project status: This project is currently in pre-release with documentation and code
+being prepared for a first release.
 As such breaking changes may be made.
 If you are interested in using this library please get in touch.
 
@@ -48,45 +64,46 @@ To install the library requires the following to be installed on the system:
 
 #### Windows Support
 
-If building in a windows environment then you can either:
-
-1) Use [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) (WSL)  
-   In this case the build process is the same as for Linux environment.
-2) Use Visual Studio and the Intel Fortran Compiler  
-   In this case you must install [Visual Studio](https://visualstudio.microsoft.com/) followed by [Intel OneAPI Base and HPC toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html) (ensure that the Intel Fortran compiler and VS integration is selected in the latter). 
-
+If building in a Windows environment then you can either use
+[Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) (WSL)
+or Visual Studio and the Intel Fortran Compiler.
+For full details on the process see the
+[online Windows documentation](https://cambridge-iccs.github.io/FTorch/page/troubleshooting.html#windows).\
 Note that libTorch is not supported for the GNU Fortran compiler with MinGW.
 
 #### Apple Silicon Support
 
-At the time of writing, libtorch is currently only officially available for x86 architectures (according to https://pytorch.org/). However, the version of PyTorch provided by `pip install` provides an ARM binary for libtorch which works on Apple Silicon. Therefore you should `pip install` PyTorch in this situation and follow the guidance below on locating Torch for cmake.
+At the time of writing, libtorch is only officially available for x86 architectures
+(according to https://pytorch.org/). However, the version of PyTorch provided by
+`pip install torch` uses an ARM binary for libtorch which works on Apple Silicon.
 
 ### Library installation
+
+For detailed installation instructions please see the
+[online installation documentation](https://cambridge-iccs.github.io/FTorch/page/cmake.html).
 
 To build and install the library:
 
 1. Navigate to the location in which you wish to install the source and run:  
-    ```bash
+    ```
     git clone git@github.com:Cambridge-ICCS/FTorch.git
     ```
     to clone via ssh, or  
-    ```bash
+    ```
     git clone https://github.com/Cambridge-ICCS/FTorch.git
     ```
     to clone via https.  
-2. Navigate into the library directory by running:  
-    ```bash
+2. Navigate to the source directory by running:  
+    ```
     cd FTorch/src/
     ```
-3. Create a `build` directory and execute cmake from within it using the relevant options (see below):  
-    ```bash
+3. Build the library using CMake with the relevant options from the table below:  
+    ```
     mkdir build
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release
     ```
-    If building on Windows you will need to add `-G "NMake Makefiles"` to the `cmake` command. Also you will need to load the
-    intel fortran compilers using `setvars.bat` ([see Intel docs](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/use-the-setvars-script-with-windows.html)) which is found in the Intel compiler install directory.
-    
+
     The following table of CMake options are available to be passed as arguments to `cmake` through `-D<Option>=<Value>`.  
     It is likely that you will need to provide at least `CMAKE_PREFIX_PATH`.  
     | Option                                                                                            | Value                        | Description                                                   |
@@ -109,11 +126,11 @@ To build and install the library:
 		  You can find the location of your torch install by importing torch from your python environment (`import torch`) and running `print(torch.__file__)`_
 	  
 4. Make and install the library to the desired location with either:
-	```bash
+	```
     cmake --build . --target install
     ```
     or, if you want to separate these steps:
-    ```bash
+    ```
     cmake --build .
     cmake --install .
     ```
@@ -121,7 +138,7 @@ To build and install the library:
     Note: If you are using cmake<3.15 then you will need to build and install separately
     using the make system specific commands.
     For example, if using `make` on UNIX this would be:
-    ```bash
+    ```
     make
     make install
     ```
@@ -142,140 +159,28 @@ In order to use FTorch users will typically need to follow these steps:
 2. Write Fortran using the FTorch bindings to use the model from within Fortran.
 3. Build and compile the code, linking against the FTorch library
 
-
-### 1. Saving the model as TorchScript
-
-The trained PyTorch model needs to be exported to [TorchScript](https://pytorch.org/docs/stable/jit.html).
-This can be done from within your code using the [`jit.script`](https://pytorch.org/docs/stable/generated/torch.jit.script.html#torch.jit.script) or [`jit.trace`](https://pytorch.org/docs/stable/generated/torch.jit.trace.html#torch.jit.trace) functionalities from within python.
-
-If you are not familiar with these we provide a tool [`pt2ts.py`](utils/pt2ts.py) as part of this distribution which contains an easily adaptable script to save your PyTorch model as TorchScript.
+These steps are described in more detail in the
+[online documentation](https://cambridge-iccs.github.io/FTorch/page/examples.html#overview-of-the-interfacing-process)
 
 
-### 2. Using the model from Fortran
+## GPU Support
 
-To use the trained Torch model from within Fortran we need to import the `ftorch` module and use the binding routines to load the model, convert the data, and run inference.
+To run on GPU requires a CUDA-compatible installation of libtorch and two main
+adaptations to the code:
 
-A very simple example is given below.
-For more detailed documentation please consult the API documentation, source code, and examples.
+1. When saving a TorchScript model, ensure that it is on the GPU
+2. When calling `torch_tensor_from_blob` in Fortran, set the device for the input
+   tensor(s) to `torch_kCUDA`, rather than `torch_kCPU`.
 
-This minimal snippet loads a saved Torch model, creates an input consisting of a `10x10` matrix of ones, and runs the model to infer output.  
-This is illustrative only, and we recommend following the [examples](examples/) before writing your own code to explore more features.
-
-```fortran
-! Import library for interfacing with PyTorch
-use ftorch
-
-implicit none
-
-! Generate an object to hold the Torch model
-type(torch_module) :: model
-
-! Set up types of input and output data
-integer, parameter :: n_inputs = 1
-type(torch_tensor), dimension(n_inputs) :: model_input_arr
-type(torch_tensor) :: model_output
-
-! Set up the model input and output as Fortran arrays
-real, dimension(10,10), target  :: input
-real, dimension(5), target   :: output
-
-! Set up number of dimensions of input tensor and axis order
-integer, parameter :: in_dims = 2
-integer :: in_layout(in_dims) = [1,2]
-integer, parameter :: out_dims = 1
-integer :: out_layout(out_dims) = [1]
-
-! Initialise the Torch model to be used
-model = torch_module_load("/path/to/saved/model.pt")
-
-! Initialise the inputs as Fortran array of ones
-input = 1.0
-
-! Wrap Fortran data as no-copy Torch Tensors
-! There may well be some reshaping required depending on the 
-! structure of the model which is not covered here (see examples)
-model_input_arr(1) = torch_tensor_from_array(input, in_layout, torch_kCPU)
-model_output = torch_tensor_from_array(output, out_layout, torch_kCPU)
-
-! Run model and Infer
-! Again, there may be some reshaping required depending on model design
-call torch_module_forward(model, model_input_arr, n_inputs, model_output)
-
-! Write out the result of running the model
-write(*,*) output
-
-! Clean up
-call torch_module_delete(model)
-call torch_tensor_delete(model_input_arr(1))
-call torch_tensor_delete(model_output)
-```
-
-### 3. Build the code
-
-The code now needs to be compiled and linked against our installed library.
-Here we describe how to do this for two build systems, cmake and make.
-
-#### CMake
-If our project were using cmake we would need the following in the `CMakeLists.txt` file to find the FTorch installation and link it to the executable.
-
-This can be done by adding the following to the `CMakeLists.txt` file:
-```CMake
-find_package(FTorch)
-target_link_libraries( <executable> PRIVATE FTorch::ftorch )
-message(STATUS "Building with Fortran PyTorch coupling")
-```
-and using the `-DCMAKE_PREFIX_PATH=</path/to/install/location>` flag when running cmake.  
-_Note: If you used the `CMAKE_INSTALL_PREFIX` argument when
-[building and installing the library](#library-installation) above then you should use
-the same path for `</path/to/install/location>`._
-
-#### Make
-To build with make we need to include the library when compiling and link the executable
-against it.
-
-To compile with make we need add the following compiler flag when compiling files that
-use ftorch:
-```makefile
-FCFLAGS += -I<path/to/install/location>/include/ftorch
-```
-
-When compiling the final executable add the following link flag:
-```makefile
-LDFLAGS += -L<path/to/install/location>/lib -lftorch
-```
-
-You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
-unless installing in a default location:
-```bash
-export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/install/location>/lib
-```
-_Note: depending on your system and architecture `lib` may be `lib64` or something similar._
-
-### 4. Running on GPUs
-
-In order to run a model on GPU, two main changes are required:
-
-1. When saving your TorchScript model, ensure that it is on the GPU. For example, when using [pt2ts.py](utils/pt2ts.py), this can be done by uncommenting the following lines:
-
-```
-device = torch.device('cuda')
-trained_model = trained_model.to(device)
-trained_model.eval()
-trained_model_dummy_input_1 = trained_model_dummy_input_1.to(device)
-trained_model_dummy_input_2 = trained_model_dummy_input_2.to(device)
-```
-
-Note: this also moves the dummy input tensors to the GPU. This is not necessary for saving the model, but the tensors must also be on the GPU to test that the models runs.
-
-
-2. When calling `torch_tensor_from_blob` in Fortran, the device for the input tensor(s), but not the output tensor(s),
-   should be set to `torch_kCUDA`, rather than `torch_kCPU`. This ensures that the inputs are on the same device as the model.
-
+For detailed guidance about running on GPU please see the
+[online GPU documentation](https://cambridge-iccs.github.io/FTorch/page/gpu.html).
 
 ## Examples
 
 Examples of how to use this library are provided in the [examples directory](examples/).  
-They demonstrate different functionalities and are provided with instructions to modify, build, and run as necessary.
+They demonstrate different functionalities and are provided with instructions to
+modify, build, and run as necessary.
+
 
 ## License
 
@@ -323,9 +228,8 @@ for a full list.
 ## Used by
 The following projects make use of this code or derivatives in some way:
 
+* [M2LInES CAM-ML](https://github.com/m2lines/CAM-ML)
+* [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/)
 * [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)
 
 Are we missing anyone? Let us know.
-
-
-
