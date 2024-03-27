@@ -29,3 +29,14 @@ trained_model_dummy_input_2 = trained_model_dummy_input_2.to(device_type)
 
 > Note: _You do **not** need to change the device type for the output tensors as we
 > want them to be on the CPU for subsequent use in Fortran._
+
+### Multi-GPU runs
+
+In the case of having multiple GPU devices, as well as setting `torch_kCUDA` as the
+device type for any input tensors and models, you should also specify their device index
+as the GPU device to be targeted. This argument is optional and will default to device
+index 0 if unset.
+
+See the
+[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU)
+for a worked example of running with multiple GPUs.

@@ -168,3 +168,9 @@ using ResNet-18 to classify an image.
 As the input to this model is four-dimensional (batch size, colour, x, y),
 care must be taken dealing with the data array in Python and Fortran.
 See [when to transpose arrays](transposing.html) for more details.
+
+#### 3) MultiGPU
+
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU)
+builds on the SimpleNet demo and shows how to account for the case of sending different
+data to multiple GPU devices.
