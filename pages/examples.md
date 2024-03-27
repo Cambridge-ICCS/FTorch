@@ -97,7 +97,7 @@ The code now needs to be compiled and linked against our installed library.
 Here we describe how to do this for two build systems, CMake and make.
 
 ##### CMake
-If our project were using cmake we would need the following in the `CMakeLists.txt`
+If our project were using CMake we would need the following in the `CMakeLists.txt`
 file to find the FTorch installation and link it to the executable.
 
 This can be done by adding the following to the `CMakeLists.txt` file:
@@ -106,7 +106,7 @@ find_package(FTorch)
 target_link_libraries( <executable> PRIVATE FTorch::ftorch )
 message(STATUS "Building with Fortran PyTorch coupling")
 ```
-and using the `-DCMAKE_PREFIX_PATH=</path/to/install/location>` flag when running cmake.  
+and using the `-DCMAKE_PREFIX_PATH=</path/to/install/location>` flag when running CMake.  
 
 > Note: _If you used the `CMAKE_INSTALL_PREFIX` argument when
 > [building and installing the library](https://cambridge-iccs.github.io/FTorch/page/cmake.html)
@@ -117,7 +117,7 @@ To build with make we need to include the library when compiling and link the ex
 against it.
 
 To compile with make we need add the following compiler flag when compiling files that
-use ftorch:
+use FTorch:
 ```
 FCFLAGS += -I<path/to/install/location>/include/ftorch
 ```
