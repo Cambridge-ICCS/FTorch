@@ -209,7 +209,7 @@ before writing your own code to fully explore the features.</p>
 <p>The code now needs to be compiled and linked against our installed library.
 Here we describe how to do this for two build systems, CMake and make.</p>
 <h5 id="cmake">CMake</h5>
-<p>If our project were using cmake we would need the following in the <code>CMakeLists.txt</code>
+<p>If our project were using CMake we would need the following in the <code>CMakeLists.txt</code>
 file to find the FTorch installation and link it to the executable.</p>
 <p>This can be done by adding the following to the <code>CMakeLists.txt</code> file:</p>
 <div class="codehilite"><pre><span></span><code><span class="nb">find_package</span><span class="p">(</span><span class="s">FTorch</span><span class="p">)</span>
@@ -217,7 +217,7 @@ file to find the FTorch installation and link it to the executable.</p>
 <span class="nb">message</span><span class="p">(</span><span class="s">STATUS</span><span class="w"> </span><span class="s2">&quot;Building with Fortran PyTorch coupling&quot;</span><span class="p">)</span>
 </code></pre></div>
 
-<p>and using the <code>-DCMAKE_PREFIX_PATH=&lt;/path/to/install/location&gt;</code> flag when running cmake.  </p>
+<p>and using the <code>-DCMAKE_PREFIX_PATH=&lt;/path/to/install/location&gt;</code> flag when running CMake.  </p>
 <blockquote>
 <p>Note: <em>If you used the <code>CMAKE_INSTALL_PREFIX</code> argument when
 <a href="https://cambridge-iccs.github.io/FTorch/page/cmake.html">building and installing the library</a>
@@ -227,7 +227,7 @@ then you should use the same path for <code>&lt;/path/to/install/location&gt;</c
 <p>To build with make we need to include the library when compiling and link the executable
 against it.</p>
 <p>To compile with make we need add the following compiler flag when compiling files that
-use ftorch:</p>
+use FTorch:</p>
 <div class="codehilite"><pre><span></span><code><span class="nv">FCFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="o">-</span><span class="nv">I</span><span class="o">&lt;</span><span class="nv">path</span><span class="o">/</span><span class="nv">to</span><span class="o">/</span><span class="nv">install</span><span class="o">/</span><span class="nv">location</span><span class="o">&gt;/</span><span class="k">include</span><span class="o">/</span><span class="nv">ftorch</span>
 </code></pre></div>
 
