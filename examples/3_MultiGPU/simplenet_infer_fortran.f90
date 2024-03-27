@@ -41,24 +41,36 @@ program inference
        call get_command_argument(ix,args(ix))
    end do
 
-   ! Initialise data
-   in_data = [(rank + i, i=0,4)]
+   ! Initialise data and print the values used on each MPI rank.
+   in_data = [(rank + i, i = 0, 4)]
+   write (6, 100) rank, in_data(:)
+   100 format("input on rank ", i1,": [", 4(f5.1,","), f5.1,"]")
 
-   ! Create Torch input/output tensors from the above arrays
-   in_tensor(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCUDA, device_index=rank)
-   out_tensor = torch_tensor_from_array(out_data, tensor_layout, torch_kCUDA, device_index=rank)
+   ! Create Torch input tensor from the above array. We use the torch_kCUDA
+   ! device type and the device index corresponding to the MPI rank.
+   in_tensor(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCUDA, &
+                                          device_index=rank)
 
-   ! Load ML model
-   model = torch_module_load(args(1), device_type=torch_kCUDA, device_index=rank)
+   ! Create Torch input tensor from the above array. Here we use the
+   ! torch_kCPU device type since the tensor is for output only.
+   out_tensor = torch_tensor_from_array(out_data, tensor_layout, torch_kCPU)
+
+   ! Load ML model. Ensure that the same device type and device index are used
+   ! as for the input data.
+   model = torch_module_load(args(1), device_type=torch_kCUDA,                 &
+                             device_index=rank)
 
    ! Infer
    call torch_module_forward(model, in_tensor, n_inputs, out_tensor)
-   write (6,100) rank, ": [", out_data(:), "]"
-   100 format(i1,a3,4(f5.1,","),f5.1,a1)
+
+   ! Print the values computed on each MPI rank.
+   write (6, 200) rank, out_data(:)
+   200 format("output on rank ", i1,": [", 4(f5.1,","), f5.1,"]")
 
    ! Cleanup
    call torch_module_delete(model)
    call torch_tensor_delete(in_tensor(1))
    call torch_tensor_delete(out_tensor)
+   call mpi_finalize(ierr)
 
 end program inference
