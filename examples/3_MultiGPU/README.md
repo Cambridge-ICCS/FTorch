@@ -101,10 +101,14 @@ mpiexec -np 4 ./simplenet_infer_fortran ../saved_simplenet_model_cuda.pt
 This runs the model with the same inputs as described above and should produce (some
 permutation of) the output:
 ```
-0: [  0.0,  2.0,  4.0,  6.0,  8.0]
-1: [  2.0,  4.0,  6.0,  8.0, 10.0]
-2: [  4.0,  6.0,  8.0, 10.0, 12.0]
-3: [  6.0,  8.0, 10.0, 12.0, 14.0]
+input on rank0: [  0.0,  1.0,  2.0,  3.0,  4.0]
+input on rank1: [  1.0,  2.0,  3.0,  4.0,  5.0]
+input on rank2: [  2.0,  3.0,  4.0,  5.0,  6.0]
+input on rank3: [  3.0,  4.0,  5.0,  6.0,  7.0]
+output on rank0: [  0.0,  2.0,  4.0,  6.0,  8.0]
+output on rank1: [  2.0,  4.0,  6.0,  8.0, 10.0]
+output on rank2: [  4.0,  6.0,  8.0, 10.0, 12.0]
+output on rank3: [  6.0,  8.0, 10.0, 12.0, 14.0]
 ```
 
 Alternatively, we can use `make`, instead of cmake, copying the Makefile over from the
