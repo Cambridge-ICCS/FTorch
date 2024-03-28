@@ -105,7 +105,10 @@
     <div class="col-9" id='text'>
       <div class="toc">
 <ul>
-<li><a href="#gpu-support">GPU Support</a></li>
+<li><a href="#gpu-support">GPU Support</a><ul>
+<li><a href="#multi-gpu-runs">Multi-GPU runs</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <h2 id="gpu-support">GPU Support</h2>
@@ -114,11 +117,11 @@
 For example, when using
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py"><code>pt2ts.py</code></a>,
 this can be done by uncommenting the following lines:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
-<span class="n">trained_model</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><code><span class="n">device_type</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+<span class="n">trained_model</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
 <span class="n">trained_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-<span class="n">trained_model_dummy_input_1</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_1</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-<span class="n">trained_model_dummy_input_2</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">trained_model_dummy_input_1</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_1</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
+<span class="n">trained_model_dummy_input_2</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
 </code></pre></div>
 
 <blockquote>
@@ -126,13 +129,31 @@ this can be done by uncommenting the following lines:</p>
 Whilst not necessary for saving the model, but the tensors must also be on the GPU
 to test that the models runs.</em></p>
 </blockquote>
-<p>2) When calling <code>torch_tensor_from_array</code> in Fortran, the device for the input
+<p>2) When calling <code>torch_tensor_from_array</code> in Fortran, the device type for the input
    tensor(s) should be set to <code>torch_kCUDA</code>, rather than <code>torch_kCPU</code>.
-   This ensures that the inputs are on the same device as the model.</p>
+   This ensures that the inputs are on the same device type as the model.</p>
 <blockquote>
-<p>Note: <em>You do <strong>not</strong> need to change the device for the output tensors as we
+<p>Note: <em>You do <strong>not</strong> need to change the device type for the output tensors as we
 want them to be on the CPU for subsequent use in Fortran.</em></p>
 </blockquote>
+<h3 id="multi-gpu-runs">Multi-GPU runs</h3>
+<p>In the case of having multiple GPU devices, as well as setting <code>torch_kCUDA</code> as the
+device type for any input tensors and models, you should also specify their device index
+as the GPU device to be targeted. This argument is optional and will default to device
+index 0 if unset.</p>
+<p>For example, the following code snippet sets up a Torch tensor with GPU device index 2:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">device_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="n">in_tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">in_data</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span>
+<span class="w">                                       </span><span class="n">device_index</span><span class="o">=</span><span class="n">device_index</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Whereas the following code snippet sets up a Torch tensor with (default) device index 0:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">in_tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">in_data</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">)</span>
+</code></pre></div>
+
+<p>See the
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU">MultiGPU example</a>
+for a worked example of running with multiple GPUs.</p>
     </div>
   </div>
       <hr>

@@ -76,7 +76,7 @@
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-html="true"
-                 title=" 2.0% of total for procedures.">12 statements</a>
+                 title=" 1.5% of total for procedures.">13 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -137,7 +137,7 @@
     
     <div class="col-md-9" id='text'>
       <h2>interface <br>
-      public  function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device) result(tensor_p) bind(c, name = 'torch_from_blob')  
+      public  function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device_type, device_index) result(tensor_p) bind(c, name = 'torch_from_blob')  
 </h2>    
 
     
@@ -230,7 +230,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device"></span>
+              <span class="anchor" id="variable-device_type"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in),</td>
@@ -238,7 +238,22 @@
               value
             </td>
             <td>::</td>
-            <td><strong>device</strong></td>
+            <td><strong>device_type</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-device_index"></span>
+              integer(kind=c_int),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>device_index</strong></td>
             <td>
                 
             </td>
