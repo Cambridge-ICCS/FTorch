@@ -187,7 +187,8 @@ adaptations to the code:
 2. When using FTorch in Fortran, set the device for the input
    tensor(s) to `torch_kCUDA`, rather than `torch_kCPU`.
 
-For detailed guidance about running on GPU please see the
+For detailed guidance about running on GPU, including instructions for using multiple
+devices, please see the
 [online GPU documentation](https://cambridge-iccs.github.io/FTorch/page/gpu.html).
 
 ## Examples
