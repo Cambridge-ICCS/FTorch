@@ -40,7 +40,7 @@ const auto get_device(torch_device_t device_type, int device_index)
     return torch::Device(torch::kCPU);
   case torch_kCUDA:
     if (device_index == -1) {
-      std::cerr << "[WARNING]: device index unset, setting to zero"
+      std::cerr << "[WARNING]: device index unset, defaulting to 0"
                 << std::endl;
       device_index = 0;
     }
