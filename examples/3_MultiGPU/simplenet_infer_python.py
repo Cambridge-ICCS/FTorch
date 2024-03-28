@@ -1,5 +1,6 @@
 """Load saved SimpleNet to TorchScript and run inference example."""
 
+from mpi4py import MPI
 import torch
 
 
@@ -23,18 +24,21 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     """
     input_tensor = torch.tensor([0.0, 1.0, 2.0, 3.0, 4.0]).repeat(batch_size, 1)
 
+    # Add the rank (device index) to each tensor to make them differ
+    input_tensor += MPI.COMM_WORLD.rank
+
     if device == "cpu":
         # Load saved TorchScript model
         model = torch.jit.load(saved_model)
         # Inference
         output = model.forward(input_tensor)
 
-    elif device == "cuda":
+    elif device.startswith("cuda"):
         # All previously saved modules, no matter their device, are first
         # loaded onto CPU, and then are moved to the devices they were saved
         # from, so we don't need to manually transfer the model to the GPU
         model = torch.jit.load(saved_model)
-        input_tensor_gpu = input_tensor.to(torch.device("cuda"))
+        input_tensor_gpu = input_tensor.to(torch.device(device))
         output_gpu = model.forward(input_tensor_gpu)
         output = output_gpu.to(torch.device("cpu"))
 
@@ -45,13 +49,14 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 
 
 if __name__ == "__main__":
-    saved_model_file = "saved_simplenet_model_cpu.pt"
+    saved_model_file = "saved_simplenet_model_cuda.pt"
 
-    device_to_run = "cpu"
+    rank = MPI.COMM_WORLD.rank
+    device_to_run = f"cuda:{rank}"
 
     batch_size_to_run = 1
 
     with torch.no_grad():
         result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
-    print(result)
+    print(f"{rank}: {result}")
