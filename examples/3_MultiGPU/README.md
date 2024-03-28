@@ -20,8 +20,9 @@ TorchScript model in inference mode.
 To run this example requires:
 
 - cmake
+- An MPI installation.
 - mpif90
-- FTorch (installed as described in main package with mpicc, mpicxx, and mpif90)
+- FTorch (installed as described in main package)
 - python3
 
 ## Running
