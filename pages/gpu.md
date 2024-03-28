@@ -37,6 +37,20 @@ device type for any input tensors and models, you should also specify their devi
 as the GPU device to be targeted. This argument is optional and will default to device
 index 0 if unset.
 
+For example, the following code snippet sets up a Torch tensor with GPU device index 2:
+
+```fortran
+device_index = 2
+in_tensor(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCUDA,    &
+                                       device_index=device_index)
+```
+
+Whereas the following code snippet sets up a Torch tensor with (default) device index 0:
+
+```fortran
+in_tensor(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCUDA)
+```
+
 See the
 [MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU)
 for a worked example of running with multiple GPUs.
