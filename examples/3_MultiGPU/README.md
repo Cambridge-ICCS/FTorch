@@ -35,11 +35,6 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Copy over the `simplenet.py` script from the earlier example:
-```
-cp ../1_SimpleNet/simplenet.py .
-```
-
 You can check that everything is working by running `simplenet.py`:
 ```
 python3 simplenet.py
