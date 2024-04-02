@@ -1,12 +1,12 @@
-# Example n - ResNet-18 for c and c++
+# Example n - ResNet-18 for C and C++
 
 **Note: This Example is not currently functional and is still being developed.**
 
-This example provides a demonstration of how to use the library to interface to c and c++.
+This example provides a demonstration of how to use the library to interface to C and C++.
 
 ## Description
 
-A python file is provided that downloads the pretrained
+A Python file is provided that downloads the pretrained
 [ResNet-18](https://pytorch.org/vision/main/models/generated/torchvision.models.resnet18.html)
 model from [TorchVision](https://pytorch.org/vision/stable/index.html).
 
@@ -19,16 +19,16 @@ TorchScript ResNet-18 model in inference mode.
 
 To run this example requires:
 
-- cmake
-- c compiler
-- c++ compiler
+- CMake
+- C compiler
+- C++ compiler
 - FTorch (installed as described in main package)
-- python3
+- Python 3
 
 ## Running
 
 To run this example install FTorch as described in the main documentation.
-Then from this directory create a virtual environment an install the neccessary python
+Then from this directory create a virtual environment an install the neccessary Python
 modules:
 ```
 python3 -m venv venv
@@ -48,12 +48,12 @@ To save the pretrained ResNet-18 model to TorchScript run the modified version o
 python3 pt2ts.py
 ```
 
-At this point we no longer require python, so can deactivate the virtual environment:
+At this point we no longer require Python, so can deactivate the virtual environment:
 ```
 deactivate
 ```
 
-To call the saved ResNet-18 model from fortran we need to compile the `resnet_infer`
+To call the saved ResNet-18 model from Fortran we need to compile the `resnet_infer`
 files.
 This can be done using the included `CMakeLists.txt` as follows:
 ```
@@ -86,7 +86,7 @@ language you wish
 * ctorch.h   - Header file for C++ wrapper
 * ftorch.f90 - Wrapper onto PyTorch for Fortran
 
-* CMakeLists.txt - Provides the cmake build system configuration
+* CMakeLists.txt - Provides the CMake build system configuration
 
 
 
@@ -96,7 +96,7 @@ language you wish
     make
 
 This will build the separate examples. Next, from this directory, you need
-to run the python code to generate the saved model:
+to run the Python code to generate the saved model:
 
     python3 ../pt2ts.py
 

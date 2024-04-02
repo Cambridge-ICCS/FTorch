@@ -6,7 +6,7 @@ multiple GPU devices.
 
 ## Description
 
-The same python file `simplenet.py` is used from the earlier example. Recall that it
+The same Python file `simplenet.py` is used from the earlier example. Recall that it
 defines a very simple PyTorch network that takes an input of length 5 and applies a
 single `Linear` layer to multiply it by 2.
 
@@ -19,16 +19,16 @@ TorchScript model in inference mode.
 
 To run this example requires:
 
-- cmake
+- CMake
 - An MPI installation.
 - mpif90
 - FTorch (installed as described in main package)
-- python3
+- Python 3
 
 ## Running
 
 To run this example install FTorch as described in the main documentation. Then from
-this directory create a virtual environment and install the necessary python modules:
+this directory create a virtual environment and install the necessary Python modules:
 ```
 python3 -m venv venv
 source venv/bin/activate
@@ -70,7 +70,7 @@ entry. The result should be (some permutation of):
 3: tensor([[ 6., 8., 10., 12., 14.]])
 ```
 
-At this point we no longer require python, so can deactivate the virtual environment:
+At this point we no longer require Python, so can deactivate the virtual environment:
 ```
 deactivate
 ```
@@ -105,7 +105,7 @@ output on rank2: [  4.0,  6.0,  8.0, 10.0, 12.0]
 output on rank3: [  6.0,  8.0, 10.0, 12.0, 14.0]
 ```
 
-Alternatively, we can use `make`, instead of cmake, copying the Makefile over from the
+Alternatively, we can use `make`, instead of CMake, copying the Makefile over from the
 first example:
 ```
 cp ../1_SimpleNet/Makefile .

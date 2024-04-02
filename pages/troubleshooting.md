@@ -28,7 +28,7 @@ From CMD this can be done with:
 "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
 ```
 
-Finally you will need to add `-G "NMake Makefiles"` to the cmake command in the
+Finally you will need to add `-G "NMake Makefiles"` to the `cmake` command in the
 [regular install instructions](doc/page/cmake.html).\
 So the basic command to build from CMD becomes:
 ```
@@ -49,7 +49,7 @@ cmake --install .
 
 It may be tempting to build on Windows using MinGW.
 However, [libtorch does not currently support MinGW](https://github.com/pytorch/pytorch/issues/15099).
-Instead please build using Visual Studio and the intel fortran compiler (ifort) as
+Instead please build using Visual Studio and the intel Fortran compiler (ifort) as
 detailed in the project README.
 
 ## Apple Silicon

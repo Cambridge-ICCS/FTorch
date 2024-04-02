@@ -9,7 +9,7 @@ covered in later examples.
 
 ## Description
 
-A python file `simplenet.py` is provided that defines a very simple PyTorch 'net' that takes an input
+A Python file `simplenet.py` is provided that defines a very simple PyTorch 'net' that takes an input
 vector of length 5 and applies a single `Linear` layer to multiply it by 2.
 
 A modified version of the `pt2ts.py` tool saves this simple net to TorchScript.
@@ -21,15 +21,15 @@ TorchScript model in inference mode.
 
 To run this example requires:
 
-- cmake
-- fortran compiler
+- CMake
+- Fortran compiler
 - FTorch (installed as described in main package)
-- python3
+- Python 3
 
 ## Running
 
 To run this example install FTorch as described in the main documentation.
-Then from this directory create a virtual environment and install the necessary python
+Then from this directory create a virtual environment and install the necessary Python
 modules:
 ```
 python3 -m venv venv
@@ -63,12 +63,12 @@ This reads the model in from the TorchScript file and runs it with an input tens
 tensor([[0, 2, 4, 6, 8]])
 ```
 
-At this point we no longer require python, so can deactivate the virtual environment:
+At this point we no longer require Python, so can deactivate the virtual environment:
 ```
 deactivate
 ```
 
-To call the saved SimpleNet model from fortran we need to compile the `simplenet_infer`
+To call the saved SimpleNet model from Fortran we need to compile the `simplenet_infer`
 files.
 This can be done using the included `CMakeLists.txt` as follows:
 ```
@@ -89,7 +89,7 @@ This runs the model with the array `[0.0, 1.0, 2.0, 3.0, 4.0]` should produce th
    0.00000000       2.00000000       4.00000000       6.00000000       8.00000000
 ```
 
-Alternatively we can use `make`, instead of cmake, with the included Makefile.
+Alternatively we can use `make`, instead of CMake, with the included Makefile.
 However, to do this you will need to modify `Makefile` to link to and include your
 installation of FTorch as described in the main documentation. Also check that the compiler is the same as the one you built the Library with.
 ```

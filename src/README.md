@@ -23,4 +23,4 @@ To build, follow the instructions in the [main repository README](/README.md).
 * ctorch.cpp - Wrapper onto PyTorch for C++
 * ctorch.h   - Header file for C++ wrapper
 * ftorch.f90 - Wrapper onto PyTorch for Fortran
-* CMakeLists.txt - Provides the cmake build system configuration
+* CMakeLists.txt - Provides the CMake build system configuration
