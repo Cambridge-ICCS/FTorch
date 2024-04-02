@@ -71,7 +71,7 @@ _For a similar approach to calling TensorFlow models from Fortran please see [Fo
 
 To install the library requires the following to be installed on the system:
 
-* cmake >= 3.1
+* CMake >= 3.1
 * [libtorch](https://pytorch.org/cppdocs/installing.html)<sup>*</sup> or [PyTorch](https://pytorch.org/)
 * Fortran, C++ (must fully support C++17), and C compilers
 
@@ -133,12 +133,12 @@ To build and install the library:
 
     <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
 
-    <sup>2</sup> _The path to the Torch installation needs to allow cmake to locate the relevant Torch cmake files.  
+    <sup>2</sup> _The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.  
           If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
           then this should be the absolute path to the unzipped libtorch distribution.
-          If Torch has been installed as PyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
+          If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
           e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
-		  You can find the location of your torch install by importing torch from your python environment (`import torch`) and running `print(torch.__file__)`_
+		  You can find the location of your torch install by importing torch from your Python environment (`import torch`) and running `print(torch.__file__)`_
 	  
 4. Make and install the library to the desired location with either:
 	```
@@ -150,7 +150,7 @@ To build and install the library:
     cmake --install .
     ```
 
-    Note: If you are using cmake<3.15 then you will need to build and install separately
+    Note: If you are using CMake < 3.15 then you will need to build and install separately
     using the make system specific commands.
     For example, if using `make` on UNIX this would be:
     ```

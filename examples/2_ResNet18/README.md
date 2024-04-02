@@ -6,7 +6,7 @@ As the input to this model is four-dimensional (batch size, colour, x, y), care 
 
 ## Description
 
-A python file is provided that downloads the pretrained
+A Python file is provided that downloads the pretrained
 [ResNet-18](https://pytorch.org/vision/main/models/generated/torchvision.models.resnet18.html)
 model from [TorchVision](https://pytorch.org/vision/stable/index.html).
 
@@ -19,15 +19,15 @@ TorchScript ResNet-18 model in inference mode.
 
 To run this example requires:
 
-- cmake
-- fortran compiler
+- CMake
+- Fortran compiler
 - FTorch (installed as described in main package)
-- python3
+- Python 3
 
 ## Running
 
 To run this example install FTorch as described in the main documentation.
-Then from this directory create a virtual environment an install the neccessary python
+Then from this directory create a virtual environment an install the neccessary Python
 modules:
 ```
 python3 -m venv venv
@@ -59,12 +59,12 @@ To save the pretrained ResNet-18 model to TorchScript run the modified version o
 python3 pt2ts.py
 ```
 
-At this point we no longer require python, so can deactivate the virtual environment:
+At this point we no longer require Python, so can deactivate the virtual environment:
 ```
 deactivate
 ```
 
-To call the saved ResNet-18 model from fortran we need to compile the `resnet_infer`
+To call the saved ResNet-18 model from Fortran we need to compile the `resnet_infer`
 files.
 This can be done using the included `CMakeLists.txt` as follows:
 ```
@@ -89,7 +89,7 @@ This should produce the same top result:
 ```
 
 
-Alternatively we can use `make`, instead of cmake, with the included Makefile.
+Alternatively we can use `make`, instead of CMake, with the included Makefile.
 However, to do this you will need to modify `Makefile` to link to and include your
 installation of FTorch as described in the main documentation. Also check that the compiler is the same as the one you built the Library with.  
 You will also likely need to add the location of the `.so` files to your `LD_LIBRARY_PATH`:

@@ -22,7 +22,7 @@ This can be done from within your code using the
 [`jit.script`](https://pytorch.org/docs/stable/generated/torch.jit.script.html#torch.jit.script)
 or
 [`jit.trace`](https://pytorch.org/docs/stable/generated/torch.jit.trace.html#torch.jit.trace)
-functionalities from within python.
+functionalities from within Python.
 
 If you are not familiar with these we provide a tool
 [`pt2ts.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py)

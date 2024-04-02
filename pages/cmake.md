@@ -61,7 +61,7 @@ The following CMake flags are available and can be passed as arguments through `
 > <sup>2</sup> _The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.  
 >       If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
 >       then this should be the absolute path to the unzipped libtorch distribution.
->       If Torch has been installed as PyTorch in a python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
+>       If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
 >       e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
 > 
 > <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU or GPU only version is installed, e.g.
