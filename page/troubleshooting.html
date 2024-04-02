@@ -133,7 +133,7 @@ From CMD this can be done with:</p>
 <div class="codehilite"><pre><span></span><code><span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
 </code></pre></div>
 
-<p>Finally you will need to add <code>-G "NMake Makefiles"</code> to the cmake command in the
+<p>Finally you will need to add <code>-G "NMake Makefiles"</code> to the <code>cmake</code> command in the
 <a href="cmake.html">regular install instructions</a>.\
 So the basic command to build from CMD becomes:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\melt\Downloads\libtorch-win-shared-with-deps-2.1.0+cpu\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
@@ -151,7 +151,7 @@ So the basic command to build from CMD becomes:</p>
 <h3 id="mingw">MinGW</h3>
 <p>It may be tempting to build on Windows using MinGW.
 However, <a href="https://github.com/pytorch/pytorch/issues/15099">libtorch does not currently support MinGW</a>.
-Instead please build using Visual Studio and the intel fortran compiler (ifort) as
+Instead please build using Visual Studio and the intel Fortran compiler (ifort) as
 detailed in the project README.</p>
 <h2 id="apple-silicon">Apple Silicon</h2>
 <p>At the time of writing, libtorch is currently only officially available for x86
