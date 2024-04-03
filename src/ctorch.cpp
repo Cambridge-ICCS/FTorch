@@ -90,6 +90,12 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
                 << " for device count " << torch::cuda::device_count() << std::endl;
       exit(EXIT_FAILURE);
     }
+  case torch_kMPS:
+    if (device_index != -1 && device_index != 0) {
+      std::cerr << "[WARNING]: Only one device is available for MPS runs"
+                << std::endl;
+    }
+    return torch::Device(torch::kMPS);
   default:
     std::cerr << "[WARNING]: unknown device type, setting to torch_kCPU" << std::endl;
     return torch::Device(torch::kCPU);
