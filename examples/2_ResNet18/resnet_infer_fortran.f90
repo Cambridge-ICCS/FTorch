@@ -21,7 +21,7 @@ contains
 
       ! Set up types of input and output data
       type(torch_module) :: model
-      type(torch_tensor), dimension(1) :: in_tensor
+      type(torch_tensor), dimension(1) :: in_tensors
       type(torch_tensor) :: out_tensor
 
       real(wp), dimension(:,:,:,:), allocatable, target :: in_data
@@ -66,7 +66,7 @@ contains
       call load_data(filename, tensor_length, in_data)
 
       ! Create input/output tensors from the above arrays
-      in_tensor(1) = torch_tensor_from_array(in_data, in_layout, torch_kCPU)
+      in_tensors(1) = torch_tensor_from_array(in_data, in_layout, torch_kCPU)
 
       out_tensor = torch_tensor_from_array(out_data, out_layout, torch_kCPU)
 
@@ -74,7 +74,7 @@ contains
       model = torch_module_load(args(1))
 
       ! Infer
-      call torch_module_forward(model, in_tensor, n_inputs, out_tensor)
+      call torch_module_forward(model, in_tensors, n_inputs, out_tensor)
 
       ! Load categories
       call load_categories(filename_cats, N_cats, categories)
@@ -93,7 +93,7 @@ contains
 
       ! Cleanup
       call torch_module_delete(model)
-      call torch_tensor_delete(in_tensor(1))
+      call torch_tensor_delete(in_tensors(1))
       call torch_tensor_delete(out_tensor)
       deallocate(in_data)
       deallocate(out_data)
