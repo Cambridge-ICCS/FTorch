@@ -59,7 +59,8 @@ const auto get_device(torch_device_t device_type, int device_index)
   }
 }
 
-void set_is_training(torch_jit_script_module_t module, const bool is_training)
+void set_is_training(torch_jit_script_module_t module,
+                     const bool is_training=false)
 {
   auto model = static_cast<torch::jit::script::Module*>(module);
   if (is_training) {
@@ -70,7 +71,8 @@ void set_is_training(torch_jit_script_module_t module, const bool is_training)
 }
 
 torch_tensor_t torch_zeros(int ndim, const int64_t* shape, torch_data_t dtype,
-                           torch_device_t device_type, int device_index = -1, const bool requires_grad)
+                           torch_device_t device_type, int device_index = -1,
+                           const bool requires_grad=false)
 {
   torch::AutoGradMode enable_grad(requires_grad);
   torch::Tensor* tensor = nullptr;
@@ -93,7 +95,8 @@ torch_tensor_t torch_zeros(int ndim, const int64_t* shape, torch_data_t dtype,
 }
 
 torch_tensor_t torch_ones(int ndim, const int64_t* shape, torch_data_t dtype,
-                          torch_device_t device_type, int device_index = -1, const bool requires_grad)
+                          torch_device_t device_type, int device_index = -1,
+                          const bool requires_grad=false)
 {
   torch::AutoGradMode enable_grad(requires_grad);
   torch::Tensor* tensor = nullptr;
@@ -116,7 +119,8 @@ torch_tensor_t torch_ones(int ndim, const int64_t* shape, torch_data_t dtype,
 }
 
 torch_tensor_t torch_empty(int ndim, const int64_t* shape, torch_data_t dtype,
-                           torch_device_t device_type, int device_index = -1, const bool requires_grad)
+                           torch_device_t device_type, int device_index = -1,
+                           const bool requires_grad=false)
 {
   torch::AutoGradMode enable_grad(requires_grad);
   torch::Tensor* tensor = nullptr;
@@ -143,7 +147,7 @@ torch_tensor_t torch_empty(int ndim, const int64_t* shape, torch_data_t dtype,
 torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
                                const int64_t* strides, torch_data_t dtype,
                                torch_device_t device_type, int device_index = -1,
-                               const bool requires_grad)
+                               const bool requires_grad=false)
 {
   torch::AutoGradMode enable_grad(requires_grad);
   torch::Tensor* tensor = nullptr;
@@ -190,8 +194,8 @@ void torch_tensor_delete(torch_tensor_t tensor)
 torch_jit_script_module_t torch_jit_load(const char* filename,
                                          const torch_device_t device_type = torch_kCPU,
                                          const int device_index = -1,
-                                         const bool requires_grad,
-                                         const bool is_training)
+                                         const bool requires_grad=false,
+                                         const bool is_training=false)
 {
   torch::AutoGradMode enable_grad(requires_grad);
   torch::jit::script::Module* module = nullptr;
@@ -214,7 +218,7 @@ torch_jit_script_module_t torch_jit_load(const char* filename,
 
 void torch_jit_module_forward(const torch_jit_script_module_t module,
                               const torch_tensor_t *inputs, const int nin,
-			      torch_tensor_t output, const bool requires_grad)
+			                        torch_tensor_t output, const bool requires_grad=false)
 {
   torch::AutoGradMode enable_grad(requires_grad);
   // Here we cast the pointers we recieved in to Tensor objects
