@@ -51,12 +51,13 @@ implicit none
 ! Generate an object to hold the Torch model
 type(torch_module) :: model
 
-! Set up types of input and output data
+! Set up array of n_inputs input tensors and the output tensor
+! Note: In this example there is only one input tensor (n_inputs = 1)
 integer, parameter :: n_inputs = 1
 type(torch_tensor), dimension(n_inputs) :: model_input_arr
 type(torch_tensor) :: model_output
 
-! Set up the model input and output as Fortran arrays
+! Set up the model inputs and output as Fortran arrays
 real, dimension(10,10), target  :: input
 real, dimension(5), target   :: output
 
