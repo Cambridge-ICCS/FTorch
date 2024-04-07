@@ -41,14 +41,14 @@ For example, the following code snippet sets up a Torch tensor with GPU device i
 
 ```fortran
 device_index = 2
-in_tensor(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCUDA,    &
+in_tensors(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCUDA,    &
                                        device_index=device_index)
 ```
 
 Whereas the following code snippet sets up a Torch tensor with (default) device index 0:
 
 ```fortran
-in_tensor(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCUDA)
+in_tensors(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCUDA)
 ```
 
 See the
