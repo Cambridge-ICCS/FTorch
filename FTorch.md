@@ -45,11 +45,11 @@ Presentations
 
 The following presentations contain information about FTorch:
 
-* Reducing the overheads for coupling PyTorch machine learning models to Fortran\
-  ML & DL Seminars, LSCE, IPSL, Paris - November 2023\
-  [Slides](IPSL_FTorch/IPSL_FTorch.html) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
-* Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran\
-  RSECon23, Swansea - September 2023\
+* Reducing the overheads for coupling PyTorch machine learning models to Fortran<br>
+  ML & DL Seminars, LSCE, IPSL, Paris - November 2023<br>
+  [Slides](https://jackatkinson.net/slides/IPSL_FTorch/IPSL_FTorch.html) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
+* Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran<br>
+  RSECon23, Swansea - September 2023<br>
   [Slides](https://jackatkinson.net/slides/RSECon23/RSECon23.html) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
 
 License
