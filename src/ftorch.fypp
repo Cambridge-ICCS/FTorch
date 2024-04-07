@@ -204,6 +204,12 @@ contains
     integer(c_int)                 :: device_index_value  !! device index used
     logical(c_bool)                :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
+    if (.not. present(requires_grad_opt)) then
+      requires_grad = logical(.false., c_bool)
+    else
+      requires_grad = requires_grad_opt
+    end if
+
     strides(layout(1)) = 1
     do i = 2, ndims
       strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
@@ -385,7 +391,7 @@ contains
   #:for PREC in PRECISIONS
   #:for RANK in RANKS
   !> Return a Torch tensor pointing to data_in array of rank ${RANK}$ containing data of type `${PREC}$`
-  function torch_tensor_from_array_${PREC}$_${RANK}$d(data_in, layout, c_device_type, device_index) result(tensor)
+  function torch_tensor_from_array_${PREC}$_${RANK}$d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
 
