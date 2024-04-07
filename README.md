@@ -39,11 +39,11 @@ examples for performing coupling.
 use ftorch
 ...
 type(torch_module) :: model
-type(torch_tensor), dimension(n_inputs) :: model_input_arr
+type(torch_tensor), dimension(n_inputs) :: model_inputs_arr
 type(torch_tensor) :: model_output
 ...
 model = torch_module_load("/my/saved/TorchScript/model.pt")
-model_input_arr(1) = torch_tensor_from_array(input_fortran, in_layout, torch_kCPU)
+model_inputs_arr(1) = torch_tensor_from_array(input_fortran, in_layout, torch_kCPU)
 model_output = torch_tensor_from_array(output_fortran, out_layout, torch_kCPU)
 
 call torch_module_forward(model, model_input_arr, n_inputs, model_output)
