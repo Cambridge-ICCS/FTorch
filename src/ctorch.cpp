@@ -218,7 +218,7 @@ torch_jit_script_module_t torch_jit_load(const char* filename,
 
 void torch_jit_module_forward(const torch_jit_script_module_t module,
                               const torch_tensor_t *inputs, const int nin,
-			                        torch_tensor_t output, const bool requires_grad=false)
+                              torch_tensor_t output, const bool requires_grad=false)
 {
   torch::AutoGradMode enable_grad(requires_grad);
   // Here we cast the pointers we recieved in to Tensor objects
