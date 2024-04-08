@@ -112,6 +112,10 @@
 </ul>
 </li>
 <li><a href="#apple-silicon">Apple Silicon</a></li>
+<li><a href="#faq">FAQ</a><ul>
+<li><a href="#why-are-inputs-to-torch-models-an-array">Why are inputs to torch models an array?</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <h2 id="windows">Windows</h2>
@@ -160,6 +164,17 @@ However, the version of PyTorch provided by pip install provides an ARM binary
 for libtorch which works on Apple Silicon.
 Therefore you should <code>pip install torch</code> in this situation and follow the guidance
 on locating Torch within a virtual environment (venv) for CMake.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="why-are-inputs-to-torch-models-an-array">Why are inputs to torch models an array?</h3>
+<p>The reason input tensors to <a href="../proc/torch_module_forward.html">torch_module_forward</a> are contained in an
+array is because it is possible to pass multiple input tensors to the <code>forward()</code>
+method of a torch net.\
+The nature of Fortran means that it is not possible to set an arbitrary number
+of inputs to the <code>torch_module_forward</code> subroutine, so instead we use an single array
+of input tensors which <em>can</em> have an arbitrary length of <code>n_inputs</code>.</p>
+<p>Note that this does not refer to batching data.
+This should be done in the same way as in Torch; by extending the dimensionality of
+the input tensors.</p>
     </div>
   </div>
       <hr>
@@ -167,7 +182,10 @@ on locating Torch within a virtual environment (venv) for CMake.</p>
     <footer>
       <div class="container">
         <div class="row justify-content-between">
-          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+          <div class="col">
+            <p>
+              FTorch
+ was developed by ICCS Cambridge<br>              &copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
 </p>
           </div>
           <div class="col">

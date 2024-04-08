@@ -166,12 +166,13 @@ before writing your own code to fully explore the features.</p>
 <span class="c">! Generate an object to hold the Torch model</span>
 <span class="k">type</span><span class="p">(</span><span class="n">torch_module</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span>
 
-<span class="c">! Set up types of input and output data</span>
+<span class="c">! Set up array of n_inputs input tensors and the output tensor</span>
+<span class="c">! Note: In this example there is only one input tensor (n_inputs = 1)</span>
 <span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 <span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model_input_arr</span>
 <span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model_output</span>
 
-<span class="c">! Set up the model input and output as Fortran arrays</span>
+<span class="c">! Set up the model inputs and output as Fortran arrays</span>
 <span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">input</span>
 <span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">output</span>
 
@@ -281,7 +282,10 @@ data to multiple GPU devices.</p>
     <footer>
       <div class="container">
         <div class="row justify-content-between">
-          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+          <div class="col">
+            <p>
+              FTorch
+ was developed by ICCS Cambridge<br>              &copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
 </p>
           </div>
           <div class="col">

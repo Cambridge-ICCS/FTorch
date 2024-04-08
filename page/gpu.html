@@ -143,12 +143,12 @@ as the GPU device to be targeted. This argument is optional and will default to 
 index 0 if unset.</p>
 <p>For example, the following code snippet sets up a Torch tensor with GPU device index 2:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">device_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-<span class="n">in_tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">in_data</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span>
+<span class="n">in_tensors</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">in_data</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span>
 <span class="w">                                       </span><span class="n">device_index</span><span class="o">=</span><span class="n">device_index</span><span class="p">)</span>
 </code></pre></div>
 
 <p>Whereas the following code snippet sets up a Torch tensor with (default) device index 0:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">in_tensor</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">in_data</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><code><span class="n">in_tensors</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">in_data</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">)</span>
 </code></pre></div>
 
 <p>See the
@@ -161,7 +161,10 @@ for a worked example of running with multiple GPUs.</p>
     <footer>
       <div class="container">
         <div class="row justify-content-between">
-          <div class="col"><p>FTorch was developed by ICCS Cambridge<br>&copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+          <div class="col">
+            <p>
+              FTorch
+ was developed by ICCS Cambridge<br>              &copy; 2024 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
 </p>
           </div>
           <div class="col">
