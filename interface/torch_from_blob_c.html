@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.5% of total for procedures.">13 statements</a>
+                 title=" 1.3% of total for procedures.">14 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -136,7 +136,7 @@
     
     <div class="col-md-9" id='text'>
       <h2>interface <br>
-      public  function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device_type, device_index) result(tensor_p) bind(c, name = 'torch_from_blob')  
+      public  function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device_type, device_index, requires_grad) result(tensor_p) bind(c, name = 'torch_from_blob')  
 </h2>    
 
     
@@ -253,6 +253,21 @@
             </td>
             <td>::</td>
             <td><strong>device_index</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad"></span>
+              logical(kind=c_bool),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad</strong></td>
             <td>
                 
             </td>

@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p> 2.9% of total for procedures.</p>Including implementation: 698 statements, 78.3% of total for procedures.">26 statements</a>
+                 title="<p> 2.3% of total for procedures.</p>Including implementation: 866 statements, 78.2% of total for procedures.">26 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -175,7 +175,7 @@
 
         <h2>Module Procedures</h2>
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_1d.html'>torch_tensor_from_array_int8_1d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_1d.html'>torch_tensor_from_array_int8_1d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -252,6 +252,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~6"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -265,7 +280,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_2d.html'>torch_tensor_from_array_int8_2d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_2d.html'>torch_tensor_from_array_int8_2d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -342,6 +357,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~7"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -355,7 +385,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_3d.html'>torch_tensor_from_array_int8_3d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_3d.html'>torch_tensor_from_array_int8_3d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -432,6 +462,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~8"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -445,7 +490,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_4d.html'>torch_tensor_from_array_int8_4d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int8_4d.html'>torch_tensor_from_array_int8_4d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -522,6 +567,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~9"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -535,7 +595,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_1d.html'>torch_tensor_from_array_int16_1d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_1d.html'>torch_tensor_from_array_int16_1d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -612,6 +672,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~10"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -625,7 +700,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_2d.html'>torch_tensor_from_array_int16_2d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_2d.html'>torch_tensor_from_array_int16_2d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -702,6 +777,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~11"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -715,7 +805,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_3d.html'>torch_tensor_from_array_int16_3d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_3d.html'>torch_tensor_from_array_int16_3d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -792,6 +882,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~12"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -805,7 +910,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_4d.html'>torch_tensor_from_array_int16_4d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int16_4d.html'>torch_tensor_from_array_int16_4d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -882,6 +987,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~13"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -895,7 +1015,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_1d.html'>torch_tensor_from_array_int32_1d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_1d.html'>torch_tensor_from_array_int32_1d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -972,6 +1092,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~14"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -985,7 +1120,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_2d.html'>torch_tensor_from_array_int32_2d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_2d.html'>torch_tensor_from_array_int32_2d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1062,6 +1197,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~15"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1075,7 +1225,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_3d.html'>torch_tensor_from_array_int32_3d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_3d.html'>torch_tensor_from_array_int32_3d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1152,6 +1302,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~16"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1165,7 +1330,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_4d.html'>torch_tensor_from_array_int32_4d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int32_4d.html'>torch_tensor_from_array_int32_4d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1242,6 +1407,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~17"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1255,7 +1435,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_1d.html'>torch_tensor_from_array_int64_1d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_1d.html'>torch_tensor_from_array_int64_1d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1332,6 +1512,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~18"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1345,7 +1540,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_2d.html'>torch_tensor_from_array_int64_2d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_2d.html'>torch_tensor_from_array_int64_2d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1422,6 +1617,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~19"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1435,7 +1645,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_3d.html'>torch_tensor_from_array_int64_3d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_3d.html'>torch_tensor_from_array_int64_3d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1512,6 +1722,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~20"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1525,7 +1750,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_4d.html'>torch_tensor_from_array_int64_4d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_int64_4d.html'>torch_tensor_from_array_int64_4d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1602,6 +1827,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~21"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1615,7 +1855,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_1d.html'>torch_tensor_from_array_real32_1d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_1d.html'>torch_tensor_from_array_real32_1d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1692,6 +1932,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~22"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1705,7 +1960,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_2d.html'>torch_tensor_from_array_real32_2d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_2d.html'>torch_tensor_from_array_real32_2d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1782,6 +2037,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~23"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1795,7 +2065,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_3d.html'>torch_tensor_from_array_real32_3d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_3d.html'>torch_tensor_from_array_real32_3d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1872,6 +2142,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~24"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1885,7 +2170,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_4d.html'>torch_tensor_from_array_real32_4d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real32_4d.html'>torch_tensor_from_array_real32_4d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -1962,6 +2247,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~25"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1975,7 +2275,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_1d.html'>torch_tensor_from_array_real64_1d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_1d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_1d.html'>torch_tensor_from_array_real64_1d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2052,6 +2352,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~26"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -2065,7 +2380,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_2d.html'>torch_tensor_from_array_real64_2d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_2d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_2d.html'>torch_tensor_from_array_real64_2d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2142,6 +2457,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~27"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -2155,7 +2485,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_3d.html'>torch_tensor_from_array_real64_3d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_3d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_3d.html'>torch_tensor_from_array_real64_3d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2232,6 +2562,21 @@
 <p>device index to use for <code>torch_kCUDA</code> case</p>
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~28"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -2245,7 +2590,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_4d.html'>torch_tensor_from_array_real64_4d</a>(data_in, layout, c_device_type, device_index) result(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_4d"></span> <h3>public  function <a href='../proc/torch_tensor_from_array_real64_4d.html'>torch_tensor_from_array_real64_4d</a>(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -2320,6 +2665,21 @@
             <td><strong>device_index</strong></td>
             <td>
 <p>device index to use for <code>torch_kCUDA</code> case</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-requires_grad_opt~29"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>requires_grad_opt</strong></td>
+            <td>
+<p>Whether gradients need to be computed for the created tensor</p>
             </td>
         </tr>
     </tbody>
