@@ -22,14 +22,14 @@ In this case you must install
 You will then need to load the intel Fortran compilers using `setvars.bat`
 which is found in the Intel compiler install directory (see the 
 [intel docs](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/use-the-setvars-script-with-windows.html))
-for more details.\
+for more details.<br>
 From CMD this can be done with:
 ```
 "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
 ```
 
 Finally you will need to add `-G "NMake Makefiles"` to the `cmake` command in the
-[regular install instructions](doc/page/cmake.html).\
+[regular install instructions](doc/page/cmake.html).<br>
 So the basic command to build from CMD becomes:
 ```
 cmake -G "NMake Makefiles" -DCMAKE_PREFIX_PATH="C:\Users\melt\Downloads\libtorch-win-shared-with-deps-2.1.0+cpu\libtorch" -DCMAKE_BUILD_TYPE=Release ..
@@ -67,7 +67,7 @@ on locating Torch within a virtual environment (venv) for CMake.
 
 The reason input tensors to [[torch_module_forward(subroutine)]] are contained in an
 array is because it is possible to pass multiple input tensors to the `forward()`
-method of a torch net.\
+method of a torch net.<br>
 The nature of Fortran means that it is not possible to set an arbitrary number
 of inputs to the `torch_module_forward` subroutine, so instead we use an single array
 of input tensors which _can_ have an arbitrary length of `n_inputs`.
@@ -75,3 +75,11 @@ of input tensors which _can_ have an arbitrary length of `n_inputs`.
 Note that this does not refer to batching data.
 This should be done in the same way as in Torch; by extending the dimensionality of
 the input tensors.
+
+### Do I need to set torch.no_grad() or torch.eval() somewhere like in PyTorch?
+
+By default we disable gradient calculations for tensors and models and place models in
+evaluation mode for efficiency.
+These can be adjusted using the `requires_grad` and `is_training` optional arguments
+in the Fortran interface. See the [API procedures documentation](lists/procedures.html)
+for details.
