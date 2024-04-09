@@ -217,6 +217,9 @@ address an [open issue](https://github.com/Cambridge-ICCS/FTorch/issues), please
 [fork the repository](https://github.com/Cambridge-ICCS/FTorch/fork) and open a
 pull request.
 
+Detailed guidelines can be found in the
+[online developer documentation](page/developer.html).
+
 
 ### Code of Conduct
 Everyone participating in the _FTorch_ project, and in particular in the
