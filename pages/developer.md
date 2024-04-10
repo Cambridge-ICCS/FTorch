@@ -45,7 +45,7 @@ If you have done something but don't know where to start with
 open-source contributions please get in touch!<sup>*</sup>
 
 <sup>*</sup>_Our preferred method of contact is via Github issues and discussions,
-but if you are unfamiliar with this you can [email ICCS](mailto:iccs@maths.cam.ac.uk)
+but if you are unfamiliar with this you can [email ICCS](mailto:jwa34@cam.ac.uk)
 asking for the FTorch developers._
 
 
