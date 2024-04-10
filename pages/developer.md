@@ -11,7 +11,7 @@ level, please see below for guidance.
 Contributions and collaborations are welcome.
 
 For bugs, feature requests, and clear suggestions for improvement please
-[open an issue](https://github.com/Cambridge-ICCS/FTorch/issues).
+[open an issue](https://github.com/Cambridge-ICCS/FTorch/issues/new/choose).
 
 If you have built something upon _FTorch_ that would be useful to others, or can
 address an [open issue](https://github.com/Cambridge-ICCS/FTorch/issues), please
@@ -31,9 +31,9 @@ people with respect and, more generally, to follow the guidelines articulated in
 If you have a Torch functionality that you wish to bring in from the C++ API to
 the FTorch Fortran API the steps are generally as follows:
 
-* Modify `ctorch.cpp` to create a C++ version of the function that accesses `torch::`.
+* Modify `ctorch.cpp` to create a C++ version of the function that accesses `torch::<item>`.
 * Add the function to the header file `ctorch.h`
-* Modify `ftorch.fypp` to create a fortran version of the function
+* Modify `ftorch.fypp` to create a Fortran version of the function
   that binds to the version in `ctorch.cpp`.
 
 Details of C++ functionalities available to be wrapped can be found
@@ -42,7 +42,11 @@ in the [libtorch C++ API](https://pytorch.org/cppdocs/).
 As this is an open-source project we appreciate any contributions
 back from users that have extended the functionality.
 If you have done something but don't know where to start with
-open-source contributions please get in touch!
+open-source contributions please get in touch!<sup>*</sup>
+
+<sup>*</sup>_Our preferred method of contact is via Github issues and discussions,
+but if you are unfamiliar with this you can [email ICCS](mailto:iccs@maths.cam.ac.uk)
+asking for the FTorch developers._
 
 
 ### Fortran source and Fypp
@@ -82,18 +86,18 @@ synchronous fashion before a commmit can take place.
 If this does not happen then the second line of defence (GitHub continuous integration)
 will fail following the commit.
 
-Use of the hook is not automatic and needs to be enabled by the developer:
+Use of the hook is not automatic and needs to be enabled by the developer
+(after they have inspected it and are happy with its contents).
+Hooks can be enabled by placing them in the `.git` directory with the following commands:
 ```
 cp .githooks/pre-commit .git/hooks/
 chmod +x .git/pre-commit
 ```
-after they have inspected it and are happy with its contents.
-
 
 ### General guidelines
 
 * Match optional argument defaults between Fortran, C, and C++<br>
-  Principle of Least Surprise.
+  ([principle of least astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment)).
 * Handle `torch::Error` and `std::exception` in the C++ functions by catching and
   printing to screen before exiting cleanly.
 
