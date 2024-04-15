@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
 """Load a PyTorch model and convert it to TorchScript."""
 
+import os
 from typing import Optional
 import torch
 
@@ -155,3 +157,6 @@ if __name__ == "__main__":
             "Saved Torchscript model is not performing as expected.\n"
             "Consider using scripting if you used tracing, or investigate further."
         )
+
+    # Check that the model file is created
+    assert os.path.exists(os.path.join(os.path.dirname(__file__), saved_ts_filename))
