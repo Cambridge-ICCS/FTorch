@@ -79,7 +79,7 @@ module ftorch
                                device_type, device_index, &
                                requires_grad) result(tensor_p) &
                                bind(c, name = 'torch_from_blob')
-      use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr, c_bool
+      use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
 
       ! Arguments
       type(c_ptr), value, intent(in)    :: data
@@ -98,7 +98,7 @@ contains
 
   !> Returns a tensor filled with the scalar value 0.
   function torch_tensor_zeros(ndims, tensor_shape, dtype, device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
     integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
     integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
@@ -112,7 +112,7 @@ contains
     interface
       function torch_zeros_c(ndims, tensor_shape, dtype, device_type, device_index, requires_grad) result(tensor) &
           bind(c, name = 'torch_zeros')
-        use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr, c_bool
+        use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
         integer(c_int), value, intent(in) :: ndims
         integer(c_int64_t), intent(in)    :: tensor_shape(*)
         integer(c_int), value, intent(in) :: dtype
@@ -143,7 +143,7 @@ contains
 
   !> Returns a tensor filled with the scalar value 1.
   function torch_tensor_ones(ndims, tensor_shape, dtype, device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
     integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
     integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
@@ -157,7 +157,7 @@ contains
     interface
       function torch_ones_c(ndims, tensor_shape, dtype, device_type, device_index, requires_grad) result(tensor) &
           bind(c, name = 'torch_ones')
-        use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
+        use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
         integer(c_int), value, intent(in) :: ndims
         integer(c_int64_t), intent(in)    :: tensor_shape(*)
         integer(c_int), value, intent(in) :: dtype
@@ -189,8 +189,10 @@ contains
   ! Torch Tensor API
   !| Exposes the given data as a tensor without taking ownership of the original data.
   !  This routine will take an (i, j, k) array and return an (k, j, i) tensor.
-  function torch_tensor_from_blob(data, ndims, tensor_shape, layout, dtype, device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
+  function torch_tensor_from_blob(data, ndims, tensor_shape, layout, dtype,    &
+                                  device_type, device_index,                   &
+                                  requires_grad_opt) result(tensor)
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
     type(c_ptr), intent(in)        :: data       !! Pointer to data
     integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
     integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
@@ -280,7 +282,7 @@ contains
   ! Torch Module API
   !> Loads a TorchScript module (pre-trained PyTorch model saved with TorchScript)
   function torch_module_load(filename, device_type, device_index, requires_grad_opt, is_training_opt) result(module)
-    use, intrinsic :: iso_c_binding, only : c_int, c_null_char
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_null_char
     character(*), intent(in)   :: filename !! Filename of TorchScript module
     integer(c_int), optional, intent(in) :: device_type !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index !! device index to use for `torch_kCUDA` case
@@ -295,7 +297,7 @@ contains
     interface
       function torch_jit_load_c(filename, device_type, device_index, requires_grad, is_training) result(module) &
           bind(c, name = 'torch_jit_load')
-        use, intrinsic :: iso_c_binding, only : c_char, c_int, c_ptr, c_bool
+        use, intrinsic :: iso_c_binding, only : c_bool, c_char, c_int, c_ptr
         character(c_char), intent(in) :: filename(*)
         integer(c_int), value, intent(in)    :: device_type
         integer(c_int), value, intent(in)    :: device_index
@@ -332,12 +334,15 @@ contains
     end if
 
     ! Need to append c_null_char at end of filename
-    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char, device_type_value, device_index_value, logical(requires_grad, c_bool), logical(is_training, c_bool))
+    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char,          &
+                                device_type_value, device_index_value,         &
+                                logical(requires_grad, c_bool),                &
+                                logical(is_training, c_bool))
   end function torch_module_load
 
   !> Performs a forward pass of the module with the input tensors
   subroutine torch_module_forward(module, input_tensors, n_inputs, output_tensor, requires_grad_opt)
-    use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int, c_loc
     type(torch_module), intent(in) :: module        !! Module
     type(torch_tensor), intent(in), dimension(:) :: input_tensors  !! Array of Input tensors
     type(torch_tensor), intent(in) :: output_tensor !! Returned output tensors
@@ -352,7 +357,7 @@ contains
       subroutine torch_jit_module_forward_c(module, input_tensors, n_inputs, &
           output_tensor, requires_grad) &
           bind(c, name = 'torch_jit_module_forward')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_bool
+        use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int
         type(c_ptr), value, intent(in) :: module
         type(c_ptr), value, intent(in) :: input_tensors
         integer(c_int), value, intent(in) :: n_inputs
@@ -372,7 +377,9 @@ contains
       input_ptrs(i) = input_tensors(i)%p
     end do
 
-    call torch_jit_module_forward_c(module%p, c_loc(input_ptrs), n_inputs, output_tensor%p, logical(requires_grad, c_bool))
+    call torch_jit_module_forward_c(module%p, c_loc(input_ptrs), n_inputs,     &
+                                    output_tensor%p,                           &
+                                    logical(requires_grad, c_bool))
   end subroutine torch_module_forward
 
   !> Deallocates a TorchScript module
@@ -392,7 +399,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
   function torch_tensor_from_array_int8_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! inputs
@@ -436,13 +443,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int8_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int8`
   function torch_tensor_from_array_int8_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! inputs
@@ -486,13 +496,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int8_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int8`
   function torch_tensor_from_array_int8_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! inputs
@@ -536,13 +549,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int8_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int8`
   function torch_tensor_from_array_int8_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! inputs
@@ -586,13 +602,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int8_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int16`
   function torch_tensor_from_array_int16_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! inputs
@@ -636,13 +655,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int16_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int16`
   function torch_tensor_from_array_int16_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! inputs
@@ -686,13 +708,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int16_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int16`
   function torch_tensor_from_array_int16_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! inputs
@@ -736,13 +761,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int16_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int16`
   function torch_tensor_from_array_int16_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! inputs
@@ -786,13 +814,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int16_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int32`
   function torch_tensor_from_array_int32_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! inputs
@@ -836,13 +867,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int32_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int32`
   function torch_tensor_from_array_int32_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! inputs
@@ -886,13 +920,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int32_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int32`
   function torch_tensor_from_array_int32_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! inputs
@@ -936,13 +973,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int32_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int32`
   function torch_tensor_from_array_int32_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! inputs
@@ -986,13 +1026,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int32_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int64`
   function torch_tensor_from_array_int64_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! inputs
@@ -1036,13 +1079,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int64_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int64`
   function torch_tensor_from_array_int64_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! inputs
@@ -1086,13 +1132,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int64_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int64`
   function torch_tensor_from_array_int64_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! inputs
@@ -1136,13 +1185,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int64_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int64`
   function torch_tensor_from_array_int64_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! inputs
@@ -1186,13 +1238,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_int64_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real32`
   function torch_tensor_from_array_real32_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! inputs
@@ -1236,13 +1291,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_real32_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real32`
   function torch_tensor_from_array_real32_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! inputs
@@ -1286,13 +1344,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_real32_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real32`
   function torch_tensor_from_array_real32_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! inputs
@@ -1336,13 +1397,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_real32_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real32`
   function torch_tensor_from_array_real32_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! inputs
@@ -1386,13 +1450,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_real32_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real64`
   function torch_tensor_from_array_real64_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! inputs
@@ -1436,13 +1503,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_real64_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real64`
   function torch_tensor_from_array_real64_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! inputs
@@ -1486,13 +1556,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_real64_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real64`
   function torch_tensor_from_array_real64_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! inputs
@@ -1536,13 +1609,16 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_real64_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real64`
   function torch_tensor_from_array_real64_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_float, c_loc, c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! inputs
@@ -1586,7 +1662,10 @@ contains
       strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape, strides, c_dtype, c_device_type, device_index_value, logical(requires_grad, c_bool))
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
+                                 strides, c_dtype, c_device_type,              &
+                                 device_index_value,                           &
+                                 logical(requires_grad, c_bool))
 
   end function torch_tensor_from_array_real64_4d
 
