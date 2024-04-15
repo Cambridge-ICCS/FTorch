@@ -54,12 +54,12 @@ jobs:
         run: |
           . ftorch/bin/activate
           export BUILD_DIR=$(pwd)/src/build
-          for EXAMPLE in 1_SimpleNet 2_ResNet; do
-            cd examples/${EXAMPLE}
-            mkdir build
-            cd build
+          cd examples
+          for EXAMPLE in 1_SimpleNet 2_ResNet18; do
+            mkdir ${EXAMPLE}/build
+            cd ${EXAMPLE}/build
             cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${BUILD_DIR}
             cmake --build .
             ctest
-            cd ..
+            cd ../..
           done
