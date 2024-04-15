@@ -28,3 +28,8 @@ set_tests_properties(simplenet PROPERTIES PASS_REGULAR_EXPRESSION
 add_test(NAME pt2ts
   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/pt2ts.py
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+add_test(NAME simplenet_infer_python
+  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/simplenet_infer_python.py
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+set_tests_properties(simplenet_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
+  "0., 2., 4., 6., 8.")
