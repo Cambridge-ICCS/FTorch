@@ -17,3 +17,11 @@ message(STATUS "Building with Fortran PyTorch coupling")
 # Fortran example
 add_executable(simplenet_infer_fortran simplenet_infer_fortran.f90)
 target_link_libraries(simplenet_infer_fortran PRIVATE FTorch::ftorch)
+
+# Integration testing
+include(CTest)
+add_test(NAME simplenet
+  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/simplenet.py
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+set_tests_properties(simplenet PROPERTIES PASS_REGULAR_EXPRESSION
+  "0., 2., 4., 6., 8.")
