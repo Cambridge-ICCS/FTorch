@@ -17,3 +17,14 @@ message(STATUS "Building with Fortran PyTorch coupling")
 # Fortran example
 add_executable(resnet_infer_fortran resnet_infer_fortran.f90)
 target_link_libraries(resnet_infer_fortran PRIVATE FTorch::ftorch)
+
+# Integration testing
+include(CTest)
+add_test(NAME resnet18
+  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/resnet18.py
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.8846225142478943")
+set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.045805174857378006")
+set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.0442761555314064")
+set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.005621383432298899")
+set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.004652013536542654")
