@@ -41,6 +41,7 @@ jobs:
         run: |
           . ftorch/bin/activate
           export Torch_DIR=${VIRTUAL_ENV}/lib/python3.12/site-packages  # TODO: Get vn
+          cd src
           export BUILD_DIR=$(pwd)/build
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
