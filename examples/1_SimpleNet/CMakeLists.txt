@@ -33,3 +33,7 @@ add_test(NAME simplenet_infer_python
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 set_tests_properties(simplenet_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
   "0., 2., 4., 6., 8.")
+add_test(NAME simplenet_infer_fortran
+  COMMAND simplenet_infer_fortran ../saved_simplenet_model_cpu.pt)
+set_tests_properties(simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+  "   0.00000000       2.00000000       4.00000000       6.00000000       8.00000000")
