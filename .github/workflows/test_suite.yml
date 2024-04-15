@@ -57,7 +57,9 @@ jobs:
           cd examples
           for EXAMPLE in 1_SimpleNet 2_ResNet18; do
             mkdir ${EXAMPLE}/build
-            cd ${EXAMPLE}/build
+            cd ${EXAMPLE}
+            python3 -m pip install -r requirements.txt
+            cd build
             cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${BUILD_DIR}
             cmake --build .
             ctest
