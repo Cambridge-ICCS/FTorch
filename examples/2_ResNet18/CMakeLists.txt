@@ -31,3 +31,6 @@ set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.004652013536
 add_test(NAME pt2ts
   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/pt2ts.py
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+add_test(NAME resnet_infer_fortran
+  COMMAND resnet_infer_fortran ../saved_resnet18_model_cpu.pt)
+set_tests_properties(resnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION "0.884623706")
