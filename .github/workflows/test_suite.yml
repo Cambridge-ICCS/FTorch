@@ -40,7 +40,8 @@ jobs:
       - name: Build FTorch
         run: |
           . ftorch/bin/activate
-          export Torch_DIR=${VIRTUAL_ENV}/lib/python3.12/site-packages  # TODO: Get vn
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           cd src
           export BUILD_DIR=$(pwd)/build
           mkdir ${BUILD_DIR}
