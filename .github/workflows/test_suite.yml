@@ -33,11 +33,14 @@ jobs:
       - name: Install PyTorch
         run: |
           python -m pip install --upgrade pip
+          python -m venv ftorch
+          . ftorch/bin/activate
           pip install torch --index-url https://download.pytorch.org/whl/cpu
 
       - name: Build FTorch
         run: |
-          export Torch_DIR=/usr/lib/python3/dist-packages
+          . ftorch/bin/activate
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python3.12/site-packages  # TODO: Get vn
           export BUILD_DIR=$(pwd)/build
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
@@ -47,6 +50,7 @@ jobs:
 
       - name: Integration tests
         run: |
+          . ftorch/bin/activate
           # TODO: More examples
           cd examples/1_SimpleNet
           mkdir build
