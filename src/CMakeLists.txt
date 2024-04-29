@@ -81,3 +81,18 @@ install(EXPORT ${PROJECT_NAME}
 install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch.mod"
  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}"
  )
+
+# Build integration tests
+if(CMAKE_BUILD_TESTS)
+  file(MAKE_DIRECTORY examples)
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/CMakeLists.txt
+    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/examples
+    )
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/1_SimpleNet
+    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/examples
+    )
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/2_ResNet18
+    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/examples
+    )
+  add_subdirectory(examples)
+endif()

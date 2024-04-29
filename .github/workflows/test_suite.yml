@@ -53,14 +53,9 @@ jobs:
         run: |
           . ftorch/bin/activate
           export BUILD_DIR=$(pwd)/src/build
-          cd examples
+          cd ${BUILD_DIR}/examples
           for EXAMPLE in 1_SimpleNet 2_ResNet18; do
             cd ${EXAMPLE}
-            python3 -m pip install -r requirements.txt
-            mkdir build
-            cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${BUILD_DIR}
-            cmake --build .
             ctest
-            cd ../..
+            cd ..
           done
