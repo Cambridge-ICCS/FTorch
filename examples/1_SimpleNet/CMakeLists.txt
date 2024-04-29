@@ -19,21 +19,23 @@ add_executable(simplenet_infer_fortran simplenet_infer_fortran.f90)
 target_link_libraries(simplenet_infer_fortran PRIVATE FTorch::ftorch)
 
 # Integration testing
-include(CTest)
-add_test(NAME simplenet
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/simplenet.py
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-set_tests_properties(simplenet PROPERTIES PASS_REGULAR_EXPRESSION
-  "0., 2., 4., 6., 8.")
-add_test(NAME pt2ts
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/pt2ts.py
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-add_test(NAME simplenet_infer_python
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/simplenet_infer_python.py
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-set_tests_properties(simplenet_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
-  "0., 2., 4., 6., 8.")
-add_test(NAME simplenet_infer_fortran
-  COMMAND simplenet_infer_fortran ../saved_simplenet_model_cpu.pt)
-set_tests_properties(simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-  "   0.00000000       2.00000000       4.00000000       6.00000000       8.00000000")
+if(CMAKE_BUILD_TESTS)
+  include(CTest)
+  add_test(NAME simplenet
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/simplenet.py
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+  set_tests_properties(simplenet PROPERTIES PASS_REGULAR_EXPRESSION
+    "0., 2., 4., 6., 8.")
+  add_test(NAME pt2ts
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/pt2ts.py
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+  add_test(NAME simplenet_infer_python
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/simplenet_infer_python.py
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+  set_tests_properties(simplenet_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
+    "0., 2., 4., 6., 8.")
+  add_test(NAME simplenet_infer_fortran
+    COMMAND simplenet_infer_fortran ../saved_simplenet_model_cpu.pt)
+  set_tests_properties(simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "   0.00000000       2.00000000       4.00000000       6.00000000       8.00000000")
+endif()

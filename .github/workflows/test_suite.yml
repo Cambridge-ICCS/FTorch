@@ -45,7 +45,7 @@ jobs:
           export BUILD_DIR=$(pwd)/src/build
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${BUILD_DIR}
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} -DCMAKE_BUILD_TESTS=TRUE
           cmake --build .
           cmake --install .
 

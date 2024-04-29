@@ -19,18 +19,20 @@ add_executable(resnet_infer_fortran resnet_infer_fortran.f90)
 target_link_libraries(resnet_infer_fortran PRIVATE FTorch::ftorch)
 
 # Integration testing
-include(CTest)
-add_test(NAME resnet18
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/resnet18.py
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.884622")
-set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.045805")
-set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.044276")
-set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.005621")
-set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.004652")
-add_test(NAME pt2ts
-  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/pt2ts.py
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-add_test(NAME resnet_infer_fortran
-  COMMAND resnet_infer_fortran ../saved_resnet18_model_cpu.pt)
-set_tests_properties(resnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION "0.884623")
+if(CMAKE_BUILD_TESTS)
+  include(CTest)
+  add_test(NAME resnet18
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/resnet18.py
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+  set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.884622")
+  set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.045805")
+  set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.044276")
+  set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.005621")
+  set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.004652")
+  add_test(NAME pt2ts
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/pt2ts.py
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+  add_test(NAME resnet_infer_fortran
+    COMMAND resnet_infer_fortran ../saved_resnet18_model_cpu.pt)
+  set_tests_properties(resnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION "0.884623")
+endif()
