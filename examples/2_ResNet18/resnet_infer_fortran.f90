@@ -35,10 +35,12 @@ contains
       integer :: out_shape(out_dims) = [1, 1000]
       integer :: out_layout(out_dims) = [1,2]
 
+      ! Path to input data
+      character(len=100) :: data_dir
       ! Binary file containing input tensor
-      character(len=*), parameter :: filename = '../data/image_tensor.dat'
+      character(len=116) :: filename
       ! Text file containing categories
-      character(len=*), parameter :: filename_cats = '../data/categories.txt'
+      character(len=114) :: filename_cats
 
       ! Length of tensor and number of categories
       integer, parameter :: tensor_length = 150528
@@ -57,6 +59,15 @@ contains
       do ix = 1, num_args
          call get_command_argument(ix,args(ix))
       end do
+
+      ! Process data directory argument, if provided
+      if (num_args > 1) then
+        data_dir = args(2)
+      else
+        data_dir = "../data"
+      end if
+      filename = trim(data_dir)//"/image_tensor.dat"
+      filename_cats =  trim(data_dir)//"/categories.txt"
 
       ! Allocate one-dimensional input/output arrays, based on multiplication of all input/output dimension sizes
       allocate(in_data(in_shape(1), in_shape(2), in_shape(3), in_shape(4)))
