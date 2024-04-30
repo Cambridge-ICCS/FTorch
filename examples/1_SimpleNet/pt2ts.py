@@ -2,6 +2,7 @@
 """Load a PyTorch model and convert it to TorchScript."""
 
 import os
+import sys
 from typing import Optional
 import torch
 
@@ -159,4 +160,5 @@ if __name__ == "__main__":
         )
 
     # Check that the model file is created
-    assert os.path.exists(os.path.join(os.path.dirname(__file__), saved_ts_filename))
+    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
+    assert os.path.exists(os.path.join(filepath, saved_ts_filename))

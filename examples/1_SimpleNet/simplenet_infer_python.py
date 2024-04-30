@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Load saved SimpleNet to TorchScript and run inference example."""
 
+import os
+import sys
 import torch
 
 
@@ -46,7 +48,8 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 
 
 if __name__ == "__main__":
-    saved_model_file = "saved_simplenet_model_cpu.pt"
+    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
+    saved_model_file = os.path.join(filepath, "saved_simplenet_model_cpu.pt")
 
     device_to_run = "cpu"
 
