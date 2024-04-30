@@ -2,6 +2,8 @@
 
 from math import isclose
 import numpy as np
+import os
+import sys
 import torch
 from resnet18 import print_top_results
 
@@ -72,7 +74,8 @@ def check_results(output: torch.Tensor) -> None:
 
 
 if __name__ == "__main__":
-    saved_model_file = "saved_resnet18_model_cpu.pt"
+    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
+    saved_model_file = os.path.join(filepath, "saved_resnet18_model_cpu.pt")
 
     device_to_run = "cpu"
     # device_to_run = "cuda"
