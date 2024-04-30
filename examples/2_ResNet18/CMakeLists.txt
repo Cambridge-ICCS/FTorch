@@ -8,7 +8,7 @@ project(${PROJECT_NAME} LANGUAGES Fortran)
 
 # Build in Debug mode if not specified
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
 endif()
 
 find_package(FTorch)
@@ -22,7 +22,7 @@ target_link_libraries(resnet_infer_fortran PRIVATE FTorch::ftorch)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
   add_test(NAME resnet18
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/resnet18.py
+    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/resnet18.py
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
   set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.884622")
   set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.045805")
@@ -30,9 +30,12 @@ if(CMAKE_BUILD_TESTS)
   set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.005621")
   set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.004652")
   add_test(NAME pt2ts
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/pt2ts.py
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py ${PROJECT_BINARY_DIR}
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   add_test(NAME resnet_infer_fortran
-    COMMAND resnet_infer_fortran ../saved_resnet18_model_cpu.pt)
+    COMMAND resnet_infer_fortran
+    ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt
+    ${PROJECT_SOURCE_DIR}/data
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(resnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION "0.884623")
 endif()
