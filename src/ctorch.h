@@ -26,7 +26,7 @@ typedef enum {
 } torch_data_t;
 
 // Device types
-typedef enum { torch_kCPU, torch_kCUDA, torch_kMPS } torch_device_t;
+typedef enum { torch_kCPU, torch_kCUDA, torch_kMPS, torch_kXPU } torch_device_t;
 
 
 // =====================================================================================
