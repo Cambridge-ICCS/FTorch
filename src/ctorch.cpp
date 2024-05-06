@@ -96,6 +96,12 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
                 << std::endl;
     }
     return torch::Device(torch::kMPS);
+  case torch_kXPU:
+    if (device_index != -1) {
+      std::cerr << "[WARNING]: device index unused for XPU runs"
+                << std::endl;
+    }
+    return torch::Device(torch::kXPU);
   default:
     std::cerr << "[WARNING]: unknown device type, setting to torch_kCPU" << std::endl;
     return torch::Device(torch::kCPU);
