@@ -245,6 +245,7 @@ Notable contributors to this project are:
 * [**@SimonClifford**](https://github.com/SimonClifford)
 * [**@ElliottKasoar**](https://github.com/ElliottKasoar)
 * [**@TomMelt**](https://github.com/TomMelt)
+* [**@jwallwork23**](https://github.com/jwallwork23)
 
 See [Contributors](https://github.com/Cambridge-ICCS/FTorch/graphs/contributors)
 for a full list.
