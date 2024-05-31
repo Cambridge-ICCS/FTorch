@@ -120,22 +120,6 @@ message(STATUS "Building with Fortran PyTorch coupling")
 You will then need to use the `-DFTorch_DIR=</path/to/install/location>` flag
 when running CMake.
 
-### Testing
-
-To enable FTorch's integration tests, ensure that the `CMAKE_BUILD_TESTS` option
-is set to `TRUE` for the build. Once the build is complete, activate the Python
-virtual environment you created for FTorch and run the tests by going to the
-desired subdirectory of `src/build/test/examples` and calling `ctest`. This will
-produce a report on which tests passed and which failed for your build. Note
-that the examples have additional dependencies, which may need installing into
-your virtual environment.
-
-Alternatively, run the helper script in the root FTorch directory:
-```
-./run_integration_tests.sh
-```
-This will automatically install any additional dependencies for the examples.
-
 
 ## Building other projects with make
 
