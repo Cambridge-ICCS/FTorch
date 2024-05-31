@@ -52,6 +52,7 @@ The following CMake flags are available and can be passed as arguments through `
 | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`       | Location of Torch installation<sup>2</sup>                    |
 | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
 | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
+| `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`             | Specifies whether to compile FTorch's test suite as part of the build. |
 | `ENABLE_CUDA`                                                                                     | `TRUE` / `FALSE`             | Specifies whether to check for and enable CUDA<sup>3</sup> |
 
 
@@ -118,6 +119,22 @@ message(STATUS "Building with Fortran PyTorch coupling")
 
 You will then need to use the `-DFTorch_DIR=</path/to/install/location>` flag
 when running CMake.
+
+### Testing
+
+To enable FTorch's integration tests, ensure that the `CMAKE_BUILD_TESTS` option
+is set to `TRUE` for the build. Once the build is complete, activate the Python
+virtual environment you created for FTorch and run the tests by going to the
+desired subdirectory of `src/build/test/examples` and calling `ctest`. This will
+produce a report on which tests passed and which failed for your build. Note
+that the examples have additional dependencies, which may need installing into
+your virtual environment.
+
+Alternatively, run the helper script in the root FTorch directory:
+```
+./run_integration_tests.sh
+```
+This will automatically install any additional dependencies for the examples.
 
 
 ## Building other projects with make

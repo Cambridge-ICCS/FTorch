@@ -200,7 +200,7 @@ instructions to modify, build, and run as necessary.
 
 ## Tests
 
-For information on testing, see the [test subdirectory](src/examples/README.md).
+For information on testing, see the [test subdirectory](src/test/README.md).
 
 ## License
 
