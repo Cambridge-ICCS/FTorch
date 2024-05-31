@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # ---
 # Execute this shell script to run all of FTorch's integration tests.
 #
