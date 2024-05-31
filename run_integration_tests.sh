@@ -15,10 +15,10 @@ CTEST_ARGS=$@
 EXAMPLES="1_SimpleNet 2_ResNet18"
 BUILD_DIR=src/build
 
-cd ${BUILD_DIR}/test/examples
 for EXAMPLE in ${EXAMPLES}
 do
-  cd ${EXAMPLE}
+  python3 -m pip install -r examples/${EXAMPLE}/requirements.txt
+  cd ${BUILD_DIR}/test/examples/${EXAMPLE}
   ctest ${CTEST_ARGS}
   cd -
 done
