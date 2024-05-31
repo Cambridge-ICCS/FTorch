@@ -52,8 +52,4 @@ jobs:
       - name: Integration tests
         run: |
           . ftorch/bin/activate
-          export BUILD_DIR=$(pwd)/src/build
-          for EXAMPLE in 1_SimpleNet 2_ResNet18; do
-            cd ${BUILD_DIR}/test/examples/${EXAMPLE}
-            ctest
-          done
+          ./run_integration_tests.sh
