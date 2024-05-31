@@ -17,7 +17,7 @@ BUILD_DIR=src/build
 
 for EXAMPLE in ${EXAMPLES}
 do
-  python3 -m pip -q install -r examples/${EXAMPLE}/requirements.txt
+  pip -q install -r examples/${EXAMPLE}/requirements.txt
   cd ${BUILD_DIR}/test/examples/${EXAMPLE}
   ctest ${CTEST_ARGS}
   cd -
