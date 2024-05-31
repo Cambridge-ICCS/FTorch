@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Module defining a simple PyTorch 'Net' for coupling to Fortran."""
 
 import torch

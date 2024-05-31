@@ -17,6 +17,10 @@ We have created a minimum C wrapper interface of LibTorch (c_torch.h) that allow
 
 To build, follow the instructions in the [main repository README](/README.md).
 
+## Testing
+
+For information on testing, see the [test subdirectory](test/README.md).
+
 
 ### Summary of files
 
