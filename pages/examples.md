@@ -152,6 +152,9 @@ The repository comes with a number of documented
 
 These are designed to introduce users to FTorch and how to use the various features.
 
+A subset of the examples are included as integration tests as part of FTorch's
+[test suite](testing.html).
+
 #### 1) SimpleNet
 
 [This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/1_SimpleNet)
