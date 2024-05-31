@@ -9,7 +9,7 @@
 # See `src/test/README.md` for more details on integration testing.
 # ---
 
-set -eux
+set -eu
 
 CTEST_ARGS=$@
 EXAMPLES="1_SimpleNet 2_ResNet18"
@@ -17,7 +17,7 @@ BUILD_DIR=src/build
 
 for EXAMPLE in ${EXAMPLES}
 do
-  python3 -m pip install -r examples/${EXAMPLE}/requirements.txt
+  python3 -m pip -q install -r examples/${EXAMPLE}/requirements.txt
   cd ${BUILD_DIR}/test/examples/${EXAMPLE}
   ctest ${CTEST_ARGS}
   cd -
