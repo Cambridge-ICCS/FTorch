@@ -97,6 +97,7 @@
               <a class="nav-link" href="developer.html">Developer Guide</a>
               <a class="nav-link" href="examples.html">Examples</a>
               <a class="nav-link" href="gpu.html">GPU Support</a>
+              <a class="nav-link" href="testing.html">FTorch test suite</a>
               <a class="nav-link" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
           </nav>
@@ -187,6 +188,11 @@ The following CMake flags are available and can be passed as arguments through <
 <td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html"><code>CMAKE_BUILD_TYPE</code></a></td>
 <td><code>Release</code> / <code>Debug</code></td>
 <td>Specifies build type. The default is <code>Debug</code>, use <code>Release</code> for production code</td>
+</tr>
+<tr>
+<td><code>CMAKE_BUILD_TESTS</code></td>
+<td><code>TRUE</code> / <code>FALSE</code></td>
+<td>Specifies whether to compile FTorch's <a href="testing.html">test suite</a> as part of the build.</td>
 </tr>
 <tr>
 <td><code>ENABLE_CUDA</code></td>
