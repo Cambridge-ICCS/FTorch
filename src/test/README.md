@@ -17,11 +17,15 @@ when building FTorch.
 
 ## Running
 
-Having built the integration tests, run them by going to the corresponding
-subdirectory of `src/build/test/examples` and calling `ctest`. This will produce
-a report on which tests passed and which failed for your build.
+Having built the integration tests, ensure the Python virtual environment is
+active and run them by going to the corresponding subdirectory of
+`src/build/test/examples` and calling `ctest`. This will produce a report on
+which tests passed and which failed for your build. Note that the examples have
+additional dependencies, which may need installing into your virtual
+environment.
 
 Alternatively, run the helper script in the root FTorch directory:
 ```
 ./run_integration_tests.sh
 ```
+This will automatically install any additional dependencies for the examples.
