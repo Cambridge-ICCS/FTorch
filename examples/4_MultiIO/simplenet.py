@@ -43,7 +43,7 @@ class SimpleNet(nn.Module):
             second batch scaled by 3.
 
         """
-        batch = torch.cat((batch1, batch2), dim=0)
+        batch = torch.cat((batch1, batch2), dim=0).flatten()
         return self._fwd_seq(batch).view((2, 4))
 
 
