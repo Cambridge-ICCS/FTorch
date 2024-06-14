@@ -44,7 +44,7 @@ class SimpleNet(nn.Module):
 
         """
         batch = torch.cat((batch1, batch2), dim=0)
-        return self._fwd_seq(batch).split(4)
+        return self._fwd_seq(batch).view((2, 4))
 
 
 if __name__ == "__main__":

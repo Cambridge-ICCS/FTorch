@@ -29,4 +29,10 @@ if(CMAKE_BUILD_TESTS)
     "0., 2., 4., 6.")
   set_tests_properties(simplenet PROPERTIES PASS_REGULAR_EXPRESSION
     "0., -3., -6., -9.")
+
+  # 2. Check the model is saved to file in the expected location with the pt2ts.py script
+  add_test(NAME pt2ts
+    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py
+    ${PROJECT_BINARY_DIR} # Command line argument: filepath for saving the model
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 endif()
