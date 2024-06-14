@@ -22,18 +22,19 @@ contains
       ! Set up types of input and output data
       type(torch_module) :: model
       type(torch_tensor), dimension(1) :: in_tensors
-      type(torch_tensor) :: out_tensor
+      type(torch_tensor), dimension(1) :: out_tensors
 
       real(wp), dimension(:,:,:,:), allocatable, target :: in_data
       real(wp), dimension(:,:), allocatable, target :: out_data
       integer, parameter :: n_inputs = 1
+      integer, parameter :: n_outputs = 1
 
       integer, parameter :: in_dims = 4
       integer :: in_shape(in_dims) = [1, 3, 224, 224]
-      integer :: in_layout(in_dims) = [1,2,3,4]
+      integer :: in_layout(in_dims) = [1, 2, 3, 4]
       integer, parameter :: out_dims = 2
       integer :: out_shape(out_dims) = [1, 1000]
-      integer :: out_layout(out_dims) = [1,2]
+      integer :: out_layout(out_dims) = [1, 2]
 
       ! Path to input data
       character(len=100) :: data_dir
@@ -79,13 +80,14 @@ contains
       ! Create input/output tensors from the above arrays
       in_tensors(1) = torch_tensor_from_array(in_data, in_layout, torch_kCPU)
 
-      out_tensor = torch_tensor_from_array(out_data, out_layout, torch_kCPU)
+      out_tensors(1) = torch_tensor_from_array(out_data, out_layout, torch_kCPU)
 
       ! Load ML model (edit this line to use different models)
       model = torch_module_load(args(1))
 
       ! Infer
-      call torch_module_forward(model, in_tensors, n_inputs, out_tensor)
+      call torch_module_forward(model, in_tensors, n_inputs, out_tensors,      &
+                                n_outputs)
 
       ! Load categories
       call load_categories(filename_cats, N_cats, categories)
@@ -105,7 +107,7 @@ contains
       ! Cleanup
       call torch_module_delete(model)
       call torch_tensor_delete(in_tensors(1))
-      call torch_tensor_delete(out_tensor)
+      call torch_tensor_delete(out_tensors(1))
       deallocate(in_data)
       deallocate(out_data)
       deallocate(probabilities)
