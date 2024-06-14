@@ -18,13 +18,14 @@ program inference
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
    integer, parameter :: n_inputs = 1
+   integer, parameter :: n_outputs = 1
    integer :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
    ! The net, a vector of input tensors (in this case we only have one), and the output tensor
    type(torch_module) :: model
    type(torch_tensor), dimension(1) :: in_tensors
-   type(torch_tensor) :: out_tensor
+   type(torch_tensor), dimension(1) :: out_tensors
 
    ! Get TorchScript model file as a command line argument
    num_args = command_argument_count()
@@ -38,18 +39,18 @@ program inference
 
    ! Create Torch input/output tensors from the above arrays
    in_tensors(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCPU)
-   out_tensor = torch_tensor_from_array(out_data, tensor_layout, torch_kCPU)
+   out_tensors(1) = torch_tensor_from_array(out_data, tensor_layout, torch_kCPU)
 
    ! Load ML model
    model = torch_module_load(args(1))
 
    ! Infer
-   call torch_module_forward(model, in_tensors, n_inputs, out_tensor)
+   call torch_module_forward(model, in_tensors, n_inputs, out_tensors, n_outputs)
    write (*,*) out_data(:)
 
    ! Cleanup
    call torch_module_delete(model)
    call torch_tensor_delete(in_tensors(1))
-   call torch_tensor_delete(out_tensor)
+   call torch_tensor_delete(out_tensors(1))
 
 end program inference
