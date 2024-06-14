@@ -218,14 +218,14 @@ torch_jit_script_module_t torch_jit_load(const char* filename,
 
 void torch_jit_module_forward(const torch_jit_script_module_t module,
                               const torch_tensor_t *inputs, const int nin,
-                              torch_tensor_t outputs, const int nout,
+                              torch_tensor_t *outputs, const int nout,
                               const bool requires_grad=false)
 {
   torch::AutoGradMode enable_grad(requires_grad);
   // Here we cast the pointers we recieved in to Tensor objects
   auto model = static_cast<torch::jit::script::Module*>(module);
   auto in = reinterpret_cast<torch::Tensor* const*>(inputs);
-  auto out = reinterpret_cast<torch::Tensor*>(outputs);
+  auto out = reinterpret_cast<torch::Tensor**>(outputs);
   // Local IValue for checking we are passed types
   torch::jit::IValue LocalTensor;
   // Generate a vector of IValues (placeholders for various Torch types)
@@ -248,8 +248,8 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
       // Single output models will return a tensor directly.
       std::cerr << "[NOTE]: Single output." << std::endl;
       std::cerr << model_out.toTensor() << std::endl;
-      std::move(out[0]) = model_out.toTensor();
-      std::cerr << out[0] << std::endl;
+      std::move(*out[0]) = model_out.toTensor();
+      std::cerr << *out[0] << std::endl;
     }
     else if (model_out.isTuple()) {
       // Multiple output models will return a tuple => cast to tensors.
@@ -257,8 +257,8 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
       std::cerr << "[NOTE]: Multiple outputs." << std::endl;
       for (int i=0; i<nout; ++i) {
         std::cerr << model_out.toTuple()->elements()[i].toTensor() << std::endl;
-        std::cerr << out[i] << std::endl;
-        std::move(out[i]) = model_out.toTuple()->elements()[i].toTensor();
+        std::cerr << *out[i] << std::endl;
+        std::move(*out[i]) = model_out.toTuple()->elements()[i].toTensor();
       }
     }
     else {
