@@ -247,18 +247,18 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     auto model_out = model->forward(inputs_vec);
     if (model_out.isTensor()) {
       // Single output models will return a tensor directly.
-      std::cerr << "[NOTE]: Single output." << std::endl;
-      std::cerr << model_out.toTensor() << std::endl;
+      std::cerr << "[NOTE]: Single output." << std::endl; // TODO: Remove (debugging)
+      std::cerr << model_out.toTensor() << std::endl; // TODO: Remove (debugging)
       std::move(*out[0]) = model_out.toTensor();
-      std::cerr << *out[0] << std::endl;
+      std::cerr << *out[0] << std::endl; // TODO: Remove (debugging)
     }
     else if (model_out.isTuple()) {
       // Multiple output models will return a tuple => cast to tensors.
       // See https://github.com/pytorch/pytorch/issues/15523
-      std::cerr << "[NOTE]: Multiple outputs." << std::endl;
+      std::cerr << "[NOTE]: Multiple outputs." << std::endl; // TODO: Remove (debugging)
       for (int i=0; i<nout; ++i) {
-        std::cerr << model_out.toTuple()->elements()[i].toTensor() << std::endl;
-        std::cerr << *out[i] << std::endl;
+        std::cerr << model_out.toTuple()->elements()[i].toTensor() << std::endl; // TODO: Remove (debugging)
+        std::cerr << *out[i] << std::endl; // TODO: Remove (debugging)
         std::move(*out[i]) = model_out.toTuple()->elements()[i].toTensor();
       }
     }
