@@ -52,7 +52,9 @@ if __name__ == "__main__":
     model.eval()
 
     with torch.no_grad():
-        print(model(
-            torch.Tensor([0.0, 1.0, 2.0, 3.0]),
-            torch.Tensor([-0.0, -1.0, -2.0, -3.0]),
-        ))
+        print(
+            model(
+                torch.Tensor([0.0, 1.0, 2.0, 3.0]),
+                torch.Tensor([-0.0, -1.0, -2.0, -3.0]),
+            )
+        )
