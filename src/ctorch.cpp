@@ -243,6 +243,7 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     }
   }
   try {
+    // TODO: Avoid data transfers
     auto model_out = model->forward(inputs_vec);
     if (model_out.isTensor()) {
       // Single output models will return a tensor directly.
