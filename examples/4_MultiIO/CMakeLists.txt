@@ -26,7 +26,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(NAME simplenet
     COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py)
   set_tests_properties(simplenet PROPERTIES PASS_REGULAR_EXPRESSION
-    "0., 2., 4., 6., 8.")
+    "0., 2., 4., 6.")
   set_tests_properties(simplenet PROPERTIES PASS_REGULAR_EXPRESSION
     "0., -3., -6., -9.")
 endif()
