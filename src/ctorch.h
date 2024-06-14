@@ -140,7 +140,7 @@ EXPORT_C torch_jit_script_module_t torch_jit_load(const char* filename,
  */
 EXPORT_C void torch_jit_module_forward(const torch_jit_script_module_t module,
                                        const torch_tensor_t *inputs, const int nin,
-                                       torch_tensor_t output, const int nout,
+                                       torch_tensor_t outputs, const int nout,
                                        const bool requires_grad);
 
 /**

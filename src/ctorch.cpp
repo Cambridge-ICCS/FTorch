@@ -225,7 +225,7 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
   // Here we cast the pointers we recieved in to Tensor objects
   auto model = static_cast<torch::jit::script::Module*>(module);
   auto in = reinterpret_cast<torch::Tensor* const*>(inputs);
-  auto out = static_cast<torch::Tensor*>(outputs);
+  auto out = reinterpret_cast<torch::Tensor*>(outputs);
   // Local IValue for checking we are passed types
   torch::jit::IValue LocalTensor;
   // Generate a vector of IValues (placeholders for various Torch types)
@@ -243,11 +243,28 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     }
   }
   try {
-    // If for some reason the forward method does not return a Tensor it should
-    // raise an error when trying to cast to a Tensor type
-    auto output_tuple = model->forward(inputs_vec).toTuple();
-    for (int i=0; i<nout; ++i) {
-      std::move(out[i]) = output_tuple->elements()[i].toTensor();
+    auto model_out = model->forward(inputs_vec);
+    if (model_out.isTensor()) {
+      // Single output models will return a tensor directly.
+      std::cerr << "[NOTE]: Single output." << std::endl;
+      std::cerr << model_out.toTensor() << std::endl;
+      std::move(out[0]) = model_out.toTensor();
+      std::cerr << out[0] << std::endl;
+    }
+    else if (model_out.isTuple()) {
+      // Multiple output models will return a tuple => cast to tensors.
+      // See https://github.com/pytorch/pytorch/issues/15523
+      std::cerr << "[NOTE]: Multiple outputs." << std::endl;
+      for (int i=0; i<nout; ++i) {
+        std::cerr << model_out.toTuple()->elements()[i].toTensor() << std::endl;
+        std::cerr << out[i] << std::endl;
+        std::move(out[i]) = model_out.toTuple()->elements()[i].toTensor();
+      }
+    }
+    else {
+      // If for some reason the forward method does not return a Tensor it should
+      // raise an error when trying to cast to a Tensor type
+      std::cerr << "[ERROR]: Model Output is neither Tensor nor Tuple." << std::endl;
     }
   } catch (const torch::Error& e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
