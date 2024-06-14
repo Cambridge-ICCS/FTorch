@@ -14,9 +14,9 @@ endif()
 find_package(FTorch)
 message(STATUS "Building with Fortran PyTorch coupling")
 
-# # Fortran example # TODO
-# add_executable(simplenet_infer_fortran simplenet_infer_fortran.f90)
-# target_link_libraries(simplenet_infer_fortran PRIVATE FTorch::ftorch)
+# Fortran example
+add_executable(simplenet_infer_fortran_multiio simplenet_infer_fortran.f90)
+target_link_libraries(simplenet_infer_fortran_multiio PRIVATE FTorch::ftorch)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
@@ -46,4 +46,15 @@ if(CMAKE_BUILD_TESTS)
     "0., 2., 4., 6.")
   set_tests_properties(simplenet_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
     "0., -3., -6., -9.")
+
+  # 4. Check the model can be loaded from file and run in Fortran and that its outputs
+  #    meet expectations
+  add_test(NAME simplenet_infer_fortran
+    COMMAND simplenet_infer_fortran_multiio
+    ${PROJECT_BINARY_DIR}/saved_multiio_model_cpu.pt # Command line argument: model file
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_tests_properties(simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "   0.00000000       2.00000000       4.00000000       6.00000000")
+  set_tests_properties(simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "   0.00000000      -3.00000000      -6.00000000      -9.00000000")
 endif()
