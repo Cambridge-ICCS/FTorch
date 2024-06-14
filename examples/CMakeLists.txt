@@ -1,4 +1,6 @@
 if(CMAKE_BUILD_TESTS)
   add_subdirectory(1_SimpleNet)
   add_subdirectory(2_ResNet18)
+  # add_subdirectory(3_MultiGPU)
+  add_subdirectory(4_MultiIO)
 endif()
