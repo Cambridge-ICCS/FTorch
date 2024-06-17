@@ -155,7 +155,11 @@ if __name__ == "__main__":
         *trained_model_dummy_inputs,
     )
 
-    for output, ts_output in zip(trained_model_testing_outputs, ts_model_outputs):
+    if not isinstance(ts_model_outputs, tuple):
+        ts_model_outputs = (ts_model_outputs,)
+    if not isinstance(trained_model_testing_outputs, tuple):
+        trained_model_testing_outputs = (trained_model_testing_outputs,)
+    for ts_output, output in zip(ts_model_outputs, trained_model_testing_outputs):
         if torch.all(ts_output.eq(output)):
             print("Saved TorchScript model working as expected in a basic test.")
             print("Users should perform further validation as appropriate.")
