@@ -15,8 +15,10 @@ program inference
    character(len=128), dimension(:), allocatable :: args
 
    ! Set up Fortran data structures
-   real(wp), dimension(2,4), target :: in_data
-   real(wp), dimension(2,4), target :: out_data
+   real(wp), dimension(4), target :: in_data1
+   real(wp), dimension(4), target :: in_data2
+   real(wp), dimension(4), target :: out_data1
+   real(wp), dimension(4), target :: out_data2
    integer, parameter :: n_inputs = 2
    integer, parameter :: n_outputs = 2
    integer :: tensor_layout(1) = [1]
@@ -35,22 +37,22 @@ program inference
    end do
 
    ! Initialise data
-   in_data(1,:) = [0.0, 1.0, 2.0, 3.0]
-   in_data(2,:) = [0.0, -1.0, -2.0, -3.0]
+   in_data1(:) = [0.0, 1.0, 2.0, 3.0]
+   in_data2(:) = [0.0, -1.0, -2.0, -3.0]
 
    ! Create Torch input/output tensors from the above arrays
-   in_tensors(1) = torch_tensor_from_array(in_data(1,:), tensor_layout, torch_kCPU)
-   in_tensors(2) = torch_tensor_from_array(in_data(2,:), tensor_layout, torch_kCPU)
-   out_tensors(1) = torch_tensor_from_array(out_data(1,:), tensor_layout, torch_kCPU)
-   out_tensors(2) = torch_tensor_from_array(out_data(2,:), tensor_layout, torch_kCPU)
+   in_tensors(1) = torch_tensor_from_array(in_data1, tensor_layout, torch_kCPU)
+   in_tensors(2) = torch_tensor_from_array(in_data2, tensor_layout, torch_kCPU)
+   out_tensors(1) = torch_tensor_from_array(out_data1, tensor_layout, torch_kCPU)
+   out_tensors(2) = torch_tensor_from_array(out_data2, tensor_layout, torch_kCPU)
 
    ! Load ML model
    model = torch_module_load(args(1))
 
    ! Infer
    call torch_module_forward(model, in_tensors, n_inputs, out_tensors, n_outputs)
-   write (*,*) out_data(1,:)
-   write (*,*) out_data(2,:)
+   write (*,*) out_data1
+   write (*,*) out_data2
 
    ! Cleanup
    call torch_module_delete(model)
