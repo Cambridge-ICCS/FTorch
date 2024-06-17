@@ -18,13 +18,13 @@ class SimpleNet(nn.Module):
         multiply the inputs by 2 and 3, respectively.
         """
         super().__init__()
-        self._fwd_seq = nn.Sequential(nn.Linear(10, 10, bias=False))
+        self._fwd_seq = nn.Sequential(nn.Linear(4, 4, bias=False))
         with torch.no_grad():
             self._fwd_seq[0].weight = nn.Parameter(
                 torch.kron(torch.Tensor([[2.0, 0.0], [0.0, 3.0]]), torch.eye(4))
             )
 
-    def forward(self, batch1: torch.Tensor, batch2: torch.Tensor) -> torch.Tensor:
+    def forward(self, batch1: torch.Tensor, batch2: torch.Tensor):
         """
         Pass ``batch1`` and ``batch2`` through the model.
 
@@ -44,7 +44,8 @@ class SimpleNet(nn.Module):
 
         """
         batch = torch.cat((batch1, batch2), dim=0).flatten()
-        return self._fwd_seq(batch).view((2, 4))
+        a, b = self._fwd_seq(batch).split(4)
+        return a, b
 
 
 if __name__ == "__main__":

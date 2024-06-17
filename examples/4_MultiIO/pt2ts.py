@@ -155,14 +155,15 @@ if __name__ == "__main__":
         *trained_model_dummy_inputs,
     )
 
-    if torch.all(ts_model_outputs.eq(trained_model_testing_outputs)):
-        print("Saved TorchScript model working as expected in a basic test.")
-        print("Users should perform further validation as appropriate.")
-    else:
-        raise RuntimeError(
-            "Saved Torchscript model is not performing as expected.\n"
-            "Consider using scripting if you used tracing, or investigate further."
-        )
+    for output, ts_output in zip(trained_model_testing_outputs, ts_model_outputs):
+        if torch.all(ts_output.eq(output)):
+            print("Saved TorchScript model working as expected in a basic test.")
+            print("Users should perform further validation as appropriate.")
+        else:
+            raise RuntimeError(
+                "Saved Torchscript model is not performing as expected.\n"
+                "Consider using scripting if you used tracing, or investigate further."
+            )
 
     # Check that the model file is created
     filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
