@@ -1,7 +1,7 @@
 program inference
 
    ! Import precision info from iso
-   use, intrinsic :: iso_fortran_env, only : sp => real32
+   use, intrinsic :: iso_fortran_env, only : sp => real32, int64
 
    ! Import our library for interfacing with PyTorch
    use ftorch
@@ -18,7 +18,7 @@ program inference
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
    integer, parameter :: n_inputs = 1
-   integer :: tensor_layout(1) = [1]
+   integer(int64) :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
    ! The net, a vector of input tensors (in this case we only have one), and the output tensor
