@@ -3,6 +3,11 @@ set(PROJECT_NAME FTorch)
 set(LIB_NAME ftorch)
 set(PACKAGE_VERSION 0.1)
 
+if (WIN32)
+    set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    set (BUILD_SHARED_LIBS TRUE)
+endif ()
+
 project(${PROJECT_NAME} VERSION ${PACKAGE_VERSION} LANGUAGES C CXX Fortran)
 
 include(FortranCInterface)
