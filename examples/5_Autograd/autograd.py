@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Autograd demo taken from https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html.
-"""
+"""Autograd demo taken from https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html."""
 
 import torch
 
