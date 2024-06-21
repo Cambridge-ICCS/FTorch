@@ -108,6 +108,10 @@ module ftorch
     module procedure torch_tensor_multiply
   end interface
 
+  interface operator (/)
+    module procedure torch_tensor_divide
+  end interface
+
 contains
 
   !> Returns a tensor filled with the scalar value 0.
@@ -368,6 +372,25 @@ contains
 
     output%p = torch_tensor_multiply_c(tensor1%p, tensor2%p)
   end function torch_tensor_multiply
+
+  !> Overloads division operator for two tensors.
+  function torch_tensor_divide(tensor1, tensor2) result(output)
+    type(torch_tensor), intent(in) :: tensor1
+    type(torch_tensor), intent(in) :: tensor2
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_divide')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        type(c_ptr), value, intent(in) :: tensor1_c
+        type(c_ptr), value, intent(in) :: tensor2_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_divide_c
+    end interface
+
+    output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
+  end function torch_tensor_divide
 
   ! Torch Module API
   !> Loads a TorchScript module (pre-trained PyTorch model saved with TorchScript)

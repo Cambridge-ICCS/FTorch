@@ -144,6 +144,15 @@ EXPORT_C torch_tensor_t torch_tensor_subtract(const torch_tensor_t tensor1,
 EXPORT_C torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
                                               const torch_tensor_t tensor2);
 
+/**
+ * Overloads the division operator for two Torch Tensors
+ * @param first Tensor to be divided
+ * @param second Tensor to be divided
+ * @return quotient of the Tensors
+ */
+EXPORT_C torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
+                                            const torch_tensor_t tensor2);
+
 
 // =====================================================================================
 // Module API
