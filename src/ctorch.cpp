@@ -191,6 +191,38 @@ void torch_tensor_delete(torch_tensor_t tensor)
   delete t;
 }
 
+torch_tensor_t torch_tensor_assign(const torch_tensor_t input)
+{
+    auto in = reinterpret_cast<torch::Tensor* const>(input);
+    torch::AutoGradMode enable_grad(in->requires_grad());
+    torch::Tensor* output = nullptr;
+    output = new torch::Tensor;
+    *output = in->detach().clone();
+    return output;
+}
+
+torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
+                                const torch_tensor_t tensor2)
+{
+    auto t1 = reinterpret_cast<torch::Tensor* const>(tensor1);
+    auto t2 = reinterpret_cast<torch::Tensor* const>(tensor2);
+    torch::Tensor* output = nullptr;
+    output = new torch::Tensor;
+    *output = *t1 + *t2;
+    return output;
+}
+
+torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
+                                     const torch_tensor_t tensor2)
+{
+    auto t1 = reinterpret_cast<torch::Tensor* const>(tensor1);
+    auto t2 = reinterpret_cast<torch::Tensor* const>(tensor2);
+    torch::Tensor* output = nullptr;
+    output = new torch::Tensor;
+    *output = *t1 * *t2;
+    return output;
+}
+
 torch_jit_script_module_t torch_jit_load(const char* filename,
                                          const torch_device_t device_type = torch_kCPU,
                                          const int device_index = -1,

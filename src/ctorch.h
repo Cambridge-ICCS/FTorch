@@ -110,6 +110,31 @@ EXPORT_C int torch_tensor_get_device_index(const torch_tensor_t tensor);
  */
 EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
 
+/**
+ * Overloads the assignment operator for Torch Tensor
+ * @param input Tensor
+ * @return copy of input Tensor
+ */
+EXPORT_C torch_tensor_t torch_tensor_assign(const torch_tensor_t input);
+
+/**
+ * Overloads the addition operator for two Torch Tensors
+ * @param first Tensor to be added
+ * @param second Tensor to be added
+ * @return sum of the Tensors
+ */
+EXPORT_C torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
+                                         const torch_tensor_t tensor2);
+
+/**
+ * Overloads the multiplication operator for two Torch Tensors
+ * @param first Tensor to be multiplied
+ * @param second Tensor to be multiplied
+ * @return product of the Tensors
+ */
+EXPORT_C torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
+                                              const torch_tensor_t tensor2);
+
 
 // =====================================================================================
 // Module API
