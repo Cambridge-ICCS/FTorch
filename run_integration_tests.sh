@@ -12,7 +12,11 @@
 set -eu
 
 CTEST_ARGS=$@
-EXAMPLES="1_SimpleNet 2_ResNet18"
+EXAMPLES="
+  1_SimpleNet
+  2_ResNet18
+  5_Autograd
+"
 BUILD_DIR=src/build
 
 for EXAMPLE in ${EXAMPLES}
