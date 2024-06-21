@@ -76,9 +76,9 @@ contains
       call load_data(filename, tensor_length, in_data)
 
       ! Create input/output tensors from the above arrays
-      in_tensors(1) = torch_tensor_from_array(in_data, in_layout, torch_kCPU)
+      call torch_tensor_from_array(in_tensors(1), in_data, in_layout, torch_kCPU)
 
-      out_tensors(1) = torch_tensor_from_array(out_data, out_layout, torch_kCPU)
+      call torch_tensor_from_array(out_tensor, out_data, out_layout, torch_kCPU)
 
       ! Load ML model (edit this line to use different models)
       model = torch_module_load(args(1))
