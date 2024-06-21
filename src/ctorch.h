@@ -145,6 +145,15 @@ EXPORT_C torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
                                               const torch_tensor_t tensor2);
 
 /**
+ * Overloads the premultiplication operator for a scalar and a Torch Tensor
+ * @param scalar to multiply by
+ * @param Tensor to be multiplied
+ * @return product of the scalar and Tensor
+ */
+EXPORT_C torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
+                                                 const torch_tensor_t tensor);
+
+/**
  * Overloads the division operator for two Torch Tensors
  * @param first Tensor to be divided
  * @param second Tensor to be divided

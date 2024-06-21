@@ -33,6 +33,14 @@ program example
   print *, "b ="
   call torch_tensor_print(b)
   ! ---
+  print *, "Q = a - b ="
+  Q = a - b
+  call torch_tensor_print(Q)
+  print *, "a ="
+  call torch_tensor_print(a)
+  print *, "b ="
+  call torch_tensor_print(b)
+  ! ---
   print *, "Q = a * b ="
   Q = a * b
   call torch_tensor_print(Q)
@@ -41,13 +49,11 @@ program example
   print *, "b ="
   call torch_tensor_print(b)
   ! ---
-  print *, "Q = a - b ="
-  Q = a - b
+  print *, "Q = 3 * a ="
+  Q = 3 * a
   call torch_tensor_print(Q)
   print *, "a ="
   call torch_tensor_print(a)
-  print *, "b ="
-  call torch_tensor_print(b)
   ! ---
   print *, "Q = a / b ="
   Q = a / b

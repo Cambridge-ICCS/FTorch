@@ -108,6 +108,12 @@ module ftorch
 
   interface operator (*)
     module procedure torch_tensor_multiply
+    module procedure torch_tensor_premultiply_int8
+    module procedure torch_tensor_premultiply_int16
+    module procedure torch_tensor_premultiply_int32
+    module procedure torch_tensor_premultiply_int64
+    module procedure torch_tensor_premultiply_real32
+    module procedure torch_tensor_premultiply_real64
   end interface
 
   interface operator (/)
@@ -383,6 +389,126 @@ contains
 
     output%p = torch_tensor_multiply_c(tensor1%p, tensor2%p)
   end function torch_tensor_multiply
+
+  !> Overloads multiplication operator for a scalar of type int8 and a tensor.
+  function torch_tensor_premultiply_int8(scalar, tensor) result(output)
+    integer(kind=int8), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int8
+        integer(kind=int8), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_int8
+
+  !> Overloads multiplication operator for a scalar of type int16 and a tensor.
+  function torch_tensor_premultiply_int16(scalar, tensor) result(output)
+    integer(kind=int16), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int16
+        integer(kind=int16), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_int16
+
+  !> Overloads multiplication operator for a scalar of type int32 and a tensor.
+  function torch_tensor_premultiply_int32(scalar, tensor) result(output)
+    integer(kind=int32), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int32
+        integer(kind=int32), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_int32
+
+  !> Overloads multiplication operator for a scalar of type int64 and a tensor.
+  function torch_tensor_premultiply_int64(scalar, tensor) result(output)
+    integer(kind=int64), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int64
+        integer(kind=int64), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_int64
+
+  !> Overloads multiplication operator for a scalar of type real32 and a tensor.
+  function torch_tensor_premultiply_real32(scalar, tensor) result(output)
+    real(kind=real32), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : real32
+        real(kind=real32), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_real32
+
+  !> Overloads multiplication operator for a scalar of type real64 and a tensor.
+  function torch_tensor_premultiply_real64(scalar, tensor) result(output)
+    real(kind=real64), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : real64
+        real(kind=real64), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_real64
 
   !> Overloads division operator for two tensors.
   function torch_tensor_divide(tensor1, tensor2) result(output)

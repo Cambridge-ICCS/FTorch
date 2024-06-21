@@ -106,6 +106,9 @@ module ftorch
 
   interface operator (*)
     module procedure torch_tensor_multiply
+    #:for PREC in PRECISIONS
+    module procedure torch_tensor_premultiply_${PREC}$
+    #:endfor
   end interface
 
   interface operator (/)
@@ -379,6 +382,28 @@ contains
     output%p = torch_tensor_multiply_c(tensor1%p, tensor2%p)
   end function torch_tensor_multiply
 
+  #:for PREC in PRECISIONS
+  !> Overloads multiplication operator for a scalar of type ${PREC}$ and a tensor.
+  function torch_tensor_premultiply_${PREC}$(scalar, tensor) result(output)
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_${PREC}$
+
+  #:endfor
   !> Overloads division operator for two tensors.
   function torch_tensor_divide(tensor1, tensor2) result(output)
     type(torch_tensor), intent(in) :: tensor1
