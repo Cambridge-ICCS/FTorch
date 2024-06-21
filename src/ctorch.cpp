@@ -212,6 +212,17 @@ torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
     return output;
 }
 
+torch_tensor_t torch_tensor_subtract(const torch_tensor_t tensor1,
+                                     const torch_tensor_t tensor2)
+{
+    auto t1 = reinterpret_cast<torch::Tensor* const>(tensor1);
+    auto t2 = reinterpret_cast<torch::Tensor* const>(tensor2);
+    torch::Tensor* output = nullptr;
+    output = new torch::Tensor;
+    *output = *t1 - *t2;
+    return output;
+}
+
 torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
                                      const torch_tensor_t tensor2)
 {

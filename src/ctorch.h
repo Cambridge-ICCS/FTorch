@@ -127,6 +127,15 @@ EXPORT_C torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
                                          const torch_tensor_t tensor2);
 
 /**
+ * Overloads the subtraction operator for two Torch Tensors
+ * @param first Tensor to be subtracted
+ * @param second Tensor to be subtracted
+ * @return difference of the Tensors
+ */
+EXPORT_C torch_tensor_t torch_tensor_subtract(const torch_tensor_t tensor1,
+                                              const torch_tensor_t tensor2);
+
+/**
  * Overloads the multiplication operator for two Torch Tensors
  * @param first Tensor to be multiplied
  * @param second Tensor to be multiplied
