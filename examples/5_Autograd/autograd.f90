@@ -56,6 +56,12 @@ program example
   call torch_tensor_print(a)
   print *, "b ="
   call torch_tensor_print(b)
+  ! ---
+  print *, "Q = a ** 2 ="
+  Q = a ** 2
+  call torch_tensor_print(Q)
+  print *, "a ="
+  call torch_tensor_print(a)
 
   ! TODO: Backward
   !   Requires API extension

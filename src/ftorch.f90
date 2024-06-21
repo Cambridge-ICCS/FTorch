@@ -114,6 +114,15 @@ module ftorch
     module procedure torch_tensor_divide
   end interface
 
+  interface operator (**)
+    module procedure torch_tensor_power_int8
+    module procedure torch_tensor_power_int16
+    module procedure torch_tensor_power_int32
+    module procedure torch_tensor_power_int64
+    module procedure torch_tensor_power_real32
+    module procedure torch_tensor_power_real64
+  end interface
+
 contains
 
   !> Returns a tensor filled with the scalar value 0.
@@ -393,6 +402,127 @@ contains
 
     output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
   end function torch_tensor_divide
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int8`
+  function torch_tensor_power_int8(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int8), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int8
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=int8), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_int8
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int16`
+  function torch_tensor_power_int16(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int16), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int16
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=int16), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_int16
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int32`
+  function torch_tensor_power_int32(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int32), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int32
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=int32), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_int32
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int64`
+  function torch_tensor_power_int64(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int64), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int64
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=int64), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_int64
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `real32`
+  function torch_tensor_power_real32(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real32), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : real32
+        type(c_ptr), value, intent(in) :: tensor_c
+        real(kind=real32), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_real32
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `real64`
+  function torch_tensor_power_real64(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real64), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : real64
+        type(c_ptr), value, intent(in) :: tensor_c
+        real(kind=real64), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_real64
+
 
   ! Torch Module API
   !> Loads a TorchScript module (pre-trained PyTorch model saved with TorchScript)

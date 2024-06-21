@@ -112,6 +112,12 @@ module ftorch
     module procedure torch_tensor_divide
   end interface
 
+  interface operator (**)
+    #:for PREC in PRECISIONS
+    module procedure torch_tensor_power_${PREC}$
+    #:endfor
+  end interface
+
 contains
 
   !> Returns a tensor filled with the scalar value 0.
@@ -391,6 +397,29 @@ contains
 
     output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
   end function torch_tensor_divide
+
+  #:for PREC in PRECISIONS
+  !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
+  function torch_tensor_power_${PREC}$(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        type(c_ptr), value, intent(in) :: tensor_c
+        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_${PREC}$
+
+  #:endfor
 
   ! Torch Module API
   !> Loads a TorchScript module (pre-trained PyTorch model saved with TorchScript)

@@ -153,6 +153,15 @@ EXPORT_C torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
 EXPORT_C torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
                                             const torch_tensor_t tensor2);
 
+/**
+ * Overloads the exponentiation operator for two Torch Tensors
+ * @param Tensor to take the power of
+ * @param scalar exponent
+ * @return power of the Tensor
+ */
+EXPORT_C torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
+                                           const torch_data_t exponent);
+
 
 // =====================================================================================
 // Module API

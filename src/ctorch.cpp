@@ -245,6 +245,16 @@ torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
     return output;
 }
 
+torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
+                                  const torch_data_t exponent)
+{
+    auto t = reinterpret_cast<torch::Tensor* const>(tensor);
+    torch::Tensor* output = nullptr;
+    output = new torch::Tensor;
+    *output = pow(*t, exponent);
+    return output;
+}
+
 torch_jit_script_module_t torch_jit_load(const char* filename,
                                          const torch_device_t device_type = torch_kCPU,
                                          const int device_index = -1,
