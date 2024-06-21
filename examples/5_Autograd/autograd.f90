@@ -55,6 +55,12 @@ program example
   print *, "a ="
   call torch_tensor_print(a)
   ! ---
+  print *, "Q = b * 2 ="
+  Q = b * 2
+  call torch_tensor_print(Q)
+  print *, "b ="
+  call torch_tensor_print(b)
+  ! ---
   print *, "Q = a / b ="
   Q = a / b
   call torch_tensor_print(Q)

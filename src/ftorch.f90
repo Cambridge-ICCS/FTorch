@@ -109,11 +109,17 @@ module ftorch
   interface operator (*)
     module procedure torch_tensor_multiply
     module procedure torch_tensor_premultiply_int8
+    module procedure torch_tensor_postmultiply_int8
     module procedure torch_tensor_premultiply_int16
+    module procedure torch_tensor_postmultiply_int16
     module procedure torch_tensor_premultiply_int32
+    module procedure torch_tensor_postmultiply_int32
     module procedure torch_tensor_premultiply_int64
+    module procedure torch_tensor_postmultiply_int64
     module procedure torch_tensor_premultiply_real32
+    module procedure torch_tensor_postmultiply_real32
     module procedure torch_tensor_premultiply_real64
+    module procedure torch_tensor_postmultiply_real64
   end interface
 
   interface operator (/)
@@ -509,6 +515,127 @@ contains
 
     output%p = torch_tensor_premultiply_c(scalar, tensor%p)
   end function torch_tensor_premultiply_real64
+
+
+  !> Overloads multiplication operator for a tensor and a scalar of type int8.
+  function torch_tensor_postmultiply_int8(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int8), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int8
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=int8), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_int8
+
+  !> Overloads multiplication operator for a tensor and a scalar of type int16.
+  function torch_tensor_postmultiply_int16(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int16), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int16
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=int16), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_int16
+
+  !> Overloads multiplication operator for a tensor and a scalar of type int32.
+  function torch_tensor_postmultiply_int32(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int32), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int32
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=int32), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_int32
+
+  !> Overloads multiplication operator for a tensor and a scalar of type int64.
+  function torch_tensor_postmultiply_int64(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int64), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : int64
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=int64), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_int64
+
+  !> Overloads multiplication operator for a tensor and a scalar of type real32.
+  function torch_tensor_postmultiply_real32(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real32), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : real32
+        type(c_ptr), value, intent(in) :: tensor_c
+        real(kind=real32), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_real32
+
+  !> Overloads multiplication operator for a tensor and a scalar of type real64.
+  function torch_tensor_postmultiply_real64(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real64), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : real64
+        type(c_ptr), value, intent(in) :: tensor_c
+        real(kind=real64), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_real64
 
   !> Overloads division operator for two tensors.
   function torch_tensor_divide(tensor1, tensor2) result(output)

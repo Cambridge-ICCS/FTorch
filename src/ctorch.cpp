@@ -245,6 +245,18 @@ torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
     return output;
 }
 
+torch_tensor_t torch_tensor_postmultiply(const torch_tensor_t tensor,
+                                         const torch_data_t scalar)
+                                        
+                                     
+{
+    auto t = reinterpret_cast<torch::Tensor* const>(tensor);
+    torch::Tensor* output = nullptr;
+    output = new torch::Tensor;
+    *output = *t * scalar;
+    return output;
+}
+
 torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
                                    const torch_tensor_t tensor2)
 {
