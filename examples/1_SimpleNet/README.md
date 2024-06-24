@@ -37,6 +37,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Note: On Windows you can do this as follows: 
+```
+cd <location of FTorch Github>\examples\1_SimpleNet
+python3 -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
 You can check that everything is working by running `simplenet.py`:
 ```
 python3 simplenet.py
@@ -67,6 +75,7 @@ At this point we no longer require Python, so can deactivate the virtual environ
 ```
 deactivate
 ```
+Note: The above command also works on Windows to deactivate the virtual environment.
 
 To call the saved SimpleNet model from Fortran we need to compile the `simplenet_infer`
 files.
@@ -78,11 +87,29 @@ cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> -DCMAKE_BUI
 cmake --build .
 ```
 
+Note: on windows you can do this as follows: 
+```
+"C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
+cd cd <location of FTorch Github>\examples\1_SimpleNet
+cmake -Bbuild -G "NMake Makefiles" -DCMAKE_PREFIX_PATH="<path to FTorch installation>\lib" -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER="C:\Program Files (x86)\Intel\oneAPI\compiler\latest\bin\ifx.exe"
+cmake --build build
+cmake --install build
+set PATH="<your path to libtorch>\libtorch";%PATH%
+set PATH="<your path to FTorch installation>\bin";%PATH%
+set PATH="<your path to FTorch Github>\examples\1_SimpleNet\venv";%PATH% 
+```
+
+
 To run the compiled code calling the saved SimpleNet TorchScript from Fortran run the
 executable with an argument of the saved model file:
 ```
 ./simplenet_infer_fortran ../saved_simplenet_model_cpu.pt
 ```
+Note: For Windows:
+```
+simplenet_infer_fortran.exe ..\saved_simplenet_model_cpu.pt
+```
+If you encounter an error, check out issue #124.
 
 This runs the model with the array `[0.0, 1.0, 2.0, 3.0, 4.0]` should produce the output:
 ```
