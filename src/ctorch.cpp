@@ -243,7 +243,6 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     }
   }
   try {
-    // TODO: Avoid data transfers
     auto model_out = model->forward(inputs_vec);
     if (model_out.isTensor()) {
       // Single output models will return a tensor directly.
@@ -251,7 +250,6 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     }
     else if (model_out.isTuple()) {
       // Multiple output models will return a tuple => cast to tensors.
-      // See https://github.com/pytorch/pytorch/issues/15523
       for (int i=0; i<nout; ++i) {
         std::move(*out[i]) = model_out.toTuple()->elements()[i].toTensor();
       }
