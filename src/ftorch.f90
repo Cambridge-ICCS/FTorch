@@ -341,19 +341,19 @@ contains
   end function torch_module_load
 
   !> Performs a forward pass of the module with the input tensors
-  subroutine torch_module_forward(module, input_tensors, n_inputs, output_tensors, n_outputs, requires_grad_opt)
+  subroutine torch_module_forward(module, input_tensors, output_tensors, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int, c_loc
     type(torch_module), intent(in) :: module        !! Module
     type(torch_tensor), intent(in), dimension(:) :: input_tensors  !! Array of Input tensors
     type(torch_tensor), intent(in), dimension(:) :: output_tensors !! Returned output tensors
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-    integer(c_int) ::  n_inputs
-    integer(c_int) ::  n_outputs
     logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     integer :: i
-    type(c_ptr), dimension(n_inputs), target  :: input_ptrs
-    type(c_ptr), dimension(n_outputs), target  :: output_ptrs
+    integer(c_int) ::  n_inputs
+    integer(c_int) ::  n_outputs
+    type(c_ptr), dimension(size(input_tensors)), target  :: input_ptrs
+    type(c_ptr), dimension(size(output_tensors)), target  :: output_ptrs
 
     interface
       subroutine torch_jit_module_forward_c(module, input_tensors, n_inputs, &
@@ -368,6 +368,9 @@ contains
         logical(c_bool), value, intent(in) :: requires_grad
       end subroutine torch_jit_module_forward_c
     end interface
+
+    n_inputs = size(input_tensors)
+    n_outputs = size(output_tensors)
 
     if (.not. present(requires_grad_opt)) then
       requires_grad = .false.
