@@ -26,8 +26,6 @@ contains
 
       real(wp), dimension(:,:,:,:), allocatable, target :: in_data
       real(wp), dimension(:,:), allocatable, target :: out_data
-      integer, parameter :: n_inputs = 1
-      integer, parameter :: n_outputs = 1
 
       integer, parameter :: in_dims = 4
       integer :: in_shape(in_dims) = [1, 3, 224, 224]
@@ -86,8 +84,7 @@ contains
       model = torch_module_load(args(1))
 
       ! Infer
-      call torch_module_forward(model, in_tensors, n_inputs, out_tensors,      &
-                                n_outputs)
+      call torch_module_forward(model, in_tensors, out_tensors)
 
       ! Load categories
       call load_categories(filename_cats, N_cats, categories)

@@ -19,8 +19,6 @@ program inference
    real(wp), dimension(4), target :: in_data2
    real(wp), dimension(4), target :: out_data1
    real(wp), dimension(4), target :: out_data2
-   integer, parameter :: n_inputs = 2
-   integer, parameter :: n_outputs = 2
    integer :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
@@ -50,7 +48,7 @@ program inference
    model = torch_module_load(args(1))
 
    ! Infer
-   call torch_module_forward(model, in_tensors, n_inputs, out_tensors, n_outputs)
+   call torch_module_forward(model, in_tensors, out_tensors)
    write (*,*) out_data1
    write (*,*) out_data2
 

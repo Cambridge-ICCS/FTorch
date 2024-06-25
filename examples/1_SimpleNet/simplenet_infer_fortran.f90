@@ -17,8 +17,6 @@ program inference
    ! Set up Fortran data structures
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
-   integer, parameter :: n_inputs = 1
-   integer, parameter :: n_outputs = 1
    integer :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
@@ -45,7 +43,7 @@ program inference
    model = torch_module_load(args(1))
 
    ! Infer
-   call torch_module_forward(model, in_tensors, n_inputs, out_tensors, n_outputs)
+   call torch_module_forward(model, in_tensors, out_tensors)
    write (*,*) out_data(:)
 
    ! Cleanup
