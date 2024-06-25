@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Load saved SimpleNet to TorchScript and run inference example."""
+"""Load saved MultIONet to TorchScript and run inference example."""
 
 import os
 import sys
@@ -8,12 +8,12 @@ import torch
 
 def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     """
-    Load TorchScript SimpleNet and run inference with example Tensors.
+    Load TorchScript MultiIONet and run inference with example Tensors.
 
     Parameters
     ----------
     saved_model : str
-        location of SimpleNet model saved to Torchscript
+        location of MultiIONet model saved to Torchscript
     device : str
         Torch device to run model on, 'cpu' or 'cuda'
     batch_size : int

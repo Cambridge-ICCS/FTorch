@@ -5,14 +5,14 @@ import torch
 from torch import nn
 
 
-class SimpleNet(nn.Module):
+class MultiIONet(nn.Module):
     """PyTorch module multiplying two input vectors by 2 and 3, respectively."""
 
     def __init__(
         self,
     ) -> None:
         """
-        Initialize the SimpleNet model.
+        Initialize the MultiIONet model.
 
         Consists of a single Linear layer with weights predefined to
         multiply the inputs by 2 and 3, respectively.
@@ -49,7 +49,7 @@ class SimpleNet(nn.Module):
 
 
 if __name__ == "__main__":
-    model = SimpleNet()
+    model = MultiIONet()
     model.eval()
 
     with torch.no_grad():
