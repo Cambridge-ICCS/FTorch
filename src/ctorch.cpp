@@ -218,13 +218,14 @@ torch_jit_script_module_t torch_jit_load(const char* filename,
 
 void torch_jit_module_forward(const torch_jit_script_module_t module,
                               const torch_tensor_t *inputs, const int nin,
-                              torch_tensor_t output, const bool requires_grad=false)
+                              torch_tensor_t *outputs, const int nout,
+                              const bool requires_grad=false)
 {
   torch::AutoGradMode enable_grad(requires_grad);
   // Here we cast the pointers we recieved in to Tensor objects
   auto model = static_cast<torch::jit::script::Module*>(module);
   auto in = reinterpret_cast<torch::Tensor* const*>(inputs);
-  auto out = static_cast<torch::Tensor*>(output);
+  auto out = reinterpret_cast<torch::Tensor**>(outputs);
   // Local IValue for checking we are passed types
   torch::jit::IValue LocalTensor;
   // Generate a vector of IValues (placeholders for various Torch types)
@@ -242,9 +243,22 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     }
   }
   try {
-    // If for some reason the forward method does not return a Tensor it should
-    // raise an error when trying to cast to a Tensor type
-    std::move(*out) = model->forward(inputs_vec).toTensor();
+    auto model_out = model->forward(inputs_vec);
+    if (model_out.isTensor()) {
+      // Single output models will return a tensor directly.
+      std::move(*out[0]) = model_out.toTensor();
+    }
+    else if (model_out.isTuple()) {
+      // Multiple output models will return a tuple => cast to tensors.
+      for (int i=0; i<nout; ++i) {
+        std::move(*out[i]) = model_out.toTuple()->elements()[i].toTensor();
+      }
+    }
+    else {
+      // If for some reason the forward method does not return a Tensor it should
+      // raise an error when trying to cast to a Tensor type
+      std::cerr << "[ERROR]: Model Output is neither Tensor nor Tuple." << std::endl;
+    }
   } catch (const torch::Error& e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     exit(EXIT_FAILURE);

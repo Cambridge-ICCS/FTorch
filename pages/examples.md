@@ -51,15 +51,17 @@ implicit none
 ! Generate an object to hold the Torch model
 type(torch_module) :: model
 
-! Set up array of n_inputs input tensors and the output tensor
-! Note: In this example there is only one input tensor (n_inputs = 1)
+! Set up array of n_inputs input tensors and array of n_outputs output tensors
+! Note: In this example there is only one input tensor (n_inputs = 1) and one
+!       output tensor (n_outputs = 1)
 integer, parameter :: n_inputs = 1
-type(torch_tensor), dimension(n_inputs) :: model_input_arr
-type(torch_tensor) :: model_output
+integer, parameter :: n_outputs = 1
+type(torch_tensor), dimension(n_inputs)  :: model_input_arr
+type(torch_tensor), dimension(n_outputs) :: model_output_arr
 
 ! Set up the model inputs and output as Fortran arrays
-real, dimension(10,10), target  :: input
-real, dimension(5), target   :: output
+real, dimension(10,10), target :: input
+real, dimension(5), target     :: output
 
 ! Set up number of dimensions of input tensor and axis order
 integer, parameter :: in_dims = 2
@@ -77,11 +79,11 @@ input = 1.0
 ! There may well be some reshaping required depending on the 
 ! structure of the model which is not covered here (see examples)
 model_input_arr(1) = torch_tensor_from_array(input, in_layout, torch_kCPU)
-model_output = torch_tensor_from_array(output, out_layout, torch_kCPU)
+model_output_arr(1) = torch_tensor_from_array(output, out_layout, torch_kCPU)
 
 ! Run model and Infer
 ! Again, there may be some reshaping required depending on model design
-call torch_module_forward(model, model_input_arr, n_inputs, model_output)
+call torch_module_forward(model, model_input_arr, model_output_arr)
 
 ! Write out the result of running the model
 write(*,*) output
@@ -89,7 +91,7 @@ write(*,*) output
 ! Clean up
 call torch_module_delete(model)
 call torch_tensor_delete(model_input_arr(1))
-call torch_tensor_delete(model_output)
+call torch_tensor_delete(model_output_arr(1))
 ```
 
 #### 3. Build the code
@@ -178,3 +180,9 @@ See [when to transpose arrays](transposing.html) for more details.
 [This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU)
 builds on the SimpleNet demo and shows how to account for the case of sending different
 data to multiple GPU devices.
+
+#### 4) MultiIO
+
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_MultiIO)
+considers a variant of the SimpleNet demo, which demonstrates how to account for
+multiple input tensors and multiple output tensors.

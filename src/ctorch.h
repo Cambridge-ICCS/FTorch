@@ -134,12 +134,14 @@ EXPORT_C torch_jit_script_module_t torch_jit_load(const char* filename,
  * @param Torch Module containing the model
  * @param vector of Torch Tensors as inputs to the model
  * @param number of input Tensors in the input vector
- * @param the output Tensor from running the model
+ * @param vector of Torch Tensors as outputs from running the model
+ * @param number of output Tensors in the output vector
  * @param whether gradient is required
  */
 EXPORT_C void torch_jit_module_forward(const torch_jit_script_module_t module,
                                        const torch_tensor_t *inputs, const int nin,
-                                       torch_tensor_t output, const bool requires_grad);
+                                       torch_tensor_t *outputs, const int nout,
+                                       const bool requires_grad);
 
 /**
  * Function to delete a Torch Module to clean up

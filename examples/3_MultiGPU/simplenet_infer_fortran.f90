@@ -20,7 +20,6 @@ program inference
    ! Set up Fortran data structures
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
-   integer, parameter :: n_inputs = 1
    integer :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
@@ -63,7 +62,7 @@ program inference
                              device_index=rank)
 
    ! Infer
-   call torch_module_forward(model, in_tensors, n_inputs, out_tensor)
+   call torch_module_forward(model, in_tensors, out_tensor)
 
    ! Print the values computed on each MPI rank.
    write (6, 200) rank, out_data(:)
