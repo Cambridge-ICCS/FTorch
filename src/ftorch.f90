@@ -283,14 +283,14 @@ contains
 
   ! Torch Model API
   !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
-  function torch_model_load(filename, device_type, device_index, requires_grad_opt, is_training_opt) result(model)
+  subroutine torch_model_load(model, filename, device_type, device_index, requires_grad_opt, is_training_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_null_char
-    character(*), intent(in)   :: filename !! Filename of saved TorchScript model
+    type(torch_model), intent(out)       :: model   !! Returned deserialized model
+    character(*), intent(in)             :: filename !! Filename of saved TorchScript model
     integer(c_int), optional, intent(in) :: device_type !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
     logical, optional, intent(in) :: is_training_opt  !! Whether gradients need to be computed for the created tensor
-    type(torch_model)         :: model   !! Returned deserialized model
     integer(c_int) :: device_type_value
     integer(c_int) :: device_index_value
     logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -340,7 +340,7 @@ contains
                                 device_type_value, device_index_value,         &
                                 logical(requires_grad, c_bool),                &
                                 logical(is_training, c_bool))
-  end function torch_model_load
+  end subroutine torch_model_load
 
   !> Performs a forward pass of the model with the input tensors
   subroutine torch_model_forward(model, input_tensors, output_tensors, requires_grad_opt)
