@@ -11,7 +11,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
 endif()
 
-find_package(FTorch)
+find_package(FTorch REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Fortran example
