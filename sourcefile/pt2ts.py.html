@@ -247,7 +247,7 @@
 <a id="ln-108" name="ln-108" href="#ln-108"></a>    <span class="c1"># FPTLIB-TODO</span>
 <a id="ln-109" name="ln-109" href="#ln-109"></a>    <span class="c1"># Run model for dummy inputs</span>
 <a id="ln-110" name="ln-110" href="#ln-110"></a>    <span class="c1"># If something isn&#39;t working This will generate an error</span>
-<a id="ln-111" name="ln-111" href="#ln-111"></a>    <span class="n">trained_model_dummy_output</span> <span class="o">=</span> <span class="n">trained_model</span><span class="p">(</span>
+<a id="ln-111" name="ln-111" href="#ln-111"></a>    <span class="n">trained_model_dummy_outputs</span> <span class="o">=</span> <span class="n">trained_model</span><span class="p">(</span>
 <a id="ln-112" name="ln-112" href="#ln-112"></a>        <span class="n">trained_model_dummy_input_1</span><span class="p">,</span>
 <a id="ln-113" name="ln-113" href="#ln-113"></a>        <span class="n">trained_model_dummy_input_2</span><span class="p">,</span>
 <a id="ln-114" name="ln-114" href="#ln-114"></a>    <span class="p">)</span>
@@ -283,28 +283,33 @@
 <a id="ln-144" name="ln-144" href="#ln-144"></a>    <span class="c1"># Scale inputs as above and, if required, move inputs and mode to GPU</span>
 <a id="ln-145" name="ln-145" href="#ln-145"></a>    <span class="n">trained_model_dummy_input_1</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">trained_model_dummy_input_1</span>
 <a id="ln-146" name="ln-146" href="#ln-146"></a>    <span class="n">trained_model_dummy_input_2</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">trained_model_dummy_input_2</span>
-<a id="ln-147" name="ln-147" href="#ln-147"></a>    <span class="n">trained_model_testing_output</span> <span class="o">=</span> <span class="n">trained_model</span><span class="p">(</span>
+<a id="ln-147" name="ln-147" href="#ln-147"></a>    <span class="n">trained_model_testing_outputs</span> <span class="o">=</span> <span class="n">trained_model</span><span class="p">(</span>
 <a id="ln-148" name="ln-148" href="#ln-148"></a>        <span class="n">trained_model_dummy_input_1</span><span class="p">,</span>
 <a id="ln-149" name="ln-149" href="#ln-149"></a>        <span class="n">trained_model_dummy_input_2</span><span class="p">,</span>
 <a id="ln-150" name="ln-150" href="#ln-150"></a>    <span class="p">)</span>
 <a id="ln-151" name="ln-151" href="#ln-151"></a>    <span class="n">ts_model</span> <span class="o">=</span> <span class="n">load_torchscript</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">saved_ts_filename</span><span class="p">)</span>
-<a id="ln-152" name="ln-152" href="#ln-152"></a>    <span class="n">ts_model_output</span> <span class="o">=</span> <span class="n">ts_model</span><span class="p">(</span>
+<a id="ln-152" name="ln-152" href="#ln-152"></a>    <span class="n">ts_model_outputs</span> <span class="o">=</span> <span class="n">ts_model</span><span class="p">(</span>
 <a id="ln-153" name="ln-153" href="#ln-153"></a>        <span class="n">trained_model_dummy_input_1</span><span class="p">,</span>
 <a id="ln-154" name="ln-154" href="#ln-154"></a>        <span class="n">trained_model_dummy_input_2</span><span class="p">,</span>
 <a id="ln-155" name="ln-155" href="#ln-155"></a>    <span class="p">)</span>
 <a id="ln-156" name="ln-156" href="#ln-156"></a>
-<a id="ln-157" name="ln-157" href="#ln-157"></a>    <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ts_model_output</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">trained_model_testing_output</span><span class="p">)):</span>
-<a id="ln-158" name="ln-158" href="#ln-158"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved TorchScript model working as expected in a basic test.&quot;</span><span class="p">)</span>
-<a id="ln-159" name="ln-159" href="#ln-159"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Users should perform further validation as appropriate.&quot;</span><span class="p">)</span>
-<a id="ln-160" name="ln-160" href="#ln-160"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="ln-161" name="ln-161" href="#ln-161"></a>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-<a id="ln-162" name="ln-162" href="#ln-162"></a>            <span class="s2">&quot;Saved Torchscript model is not performing as expected.</span><span class="se">\n</span><span class="s2">&quot;</span>
-<a id="ln-163" name="ln-163" href="#ln-163"></a>            <span class="s2">&quot;Consider using scripting if you used tracing, or investigate further.&quot;</span>
-<a id="ln-164" name="ln-164" href="#ln-164"></a>        <span class="p">)</span>
-<a id="ln-165" name="ln-165" href="#ln-165"></a>
-<a id="ln-166" name="ln-166" href="#ln-166"></a>    <span class="c1"># Check that the model file is created</span>
-<a id="ln-167" name="ln-167" href="#ln-167"></a>    <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<a id="ln-168" name="ln-168" href="#ln-168"></a>    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">saved_ts_filename</span><span class="p">))</span>
+<a id="ln-157" name="ln-157" href="#ln-157"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ts_model_outputs</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+<a id="ln-158" name="ln-158" href="#ln-158"></a>        <span class="n">ts_model_outputs</span> <span class="o">=</span> <span class="p">(</span><span class="n">ts_model_outputs</span><span class="p">,)</span>
+<a id="ln-159" name="ln-159" href="#ln-159"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trained_model_testing_outputs</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+<a id="ln-160" name="ln-160" href="#ln-160"></a>        <span class="n">trained_model_testing_outputs</span> <span class="o">=</span> <span class="p">(</span><span class="n">trained_model_testing_outputs</span><span class="p">,)</span>
+<a id="ln-161" name="ln-161" href="#ln-161"></a>    <span class="k">for</span> <span class="n">ts_output</span><span class="p">,</span> <span class="n">output</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ts_model_outputs</span><span class="p">,</span> <span class="n">trained_model_testing_outputs</span><span class="p">):</span>
+<a id="ln-162" name="ln-162" href="#ln-162"></a>        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ts_output</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">output</span><span class="p">)):</span>
+<a id="ln-163" name="ln-163" href="#ln-163"></a>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved TorchScript model working as expected in a basic test.&quot;</span><span class="p">)</span>
+<a id="ln-164" name="ln-164" href="#ln-164"></a>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Users should perform further validation as appropriate.&quot;</span><span class="p">)</span>
+<a id="ln-165" name="ln-165" href="#ln-165"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="ln-166" name="ln-166" href="#ln-166"></a>            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+<a id="ln-167" name="ln-167" href="#ln-167"></a>                <span class="s2">&quot;Saved Torchscript model is not performing as expected.</span><span class="se">\n</span><span class="s2">&quot;</span>
+<a id="ln-168" name="ln-168" href="#ln-168"></a>                <span class="s2">&quot;Consider using scripting if you used tracing, or investigate further.&quot;</span>
+<a id="ln-169" name="ln-169" href="#ln-169"></a>            <span class="p">)</span>
+<a id="ln-170" name="ln-170" href="#ln-170"></a>
+<a id="ln-171" name="ln-171" href="#ln-171"></a>    <span class="c1"># Check that the model file is created</span>
+<a id="ln-172" name="ln-172" href="#ln-172"></a>    <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<a id="ln-173" name="ln-173" href="#ln-173"></a>    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">saved_ts_filename</span><span class="p">))</span>
 </pre></div>
 
       </section>

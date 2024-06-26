@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="100.0% of total for modules and submodules.">1133 statements</a>
+                 title="100.0% of total for modules and submodules.">1141 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -6210,7 +6210,7 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_module_forward"></span> <h3>public  subroutine <a href='../proc/torch_module_forward.html'>torch_module_forward</a>(module, input_tensors, n_inputs, output_tensor, requires_grad_opt)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_module_forward"></span> <h3>public  subroutine <a href='../proc/torch_module_forward.html'>torch_module_forward</a>(module, input_tensors, output_tensors, requires_grad_opt)  
 </h3></div>
     <div class="card-body">
           
@@ -6259,30 +6259,15 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-n_inputs"></span>
-              integer(kind=c_int)
-            </td>
-<td></td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>n_inputs</strong></td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-output_tensor"></span>
+              <span class="anchor" id="variable-output_tensors"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              dimension(:)
             </td>
             <td>::</td>
-            <td><strong>output_tensor</strong></td>
+            <td><strong>output_tensors</strong></td>
             <td>
 <p>Returned output tensors</p>
             </td>

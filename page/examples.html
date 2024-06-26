@@ -125,6 +125,7 @@
 <li><a href="#1-simplenet">1) SimpleNet</a></li>
 <li><a href="#2-resnet">2) Resnet</a></li>
 <li><a href="#3-multigpu">3) MultiGPU</a></li>
+<li><a href="#4-multiio">4) MultiIO</a></li>
 </ul>
 </li>
 </ul>
@@ -168,15 +169,17 @@ before writing your own code to fully explore the features.</p>
 <span class="c">! Generate an object to hold the Torch model</span>
 <span class="k">type</span><span class="p">(</span><span class="n">torch_module</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span>
 
-<span class="c">! Set up array of n_inputs input tensors and the output tensor</span>
-<span class="c">! Note: In this example there is only one input tensor (n_inputs = 1)</span>
+<span class="c">! Set up array of n_inputs input tensors and array of n_outputs output tensors</span>
+<span class="c">! Note: In this example there is only one input tensor (n_inputs = 1) and one</span>
+<span class="c">!       output tensor (n_outputs = 1)</span>
 <span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model_input_arr</span>
-<span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model_output</span>
+<span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="n">n_inputs</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">model_input_arr</span>
+<span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="n">n_outputs</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model_output_arr</span>
 
 <span class="c">! Set up the model inputs and output as Fortran arrays</span>
-<span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">input</span>
-<span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">output</span>
+<span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">input</span>
+<span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="n">output</span>
 
 <span class="c">! Set up number of dimensions of input tensor and axis order</span>
 <span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">in_dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
@@ -194,11 +197,11 @@ before writing your own code to fully explore the features.</p>
 <span class="c">! There may well be some reshaping required depending on the </span>
 <span class="c">! structure of the model which is not covered here (see examples)</span>
 <span class="n">model_input_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">in_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
-<span class="n">model_output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">out_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+<span class="n">model_output_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">out_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 
 <span class="c">! Run model and Infer</span>
 <span class="c">! Again, there may be some reshaping required depending on model design</span>
-<span class="k">call </span><span class="n">torch_module_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">model_input_arr</span><span class="p">,</span><span class="w"> </span><span class="n">n_inputs</span><span class="p">,</span><span class="w"> </span><span class="n">model_output</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_module_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">model_input_arr</span><span class="p">,</span><span class="w"> </span><span class="n">model_output_arr</span><span class="p">)</span>
 
 <span class="c">! Write out the result of running the model</span>
 <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">output</span>
@@ -206,7 +209,7 @@ before writing your own code to fully explore the features.</p>
 <span class="c">! Clean up</span>
 <span class="k">call </span><span class="n">torch_module_delete</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="k">call </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">model_input_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-<span class="k">call </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">model_output</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">model_output_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 </code></pre></div>
 
 <h4 id="3-build-the-code">3. Build the code</h4>
@@ -279,6 +282,10 @@ See <a href="transposing.html">when to transpose arrays</a> for more details.</p
 <p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU">This worked example</a>
 builds on the SimpleNet demo and shows how to account for the case of sending different
 data to multiple GPU devices.</p>
+<h4 id="4-multiio">4) MultiIO</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_MultiIO">This worked example</a>
+considers a variant of the SimpleNet demo, which demonstrates how to account for
+multiple input tensors and multiple output tensors.</p>
     </div>
   </div>
       <hr>
