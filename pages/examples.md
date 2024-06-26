@@ -180,3 +180,9 @@ See [when to transpose arrays](transposing.html) for more details.
 [This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU)
 builds on the SimpleNet demo and shows how to account for the case of sending different
 data to multiple GPU devices.
+
+#### 4) MultiIO
+
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_MultiIO)
+considers a variant of the SimpleNet demo, which demonstrates how to account for
+multiple input tensors and multiple output tensors.
