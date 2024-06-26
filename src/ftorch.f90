@@ -15,9 +15,9 @@ module ftorch
   implicit none
 
   !> Type for holding a torch neural net (nn.Module).
-  type torch_module
-    type(c_ptr) :: p = c_null_ptr  !! pointer to the neural net module in memory
-  end type torch_module
+  type torch_model
+    type(c_ptr) :: p = c_null_ptr  !! pointer to the neural net in memory
+  end type torch_model
 
   !> Type for holding a Torch tensor.
   type torch_tensor
@@ -281,23 +281,23 @@ contains
     call torch_tensor_delete_c(tensor%p)
   end subroutine torch_tensor_delete
 
-  ! Torch Module API
-  !> Loads a TorchScript module (pre-trained PyTorch model saved with TorchScript)
-  function torch_module_load(filename, device_type, device_index, requires_grad_opt, is_training_opt) result(module)
+  ! Torch Model API
+  !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
+  function torch_model_load(filename, device_type, device_index, requires_grad_opt, is_training_opt) result(model)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_null_char
-    character(*), intent(in)   :: filename !! Filename of TorchScript module
+    character(*), intent(in)   :: filename !! Filename of saved TorchScript model
     integer(c_int), optional, intent(in) :: device_type !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
     logical, optional, intent(in) :: is_training_opt  !! Whether gradients need to be computed for the created tensor
-    type(torch_module)         :: module   !! Returned deserialized module
+    type(torch_model)         :: model   !! Returned deserialized model
     integer(c_int) :: device_type_value
     integer(c_int) :: device_index_value
     logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
     logical :: is_training  !! Whether the model is being trained, rather than evaluated
 
     interface
-      function torch_jit_load_c(filename, device_type, device_index, requires_grad, is_training) result(module) &
+      function torch_jit_load_c(filename, device_type, device_index, requires_grad, is_training) result(model) &
           bind(c, name = 'torch_jit_load')
         use, intrinsic :: iso_c_binding, only : c_bool, c_char, c_int, c_ptr
         character(c_char), intent(in) :: filename(*)
@@ -305,7 +305,7 @@ contains
         integer(c_int), value, intent(in)    :: device_index
         logical(c_bool), value, intent(in) :: requires_grad
         logical(c_bool), value, intent(in) :: is_training
-        type(c_ptr)                   :: module
+        type(c_ptr)                   :: model
       end function torch_jit_load_c
     end interface
 
@@ -336,16 +336,16 @@ contains
     end if
 
     ! Need to append c_null_char at end of filename
-    module%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char,          &
+    model%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char,          &
                                 device_type_value, device_index_value,         &
                                 logical(requires_grad, c_bool),                &
                                 logical(is_training, c_bool))
-  end function torch_module_load
+  end function torch_model_load
 
-  !> Performs a forward pass of the module with the input tensors
-  subroutine torch_module_forward(module, input_tensors, output_tensors, requires_grad_opt)
+  !> Performs a forward pass of the model with the input tensors
+  subroutine torch_model_forward(model, input_tensors, output_tensors, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int, c_loc
-    type(torch_module), intent(in) :: module        !! Module
+    type(torch_model), intent(in) :: model        !! Model
     type(torch_tensor), intent(in), dimension(:) :: input_tensors  !! Array of Input tensors
     type(torch_tensor), intent(in), dimension(:) :: output_tensors !! Returned output tensors
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
@@ -358,17 +358,17 @@ contains
     type(c_ptr), dimension(size(output_tensors)), target  :: output_ptrs
 
     interface
-      subroutine torch_jit_module_forward_c(module, input_tensors, n_inputs, &
+      subroutine torch_jit_model_forward_c(model, input_tensors, n_inputs, &
           output_tensors, n_outputs, requires_grad) &
           bind(c, name = 'torch_jit_module_forward')
         use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int
-        type(c_ptr), value, intent(in) :: module
+        type(c_ptr), value, intent(in) :: model
         type(c_ptr), value, intent(in) :: input_tensors
         integer(c_int), value, intent(in) :: n_inputs
         type(c_ptr), value, intent(in) :: output_tensors
         integer(c_int), value, intent(in) :: n_outputs
         logical(c_bool), value, intent(in) :: requires_grad
-      end subroutine torch_jit_module_forward_c
+      end subroutine torch_jit_model_forward_c
     end interface
 
     n_inputs = size(input_tensors)
@@ -390,25 +390,25 @@ contains
       output_ptrs(i) = output_tensors(i)%p
     end do
 
-    call torch_jit_module_forward_c(module%p, c_loc(input_ptrs), n_inputs,     &
+    call torch_jit_model_forward_c(model%p, c_loc(input_ptrs), n_inputs,     &
                                     c_loc(output_ptrs), n_outputs,             &
                                     logical(requires_grad, c_bool))
-  end subroutine torch_module_forward
+  end subroutine torch_model_forward
 
-  !> Deallocates a TorchScript module
-  subroutine torch_module_delete(module)
-    type(torch_module), intent(in) :: module     !! Module to deallocate
+  !> Deallocates a TorchScript model
+  subroutine torch_model_delete(model)
+    type(torch_model), intent(in) :: model     !! Torch Model to deallocate
 
     interface
-      subroutine torch_jit_module_delete_c(module) &
+      subroutine torch_jit_model_delete_c(model) &
           bind(c, name = 'torch_jit_module_delete')
         use, intrinsic :: iso_c_binding, only : c_ptr
-        type(c_ptr), value, intent(in) :: module
-      end subroutine torch_jit_module_delete_c
+        type(c_ptr), value, intent(in) :: model
+      end subroutine torch_jit_model_delete_c
     end interface
 
-    call torch_jit_module_delete_c(module%p)
-  end subroutine torch_module_delete
+    call torch_jit_model_delete_c(model%p)
+  end subroutine torch_model_delete
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_1d(tensor, data_in, layout, &
