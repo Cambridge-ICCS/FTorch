@@ -97,17 +97,18 @@ module ftorch
 contains
 
   !> Returns a tensor filled with the scalar value 0.
-  function torch_tensor_zeros(ndims, tensor_shape, dtype, device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, &
+                                device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
-    integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
-    integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
-    integer(c_int), intent(in)     :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    type(torch_tensor), intent(out) :: tensor     !! Returned tensor
+    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
+    integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
+    integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index     !! device index to use for `torch_kCUDA` case
     logical(c_bool), optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-    type(torch_tensor)             :: tensor     !! Returned tensor
-    integer(c_int)                 :: device_index_value  !! device index used
-    logical(c_bool)                :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    integer(c_int)                  :: device_index_value  !! device index used
+    logical(c_bool)                 :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     interface
       function torch_zeros_c(ndims, tensor_shape, dtype, device_type, device_index, requires_grad) result(tensor) &
@@ -139,20 +140,21 @@ contains
     end if
 
     tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device_type, device_index_value, requires_grad)
-  end function torch_tensor_zeros
+  end subroutine torch_tensor_zeros
 
   !> Returns a tensor filled with the scalar value 1.
-  function torch_tensor_ones(ndims, tensor_shape, dtype, device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_ones(tensor, ndims, tensor_shape, dtype, &
+                               device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
-    integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
-    integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
-    integer(c_int), intent(in)     :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    type(torch_tensor), intent(out) :: tensor     !! Returned tensor
+    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
+    integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
+    integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index     !! device index to use for `torch_kCUDA` case
     logical(c_bool), optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-    type(torch_tensor)             :: tensor     !! Returned tensor
-    integer(c_int)                 :: device_index_value  !! device index used
-    logical(c_bool)                :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    integer(c_int)                  :: device_index_value  !! device index used
+    logical(c_bool)                 :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     interface
       function torch_ones_c(ndims, tensor_shape, dtype, device_type, device_index, requires_grad) result(tensor) &
@@ -184,29 +186,29 @@ contains
     end if
 
     tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device_type, device_index_value, requires_grad)
-  end function torch_tensor_ones
+  end subroutine torch_tensor_ones
 
   ! Torch Tensor API
   !| Exposes the given data as a tensor without taking ownership of the original data.
   !  This routine will take an (i, j, k) array and return an (k, j, i) tensor.
-  function torch_tensor_from_blob(data, ndims, tensor_shape, layout, dtype,    &
-                                  device_type, device_index,                   &
-                                  requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_blob(tensor, data, ndims, tensor_shape, layout, dtype, &
+                                    device_type, device_index, &
+                                    requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
-    type(c_ptr), intent(in)        :: data       !! Pointer to data
-    integer(c_int), intent(in)     :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in) :: tensor_shape(*)   !! Shape of the tensor
-    integer(c_int), intent(in)     :: layout(*)  !! Layout for strides for accessing data
-    integer(c_int), intent(in)     :: dtype      !! Data type of the tensor
-    integer(c_int), intent(in)     :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    type(torch_tensor), intent(out) :: tensor     !! Returned tensor
+    type(c_ptr), intent(in)         :: data       !! Pointer to data
+    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
+    integer(c_int), intent(in)      :: layout(*)  !! Layout for strides for accessing data
+    integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
+    integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index     !! device index to use for `torch_kCUDA` case
     logical(c_bool), optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-    type(torch_tensor)             :: tensor     !! Returned tensor
 
-    integer(c_int)                 :: i          !! loop index
-    integer(c_int64_t)             :: strides(ndims) !! Strides for accessing data
-    integer(c_int)                 :: device_index_value  !! device index used
-    logical(c_bool)                :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    integer(c_int)                  :: i          !! loop index
+    integer(c_int64_t)              :: strides(ndims) !! Strides for accessing data
+    integer(c_int)                  :: device_index_value  !! device index used
+    logical(c_bool)                 :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     if (.not. present(requires_grad_opt)) then
       requires_grad = logical(.false., c_bool)
@@ -229,7 +231,7 @@ contains
     endif
 
     tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device_type, device_index_value, requires_grad)
-  end function torch_tensor_from_blob
+  end subroutine torch_tensor_from_blob
 
   !> Prints the contents of a tensor.
   subroutine torch_tensor_print(tensor)
@@ -249,7 +251,7 @@ contains
   !> Determines the device index of a tensor.
   function torch_tensor_get_device_index(tensor) result(device_index)
     use, intrinsic :: iso_c_binding, only : c_int
-    type(torch_tensor), intent(in) :: tensor  !! Input tensor
+    type(torch_tensor), value, intent(in) :: tensor  !! Input tensor
     integer(c_int) :: device_index  !! Device index of tensor
 
     interface
@@ -409,9 +411,13 @@ contains
   end subroutine torch_module_delete
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
-  function torch_tensor_from_array_int8_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int8_1d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int8), intent(in), target :: data_in(:)   !! Input data that tensor will point at
@@ -420,9 +426,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(1)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
@@ -459,12 +462,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int8_1d
+  end subroutine torch_tensor_from_array_int8_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int8`
-  function torch_tensor_from_array_int8_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int8_2d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int8), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
@@ -473,9 +480,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(2)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
@@ -512,12 +516,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int8_2d
+  end subroutine torch_tensor_from_array_int8_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int8`
-  function torch_tensor_from_array_int8_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int8_3d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int8), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
@@ -526,9 +534,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(3)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
@@ -565,12 +570,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int8_3d
+  end subroutine torch_tensor_from_array_int8_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int8`
-  function torch_tensor_from_array_int8_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int8_4d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int8), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
@@ -579,9 +588,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(4)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
@@ -618,12 +624,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int8_4d
+  end subroutine torch_tensor_from_array_int8_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int16`
-  function torch_tensor_from_array_int16_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int16_1d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int16), intent(in), target :: data_in(:)   !! Input data that tensor will point at
@@ -632,9 +642,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(1)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
@@ -671,12 +678,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int16_1d
+  end subroutine torch_tensor_from_array_int16_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int16`
-  function torch_tensor_from_array_int16_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int16_2d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int16), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
@@ -685,9 +696,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(2)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
@@ -724,12 +732,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int16_2d
+  end subroutine torch_tensor_from_array_int16_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int16`
-  function torch_tensor_from_array_int16_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int16_3d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int16), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
@@ -738,9 +750,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(3)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
@@ -777,12 +786,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int16_3d
+  end subroutine torch_tensor_from_array_int16_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int16`
-  function torch_tensor_from_array_int16_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int16_4d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int16), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
@@ -791,9 +804,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(4)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
@@ -830,12 +840,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int16_4d
+  end subroutine torch_tensor_from_array_int16_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int32`
-  function torch_tensor_from_array_int32_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int32_1d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int32), intent(in), target :: data_in(:)   !! Input data that tensor will point at
@@ -844,9 +858,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(1)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
@@ -883,12 +894,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int32_1d
+  end subroutine torch_tensor_from_array_int32_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int32`
-  function torch_tensor_from_array_int32_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int32_2d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int32), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
@@ -897,9 +912,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(2)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
@@ -936,12 +948,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int32_2d
+  end subroutine torch_tensor_from_array_int32_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int32`
-  function torch_tensor_from_array_int32_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int32_3d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int32), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
@@ -950,9 +966,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(3)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
@@ -989,12 +1002,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int32_3d
+  end subroutine torch_tensor_from_array_int32_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int32`
-  function torch_tensor_from_array_int32_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int32_4d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int32), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
@@ -1003,9 +1020,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(4)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
@@ -1042,12 +1056,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int32_4d
+  end subroutine torch_tensor_from_array_int32_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int64`
-  function torch_tensor_from_array_int64_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int64_1d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int64), intent(in), target :: data_in(:)   !! Input data that tensor will point at
@@ -1056,9 +1074,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(1)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
@@ -1095,12 +1110,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int64_1d
+  end subroutine torch_tensor_from_array_int64_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int64`
-  function torch_tensor_from_array_int64_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int64_2d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int64), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
@@ -1109,9 +1128,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(2)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
@@ -1148,12 +1164,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int64_2d
+  end subroutine torch_tensor_from_array_int64_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int64`
-  function torch_tensor_from_array_int64_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int64_3d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int64), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
@@ -1162,9 +1182,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(3)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
@@ -1201,12 +1218,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int64_3d
+  end subroutine torch_tensor_from_array_int64_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int64`
-  function torch_tensor_from_array_int64_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_int64_4d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     integer(kind=int64), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
@@ -1215,9 +1236,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(4)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
@@ -1254,12 +1272,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_int64_4d
+  end subroutine torch_tensor_from_array_int64_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real32`
-  function torch_tensor_from_array_real32_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_real32_1d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     real(kind=real32), intent(in), target :: data_in(:)   !! Input data that tensor will point at
@@ -1268,9 +1290,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(1)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
@@ -1307,12 +1326,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_real32_1d
+  end subroutine torch_tensor_from_array_real32_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real32`
-  function torch_tensor_from_array_real32_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_real32_2d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     real(kind=real32), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
@@ -1321,9 +1344,6 @@ contains
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
 
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
-
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(2)           !! Shape of the tensor
     integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
@@ -1360,12 +1380,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_real32_2d
+  end subroutine torch_tensor_from_array_real32_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real32`
-  function torch_tensor_from_array_real32_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_real32_3d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     real(kind=real32), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
@@ -1373,9 +1397,6 @@ contains
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
 
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(3)           !! Shape of the tensor
@@ -1413,12 +1434,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_real32_3d
+  end subroutine torch_tensor_from_array_real32_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real32`
-  function torch_tensor_from_array_real32_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_real32_4d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     real(kind=real32), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
@@ -1426,9 +1451,6 @@ contains
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
 
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(4)           !! Shape of the tensor
@@ -1466,12 +1488,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_real32_4d
+  end subroutine torch_tensor_from_array_real32_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real64`
-  function torch_tensor_from_array_real64_1d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_real64_1d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     real(kind=real64), intent(in), target :: data_in(:)   !! Input data that tensor will point at
@@ -1479,9 +1505,6 @@ contains
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
 
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(1)           !! Shape of the tensor
@@ -1519,12 +1542,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_real64_1d
+  end subroutine torch_tensor_from_array_real64_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real64`
-  function torch_tensor_from_array_real64_2d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_real64_2d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     real(kind=real64), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
@@ -1532,9 +1559,6 @@ contains
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
 
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(2)           !! Shape of the tensor
@@ -1572,12 +1596,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_real64_2d
+  end subroutine torch_tensor_from_array_real64_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real64`
-  function torch_tensor_from_array_real64_3d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_real64_3d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     real(kind=real64), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
@@ -1585,9 +1613,6 @@ contains
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
 
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(3)           !! Shape of the tensor
@@ -1625,12 +1650,16 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_real64_3d
+  end subroutine torch_tensor_from_array_real64_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real64`
-  function torch_tensor_from_array_real64_4d(data_in, layout, c_device_type, device_index, requires_grad_opt) result(tensor)
+  subroutine torch_tensor_from_array_real64_4d(tensor, data_in, layout, &
+                                                        c_device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor !! Returned tensor
 
     ! inputs
     real(kind=real64), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
@@ -1638,9 +1667,6 @@ contains
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-
-    ! output tensory
-    type(torch_tensor) :: tensor     !! Returned tensor
 
     ! local data
     integer(c_int64_t)        :: c_tensor_shape(4)           !! Shape of the tensor
@@ -1678,7 +1704,7 @@ contains
                                  device_index_value,                           &
                                  logical(requires_grad, c_bool))
 
-  end function torch_tensor_from_array_real64_4d
+  end subroutine torch_tensor_from_array_real64_4d
 
 
 end module ftorch
