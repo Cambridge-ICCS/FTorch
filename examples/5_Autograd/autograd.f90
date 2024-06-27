@@ -33,6 +33,7 @@ program example
   write (*,*) "a = ", in_data1(:)
   write (*,*) "b = ", in_data2(:)
   Q = 3 * a ** 3 - b ** 2
+  call torch_tensor_print(Q) ! TODO: Temporary (debug)
   write (*,*) "Q = 3 * a ** 3 - b ** 2 =", out_data(:)
 
   ! Check a and b are unchanged by the arithmetic operations
