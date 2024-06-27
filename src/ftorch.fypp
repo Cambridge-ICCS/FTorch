@@ -603,7 +603,7 @@ contains
   #:for RANK in RANKS
   !> Return a Torch tensor pointing to data_in array of rank ${RANK}$ containing data of type `${PREC}$`
   subroutine torch_tensor_from_array_${PREC}$_${RANK}$d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
 

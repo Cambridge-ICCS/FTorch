@@ -908,7 +908,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_1d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -962,7 +962,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_2d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -1016,7 +1016,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_3d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -1070,7 +1070,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_4d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -1124,7 +1124,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_1d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -1178,7 +1178,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_2d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -1232,7 +1232,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_3d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -1286,7 +1286,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_4d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -1340,7 +1340,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_1d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -1394,7 +1394,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_2d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -1448,7 +1448,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_3d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -1502,7 +1502,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_4d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -1556,7 +1556,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_1d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -1610,7 +1610,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_2d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -1664,7 +1664,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_3d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -1718,7 +1718,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_4d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -1772,7 +1772,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_1d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1826,7 +1826,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_2d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1880,7 +1880,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_3d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1934,7 +1934,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_4d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1988,7 +1988,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_1d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -2042,7 +2042,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_2d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -2096,7 +2096,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_3d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -2150,7 +2150,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_4d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad_opt)
+                                                        device_type, device_index, requires_grad_opt)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
