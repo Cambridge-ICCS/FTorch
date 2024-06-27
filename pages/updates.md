@@ -17,20 +17,20 @@ will be avoided. We hope that this is the last time we have such a shift.
 The changes allow us to implement two new features:
 
 #. Multiple output tensors
-   Previously you could pass an array of several input tensors to a torch model, but
+   Previously you could pass an array of several input tensors to a Torch model, but
    only recieve a single output tensor back. Now you can use models that return several
    output tensors by passing an array of output tensors instead.
 #. Preparation for autograd functionality
-   We hope to make it easier to access the autograd features of pytorch from within Fortran.
+   We hope to make it easier to access the autograd features of PyTorch from within Fortran.
    To do this we needed to change how data was assigned from a Fortran array to a Torch tensor.
    This is now done via a subroutine call rather than a function.
 
 
 ## Changes and how to update your code
 
-### torch_tensors are created using a subroutine call, not a function
+### `torch_tensor`s are created using a subroutine call, not a function
 
-Previously you would have created a torch tensor and assigned some fortran data to it as follows:
+Previously you would have created a Torch tensor and assigned some fortran data to it as follows:
 ```fortran
 real, dimension(5), target :: fortran_data
 type(torch_tensor) :: my_tensor
@@ -86,7 +86,7 @@ call torch_model_forward(model, in_tensors, out_tensors)
 ```
 
 
-### outputs now need to be an array of torch_tensors
+### Outputs now need to be an array of `torch_tensor`s
 
 Previously you passed an array of `torch_tensor` types as inputs, and a single `torch_tensor`
 to the forward method:
