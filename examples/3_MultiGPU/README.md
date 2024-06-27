@@ -75,9 +75,10 @@ At this point we no longer require Python, so can deactivate the virtual environ
 deactivate
 ```
 
-To call the saved SimpleNet model from Fortran we need to compiler the `simplnet_infer`
-files. This can be done using the included `CMakeLists.txt` as follows, noting that we
-need to use an MPI-enabled Fortran compiler:
+To call the saved SimpleNet model from Fortran we need to compile the
+`simplenet_infer_fortran.f90` file. This can be done using the included
+`CMakeLists.txt` as follows, noting that we need to use an MPI-enabled Fortran
+compiler:
 ```
 mkdir build
 cd build

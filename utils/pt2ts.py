@@ -108,7 +108,7 @@ if __name__ == "__main__":
     # FPTLIB-TODO
     # Run model for dummy inputs
     # If something isn't working This will generate an error
-    trained_model_dummy_output = trained_model(
+    trained_model_dummy_outputs = trained_model(
         trained_model_dummy_input_1,
         trained_model_dummy_input_2,
     )
@@ -144,24 +144,29 @@ if __name__ == "__main__":
     # Scale inputs as above and, if required, move inputs and mode to GPU
     trained_model_dummy_input_1 = 2.0 * trained_model_dummy_input_1
     trained_model_dummy_input_2 = 2.0 * trained_model_dummy_input_2
-    trained_model_testing_output = trained_model(
+    trained_model_testing_outputs = trained_model(
         trained_model_dummy_input_1,
         trained_model_dummy_input_2,
     )
     ts_model = load_torchscript(filename=saved_ts_filename)
-    ts_model_output = ts_model(
+    ts_model_outputs = ts_model(
         trained_model_dummy_input_1,
         trained_model_dummy_input_2,
     )
 
-    if torch.all(ts_model_output.eq(trained_model_testing_output)):
-        print("Saved TorchScript model working as expected in a basic test.")
-        print("Users should perform further validation as appropriate.")
-    else:
-        raise RuntimeError(
-            "Saved Torchscript model is not performing as expected.\n"
-            "Consider using scripting if you used tracing, or investigate further."
-        )
+    if not isinstance(ts_model_outputs, tuple):
+        ts_model_outputs = (ts_model_outputs,)
+    if not isinstance(trained_model_testing_outputs, tuple):
+        trained_model_testing_outputs = (trained_model_testing_outputs,)
+    for ts_output, output in zip(ts_model_outputs, trained_model_testing_outputs):
+        if torch.all(ts_output.eq(output)):
+            print("Saved TorchScript model working as expected in a basic test.")
+            print("Users should perform further validation as appropriate.")
+        else:
+            raise RuntimeError(
+                "Saved Torchscript model is not performing as expected.\n"
+                "Consider using scripting if you used tracing, or investigate further."
+            )
 
     # Check that the model file is created
     filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]

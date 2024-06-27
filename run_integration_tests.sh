@@ -15,6 +15,7 @@ CTEST_ARGS=$@
 EXAMPLES="
   1_SimpleNet
   2_ResNet18
+  4_MultiIO
   5_Autograd
 "
 BUILD_DIR=src/build

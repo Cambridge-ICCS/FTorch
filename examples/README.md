@@ -13,6 +13,10 @@ This directory contains a number of examples of how to use the library:
 3. MultiGPU
 	- Revisits the SimpleNet example but considering multiple GPUs.
 
+4. MultiIO
+    - Considers a variant of the SimpleNet example which has multiple input
+      tensors and multiple output tensors.
+
 To run the examples as integration tests, use the CMake argument
 ```
 -DCMAKE_BUILD_TESTS=TRUE

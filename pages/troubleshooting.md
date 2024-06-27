@@ -65,12 +65,14 @@ on locating Torch within a virtual environment (venv) for CMake.
 
 ### Why are inputs to torch models an array?
 
-The reason input tensors to [[torch_module_forward(subroutine)]] are contained in an
-array is because it is possible to pass multiple input tensors to the `forward()`
-method of a torch net.<br>
+The reason input and output tensors to [[torch_model_forward(subroutine)]] are
+contained in arrays is because it is possible to pass multiple input tensors to
+the `forward()` method of a torch net, and it is possible for the net to return
+multiple output arrays.<br>
 The nature of Fortran means that it is not possible to set an arbitrary number
-of inputs to the `torch_module_forward` subroutine, so instead we use an single array
-of input tensors which _can_ have an arbitrary length of `n_inputs`.
+of inputs to the `torch_model_forward` subroutine, so instead we use a single
+array of input tensors which _can_ have an arbitrary length. Similarly, a single
+array of output tensors is used.
 
 Note that this does not refer to batching data.
 This should be done in the same way as in Torch; by extending the dimensionality of
