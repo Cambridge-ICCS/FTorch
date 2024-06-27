@@ -23,9 +23,9 @@ program inference
    integer :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
-   type(torch_module) :: model
+   type(torch_model) :: model
    type(torch_tensor), dimension(1) :: in_tensors
-   type(torch_tensor) :: out_tensor
+   type(torch_tensor), dimension(1) :: out_tensors
 
    ! MPI configuration
    integer :: rank, ierr, i
@@ -48,30 +48,30 @@ program inference
    ! Create Torch input tensor from the above array and assign it to the first (and only)
    ! element in the array of input tensors.
    ! We use the torch_kCUDA device type with device index corresponding to the MPI rank.
-   in_tensors(1) = torch_tensor_from_array(in_data, tensor_layout, torch_kCUDA, &
-                                          device_index=rank)
+   call torch_tensor_from_array(in_tensors(1), in_data, tensor_layout, &
+                                torch_kCUDA, device_index=rank)
 
    ! Create Torch output tensor from the above array.
    ! Here we use the torch_kCPU device type since the tensor is for output only
    ! i.e. to be subsequently used by Fortran on CPU.
-   out_tensor = torch_tensor_from_array(out_data, tensor_layout, torch_kCPU)
+   call torch_tensor_from_array(out_tensors(1), out_data, tensor_layout, torch_kCPU)
 
    ! Load ML model. Ensure that the same device type and device index are used
    ! as for the input data.
-   model = torch_module_load(args(1), device_type=torch_kCUDA,                 &
+   call torch_model_load(model, args(1), device_type=torch_kCUDA,                 &
                              device_index=rank)
 
    ! Infer
-   call torch_module_forward(model, in_tensors, out_tensor)
+   call torch_model_forward(model, in_tensors, out_tensors)
 
    ! Print the values computed on each MPI rank.
    write (6, 200) rank, out_data(:)
    200 format("output on rank ", i1,": [", 4(f5.1,","), f5.1,"]")
 
    ! Cleanup
-   call torch_module_delete(model)
+   call torch_model_delete(model)
    call torch_tensor_delete(in_tensors(1))
-   call torch_tensor_delete(out_tensor)
+   call torch_tensor_delete(out_tensors(1))
    call mpi_finalize(ierr)
 
 end program inference

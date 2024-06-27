@@ -20,7 +20,7 @@ contains
       character(len=128), dimension(:), allocatable :: args
 
       ! Set up types of input and output data
-      type(torch_module) :: model
+      type(torch_model) :: model
       type(torch_tensor), dimension(1) :: in_tensors
       type(torch_tensor), dimension(1) :: out_tensors
 
@@ -76,15 +76,15 @@ contains
       call load_data(filename, tensor_length, in_data)
 
       ! Create input/output tensors from the above arrays
-      in_tensors(1) = torch_tensor_from_array(in_data, in_layout, torch_kCPU)
+      call torch_tensor_from_array(in_tensors(1), in_data, in_layout, torch_kCPU)
 
-      out_tensors(1) = torch_tensor_from_array(out_data, out_layout, torch_kCPU)
+      call torch_tensor_from_array(out_tensors(1), out_data, out_layout, torch_kCPU)
 
       ! Load ML model (edit this line to use different models)
-      model = torch_module_load(args(1))
+      call torch_model_load(model, args(1))
 
       ! Infer
-      call torch_module_forward(model, in_tensors, out_tensors)
+      call torch_model_forward(model, in_tensors, out_tensors)
 
       ! Load categories
       call load_categories(filename_cats, N_cats, categories)
@@ -102,7 +102,7 @@ contains
       write (*,*) trim(categories(idx(2))), " (id=", idx(2), "), : probability =", probability
 
       ! Cleanup
-      call torch_module_delete(model)
+      call torch_model_delete(model)
       call torch_tensor_delete(in_tensors(1))
       call torch_tensor_delete(out_tensors(1))
       deallocate(in_data)

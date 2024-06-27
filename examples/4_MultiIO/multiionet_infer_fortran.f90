@@ -23,7 +23,7 @@ program inference
 
    ! Set up Torch data structures
    ! The net, a vector of input tensors (in this case we only have one), and the output tensor
-   type(torch_module) :: model
+   type(torch_model) :: model
    type(torch_tensor), dimension(2) :: in_tensors
    type(torch_tensor), dimension(2) :: out_tensors
 
@@ -39,21 +39,21 @@ program inference
    in_data2(:) = [0.0, -1.0, -2.0, -3.0]
 
    ! Create Torch input/output tensors from the above arrays
-   in_tensors(1) = torch_tensor_from_array(in_data1, tensor_layout, torch_kCPU)
-   in_tensors(2) = torch_tensor_from_array(in_data2, tensor_layout, torch_kCPU)
-   out_tensors(1) = torch_tensor_from_array(out_data1, tensor_layout, torch_kCPU)
-   out_tensors(2) = torch_tensor_from_array(out_data2, tensor_layout, torch_kCPU)
+   call torch_tensor_from_array(in_tensors(1), in_data1, tensor_layout, torch_kCPU)
+   call torch_tensor_from_array(in_tensors(2), in_data2, tensor_layout, torch_kCPU)
+   call torch_tensor_from_array(out_tensors(1), out_data1, tensor_layout, torch_kCPU)
+   call torch_tensor_from_array(out_tensors(2), out_data2, tensor_layout, torch_kCPU)
 
    ! Load ML model
-   model = torch_module_load(args(1))
+   call torch_model_load(model, args(1))
 
    ! Infer
-   call torch_module_forward(model, in_tensors, out_tensors)
+   call torch_model_forward(model, in_tensors, out_tensors)
    write (*,*) out_data1
    write (*,*) out_data2
 
    ! Cleanup
-   call torch_module_delete(model)
+   call torch_model_delete(model)
    call torch_tensor_delete(in_tensors(1))
    call torch_tensor_delete(in_tensors(2))
    call torch_tensor_delete(out_tensors(1))

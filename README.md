@@ -38,15 +38,15 @@ examples for performing coupling.
 ```fortran
 use ftorch
 ...
-type(torch_module) :: model
-type(torch_tensor), dimension(n_inputs) :: model_inputs_arr
-type(torch_tensor) :: model_output
+type(torch_model) :: model
+type(torch_tensor), dimension(n_inputs)  :: model_inputs_arr
+type(torch_tensor), dimension(n_outputs) :: model_output_arr
 ...
-model = torch_module_load("/my/saved/TorchScript/model.pt")
-model_inputs_arr(1) = torch_tensor_from_array(input_fortran, in_layout, torch_kCPU)
-model_output = torch_tensor_from_array(output_fortran, out_layout, torch_kCPU)
+call torch_model_load(model, "/my/saved/TorchScript/model.pt")
+call torch_tensor_from_array(model_inputs_arr(1), input_fortran, in_layout, torch_kCPU)
+call torch_tensor_from_array(model_output_arr(1), output_fortran, out_layout, torch_kCPU)
 
-call torch_module_forward(model, model_input_arr, n_inputs, model_output)
+call torch_model_forward(model, model_input_arr, model_output_arr)
 ```
 
 The following presentations provide an introduction and overview of _FTorch_:

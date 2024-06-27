@@ -49,7 +49,7 @@ use ftorch
 implicit none
 
 ! Generate an object to hold the Torch model
-type(torch_module) :: model
+type(torch_model) :: model
 
 ! Set up array of n_inputs input tensors and array of n_outputs output tensors
 ! Note: In this example there is only one input tensor (n_inputs = 1) and one
@@ -70,7 +70,7 @@ integer, parameter :: out_dims = 1
 integer :: out_layout(out_dims) = [1]
 
 ! Initialise the Torch model to be used
-model = torch_module_load("/path/to/saved/model.pt")
+torch_model_load(model, "/path/to/saved/model.pt")
 
 ! Initialise the inputs as Fortran array of ones
 input = 1.0
@@ -78,18 +78,18 @@ input = 1.0
 ! Wrap Fortran data as no-copy Torch Tensors
 ! There may well be some reshaping required depending on the 
 ! structure of the model which is not covered here (see examples)
-model_input_arr(1) = torch_tensor_from_array(input, in_layout, torch_kCPU)
-model_output_arr(1) = torch_tensor_from_array(output, out_layout, torch_kCPU)
+call torch_tensor_from_array(model_input_arr(1), input, in_layout, torch_kCPU)
+call torch_tensor_from_array(model_output_arr(1), output, out_layout, torch_kCPU)
 
-! Run model and Infer
+! Run model forward method and Infer
 ! Again, there may be some reshaping required depending on model design
-call torch_module_forward(model, model_input_arr, model_output_arr)
+call torch_model_forward(model, model_input_arr, model_output_arr)
 
 ! Write out the result of running the model
 write(*,*) output
 
 ! Clean up
-call torch_module_delete(model)
+call torch_model_delete(model)
 call torch_tensor_delete(model_input_arr(1))
 call torch_tensor_delete(model_output_arr(1))
 ```
