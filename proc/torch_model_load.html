@@ -10,7 +10,7 @@
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
-    <title>torch_module_load &ndash; FTorch</title>
+    <title>torch_model_load &ndash; FTorch</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -63,8 +63,8 @@
 
     <div class="container">
   <div class="row">
-    <h1>torch_module_load
-      <small>Function</small>
+    <h1>torch_model_load
+      <small>Subroutine</small>
       
     </h1>
       <div class="container p-2 mb-4 bg-light border rounded-3">
@@ -89,7 +89,7 @@
           <ol class="breadcrumb justify-content-end mb-0">
                 <li class="breadcrumb-item"><a href='../sourcefile/ftorch.f90.html'>ftorch.f90</a></li>
                 <li class="breadcrumb-item"><a href='../module/ftorch.html'>ftorch</a></li>
-            <li class="breadcrumb-item active" aria-current="page">torch_module_load</li>
+            <li class="breadcrumb-item active" aria-current="page">torch_model_load</li>
           </ol>
         </nav>
       </div>
@@ -130,7 +130,7 @@
     <div class="card card-primary">
       <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
-        <a class="list-group-item" href="../proc/torch_module_load.html#src">torch_module_load</a>
+        <a class="list-group-item" href="../proc/torch_model_load.html#src">torch_model_load</a>
       </div>
     </div>
 
@@ -140,7 +140,7 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public  function torch_module_load(filename, device_type, device_index, requires_grad_opt, is_training_opt) result(module)  
+    <h2>public  subroutine torch_model_load(model, filename, device_type, device_index, requires_grad_opt, is_training_opt)  
 </h2>
         <div class="card mb-4">
       <h3 class="card-header card-title bg-light">Uses</h3>
@@ -156,7 +156,7 @@
     </div>
 
 
-    <p>Loads a TorchScript module (pre-trained PyTorch model saved with TorchScript)</p>
+    <p>Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)</p>
 
 
     <h3>Arguments</h3>
@@ -172,6 +172,21 @@
     <tbody>
         <tr>
             <td>
+              <span class="anchor" id="variable-model"></span>
+              type(<a href='../type/torch_model.html'>torch_model</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>model</strong></td>
+            <td>
+                <p>Returned deserialized model</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
               <span class="anchor" id="variable-filename"></span>
               character(len=*),
             </td>
@@ -182,7 +197,7 @@
             <td>::</td>
             <td><strong>filename</strong></td>
             <td>
-                <p>Filename of TorchScript module</p>
+                <p>Filename of saved TorchScript model</p>
             </td>
         </tr>
         <tr>
@@ -248,13 +263,6 @@
     </tbody>
   </table>
 
-      <h3>Return Value
-        <small>
-          <span class="anchor" id="variable-module"></span>
-          type(<a href='../type/torch_module.html'>torch_module</a>)
-        </small>
-      </h3>
-      <p>Returned deserialized module</p>
     <br>
 
 
@@ -269,21 +277,21 @@
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">function </span><span class="n">torch_module_load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span><span class="w"> </span><span class="n">requires_grad_opt</span><span class="p">,</span><span class="w"> </span><span class="n">is_training_opt</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="k">module</span><span class="p">)</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_model_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span><span class="w"> </span><span class="n">requires_grad_opt</span><span class="p">,</span><span class="w"> </span><span class="n">is_training_opt</span><span class="p">)</span>
 <span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="nb">c_null_char</span>
-<span class="nb">    </span><span class="kt">character</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="w"> </span><span class="c">!! Filename of TorchScript module</span>
+<span class="nb">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_model</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">       </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span><span class="w">   </span><span class="c">!! Returned deserialized model</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">             </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="w"> </span><span class="c">!! Filename of saved TorchScript model</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_type</span><span class="w"> </span><span class="c">!! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index</span><span class="w"> </span><span class="c">!! device index to use for `torch_kCUDA` case</span>
 <span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad_opt</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
 <span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_training_opt</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
-<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_module</span><span class="p">)</span><span class="w">         </span><span class="kd">::</span><span class="w"> </span><span class="k">module</span><span class="w">   </span><span class="c">!! Returned deserialized module</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_type_value</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index_value</span>
 <span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
 <span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_training</span><span class="w">  </span><span class="c">!! Whether the model is being trained, rather than evaluated</span>
 
 <span class="w">    </span><span class="k">interface</span>
-<span class="k">      function </span><span class="n">torch_jit_load_c</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">,</span><span class="w"> </span><span class="n">is_training</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="k">module</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="k">      function </span><span class="n">torch_jit_load_c</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">,</span><span class="w"> </span><span class="n">is_training</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">          </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;torch_jit_load&#39;</span><span class="p">)</span>
 <span class="w">        </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">,</span><span class="w"> </span><span class="kt">c_char</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="kt">c_ptr</span>
 <span class="kt">        character</span><span class="p">(</span><span class="kt">c_char</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
@@ -291,8 +299,8 @@
 <span class="w">        </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index</span>
 <span class="w">        </span><span class="kt">logical</span><span class="p">(</span><span class="kt">c_bool</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span>
 <span class="w">        </span><span class="kt">logical</span><span class="p">(</span><span class="kt">c_bool</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_training</span>
-<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">)</span><span class="w">                   </span><span class="kd">::</span><span class="w"> </span><span class="k">module</span>
-<span class="k">      end function </span><span class="n">torch_jit_load_c</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">)</span><span class="w">                   </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span>
+<span class="w">      </span><span class="k">end function </span><span class="n">torch_jit_load_c</span>
 <span class="w">    </span><span class="k">end interface</span>
 
 <span class="w">    </span><span class="c">! Process optional arguments</span>
@@ -322,11 +330,11 @@
 <span class="w">    </span><span class="k">end if</span>
 
 <span class="w">    </span><span class="c">! Need to append c_null_char at end of filename</span>
-<span class="w">    </span><span class="k">module</span><span class="p">%</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_jit_load_c</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span><span class="o">//</span><span class="nb">c_null_char</span><span class="p">,</span><span class="w">          </span><span class="p">&amp;</span>
+<span class="w">    </span><span class="n">model</span><span class="p">%</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_jit_load_c</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span><span class="o">//</span><span class="nb">c_null_char</span><span class="p">,</span><span class="w">          </span><span class="p">&amp;</span>
 <span class="w">                                </span><span class="n">device_type_value</span><span class="p">,</span><span class="w"> </span><span class="n">device_index_value</span><span class="p">,</span><span class="w">         </span><span class="p">&amp;</span>
 <span class="w">                                </span><span class="kt">logical</span><span class="p">(</span><span class="n">requires_grad</span><span class="p">,</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">),</span><span class="w">                </span><span class="p">&amp;</span>
 <span class="w">                                </span><span class="kt">logical</span><span class="p">(</span><span class="n">is_training</span><span class="p">,</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">))</span>
-<span class="w">  </span><span class="k">end function </span><span class="n">torch_module_load</span>
+<span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_model_load</span>
 </pre></div>
 
     </section>

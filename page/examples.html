@@ -167,7 +167,7 @@ before writing your own code to fully explore the features.</p>
 <span class="k">implicit none</span>
 
 <span class="c">! Generate an object to hold the Torch model</span>
-<span class="k">type</span><span class="p">(</span><span class="n">torch_module</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span>
+<span class="k">type</span><span class="p">(</span><span class="n">torch_model</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span>
 
 <span class="c">! Set up array of n_inputs input tensors and array of n_outputs output tensors</span>
 <span class="c">! Note: In this example there is only one input tensor (n_inputs = 1) and one</span>
@@ -188,7 +188,7 @@ before writing your own code to fully explore the features.</p>
 <span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">out_layout</span><span class="p">(</span><span class="n">out_dims</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="c">! Initialise the Torch model to be used</span>
-<span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_module_load</span><span class="p">(</span><span class="s2">&quot;/path/to/saved/model.pt&quot;</span><span class="p">)</span>
+<span class="n">torch_model_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/path/to/saved/model.pt&quot;</span><span class="p">)</span>
 
 <span class="c">! Initialise the inputs as Fortran array of ones</span>
 <span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
@@ -196,18 +196,18 @@ before writing your own code to fully explore the features.</p>
 <span class="c">! Wrap Fortran data as no-copy Torch Tensors</span>
 <span class="c">! There may well be some reshaping required depending on the </span>
 <span class="c">! structure of the model which is not covered here (see examples)</span>
-<span class="n">model_input_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">in_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
-<span class="n">model_output_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">out_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">model_input_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">in_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">model_output_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">out_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 
-<span class="c">! Run model and Infer</span>
+<span class="c">! Run model forward method and Infer</span>
 <span class="c">! Again, there may be some reshaping required depending on model design</span>
-<span class="k">call </span><span class="n">torch_module_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">model_input_arr</span><span class="p">,</span><span class="w"> </span><span class="n">model_output_arr</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_model_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">model_input_arr</span><span class="p">,</span><span class="w"> </span><span class="n">model_output_arr</span><span class="p">)</span>
 
 <span class="c">! Write out the result of running the model</span>
 <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">output</span>
 
 <span class="c">! Clean up</span>
-<span class="k">call </span><span class="n">torch_module_delete</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_model_delete</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="k">call </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">model_input_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">call </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">model_output_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 </code></pre></div>

@@ -10,7 +10,7 @@
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
-    <title>torch_module &ndash; FTorch </title>
+    <title>torch_model &ndash; FTorch </title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -63,7 +63,7 @@
 
     <div class="container">
   <div class="row">
-    <h1>torch_module
+    <h1>torch_model
       <small>Derived Type</small>
       
     </h1>
@@ -89,7 +89,7 @@
           <ol class="breadcrumb justify-content-end mb-0">
                 <li class="breadcrumb-item"><a href='../sourcefile/ftorch.f90.html'>ftorch.f90</a></li>
                 <li class="breadcrumb-item"><a href='../module/ftorch.html'>ftorch</a></li>
-            <li class="breadcrumb-item active" aria-current="page">torch_module</li>
+            <li class="breadcrumb-item active" aria-current="page">torch_model</li>
           </ol>
         </nav>
       </div>
@@ -115,7 +115,7 @@
       </a>
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../type/torch_module.html#variable-p">p</a>
+            <a class="list-group-item" href="../type/torch_model.html#variable-p">p</a>
         </div>
       </div>
     </div>
@@ -141,7 +141,7 @@
     <div class="card card-primary">
       <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
-        <a class="list-group-item" href="../type/torch_module.html#src">torch_module</a>
+        <a class="list-group-item" href="../type/torch_model.html#src">torch_model</a>
       </div>
     </div>
 
@@ -152,7 +152,7 @@
     
     <div class="col-md-9" id='text'>
       <h2 id="type-def-statement">
-        type, public :: torch_module</h2>
+        type, public :: torch_model</h2>
     <p>Type for holding a torch neural net (nn.Module).</p>
     <br>
 
@@ -182,7 +182,7 @@
 <td> =</td>
                 <td>c_null_ptr</td>
             <td>
-                <p>pointer to the neural net module in memory</p>
+                <p>pointer to the neural net in memory</p>
             </td>
         </tr>
     </tbody>
@@ -196,9 +196,9 @@
 
     <section>
     <h3><span class="anchor" id="src"></span>Source Code</h3>
-    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">type </span><span class="n">torch_module</span>
-<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">c_null_ptr</span><span class="w">  </span><span class="c">!! pointer to the neural net module in memory</span>
-<span class="w">  </span><span class="k">end type </span><span class="n">torch_module</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">type </span><span class="n">torch_model</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">c_null_ptr</span><span class="w">  </span><span class="c">!! pointer to the neural net in memory</span>
+<span class="w">  </span><span class="k">end type </span><span class="n">torch_model</span>
 </pre></div>
 
     </section>
