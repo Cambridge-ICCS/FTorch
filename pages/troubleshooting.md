@@ -33,7 +33,7 @@ Finally you will need to add `-G "NMake Makefiles"` to the `cmake` command in th
 [regular install instructions](doc/page/cmake.html).<br>
 So the basic command to build from CMD becomes:
 ```
-cmake -G "NMake Makefiles" -DCMAKE_PREFIX_PATH="C:\Users\<path-to-libtorch>\libtorch-win-shared-with-deps-2.1.0+cpu\libtorch" -DCMAKE_BUILD_TYPE=Release ..
+cmake -G "NMake Makefiles" -DCMAKE_PREFIX_PATH="C:\Users\<path-to-libtorch-download>\libtorch" -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
 cmake --install .
 ```
@@ -41,7 +41,7 @@ cmake --install .
 If using powershell the setvars and build commands become:
 ```
 cmd /k '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'
-cmake -G "NMake Makefiles" -DCMAKE_PREFIX_PATH="C:\Users\<path-to-libtorch>\libtorch-win-shared-with-deps-2.1.0+cpu\libtorch" -DCMAKE_BUILD_TYPE=Release ..
+cmake -G "NMake Makefiles" -DCMAKE_PREFIX_PATH="C:\Users\<path-to-libtorch-download>\libtorch" -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
 cmake --install .
 ```
