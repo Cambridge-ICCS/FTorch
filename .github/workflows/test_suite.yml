@@ -18,6 +18,10 @@ jobs:
   test-suite:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        std: ["f95", "f2003", "f2008", "f2018"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -45,7 +49,7 @@ jobs:
           export BUILD_DIR=$(pwd)/src/build
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} -DCMAKE_BUILD_TESTS=TRUE
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} -DCMAKE_BUILD_TESTS=TRUE -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}"
           cmake --build .
           cmake --install .
 
