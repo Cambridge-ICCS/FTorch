@@ -130,8 +130,9 @@ In this case the build process is the same as for a Linux environment.</p>
 <p>It is possible to build using Visual Studio and the Intel Fortran Compiler<br>
 In this case you must install </p>
 <ul>
-<li><a href="https://visualstudio.microsoft.com/">Visual Studio</a></li>
-<li><a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html">Intel OneAPI Base and HPC toolkit</a> (ensure that the Intel Fortran compiler and VS integration is selected).</li>
+<li><a href="https://visualstudio.microsoft.com/">Visual Studio</a> ensuring C++ tools are selected and installed.</li>
+<li><a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html">Intel OneAPI Basetoolkit</a></li>
+<li><a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit.html">Intel OneAPI HPC toolkit</a> ensuring that the Intel Fortran compiler and VS integration is selected.</li>
 </ul>
 <p>You will then need to load the intel Fortran compilers using <code>setvars.bat</code>
 which is found in the Intel compiler install directory (see the 
@@ -144,14 +145,14 @@ From CMD this can be done with:</p>
 <p>Finally you will need to add <code>-G "NMake Makefiles"</code> to the <code>cmake</code> command in the
 <a href="cmake.html">regular install instructions</a>.<br>
 So the basic command to build from CMD becomes:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\melt\Downloads\libtorch-win-shared-with-deps-2.1.0+cpu\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
+<div class="codehilite"><pre><span></span><code><span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\&lt;path-to-libtorch-download&gt;\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">build</span><span class="w"> </span><span class="o">.</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">install</span><span class="w"> </span><span class="o">.</span>
 </code></pre></div>
 
 <p>If using powershell the setvars and build commands become:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">cmd</span><span class="w"> </span><span class="o">/</span><span class="n">k</span><span class="w"> </span><span class="s1">&#39;&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot; &amp;&amp; powershell&#39;</span>
-<span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\melt\Downloads\libtorch-win-shared-with-deps-2.1.0+cpu\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
+<span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\&lt;path-to-libtorch-download&gt;\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">build</span><span class="w"> </span><span class="o">.</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">install</span><span class="w"> </span><span class="o">.</span>
 </code></pre></div>
