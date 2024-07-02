@@ -10,14 +10,14 @@ A variant of the `simplenet.py` Python file from the first example appears here:
 `multiionet.py`. In this case, it defines a simple PyTorch network that takes
 *two* input vectors $a$ and $b$ of length 4, concatenates them, and then
 multiplies the concatenated vector by the Kronecker product of
-$\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}$ with the $2\times2$ identity
-matrix. This has the effect of scaling the first half of the vector by 2 and the
-second half by 3. The output is then split into two components. That is, we have
-$$
-    \begin{bmatrix} c \\ d \end{bmatrix}=
-    \begin{bmatrix} 2I \\ & 3I \end{bmatrix}
-    \begin{bmatrix} a \\ b \end{bmatrix}=
-$$
+$\mathrm{diag}(2,3)$ with the $2\times2$ identity matrix. This has the effect of
+scaling the first half of the vector by 2 and the second half by 3. The output
+is then split into two components. That is, we have
+```math
+    \begin{bmatrix} c \\\ d \end{bmatrix}=
+    \begin{bmatrix} 2I \\\ & 3I \end{bmatrix}
+    \begin{bmatrix} a \\\ b \end{bmatrix}
+```
 where $a$ and $b$ are inputs and $c$ and $d$ are outputs.
 
 The same `pt2ts.py` tool as in the previous examples is used to save the
