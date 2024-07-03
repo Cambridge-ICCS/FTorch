@@ -140,7 +140,7 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public  subroutine torch_model_forward(model, input_tensors, output_tensors, requires_grad_opt)  
+    <h2>public  subroutine torch_model_forward(model, input_tensors, output_tensors, requires_grad)  
 </h2>
         <div class="card mb-4">
       <h3 class="card-header card-title bg-light">Uses</h3>
@@ -217,7 +217,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-requires_grad_opt~5"></span>
+              <span class="anchor" id="variable-requires_grad~9"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -225,7 +225,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>requires_grad_opt</strong></td>
+            <td><strong>requires_grad</strong></td>
             <td>
                 <p>Whether gradients need to be computed for the created tensor</p>
             </td>
@@ -247,13 +247,13 @@
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_model_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">input_tensors</span><span class="p">,</span><span class="w"> </span><span class="n">output_tensors</span><span class="p">,</span><span class="w"> </span><span class="n">requires_grad_opt</span><span class="p">)</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_model_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">input_tensors</span><span class="p">,</span><span class="w"> </span><span class="n">output_tensors</span><span class="p">,</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">)</span>
 <span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">,</span><span class="w"> </span><span class="kt">c_ptr</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span>
 <span class="nb">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_model</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span><span class="w">        </span><span class="c">!! Model</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(:)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">input_tensors</span><span class="w">  </span><span class="c">!! Array of Input tensors</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(:)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">output_tensors</span><span class="w"> </span><span class="c">!! Returned output tensors</span>
-<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad_opt</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
-<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad_value</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
 
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w">  </span><span class="n">n_inputs</span>
@@ -278,10 +278,10 @@
 <span class="k">    </span><span class="n">n_inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">input_tensors</span><span class="p">)</span>
 <span class="w">    </span><span class="n">n_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">output_tensors</span><span class="p">)</span>
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">requires_grad_opt</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
-<span class="k">      </span><span class="n">requires_grad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="n">requires_grad</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      </span><span class="n">requires_grad_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
 <span class="w">    </span><span class="k">else</span>
-<span class="k">      </span><span class="n">requires_grad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">requires_grad_opt</span>
+<span class="k">      </span><span class="n">requires_grad_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">requires_grad</span>
 <span class="w">    </span><span class="k">end if</span>
 
 <span class="w">    </span><span class="c">! Assign array of pointers to the input tensors</span>
@@ -294,9 +294,9 @@
 <span class="w">      </span><span class="n">output_ptrs</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output_tensors</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">p</span>
 <span class="w">    </span><span class="k">end do</span>
 
-<span class="k">    call </span><span class="n">torch_jit_model_forward_c</span><span class="p">(</span><span class="n">model</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span><span class="p">(</span><span class="n">input_ptrs</span><span class="p">),</span><span class="w"> </span><span class="n">n_inputs</span><span class="p">,</span><span class="w">     </span><span class="p">&amp;</span>
-<span class="w">                                    </span><span class="nb">c_loc</span><span class="p">(</span><span class="n">output_ptrs</span><span class="p">),</span><span class="w"> </span><span class="n">n_outputs</span><span class="p">,</span><span class="w">             </span><span class="p">&amp;</span>
-<span class="w">                                    </span><span class="kt">logical</span><span class="p">(</span><span class="n">requires_grad</span><span class="p">,</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">))</span>
+<span class="k">    call </span><span class="n">torch_jit_model_forward_c</span><span class="p">(</span><span class="n">model</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span><span class="p">(</span><span class="n">input_ptrs</span><span class="p">),</span><span class="w"> </span><span class="n">n_inputs</span><span class="p">,</span><span class="w">       </span><span class="p">&amp;</span>
+<span class="w">                                   </span><span class="nb">c_loc</span><span class="p">(</span><span class="n">output_ptrs</span><span class="p">),</span><span class="w"> </span><span class="n">n_outputs</span><span class="p">,</span><span class="w">              </span><span class="p">&amp;</span>
+<span class="w">                                   </span><span class="kt">logical</span><span class="p">(</span><span class="n">requires_grad_value</span><span class="p">,</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">))</span>
 <span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_model_forward</span>
 </pre></div>
 
