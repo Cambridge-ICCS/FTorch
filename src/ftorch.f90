@@ -287,18 +287,18 @@ contains
 
   ! Torch Model API
   !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
-  subroutine torch_model_load(model, filename, device_type, device_index, requires_grad, is_training_opt)
+  subroutine torch_model_load(model, filename, device_type, device_index, requires_grad, is_training)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_null_char
     type(torch_model), intent(out)       :: model   !! Returned deserialized model
     character(*), intent(in)             :: filename !! Filename of saved TorchScript model
     integer(c_int), optional, intent(in) :: device_type !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-    logical, optional, intent(in) :: is_training_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: is_training  !! Whether gradients need to be computed for the created tensor
     integer(c_int) :: device_type_value
     integer(c_int) :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
-    logical :: is_training  !! Whether the model is being trained, rather than evaluated
+    logical :: is_training_value  !! Whether the model is being trained, rather than evaluated
 
     interface
       function torch_jit_load_c(filename, device_type, device_index, requires_grad, is_training) result(model) &
@@ -333,17 +333,17 @@ contains
       requires_grad_value = requires_grad
     end if
 
-    if (.not. present(is_training_opt)) then
-      is_training = .false.
+    if (.not. present(is_training)) then
+      is_training_value = .false.
     else
-      is_training = is_training_opt
+      is_training_value = is_training
     end if
 
     ! Need to append c_null_char at end of filename
     model%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char,           &
                                 device_type_value, device_index_value,         &
                                 logical(requires_grad_value, c_bool),          &
-                                logical(is_training, c_bool))
+                                logical(is_training_value, c_bool))
   end subroutine torch_model_load
 
   !> Performs a forward pass of the model with the input tensors
