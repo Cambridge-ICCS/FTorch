@@ -22,7 +22,8 @@ program inference
    integer :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
-   ! The net, a vector of input tensors (in this case we only have one), and the output tensor
+   ! The net, a vector of input tensors (in this case we only have one), and the
+   ! output tensor
    type(torch_model) :: model
    type(torch_tensor), dimension(2) :: in_tensors
    type(torch_tensor), dimension(2) :: out_tensors
@@ -39,10 +40,14 @@ program inference
    in_data2(:) = [0.0, -1.0, -2.0, -3.0]
 
    ! Create Torch input/output tensors from the above arrays
-   call torch_tensor_from_array(in_tensors(1), in_data1, tensor_layout, torch_kCPU)
-   call torch_tensor_from_array(in_tensors(2), in_data2, tensor_layout, torch_kCPU)
-   call torch_tensor_from_array(out_tensors(1), out_data1, tensor_layout, torch_kCPU)
-   call torch_tensor_from_array(out_tensors(2), out_data2, tensor_layout, torch_kCPU)
+   call torch_tensor_from_array(in_tensors(1), in_data1, tensor_layout,        &
+                                device_type=torch_kCPU)
+   call torch_tensor_from_array(in_tensors(2), in_data2, tensor_layout,        &
+                                device_type=torch_kCPU)
+   call torch_tensor_from_array(out_tensors(1), out_data1, tensor_layout,      &
+                                device_type=torch_kCPU)
+   call torch_tensor_from_array(out_tensors(2), out_data2, tensor_layout,      &
+                                device_type=torch_kCPU)
 
    ! Load ML model
    call torch_model_load(model, args(1))

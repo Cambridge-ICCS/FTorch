@@ -76,12 +76,14 @@ contains
       call load_data(filename, tensor_length, in_data)
 
       ! Create input/output tensors from the above arrays
-      call torch_tensor_from_array(in_tensors(1), in_data, in_layout, torch_kCPU)
+      call torch_tensor_from_array(in_tensors(1), in_data, in_layout,          &
+                                   device_type=torch_kCPU)
 
-      call torch_tensor_from_array(out_tensors(1), out_data, out_layout, torch_kCPU)
+      call torch_tensor_from_array(out_tensors(1), out_data, out_layout,       &
+                                   device_type=torch_kCPU)
 
       ! Load ML model (edit this line to use different models)
-      call torch_model_load(model, args(1))
+      call torch_model_load(model, args(1), device_type=torch_kCPU)
 
       ! Infer
       call torch_model_forward(model, in_tensors, out_tensors)
