@@ -49,10 +49,13 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 
 
 if __name__ == "__main__":
-    saved_model_file = "saved_simplenet_model_cuda.pt"
+    device_type = "cuda"
+    device_index = MPI.COMM_WORLD.rank
+    device_to_run = f"{device_type}:{device_index}"
 
-    rank = MPI.COMM_WORLD.rank
-    device_to_run = f"cuda:{rank}"
+    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
+    filename = f"saved_simplenet_model_{device_type}.pt"
+    saved_model_file = os.path.join(filepath, filename)
 
     batch_size_to_run = 1
 

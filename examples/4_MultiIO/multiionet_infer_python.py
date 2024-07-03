@@ -51,14 +51,16 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 
 
 if __name__ == "__main__":
-    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
-    saved_model_file = os.path.join(filepath, "saved_multiio_model_cpu.pt")
+    device_type = "cpu"
+    # device_type = "cuda"
 
-    device_to_run = "cpu"
+    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
+    filename = f"saved_multiio_model_{device_type}.pt"
+    saved_model_file = os.path.join(filepath, filename)
 
     batch_size_to_run = 1
 
     with torch.no_grad():
-        result = deploy(saved_model_file, device_to_run, batch_size_to_run)
+        result = deploy(saved_model_file, device_type, batch_size_to_run)
 
     print(result)
