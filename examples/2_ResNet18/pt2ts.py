@@ -80,6 +80,18 @@ if __name__ == "__main__":
     # Load model and prepare for saving
     # =====================================================
 
+    # FPTLIB-TODO
+    # Uncomment to save for inference on GPU (rather than CPU):
+    device_type = "cpu"
+    # device_type = "cuda"
+
+    # Check CUDA is supported on the hardware
+    if device_type == "cuda":
+        if not torch.cuda.is_available():
+            raise ValueError("CUDA is not available")
+        device_name = torch.cuda.current_device()
+        print(f"Using CUDA device '{torch.cuda.get_device_name(device_name)}'")
+
     precision = torch.float32
 
     # FPTLIB-TODO
@@ -104,12 +116,12 @@ if __name__ == "__main__":
     # of resolution 244x244 in a batch size of 1.
     trained_model_dummy_input = torch.ones(1, 3, 224, 224)
 
-    # FPTLIB-TODO
-    # Uncomment the following lines to save for inference on GPU (rather than CPU):
-    # device = torch.device('cuda')
-    # trained_model = trained_model.to(device)
-    # trained_model.eval()
-    # trained_model_dummy_input = trained_model_dummy_input.to(device)
+    # Save for inference on GPU (rather than CPU), if requested:
+    if device_type == "cuda":
+        device = torch.device("cuda")
+        trained_model = trained_model.to(device)
+        trained_model.eval()
+        trained_model_dummy_input = trained_model_dummy_input.to(device)
 
     # FPTLIB-TODO
     # Run model for dummy inputs
@@ -124,7 +136,7 @@ if __name__ == "__main__":
 
     # FPTLIB-TODO
     # Set the name of the file you want to save the torchscript model to:
-    saved_ts_filename = "saved_resnet18_model_cpu.pt"
+    saved_ts_filename = f"saved_resnet18_model_{device_type}.pt"
     # A filepath may also be provided. To do this, pass the filepath as an argument to
     # this script when it is run from the command line, i.e., `./pt2ts.py path/to/model`.
 

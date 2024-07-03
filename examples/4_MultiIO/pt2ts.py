@@ -78,6 +78,18 @@ if __name__ == "__main__":
     # =====================================================
 
     # FPTLIB-TODO
+    # Uncomment to save for inference on GPU (rather than CPU):
+    device_type = "cpu"
+    # device_type = "cuda"
+
+    # Check CUDA is supported on the hardware
+    if device_type == "cuda":
+        if not torch.cuda.is_available():
+            raise ValueError("CUDA is not available")
+        device_name = torch.cuda.current_device()
+        print(f"Using CUDA device '{torch.cuda.get_device_name(device_name)}'")
+
+    # FPTLIB-TODO
     # Load a pre-trained PyTorch model
     # Insert code here to load your model as `trained_model`.
     # This example assumes my_ml_model has a method `initialize` to load
@@ -98,12 +110,12 @@ if __name__ == "__main__":
     # This example assumes one input of size (5)
     trained_model_dummy_inputs = (torch.ones(4), torch.ones(4))
 
-    # FPTLIB-TODO
-    # Uncomment the following lines to save for inference on GPU (rather than CPU):
-    # device = torch.device('cuda')
-    # trained_model = trained_model.to(device)
-    # trained_model.eval()
-    # trained_model_dummy_input = trained_model_dummy_input.to(device)
+    # Save for inference on GPU (rather than CPU), if requested:
+    if device_type == "cuda":
+        device = torch.device("cuda")
+        trained_model = trained_model.to(device)
+        trained_model.eval()
+        trained_model_dummy_input = trained_model_dummy_input.to(device)
 
     # FPTLIB-TODO
     # Run model for dummy inputs
@@ -118,7 +130,7 @@ if __name__ == "__main__":
 
     # FPTLIB-TODO
     # Set the name of the file you want to save the torchscript model to:
-    saved_ts_filename = "saved_multiio_model_cpu.pt"
+    saved_ts_filename = f"saved_multiio_model_{device_type}.pt"
     # A filepath may also be provided. To do this, pass the filepath as an argument to
     # this script when it is run from the command line, i.e., `./pt2ts.py path/to/model`.
 
@@ -147,6 +159,11 @@ if __name__ == "__main__":
         2.0 * trained_model_dummy_inputs[0],
         3.0 * trained_model_dummy_inputs[1],
     )
+    if device_type == "cuda":
+        trained_model_dummy_inputs = (
+            trained_model_dummy_inputs[0].to("cuda"),
+            trained_model_dummy_inputs[1].to("cuda"),
+        )
     trained_model_testing_outputs = trained_model(
         *trained_model_dummy_inputs,
     )
