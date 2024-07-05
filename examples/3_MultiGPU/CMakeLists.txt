@@ -16,6 +16,6 @@ find_package(MPI REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Fortran example
-add_executable(simplenet_infer_fortran_gpu simplenet_infer_fortran.f90)
+add_executable(simplenet_infer_fortran_gpu simplenet_infer_fortran_gpu.f90)
 target_link_libraries(simplenet_infer_fortran_gpu PRIVATE FTorch::ftorch)
 target_link_libraries(simplenet_infer_fortran_gpu PRIVATE MPI::MPI_Fortran)
