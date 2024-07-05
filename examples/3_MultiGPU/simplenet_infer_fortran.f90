@@ -70,8 +70,8 @@ program inference
 
    ! Cleanup
    call torch_model_delete(model)
-   call torch_tensor_delete(in_tensors(1))
-   call torch_tensor_delete(out_tensors(1))
+   call torch_tensor_array_delete(in_tensors)
+   call torch_tensor_array_delete(out_tensors)
    call mpi_finalize(ierr)
 
 end program inference
