@@ -90,8 +90,8 @@ write(*,*) output
 
 ! Clean up
 call torch_model_delete(model)
-call torch_tensor_delete(model_input_arr(1))
-call torch_tensor_delete(model_output_arr(1))
+call torch_tensor_array_delete(model_input_arr)
+call torch_tensor_array_delete(model_output_arr)
 ```
 
 #### 3. Build the code
