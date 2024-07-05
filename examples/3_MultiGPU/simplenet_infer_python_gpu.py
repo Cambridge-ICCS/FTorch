@@ -1,6 +1,9 @@
+#!/bin/env python3
 """Load saved SimpleNet to TorchScript and run inference example."""
 
 from mpi4py import MPI
+import os
+import sys
 import torch
 
 
@@ -38,6 +41,7 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         # loaded onto CPU, and then are moved to the devices they were saved
         # from, so we don't need to manually transfer the model to the GPU
         model = torch.jit.load(saved_model)
+        model.to(torch.device(device))
         input_tensor_gpu = input_tensor.to(torch.device(device))
         output_gpu = model.forward(input_tensor_gpu)
         output = output_gpu.to(torch.device("cpu"))
@@ -49,8 +53,15 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 
 
 if __name__ == "__main__":
+
+    # Check CUDA is supported on the hardware
+    if not torch.cuda.is_available():
+        raise ValueError("CUDA is not available")
+    device_name = torch.cuda.current_device()
+    print(f"Using CUDA device '{torch.cuda.get_device_name(device_name)}'")
+
     device_type = "cuda"
-    device_index = MPI.COMM_WORLD.rank
+    device_index = 0
     device_to_run = f"{device_type}:{device_index}"
 
     filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
@@ -62,4 +73,4 @@ if __name__ == "__main__":
     with torch.no_grad():
         result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
-    print(f"{rank}: {result}")
+    print(f"{MPI.COMM_WORLD.rank}: {result}")
