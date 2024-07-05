@@ -436,7 +436,6 @@ contains
     integer(c_int64_t)        :: strides(1)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -463,7 +462,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -491,7 +490,6 @@ contains
     integer(c_int64_t)        :: strides(2)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -518,7 +516,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -546,7 +544,6 @@ contains
     integer(c_int64_t)        :: strides(3)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -573,7 +570,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -601,7 +598,6 @@ contains
     integer(c_int64_t)        :: strides(4)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -628,7 +624,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -656,7 +652,6 @@ contains
     integer(c_int64_t)        :: strides(1)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -683,7 +678,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -711,7 +706,6 @@ contains
     integer(c_int64_t)        :: strides(2)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -738,7 +732,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -766,7 +760,6 @@ contains
     integer(c_int64_t)        :: strides(3)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -793,7 +786,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -821,7 +814,6 @@ contains
     integer(c_int64_t)        :: strides(4)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -848,7 +840,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -876,7 +868,6 @@ contains
     integer(c_int64_t)        :: strides(1)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -903,7 +894,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -931,7 +922,6 @@ contains
     integer(c_int64_t)        :: strides(2)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -958,7 +948,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -986,7 +976,6 @@ contains
     integer(c_int64_t)        :: strides(3)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1013,7 +1002,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1041,7 +1030,6 @@ contains
     integer(c_int64_t)        :: strides(4)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1068,7 +1056,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1096,7 +1084,6 @@ contains
     integer(c_int64_t)        :: strides(1)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1123,7 +1110,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1151,7 +1138,6 @@ contains
     integer(c_int64_t)        :: strides(2)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1178,7 +1164,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1206,7 +1192,6 @@ contains
     integer(c_int64_t)        :: strides(3)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1233,7 +1218,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1261,7 +1246,6 @@ contains
     integer(c_int64_t)        :: strides(4)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1288,7 +1272,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1316,7 +1300,6 @@ contains
     integer(c_int64_t)        :: strides(1)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1343,7 +1326,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1371,7 +1354,6 @@ contains
     integer(c_int64_t)        :: strides(2)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1398,7 +1380,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1426,7 +1408,6 @@ contains
     integer(c_int64_t)        :: strides(3)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1453,7 +1434,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1481,7 +1462,6 @@ contains
     integer(c_int64_t)        :: strides(4)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1508,7 +1488,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1536,7 +1516,6 @@ contains
     integer(c_int64_t)        :: strides(1)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1563,7 +1542,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1591,7 +1570,6 @@ contains
     integer(c_int64_t)        :: strides(2)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1618,7 +1596,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1646,7 +1624,6 @@ contains
     integer(c_int64_t)        :: strides(3)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1673,7 +1650,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -1701,7 +1678,6 @@ contains
     integer(c_int64_t)        :: strides(4)                  !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
-    integer(c_int)            :: device_type_value
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -1728,7 +1704,7 @@ contains
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, device_type_value,          &
+                                 strides, c_dtype, device_type,                &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
