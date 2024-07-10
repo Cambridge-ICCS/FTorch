@@ -74,6 +74,13 @@ module ftorch
     module procedure torch_tensor_from_array_real64_4d
   end interface
 
+  !> Interface for deleting generic torch objects
+  interface torch_delete
+    module procedure torch_model_delete
+    module procedure torch_tensor_delete
+    module procedure torch_tensor_array_delete
+  end interface
+
   interface
     function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, &
                                device_type, device_index, &
@@ -270,9 +277,20 @@ contains
     device_index = torch_tensor_get_device_index_c(tensor%p)
   end function torch_tensor_get_device_index
 
+  !> Deallocates an array of tensors.
+  subroutine torch_tensor_array_delete(tensor_array)
+    type(torch_tensor), dimension(:), intent(inout) :: tensor_array
+    integer :: i
+
+    ! use bounds rather than (1, N) because it's safer
+    do i = lbound(tensor_array, dim=1), ubound(tensor_array, dim=1)
+      call torch_tensor_delete(tensor_array(i))
+    end do
+  end subroutine torch_tensor_array_delete
+
   !> Deallocates a tensor.
   subroutine torch_tensor_delete(tensor)
-    type(torch_tensor), intent(in) :: tensor     !! Input tensor
+    type(torch_tensor), intent(inout) :: tensor
 
     interface
       subroutine torch_tensor_delete_c(tensor) &

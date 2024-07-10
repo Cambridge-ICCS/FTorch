@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="100.0% of total for modules and submodules.">1141 statements</a>
+                 title="100.0% of total for modules and submodules.">1153 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -133,6 +133,7 @@
       </a>
       <div id="inters-0" class="collapse">
         <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/ftorch.html#interface-torch_delete">torch_delete</a>
             <a class="list-group-item" href="../module/ftorch.html#interface-torch_from_blob_c">torch_from_blob_c</a>
             <a class="list-group-item" href="../module/ftorch.html#interface-torch_tensor_from_array">torch_tensor_from_array</a>
         </div>
@@ -175,6 +176,7 @@
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_model_delete">torch_model_delete</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_model_forward">torch_model_forward</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_model_load">torch_model_load</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_array_delete">torch_tensor_array_delete</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_delete">torch_tensor_delete</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_from_array_int16_1d">torch_tensor_from_array_int16_1d</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_from_array_int16_2d">torch_tensor_from_array_int16_2d</a>
@@ -327,6 +329,136 @@
 
         <section>
           <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-torch_delete"></span>
+      <h3>public        interface <a href='../interface/torch_delete.html'>torch_delete</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Interface for deleting generic torch objects</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_model_delete.html'>torch_model_delete</a>(model)  
+
+    </h3>
+    
+  <p>Deallocates a TorchScript model</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-model~5"></span>
+              type(<a href='../type/torch_model.html'>torch_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>model</strong></td>
+            <td>
+<p>Torch Model to deallocate</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_delete.html'>torch_tensor_delete</a>(tensor)  
+
+    </h3>
+    
+  <p>Deallocates a tensor.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~10"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_array_delete.html'>torch_tensor_array_delete</a>(tensor_array)  
+
+    </h3>
+    
+  <p>Deallocates an array of tensors.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor_array"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tensor_array</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
               <div class="card">
     <div class="card-header bg-light codesum">
       <span class="anchor" id="interface-torch_from_blob_c"></span>
@@ -3634,6 +3766,46 @@
   </div>
 
               <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_array_delete"></span> <h3>public  subroutine <a href='../proc/torch_tensor_array_delete.html'>torch_tensor_array_delete</a>(tensor_array)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Deallocates an array of tensors.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor_array"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>tensor_array</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_delete"></span> <h3>public  subroutine <a href='../proc/torch_tensor_delete.html'>torch_tensor_delete</a>(tensor)  
 </h3></div>
     <div class="card-body">
@@ -3656,14 +3828,14 @@
               <span class="anchor" id="variable-tensor~10"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
-<td>intent(in)</td>
+<td>intent(inout)</td>
               <td></td>            <td>
               
             </td>
             <td>::</td>
             <td><strong>tensor</strong></td>
             <td>
-<p>Input tensor</p>
+
             </td>
         </tr>
     </tbody>

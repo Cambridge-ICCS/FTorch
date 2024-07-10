@@ -208,9 +208,9 @@ before writing your own code to fully explore the features.</p>
 <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">output</span>
 
 <span class="c">! Clean up</span>
-<span class="k">call </span><span class="n">torch_model_delete</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="k">call </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">model_input_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-<span class="k">call </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">model_output_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">call </span><span class="n">torch_delete</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_delete</span><span class="p">(</span><span class="n">model_input_arr</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_delete</span><span class="p">(</span><span class="n">model_output_arr</span><span class="p">)</span>
 </code></pre></div>
 
 <h4 id="3-build-the-code">3. Build the code</h4>
