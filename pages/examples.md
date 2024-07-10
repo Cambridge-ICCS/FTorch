@@ -89,9 +89,9 @@ call torch_model_forward(model, model_input_arr, model_output_arr)
 write(*,*) output
 
 ! Clean up
-call torch_model_delete(model)
-call torch_tensor_array_delete(model_input_arr)
-call torch_tensor_array_delete(model_output_arr)
+call torch_delete(model)
+call torch_delete(model_input_arr)
+call torch_delete(model_output_arr)
 ```
 
 #### 3. Build the code
