@@ -102,9 +102,9 @@ contains
       write (*,*) trim(categories(idx(2))), " (id=", idx(2), "), : probability =", probability
 
       ! Cleanup
-      call torch_model_delete(model)
-      call torch_tensor_array_delete(in_tensors)
-      call torch_tensor_array_delete(out_tensors)
+      call torch_delete(model)
+      call torch_delete(in_tensors)
+      call torch_delete(out_tensors)
       deallocate(in_data)
       deallocate(out_data)
       deallocate(probabilities)

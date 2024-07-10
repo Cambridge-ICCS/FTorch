@@ -47,8 +47,8 @@ program inference
    write (*,*) out_data(:)
 
    ! Cleanup
-   call torch_model_delete(model)
-   call torch_tensor_array_delete(in_tensors)
-   call torch_tensor_array_delete(out_tensors)
+   call torch_delete(model)
+   call torch_delete(in_tensors)
+   call torch_delete(out_tensors)
 
 end program inference

@@ -74,6 +74,13 @@ module ftorch
     module procedure torch_tensor_from_array_real64_4d
   end interface
 
+  !> Interface for deleting generic torch objects
+  interface torch_delete
+    module procedure torch_model_delete
+    module procedure torch_tensor_delete
+    module procedure torch_tensor_array_delete
+  end interface
+
   interface
     function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, &
                                device_type, device_index, &
