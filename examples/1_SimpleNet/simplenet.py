@@ -45,14 +45,16 @@ if __name__ == "__main__":
     model = SimpleNet()
     model.eval()
 
-    input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0])
-    with torch.no_grad():
-        output_tensor = model(input_tensor)
+    a = [0.0, 1.0, 2.0, 3.0, 4.0]
 
-    print(output_tensor)
-    if not torch.allclose(output_tensor, 2 * input_tensor):
-        result_error = (
-            f"result:\n{output_tensor}\ndoes not match expected value:\n"
-            f"{2 * input_tensor}"
-        )
-        raise ValueError(result_error)
+    with torch.no_grad():
+        output_tensor = model(torch.Tensor(a))
+        print(output_tensor)
+        if not torch.allclose(output_tensor, 2 * input_tensor):
+            result_error = (
+                f"result:\n{output_tensor}\ndoes not match expected value:\n"
+                f"{2 * input_tensor}"
+            )
+            raise ValueError(result_error)
+
+        print(model(torch.Tensor([a, a])))
