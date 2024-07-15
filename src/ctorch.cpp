@@ -173,6 +173,43 @@ torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
   return tensor;
 }
 
+// FIXME: Why can't we use torch::kUInt8, etc.?
+void* torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype)
+{
+    auto t = reinterpret_cast<torch::Tensor* const>(tensor);
+    void* raw_ptr;
+    switch (dtype) {
+    case torch_kUInt8:
+      raw_ptr = (void*) t->data_ptr<int>();
+      break;
+    case torch_kInt8:
+      raw_ptr = (void*) t->data_ptr<int>();
+      break;
+    case torch_kInt16:
+      raw_ptr = (void*) t->data_ptr<int>();
+      break;
+    case torch_kInt32:
+      raw_ptr = (void*) t->data_ptr<int>();
+      break;
+    case torch_kInt64:
+      raw_ptr = (void*) t->data_ptr<int>();
+      break;
+    case torch_kFloat16:
+      raw_ptr = (void*) t->data_ptr<float>();
+      break;
+    case torch_kFloat32:
+      raw_ptr = (void*) t->data_ptr<float>();
+      break;
+    case torch_kFloat64:
+      raw_ptr = (void*) t->data_ptr<float>();
+      break;
+    default:
+      std::cerr << "[WARNING]: unknown data type" << std::endl;
+      exit(EXIT_FAILURE);
+    }
+    return raw_ptr;
+}
+
 void torch_tensor_print(const torch_tensor_t tensor)
 {
   auto t = reinterpret_cast<torch::Tensor*>(tensor);
