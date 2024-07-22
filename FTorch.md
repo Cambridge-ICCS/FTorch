@@ -65,12 +65,16 @@ Projects using FTorch
 The following projects make use of FTorch.  
 If you use our library in your work please let us know.
 
-* [M2LInES CAM-ML](https://github.com/m2lines/CAM-ML)\
+* [M2LInES CAM-ML](https://github.com/m2lines/CAM-ML) -
   Using FTorch to couple a neural net parameterisation of convection to the CAM
   atmospheric model in CESM.
-* [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/)\
+* [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/) -
   Using FTorch to couple neural net parameterisations of gravity waves to the CAM
-  atmospheric model in CESM.
-* [MiMA Machine Learning](https://github.com/DataWaveProject/MiMA-machine-learning)\
+  atmospheric model.
+* [MiMA Machine Learning](https://github.com/DataWaveProject/MiMA-machine-learning) -
   Using FTorch to couple a neural net parameterisation of gravity waves to the MiMA
   atmospheric model.
+  See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
+* [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization) -
+  Implementing machine learnt convection parameterisations in the ICON atmospheric model.
+  See Heuer et al (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
