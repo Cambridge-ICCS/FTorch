@@ -266,6 +266,9 @@ The following projects make use of this code or derivatives in some way:
 
 * [M2LInES CAM-ML](https://github.com/m2lines/CAM-ML)
 * [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/)
-* [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)
+* [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)\
+  See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
+* [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization)\
+  See Heuer et al (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
 
 Are we missing anyone? Let us know.
