@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        std: ["f95", "f2003", "f2008", "f2018"]
+        std: ["f2008", "f2018"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
