@@ -199,12 +199,15 @@ void* torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype)
       break;
     case torch_kFloat16:
       std::cerr << "[WARNING]: float16 not supported" << std::endl;
+      // NOTE: std::float16_t is available but only with C++23
       exit(EXIT_FAILURE);
     case torch_kFloat32:
       raw_ptr = (void*) t->data_ptr<float>();
+      // NOTE: std::float32_t is available but only with C++23
       break;
     case torch_kFloat64:
       raw_ptr = (void*) t->data_ptr<double>();
+      // NOTE: std::float64_t is available but only with C++23
       break;
     default:
       std::cerr << "[WARNING]: unknown data type" << std::endl;
