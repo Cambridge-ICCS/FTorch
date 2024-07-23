@@ -7,7 +7,8 @@ constexpr auto get_dtype(torch_data_t dtype)
 {
   switch (dtype) {
   case torch_kUInt8:
-    return torch::kUInt8;
+    std::cerr << "[WARNING]: uint8 not supported" << std::endl;
+    exit(EXIT_FAILURE);
   case torch_kInt8:
     return torch::kInt8;
   case torch_kInt16:
@@ -17,7 +18,8 @@ constexpr auto get_dtype(torch_data_t dtype)
   case torch_kInt64:
     return torch::kInt64;
   case torch_kFloat16:
-    return torch::kFloat16;
+    std::cerr << "[WARNING]: float16 not supported" << std::endl;
+    exit(EXIT_FAILURE);
   case torch_kFloat32:
     return torch::kFloat32;
   case torch_kFloat64:
@@ -173,35 +175,34 @@ torch_tensor_t torch_from_blob(void* data, int ndim, const int64_t* shape,
   return tensor;
 }
 
-// FIXME: Why can't we use torch::kUInt8, etc.?
 void* torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype)
 {
     auto t = reinterpret_cast<torch::Tensor* const>(tensor);
     void* raw_ptr;
     switch (dtype) {
     case torch_kUInt8:
-      raw_ptr = (void*) t->data_ptr<int>();
-      break;
+      std::cerr << "[WARNING]: uint8 not supported" << std::endl;
+      exit(EXIT_FAILURE);
     case torch_kInt8:
-      raw_ptr = (void*) t->data_ptr<int>();
+      raw_ptr = (void*) t->data_ptr<int8_t>();
       break;
     case torch_kInt16:
-      raw_ptr = (void*) t->data_ptr<int>();
+      raw_ptr = (void*) t->data_ptr<int16_t>();
       break;
     case torch_kInt32:
-      raw_ptr = (void*) t->data_ptr<int>();
+      raw_ptr = (void*) t->data_ptr<int32_t>();
       break;
     case torch_kInt64:
-      raw_ptr = (void*) t->data_ptr<int>();
+      raw_ptr = (void*) t->data_ptr<int64_t>();
       break;
     case torch_kFloat16:
-      raw_ptr = (void*) t->data_ptr<float>();
-      break;
+      std::cerr << "[WARNING]: float16 not supported" << std::endl;
+      exit(EXIT_FAILURE);
     case torch_kFloat32:
       raw_ptr = (void*) t->data_ptr<float>();
       break;
     case torch_kFloat64:
-      raw_ptr = (void*) t->data_ptr<float>();
+      raw_ptr = (void*) t->data_ptr<double>();
       break;
     default:
       std::cerr << "[WARNING]: unknown data type" << std::endl;
