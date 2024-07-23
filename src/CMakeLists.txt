@@ -12,6 +12,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if(NOT CMAKE_Fortran_FLAGS)
+    set(CMAKE_Fortran_FLAGS "-std=f2008")
+endif()
+
 include(CheckLanguage)
 if(ENABLE_CUDA)
   check_language(CUDA)

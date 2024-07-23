@@ -6,6 +6,15 @@ Installation of FTorch is done by CMake.
 
 This is controlled by the `CMakeLists.txt` file in `src/`.
 
+## Dependencies
+
+To install the library requires the following to be installed on the system:
+
+- CMake >= 3.1
+- libtorch or PyTorch
+- Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
+
+
 ## Basic instructions
 
 To build the library, first clone it from GitHub to your local machine and then run:

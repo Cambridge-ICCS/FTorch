@@ -3,6 +3,7 @@
 **_A library for coupling (Py)Torch machine learning models to Fortran_**
 
 ![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/FTorch)
+![Fortran](https://img.shields.io/badge/Fortran-2008-purple)
 
 This repository contains code, utilities, and examples for directly calling PyTorch ML
 models from Fortran.
@@ -83,7 +84,7 @@ To install the library requires the following to be installed on the system:
 
 * CMake >= 3.1
 * [libtorch](https://pytorch.org/cppdocs/installing.html)<sup>*</sup> or [PyTorch](https://pytorch.org/)
-* Fortran, C++ (must fully support C++17), and C compilers
+* Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 
 <sup>*</sup> _The minimal example provided downloads the CPU-only Linux Nightly binary. [Alternative versions](https://pytorch.org/get-started/locally/) may be required._
 
