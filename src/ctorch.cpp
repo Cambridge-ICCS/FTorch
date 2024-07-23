@@ -7,7 +7,8 @@ constexpr auto get_dtype(torch_data_t dtype)
 {
   switch (dtype) {
   case torch_kUInt8:
-    std::cerr << "[WARNING]: uint8 not supported" << std::endl;
+    std::cerr << "[WARNING]: uint8 not supported in Fortran" << std::endl;
+    // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
     exit(EXIT_FAILURE);
   case torch_kInt8:
     return torch::kInt8;
@@ -18,7 +19,8 @@ constexpr auto get_dtype(torch_data_t dtype)
   case torch_kInt64:
     return torch::kInt64;
   case torch_kFloat16:
-    std::cerr << "[WARNING]: float16 not supported" << std::endl;
+    std::cerr << "[WARNING]: float16 not supported in Fortran" << std::endl;
+    // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
     exit(EXIT_FAILURE);
   case torch_kFloat32:
     return torch::kFloat32;
