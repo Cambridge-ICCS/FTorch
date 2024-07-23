@@ -100,5 +100,8 @@ if(CMAKE_BUILD_TESTS)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/4_MultiIO
     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples
     )
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/5_Autograd
+    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples
+    )
   add_subdirectory(test/examples)
 endif()
