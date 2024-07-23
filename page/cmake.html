@@ -108,6 +108,7 @@
     <div class="col-9" id='text'>
       <div class="toc">
 <ul>
+<li><a href="#dependencies">Dependencies</a></li>
 <li><a href="#basic-instructions">Basic instructions</a></li>
 <li><a href="#cmake-build-options">CMake build options</a><ul>
 <li><a href="#ftorch-library">FTorch Library</a></li>
@@ -119,6 +120,13 @@
 </div>
 <p>Installation of FTorch is done by CMake.</p>
 <p>This is controlled by the <code>CMakeLists.txt</code> file in <code>src/</code>.</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>To install the library requires the following to be installed on the system:</p>
+<ul>
+<li>CMake &gt;= 3.1</li>
+<li>libtorch or PyTorch</li>
+<li>Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers</li>
+</ul>
 <h2 id="basic-instructions">Basic instructions</h2>
 <p>To build the library, first clone it from GitHub to your local machine and then run:</p>
 <div class="codehilite"><pre><span></span><code>cd FTorch/src/
