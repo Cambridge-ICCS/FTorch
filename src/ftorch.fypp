@@ -511,20 +511,36 @@ contains
   #:for PREC in PRECISIONS
   #:for RANK in RANKS
   !> Return the array data associated with a Torch tensor of rank ${RANK}$ and data type `${PREC}$`
-  subroutine torch_tensor_to_array_${PREC}$_${RANK}$d(tensor, data_out)
+  subroutine torch_tensor_to_array_${PREC}$_${RANK}$d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     ${f_type(PREC)}$(kind=${PREC}$), pointer, intent(out) :: data_out${ranksuffix(RANK)}$ !! Pointer to tensor data
-    integer(c_int), parameter :: c_dtype = ${enum_from_prec(PREC)}$ !! Data type
+    integer, optional, intent(in) :: sizes(${RANK}$) !! Number of entries for each rank
 
     ! Local data
-    integer(c_int64_t)        :: c_tensor_shape(${RANK}$)           !! Shape of the tensor
+    integer(c_int), parameter :: c_dtype = ${enum_from_prec(PREC)}$ !! Data type
     type(c_ptr) :: cptr
 
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1)#{for i in range(1,RANK)}#,sizes(${i+1}$)#{endfor}#))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    c_tensor_shape = shape(data_out)
-    call c_f_pointer(cptr, data_out, c_tensor_shape)
+    call c_f_pointer(cptr, data_out, sizes)
+
   end subroutine torch_tensor_to_array_${PREC}$_${RANK}$d
 
   #:endfor
