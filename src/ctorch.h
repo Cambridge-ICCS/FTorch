@@ -92,6 +92,15 @@ EXPORT_C torch_tensor_t torch_from_blob(void* data, int ndim,
                                         const bool requires_grad);
 
 /**
+ * Function to extract a C-array from a Torch Tensor's data.
+ *
+ * @param the Torch Tensor
+ * @param data type of the elements of the Tensor
+ * @return pointer to the Tensor in memory
+ */
+EXPORT_C void* torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype);
+
+/**
  * Function to print out a Torch Tensor
  * @param Torch Tensor to print
  */
