@@ -14,7 +14,7 @@ program example
    ! Set up Fortran data structures
   real(wp), dimension(2), target :: in_data1
   real(wp), dimension(2), target :: in_data2
-  real(wp), dimension(2), target :: out_data
+  real(wp), dimension(:), pointer :: out_data
   integer :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
@@ -33,7 +33,9 @@ program example
   write (*,*) "a = ", in_data1(:)
   write (*,*) "b = ", in_data2(:)
   Q = 3 * a ** 3 - b ** 2
-  call torch_tensor_print(Q) ! TODO: Temporary (debug)
+
+  ! Extract output Fortran array from Q tensor
+  call torch_tensor_to_array(Q, out_data, shape(in_data))
   write (*,*) "Q = 3 * a ** 3 - b ** 2 =", out_data(:)
 
   ! Check a and b are unchanged by the arithmetic operations
@@ -44,6 +46,7 @@ program example
   !   Requires API extension
 
   ! Cleanup
+  nullify(out_data)
   call torch_tensor_delete(a)
   call torch_tensor_delete(b)
   call torch_tensor_delete(Q)

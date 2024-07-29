@@ -9,7 +9,7 @@
 module ftorch
 
   use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, c_int64_t, &
-                                         c_float, c_double, c_char, c_ptr, c_null_ptr
+                                         c_float, c_double, c_char, c_ptr, c_null_ptr, c_f_pointer
   use, intrinsic :: iso_fortran_env, only: int8, int16, int32, int64, real32, real64
 
   implicit none
@@ -74,6 +74,41 @@ module ftorch
     module procedure torch_tensor_from_array_real64_4d
   end interface
 
+  !> Interface for directing `torch_tensor_to_array` to possible input types and ranks
+  interface torch_tensor_to_array
+    module procedure torch_tensor_to_array_int8_1d
+    module procedure torch_tensor_to_array_int8_2d
+    module procedure torch_tensor_to_array_int8_3d
+    module procedure torch_tensor_to_array_int8_4d
+    module procedure torch_tensor_to_array_int16_1d
+    module procedure torch_tensor_to_array_int16_2d
+    module procedure torch_tensor_to_array_int16_3d
+    module procedure torch_tensor_to_array_int16_4d
+    module procedure torch_tensor_to_array_int32_1d
+    module procedure torch_tensor_to_array_int32_2d
+    module procedure torch_tensor_to_array_int32_3d
+    module procedure torch_tensor_to_array_int32_4d
+    module procedure torch_tensor_to_array_int64_1d
+    module procedure torch_tensor_to_array_int64_2d
+    module procedure torch_tensor_to_array_int64_3d
+    module procedure torch_tensor_to_array_int64_4d
+    module procedure torch_tensor_to_array_real32_1d
+    module procedure torch_tensor_to_array_real32_2d
+    module procedure torch_tensor_to_array_real32_3d
+    module procedure torch_tensor_to_array_real32_4d
+    module procedure torch_tensor_to_array_real64_1d
+    module procedure torch_tensor_to_array_real64_2d
+    module procedure torch_tensor_to_array_real64_3d
+    module procedure torch_tensor_to_array_real64_4d
+  end interface
+
+  !> Interface for deleting generic torch objects
+  interface torch_delete
+    module procedure torch_model_delete
+    module procedure torch_tensor_delete
+    module procedure torch_tensor_array_delete
+  end interface
+
   interface
     function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, &
                                device_type, device_index, &
@@ -135,11 +170,21 @@ module ftorch
     module procedure torch_tensor_power_real64
   end interface
 
+  interface
+    function torch_to_blob_c(tensor, dtype) result(data) &
+        bind(c, name = 'torch_to_blob')
+      use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+      type(c_ptr), value, intent(in)    :: tensor
+      integer(c_int), value, intent(in) :: dtype
+      type(c_ptr)                       :: data
+    end function torch_to_blob_c
+  end interface
+
 contains
 
   !> Returns a tensor filled with the scalar value 0.
   subroutine torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, &
-                                device_type, device_index, requires_grad_opt)
+                                device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
@@ -147,9 +192,9 @@ contains
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index     !! device index to use for `torch_kCUDA` case
-    logical(c_bool), optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical(c_bool), optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
     integer(c_int)                  :: device_index_value  !! device index used
-    logical(c_bool)                 :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     interface
       function torch_zeros_c(ndims, tensor_shape, dtype, device_type, device_index, requires_grad) result(tensor) &
@@ -174,18 +219,19 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = logical(.false., c_bool)
+    if (.not. present(requires_grad)) then
+      requires_grad_value = logical(.false., c_bool)
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
-    tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device_type, device_index_value, requires_grad)
+    tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device_type,          &
+                             device_index_value, requires_grad_value)
   end subroutine torch_tensor_zeros
 
   !> Returns a tensor filled with the scalar value 1.
   subroutine torch_tensor_ones(tensor, ndims, tensor_shape, dtype, &
-                               device_type, device_index, requires_grad_opt)
+                               device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
@@ -193,9 +239,9 @@ contains
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index     !! device index to use for `torch_kCUDA` case
-    logical(c_bool), optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical(c_bool), optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
     integer(c_int)                  :: device_index_value  !! device index used
-    logical(c_bool)                 :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     interface
       function torch_ones_c(ndims, tensor_shape, dtype, device_type, device_index, requires_grad) result(tensor) &
@@ -220,13 +266,14 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = logical(.false., c_bool)
+    if (.not. present(requires_grad)) then
+      requires_grad_value = logical(.false., c_bool)
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
-    tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device_type, device_index_value, requires_grad)
+    tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device_type,           &
+                            device_index_value, requires_grad_value)
   end subroutine torch_tensor_ones
 
   ! Torch Tensor API
@@ -234,7 +281,7 @@ contains
   !  This routine will take an (i, j, k) array and return an (k, j, i) tensor.
   subroutine torch_tensor_from_blob(tensor, data, ndims, tensor_shape, layout, dtype, &
                                     device_type, device_index, &
-                                    requires_grad_opt)
+                                    requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     type(c_ptr), intent(in)         :: data       !! Pointer to data
@@ -244,17 +291,17 @@ contains
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index     !! device index to use for `torch_kCUDA` case
-    logical(c_bool), optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical(c_bool), optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     integer(c_int)                  :: i          !! loop index
     integer(c_int64_t)              :: strides(ndims) !! Strides for accessing data
     integer(c_int)                  :: device_index_value  !! device index used
-    logical(c_bool)                 :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = logical(.false., c_bool)
+    if (.not. present(requires_grad)) then
+      requires_grad_value = logical(.false., c_bool)
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     strides(layout(1)) = 1
@@ -271,7 +318,9 @@ contains
       device_index_value = 0
     endif
 
-    tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device_type, device_index_value, requires_grad)
+    tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype,    &
+                                 device_type, device_index_value,              &
+                                 requires_grad_value)
   end subroutine torch_tensor_from_blob
 
   !> Prints the contents of a tensor.
@@ -307,9 +356,20 @@ contains
     device_index = torch_tensor_get_device_index_c(tensor%p)
   end function torch_tensor_get_device_index
 
+  !> Deallocates an array of tensors.
+  subroutine torch_tensor_array_delete(tensor_array)
+    type(torch_tensor), dimension(:), intent(inout) :: tensor_array
+    integer :: i
+
+    ! use bounds rather than (1, N) because it's safer
+    do i = lbound(tensor_array, dim=1), ubound(tensor_array, dim=1)
+      call torch_tensor_delete(tensor_array(i))
+    end do
+  end subroutine torch_tensor_array_delete
+
   !> Deallocates a tensor.
   subroutine torch_tensor_delete(tensor)
-    type(torch_tensor), intent(in) :: tensor     !! Input tensor
+    type(torch_tensor), intent(inout) :: tensor
 
     interface
       subroutine torch_tensor_delete_c(tensor) &
@@ -779,18 +839,18 @@ contains
 
   ! Torch Model API
   !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
-  subroutine torch_model_load(model, filename, device_type, device_index, requires_grad_opt, is_training_opt)
+  subroutine torch_model_load(model, filename, device_type, device_index, requires_grad, is_training)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_null_char
     type(torch_model), intent(out)       :: model   !! Returned deserialized model
     character(*), intent(in)             :: filename !! Filename of saved TorchScript model
     integer(c_int), optional, intent(in) :: device_type !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-    logical, optional, intent(in) :: is_training_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: is_training  !! Whether gradients need to be computed for the created tensor
     integer(c_int) :: device_type_value
     integer(c_int) :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
-    logical :: is_training  !! Whether the model is being trained, rather than evaluated
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
+    logical :: is_training_value  !! Whether the model is being trained, rather than evaluated
 
     interface
       function torch_jit_load_c(filename, device_type, device_index, requires_grad, is_training) result(model) &
@@ -819,33 +879,33 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
-    if (.not. present(is_training_opt)) then
-      is_training = .false.
+    if (.not. present(is_training)) then
+      is_training_value = .false.
     else
-      is_training = is_training_opt
+      is_training_value = is_training
     end if
 
     ! Need to append c_null_char at end of filename
-    model%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char,          &
+    model%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char,           &
                                 device_type_value, device_index_value,         &
-                                logical(requires_grad, c_bool),                &
-                                logical(is_training, c_bool))
+                                logical(requires_grad_value, c_bool),          &
+                                logical(is_training_value, c_bool))
   end subroutine torch_model_load
 
   !> Performs a forward pass of the model with the input tensors
-  subroutine torch_model_forward(model, input_tensors, output_tensors, requires_grad_opt)
+  subroutine torch_model_forward(model, input_tensors, output_tensors, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int, c_loc
     type(torch_model), intent(in) :: model        !! Model
     type(torch_tensor), intent(in), dimension(:) :: input_tensors  !! Array of Input tensors
     type(torch_tensor), intent(in), dimension(:) :: output_tensors !! Returned output tensors
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     integer :: i
     integer(c_int) ::  n_inputs
@@ -870,10 +930,10 @@ contains
     n_inputs = size(input_tensors)
     n_outputs = size(output_tensors)
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     ! Assign array of pointers to the input tensors
@@ -886,9 +946,9 @@ contains
       output_ptrs(i) = output_tensors(i)%p
     end do
 
-    call torch_jit_model_forward_c(model%p, c_loc(input_ptrs), n_inputs,     &
-                                    c_loc(output_ptrs), n_outputs,             &
-                                    logical(requires_grad, c_bool))
+    call torch_jit_model_forward_c(model%p, c_loc(input_ptrs), n_inputs,       &
+                                   c_loc(output_ptrs), n_outputs,              &
+                                   logical(requires_grad_value, c_bool))
   end subroutine torch_model_forward
 
   !> Deallocates a TorchScript model
@@ -908,7 +968,7 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -920,7 +980,7 @@ contains
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)           !! Shape of the tensor
@@ -929,7 +989,7 @@ contains
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -940,10 +1000,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -956,13 +1016,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int8_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -974,7 +1034,7 @@ contains
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)           !! Shape of the tensor
@@ -983,7 +1043,7 @@ contains
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -994,10 +1054,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1010,13 +1070,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int8_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -1028,7 +1088,7 @@ contains
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)           !! Shape of the tensor
@@ -1037,7 +1097,7 @@ contains
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1048,10 +1108,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1064,13 +1124,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int8_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -1082,7 +1142,7 @@ contains
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)           !! Shape of the tensor
@@ -1091,7 +1151,7 @@ contains
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1102,10 +1162,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1118,13 +1178,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int8_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -1136,7 +1196,7 @@ contains
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)           !! Shape of the tensor
@@ -1145,7 +1205,7 @@ contains
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1156,10 +1216,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1172,13 +1232,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int16_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -1190,7 +1250,7 @@ contains
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)           !! Shape of the tensor
@@ -1199,7 +1259,7 @@ contains
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1210,10 +1270,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1226,13 +1286,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int16_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -1244,7 +1304,7 @@ contains
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)           !! Shape of the tensor
@@ -1253,7 +1313,7 @@ contains
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1264,10 +1324,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1280,13 +1340,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int16_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -1298,7 +1358,7 @@ contains
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)           !! Shape of the tensor
@@ -1307,7 +1367,7 @@ contains
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1318,10 +1378,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1334,13 +1394,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int16_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -1352,7 +1412,7 @@ contains
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)           !! Shape of the tensor
@@ -1361,7 +1421,7 @@ contains
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1372,10 +1432,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1388,13 +1448,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int32_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -1406,7 +1466,7 @@ contains
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)           !! Shape of the tensor
@@ -1415,7 +1475,7 @@ contains
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1426,10 +1486,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1442,13 +1502,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int32_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -1460,7 +1520,7 @@ contains
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)           !! Shape of the tensor
@@ -1469,7 +1529,7 @@ contains
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1480,10 +1540,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1496,13 +1556,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int32_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -1514,7 +1574,7 @@ contains
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)           !! Shape of the tensor
@@ -1523,7 +1583,7 @@ contains
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1534,10 +1594,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1550,13 +1610,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int32_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -1568,7 +1628,7 @@ contains
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)           !! Shape of the tensor
@@ -1577,7 +1637,7 @@ contains
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1588,10 +1648,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1604,13 +1664,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int64_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -1622,7 +1682,7 @@ contains
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)           !! Shape of the tensor
@@ -1631,7 +1691,7 @@ contains
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1642,10 +1702,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1658,13 +1718,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int64_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -1676,7 +1736,7 @@ contains
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)           !! Shape of the tensor
@@ -1685,7 +1745,7 @@ contains
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1696,10 +1756,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1712,13 +1772,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int64_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -1730,7 +1790,7 @@ contains
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)           !! Shape of the tensor
@@ -1739,7 +1799,7 @@ contains
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1750,10 +1810,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1766,13 +1826,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_int64_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1784,7 +1844,7 @@ contains
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)           !! Shape of the tensor
@@ -1793,7 +1853,7 @@ contains
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1804,10 +1864,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1820,13 +1880,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_real32_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1838,7 +1898,7 @@ contains
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)           !! Shape of the tensor
@@ -1847,7 +1907,7 @@ contains
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1858,10 +1918,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1874,13 +1934,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_real32_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1892,7 +1952,7 @@ contains
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)           !! Shape of the tensor
@@ -1901,7 +1961,7 @@ contains
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1912,10 +1972,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1928,13 +1988,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_real32_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1946,7 +2006,7 @@ contains
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)           !! Shape of the tensor
@@ -1955,7 +2015,7 @@ contains
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -1966,10 +2026,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -1982,13 +2042,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_real32_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -2000,7 +2060,7 @@ contains
     integer, intent(in)        :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)           !! Shape of the tensor
@@ -2009,7 +2069,7 @@ contains
     integer(c_int), parameter :: ndims = 1                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -2020,10 +2080,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -2036,13 +2096,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_real64_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -2054,7 +2114,7 @@ contains
     integer, intent(in)        :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)           !! Shape of the tensor
@@ -2063,7 +2123,7 @@ contains
     integer(c_int), parameter :: ndims = 2                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -2074,10 +2134,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -2090,13 +2150,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_real64_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -2108,7 +2168,7 @@ contains
     integer, intent(in)        :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)           !! Shape of the tensor
@@ -2117,7 +2177,7 @@ contains
     integer(c_int), parameter :: ndims = 3                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -2128,10 +2188,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -2144,13 +2204,13 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_real64_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad_opt)
+                                                        c_device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -2162,7 +2222,7 @@ contains
     integer, intent(in)        :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad_opt  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)           !! Shape of the tensor
@@ -2171,7 +2231,7 @@ contains
     integer(c_int), parameter :: ndims = 4                   !! Number of dimension of input data
     integer                   :: i
     integer(c_int)            :: device_index_value
-    logical :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -2182,10 +2242,10 @@ contains
       device_index_value = 0
     endif
 
-    if (.not. present(requires_grad_opt)) then
-      requires_grad = .false.
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
     else
-      requires_grad = requires_grad_opt
+      requires_grad_value = requires_grad
     end if
 
     tensor_shape = shape(data_in)
@@ -2198,9 +2258,802 @@ contains
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
                                  strides, dtype, device_type,                  &
                                  device_index_value,                           &
-                                 logical(requires_grad, c_bool))
+                                 logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_real64_4d
+
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `int8`
+  subroutine torch_tensor_to_array_int8_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int8
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int8), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int8_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `int8`
+  subroutine torch_tensor_to_array_int8_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int8
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int8), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int8_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `int8`
+  subroutine torch_tensor_to_array_int8_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int8
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int8), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int8_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `int8`
+  subroutine torch_tensor_to_array_int8_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int8
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int8), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int8_4d
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `int16`
+  subroutine torch_tensor_to_array_int16_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int16
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int16), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int16_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `int16`
+  subroutine torch_tensor_to_array_int16_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int16
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int16), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int16_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `int16`
+  subroutine torch_tensor_to_array_int16_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int16
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int16), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int16_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `int16`
+  subroutine torch_tensor_to_array_int16_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int16
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int16), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int16_4d
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `int32`
+  subroutine torch_tensor_to_array_int32_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int32), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int32_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `int32`
+  subroutine torch_tensor_to_array_int32_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int32), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int32_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `int32`
+  subroutine torch_tensor_to_array_int32_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int32), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int32_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `int32`
+  subroutine torch_tensor_to_array_int32_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int32), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int32_4d
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `int64`
+  subroutine torch_tensor_to_array_int64_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int64), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int64_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `int64`
+  subroutine torch_tensor_to_array_int64_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int64), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int64_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `int64`
+  subroutine torch_tensor_to_array_int64_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int64), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int64_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `int64`
+  subroutine torch_tensor_to_array_int64_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int64), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int64_4d
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `real32`
+  subroutine torch_tensor_to_array_real32_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real32), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real32_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `real32`
+  subroutine torch_tensor_to_array_real32_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real32), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real32_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `real32`
+  subroutine torch_tensor_to_array_real32_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real32), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real32_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `real32`
+  subroutine torch_tensor_to_array_real32_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real32), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real32_4d
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `real64`
+  subroutine torch_tensor_to_array_real64_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real64), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real64_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `real64`
+  subroutine torch_tensor_to_array_real64_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real64), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real64_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `real64`
+  subroutine torch_tensor_to_array_real64_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real64), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real64_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `real64`
+  subroutine torch_tensor_to_array_real64_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real64), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      if (all(shape(data_out) == 0)) then
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else
+      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+        write (*,*) "[ERROR]: Pointer array has not been allocated"
+        stop
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real64_4d
 
 
 end module ftorch

@@ -69,9 +69,9 @@ program inference
    200 format("output on rank ", i1,": [", 4(f5.1,","), f5.1,"]")
 
    ! Cleanup
-   call torch_model_delete(model)
-   call torch_tensor_delete(in_tensors(1))
-   call torch_tensor_delete(out_tensors(1))
+   call torch_delete(model)
+   call torch_delete(in_tensors)
+   call torch_delete(out_tensors)
    call mpi_finalize(ierr)
 
 end program inference

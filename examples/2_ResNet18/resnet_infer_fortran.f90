@@ -95,16 +95,16 @@ contains
       probability = maxval(probabilities)
 
       ! Check top probability matches expected value
-      call assert_real(probability, expected_prob, test_name="Check probability", rtol_opt=1e-5)
+      call assert_real(probability, expected_prob, test_name="Check probability", rtol=1e-5)
 
       write (*,*) "Top result"
       write (*,*) ""
       write (*,*) trim(categories(idx(2))), " (id=", idx(2), "), : probability =", probability
 
       ! Cleanup
-      call torch_model_delete(model)
-      call torch_tensor_delete(in_tensors(1))
-      call torch_tensor_delete(out_tensors(1))
+      call torch_delete(model)
+      call torch_delete(in_tensors)
+      call torch_delete(out_tensors)
       deallocate(in_data)
       deallocate(out_data)
       deallocate(probabilities)
@@ -182,29 +182,29 @@ contains
 
    end subroutine calc_probs
 
-   subroutine assert_real(a, b, test_name, rtol_opt)
+   subroutine assert_real(a, b, test_name, rtol)
 
       implicit none
 
       character(len=*) :: test_name
       real, intent(in) :: a, b
-      real, optional :: rtol_opt
-      real :: relative_error, rtol
+      real, optional :: rtol
+      real :: relative_error, rtol_value
 
       character(len=15) :: pass, fail
 
       fail = char(27)//'[31m'//'FAILED'//char(27)//'[0m'
       pass = char(27)//'[32m'//'PASSED'//char(27)//'[0m'
 
-      if (.not. present(rtol_opt)) then
-        rtol = 1e-5
+      if (.not. present(rtol)) then
+        rtol_value = 1e-5
       else
-         rtol = rtol_opt
+        rtol_value = rtol
       end if
 
       relative_error = abs(a/b - 1.)
 
-      if (relative_error > rtol) then
+      if (relative_error > rtol_value) then
         write(*, '(A, " :: [", A, "] maximum relative error = ", E11.4)') fail, trim(test_name), relative_error
       else
         write(*, '(A, " :: [", A, "] maximum relative error = ", E11.4)') pass, trim(test_name), relative_error
