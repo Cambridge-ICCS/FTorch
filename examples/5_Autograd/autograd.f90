@@ -35,7 +35,7 @@ program example
   Q = 3 * a ** 3 - b ** 2
 
   ! Extract output Fortran array from Q tensor
-  call torch_tensor_to_array(Q, out_data, shape(in_data))
+  call torch_tensor_to_array(Q, out_data, shape(in_data1))
   write (*,*) "Q = 3 * a ** 3 - b ** 2 =", out_data(:)
 
   ! Check a and b are unchanged by the arithmetic operations

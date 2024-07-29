@@ -33,5 +33,5 @@ if(CMAKE_BUILD_TESTS)
     COMMAND autograd
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(fautograd PROPERTIES PASS_REGULAR_EXPRESSION
-    "-12.00000000      65.00000000")
+    "-12.0000000       65.0000000")
 endif()
