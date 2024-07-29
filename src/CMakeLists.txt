@@ -84,6 +84,9 @@ install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch.mod"
 
 # Build integration tests
 if(CMAKE_BUILD_TESTS)
+  # Unit tests
+  add_subdirectory(test/unit)
+  # Integration tests
   file(MAKE_DIRECTORY test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/CMakeLists.txt
     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples
