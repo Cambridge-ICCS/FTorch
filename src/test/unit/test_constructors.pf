@@ -1,10 +1,70 @@
 @test
+subroutine test_torch_tensor_zeros()
+  use pFUnit
+  use ftorch
+  use iso_c_binding, only: c_bool, c_int, c_int64_t, c_null_ptr
+
+  implicit none
+
+  type(torch_tensor) :: tensor
+  integer(c_int) :: ndims
+  integer(c_int64_t), dimension(2) :: tensor_shape
+  integer(c_int) :: dtype
+  integer(c_int) :: device_type
+  integer(c_int) :: device_index
+  logical(c_bool) :: requires_grad
+
+  ndims = 2
+  tensor_shape = [2, 3]
+  dtype = torch_kFloat32
+  device_type = torch_kCPU
+  device_index = -1
+  requires_grad = .false.
+
+  call torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, device_type, &
+                          device_index, requires_grad)
+
+  ! Check if tensor is not null
+  ! @assertTrue(tensor%p /= c_null_ptr) ! FIXME: compiler not happy with this
+end subroutine test_torch_tensor_zeros
+
+@test
+subroutine test_torch_tensor_ones()
+  use pFUnit
+  use ftorch
+  use iso_c_binding, only: c_bool, c_int, c_int64_t, c_null_ptr
+
+  implicit none
+
+  type(torch_tensor) :: tensor
+  integer(c_int) :: ndims
+  integer(c_int64_t), dimension(2) :: tensor_shape
+  integer(c_int) :: dtype
+  integer(c_int) :: device_type
+  integer(c_int) :: device_index
+  logical(c_bool) :: requires_grad
+
+  ndims = 2
+  tensor_shape = [2, 3]
+  dtype = torch_kFloat32
+  device_type = torch_kCPU
+  device_index = -1
+  requires_grad = .false.
+
+  call torch_tensor_ones(tensor, ndims, tensor_shape, dtype, device_type, &
+                         device_index, requires_grad)
+
+  ! Check if tensor is not null
+  ! @assertTrue(tensor%p /= c_null_ptr) ! FIXME: compiler not happy with this
+end subroutine test_torch_tensor_ones
+
+@test
 subroutine test_torch_from_blob()
-  use pfunit
+  use pFUnit
   use ftorch
   use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_loc
   use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, c_int64_t, &
-                                         c_float, c_double, c_char, c_ptr, c_null_ptr
+                                        c_float, c_double, c_char, c_ptr, c_null_ptr
 
   implicit none
 
