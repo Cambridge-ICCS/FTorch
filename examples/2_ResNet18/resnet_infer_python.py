@@ -74,14 +74,15 @@ def check_results(output: torch.Tensor) -> None:
 
 
 if __name__ == "__main__":
-    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
-    saved_model_file = os.path.join(filepath, "saved_resnet18_model_cpu.pt")
+    device_type = "cpu"
+    # device_type = "cuda"
 
-    device_to_run = "cpu"
-    # device_to_run = "cuda"
+    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
+    filename = f"saved_resnet18_model_{device_type}.pt"
+    saved_model_file = os.path.join(filepath, filename)
 
     batch_size_to_run = 1
 
-    result = deploy(saved_model_file, device_to_run, batch_size_to_run)
+    result = deploy(saved_model_file, device_type, batch_size_to_run)
     print_top_results(result)
     check_results(result)

@@ -1,3 +1,4 @@
+#!/bin/env python3
 """Module defining a simple PyTorch 'Net' for coupling to Fortran."""
 
 import torch
@@ -42,12 +43,23 @@ class SimpleNet(nn.Module):
 
 
 if __name__ == "__main__":
+
+    # Check CUDA is supported on the hardware
+    if not torch.cuda.is_available():
+        raise ValueError("CUDA is not available")
+    device_name = torch.cuda.current_device()
+    print(f"Using CUDA device '{torch.cuda.get_device_name(device_name)}'")
+    device = torch.device("cuda")
+
+    # Put the model on the GPU
     model = SimpleNet()
     model.eval()
+    model.to(device)
 
+    # Put the input tensor on the GPU
     input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0])
-    input_tensor_gpu = input_tensor.to(torch.device("cuda"))
+    input_tensor_gpu = input_tensor.to(device)
 
-    print(f"SimpleNet forward pass on CUDA device {input_tensor_gpu.get_device()}")
+    # Run inference
     with torch.no_grad():
         print(model(input_tensor_gpu))
