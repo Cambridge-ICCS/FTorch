@@ -6,6 +6,7 @@ module test_ftorch
 
   @test
   subroutine test_torch_tensor_zeros()
+    use iso_c_binding, only c_bool, c_int, c_int64_t, c_null_ptr
     type(torch_tensor) :: tensor
     integer(c_int) :: ndims
     integer(c_int64_t), dimension(2) :: tensor_shape
@@ -28,6 +29,7 @@ module test_ftorch
 
   @test
   subroutine test_torch_tensor_ones()
+    use iso_c_binding, only c_bool, c_int, c_int64_t, c_null_ptr
     type(torch_tensor) :: tensor
     integer(c_int) :: ndims
     integer(c_int64_t), dimension(2) :: tensor_shape
