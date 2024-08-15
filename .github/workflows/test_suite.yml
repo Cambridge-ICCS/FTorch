@@ -36,17 +36,59 @@ jobs:
   # This workflow contains a single job called "test-suite"
   test-suite:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os:
+          - ubuntu-latest
+          # - macos-latest
+          # - windows-latest
+        toolchain:
+          - {compiler: gcc, version: 13}
+          - {compiler: gcc, version: 12}
+          - {compiler: gcc, version: 11}
+          - {compiler: gcc, version: 10}
+          - {compiler: gcc, version: 9}
+          - {compiler: intel, version: '2024.1'}
+          - {compiler: intel-classic, version: '2021.10'}
+          # - {compiler: nvidia-hpc, version: '23.11'}
         std: ["f2008", "f2018"]
+        include:
+          # Run 2018 Fortran standards on latest gcc only
+          - toolchain: {compiler: gcc, version: 13}
+            std: "f2018"
+          # Newest possible gcc on macos-latest (arm64)
+          - os: macos-latest
+            toolchain: {compiler: gcc, version: 13}
+            std: "f2008"
+          # Oldest possible gcc and standard on macos-latest (arm64)
+          - os: macos-latest
+            toolchain: {compiler: gcc, version: 11}
+            std: "f2008"
+          # Newest possible intel-classic and standard on newest compatible macos
+          - os: macos-14
+            toolchain: {compiler: intel-classic, version: '2021.10'}
+            std: "f2018"
+        # exclude:
+          # - os: windows-latest
+          # toolchain: {compiler: nvidia-hpc, version: '23.11'}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: setup-fortran
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - name: check-compilers-env
+        run: |
+          ${{ steps.setup-fortran.outputs.fc }}
 
       - name: Install Python
         uses: actions/setup-python@v5
@@ -68,7 +110,13 @@ jobs:
           export BUILD_DIR=$(pwd)/src/build
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} -DCMAKE_BUILD_TESTS=TRUE -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}"
+          cmake .. -DCMAKE_BUILD_TYPE=Release \
+                   -DCMAKE_Fortran_COMPILER=${{ env.FC }} \
+                   -DCMAKE_C_COMPILER=${{ env.CC }} \
+                   -DCMAKE_CXX_COMPILER=${{ env.CXX }} \
+                   -DCMAKE_INSTALL_PREFIX=${BUILD_DIR}\
+                   -DCMAKE_BUILD_TESTS=TRUE \
+                   -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}"
           cmake --build .
           cmake --install .
 
