@@ -6,6 +6,9 @@ program inference
    ! Import our library for interfacing with PyTorch
    use ftorch
 
+   ! Import our tools module for testing utils
+   use utils, only : assert_real_array_1d
+
    implicit none
   
    ! Set working precision for reals
@@ -19,6 +22,7 @@ program inference
    real(wp), dimension(4), target :: in_data2
    real(wp), dimension(4), target :: out_data1
    real(wp), dimension(4), target :: out_data2
+   real(wp), dimension(4) :: expected
    integer :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
@@ -26,6 +30,9 @@ program inference
    type(torch_model) :: model
    type(torch_tensor), dimension(2) :: in_tensors
    type(torch_tensor), dimension(2) :: out_tensors
+
+   ! Flag for testing
+   logical :: test_pass
 
    ! Get TorchScript model file as a command line argument
    num_args = command_argument_count()
@@ -52,9 +59,19 @@ program inference
    write (*,*) out_data1
    write (*,*) out_data2
 
+   ! Check output tensors match expected values
+   expected = [0.0, 2.0, 4.0, 6.0]
+   test_pass = assert_real_array_1d(out_data1, expected, test_name="MultiIO array1", rtol=1e-5)
+   expected = [0.0, -3.0, -6.0, -9.0]
+   test_pass = assert_real_array_1d(out_data2, expected, test_name="MultiIO array2", rtol=1e-5)
+
    ! Cleanup
    call torch_delete(model)
    call torch_delete(in_tensors)
    call torch_delete(out_tensors)
+
+   if (.not. test_pass) then
+     stop 999
+   end if
 
 end program inference
