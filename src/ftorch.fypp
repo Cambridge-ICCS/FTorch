@@ -531,8 +531,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1)#{for i in range(1,RANK)}#,sizes(${i+1}$)#{endfor}#))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
