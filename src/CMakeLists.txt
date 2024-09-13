@@ -49,7 +49,7 @@ set(CMAKE_INSTALL_RPATH $ORIGIN/${relDir})
 find_package(Torch REQUIRED)
 
 # Library with C and Fortran bindings
-add_library(${LIB_NAME} SHARED ctorch.cpp ftorch.f90)
+add_library(${LIB_NAME} SHARED ctorch.cpp ftorch.f90 utils.f90)
 # Add an alias FTorch::ftorch for the library
 add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
 set_target_properties(${LIB_NAME} PROPERTIES
@@ -83,6 +83,9 @@ install(EXPORT ${PROJECT_NAME}
 
 # Install Fortran module files
 install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch.mod"
+ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}"
+ )
+install(FILES "${CMAKE_BINARY_DIR}/modules/utils.mod"
  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}"
  )
 
