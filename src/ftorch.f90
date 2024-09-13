@@ -1788,8 +1788,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -1828,8 +1828,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -1868,8 +1868,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -1908,8 +1908,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -1948,8 +1948,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -1988,8 +1988,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2028,8 +2028,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2068,8 +2068,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2108,8 +2108,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2148,8 +2148,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2188,8 +2188,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2228,8 +2228,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2268,8 +2268,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2308,8 +2308,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2348,8 +2348,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2388,8 +2388,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2428,8 +2428,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2468,8 +2468,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2508,8 +2508,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2548,8 +2548,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2588,8 +2588,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2628,8 +2628,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2668,8 +2668,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
@@ -2708,8 +2708,8 @@ contains
         ! been allocated (i.e., its shape is all zeros) then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided and the output array
-      ! has already been allocated but its shape differs from the sizes argument
+      ! Raise an error if the sizes array has been provided but the shape of the
+      ! output array differs from it
       if (any(shape(data_out) /= sizes)) then
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
