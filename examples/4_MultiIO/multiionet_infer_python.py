@@ -62,3 +62,11 @@ if __name__ == "__main__":
         result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
     print(result)
+
+    expected_tensors = (
+        torch.Tensor([0.0, 2.0, 4.0, 6.0]),
+        torch.Tensor([-0.0, -3.0, -6.0, -9.0]),
+    )
+
+    for got, expected in zip(result, expected_tensors):
+        assert torch.allclose(got, expected)
