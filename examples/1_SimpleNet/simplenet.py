@@ -51,4 +51,4 @@ if __name__ == "__main__":
         output_tensor = model(input_tensor)
 
     print(output_tensor)
-    assert(torch.allclose(output_tensor, 2 * input_tensor))
+    assert torch.allclose(output_tensor, 2 * input_tensor)
