@@ -1792,13 +1792,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -1832,13 +1832,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -1872,13 +1872,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -1912,13 +1912,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -1952,13 +1952,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -1992,13 +1992,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2032,13 +2032,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2072,13 +2072,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2112,13 +2112,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2152,13 +2152,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2192,13 +2192,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2232,13 +2232,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2272,13 +2272,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2312,13 +2312,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2352,13 +2352,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2392,13 +2392,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2432,13 +2432,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2472,13 +2472,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2512,13 +2512,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2552,13 +2552,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2592,13 +2592,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2632,13 +2632,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2672,13 +2672,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
@@ -2712,13 +2712,13 @@ contains
         ! array has already been allocated but its shape differs from the sizes
         ! argument
         write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
+        stop 999
       end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop
+      stop 999
     end if
 
     ! Have the data_out array point to the Tensor data
