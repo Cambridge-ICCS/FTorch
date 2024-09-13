@@ -55,12 +55,7 @@ module utils
         print_result_value = print_result
       end if
 
-      if (abs(expect) < rtol_value) then
-        ! Special case where expected value is near-zero
-        test_pass = (abs(got) < rtol_value)
-      else
-        test_pass = (abs(got - expect) / expect < rtol_value)
-      end if
+      test_pass = (abs(got - expect) <= rtol_value * expect)
 
       if (print_result_value) then
         call test_print(test_name, rtol_value, test_pass)
