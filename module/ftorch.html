@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="100.0% of total for modules and submodules.">1153 statements</a>
+                 title="100.0% of total for modules and submodules.">1715 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -136,6 +136,8 @@
             <a class="list-group-item" href="../module/ftorch.html#interface-torch_delete">torch_delete</a>
             <a class="list-group-item" href="../module/ftorch.html#interface-torch_from_blob_c">torch_from_blob_c</a>
             <a class="list-group-item" href="../module/ftorch.html#interface-torch_tensor_from_array">torch_tensor_from_array</a>
+            <a class="list-group-item" href="../module/ftorch.html#interface-torch_tensor_to_array">torch_tensor_to_array</a>
+            <a class="list-group-item" href="../module/ftorch.html#interface-torch_to_blob_c">torch_to_blob_c</a>
         </div>
       </div>
     </div>
@@ -205,6 +207,30 @@
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_from_blob">torch_tensor_from_blob</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_ones">torch_tensor_ones</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_print">torch_tensor_print</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int16_1d">torch_tensor_to_array_int16_1d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int16_2d">torch_tensor_to_array_int16_2d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int16_3d">torch_tensor_to_array_int16_3d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int16_4d">torch_tensor_to_array_int16_4d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int32_1d">torch_tensor_to_array_int32_1d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int32_2d">torch_tensor_to_array_int32_2d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int32_3d">torch_tensor_to_array_int32_3d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int32_4d">torch_tensor_to_array_int32_4d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int64_1d">torch_tensor_to_array_int64_1d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int64_2d">torch_tensor_to_array_int64_2d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int64_3d">torch_tensor_to_array_int64_3d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int64_4d">torch_tensor_to_array_int64_4d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int8_1d">torch_tensor_to_array_int8_1d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int8_2d">torch_tensor_to_array_int8_2d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int8_3d">torch_tensor_to_array_int8_3d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_int8_4d">torch_tensor_to_array_int8_4d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_real32_1d">torch_tensor_to_array_real32_1d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_real32_2d">torch_tensor_to_array_real32_2d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_real32_3d">torch_tensor_to_array_real32_3d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_real32_4d">torch_tensor_to_array_real32_4d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_real64_1d">torch_tensor_to_array_real64_1d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_real64_2d">torch_tensor_to_array_real64_2d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_real64_3d">torch_tensor_to_array_real64_3d</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_to_array_real64_4d">torch_tensor_to_array_real64_4d</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_zeros">torch_tensor_zeros</a>
         </div>
       </div>
@@ -399,7 +425,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~10"></span>
+              <span class="anchor" id="variable-tensor~11"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(inout)</td>
@@ -648,7 +674,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~12"></span>
+              <span class="anchor" id="variable-tensor~13"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -762,7 +788,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~13"></span>
+              <span class="anchor" id="variable-tensor~14"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -876,7 +902,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~14"></span>
+              <span class="anchor" id="variable-tensor~15"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -990,7 +1016,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~15"></span>
+              <span class="anchor" id="variable-tensor~16"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1104,7 +1130,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~16"></span>
+              <span class="anchor" id="variable-tensor~17"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1218,7 +1244,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~17"></span>
+              <span class="anchor" id="variable-tensor~18"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1332,7 +1358,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~18"></span>
+              <span class="anchor" id="variable-tensor~19"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1446,7 +1472,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~19"></span>
+              <span class="anchor" id="variable-tensor~20"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1560,7 +1586,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~20"></span>
+              <span class="anchor" id="variable-tensor~21"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1674,7 +1700,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~21"></span>
+              <span class="anchor" id="variable-tensor~22"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1788,7 +1814,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~22"></span>
+              <span class="anchor" id="variable-tensor~23"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1902,7 +1928,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~23"></span>
+              <span class="anchor" id="variable-tensor~24"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2016,7 +2042,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~24"></span>
+              <span class="anchor" id="variable-tensor~25"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2130,7 +2156,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~25"></span>
+              <span class="anchor" id="variable-tensor~26"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2244,7 +2270,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~26"></span>
+              <span class="anchor" id="variable-tensor~27"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2358,7 +2384,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~27"></span>
+              <span class="anchor" id="variable-tensor~28"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2472,7 +2498,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~28"></span>
+              <span class="anchor" id="variable-tensor~29"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2586,7 +2612,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~29"></span>
+              <span class="anchor" id="variable-tensor~30"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2700,7 +2726,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~30"></span>
+              <span class="anchor" id="variable-tensor~31"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2814,7 +2840,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~31"></span>
+              <span class="anchor" id="variable-tensor~32"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2928,7 +2954,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~32"></span>
+              <span class="anchor" id="variable-tensor~33"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3042,7 +3068,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~33"></span>
+              <span class="anchor" id="variable-tensor~34"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3156,7 +3182,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~34"></span>
+              <span class="anchor" id="variable-tensor~35"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3270,7 +3296,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~35"></span>
+              <span class="anchor" id="variable-tensor~36"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3363,6 +3389,1743 @@
 
 
           </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-torch_tensor_to_array"></span>
+      <h3>public        interface <a href='../interface/torch_tensor_to_array.html'>torch_tensor_to_array</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Interface for directing <code>torch_tensor_to_array</code> to possible input types and ranks</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int8_1d.html'>torch_tensor_to_array_int8_1d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>int8</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~37"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out"></span>
+              integer(kind=int8),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int8_2d.html'>torch_tensor_to_array_int8_2d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>int8</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~38"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~2"></span>
+              integer(kind=int8),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~2"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int8_3d.html'>torch_tensor_to_array_int8_3d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>int8</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~39"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~3"></span>
+              integer(kind=int8),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~3"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int8_4d.html'>torch_tensor_to_array_int8_4d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>int8</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~40"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~4"></span>
+              integer(kind=int8),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~4"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int16_1d.html'>torch_tensor_to_array_int16_1d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>int16</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~41"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~5"></span>
+              integer(kind=int16),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~5"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int16_2d.html'>torch_tensor_to_array_int16_2d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>int16</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~42"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~6"></span>
+              integer(kind=int16),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~6"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int16_3d.html'>torch_tensor_to_array_int16_3d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>int16</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~43"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~7"></span>
+              integer(kind=int16),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~7"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int16_4d.html'>torch_tensor_to_array_int16_4d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>int16</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~44"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~8"></span>
+              integer(kind=int16),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~8"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int32_1d.html'>torch_tensor_to_array_int32_1d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>int32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~45"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~9"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~9"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int32_2d.html'>torch_tensor_to_array_int32_2d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>int32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~46"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~10"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~10"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int32_3d.html'>torch_tensor_to_array_int32_3d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>int32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~47"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~11"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~11"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int32_4d.html'>torch_tensor_to_array_int32_4d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>int32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~48"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~12"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~12"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int64_1d.html'>torch_tensor_to_array_int64_1d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>int64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~49"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~13"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~13"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int64_2d.html'>torch_tensor_to_array_int64_2d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>int64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~50"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~14"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~14"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int64_3d.html'>torch_tensor_to_array_int64_3d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>int64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~51"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~15"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~15"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_int64_4d.html'>torch_tensor_to_array_int64_4d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>int64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~52"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~16"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~16"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_real32_1d.html'>torch_tensor_to_array_real32_1d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>real32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~53"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~17"></span>
+              real(kind=real32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~17"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_real32_2d.html'>torch_tensor_to_array_real32_2d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>real32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~54"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~18"></span>
+              real(kind=real32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~18"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_real32_3d.html'>torch_tensor_to_array_real32_3d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>real32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~55"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~19"></span>
+              real(kind=real32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~19"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_real32_4d.html'>torch_tensor_to_array_real32_4d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>real32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~56"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~20"></span>
+              real(kind=real32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~20"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_real64_1d.html'>torch_tensor_to_array_real64_1d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>real64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~57"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~21"></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~21"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_real64_2d.html'>torch_tensor_to_array_real64_2d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>real64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~58"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~22"></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~22"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_real64_3d.html'>torch_tensor_to_array_real64_3d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>real64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~59"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~23"></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~23"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_tensor_to_array_real64_4d.html'>torch_tensor_to_array_real64_4d</a>(tensor, data_out, sizes)  
+
+    </h3>
+    
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>real64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~60"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~24"></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~24"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-torch_to_blob_c"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    public  function torch_to_blob_c(tensor, dtype) result(data) bind(c, name = 'torch_to_blob')  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor"></span>
+              type(c_ptr),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dtype~2"></span>
+              integer(kind=c_int),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>dtype</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(c_ptr)</small>
+    </h4>
+    
+
+        </li>
     </ul>
   </div>
 
@@ -3495,7 +5258,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~8"></span>
+              <span class="anchor" id="variable-tensor~9"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -3825,7 +5588,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~10"></span>
+              <span class="anchor" id="variable-tensor~11"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(inout)</td>
@@ -3865,7 +5628,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~16"></span>
+              <span class="anchor" id="variable-tensor~17"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3980,7 +5743,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~17"></span>
+              <span class="anchor" id="variable-tensor~18"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -4095,7 +5858,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~18"></span>
+              <span class="anchor" id="variable-tensor~19"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -4210,7 +5973,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~19"></span>
+              <span class="anchor" id="variable-tensor~20"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -4325,7 +6088,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~20"></span>
+              <span class="anchor" id="variable-tensor~21"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -4440,7 +6203,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~21"></span>
+              <span class="anchor" id="variable-tensor~22"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -4555,7 +6318,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~22"></span>
+              <span class="anchor" id="variable-tensor~23"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -4670,7 +6433,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~23"></span>
+              <span class="anchor" id="variable-tensor~24"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -4785,7 +6548,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~24"></span>
+              <span class="anchor" id="variable-tensor~25"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -4900,7 +6663,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~25"></span>
+              <span class="anchor" id="variable-tensor~26"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -5015,7 +6778,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~26"></span>
+              <span class="anchor" id="variable-tensor~27"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -5130,7 +6893,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~27"></span>
+              <span class="anchor" id="variable-tensor~28"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -5245,7 +7008,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~12"></span>
+              <span class="anchor" id="variable-tensor~13"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -5360,7 +7123,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~13"></span>
+              <span class="anchor" id="variable-tensor~14"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -5475,7 +7238,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~14"></span>
+              <span class="anchor" id="variable-tensor~15"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -5590,7 +7353,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~15"></span>
+              <span class="anchor" id="variable-tensor~16"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -5705,7 +7468,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~28"></span>
+              <span class="anchor" id="variable-tensor~29"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -5820,7 +7583,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~29"></span>
+              <span class="anchor" id="variable-tensor~30"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -5935,7 +7698,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~30"></span>
+              <span class="anchor" id="variable-tensor~31"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -6050,7 +7813,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~31"></span>
+              <span class="anchor" id="variable-tensor~32"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -6165,7 +7928,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~32"></span>
+              <span class="anchor" id="variable-tensor~33"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -6280,7 +8043,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~33"></span>
+              <span class="anchor" id="variable-tensor~34"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -6395,7 +8158,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~34"></span>
+              <span class="anchor" id="variable-tensor~35"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -6510,7 +8273,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~35"></span>
+              <span class="anchor" id="variable-tensor~36"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -6626,7 +8389,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~5"></span>
+              <span class="anchor" id="variable-tensor~6"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -6641,7 +8404,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-data~2"></span>
+              <span class="anchor" id="variable-data~3"></span>
               type(c_ptr),
             </td>
 <td>intent(in)</td>
@@ -6701,7 +8464,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-dtype~6"></span>
+              <span class="anchor" id="variable-dtype~7"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -6786,7 +8549,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~3"></span>
+              <span class="anchor" id="variable-tensor~4"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -6831,7 +8594,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-dtype~4"></span>
+              <span class="anchor" id="variable-dtype~5"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -6916,7 +8679,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~6"></span>
+              <span class="anchor" id="variable-tensor~7"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -6927,6 +8690,1686 @@
             <td><strong>tensor</strong></td>
             <td>
 <p>Input tensor</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int16_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int16_1d.html'>torch_tensor_to_array_int16_1d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>int16</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~41"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~5"></span>
+              integer(kind=int16),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~5"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int16_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int16_2d.html'>torch_tensor_to_array_int16_2d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>int16</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~42"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~6"></span>
+              integer(kind=int16),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~6"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int16_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int16_3d.html'>torch_tensor_to_array_int16_3d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>int16</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~43"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~7"></span>
+              integer(kind=int16),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~7"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int16_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int16_4d.html'>torch_tensor_to_array_int16_4d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>int16</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~44"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~8"></span>
+              integer(kind=int16),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~8"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int32_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int32_1d.html'>torch_tensor_to_array_int32_1d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>int32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~45"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~9"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~9"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int32_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int32_2d.html'>torch_tensor_to_array_int32_2d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>int32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~46"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~10"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~10"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int32_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int32_3d.html'>torch_tensor_to_array_int32_3d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>int32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~47"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~11"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~11"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int32_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int32_4d.html'>torch_tensor_to_array_int32_4d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>int32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~48"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~12"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~12"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int64_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int64_1d.html'>torch_tensor_to_array_int64_1d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>int64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~49"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~13"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~13"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int64_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int64_2d.html'>torch_tensor_to_array_int64_2d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>int64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~50"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~14"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~14"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int64_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int64_3d.html'>torch_tensor_to_array_int64_3d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>int64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~51"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~15"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~15"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int64_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int64_4d.html'>torch_tensor_to_array_int64_4d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>int64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~52"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~16"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~16"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int8_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int8_1d.html'>torch_tensor_to_array_int8_1d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>int8</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~37"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out"></span>
+              integer(kind=int8),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int8_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int8_2d.html'>torch_tensor_to_array_int8_2d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>int8</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~38"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~2"></span>
+              integer(kind=int8),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~2"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int8_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int8_3d.html'>torch_tensor_to_array_int8_3d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>int8</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~39"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~3"></span>
+              integer(kind=int8),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~3"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_int8_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_int8_4d.html'>torch_tensor_to_array_int8_4d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>int8</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~40"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~4"></span>
+              integer(kind=int8),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~4"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_real32_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_real32_1d.html'>torch_tensor_to_array_real32_1d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>real32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~53"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~17"></span>
+              real(kind=real32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~17"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_real32_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_real32_2d.html'>torch_tensor_to_array_real32_2d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>real32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~54"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~18"></span>
+              real(kind=real32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~18"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_real32_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_real32_3d.html'>torch_tensor_to_array_real32_3d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>real32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~55"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~19"></span>
+              real(kind=real32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~19"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_real32_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_real32_4d.html'>torch_tensor_to_array_real32_4d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>real32</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~56"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~20"></span>
+              real(kind=real32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~20"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_real64_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_real64_1d.html'>torch_tensor_to_array_real64_1d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 1 and data type <code>real64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~57"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~21"></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~21"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(1)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_real64_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_real64_2d.html'>torch_tensor_to_array_real64_2d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 2 and data type <code>real64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~58"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~22"></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~22"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(2)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_real64_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_real64_3d.html'>torch_tensor_to_array_real64_3d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 3 and data type <code>real64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~59"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~23"></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~23"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(3)</td>
+            <td>
+<p>Number of entries for each rank</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_to_array_real64_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_to_array_real64_4d.html'>torch_tensor_to_array_real64_4d</a>(tensor, data_out, sizes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>real64</code></p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~60"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Returned tensor</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data_out~24"></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td>
+<p>Pointer to tensor data</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sizes~24"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sizes</strong>(4)</td>
+            <td>
+<p>Number of entries for each rank</p>
             </td>
         </tr>
     </tbody>
@@ -6956,7 +10399,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor"></span>
+              <span class="anchor" id="variable-tensor~2"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -7001,7 +10444,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-dtype~2"></span>
+              <span class="anchor" id="variable-dtype~3"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>

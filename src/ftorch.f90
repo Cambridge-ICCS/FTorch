@@ -9,7 +9,7 @@
 module ftorch
 
   use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, c_int64_t, &
-                                         c_float, c_double, c_char, c_ptr, c_null_ptr
+                                         c_float, c_double, c_char, c_ptr, c_null_ptr, c_f_pointer
   use, intrinsic :: iso_fortran_env, only: int8, int16, int32, int64, real32, real64
 
   implicit none
@@ -74,6 +74,34 @@ module ftorch
     module procedure torch_tensor_from_array_real64_4d
   end interface
 
+  !> Interface for directing `torch_tensor_to_array` to possible input types and ranks
+  interface torch_tensor_to_array
+    module procedure torch_tensor_to_array_int8_1d
+    module procedure torch_tensor_to_array_int8_2d
+    module procedure torch_tensor_to_array_int8_3d
+    module procedure torch_tensor_to_array_int8_4d
+    module procedure torch_tensor_to_array_int16_1d
+    module procedure torch_tensor_to_array_int16_2d
+    module procedure torch_tensor_to_array_int16_3d
+    module procedure torch_tensor_to_array_int16_4d
+    module procedure torch_tensor_to_array_int32_1d
+    module procedure torch_tensor_to_array_int32_2d
+    module procedure torch_tensor_to_array_int32_3d
+    module procedure torch_tensor_to_array_int32_4d
+    module procedure torch_tensor_to_array_int64_1d
+    module procedure torch_tensor_to_array_int64_2d
+    module procedure torch_tensor_to_array_int64_3d
+    module procedure torch_tensor_to_array_int64_4d
+    module procedure torch_tensor_to_array_real32_1d
+    module procedure torch_tensor_to_array_real32_2d
+    module procedure torch_tensor_to_array_real32_3d
+    module procedure torch_tensor_to_array_real32_4d
+    module procedure torch_tensor_to_array_real64_1d
+    module procedure torch_tensor_to_array_real64_2d
+    module procedure torch_tensor_to_array_real64_3d
+    module procedure torch_tensor_to_array_real64_4d
+  end interface
+
   !> Interface for deleting generic torch objects
   interface torch_delete
     module procedure torch_model_delete
@@ -99,6 +127,16 @@ module ftorch
       logical(c_bool), value, intent(in) :: requires_grad
       type(c_ptr)                       :: tensor_p
     end function torch_from_blob_c
+  end interface
+
+  interface
+    function torch_to_blob_c(tensor, dtype) result(data) &
+        bind(c, name = 'torch_to_blob')
+      use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+      type(c_ptr), value, intent(in)    :: tensor
+      integer(c_int), value, intent(in) :: dtype
+      type(c_ptr)                       :: data
+    end function torch_to_blob_c
   end interface
 
 contains
@@ -1727,6 +1765,967 @@ contains
                                  logical(requires_grad_value, c_bool))
 
   end subroutine torch_tensor_from_array_real64_4d
+
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `int8`
+  subroutine torch_tensor_to_array_int8_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int8
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int8), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int8_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `int8`
+  subroutine torch_tensor_to_array_int8_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int8
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int8), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int8_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `int8`
+  subroutine torch_tensor_to_array_int8_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int8
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int8), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int8_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `int8`
+  subroutine torch_tensor_to_array_int8_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int8
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int8), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int8_4d
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `int16`
+  subroutine torch_tensor_to_array_int16_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int16
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int16), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int16_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `int16`
+  subroutine torch_tensor_to_array_int16_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int16
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int16), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int16_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `int16`
+  subroutine torch_tensor_to_array_int16_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int16
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int16), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int16_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `int16`
+  subroutine torch_tensor_to_array_int16_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int16
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int16), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int16_4d
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `int32`
+  subroutine torch_tensor_to_array_int32_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int32), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int32_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `int32`
+  subroutine torch_tensor_to_array_int32_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int32), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int32_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `int32`
+  subroutine torch_tensor_to_array_int32_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int32), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int32_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `int32`
+  subroutine torch_tensor_to_array_int32_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int32), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int32_4d
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `int64`
+  subroutine torch_tensor_to_array_int64_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int64), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int64_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `int64`
+  subroutine torch_tensor_to_array_int64_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int64), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int64_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `int64`
+  subroutine torch_tensor_to_array_int64_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int64), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int64_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `int64`
+  subroutine torch_tensor_to_array_int64_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : int64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    integer(kind=int64), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_int64_4d
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `real32`
+  subroutine torch_tensor_to_array_real32_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real32), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real32_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `real32`
+  subroutine torch_tensor_to_array_real32_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real32), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real32_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `real32`
+  subroutine torch_tensor_to_array_real32_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real32), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real32_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `real32`
+  subroutine torch_tensor_to_array_real32_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real32
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real32), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real32_4d
+
+  !> Return the array data associated with a Torch tensor of rank 1 and data type `real64`
+  subroutine torch_tensor_to_array_real64_1d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real64), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real64_1d
+
+  !> Return the array data associated with a Torch tensor of rank 2 and data type `real64`
+  subroutine torch_tensor_to_array_real64_2d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real64), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real64_2d
+
+  !> Return the array data associated with a Torch tensor of rank 3 and data type `real64`
+  subroutine torch_tensor_to_array_real64_3d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real64), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real64_3d
+
+  !> Return the array data associated with a Torch tensor of rank 4 and data type `real64`
+  subroutine torch_tensor_to_array_real64_4d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_tensor), intent(in) :: tensor !! Returned tensor
+    real(kind=real64), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
+    type(c_ptr) :: cptr
+
+    ! Handle allocation of the pointer array
+    if (present(sizes)) then
+      ! The user may provide an array of sizes, i.e., the number of entries for
+      ! each rank
+      if (all(shape(data_out) == 0)) then
+        ! If the sizes array has been provided and the output array has not
+        ! been allocated (i.e., its shape is all zeros) then allocate it
+        allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
+      else if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided and the output
+        ! array has already been allocated but its shape differs from the sizes
+        ! argument
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop
+      end if
+    else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
+      ! Raise an error if the sizes array has not been provided and the pointer
+      ! array has not been allocated
+      write (*,*) "[ERROR]: Pointer array has not been allocated"
+      stop
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    call c_f_pointer(cptr, data_out, sizes)
+
+  end subroutine torch_tensor_to_array_real64_4d
 
 
 end module ftorch
