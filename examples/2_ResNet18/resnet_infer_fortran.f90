@@ -29,10 +29,10 @@ contains
 
       integer, parameter :: in_dims = 4
       integer :: in_shape(in_dims) = [1, 3, 224, 224]
-      integer :: in_layout(in_dims) = [1, 2, 3, 4]
+      integer(FT_INT) :: in_layout(in_dims) = [1, 2, 3, 4]
       integer, parameter :: out_dims = 2
       integer :: out_shape(out_dims) = [1, 1000]
-      integer :: out_layout(out_dims) = [1, 2]
+      integer(FT_INT) :: out_layout(out_dims) = [1, 2]
 
       ! Path to input data
       character(len=100) :: data_dir

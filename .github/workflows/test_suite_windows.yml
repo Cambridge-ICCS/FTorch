@@ -1,0 +1,50 @@
+# workflow to run the FTorch test suite
+
+name: TestSuiteWindows
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pushes to the "main" branch and any pull request events
+  push:
+    branches: [ "main"]
+  pull_request:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        toolchain:
+          - {compiler: gcc, version: 13}
+          - {compiler: intel, version: '2023.2'}
+        # include:
+        #   - os: windows-latest
+        #     toolchain: {compiler: gcc, version: 12}
+        # exclude:
+        #   - os: macos-latest
+        #     toolchain: {compiler: intel, version: '2023.2'}
+        #   - os: macos-latest
+        #     toolchain: {compiler: nvidia-hpc, version: '23.11'}
+        #   - os: windows-latest
+        #     toolchain: {compiler: nvidia-hpc, version: '23.11'}
+
+    steps:
+      - uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - run: |
+          ${{ env.FC }} --version
+          # ${{ steps.setup-fortran.outputs.fc }}
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
