@@ -31,7 +31,7 @@ program example
   call torch_tensor_from_array(a, in_data, tensor_layout, torch_kCPU)
 
   ! Extract a Fortran array from a Torch tensor
-  call torch_tensor_to_array(a, out_data, shape(in_data))
+  call torch_tensor_to_array(a, out_data, [2])
   write (*,*) "a = ", out_data(:)
 
   ! Check output tensor matches expected value
