@@ -19,7 +19,7 @@ program inference
    real(wp), dimension(4), target :: in_data2
    real(wp), dimension(4), target :: out_data1
    real(wp), dimension(4), target :: out_data2
-   integer :: tensor_layout(1) = [1]
+   integer(FT_INT) :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
    ! The net, a vector of input tensors (in this case we only have one), and the output tensor
