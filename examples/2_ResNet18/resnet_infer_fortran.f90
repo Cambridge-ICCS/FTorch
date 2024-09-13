@@ -5,8 +5,8 @@ program inference
    ! Import our library for interfacing with PyTorch
    use ftorch
 
-   ! Import our tools module for assert_real
-   use utils
+   ! Import our tools module for testing utils
+   use utils, only : assert_real
 
    implicit none
 
@@ -56,6 +56,7 @@ contains
       character(len=100) :: categories(N_cats)
       real(wp) :: probability
 
+      ! Flag for testing
       logical :: test_pass
 
       ! Get TorchScript model file as a command line argument
