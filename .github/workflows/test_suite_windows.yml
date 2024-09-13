@@ -16,6 +16,7 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -43,7 +44,7 @@ jobs:
 
       - run: |
           ${{ env.FC }} --version
-          ${{ steps.setup-fortran.outputs.fc }}
+          # ${{ steps.setup-fortran.outputs.fc }}
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
