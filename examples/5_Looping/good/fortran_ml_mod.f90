@@ -28,7 +28,7 @@ module ml_mod
   subroutine ml_init()
 
     ! Load ML model
-    model_torchscript_file = 'saved_model.pt'
+    model_torchscript_file = '../saved_simplenet_model.pt'
     call torch_model_load(torch_net, model_torchscript_file)
  
   end subroutine ml_init

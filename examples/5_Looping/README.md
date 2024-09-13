@@ -29,6 +29,33 @@ network to TorchScript. A `simplenet_infer_fortran.f90` file contains the main
 program that runs over the loop. A `fortran_ml_mod.f90` file contains a module with
 the FTorch code to load the TorchScript model, run it in inference mode, and clean up.
 
+### Bad
+
+We start with the 'bad' approach which takes the obvious approach, enclosing the code
+from example 1 in a loop.
+
+Examine the code in `bad/fortran_ml_mod.f90` to see how the subroutine `ml_routine()`
+creates a `torch_model` and `torch_tensor`s and reads in the net on every call before
+performing inference and then destroying them.
+
+### Good
+
+Now look at the 'good' approach.
+
+Examining the code in `good/fortran_ml_mod.f90` we see how there is an initialisation
+subroutine `ml_init()` that reads in the net from file, holding it as a module variable.
+There is then `ml_routine()` that maps the input and output dta to `torch_tensor`s
+(also declared at a module level) and performs the forward pass.
+Finally we have `ml_finalise()` that cleans up the net and tensors.
+
+Looking next at `good/simplenet_infer_fortran.f90` we see how the initialisation and
+finalisation routines are called once, before and after the main loop respectively, 
+with only `ml_routine()` running the forward pass called from inside the loop.
+
+The benefits of this approach can be seen by comparing the time taken to run each
+version the code as detailed below.
+
+
 ## Dependencies
 
 To run this example requires:
@@ -71,3 +98,37 @@ environment:
 ```
 deactivate
 ```
+
+Now we can build the Fortran codes.
+This is done using CMake s follows:
+```
+mkdir build
+cd build
+cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> -DCMAKE_BUILD_TYPE=Release
+cmake --build .
+```
+
+Which will generate two executables `simplenet_infer_fortran_bad` and
+`simplenet_infer_fortran_good`.
+
+These can be run and timed using:
+```
+time ./simplenet_infer_fortran_bad
+```
+and 
+```
+time ./simplenet_infer_fortran_good
+```
+
+which will produce output like:
+```
+   99985792.0       100005792.       100025792.       100045792.       100065800.
+./simplenet_infer_fortran_bad  13.64s user 1.10s system 94% cpu 15.551 total
+```
+and
+```
+   99985792.0       100005792.       100025792.       100045792.       100065800.
+./simplenet_infer_fortran_good  0.34s user 0.02s system 98% cpu 0.369 total
+```
+
+We see that the 'good' approach is of the order of 40 times faster.
