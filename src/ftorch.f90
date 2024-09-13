@@ -2124,17 +2124,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2165,17 +2164,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2206,17 +2204,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2247,17 +2244,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2329,17 +2325,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2370,17 +2365,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2411,17 +2405,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2452,17 +2445,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2534,17 +2526,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2575,17 +2566,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2616,17 +2606,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2657,17 +2646,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2739,17 +2727,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2780,17 +2767,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2821,17 +2807,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2862,17 +2847,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2944,17 +2928,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -2985,17 +2968,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -3026,17 +3008,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -3067,17 +3048,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -3149,17 +3129,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -3190,17 +3169,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -3231,17 +3209,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
@@ -3272,17 +3249,16 @@ contains
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
+      ! Raise an error if the sizes array has been provided and the output array
+      ! has already been allocated but its shape differs from the sizes argument
+      if (any(shape(data_out) /= sizes)) then
+        write (*,*) "[ERROR]: Array allocated with wrong shape"
+        stop 999
+      end if
     else if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
       ! Raise an error if the sizes array has not been provided and the pointer
       ! array has not been allocated
       write (*,*) "[ERROR]: Pointer array has not been allocated"
-      stop 999
-    end if
-
-    ! Raise an error if the sizes array has been provided and the output array
-    ! has already been allocated but its shape differs from the sizes argument
-    if (any(shape(data_out) /= sizes)) then
-      write (*,*) "[ERROR]: Array allocated with wrong shape"
       stop 999
     end if
 
