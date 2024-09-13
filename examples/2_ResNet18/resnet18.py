@@ -84,7 +84,7 @@ def run_model(model: torch.nn.Module, precision: type) -> None:
     tensor_shape = np.array(input_batch.numpy()).transpose().shape
     np_data = np_data.reshape(tensor_shape)
     np_data = np_data.transpose()
-    assert np.array_equal(np_data, input_batch.numpy()) is True
+    assert np.array_equal(np_data, input_batch.numpy())
     print("done.")
 
     print("Running ResNet-18 model for input...", end="")
@@ -118,6 +118,15 @@ def print_top_results(output: torch.Tensor) -> None:
         print(
             f"{categories[cat_id]} (id={cat_id}): probability = {top5_prob[i].item()}"
         )
+
+    expected_prob = [
+        0.8846225142478943,
+        0.0458051748573780,
+        0.0442761555314064,
+        0.0056213834322989,
+        0.0046520135365427,
+    ]
+    assert np.allclose(top5_prob, expected_prob, rtol=1e-5)
 
 
 if __name__ == "__main__":
