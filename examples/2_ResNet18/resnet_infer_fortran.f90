@@ -6,7 +6,7 @@ program inference
    use ftorch
 
    ! Import our tools module for testing utils
-   use utils, only : assert_real
+   use ftorch_test_utils, only : assert_real
 
    implicit none
 
