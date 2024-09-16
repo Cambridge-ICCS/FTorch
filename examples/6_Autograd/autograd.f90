@@ -7,7 +7,7 @@ program example
   use ftorch
 
   ! Import our tools module for testing utils
-  use utils, only : assert_real_array_1d
+  use ftorch_test_utils, only : assert_real_array_1d
 
   implicit none
 
