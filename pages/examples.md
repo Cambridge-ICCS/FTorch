@@ -187,7 +187,7 @@ data to multiple GPU devices.
 considers a variant of the SimpleNet demo, which demonstrates how to account for
 multiple input tensors and multiple output tensors.
 
-#### 5) Autograd
+#### 7) Autograd
 
 [This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_Autograd)
 is currently under development. Eventually, it will demonstrate how to perform
