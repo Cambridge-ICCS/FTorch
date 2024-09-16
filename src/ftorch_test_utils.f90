@@ -5,7 +5,7 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 
-module utils
+module ftorch_test_utils
 
   implicit none
 
@@ -112,4 +112,4 @@ module utils
 
     end function assert_real_array_1d
 
-end module utils
+end module ftorch_test_utils
