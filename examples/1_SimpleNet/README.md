@@ -78,9 +78,8 @@ cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> -DCMAKE_BUI
 cmake --build .
 ```
 
-(Note that you can choose the Fortran compiler with the `-DCMAKE_Fortran_COMPILER` flag, i.e., to match
-the Fortran compiler that was used to build your install of FTorch if the default found by CMake is
-different.)
+(Note that the Fortran compiler can be chosen explicitly with the `-DCMAKE_Fortran_COMPILER` flag,
+and should match the compiler that was used to locally build FTorch.)
 
 To run the compiled code calling the saved SimpleNet TorchScript from Fortran run the
 executable with an argument of the saved model file:
