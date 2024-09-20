@@ -84,6 +84,9 @@ cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> -DCMAKE_BUI
 cmake --build .
 ```
 
+(Note that the Fortran compiler can be chosen explicitly with the `-DCMAKE_Fortran_COMPILER` flag,
+and should match the compiler that was used to locally build FTorch.)
+
 To run the compiled code calling the saved MultiIONet TorchScript from Fortran,
 run the executable with an argument of the saved model file:
 ```
