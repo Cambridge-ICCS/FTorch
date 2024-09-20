@@ -17,9 +17,15 @@ This directory contains a number of examples of how to use the library:
     - Considers a variant of the SimpleNet example which has multiple input
       tensors and multiple output tensors.
 
-To run the examples as integration tests, use the CMake argument
+5. Looping
+    - In most applications we do not just call a net once, but many times.
+      To do this in a computationally efficient manner requires some thought.
+      This example demonstrates how to structure code in these cases, separating reading
+      in of a net from the call to the forward pass.
+
+To run select examples as integration tests, use the CMake argument
 ```
 -DCMAKE_BUILD_TESTS=TRUE
 ```
 when building and then call `ctest`. Note that testing is not currently set up
-for the MultiGPU example.
+for the MultiGPU or Looping example.
