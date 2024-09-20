@@ -18,7 +18,7 @@ approaches to observe the significant performance difference.
 
 We revisit SimpleNet from the first example that takes an input tensor of length 5
 and multiplies it by two.
-This time we start by passing it the the tensor `[1.0, 2.0, 3.0, 4.0]`, but then iterate
+This time we start by passing it the tensor `[1.0, 2.0, 3.0, 4.0]`, but then iterate
 10,000 times, each time incrementing each element by 1.0.
 We sum the results of each forward pass and print the final result.
 
@@ -44,8 +44,8 @@ Now look at the 'good' approach.
 
 Examining the code in `good/fortran_ml_mod.f90` we see how there is an initialisation
 subroutine `ml_init()` that reads in the net from file, holding it as a module variable.
-There is then `ml_routine()` that maps the input and output dta to `torch_tensor`s
-(also declared at a module level) and performs the forward pass.
+There is then `ml_routine()` that maps the input and output data to `torch_tensor`s
+(also declared at module level) and performs the forward pass.
 Finally we have `ml_finalise()` that cleans up the net and tensors.
 
 Looking next at `good/simplenet_infer_fortran.f90` we see how the initialisation and
@@ -75,7 +75,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-You can check everything is working by running `multiionet.py`:
+You can check everything is working by running `simplenet.py`:
 ```
 python3 simplenet.py
 ```
@@ -108,7 +108,10 @@ cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> -DCMAKE_BUI
 cmake --build .
 ```
 
-Which will generate two executables `simplenet_infer_fortran_bad` and
+(Note that the Fortran compiler can be chosen explicitly with the `-DCMAKE_Fortran_COMPILER` flag,
+and should match the compiler that was used to locally build FTorch.)
+
+This will generate two executables `simplenet_infer_fortran_bad` and
 `simplenet_infer_fortran_good`.
 
 These can be run and timed using:
