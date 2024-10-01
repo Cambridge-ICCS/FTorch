@@ -2119,14 +2119,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2159,14 +2161,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2199,14 +2203,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2239,14 +2245,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2279,14 +2287,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2319,14 +2329,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2359,14 +2371,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2399,14 +2413,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2439,14 +2455,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2479,14 +2497,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2519,14 +2539,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2559,14 +2581,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2599,14 +2623,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2639,14 +2665,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2679,14 +2707,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2719,14 +2749,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2759,14 +2791,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2799,14 +2833,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2839,14 +2875,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2879,14 +2917,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2919,14 +2959,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2959,14 +3001,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -2999,14 +3043,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -3039,14 +3085,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -3079,14 +3127,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -3119,14 +3169,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -3159,14 +3211,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -3199,14 +3253,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -3239,14 +3295,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
@@ -3279,14 +3337,16 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if ((.not. associated(data_out)) .or. all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
-      ! Raise an error if the sizes array has been provided but the shape of the
-      ! output array differs from it
+      write (*,*) "shape(data_out) = ", shape(data_out)
+      write (*,*) "sizes = ", sizes
       if (any(shape(data_out) /= sizes)) then
+        ! Raise an error if the sizes array has been provided but the shape of the
+        ! output array differs from it
         write (*,*) "[ERROR]: Array allocated with wrong shape"
         stop 999
       end if
