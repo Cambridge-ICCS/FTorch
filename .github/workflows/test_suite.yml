@@ -57,3 +57,8 @@ jobs:
         run: |
           . ftorch/bin/activate
           ./run_integration_tests.sh -V
+
+      - name: write log
+        if: always()
+        run: |
+          cat /home/runner/work/FTorch/FTorch/src/build/test/examples/7_Autograd/Testing/Temporary/LastTest.log
