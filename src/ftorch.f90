@@ -2119,9 +2119,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2159,9 +2159,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2199,9 +2199,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2239,9 +2239,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2279,9 +2279,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2319,9 +2319,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2359,9 +2359,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2399,9 +2399,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2439,9 +2439,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2479,9 +2479,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2519,9 +2519,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2559,9 +2559,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2599,9 +2599,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2639,9 +2639,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2679,9 +2679,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2719,9 +2719,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2759,9 +2759,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2799,9 +2799,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2839,9 +2839,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2879,9 +2879,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2919,9 +2919,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2959,9 +2959,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -2999,9 +2999,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -3039,9 +3039,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -3079,9 +3079,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -3119,9 +3119,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -3159,9 +3159,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -3199,9 +3199,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -3239,9 +3239,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
@@ -3279,9 +3279,9 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
-      if (all(shape(data_out) == 0)) then
+      if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
-        ! been allocated (i.e., its shape is all zeros) then allocate it
+        ! been associated/allocated then allocate it
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       else if (any(shape(data_out) /= sizes)) then
         ! Raise an error if the sizes array has been provided and the output
