@@ -16,7 +16,7 @@ program example
 
   ! Set up Fortran data structures
   real(wp), dimension(2), target :: in_data
-  real(wp), dimension(:), pointer :: out_data => null()
+  real(wp), dimension(:), pointer :: out_data
   real(wp), dimension(2) :: expected
   integer :: tensor_layout(1) = [1]
 
