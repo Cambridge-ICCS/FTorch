@@ -526,9 +526,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1)#{for i in range(1,RANK)}#,sizes(${i+1}$)#{endfor}#))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)

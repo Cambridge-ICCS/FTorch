@@ -2119,9 +2119,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2161,9 +2163,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2203,9 +2207,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2245,9 +2251,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2287,9 +2295,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2329,9 +2339,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2371,9 +2383,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2413,9 +2427,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2455,9 +2471,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2497,9 +2515,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2539,9 +2559,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2581,9 +2603,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2623,9 +2647,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2665,9 +2691,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2707,9 +2735,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2749,9 +2779,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2791,9 +2823,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2833,9 +2867,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2875,9 +2911,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2917,9 +2955,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -2959,9 +2999,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -3001,9 +3043,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -3043,9 +3087,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -3085,9 +3131,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -3127,9 +3175,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -3169,9 +3219,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -3211,9 +3263,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -3253,9 +3307,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -3295,9 +3351,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
@@ -3337,9 +3395,11 @@ contains
     if (present(sizes)) then
       ! The user may provide an array of sizes, i.e., the number of entries for
       ! each rank
+      write (*,*) "sizes is present as sizes = ", sizes
       if (.not. associated(data_out)) then
         ! If the sizes array has been provided and the output array has not
         ! been associated/allocated then allocate it
+        write (*,*) "data_out is not associated!, allocating to ", sizes(1)
         allocate(data_out(sizes(1),sizes(2),sizes(3),sizes(4),sizes(5)))
       end if
       write (*,*) "shape(data_out) = ", shape(data_out)
