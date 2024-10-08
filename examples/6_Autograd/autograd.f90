@@ -13,7 +13,7 @@ program example
 
   ! Set up Fortran data structures
   real(wp), dimension(2), target :: in_data
-  real(wp), dimension(:), pointer :: out_data
+  real(wp), dimension(:), pointer :: out_data => null()
   integer :: tensor_layout(1) = [1]
 
   ! Set up Torch data structures
