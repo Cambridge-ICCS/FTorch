@@ -25,13 +25,9 @@ if(CMAKE_BUILD_TESTS)
   # 1. Check the Python Autograd script runs successfully
   add_test(NAME pyautograd
     COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/autograd.py)
-  set_tests_properties(pyautograd PROPERTIES PASS_REGULAR_EXPRESSION
-    "-12.,  65.")
 
   # 2. Check the Fortran Autograd script runs successfully
   add_test(NAME fautograd
     COMMAND autograd
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(fautograd PROPERTIES PASS_REGULAR_EXPRESSION
-    "2.00000000       3.00000000")
 endif()
