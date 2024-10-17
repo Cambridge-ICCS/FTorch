@@ -22,6 +22,9 @@ module ftorch
   !> Type for holding a Torch tensor.
   type torch_tensor
     type(c_ptr) :: p = c_null_ptr  !! pointer to the tensor in memory
+  contains
+    procedure :: get_rank
+    procedure :: get_shape
   end type torch_tensor
 
   !| Enumerator for Torch data types  
@@ -314,6 +317,45 @@ contains
 
     device_index = torch_tensor_get_device_index_c(tensor%p)
   end function torch_tensor_get_device_index
+
+  !> Determines the rank of a tensor.
+  function get_rank(self) result(rank)
+    class(torch_tensor), intent(in) :: self
+    integer(kind=int32) :: rank  !! rank of tensor
+
+    interface
+      function torch_tensor_get_rank_c(tensor) result(rank) &
+          bind(c, name = 'torch_tensor_get_rank')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        type(c_ptr), value, intent(in) :: tensor
+        integer(c_int) :: rank
+      end function torch_tensor_get_rank_c
+    end interface
+
+    rank = torch_tensor_get_rank_c(self%p)
+  end function get_rank
+
+  !> Determines the shape of a tensor.
+  function get_shape(self) result(sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
+    class(torch_tensor), intent(in) :: self
+    integer(kind=c_long), pointer :: sizes(:) !! Pointer to tensor data
+    integer(kind=int32) :: ndims(1)
+    type(c_ptr) :: cptr
+
+    interface
+      function torch_tensor_get_sizes_c(tensor) result(sizes) &
+          bind(c, name = 'torch_tensor_get_sizes')
+        use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
+        type(c_ptr), value, intent(in) :: tensor
+        type(c_ptr) :: sizes
+      end function torch_tensor_get_sizes_c
+    end interface
+
+    ndims(1) = self%get_rank()
+    cptr = torch_tensor_get_sizes_c(self%p)
+    call c_f_pointer(cptr, sizes, ndims)
+  end function get_shape
 
   !> Deallocates an array of tensors.
   subroutine torch_tensor_array_delete(tensor_array)
