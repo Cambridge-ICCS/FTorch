@@ -1812,432 +1812,720 @@ contains
   !> Return the array data associated with a Torch tensor of rank 1 and data type `int8`
   subroutine torch_tensor_to_array_int8_1d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
+    use, intrinsic :: iso_fortran_env, only : int8, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int8), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 1(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 1(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int8_1d
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `int8`
   subroutine torch_tensor_to_array_int8_2d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
+    use, intrinsic :: iso_fortran_env, only : int8, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int8), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 2(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 2(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int8_2d
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `int8`
   subroutine torch_tensor_to_array_int8_3d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
+    use, intrinsic :: iso_fortran_env, only : int8, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int8), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 3(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 3(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int8_3d
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `int8`
   subroutine torch_tensor_to_array_int8_4d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
+    use, intrinsic :: iso_fortran_env, only : int8, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int8), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt8 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 4(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 4(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int8_4d
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `int16`
   subroutine torch_tensor_to_array_int16_1d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
+    use, intrinsic :: iso_fortran_env, only : int16, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int16), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 1(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 1(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int16_1d
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `int16`
   subroutine torch_tensor_to_array_int16_2d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
+    use, intrinsic :: iso_fortran_env, only : int16, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int16), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 2(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 2(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int16_2d
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `int16`
   subroutine torch_tensor_to_array_int16_3d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
+    use, intrinsic :: iso_fortran_env, only : int16, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int16), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 3(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 3(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int16_3d
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `int16`
   subroutine torch_tensor_to_array_int16_4d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
+    use, intrinsic :: iso_fortran_env, only : int16, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int16), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt16 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 4(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 4(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int16_4d
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `int32`
   subroutine torch_tensor_to_array_int32_1d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
+    use, intrinsic :: iso_fortran_env, only : int32, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int32), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 1(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 1(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int32_1d
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `int32`
   subroutine torch_tensor_to_array_int32_2d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
+    use, intrinsic :: iso_fortran_env, only : int32, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int32), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 2(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 2(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int32_2d
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `int32`
   subroutine torch_tensor_to_array_int32_3d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
+    use, intrinsic :: iso_fortran_env, only : int32, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int32), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 3(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 3(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int32_3d
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `int32`
   subroutine torch_tensor_to_array_int32_4d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
+    use, intrinsic :: iso_fortran_env, only : int32, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int32), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt32 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 4(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 4(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int32_4d
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `int64`
   subroutine torch_tensor_to_array_int64_1d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
+    use, intrinsic :: iso_fortran_env, only : int64, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int64), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 1(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 1(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int64_1d
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `int64`
   subroutine torch_tensor_to_array_int64_2d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
+    use, intrinsic :: iso_fortran_env, only : int64, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int64), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 2(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 2(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int64_2d
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `int64`
   subroutine torch_tensor_to_array_int64_3d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
+    use, intrinsic :: iso_fortran_env, only : int64, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int64), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 3(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 3(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int64_3d
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `int64`
   subroutine torch_tensor_to_array_int64_4d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
+    use, intrinsic :: iso_fortran_env, only : int64, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     integer(kind=int64), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kInt64 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 4(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 4(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int64_4d
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `real32`
   subroutine torch_tensor_to_array_real32_1d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
+    use, intrinsic :: iso_fortran_env, only : real32, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     real(kind=real32), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 1(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 1(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real32_1d
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `real32`
   subroutine torch_tensor_to_array_real32_2d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
+    use, intrinsic :: iso_fortran_env, only : real32, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     real(kind=real32), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 2(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 2(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real32_2d
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `real32`
   subroutine torch_tensor_to_array_real32_3d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
+    use, intrinsic :: iso_fortran_env, only : real32, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     real(kind=real32), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 3(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 3(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real32_3d
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `real32`
   subroutine torch_tensor_to_array_real32_4d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
+    use, intrinsic :: iso_fortran_env, only : real32, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     real(kind=real32), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kFloat32 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 4(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 4(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real32_4d
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `real64`
   subroutine torch_tensor_to_array_real64_1d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
+    use, intrinsic :: iso_fortran_env, only : real64, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     real(kind=real64), pointer, intent(out) :: data_out(:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(1) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 1(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 1(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real64_1d
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `real64`
   subroutine torch_tensor_to_array_real64_2d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
+    use, intrinsic :: iso_fortran_env, only : real64, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     real(kind=real64), pointer, intent(out) :: data_out(:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(2) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 2(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 2(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real64_2d
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `real64`
   subroutine torch_tensor_to_array_real64_3d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
+    use, intrinsic :: iso_fortran_env, only : real64, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     real(kind=real64), pointer, intent(out) :: data_out(:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(3) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 3(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 3(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real64_3d
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `real64`
   subroutine torch_tensor_to_array_real64_4d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
+    use, intrinsic :: iso_fortran_env, only : real64, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     real(kind=real64), pointer, intent(out) :: data_out(:,:,:,:) !! Pointer to tensor data
-    integer, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer, optional, intent(in) :: sizes(4) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = torch_kFloat64 !! Data type
     type(c_ptr) :: cptr
 
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, 4(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, 4(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real64_4d
 
