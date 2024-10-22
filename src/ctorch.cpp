@@ -228,6 +228,18 @@ int torch_tensor_get_device_index(const torch_tensor_t tensor)
   return t->device().index();
 }
 
+int torch_tensor_get_rank(const torch_tensor_t tensor)
+{
+  auto t = reinterpret_cast<torch::Tensor*>(tensor);
+  return t->sizes().size();
+}
+
+const long int* torch_tensor_get_sizes(const torch_tensor_t tensor)
+{
+  auto t = reinterpret_cast<torch::Tensor*>(tensor);
+  return t->sizes().data();
+}
+
 void torch_tensor_delete(torch_tensor_t tensor)
 {
   auto t = reinterpret_cast<torch::Tensor*>(tensor);

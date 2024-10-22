@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 #policy CMP0076 - target_sources source files are relative to file where target_sources is run
 cmake_policy (SET CMP0076 NEW)
 
@@ -30,4 +30,6 @@ if(CMAKE_BUILD_TESTS)
   add_test(NAME fautograd
     COMMAND autograd
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_tests_properties(fautograd PROPERTIES PASS_REGULAR_EXPRESSION
+    "Autograd example ran successfully")
 endif()
