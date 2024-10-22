@@ -5,7 +5,7 @@ $:'' if RANK == 0 else '(' + ':' + ',:' * (RANK - 1) + ')'
 #:set C_PRECISIONS = ['c_int8_t', 'c_int16_t', 'c_int32_t', 'c_int64_t', 'c_float', 'c_double']
 #:set C_PRECISIONS = dict(zip(PRECISIONS, C_PRECISIONS))
 #:set ENUMS = dict(zip(PRECISIONS, ['torch_kInt8', 'torch_kInt16', 'torch_kInt32', 'torch_kInt64', 'torch_kFloat32', 'torch_kFloat64']))
-#:set RANKS = range(1, 5)
+#:set RANKS = range(1, 6)
 #:def enum_from_prec(PRECISION)
 $:ENUMS[PRECISION]
 #:enddef enum_from_prec
