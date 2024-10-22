@@ -66,4 +66,6 @@ program inference
      stop 999
    end if
 
+  write (*,*) "SimpleNet example ran successfully"
+
 end program inference

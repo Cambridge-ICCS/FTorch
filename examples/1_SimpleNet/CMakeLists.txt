@@ -45,4 +45,6 @@ if(CMAKE_BUILD_TESTS)
     COMMAND simplenet_infer_fortran
     ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_tests_properties(simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "SimpleNet example ran successfully")
 endif()

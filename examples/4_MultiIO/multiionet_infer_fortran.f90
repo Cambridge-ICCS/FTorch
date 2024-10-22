@@ -74,4 +74,6 @@ program inference
      stop 999
    end if
 
+   write (*,*) "MultiIO example ran successfully"
+
 end program inference

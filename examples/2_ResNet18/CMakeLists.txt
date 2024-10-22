@@ -40,4 +40,6 @@ if(CMAKE_BUILD_TESTS)
     ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt # Command line argument: model file
     ${PROJECT_SOURCE_DIR}/data # Command line argument: data directory filepath
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_tests_properties(resnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "ResNet18 example ran successfully")
 endif()

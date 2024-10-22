@@ -121,6 +121,8 @@ contains
         stop 999
       end if
 
+      write (*,*) "ResNet18 example ran successfully"
+
    end subroutine main
 
    subroutine load_data(filename, tensor_length, in_data)
