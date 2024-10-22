@@ -12,23 +12,48 @@ program example
   integer, parameter :: wp = sp
 
   ! Set up Fortran data structures
-  real(wp), dimension(2), target :: in_data
-  real(wp), dimension(:), pointer :: out_data
-  integer :: tensor_layout(1) = [1]
+  integer, parameter :: n=2, m=5
+  real(wp), dimension(n,m), target :: in_data
+  real(wp), dimension(:,:), pointer :: out_data
+  integer :: tensor_layout(2) = [1, 2]
+  integer :: i, j
 
   ! Set up Torch data structures
-  type(torch_tensor) :: a
+  type(torch_tensor) :: tensor
+
+  ! initialize in_data with some fake data
+  do j = 1, m
+    do i = 1, n
+      in_data(i,j) = ((i-1)*m + j) * 1.0_wp
+    end do
+  end do
 
   ! Construct a Torch Tensor from a Fortran array
-  in_data(:) = [2.0, 3.0]
-  call torch_tensor_from_array(a, in_data, tensor_layout, torch_kCPU)
+  call torch_tensor_from_array(tensor, in_data, tensor_layout, torch_kCPU)
+
+  ! check tensor rank and shape match those of in_data
+  if (tensor%get_rank() /= 2) then
+    print *, "Error :: rank should be 2"
+    stop 1
+  end if
+  if (any(tensor%get_shape() /= [2, 5])) then
+    print *, "Error :: shape should be (2, 5)"
+    stop 1
+  end if
 
   ! Extract a Fortran array from a Torch tensor
-  call torch_tensor_to_array(a, out_data, shape(in_data))
-  write (*,*) "a = ", out_data(:)
+  call torch_tensor_to_array(tensor, out_data, shape(in_data))
+
+  ! check that the data match
+  if (any(in_data /= out_data)) then
+    print *, "Error :: in_data does not match out_data"
+    stop 1
+  end if
 
   ! Cleanup
   nullify(out_data)
-  call torch_tensor_delete(a)
+  call torch_tensor_delete(tensor)
+
+  write (*,*) "test completed successfully"
 
 end program example
