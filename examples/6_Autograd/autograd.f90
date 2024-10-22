@@ -7,7 +7,7 @@ program example
   use ftorch
 
   ! Import our tools module for testing utils
-  use ftorch_test_utils, only : assert_real_array_1d
+  use ftorch_test_utils, only : assert_real_array_2d
 
   implicit none
 
@@ -18,6 +18,7 @@ program example
   integer, parameter :: n=2, m=5
   real(wp), dimension(n,m), target :: in_data
   real(wp), dimension(:,:), pointer :: out_data
+  real(wp), dimension(n,m) :: expected
   integer :: tensor_layout(2) = [1, 2]
   integer :: i, j
 
@@ -51,8 +52,8 @@ program example
   call torch_tensor_to_array(tensor, out_data, shape(in_data))
 
   ! Check output tensor matches expected value
-  expected = [2.0, 3.0]
-  test_pass = assert_real_array_1d(out_data, expected, test_name="torch_tensor_to_array", rtol=1e-5)
+  expected(:,:) = in_data
+  test_pass = assert_real_array_2d(out_data, expected, test_name="torch_tensor_to_array", rtol=1e-5)
 
   ! Check that the data match
   if (.not. test_pass) then
