@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.3% of total for procedures.">22 statements</a>
+                 title=" 1.2% of total for procedures.">21 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -173,7 +173,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~40"></span>
+              <span class="anchor" id="variable-tensor~42"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -203,7 +203,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-sizes~4"></span>
+              <span class="anchor" id="variable-sizes~6"></span>
               integer,
             </td>
 <td>intent(in),</td>
@@ -235,40 +235,30 @@
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_to_array_int8_4d</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="n">data_out</span><span class="p">,</span><span class="w"> </span><span class="n">sizes</span><span class="p">)</span>
 <span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int64_t</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span>
-<span class="nb">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iso_fortran_env</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">int8</span>
+<span class="nb">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iso_fortran_env</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">int8</span><span class="p">,</span><span class="w"> </span><span class="n">int64</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w"> </span><span class="c">!! Returned tensor</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="n">int8</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">data_out</span><span class="p">(:,:,:,:)</span><span class="w"> </span><span class="c">!! Pointer to tensor data</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sizes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="c">!! Number of entries for each rank</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">my_shape</span><span class="p">(:)</span><span class="w"> </span><span class="c">!! Number of entries for each rank</span>
 
 <span class="w">    </span><span class="c">! Local data</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">c_dtype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_kInt8</span><span class="w"> </span><span class="c">!! Data type</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">cptr</span>
 
-<span class="w">    </span><span class="c">! Handle allocation of the pointer array</span>
+<span class="w">    </span><span class="n">my_shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_shape</span><span class="p">()</span>
+
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">sizes</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
-<span class="w">      </span><span class="c">! The user may provide an array of sizes, i.e., the number of entries for</span>
-<span class="w">      </span><span class="c">! each rank</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">all</span><span class="p">(</span><span class="nb">shape</span><span class="p">(</span><span class="n">data_out</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
-<span class="w">        </span><span class="c">! If the sizes array has been provided and the output array has not</span>
-<span class="w">        </span><span class="c">! been allocated (i.e., its shape is all zeros) then allocate it</span>
-<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">data_out</span><span class="p">(</span><span class="n">sizes</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">sizes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">sizes</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">sizes</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
-<span class="w">      </span><span class="k">else if</span><span class="w"> </span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="nb">shape</span><span class="p">(</span><span class="n">data_out</span><span class="p">)</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">sizes</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
-<span class="w">        </span><span class="c">! Raise an error if the sizes array has been provided and the output</span>
-<span class="w">        </span><span class="c">! array has already been allocated but its shape differs from the sizes</span>
-<span class="w">        </span><span class="c">! argument</span>
-<span class="w">        </span><span class="k">write</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;[ERROR]: Array allocated with wrong shape&quot;</span>
-<span class="w">        </span><span class="k">stop</span>
-<span class="k">      end if</span>
-<span class="k">    else if</span><span class="w"> </span><span class="p">((.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">associated</span><span class="p">(</span><span class="n">data_out</span><span class="p">))</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="p">(</span><span class="k">all</span><span class="p">(</span><span class="nb">shape</span><span class="p">(</span><span class="n">data_out</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span><span class="w"> </span><span class="k">then</span>
-<span class="w">      </span><span class="c">! Raise an error if the sizes array has not been provided and the pointer</span>
-<span class="w">      </span><span class="c">! array has not been allocated</span>
-<span class="w">      </span><span class="k">write</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;[ERROR]: Pointer array has not been allocated&quot;</span>
-<span class="w">      </span><span class="k">stop</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="k">all</span><span class="p">(</span><span class="n">my_shape</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">sizes</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;Error :: sizes argument does not match shape of tensor&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A, 4(I0, &quot; &quot;), A)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;sizes        :: [ &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">sizes</span><span class="p">(:),</span><span class="w"> </span><span class="s1">&#39;]&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A, 4(I0, &quot; &quot;), A)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;tensor shape :: [ &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">my_shape</span><span class="p">(:),</span><span class="w"> </span><span class="s1">&#39;]&#39;</span>
+<span class="w">        </span><span class="k">stop </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">end if</span>
 <span class="k">    end if</span>
 
 <span class="w">    </span><span class="c">! Have the data_out array point to the Tensor data</span>
 <span class="w">    </span><span class="n">cptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_to_blob_c</span><span class="p">(</span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">c_dtype</span><span class="p">)</span>
-<span class="w">    </span><span class="k">call </span><span class="nb">c_f_pointer</span><span class="p">(</span><span class="n">cptr</span><span class="p">,</span><span class="w"> </span><span class="n">data_out</span><span class="p">,</span><span class="w"> </span><span class="n">sizes</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="nb">c_f_pointer</span><span class="p">(</span><span class="n">cptr</span><span class="p">,</span><span class="w"> </span><span class="n">data_out</span><span class="p">,</span><span class="w"> </span><span class="n">my_shape</span><span class="p">)</span>
 
 <span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_tensor_to_array_int8_4d</span>
 </pre></div>
