@@ -59,3 +59,5 @@ if __name__ == "__main__":
         result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
     print(result)
+
+    assert torch.allclose(result, torch.Tensor([0.0, 2.0, 4.0, 6.0, 8.0]))

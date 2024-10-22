@@ -26,11 +26,6 @@ if(CMAKE_BUILD_TESTS)
   add_test(NAME resnet18
     COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/resnet18.py
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-  set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.88462")
-  set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.04580")
-  set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.04427")
-  set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.00562")
-  set_tests_properties(resnet18 PROPERTIES PASS_REGULAR_EXPRESSION "0.00465")
 
   # 2. Check the model is saved to file in the expected location with the pt2ts.py script
   add_test(NAME pt2ts
@@ -43,7 +38,8 @@ if(CMAKE_BUILD_TESTS)
   add_test(NAME resnet_infer_fortran
     COMMAND resnet_infer_fortran
     ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt # Command line argument: model file
-    ${PROJECT_SOURCE_DIR}/data # COmmand line argument: data directory filepath
+    ${PROJECT_SOURCE_DIR}/data # Command line argument: data directory filepath
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(resnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION "0.88462")
+  set_tests_properties(resnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "ResNet18 example ran successfully")
 endif()

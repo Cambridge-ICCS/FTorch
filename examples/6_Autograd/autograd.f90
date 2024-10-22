@@ -6,6 +6,9 @@ program example
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch
 
+  ! Import our tools module for testing utils
+  use ftorch_test_utils, only : assert_real_array_2d
+
   implicit none
 
   ! Set working precision for reals
@@ -15,8 +18,12 @@ program example
   integer, parameter :: n=2, m=5
   real(wp), dimension(n,m), target :: in_data
   real(wp), dimension(:,:), pointer :: out_data
+  real(wp), dimension(n,m) :: expected
   integer :: tensor_layout(2) = [1, 2]
   integer :: i, j
+
+  ! Flag for testing
+  logical :: test_pass
 
   ! Set up Torch data structures
   type(torch_tensor) :: tensor
@@ -44,16 +51,20 @@ program example
   ! Extract a Fortran array from a Torch tensor
   call torch_tensor_to_array(tensor, out_data, shape(in_data))
 
-  ! check that the data match
-  if (any(in_data /= out_data)) then
+  ! Check output tensor matches expected value
+  expected(:,:) = in_data
+  test_pass = assert_real_array_2d(out_data, expected, test_name="torch_tensor_to_array", rtol=1e-5)
+
+  ! Check that the data match
+  if (.not. test_pass) then
     print *, "Error :: in_data does not match out_data"
-    stop 1
+    stop 999
   end if
 
   ! Cleanup
   nullify(out_data)
   call torch_tensor_delete(tensor)
 
-  write (*,*) "test completed successfully"
+  write (*,*) "Autograd example ran successfully"
 
 end program example

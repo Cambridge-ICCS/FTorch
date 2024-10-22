@@ -52,10 +52,15 @@ if __name__ == "__main__":
     model = MultiIONet()
     model.eval()
 
+    input_tensors = (
+        torch.Tensor([0.0, 1.0, 2.0, 3.0]),
+        torch.Tensor([-0.0, -1.0, -2.0, -3.0]),
+    )
+
     with torch.no_grad():
-        print(
-            model(
-                torch.Tensor([0.0, 1.0, 2.0, 3.0]),
-                torch.Tensor([-0.0, -1.0, -2.0, -3.0]),
-            )
-        )
+        output_tensors = model(*input_tensors)
+
+    print(output_tensors)
+
+    for output, input, scale_factor in zip(output_tensors, input_tensors, (2, 3)):
+        assert torch.allclose(output, scale_factor * input)
