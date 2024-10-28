@@ -10,7 +10,7 @@
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
-    <title>torch_tensor_to_array_int16_4d &ndash; FTorch</title>
+    <title>torch_tensor_to_array_int64_5d &ndash; FTorch</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -63,7 +63,7 @@
 
     <div class="container">
   <div class="row">
-    <h1>torch_tensor_to_array_int16_4d
+    <h1>torch_tensor_to_array_int64_5d
       <small>Subroutine</small>
       
     </h1>
@@ -89,7 +89,7 @@
           <ol class="breadcrumb justify-content-end mb-0">
                 <li class="breadcrumb-item"><a href='../sourcefile/ftorch.f90.html'>ftorch.f90</a></li>
                 <li class="breadcrumb-item"><a href='../module/ftorch.html'>ftorch</a></li>
-            <li class="breadcrumb-item active" aria-current="page">torch_tensor_to_array_int16_4d</li>
+            <li class="breadcrumb-item active" aria-current="page">torch_tensor_to_array_int64_5d</li>
           </ol>
         </nav>
       </div>
@@ -130,7 +130,7 @@
     <div class="card card-primary">
       <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
-        <a class="list-group-item" href="../proc/torch_tensor_to_array_int16_4d.html#src">torch_tensor_to_array_int16_4d</a>
+        <a class="list-group-item" href="../proc/torch_tensor_to_array_int64_5d.html#src">torch_tensor_to_array_int64_5d</a>
       </div>
     </div>
 
@@ -140,7 +140,7 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public  subroutine torch_tensor_to_array_int16_4d(tensor, data_out, sizes)  
+    <h2>public  subroutine torch_tensor_to_array_int64_5d(tensor, data_out, sizes)  
 </h2>
         <div class="card mb-4">
       <h3 class="card-header card-title bg-light">Uses</h3>
@@ -157,7 +157,7 @@
     </div>
 
 
-    <p>Return the array data associated with a Torch tensor of rank 4 and data type <code>int16</code></p>
+    <p>Return the array data associated with a Torch tensor of rank 5 and data type <code>int64</code></p>
 
 
     <h3>Arguments</h3>
@@ -173,7 +173,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~53"></span>
+              <span class="anchor" id="variable-tensor~64"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -188,22 +188,22 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-data_out~9"></span>
-              integer(kind=int16),
+              <span class="anchor" id="variable-data_out~20"></span>
+              integer(kind=int64),
             </td>
 <td>intent(out),</td>
               <td></td>            <td>
               pointer
             </td>
             <td>::</td>
-            <td><strong>data_out</strong>(:,:,:,:)</td>
+            <td><strong>data_out</strong>(:,:,:,:,:)</td>
             <td>
                 <p>Pointer to tensor data</p>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-sizes~11"></span>
+              <span class="anchor" id="variable-sizes~22"></span>
               integer,
             </td>
 <td>intent(in),</td>
@@ -211,7 +211,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>sizes</strong>(4)</td>
+            <td><strong>sizes</strong>(5)</td>
             <td>
                 <p>Number of entries for each rank</p>
             </td>
@@ -233,16 +233,16 @@
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_to_array_int16_4d</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="n">data_out</span><span class="p">,</span><span class="w"> </span><span class="n">sizes</span><span class="p">)</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_to_array_int64_5d</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="n">data_out</span><span class="p">,</span><span class="w"> </span><span class="n">sizes</span><span class="p">)</span>
 <span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int64_t</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span>
-<span class="nb">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iso_fortran_env</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">int16</span><span class="p">,</span><span class="w"> </span><span class="n">int64</span>
+<span class="nb">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iso_fortran_env</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">int64</span><span class="p">,</span><span class="w"> </span><span class="n">int64</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w"> </span><span class="c">!! Returned tensor</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="n">int16</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">data_out</span><span class="p">(:,:,:,:)</span><span class="w"> </span><span class="c">!! Pointer to tensor data</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sizes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="c">!! Number of entries for each rank</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">data_out</span><span class="p">(:,:,:,:,:)</span><span class="w"> </span><span class="c">!! Pointer to tensor data</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sizes</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="c">!! Number of entries for each rank</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">my_shape</span><span class="p">(:)</span><span class="w"> </span><span class="c">!! Number of entries for each rank</span>
 
 <span class="w">    </span><span class="c">! Local data</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">c_dtype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_kInt16</span><span class="w"> </span><span class="c">!! Data type</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">c_dtype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_kInt64</span><span class="w"> </span><span class="c">!! Data type</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">cptr</span>
 
 <span class="w">    </span><span class="n">my_shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_shape</span><span class="p">()</span>
@@ -250,8 +250,8 @@
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">sizes</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
 <span class="k">      if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="k">all</span><span class="p">(</span><span class="n">my_shape</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">sizes</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
 <span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;Error :: sizes argument does not match shape of tensor&#39;</span>
-<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A, 4(I0, &quot; &quot;), A)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;sizes        :: [ &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">sizes</span><span class="p">(:),</span><span class="w"> </span><span class="s1">&#39;]&#39;</span>
-<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A, 4(I0, &quot; &quot;), A)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;tensor shape :: [ &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">my_shape</span><span class="p">(:),</span><span class="w"> </span><span class="s1">&#39;]&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A, 5(I0, &quot; &quot;), A)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;sizes        :: [ &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">sizes</span><span class="p">(:),</span><span class="w"> </span><span class="s1">&#39;]&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A, 5(I0, &quot; &quot;), A)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;tensor shape :: [ &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">my_shape</span><span class="p">(:),</span><span class="w"> </span><span class="s1">&#39;]&#39;</span>
 <span class="w">        </span><span class="k">stop </span><span class="mi">1</span>
 <span class="w">      </span><span class="k">end if</span>
 <span class="k">    end if</span>
@@ -260,7 +260,7 @@
 <span class="w">    </span><span class="n">cptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_to_blob_c</span><span class="p">(</span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">c_dtype</span><span class="p">)</span>
 <span class="w">    </span><span class="k">call </span><span class="nb">c_f_pointer</span><span class="p">(</span><span class="n">cptr</span><span class="p">,</span><span class="w"> </span><span class="n">data_out</span><span class="p">,</span><span class="w"> </span><span class="n">my_shape</span><span class="p">)</span>
 
-<span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_tensor_to_array_int16_4d</span>
+<span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_tensor_to_array_int64_5d</span>
 </pre></div>
 
     </section>
