@@ -114,6 +114,20 @@ EXPORT_C void torch_tensor_print(const torch_tensor_t tensor);
 EXPORT_C int torch_tensor_get_device_index(const torch_tensor_t tensor);
 
 /**
+ * Function to determine the rank of a Torch Tensor
+ * @param Torch Tensor to determine the rank of
+ * @return rank of the Torch Tensor
+ */
+EXPORT_C int torch_tensor_get_rank(const torch_tensor_t tensor);
+
+/**
+ * Function to determine the sizes (shape) of a Torch Tensor
+ * @param Torch Tensor to determine the rank of
+ * @return pointer to the sizes array of the Torch Tensor
+ */
+EXPORT_C const long int* torch_tensor_get_sizes(const torch_tensor_t tensor);
+
+/**
  * Function to delete a Torch Tensor to clean up
  * @param Torch Tensor to delete
  */

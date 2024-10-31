@@ -3,6 +3,7 @@
 **_A library for coupling (Py)Torch machine learning models to Fortran_**
 
 ![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/FTorch)
+![Fortran](https://img.shields.io/badge/Fortran-2008-purple)
 
 This repository contains code, utilities, and examples for directly calling PyTorch ML
 models from Fortran.
@@ -60,10 +61,10 @@ The following presentations provide an introduction and overview of _FTorch_:
 
 * Reducing the overheads for coupling PyTorch machine learning models to Fortran\
   ML & DL Seminars, LSCE, IPSL, Paris - November 2023\
-  [Slides](https://jackatkinson.net/slides/IPSL_FTorch/IPSL_FTorch.html) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
+  [Slides](https://jackatkinson.net/slides/IPSL_FTorch) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
 * Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran\
   RSECon23, Swansea - September 2023\
-  [Slides](https://jackatkinson.net/slides/RSECon23/RSECon23.html) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
+  [Slides](https://jackatkinson.net/slides/RSECon23) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
 
 Project status: This project is currently in pre-release with documentation and code
 being prepared for a first release.
@@ -83,7 +84,7 @@ To install the library requires the following to be installed on the system:
 
 * CMake >= 3.1
 * [libtorch](https://pytorch.org/cppdocs/installing.html)<sup>*</sup> or [PyTorch](https://pytorch.org/)
-* Fortran, C++ (must fully support C++17), and C compilers
+* Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 
 <sup>*</sup> _The minimal example provided downloads the CPU-only Linux Nightly binary. [Alternative versions](https://pytorch.org/get-started/locally/) may be required._
 
@@ -266,6 +267,9 @@ The following projects make use of this code or derivatives in some way:
 
 * [M2LInES CAM-ML](https://github.com/m2lines/CAM-ML)
 * [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/)
-* [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)
+* [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)\
+  See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
+* [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization)\
+  See Heuer et al (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
 
 Are we missing anyone? Let us know.

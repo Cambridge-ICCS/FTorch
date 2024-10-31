@@ -5,7 +5,7 @@ $:'' if RANK == 0 else '(' + ':' + ',:' * (RANK - 1) + ')'
 #:set C_PRECISIONS = ['c_int8_t', 'c_int16_t', 'c_int32_t', 'c_int64_t', 'c_float', 'c_double']
 #:set C_PRECISIONS = dict(zip(PRECISIONS, C_PRECISIONS))
 #:set ENUMS = dict(zip(PRECISIONS, ['torch_kInt8', 'torch_kInt16', 'torch_kInt32', 'torch_kInt64', 'torch_kFloat32', 'torch_kFloat64']))
-#:set RANKS = range(1, 5)
+#:set RANKS = range(1, 6)
 #:def enum_from_prec(PRECISION)
 $:ENUMS[PRECISION]
 #:enddef enum_from_prec
@@ -39,6 +39,9 @@ module ftorch
   !> Type for holding a Torch tensor.
   type torch_tensor
     type(c_ptr) :: p = c_null_ptr  !! pointer to the tensor in memory
+  contains
+    procedure :: get_rank
+    procedure :: get_shape
   end type torch_tensor
 
   !| Enumerator for Torch data types  
@@ -323,6 +326,45 @@ contains
 
     device_index = torch_tensor_get_device_index_c(tensor%p)
   end function torch_tensor_get_device_index
+
+  !> Determines the rank of a tensor.
+  function get_rank(self) result(rank)
+    class(torch_tensor), intent(in) :: self
+    integer(kind=int32) :: rank  !! rank of tensor
+
+    interface
+      function torch_tensor_get_rank_c(tensor) result(rank) &
+          bind(c, name = 'torch_tensor_get_rank')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        type(c_ptr), value, intent(in) :: tensor
+        integer(c_int) :: rank
+      end function torch_tensor_get_rank_c
+    end interface
+
+    rank = torch_tensor_get_rank_c(self%p)
+  end function get_rank
+
+  !> Determines the shape of a tensor.
+  function get_shape(self) result(sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
+    class(torch_tensor), intent(in) :: self
+    integer(kind=c_long), pointer :: sizes(:) !! Pointer to tensor data
+    integer(kind=int32) :: ndims(1)
+    type(c_ptr) :: cptr
+
+    interface
+      function torch_tensor_get_sizes_c(tensor) result(sizes) &
+          bind(c, name = 'torch_tensor_get_sizes')
+        use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
+        type(c_ptr), value, intent(in) :: tensor
+        type(c_ptr) :: sizes
+      end function torch_tensor_get_sizes_c
+    end interface
+
+    ndims(1) = self%get_rank()
+    cptr = torch_tensor_get_sizes_c(self%p)
+    call c_f_pointer(cptr, sizes, ndims)
+  end function get_shape
 
   !> Deallocates an array of tensors.
   subroutine torch_tensor_array_delete(tensor_array)
@@ -704,33 +746,30 @@ contains
   !> Return the array data associated with a Torch tensor of rank ${RANK}$ and data type `${PREC}$`
   subroutine torch_tensor_to_array_${PREC}$_${RANK}$d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$, int64
     type(torch_tensor), intent(in) :: tensor !! Returned tensor
     ${f_type(PREC)}$(kind=${PREC}$), pointer, intent(out) :: data_out${ranksuffix(RANK)}$ !! Pointer to tensor data
     integer, optional, intent(in) :: sizes(${RANK}$) !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:) !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: c_dtype = ${enum_from_prec(PREC)}$ !! Data type
     type(c_ptr) :: cptr
 
-    ! Handle allocation of the pointer array
+    my_shape = tensor%get_shape()
+
     if (present(sizes)) then
-      if (all(shape(data_out) == 0)) then
-        allocate(data_out(sizes(1)#{for i in range(1,RANK)}#,sizes(${i+1}$)#{endfor}#))
-      else if (any(shape(data_out) /= sizes)) then
-        write (*,*) "[ERROR]: Array allocated with wrong shape"
-        stop
-      end if
-    else
-      if ((.not. associated(data_out)) .or. (all(shape(data_out) == 0))) then
-        write (*,*) "[ERROR]: Pointer array has not been allocated"
-        stop
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, ${RANK}$(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, ${RANK}$(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
       end if
     end if
 
     ! Have the data_out array point to the Tensor data
     cptr = torch_to_blob_c(tensor%p, c_dtype)
-    call c_f_pointer(cptr, data_out, sizes)
+    call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_${PREC}$_${RANK}$d
 

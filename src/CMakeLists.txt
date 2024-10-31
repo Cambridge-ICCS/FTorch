@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 set(PROJECT_NAME FTorch)
 set(LIB_NAME ftorch)
 set(PACKAGE_VERSION 0.1)
@@ -11,6 +11,10 @@ FortranCInterface_VERIFY(CXX QUIET)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+if(NOT CMAKE_Fortran_FLAGS)
+    set(CMAKE_Fortran_FLAGS "-std=f2008")
+endif()
 
 include(CheckLanguage)
 if(ENABLE_CUDA)
@@ -45,7 +49,7 @@ set(CMAKE_INSTALL_RPATH $ORIGIN/${relDir})
 find_package(Torch REQUIRED)
 
 # Library with C and Fortran bindings
-add_library(${LIB_NAME} SHARED ctorch.cpp ftorch.f90)
+add_library(${LIB_NAME} SHARED ctorch.cpp ftorch.f90 ftorch_test_utils.f90)
 # Add an alias FTorch::ftorch for the library
 add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
 set_target_properties(${LIB_NAME} PROPERTIES
@@ -81,6 +85,9 @@ install(EXPORT ${PROJECT_NAME}
 install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch.mod"
  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}"
  )
+install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch_test_utils.mod"
+ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}"
+ )
 
 # Build integration tests
 if(CMAKE_BUILD_TESTS)
@@ -102,7 +109,10 @@ if(CMAKE_BUILD_TESTS)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/4_MultiIO
     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples
     )
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/5_Autograd
+  # file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/5_Looping
+  #   DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples
+  #   )
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/6_Autograd
     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples
     )
   add_subdirectory(test/examples)

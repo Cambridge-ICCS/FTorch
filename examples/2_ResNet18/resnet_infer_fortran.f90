@@ -1,8 +1,12 @@
 program inference
 
    use, intrinsic :: iso_fortran_env, only : sp => real32
+
    ! Import our library for interfacing with PyTorch
-   use :: ftorch
+   use ftorch
+
+   ! Import our tools module for testing utils
+   use ftorch_test_utils, only : assert_real
 
    implicit none
 
@@ -52,6 +56,9 @@ contains
       character(len=100) :: categories(N_cats)
       real(wp) :: probability
 
+      ! Flag for testing
+      logical :: test_pass
+
       ! Get TorchScript model file as a command line argument
       num_args = command_argument_count()
       allocate(args(num_args))
@@ -95,7 +102,7 @@ contains
       probability = maxval(probabilities)
 
       ! Check top probability matches expected value
-      call assert_real(probability, expected_prob, test_name="Check probability", rtol=1e-5)
+      test_pass = assert_real(probability, expected_prob, test_name="Check probability", rtol=1e-5)
 
       write (*,*) "Top result"
       write (*,*) ""
@@ -109,6 +116,12 @@ contains
       deallocate(out_data)
       deallocate(probabilities)
       deallocate(args)
+
+      if (.not. test_pass) then
+        stop 999
+      end if
+
+      write (*,*) "ResNet18 example ran successfully"
 
    end subroutine main
 
@@ -181,35 +194,5 @@ contains
       probabilities = probabilities / prob_sum
 
    end subroutine calc_probs
-
-   subroutine assert_real(a, b, test_name, rtol)
-
-      implicit none
-
-      character(len=*) :: test_name
-      real, intent(in) :: a, b
-      real, optional :: rtol
-      real :: relative_error, rtol_value
-
-      character(len=15) :: pass, fail
-
-      fail = char(27)//'[31m'//'FAILED'//char(27)//'[0m'
-      pass = char(27)//'[32m'//'PASSED'//char(27)//'[0m'
-
-      if (.not. present(rtol)) then
-        rtol_value = 1e-5
-      else
-        rtol_value = rtol
-      end if
-
-      relative_error = abs(a/b - 1.)
-
-      if (relative_error > rtol_value) then
-        write(*, '(A, " :: [", A, "] maximum relative error = ", E11.4)') fail, trim(test_name), relative_error
-      else
-        write(*, '(A, " :: [", A, "] maximum relative error = ", E11.4)') pass, trim(test_name), relative_error
-      end if
-
-   end subroutine assert_real
 
 end program inference

@@ -6,6 +6,9 @@ program inference
    ! Import our library for interfacing with PyTorch
    use ftorch
 
+   ! Import our tools module for testing utils
+   use ftorch_test_utils, only : assert_real_array_1d
+
    implicit none
   
    ! Set working precision for reals
@@ -17,6 +20,7 @@ program inference
    ! Set up Fortran data structures
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
+   real(wp), dimension(5), target :: expected
    integer :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
@@ -24,6 +28,9 @@ program inference
    type(torch_model) :: model
    type(torch_tensor), dimension(1) :: in_tensors
    type(torch_tensor), dimension(1) :: out_tensors
+
+   ! Flag for testing
+   logical :: test_pass
 
    ! Get TorchScript model file as a command line argument
    num_args = command_argument_count()
@@ -46,9 +53,19 @@ program inference
    call torch_model_forward(model, in_tensors, out_tensors)
    write (*,*) out_data(:)
 
+   ! Check output tensor matches expected value
+   expected = [0.0, 2.0, 4.0, 6.0, 8.0]
+   test_pass = assert_real_array_1d(out_data, expected, test_name="SimpleNet", rtol=1e-5)
+
    ! Cleanup
    call torch_delete(model)
    call torch_delete(in_tensors)
    call torch_delete(out_tensors)
+
+   if (.not. test_pass) then
+     stop 999
+   end if
+
+  write (*,*) "SimpleNet example ran successfully"
 
 end program inference

@@ -22,12 +22,23 @@ jobs:
         python-version: "3.11"
     - run: pip install fypp
 
-    - name: Check fypp matches f90
+    - name: Check ftorch.fypp matches ftorch.f90
       run: |
         fypp src/ftorch.fypp src/temp.f90_temp
         if ! diff -q src/ftorch.f90 src/temp.f90_temp; then
           echo "Error: The code in ftorch.f90 does not match that expected from ftorch.fypp."
           echo "Please re-run fypp on ftorch.fypp to ensure consistency and re-commit."
+          exit 1
+        else
+          exit 0
+        fi
+
+    - name: Check ftorch_test_utils.fypp matches ftorch_test_utils.f90
+      run: |
+        fypp src/ftorch_test_utils.fypp src/temp.f90_temp
+        if ! diff -q src/ftorch_test_utils.f90 src/temp.f90_temp; then
+          echo "Error: The code in ftorch_test_utils.f90 does not match that expected from ftorch_test_utils.fypp."
+          echo "Please re-run fypp on ftorch_test_utils.fypp to ensure consistency and re-commit."
           exit 1
         else
           exit 0

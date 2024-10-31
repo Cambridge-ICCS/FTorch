@@ -74,4 +74,6 @@ program inference
    call torch_delete(out_tensors)
    call mpi_finalize(ierr)
 
+   write (*,*) "MultiGPU example ran successfully"
+
 end program inference
