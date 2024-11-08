@@ -7,7 +7,7 @@ program inference
    use ftorch
 
    ! Import our tools module for testing utils
-   use ftorch_test_utils, only : assert_array
+   use ftorch_test_utils, only : assert_allclose
 
    implicit none
  
@@ -55,7 +55,7 @@ program inference
 
    ! Check output tensor matches expected value
    expected = [0.0, 2.0, 4.0, 6.0, 8.0]
-   test_pass = assert_array(out_data, expected, test_name="SimpleNet", rtol=1e-5)
+   test_pass = assert_allclose(out_data, expected, test_name="SimpleNet", rtol=1e-5)
 
    ! Cleanup
    call torch_delete(model)

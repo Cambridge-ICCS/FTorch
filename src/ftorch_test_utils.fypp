@@ -19,16 +19,16 @@ module ftorch_test_utils
 
   implicit none
 
-  interface assert
+  interface assert_isclose
     #:for PREC in PRECISIONS
-    module procedure assert_${PREC}$
+    module procedure assert_isclose_${PREC}$
     #:endfor
   end interface
 
-  interface assert_array
+  interface assert_allclose
     #:for PREC in PRECISIONS
     #:for RANK in RANKS
-    module procedure assert_${PREC}$_array_${RANK}$d
+    module procedure assert_allclose_${PREC}$_${RANK}$d
     #:endfor
     #:endfor
   end interface
@@ -54,7 +54,7 @@ module ftorch_test_utils
 
     #:for PREC in PRECISIONS
     !> Asserts that two ${PREC}$ values coincide to a given relative tolerance
-    function assert_${PREC}$(got, expect, test_name, rtol, print_result) result(test_pass)
+    function assert_isclose_${PREC}$(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name !! Name of the test being run
       ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: got !! The value to be tested
@@ -89,14 +89,14 @@ module ftorch_test_utils
         call test_print(test_name, message, test_pass)
       end if
 
-    end function assert_${PREC}$
+    end function assert_isclose_${PREC}$
 
     #:endfor
 
     #:for PREC in PRECISIONS
     #:for RANK in RANKS
     !> Asserts that two ${PREC}$-valued ${RANK}$D arrays coincide to a given relative tolerance
-    function assert_${PREC}$_array_${RANK}$d(got, expect, test_name, rtol, print_result) result(test_pass)
+    function assert_allclose_${PREC}$_${RANK}$d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name !! Name of the test being run
       ${f_type(PREC)}$(kind=${PREC}$), intent(in), dimension${ranksuffix(RANK)}$ :: got !! The array of values to be tested
@@ -139,7 +139,7 @@ module ftorch_test_utils
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
       endif
 
-    end function assert_${PREC}$_array_${RANK}$d
+    end function assert_allclose_${PREC}$_${RANK}$d
 
     #:endfor
     #:endfor

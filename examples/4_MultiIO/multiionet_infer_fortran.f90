@@ -7,7 +7,7 @@ program inference
    use ftorch
 
    ! Import our tools module for testing utils
-   use ftorch_test_utils, only : assert_array
+   use ftorch_test_utils, only : assert_allclose
 
    implicit none
  
@@ -61,9 +61,9 @@ program inference
 
    ! Check output tensors match expected values
    expected = [0.0, 2.0, 4.0, 6.0]
-   test_pass = assert_array(out_data1, expected, test_name="MultiIO array1", rtol=1e-5)
+   test_pass = assert_allclose(out_data1, expected, test_name="MultiIO array1", rtol=1e-5)
    expected = [0.0, -3.0, -6.0, -9.0]
-   test_pass = assert_array(out_data2, expected, test_name="MultiIO array2", rtol=1e-5)
+   test_pass = assert_allclose(out_data2, expected, test_name="MultiIO array2", rtol=1e-5)
 
    ! Cleanup
    call torch_delete(model)
