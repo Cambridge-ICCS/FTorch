@@ -7,7 +7,7 @@ program example
   use ftorch
 
   ! Import our tools module for testing utils
-  use ftorch_test_utils, only : assert_real_array_2d
+  use ftorch_test_utils, only : assert_array
 
   implicit none
 
@@ -53,7 +53,7 @@ program example
 
   ! Check output tensor matches expected value
   expected(:,:) = in_data
-  test_pass = assert_real_array_2d(out_data, expected, test_name="torch_tensor_to_array", rtol=1e-5)
+  test_pass = assert_array(out_data, expected, test_name="torch_tensor_to_array", rtol=1e-5)
 
   ! Check that the data match
   if (.not. test_pass) then
