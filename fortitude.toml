@@ -1,0 +1,4 @@
+[check]
+# Ignored Rules and justification:
+#   T041: assumed size - we require assumed size for library functionality when passing data to C/C++
+ignore = ["T041"]
