@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 5.3% of total for modules and submodules.">115 statements</a>
+                 title=" 9.5% of total for modules and submodules.">217 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -121,7 +121,8 @@
       </a>
       <div id="inters-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../module/ftorch_test_utils.html#interface-assert_real_array">assert_real_array</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#interface-assert_allclose">assert_allclose</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#interface-assert_isclose">assert_isclose</a>
         </div>
       </div>
     </div>
@@ -135,9 +136,12 @@
       </a>
       <div id="funcs-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-assert_real">assert_real</a>
-            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-assert_real_array_1d">assert_real_array_1d</a>
-            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-assert_real_array_2d">assert_real_array_2d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-assert_allclose_real32_1d">assert_allclose_real32_1d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-assert_allclose_real32_2d">assert_allclose_real32_2d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-assert_allclose_real64_1d">assert_allclose_real64_1d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-assert_allclose_real64_2d">assert_allclose_real64_2d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-assert_isclose_real32">assert_isclose_real32</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-assert_isclose_real64">assert_isclose_real64</a>
         </div>
       </div>
     </div>
@@ -175,7 +179,19 @@
    See the <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE">LICENSE</a>
    file for details.</li>
 </ul>
-      
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
+              </ul>
+            </li>
+        </ul>
+      </div>
+    </div>
+
       
       <br>
 
@@ -186,122 +202,18 @@
           <h2>Interfaces</h2>
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-assert_real_array"></span>
-      <h3>public        interface <a href='../interface/assert_real_array.html'>assert_real_array</a> 
+      <span class="anchor" id="interface-assert_allclose"></span>
+      <h3>public        interface <a href='../interface/assert_allclose.html'>assert_allclose</a> 
       </h3>
     </div>
     <ul class="list-group">
           <li class="list-group-item">
                 <h3>
-    public  function <a href='../proc/assert_real_array_1d.html'>assert_real_array_1d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+    public  function <a href='../proc/assert_allclose_real32_1d.html'>assert_allclose_real32_1d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
 
     </h3>
     
-  <p>Asserts that two real-valued 1D arrays coincide to a given relative tolerance</p>
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-got~2"></span>
-              real,
-            </td>
-<td>intent(in),</td>
-              <td></td>            <td>
-              dimension(:)
-            </td>
-            <td>::</td>
-            <td><strong>got</strong></td>
-            <td>
-<p>The array of values to be tested</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-expect~2"></span>
-              real,
-            </td>
-<td>intent(in),</td>
-              <td></td>            <td>
-              dimension(:)
-            </td>
-            <td>::</td>
-            <td><strong>expect</strong></td>
-            <td>
-<p>The array of expected values</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-test_name~3"></span>
-              character(len=*),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>test_name</strong></td>
-            <td>
-<p>Name of the test being run</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-rtol~2"></span>
-              real,
-            </td>
-<td>intent(in),</td>
-              <td>optional</td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>rtol</strong></td>
-            <td>
-<p>Optional relative tolerance (defaults to 1e-5)</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-print_result~2"></span>
-              logical,
-            </td>
-<td>intent(in),</td>
-              <td>optional</td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>print_result</strong></td>
-            <td>
-<p>Optionally print test result to screen (defaults to .true.)</p>
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>logical</small>
-    </h4>
-    <p>Did the assertion pass?</p>
-
-          </li>
-          <li class="list-group-item">
-                <h3>
-    public  function <a href='../proc/assert_real_array_2d.html'>assert_real_array_2d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
-
-    </h3>
-    
-  <p>Asserts that two real-valued 2D arrays coincide to a given relative tolerance</p>
+  <p>Asserts that two real32-valued 1D arrays coincide to a given relative tolerance</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -317,11 +229,11 @@
         <tr>
             <td>
               <span class="anchor" id="variable-got~3"></span>
-              real,
+              real(kind=real32),
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              dimension(:,:)
+              dimension(:)
             </td>
             <td>::</td>
             <td><strong>got</strong></td>
@@ -332,11 +244,11 @@
         <tr>
             <td>
               <span class="anchor" id="variable-expect~3"></span>
-              real,
+              real(kind=real32),
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              dimension(:,:)
+              dimension(:)
             </td>
             <td>::</td>
             <td><strong>expect</strong></td>
@@ -362,7 +274,7 @@
         <tr>
             <td>
               <span class="anchor" id="variable-rtol~3"></span>
-              real,
+              real(kind=real32),
             </td>
 <td>intent(in),</td>
               <td>optional</td>            <td>
@@ -399,22 +311,335 @@
     <p>Did the assertion pass?</p>
 
           </li>
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/assert_allclose_real32_2d.html'>assert_allclose_real32_2d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+
+    </h3>
+    
+  <p>Asserts that two real32-valued 2D arrays coincide to a given relative tolerance</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~4"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~4"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-test_name~5"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>test_name</strong></td>
+            <td>
+<p>Name of the test being run</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rtol~4"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rtol</strong></td>
+            <td>
+<p>Optional relative tolerance (defaults to 1e-5)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-print_result~4"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>print_result</strong></td>
+            <td>
+<p>Optionally print test result to screen (defaults to .true.)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the assertion pass?</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/assert_allclose_real64_1d.html'>assert_allclose_real64_1d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+
+    </h3>
+    
+  <p>Asserts that two real64-valued 1D arrays coincide to a given relative tolerance</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~5"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~5"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-test_name~6"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>test_name</strong></td>
+            <td>
+<p>Name of the test being run</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rtol~5"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rtol</strong></td>
+            <td>
+<p>Optional relative tolerance (defaults to 1e-5)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-print_result~5"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>print_result</strong></td>
+            <td>
+<p>Optionally print test result to screen (defaults to .true.)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the assertion pass?</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/assert_allclose_real64_2d.html'>assert_allclose_real64_2d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+
+    </h3>
+    
+  <p>Asserts that two real64-valued 2D arrays coincide to a given relative tolerance</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~6"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~6"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-test_name~7"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>test_name</strong></td>
+            <td>
+<p>Name of the test being run</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rtol~6"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rtol</strong></td>
+            <td>
+<p>Optional relative tolerance (defaults to 1e-5)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-print_result~6"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>print_result</strong></td>
+            <td>
+<p>Optionally print test result to screen (defaults to .true.)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the assertion pass?</p>
+
+          </li>
     </ul>
   </div>
 
-        </section>
-        <br>
-
-
-
-        <section>
-          <h2>Functions</h2>
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-assert_real"></span> <h3>public  function <a href='../proc/assert_real.html'>assert_real</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
-</h3></div>
-    <div class="card-body">
-          
-  <p>Asserts that two real values coincide to a given relative tolerance</p>
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-assert_isclose"></span>
+      <h3>public        interface <a href='../interface/assert_isclose.html'>assert_isclose</a> 
+      </h3>
+    </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/assert_isclose_real32.html'>assert_isclose_real32</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+
+    </h3>
+    
+  <p>Asserts that two real32 values coincide to a given relative tolerance</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -430,7 +655,7 @@
         <tr>
             <td>
               <span class="anchor" id="variable-got"></span>
-              real,
+              real(kind=real32),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -445,7 +670,7 @@
         <tr>
             <td>
               <span class="anchor" id="variable-expect"></span>
-              real,
+              real(kind=real32),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -475,7 +700,644 @@
         <tr>
             <td>
               <span class="anchor" id="variable-rtol"></span>
-              real,
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rtol</strong></td>
+            <td>
+<p>Optional relative tolerance (defaults to 1e-5)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-print_result"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>print_result</strong></td>
+            <td>
+<p>Optionally print test result to screen (defaults to .true.)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the assertion pass?</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/assert_isclose_real64.html'>assert_isclose_real64</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+
+    </h3>
+    
+  <p>Asserts that two real64 values coincide to a given relative tolerance</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~2"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The value to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~2"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The expected value</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-test_name~3"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>test_name</strong></td>
+            <td>
+<p>Name of the test being run</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rtol~2"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rtol</strong></td>
+            <td>
+<p>Optional relative tolerance (defaults to 1e-5)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-print_result~2"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>print_result</strong></td>
+            <td>
+<p>Optionally print test result to screen (defaults to .true.)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the assertion pass?</p>
+
+          </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-assert_allclose_real32_1d"></span> <h3>public  function <a href='../proc/assert_allclose_real32_1d.html'>assert_allclose_real32_1d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Asserts that two real32-valued 1D arrays coincide to a given relative tolerance</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~3"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~3"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-test_name~4"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>test_name</strong></td>
+            <td>
+<p>Name of the test being run</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rtol~3"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rtol</strong></td>
+            <td>
+<p>Optional relative tolerance (defaults to 1e-5)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-print_result~3"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>print_result</strong></td>
+            <td>
+<p>Optionally print test result to screen (defaults to .true.)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the assertion pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-assert_allclose_real32_2d"></span> <h3>public  function <a href='../proc/assert_allclose_real32_2d.html'>assert_allclose_real32_2d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Asserts that two real32-valued 2D arrays coincide to a given relative tolerance</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~4"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~4"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-test_name~5"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>test_name</strong></td>
+            <td>
+<p>Name of the test being run</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rtol~4"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rtol</strong></td>
+            <td>
+<p>Optional relative tolerance (defaults to 1e-5)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-print_result~4"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>print_result</strong></td>
+            <td>
+<p>Optionally print test result to screen (defaults to .true.)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the assertion pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-assert_allclose_real64_1d"></span> <h3>public  function <a href='../proc/assert_allclose_real64_1d.html'>assert_allclose_real64_1d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Asserts that two real64-valued 1D arrays coincide to a given relative tolerance</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~5"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~5"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-test_name~6"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>test_name</strong></td>
+            <td>
+<p>Name of the test being run</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rtol~5"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rtol</strong></td>
+            <td>
+<p>Optional relative tolerance (defaults to 1e-5)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-print_result~5"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>print_result</strong></td>
+            <td>
+<p>Optionally print test result to screen (defaults to .true.)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the assertion pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-assert_allclose_real64_2d"></span> <h3>public  function <a href='../proc/assert_allclose_real64_2d.html'>assert_allclose_real64_2d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Asserts that two real64-valued 2D arrays coincide to a given relative tolerance</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~6"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~6"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-test_name~7"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>test_name</strong></td>
+            <td>
+<p>Name of the test being run</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rtol~6"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rtol</strong></td>
+            <td>
+<p>Optional relative tolerance (defaults to 1e-5)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-print_result~6"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>print_result</strong></td>
+            <td>
+<p>Optionally print test result to screen (defaults to .true.)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the assertion pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-assert_isclose_real32"></span> <h3>public  function <a href='../proc/assert_isclose_real32.html'>assert_isclose_real32</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Asserts that two real32 values coincide to a given relative tolerance</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The value to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The expected value</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-test_name~2"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>test_name</strong></td>
+            <td>
+<p>Name of the test being run</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rtol"></span>
+              real(kind=real32),
             </td>
 <td>intent(in),</td>
               <td>optional</td>            <td>
@@ -515,11 +1377,11 @@
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-assert_real_array_1d"></span> <h3>public  function <a href='../proc/assert_real_array_1d.html'>assert_real_array_1d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
+    <div class="card-header codesum"><span class="anchor" id="proc-assert_isclose_real64"></span> <h3>public  function <a href='../proc/assert_isclose_real64.html'>assert_isclose_real64</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
 </h3></div>
     <div class="card-body">
           
-  <p>Asserts that two real-valued 1D arrays coincide to a given relative tolerance</p>
+  <p>Asserts that two real64 values coincide to a given relative tolerance</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -535,31 +1397,31 @@
         <tr>
             <td>
               <span class="anchor" id="variable-got~2"></span>
-              real,
+              real(kind=real64),
             </td>
-<td>intent(in),</td>
+<td>intent(in)</td>
               <td></td>            <td>
-              dimension(:)
+              
             </td>
             <td>::</td>
             <td><strong>got</strong></td>
             <td>
-<p>The array of values to be tested</p>
+<p>The value to be tested</p>
             </td>
         </tr>
         <tr>
             <td>
               <span class="anchor" id="variable-expect~2"></span>
-              real,
+              real(kind=real64),
             </td>
-<td>intent(in),</td>
+<td>intent(in)</td>
               <td></td>            <td>
-              dimension(:)
+              
             </td>
             <td>::</td>
             <td><strong>expect</strong></td>
             <td>
-<p>The array of expected values</p>
+<p>The expected value</p>
             </td>
         </tr>
         <tr>
@@ -580,7 +1442,7 @@
         <tr>
             <td>
               <span class="anchor" id="variable-rtol~2"></span>
-              real,
+              real(kind=real64),
             </td>
 <td>intent(in),</td>
               <td>optional</td>            <td>
@@ -595,111 +1457,6 @@
         <tr>
             <td>
               <span class="anchor" id="variable-print_result~2"></span>
-              logical,
-            </td>
-<td>intent(in),</td>
-              <td>optional</td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>print_result</strong></td>
-            <td>
-<p>Optionally print test result to screen (defaults to .true.)</p>
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>logical</small>
-    </h4>
-    <p>Did the assertion pass?</p>
-
-    </div>
-  </div>
-
-              <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-assert_real_array_2d"></span> <h3>public  function <a href='../proc/assert_real_array_2d.html'>assert_real_array_2d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
-</h3></div>
-    <div class="card-body">
-          
-  <p>Asserts that two real-valued 2D arrays coincide to a given relative tolerance</p>
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-got~3"></span>
-              real,
-            </td>
-<td>intent(in),</td>
-              <td></td>            <td>
-              dimension(:,:)
-            </td>
-            <td>::</td>
-            <td><strong>got</strong></td>
-            <td>
-<p>The array of values to be tested</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-expect~3"></span>
-              real,
-            </td>
-<td>intent(in),</td>
-              <td></td>            <td>
-              dimension(:,:)
-            </td>
-            <td>::</td>
-            <td><strong>expect</strong></td>
-            <td>
-<p>The array of expected values</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-test_name~4"></span>
-              character(len=*),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>test_name</strong></td>
-            <td>
-<p>Name of the test being run</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-rtol~3"></span>
-              real,
-            </td>
-<td>intent(in),</td>
-              <td>optional</td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>rtol</strong></td>
-            <td>
-<p>Optional relative tolerance (defaults to 1e-5)</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-print_result~3"></span>
               logical,
             </td>
 <td>intent(in),</td>
