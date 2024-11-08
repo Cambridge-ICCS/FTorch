@@ -7,6 +7,8 @@
 #define EXPORT_C
 #endif
 
+#include <stdint.h>
+
 // Opaque pointer type alias for torch::jit::script::Module class
 typedef void *torch_jit_script_module_t;
 
