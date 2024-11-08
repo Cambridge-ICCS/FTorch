@@ -7,11 +7,11 @@ program inference
    use ml_mod, only : ml_routine
 
    implicit none
-  
+
    ! Set working precision for reals
    integer, parameter :: wp = sp
    integer :: i
-   
+
    ! Set up Fortran data structures
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data

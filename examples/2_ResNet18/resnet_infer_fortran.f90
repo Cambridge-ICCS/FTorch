@@ -3,7 +3,8 @@ program inference
    use, intrinsic :: iso_fortran_env, only : sp => real32
 
    ! Import our library for interfacing with PyTorch
-   use ftorch
+   use ftorch, only : torch_model, torch_tensor, torch_kCPU, torch_delete, &
+                      torch_tensor_from_array, torch_model_load, torch_model_forward
 
    ! Import our tools module for testing utils
    use ftorch_test_utils, only : assert_isclose
@@ -18,8 +19,6 @@ contains
 
    subroutine main()
 
-      implicit none
-
       integer :: num_args, ix
       character(len=128), dimension(:), allocatable :: args
 
@@ -32,11 +31,11 @@ contains
       real(wp), dimension(:,:), allocatable, target :: out_data
 
       integer, parameter :: in_dims = 4
-      integer :: in_shape(in_dims) = [1, 3, 224, 224]
-      integer :: in_layout(in_dims) = [1, 2, 3, 4]
+      integer, parameter :: in_shape(in_dims) = [1, 3, 224, 224]
+      integer, parameter :: in_layout(in_dims) = [1, 2, 3, 4]
       integer, parameter :: out_dims = 2
-      integer :: out_shape(out_dims) = [1, 1000]
-      integer :: out_layout(out_dims) = [1, 2]
+      integer, parameter :: out_shape(out_dims) = [1, 1000]
+      integer, parameter :: out_layout(out_dims) = [1, 2]
 
       ! Path to input data
       character(len=100) :: data_dir
@@ -102,7 +101,8 @@ contains
       probability = maxval(probabilities)
 
       ! Check top probability matches expected value
-      test_pass = assert_isclose(probability, expected_prob, test_name="Check probability", rtol=1e-5)
+      test_pass = assert_isclose(probability, expected_prob, test_name="Check probability", &
+                                 rtol=1e-5)
 
       write (*,*) "Top result"
       write (*,*) ""
@@ -127,8 +127,6 @@ contains
 
    subroutine load_data(filename, tensor_length, in_data)
 
-      implicit none
-
       character(len=*), intent(in) :: filename
       integer, intent(in) :: tensor_length
       real(wp), dimension(:,:,:,:), intent(out) :: in_data
@@ -138,7 +136,8 @@ contains
       character(len=100) :: ioerrmsg
 
       ! Read input tensor from Python script
-      open(unit=10, file=filename, status='old', access='stream', form='unformatted', action="read", iostat=ios, iomsg=ioerrmsg)
+      open(unit=10, file=filename, status='old', access='stream', form='unformatted', &
+           action="read", iostat=ios, iomsg=ioerrmsg)
       if (ios /= 0) then
       print *, ioerrmsg
       stop 1
@@ -160,8 +159,6 @@ contains
 
    subroutine load_categories(filename_cats, N_cats, categories)
 
-      implicit none
-
       character(len=*), intent(in) :: filename_cats
       integer, intent(in) :: N_cats
       character(len=100), intent(out) :: categories(N_cats)
@@ -169,7 +166,8 @@ contains
       integer :: ios
       character(len=100) :: ioerrmsg
 
-      open (unit=11, file=filename_cats, form='formatted', access='stream', action='read', iostat=ios, iomsg=ioerrmsg)
+      open (unit=11, file=filename_cats, form='formatted', access='stream', action='read', &
+            iostat=ios, iomsg=ioerrmsg)
       if (ios /= 0) then
         print *, ioerrmsg
         stop 1
@@ -181,8 +179,6 @@ contains
    end subroutine load_categories
 
    subroutine calc_probs(out_data, probabilities)
-
-      implicit none
 
       real(wp), dimension(:,:), intent(in) :: out_data
       real(wp), dimension(:,:), intent(out) :: probabilities
