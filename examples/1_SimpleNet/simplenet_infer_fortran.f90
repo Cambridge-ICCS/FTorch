@@ -4,13 +4,14 @@ program inference
    use, intrinsic :: iso_fortran_env, only : sp => real32
 
    ! Import our library for interfacing with PyTorch
-   use ftorch
+   use ftorch, only : torch_model, torch_tensor, torch_kCPU, torch_delete, &
+                      torch_tensor_from_array, torch_model_load, torch_model_forward
 
    ! Import our tools module for testing utils
    use ftorch_test_utils, only : assert_allclose
 
    implicit none
- 
+
    ! Set working precision for reals
    integer, parameter :: wp = sp
 
@@ -21,7 +22,7 @@ program inference
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
    real(wp), dimension(5), target :: expected
-   integer :: tensor_layout(1) = [1]
+   integer, parameter :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
    ! The net, a vector of input tensors (in this case we only have one), and the output tensor
