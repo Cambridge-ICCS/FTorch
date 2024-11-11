@@ -94,6 +94,28 @@ cp .githooks/pre-commit .git/hooks/
 chmod +x .git/pre-commit
 ```
 
+
+### Code style
+
+FTorch source code is subject to a number of static analysis checks to ensure that it
+conforms to quality and legibility. These tools are a mixture of formatters and linters.
+
+The tools we use are as follows on a language-by-language basis:
+
+* Fortran: [fortitude](https://github.com/PlasmaFAIR/fortitude)
+* C++: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
+* C: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
+* Python: [ruff](https://docs.astral.sh/ruff/)
+
+Instructions on installing these tools can be found in their respective documentations.
+Contributors should run them over their code and ensure that it conforms before submitting
+a pull request. If there is a good reason to ignore a particular rule this should be
+justified in the pull request and ideally documented in the code.
+
+There is a GitHub action as part of the continuous integration that will perform these
+checks on all opened pull requests before they are merged.
+
+
 ### General guidelines
 
 * Match optional argument defaults between Fortran, C, and C++<br>
