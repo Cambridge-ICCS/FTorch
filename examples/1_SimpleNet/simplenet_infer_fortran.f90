@@ -7,13 +7,13 @@ program inference
    use ftorch
 
    ! Import our tools module for testing utils
-   use ftorch_test_utils, only : assert_real_array_1d
+   use ftorch_test_utils, only : assert_allclose
 
    implicit none
-  
+ 
    ! Set working precision for reals
    integer, parameter :: wp = sp
-   
+
    integer :: num_args, ix
    character(len=128), dimension(:), allocatable :: args
 
@@ -55,7 +55,7 @@ program inference
 
    ! Check output tensor matches expected value
    expected = [0.0, 2.0, 4.0, 6.0, 8.0]
-   test_pass = assert_real_array_1d(out_data, expected, test_name="SimpleNet", rtol=1e-5)
+   test_pass = assert_allclose(out_data, expected, test_name="SimpleNet", rtol=1e-5)
 
    ! Cleanup
    call torch_delete(model)

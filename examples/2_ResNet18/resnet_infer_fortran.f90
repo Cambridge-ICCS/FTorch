@@ -6,7 +6,7 @@ program inference
    use ftorch
 
    ! Import our tools module for testing utils
-   use ftorch_test_utils, only : assert_real
+   use ftorch_test_utils, only : assert_isclose
 
    implicit none
 
@@ -102,7 +102,7 @@ contains
       probability = maxval(probabilities)
 
       ! Check top probability matches expected value
-      test_pass = assert_real(probability, expected_prob, test_name="Check probability", rtol=1e-5)
+      test_pass = assert_isclose(probability, expected_prob, test_name="Check probability", rtol=1e-5)
 
       write (*,*) "Top result"
       write (*,*) ""
