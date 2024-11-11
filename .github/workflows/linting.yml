@@ -1,0 +1,89 @@
+# workflow to run static-analysis and linting checks on source
+
+name: StaticAnalysis
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pushes to the "main" branch and any pull request events
+  push:
+    branches: [ "main"]
+  pull_request:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Workflow run - one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "static-analysis"
+  static-analysis:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m venv ftorch
+          . ftorch/bin/activate
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install fortitude-lint
+
+      # Run CMake build to get compile commands for clang
+      - name: FTorch CMake
+        run: |
+          . ftorch/bin/activate
+          export FT_DIR=$(pwd)
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
+          export BUILD_DIR=$(pwd)/src/build
+          mkdir ${BUILD_DIR}
+          cd ${BUILD_DIR}
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} -DCMAKE_Fortran_FLAGS="-std=f2008" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      # Apply Fortran linter, fortitude
+      # Configurable using the fortitude.toml file if present
+      - name: Fortitude Source
+        if: always()
+        run: |
+          cd ${{ github.workspace }}
+          . ftorch/bin/activate  # Uses .clang-tidy config file if present
+          fortitude check src/
+
+      # Apply C++ and C linter and formatter, clang
+      # Configurable using the .clang-format and .clang-tidy config files if present
+      - name: Clang Source
+        if: always()
+        uses: cpp-linter/cpp-linter-action@v2
+        id: linter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          style: 'file'
+          tidy-checks: ''
+          # Use the compile_commands.json from CMake to locate headers
+          database: ${{ github.workspace }}/src/build
+          # only 'update' a single comment in a pull request thread.
+          thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
+      - name: Fail fast?!
+        if: steps.linter.outputs.checks-failed > 0
+        run: exit 1
+
+      # Apply Fortran linter, fortitude to examples
+      - name: Fortitude Examples
+        if: always()
+        run: |
+          cd ${{ github.workspace }}
+          . ftorch/bin/activate
+          fortitude check examples
