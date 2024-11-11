@@ -68,7 +68,7 @@ program example
 
   ! Check first input array is unchanged by the arithmetic operations
   expected(:,1) = [2.0, 3.0]
-  test_pass = assert_real_array_2d(in_data1, expected, test_name="torch_tensor_to_array", rtol=1e-5)
+  test_pass = assert_allclose(in_data1, expected, test_name="torch_tensor_to_array", rtol=1e-5)
   if (.not. test_pass) then
     call clean_up()
     print *, "Error :: in_data1 was changed during arithmetic operations"
@@ -77,7 +77,7 @@ program example
 
   ! Check second input array is unchanged by the arithmetic operations
   expected(:,1) = [6.0, 4.0]
-  test_pass = assert_real_array_2d(in_data2, expected, test_name="torch_tensor_to_array", rtol=1e-5)
+  test_pass = assert_allclose(in_data2, expected, test_name="torch_tensor_to_array", rtol=1e-5)
   if (.not. test_pass) then
     call clean_up()
     print *, "Error :: in_data2 was changed during arithmetic operations"
