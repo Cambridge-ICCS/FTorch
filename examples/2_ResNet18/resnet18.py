@@ -2,9 +2,9 @@
 """Load and run pretrained ResNet-18 from TorchVision."""
 
 import numpy as np
-from PIL import Image
 import torch
 import torchvision
+from PIL import Image
 
 
 # Initialize everything
@@ -68,23 +68,24 @@ def run_model(model: torch.nn.Module, precision: type) -> None:
 
     print("Saving input batch...", end="")
     # Transpose input before saving so order consistent with Fortran
-    np_input = np.array(
-        input_batch.numpy().transpose().flatten(), dtype=precision
-    )  # type: np.typing.NDArray
+    np_input = np.array(input_batch.numpy().transpose().flatten(), dtype=precision)  # type: np.typing.NDArray
 
     # Save data as binary
     np_input.tofile("data/image_tensor.dat")
 
     # Load saved data to check it was saved correctly
-    np_data = np.fromfile(
-        "data/image_tensor.dat", dtype=precision
-    )  # type: np.typing.NDArray
+    np_data = np.fromfile("data/image_tensor.dat", dtype=precision)  # type: np.typing.NDArray
 
     # Reshape to original tensor shape
     tensor_shape = np.array(input_batch.numpy()).transpose().shape
     np_data = np_data.reshape(tensor_shape)
     np_data = np_data.transpose()
-    assert np.array_equal(np_data, input_batch.numpy())
+    if not np.array_equal(np_data, input_batch.numpy()):
+        result_error = (
+            "Image read from saved file (data/image_tensor.dat) does not match"
+            "processed data read from data/dog.jpg expected value."
+        )
+        raise ValueError(result_error)
     print("done.")
 
     print("Running ResNet-18 model for input...", end="")
@@ -126,7 +127,12 @@ def print_top_results(output: torch.Tensor) -> None:
         0.0056213834322989,
         0.0046520135365427,
     ]
-    assert np.allclose(top5_prob, expected_prob, rtol=1e-5)
+    if not np.allclose(top5_prob, expected_prob, rtol=1e-5):
+        result_error = (
+            f"Predicted top 5 probabilities:\n{top5_prob}\ndo not match the"
+            "expected values:\n{expected_prob}"
+        )
+        raise ValueError(result_error)
 
 
 if __name__ == "__main__":
@@ -137,7 +143,8 @@ if __name__ == "__main__":
     elif np_precision == np.float64:
         torch_precision = torch.float64
     else:
-        raise ValueError("`np_precision` must be of type `np.float32` or `np.float64`")
+        precision_mismatch = "`np_precision` must be type `np.float32` or `np.float64`"
+        raise ValueError(precision_mismatch)
 
     rn_model = initialize(torch_precision)
     run_model(rn_model, np_precision)

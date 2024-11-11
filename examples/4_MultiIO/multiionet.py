@@ -62,5 +62,10 @@ if __name__ == "__main__":
 
     print(output_tensors)
 
-    for output, input, scale_factor in zip(output_tensors, input_tensors, (2, 3)):
-        assert torch.allclose(output, scale_factor * input)
+    for output_i, input_i, scale_factor in zip(output_tensors, input_tensors, (2, 3)):
+        if not torch.allclose(output_i, scale_factor * input_i):
+            result_error = (
+                f"result:\n{output_i}\ndoes not match expected value:\n"
+                f"{scale_factor * input_i}"
+            )
+            raise ValueError(result_error)

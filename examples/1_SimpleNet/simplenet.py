@@ -51,4 +51,9 @@ if __name__ == "__main__":
         output_tensor = model(input_tensor)
 
     print(output_tensor)
-    assert torch.allclose(output_tensor, 2 * input_tensor)
+    if not torch.allclose(output_tensor, 2 * input_tensor):
+        result_error = (
+            f"result:\n{output_tensor}\ndoes not match expected value:\n"
+            f"{2 * input_tensor}"
+        )
+        raise ValueError(result_error)

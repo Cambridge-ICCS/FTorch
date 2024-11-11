@@ -4,7 +4,7 @@ import torch
 from PIL import Image
 
 
-def deploy(saved_model, device, batch_size=1):
+def deploy(saved_model, device):
     """
     Load TorchScript ResNet-18 and run inference with Tensor of ones.
 
@@ -14,8 +14,6 @@ def deploy(saved_model, device, batch_size=1):
         location of ResNet-18 saved to Torchscript
     device : str
         Torch device to run model on, 'cpu' or 'cuda'
-    batch_size : int
-        batch size to run (default 1)
 
     Returns
     -------
