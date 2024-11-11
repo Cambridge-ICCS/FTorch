@@ -3,6 +3,7 @@
 
 import os
 import sys
+
 import torch
 
 
@@ -42,7 +43,8 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         output = output_gpu.to(torch.device("cpu"))
 
     else:
-        raise ValueError(f"Device '{device}' not recognised.")
+        device_error = f"Device '{device}' not recognised."
+        raise ValueError(device_error)
 
     return output
 
@@ -60,4 +62,9 @@ if __name__ == "__main__":
 
     print(result)
 
-    assert torch.allclose(result, torch.Tensor([0.0, 2.0, 4.0, 6.0, 8.0]))
+    if not torch.allclose(result, torch.Tensor([0.0, 2.0, 4.0, 6.0, 8.0])):
+        result_error = (
+            f"result:\n{result}\ndoes not match expected value:\n"
+            f"{torch.Tensor([0.0, 2.0, 4.0, 6.0, 8.0])}"
+        )
+        raise ValueError(result_error)

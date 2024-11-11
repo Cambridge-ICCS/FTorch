@@ -46,11 +46,11 @@ if __name__ == "__main__":
     model = SimpleNet()
     model.eval()
 
-    input = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0])
+    input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0])
 
     print(f"Input:  {input}")
 
     with torch.no_grad():
-        output = model(input)
+        output_tensor = model(input_tensor)
 
-    print(f"Output: {output}")
+    print(f"Output: {output_tensor}")
