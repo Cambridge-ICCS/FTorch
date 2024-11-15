@@ -8,4 +8,5 @@ message(STATUS "Building with Fortran PyTorch coupling")
 
 find_package(PFUNIT REQUIRED)
 
-add_pfunit_ctest(test_ftorch TEST_SOURCES test_ftorch.pf LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(test_constructors
+  TEST_SOURCES test_constructors.pf LINK_LIBRARIES FTorch::ftorch)
