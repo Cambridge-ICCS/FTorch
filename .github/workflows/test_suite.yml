@@ -61,7 +61,7 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} \
             -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_PREFIX_PATH=${PFUNIT_DIR} \
+            -DCMAKE_PREFIX_PATH="${Torch_DIR}:${PFUNIT_DIR}" \
             -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}"
           cmake --build .
           cmake --install .
