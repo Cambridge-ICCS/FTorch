@@ -72,7 +72,8 @@ jobs:
         run: |
           export FC=/usr/bin/gfortran
           export MPIF90=/usr/bin/mpif90
-          git clone https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          # TODO: Avoid version pinning (needed because version appears in install path)
+          git clone -b v4.10.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
           cmake -DMPI=YES ..
@@ -84,6 +85,7 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/src/build
+          # TODO: How can we avoid the pFUnit version ending up in the install path?
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.10
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
@@ -93,10 +95,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR}:${Torch_DIR}" \
-            -DCMAKE_C_FLAGS="" \
-            -DCMAKE_CXX_FLAGS="" \
-            -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}" \
-            -DCMAKE_EXE_LINKER_FLAGS=""
+            -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}"
           cmake --build .
           cmake --install .
 
