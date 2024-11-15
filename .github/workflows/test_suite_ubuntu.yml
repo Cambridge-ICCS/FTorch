@@ -62,12 +62,20 @@ jobs:
           . ftorch/bin/activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
+      # MPI is required by pFUnit
+      - name: Install an MPI distribution
+        run: |
+          sudo apt update
+          sudo apt install mpich
+
       - name: Install pFUnit
         run: |
+          export FC=/usr/bin/gfortran
+          export MPIF90=/usr/bin/mpif90
           git clone https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake ..
+          cmake -DMPI=YES ..
           make install
 
       - name: Build FTorch
