@@ -367,9 +367,13 @@ contains
 
   !> Determines the shape of a tensor.
   function get_shape(self) result(sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
+    use, intrinsic :: iso_c_binding, only : c_int, c_long, c_long_long, c_ptr
     class(torch_tensor), intent(in) :: self
+#ifdef UNIX
     integer(kind=c_long), pointer :: sizes(:) !! Pointer to tensor data
+#else
+    integer(kind=c_long_long), pointer :: sizes(:) !! Pointer to tensor data
+#endif
     integer(kind=int32) :: ndims(1)
     type(c_ptr) :: cptr
 
