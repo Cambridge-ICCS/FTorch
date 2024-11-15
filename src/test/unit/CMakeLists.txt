@@ -3,7 +3,7 @@ cmake_policy (SET CMP0076 NEW)
 
 project("FTorch unit tests" VERSION 1.0.0 LANGUAGES Fortran)
 
-find_package(FTorch REQUIRED)
+find_package(FTorch)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 find_package(PFUNIT REQUIRED)
