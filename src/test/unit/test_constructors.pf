@@ -51,7 +51,7 @@ subroutine test_torch_tensor_zeros()
   use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_to_array, torch_tensor_zeros
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_fortran_env, only: real32
-  use iso_c_binding, only: c_bool, c_int, c_int64_t, c_null_ptr
+  use iso_c_binding, only: c_associated, c_bool, c_int, c_int64_t, c_null_ptr
 
   implicit none
 
@@ -73,12 +73,15 @@ subroutine test_torch_tensor_zeros()
   device_index = -1
   requires_grad = .false.
 
+  ! Check the tensor pointer is not associated
+  @assertFalse(c_associated(tensor%p))
+
   ! Create a tensor of zeros
   call torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, device_type, &
                           device_index, requires_grad)
 
-  ! Check if tensor is not null
-  ! @assertTrue(tensor%p /= c_null_ptr) ! FIXME: compiler not happy with this
+  ! Check the tensor pointer is associated
+  @assertTrue(c_associated(tensor%p))
 
   call torch_tensor_to_array(tensor, out_data, shape(expected))
 
@@ -99,7 +102,7 @@ subroutine test_torch_tensor_ones()
   use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_ones, torch_tensor_to_array
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_fortran_env, only: real32
-  use iso_c_binding, only: c_bool, c_int, c_int64_t, c_null_ptr
+  use iso_c_binding, only: c_associated, c_bool, c_int, c_int64_t, c_null_ptr
 
   implicit none
 
@@ -121,12 +124,15 @@ subroutine test_torch_tensor_ones()
   device_index = -1
   requires_grad = .false.
 
+  ! Check the tensor pointer is not associated
+  @assertFalse(c_associated(tensor%p))
+
   ! Create tensor of ones
   call torch_tensor_ones(tensor, ndims, tensor_shape, dtype, device_type, &
                          device_index, requires_grad)
 
-  ! Check if tensor is not null
-  ! @assertTrue(tensor%p /= c_null_ptr) ! FIXME: compiler not happy with this
+  ! Check the tensor pointer is associated
+  @assertTrue(c_associated(tensor%p))
 
   call torch_tensor_to_array(tensor, out_data, shape(expected))
 
@@ -145,9 +151,9 @@ end subroutine test_torch_tensor_ones
 subroutine test_torch_from_blob()
   use pFUnit
   use ftorch
-  use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_loc
-  use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, c_int64_t, &
-                                        c_float, c_double, c_char, c_ptr, c_null_ptr
+  use, intrinsic :: iso_c_binding, only : c_associated, c_ptr, c_int, c_loc, c_null_ptr
+  use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, &
+                                        c_float, c_double, c_char
 
   implicit none
 
@@ -162,12 +168,18 @@ subroutine test_torch_from_blob()
   type(torch_tensor) :: tensor
   integer(kind = 4) :: data2(3,2) = reshape([1,2,3,4,5,6], [3,2]) ! 3 columns, 2 rows (after reshape)
 
+  ! Check the tensor pointer is not associated
+  @assertFalse(c_associated(tensor%p))
+
   ! Smoke test
   call torch_tensor_from_blob(tensor, c_loc(data1), ndims, tensor_shape, layout, dtype, device)
 
   ! TODO: would be good to try to compare the data in the tensor to the data in data1
 
   !@assertEqual(tensor, data2)
+
+  ! Check the tensor pointer is associated
+  @assertTrue(c_associated(tensor%p))
 
   ! Cleanup
   call torch_tensor_delete(tensor)
