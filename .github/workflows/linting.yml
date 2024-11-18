@@ -35,16 +35,15 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m venv ftorch
-          . ftorch/bin/activate
+          python -m venv ftorch_venv
+          . ftorch_venv/bin/activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install fortitude-lint
-          pip install ruff
+          pip install -r requirements.txt
 
       # Run CMake build to get compile commands for clang
       - name: FTorch CMake
         run: |
-          . ftorch/bin/activate
+          . ftorch_venv/bin/activate
           export FT_DIR=$(pwd)
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
@@ -59,7 +58,7 @@ jobs:
         if: always()
         run: |
           cd ${{ github.workspace }}
-          . ftorch/bin/activate  # Uses .clang-tidy config file if present
+          . ftorch_venv/bin/activate  # Uses .clang-tidy config file if present
           fortitude check src/
 
       # Apply C++ and C linter and formatter, clang
@@ -86,13 +85,13 @@ jobs:
         if: always()
         run: |
           cd ${{ github.workspace }}
-          . ftorch/bin/activate
+          . ftorch_venv/bin/activate
           fortitude check examples
 
       - name: ruff
         if: always()
         run: |
           cd ${{ github.workspace }}
-          . ftorch/bin/activate
+          . ftorch_venv/bin/activate
           ruff format --diff ./
           ruff check --diff ./
