@@ -15,20 +15,15 @@ subroutine test_torch_tensor_empty()
   implicit none
 
   type(torch_tensor) :: tensor
-  integer(c_int) :: ndims
+  integer(c_int), parameter :: ndims = 2
   integer(c_int64_t), dimension(2) :: tensor_shape
-  integer(c_int) :: dtype
-  integer(c_int) :: device_type
-  integer(c_int) :: device_index
-  logical(c_bool) :: requires_grad
+  integer(c_int), parameter :: dtype = torch_kFloat32
+  integer(c_int), parameter :: device_type = torch_kCPU
+  integer(c_int), parameter :: device_index = -1
+  logical(c_bool), parameter :: requires_grad = .false.
   logical :: test_pass
 
-  ndims = 2
   tensor_shape = [2, 3]
-  dtype = torch_kFloat32
-  device_type = torch_kCPU
-  device_index = -1
-  requires_grad = .false.
 
   ! Check the tensor pointer is not associated
   @assertFalse(c_associated(tensor%p))
@@ -56,22 +51,17 @@ subroutine test_torch_tensor_zeros()
   implicit none
 
   type(torch_tensor) :: tensor
-  integer(c_int) :: ndims
+  integer(c_int), parameter :: ndims = 2
   integer(c_int64_t), dimension(2) :: tensor_shape
-  integer(c_int) :: dtype
-  integer(c_int) :: device_type
-  integer(c_int) :: device_index
-  logical(c_bool) :: requires_grad
+  integer(c_int), parameter :: dtype = torch_kFloat32
+  integer(c_int), parameter :: device_type = torch_kCPU
+  integer(c_int), parameter :: device_index = -1
+  logical(c_bool), parameter :: requires_grad = .false.
   real(kind=real32), dimension(:,:), pointer :: out_data
   real(kind=real32), dimension(2,3) :: expected
   logical :: test_pass
 
-  ndims = 2
   tensor_shape = [2, 3]
-  dtype = torch_kFloat32
-  device_type = torch_kCPU
-  device_index = -1
-  requires_grad = .false.
 
   ! Check the tensor pointer is not associated
   @assertFalse(c_associated(tensor%p))
@@ -107,22 +97,17 @@ subroutine test_torch_tensor_ones()
   implicit none
 
   type(torch_tensor) :: tensor
-  integer(c_int) :: ndims
+  integer(c_int), parameter :: ndims = 2
   integer(c_int64_t), dimension(2) :: tensor_shape
-  integer(c_int) :: dtype
-  integer(c_int) :: device_type
-  integer(c_int) :: device_index
-  logical(c_bool) :: requires_grad
+  integer(c_int), parameter :: dtype = torch_kFloat32
+  integer(c_int), parameter :: device_type = torch_kCPU
+  integer(c_int), parameter :: device_index = -1
+  logical(c_bool), parameter :: requires_grad = .false.
   real(kind=real32), dimension(:,:), pointer :: out_data
   real(kind=real32), dimension(2,3) :: expected
   logical :: test_pass
 
-  ndims = 2
   tensor_shape = [2, 3]
-  dtype = torch_kFloat32
-  device_type = torch_kCPU
-  device_index = -1
-  requires_grad = .false.
 
   ! Check the tensor pointer is not associated
   @assertFalse(c_associated(tensor%p))
@@ -162,8 +147,8 @@ subroutine test_torch_from_blob()
   integer(c_int64_t), parameter :: tensor_shape(ndims)  = [2,3] ! 2 rows, 3 columns
   integer(kind = 4), target :: data1(2,3)  = reshape([1,2,3,4,5,6], [2,3])  ! 2 rows, 3 columns
   integer(c_int), parameter :: layout(ndims) = [1, 1]
-  integer(c_int) :: dtype  = torch_kInt32
-  integer(c_int) :: device = torch_kCPU
+  integer(c_int), parameter :: dtype  = torch_kInt32
+  integer(c_int), parameter :: device = torch_kCPU
 
   type(torch_tensor) :: tensor
   integer(kind = 4) :: data2(3,2) = reshape([1,2,3,4,5,6], [3,2]) ! 3 columns, 2 rows (after reshape)
