@@ -1,3 +1,50 @@
+!| Unit tests for FTorch subroutines that construct tensors.
+!
+!  * License  
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+
+@test
+subroutine test_torch_tensor_empty()
+  use pFUnit
+  use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_empty
+  use ftorch_test_utils, only: assert_allclose
+  use iso_c_binding, only: c_associated, c_bool, c_int, c_int64_t, c_null_ptr
+
+  implicit none
+
+  type(torch_tensor) :: tensor
+  integer(c_int) :: ndims
+  integer(c_int64_t), dimension(2) :: tensor_shape
+  integer(c_int) :: dtype
+  integer(c_int) :: device_type
+  integer(c_int) :: device_index
+  logical(c_bool) :: requires_grad
+  logical :: test_pass
+
+  ndims = 2
+  tensor_shape = [2, 3]
+  dtype = torch_kFloat32
+  device_type = torch_kCPU
+  device_index = -1
+  requires_grad = .false.
+
+  ! Check the tensor pointer is not associated
+  @assertFalse(c_associated(tensor%p))
+
+  ! Create a tensor of zeros
+  call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, &
+                          device_index, requires_grad)
+
+  ! Check the tensor pointer is associated
+  @assertTrue(c_associated(tensor%p))
+
+  ! Cleanup
+  call torch_tensor_delete(tensor)
+
+end subroutine test_torch_tensor_empty
+
 @test
 subroutine test_torch_tensor_zeros()
   use pFUnit
