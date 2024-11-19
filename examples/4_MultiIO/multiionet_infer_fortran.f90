@@ -44,8 +44,8 @@ program inference
    end do
 
    ! Initialise data
-   in_data1(:) = [0.0, 1.0, 2.0, 3.0]
-   in_data2(:) = [0.0, -1.0, -2.0, -3.0]
+   in_data1(:) = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp]
+   in_data2(:) = [0.0_wp, -1.0_wp, -2.0_wp, -3.0_wp]
 
    ! Create Torch input/output tensors from the above arrays
    call torch_tensor_from_array(in_tensors(1), in_data1, tensor_layout, torch_kCPU)
@@ -62,9 +62,9 @@ program inference
    write (*,*) out_data2
 
    ! Check output tensors match expected values
-   expected = [0.0, 2.0, 4.0, 6.0]
+   expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp]
    test_pass = assert_allclose(out_data1, expected, test_name="MultiIO array1", rtol=1e-5)
-   expected = [0.0, -3.0, -6.0, -9.0]
+   expected = [0.0_wp, -3.0_wp, -6.0_wp, -9.0_wp]
    test_pass = assert_allclose(out_data2, expected, test_name="MultiIO array2", rtol=1e-5)
 
    ! Cleanup

@@ -51,7 +51,7 @@ contains
       ! Outputs
       integer :: idx(2)
       real(wp), dimension(:,:), allocatable :: probabilities
-      real(wp), parameter :: expected_prob = 0.8846225142478943
+      real(wp), parameter :: expected_prob = 0.8846225142478943_wp
       character(len=100) :: categories(N_cats)
       real(wp) :: probability
 

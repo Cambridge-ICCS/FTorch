@@ -41,7 +41,7 @@ program inference
    end do
 
    ! Initialise data
-   in_data = [0.0, 1.0, 2.0, 3.0, 4.0]
+   in_data = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
 
    ! Create Torch input/output tensors from the above arrays
    call torch_tensor_from_array(in_tensors(1), in_data, tensor_layout, torch_kCPU)
@@ -55,7 +55,7 @@ program inference
    write (*,*) out_data(:)
 
    ! Check output tensor matches expected value
-   expected = [0.0, 2.0, 4.0, 6.0, 8.0]
+   expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
    test_pass = assert_allclose(out_data, expected, test_name="SimpleNet", rtol=1e-5)
 
    ! Cleanup
