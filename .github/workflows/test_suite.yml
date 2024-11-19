@@ -66,10 +66,20 @@ jobs:
           - os: macos-latest
             toolchain: {compiler: gcc, version: 11}
             std: "f2008"
+          # Oldest possible gcc and oldest macos
+          - os: macos-12
+            toolchain: {compiler: gcc, version: 11}
+            std: "f2008"
           # Newest possible intel-classic and standard on newest compatible macos
           - os: macos-14
             toolchain: {compiler: intel-classic, version: '2021.10'}
             std: "f2018"
+          - os: macos-13
+            toolchain: {compiler: intel-classic, version: '2021.10'}
+            std: "f2008"
+          - os: macos-12
+            toolchain: {compiler: intel-classic, version: '2021.10'}
+            std: "f2008"
         # exclude:
           # - os: windows-latest
           # toolchain: {compiler: nvidia-hpc, version: '23.11'}
