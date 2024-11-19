@@ -73,6 +73,7 @@ subroutine test_torch_tensor_zeros()
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
 
+  ! Extract Fortran array from tensor
   call torch_tensor_to_array(tensor, out_data, shape(expected))
 
   ! Check that the tensor values are all zero
@@ -119,6 +120,7 @@ subroutine test_torch_tensor_ones()
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
 
+  ! Extract Fortran array from tensor
   call torch_tensor_to_array(tensor, out_data, shape(expected))
 
   ! Check that the tensor values are all one
@@ -135,38 +137,50 @@ end subroutine test_torch_tensor_ones
 @test
 subroutine test_torch_from_blob()
   use pFUnit
-  use ftorch
-  use, intrinsic :: iso_c_binding, only : c_associated, c_ptr, c_int, c_loc, c_null_ptr
-  use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, &
-                                        c_float, c_double, c_char
+  use ftorch, only: torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_delete, torch_tensor_from_blob, torch_tensor_to_array
+  use ftorch_test_utils, only: assert_allclose
+  use, intrinsic :: iso_fortran_env, only: real32
+  use, intrinsic :: iso_c_binding, only : c_associated, c_bool, c_int, c_int64_t, c_loc, c_null_ptr, c_ptr
 
   implicit none
 
-  ! generate test data for torch_tensor_from_blob
-  integer(c_int), parameter :: ndims = 2
-  integer(c_int64_t), parameter :: tensor_shape(ndims)  = [2,3] ! 2 rows, 3 columns
-  integer(kind = 4), target :: data1(2,3)  = reshape([1,2,3,4,5,6], [2,3])  ! 2 rows, 3 columns
-  integer(c_int), parameter :: layout(ndims) = [1, 1]
-  integer(c_int), parameter :: dtype  = torch_kInt32
-  integer(c_int), parameter :: device = torch_kCPU
-
   type(torch_tensor) :: tensor
-  integer(kind = 4) :: data2(3,2) = reshape([1,2,3,4,5,6], [3,2]) ! 3 columns, 2 rows (after reshape)
+  integer(kind=c_int), parameter :: ndims = 2
+  integer(kind=c_int64_t), parameter :: tensor_layout(ndims) = [2,3]
+  integer(kind=c_int), parameter :: layout(ndims) = [1, 1]
+  integer(kind=c_int), parameter :: dtype = torch_kFloat32
+  integer(kind=c_int), parameter :: device_type = torch_kCPU
+  integer(kind=c_int), parameter :: device_index = -1
+  logical(kind=c_bool), parameter :: requires_grad = .false.
+  real(kind=real32), dimension(2,3), target :: in_data
+  real(kind=real32), dimension(:,:), pointer :: out_data
+  real(kind=real32), dimension(2,3) :: expected
+  logical :: test_pass
+
+  ! Create an arbitrary input array
+  in_data = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
 
   ! Check the tensor pointer is not associated
   @assertFalse(c_associated(tensor%p))
 
-  ! Smoke test
-  call torch_tensor_from_blob(tensor, c_loc(data1), ndims, tensor_shape, layout, dtype, device)
-
-  ! TODO: would be good to try to compare the data in the tensor to the data in data1
-
-  !@assertEqual(tensor, data2)
+  ! Create a tensor based off an input array
+  call torch_tensor_from_blob(tensor, c_loc(in_data), ndims, tensor_layout, layout, dtype, device_type, device_index, requires_grad)
 
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
 
+  ! Extract Fortran array from tensor
+  call torch_tensor_to_array(tensor, out_data, shape(in_data))
+
+  ! Compare the data in the tensor to the input data 
+  expected(:,:) = in_data
+  print *, expected
+  print *, out_data
+  test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_blob")
+  @assertTrue(test_pass)
+
   ! Cleanup
+  nullify(out_data)
   call torch_tensor_delete(tensor)
 
 end subroutine test_torch_from_blob
