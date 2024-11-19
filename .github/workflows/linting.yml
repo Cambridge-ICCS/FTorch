@@ -39,6 +39,7 @@ jobs:
           . ftorch/bin/activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
           pip install fortitude-lint
+          pip install ruff
 
       # Run CMake build to get compile commands for clang
       - name: FTorch CMake
@@ -54,7 +55,7 @@ jobs:
 
       # Apply Fortran linter, fortitude
       # Configurable using the fortitude.toml file if present
-      - name: Fortitude Source
+      - name: fortitude source
         if: always()
         run: |
           cd ${{ github.workspace }}
@@ -63,7 +64,7 @@ jobs:
 
       # Apply C++ and C linter and formatter, clang
       # Configurable using the .clang-format and .clang-tidy config files if present
-      - name: Clang Source
+      - name: clang source
         if: always()
         uses: cpp-linter/cpp-linter-action@v2
         id: linter
@@ -81,9 +82,17 @@ jobs:
         run: exit 1
 
       # Apply Fortran linter, fortitude to examples
-      - name: Fortitude Examples
+      - name: fortitude examples
         if: always()
         run: |
           cd ${{ github.workspace }}
           . ftorch/bin/activate
           fortitude check examples
+
+      - name: ruff
+        if: always()
+        run: |
+          cd ${{ github.workspace }}
+          . ftorch/bin/activate
+          ruff format --diff ./
+          ruff check --diff ./
