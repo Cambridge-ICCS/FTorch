@@ -2,6 +2,7 @@ program example
 
   ! Import precision info from iso
   use, intrinsic :: iso_fortran_env, only : sp => real32
+  use, intrinsic :: iso_c_binding, only : c_int64_t
 
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only : torch_tensor, torch_kCPU, &
@@ -20,7 +21,7 @@ program example
   real(wp), dimension(n,m), target :: in_data
   real(wp), dimension(:,:), pointer :: out_data
   real(wp), dimension(n,m) :: expected
-  integer :: tensor_layout(2) = [1, 2]
+  integer(c_int64_t) :: tensor_layout(2) = [1, 2]
   integer :: i, j
 
   ! Flag for testing

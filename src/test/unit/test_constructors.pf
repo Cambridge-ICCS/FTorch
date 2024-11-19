@@ -16,20 +16,20 @@ subroutine test_torch_tensor_empty()
 
   type(torch_tensor) :: tensor
   integer(c_int), parameter :: ndims = 2
-  integer(c_int64_t), dimension(2) :: tensor_shape
+  integer(c_int64_t), dimension(2) :: tensor_layout
   integer(c_int), parameter :: dtype = torch_kFloat32
   integer(c_int), parameter :: device_type = torch_kCPU
   integer(c_int), parameter :: device_index = -1
   logical(c_bool), parameter :: requires_grad = .false.
   logical :: test_pass
 
-  tensor_shape = [2, 3]
+  tensor_layout = [2, 3]
 
   ! Check the tensor pointer is not associated
   @assertFalse(c_associated(tensor%p))
 
   ! Create a tensor of zeros
-  call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, &
+  call torch_tensor_empty(tensor, ndims, tensor_layout, dtype, device_type, &
                           device_index, requires_grad)
 
   ! Check the tensor pointer is associated
@@ -52,7 +52,7 @@ subroutine test_torch_tensor_zeros()
 
   type(torch_tensor) :: tensor
   integer(c_int), parameter :: ndims = 2
-  integer(c_int64_t), dimension(2) :: tensor_shape
+  integer(c_int64_t), dimension(2) :: tensor_layout
   integer(c_int), parameter :: dtype = torch_kFloat32
   integer(c_int), parameter :: device_type = torch_kCPU
   integer(c_int), parameter :: device_index = -1
@@ -61,13 +61,13 @@ subroutine test_torch_tensor_zeros()
   real(kind=real32), dimension(2,3) :: expected
   logical :: test_pass
 
-  tensor_shape = [2, 3]
+  tensor_layout = [2, 3]
 
   ! Check the tensor pointer is not associated
   @assertFalse(c_associated(tensor%p))
 
   ! Create a tensor of zeros
-  call torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, device_type, &
+  call torch_tensor_zeros(tensor, ndims, tensor_layout, dtype, device_type, &
                           device_index, requires_grad)
 
   ! Check the tensor pointer is associated
@@ -99,7 +99,7 @@ subroutine test_torch_tensor_ones()
 
   type(torch_tensor) :: tensor
   integer(c_int), parameter :: ndims = 2
-  integer(c_int64_t), dimension(2) :: tensor_shape
+  integer(c_int64_t), dimension(2) :: tensor_layout
   integer(c_int), parameter :: dtype = torch_kFloat32
   integer(c_int), parameter :: device_type = torch_kCPU
   integer(c_int), parameter :: device_index = -1
@@ -108,13 +108,13 @@ subroutine test_torch_tensor_ones()
   real(kind=real32), dimension(2,3) :: expected
   logical :: test_pass
 
-  tensor_shape = [2, 3]
+  tensor_layout = [2, 3]
 
   ! Check the tensor pointer is not associated
   @assertFalse(c_associated(tensor%p))
 
   ! Create tensor of ones
-  call torch_tensor_ones(tensor, ndims, tensor_shape, dtype, device_type, &
+  call torch_tensor_ones(tensor, ndims, tensor_layout, dtype, device_type, &
                          device_index, requires_grad)
 
   ! Check the tensor pointer is associated

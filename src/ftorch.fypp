@@ -574,7 +574,7 @@ contains
 
     ! inputs
     ${f_type(PREC)}$(kind=${PREC}$), intent(in), target :: data_in${ranksuffix(RANK)}$   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(${RANK}$) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(${RANK}$) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor

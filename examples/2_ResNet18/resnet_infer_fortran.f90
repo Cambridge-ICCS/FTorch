@@ -1,6 +1,7 @@
 program inference
 
    use, intrinsic :: iso_fortran_env, only : sp => real32
+   use, intrinsic :: iso_c_binding, only : c_int64_t
 
    ! Import our library for interfacing with PyTorch
    use ftorch, only : torch_model, torch_tensor, torch_kCPU, torch_delete, &
@@ -32,10 +33,10 @@ contains
 
       integer, parameter :: in_dims = 4
       integer, parameter :: in_shape(in_dims) = [1, 3, 224, 224]
-      integer, parameter :: in_layout(in_dims) = [1, 2, 3, 4]
+      integer(c_int64_t), parameter :: in_layout(in_dims) = [1, 2, 3, 4]
       integer, parameter :: out_dims = 2
       integer, parameter :: out_shape(out_dims) = [1, 1000]
-      integer, parameter :: out_layout(out_dims) = [1, 2]
+      integer(c_int64_t), parameter :: out_layout(out_dims) = [1, 2]
 
       ! Path to input data
       character(len=100) :: data_dir
