@@ -10,6 +10,7 @@ on:
   # Triggers the workflow on pushes to open pull requests with code changes
   pull_request:
     paths:
+      - '.github/workflows/static_analysis.yml'
       - '**.c'
       - '**.cpp'
       - '**.fypp'
