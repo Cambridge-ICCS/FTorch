@@ -178,9 +178,13 @@ contains
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     interface
-      function torch_empty_c(ndims, tensor_shape, dtype, device_type, device_index, requires_grad) result(tensor) &
+      function torch_empty_c(ndims, tensor_shape, dtype, device_type, &
+          device_index, requires_grad) result(tensor) &
           bind(c, name = 'torch_empty')
         use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
+
+        implicit none
+
         integer(c_int), value, intent(in) :: ndims
         integer(c_int64_t), intent(in)    :: tensor_shape(*)
         integer(c_int), value, intent(in) :: dtype
