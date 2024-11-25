@@ -117,6 +117,7 @@ level, please see below for guidance.</p>
 <li><a href="#extending-the-api">Extending the API</a><ul>
 <li><a href="#fortran-source-and-fypp">Fortran source and Fypp</a></li>
 <li><a href="#git-hook">git hook</a></li>
+<li><a href="#code-style">Code style</a></li>
 <li><a href="#general-guidelines">General guidelines</a></li>
 </ul>
 </li>
@@ -190,6 +191,22 @@ Hooks can be enabled by placing them in the <code>.git</code> directory with the
 chmod +x .git/pre-commit
 </code></pre></div>
 
+<h3 id="code-style">Code style</h3>
+<p>FTorch source code is subject to a number of static analysis checks to ensure that it
+conforms to quality and legibility. These tools are a mixture of formatters and linters.</p>
+<p>The tools we use are as follows on a language-by-language basis:</p>
+<ul>
+<li>Fortran: <a href="https://github.com/PlasmaFAIR/fortitude">fortitude</a></li>
+<li>C++: <a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format</a> and <a href="https://clang.llvm.org/extra/clang-tidy/">clang-tidy</a></li>
+<li>C: <a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format</a> and <a href="https://clang.llvm.org/extra/clang-tidy/">clang-tidy</a></li>
+<li>Python: <a href="https://docs.astral.sh/ruff/">ruff</a></li>
+</ul>
+<p>Instructions on installing these tools can be found in their respective documentations.
+Contributors should run them over their code and ensure that it conforms before submitting
+a pull request. If there is a good reason to ignore a particular rule this should be
+justified in the pull request and ideally documented in the code.</p>
+<p>There is a GitHub action as part of the continuous integration that will perform these
+checks on all opened pull requests before they are merged.</p>
 <h3 id="general-guidelines">General guidelines</h3>
 <ul>
 <li>Match optional argument defaults between Fortran, C, and C++<br>
