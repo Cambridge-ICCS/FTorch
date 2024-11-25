@@ -1,14 +1,21 @@
 name: fypp-checks
 
 on:
-  # run on every push - doesn't work on forks
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
   push:
-  # run on every push (not commit) to a PR, plus open/reopen
+    branches: [ "main"]
+
+  # Triggers the workflow on pushes to open pull requests with Fortran changes
   pull_request:
     types:
-    - synchronize
-    - opened
-    - reopened
+      - synchronize
+      - opened
+      - reopened
+    paths:
+      - '**.fypp'
+      - '**.f90'
+      - '**.F90'
+      - '**.pf'
 
 
 jobs:
