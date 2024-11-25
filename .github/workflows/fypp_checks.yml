@@ -1,4 +1,5 @@
-name: fypp-checks
+# Workflow to run Fortran pre-processor checks on source
+name: FyppChecks
 
 on:
   # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
@@ -17,10 +18,11 @@ on:
       - '**.F90'
       - '**.pf'
 
-
+# Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
-  various:
-    name: FYPP checks - runs check on fypp and f90 files
+  # This workflow contains a single job called "fypp-checks"
+  fypp-checks:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

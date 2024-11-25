@@ -1,5 +1,4 @@
-# workflow to run the FTorch test suite
-
+# Workflow to run the FTorch test suite
 name: TestSuite
 
 # Controls when the workflow will run

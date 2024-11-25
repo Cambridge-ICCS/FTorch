@@ -1,5 +1,4 @@
-# workflow to build and deploy FORD docs for FTorch
-
+# Workflow to build and deploy FORD docs for FTorch
 name: BuildDocs
 
 # Controls when the workflow will run
