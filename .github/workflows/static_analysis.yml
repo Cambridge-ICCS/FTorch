@@ -1,13 +1,23 @@
-# workflow to run static-analysis and linting checks on source
-
+# Workflow to run static-analysis and linting checks on source
 name: StaticAnalysis
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on pushes to the "main" branch and any pull request events
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
   push:
-    branches: [ "main"]
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with code changes
   pull_request:
+    paths:
+      - '.github/workflows/static_analysis.yml'
+      - '**.c'
+      - '**.cpp'
+      - '**.fypp'
+      - '**.f90'
+      - '**.F90'
+      - '**.pf'
+      - '**.py'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
