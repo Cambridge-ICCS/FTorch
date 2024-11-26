@@ -5,7 +5,7 @@ name: TestSuite
 on:
   # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
   push:
-    branches: [ "main"]
+    branches: [ "main" ]
 
   # Triggers the workflow on pushes to open pull requests with code changes
   pull_request:
