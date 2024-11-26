@@ -9,7 +9,7 @@ on:
 
   # Triggers the workflow on pushes to open pull requests to main with documentation changes
   pull_request:
-    branches: [ "main"]
+    branches: [ "main" ]
     paths:
       - '.github/workflows/build_docs.yml'
       - '**.md'
