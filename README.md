@@ -271,5 +271,6 @@ The following projects make use of this code or derivatives in some way:
   See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
 * [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization)\
   See Heuer et al (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
+* [Incorporation into the CIME build system, used e.g. by CESM](https://github.com/Cambridge-ICCS/cime_je/tree/ftorch_forpy_cime) __work-in-progress__
 
 Are we missing anyone? Let us know.
