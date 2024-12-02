@@ -3,6 +3,13 @@ set(PROJECT_NAME FTorch)
 set(LIB_NAME ftorch)
 set(PACKAGE_VERSION 0.1)
 
+if (WIN32)
+    # if building on windows we need to make sure the symbols are exported
+    set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    # required to build the .dll on windows
+    set (BUILD_SHARED_LIBS TRUE)
+endif ()
+
 project(${PROJECT_NAME} VERSION ${PACKAGE_VERSION} LANGUAGES C CXX Fortran)
 
 include(FortranCInterface)
