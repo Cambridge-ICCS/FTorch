@@ -1,0 +1,58 @@
+name: TestSuiteWindows
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test-suite-windows:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        toolchain:
+          - {compiler: intel, version: '2023.2'}
+
+    steps:
+      # configure windows VM with intel compilers
+      - uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - uses: actions/checkout@v4
+
+      # install latest python version
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: install PyTorch
+        shell: cmd
+        run: |
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+      - name: build FTorch
+        shell: cmd
+        run: |
+          cd src
+          cmake -Bbuild -G "NMake Makefiles" -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" -DCMAKE_PREFIX_PATH="C:\hostedtoolcache\windows\Python\3.12.7\x64\Lib\site-packages" -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=ifx -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icx -DCMAKE_BUILD_TESTS=TRUE
+          cmake --build build
+          cmake --install build
+
+      - name: run tests
+        shell: cmd
+        run: |
+          cd src
+          set PATH=C:\hostedtoolcache\windows\Python\3.12.7\x64\Lib\site-packages;%PATH%
+          set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
+          set PATH=C:\hostedtoolcache\windows\Python\3.12.7\x64\Lib\site-packages\torch\lib;%PATH%
+          for /d %%i in (1_SimpleNet 2_ResNet18 4_MultiIO) do ..\run_integration_tests.bat build\test\examples\%%i
