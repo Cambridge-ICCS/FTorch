@@ -86,3 +86,31 @@ evaluation mode for efficiency.
 These can be adjusted using the `requires_grad` and `is_training` optional arguments
 in the Fortran interface. See the [API procedures documentation](lists/procedures.html)
 for details.
+
+### How do I compile an int64 version of `ftorch` for large tensors?
+
+If your code uses large tensors (where large means more elements, in at least 1
+dimension, than the maximum size of a 32-bit integer (2,147,483,647)) you may
+need to compile `ftorch` with 64-bit integers. If you do not, you may receive a
+compile time error like the following:
+```
+   39 |   call torch_tensor_from_array(tensor, in_data, tensor_layout, torch_kCPU)
+      |                                                                          1
+Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+```
+
+To fix this, we can build ftorch with 64-bit integers. We need to modify this
+line in `src/ftorch.fypp`
+```fortran
+integer, parameter :: ftorch_int = int32 ! set integer size for FTorch library
+```
+
+We can use 64-bit integers by changing the above line to this
+```fortran
+integer, parameter :: ftorch_int = int64 ! set integer size for FTorch library
+```
+
+Finally, you will need to run `fypp` e.g.,
+```bash
+fypp src/ftorch.fypp > src/ftorch.F90
+```

@@ -35,7 +35,7 @@ set(CMAKE_INSTALL_RPATH $ORIGIN/${relDir})
 find_package(Torch REQUIRED)
 
 # Library with C and Fortran bindings
-add_library(${LIB_NAME} SHARED ctorch.cpp ftorch.f90)
+add_library(${LIB_NAME} SHARED ctorch.cpp ftorch.F90)
 add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
 set_target_properties(${LIB_NAME} PROPERTIES
   PUBLIC_HEADER "ctorch.h"

@@ -30,9 +30,9 @@ jobs:
 
     - name: Check ftorch.fypp matches ftorch.f90
       run: |
-        fypp src/ftorch.fypp src/temp.f90_temp
-        if ! diff -q src/ftorch.f90 src/temp.f90_temp; then
-          echo "Error: The code in ftorch.f90 does not match that expected from ftorch.fypp."
+        fypp src/ftorch.fypp src/temp.F90_temp
+        if ! diff -q src/ftorch.F90 src/temp.F90_temp; then
+          echo "Error: The code in ftorch.F90 does not match that expected from ftorch.fypp."
           echo "Please re-run fypp on ftorch.fypp to ensure consistency and re-commit."
           exit 1
         else
