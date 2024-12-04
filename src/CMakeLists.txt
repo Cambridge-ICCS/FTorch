@@ -56,7 +56,9 @@ add_library(${LIB_NAME} SHARED ctorch.cpp ftorch.F90 ftorch_test_utils.f90)
 
 if(UNIX)
   message(STATUS "CMAKE_SYSTEM_PROCESSOR = ${CMAKE_SYSTEM_PROCESSOR}")
-  if(not APPLE)
+  if(APPLE)
+    # skip for apple for now.
+  else()
     target_compile_definitions(${LIB_NAME} PRIVATE UNIX)
   endif()
 endif()
