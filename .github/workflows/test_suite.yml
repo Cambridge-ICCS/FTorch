@@ -67,6 +67,9 @@ jobs:
             toolchain: {compiler: gcc, version: 11}
             std: "f2008"
           # Oldest possible gcc and oldest macos
+          - os: macos-13
+            toolchain: {compiler: gcc, version: 11}
+            std: "f2008"
           - os: macos-12
             toolchain: {compiler: gcc, version: 11}
             std: "f2008"
