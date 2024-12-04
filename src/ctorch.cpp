@@ -11,6 +11,7 @@ constexpr auto get_dtype(torch_data_t dtype) {
     exit(EXIT_FAILURE);
   case torch_kInt8:
     return torch::kInt8;
+
   case torch_kInt16:
     return torch::kInt16;
   case torch_kInt32:
@@ -42,8 +43,7 @@ const auto get_device(torch_device_t device_type, int device_index) {
     return torch::Device(torch::kCPU);
   case torch_kCUDA:
     if (device_index == -1) {
-      std::cerr << "[WARNING]: device index unset, defaulting to 0"
-                << std::endl;
+      std::cerr << "[WARNING]: device index unset, defaulting to 0"       <<  std::endl;
       device_index = 0;
     }
     if (device_index >= 0 && device_index < torch::cuda::device_count()) {
@@ -66,9 +66,7 @@ void set_is_training(torch_jit_script_module_t module,
   auto model = static_cast<torch::jit::script::Module *>(module);
   if (is_training) {
     model->train();
-  } else {
-    model->eval();
-  }
+  } else {model->eval();}
 }
 
 torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
