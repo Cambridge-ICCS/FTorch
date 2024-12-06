@@ -463,6 +463,7 @@ contains
       function torch_tensor_assign_c(input_c) result(output_c)                 &
           bind(c, name = 'torch_tensor_assign')
         use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: input_c
         type(c_ptr) :: output_c
       end function torch_tensor_assign_c
@@ -481,6 +482,7 @@ contains
       function torch_tensor_add_c(tensor1_c, tensor2_c) result(output_c)       &
           bind(c, name = 'torch_tensor_add')
         use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: tensor1_c
         type(c_ptr), value, intent(in) :: tensor2_c
         type(c_ptr) :: output_c
@@ -500,6 +502,7 @@ contains
       function torch_tensor_subtract_c(tensor1_c, tensor2_c) result(output_c)  &
           bind(c, name = 'torch_tensor_subtract')
         use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: tensor1_c
         type(c_ptr), value, intent(in) :: tensor2_c
         type(c_ptr) :: output_c
@@ -519,6 +522,7 @@ contains
       function torch_tensor_multiply_c(tensor1_c, tensor2_c) result(output_c)  &
           bind(c, name = 'torch_tensor_multiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: tensor1_c
         type(c_ptr), value, intent(in) :: tensor2_c
         type(c_ptr) :: output_c
@@ -539,6 +543,7 @@ contains
           bind(c, name = 'torch_tensor_premultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int8
+        implicit none
         integer(kind=int8), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
@@ -559,6 +564,7 @@ contains
           bind(c, name = 'torch_tensor_premultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int16
+        implicit none
         integer(kind=int16), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
@@ -579,6 +585,7 @@ contains
           bind(c, name = 'torch_tensor_premultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int32
+        implicit none
         integer(kind=int32), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
@@ -599,6 +606,7 @@ contains
           bind(c, name = 'torch_tensor_premultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int64
+        implicit none
         integer(kind=int64), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
@@ -619,6 +627,7 @@ contains
           bind(c, name = 'torch_tensor_premultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : real32
+        implicit none
         real(kind=real32), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
@@ -639,6 +648,7 @@ contains
           bind(c, name = 'torch_tensor_premultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : real64
+        implicit none
         real(kind=real64), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
@@ -660,6 +670,7 @@ contains
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int8
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         integer(kind=int8), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
@@ -680,6 +691,7 @@ contains
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int16
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         integer(kind=int16), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
@@ -700,6 +712,7 @@ contains
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int32
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         integer(kind=int32), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
@@ -720,6 +733,7 @@ contains
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int64
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         integer(kind=int64), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
@@ -740,6 +754,7 @@ contains
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : real32
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         real(kind=real32), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
@@ -760,6 +775,7 @@ contains
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : real64
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         real(kind=real64), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
@@ -779,6 +795,7 @@ contains
       function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c)  &
           bind(c, name = 'torch_tensor_divide')
         use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: tensor1_c
         type(c_ptr), value, intent(in) :: tensor2_c
         type(c_ptr) :: output_c
@@ -799,6 +816,7 @@ contains
           bind(c, name = 'torch_tensor_power')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int8
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         integer(kind=int8), value, intent(in) :: power_c
         type(c_ptr) :: output_c
@@ -819,6 +837,7 @@ contains
           bind(c, name = 'torch_tensor_power')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int16
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         integer(kind=int16), value, intent(in) :: power_c
         type(c_ptr) :: output_c
@@ -839,6 +858,7 @@ contains
           bind(c, name = 'torch_tensor_power')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int32
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         integer(kind=int32), value, intent(in) :: power_c
         type(c_ptr) :: output_c
@@ -859,6 +879,7 @@ contains
           bind(c, name = 'torch_tensor_power')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : int64
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         integer(kind=int64), value, intent(in) :: power_c
         type(c_ptr) :: output_c
@@ -879,6 +900,7 @@ contains
           bind(c, name = 'torch_tensor_power')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : real32
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         real(kind=real32), value, intent(in) :: power_c
         type(c_ptr) :: output_c
@@ -899,6 +921,7 @@ contains
           bind(c, name = 'torch_tensor_power')
         use, intrinsic :: iso_c_binding, only : c_ptr
         use, intrinsic :: iso_fortran_env, only : real64
+        implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         real(kind=real64), value, intent(in) :: power_c
         type(c_ptr) :: output_c

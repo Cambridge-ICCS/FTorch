@@ -279,7 +279,6 @@ torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
 
 torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
                                         const torch_tensor_t tensor)
-                                     
 {
     auto t = reinterpret_cast<torch::Tensor* const>(tensor);
     torch::Tensor* output = nullptr;
@@ -290,8 +289,6 @@ torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
 
 torch_tensor_t torch_tensor_postmultiply(const torch_tensor_t tensor,
                                          const torch_data_t scalar)
-                                        
-                                     
 {
     auto t = reinterpret_cast<torch::Tensor* const>(tensor);
     torch::Tensor* output = nullptr;
