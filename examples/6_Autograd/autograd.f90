@@ -4,8 +4,8 @@ program example
   use, intrinsic :: iso_fortran_env, only : sp => real32
 
   ! Import our library for interfacing with PyTorch's Autograd module
-  use ftorch, only : torch_tensor, torch_kCPU, &
-                     torch_tensor_from_array, torch_tensor_to_array, torch_tensor_delete
+  ! NOTE: Need bare import to get the operator overloading
+  use ftorch
 
   ! Import our tools module for testing utils
   use ftorch_test_utils, only : assert_allclose
