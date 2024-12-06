@@ -1,0 +1,38 @@
+# Workflow to render the FTorch submission to JOSS
+name: RenderJOSSPaper
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests to main with documentation changes
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '.github/workflows/JOSS_paper_pdf.yml'
+      - 'paper/*'
+
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    name: Paper Draft
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Builds/renders the paper using the openjournals action
+      - name: Build draft PDF
+        uses: openjournals/openjournals-draft-action@master
+        with:
+          journal: joss
+          paper-path: paper/paper.md
+
+      # Uploads the rendered pdf to GitHub.
+      - name: Upload draft PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper
+          path: paper/paper.pdf
