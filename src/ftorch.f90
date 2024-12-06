@@ -161,6 +161,57 @@ module ftorch
 
 contains
 
+  !> Returns a tensor with uninitialised values.
+  subroutine torch_tensor_empty(tensor, ndims, tensor_shape, dtype, &
+                                device_type, device_index, requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
+    type(torch_tensor), intent(out) :: tensor     !! Returned tensor
+    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
+    integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
+    integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), optional, intent(in) :: device_index     !! device index to use for `torch_kCUDA` case
+    logical(c_bool), optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    integer(c_int)                  :: device_index_value  !! device index used
+    logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
+
+    interface
+      function torch_empty_c(ndims, tensor_shape, dtype, device_type, &
+          device_index, requires_grad) result(tensor) &
+          bind(c, name = 'torch_empty')
+        use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
+
+        implicit none
+
+        integer(c_int), value, intent(in) :: ndims
+        integer(c_int64_t), intent(in)    :: tensor_shape(*)
+        integer(c_int), value, intent(in) :: dtype
+        integer(c_int), value, intent(in) :: device_type
+        integer(c_int), value, intent(in) :: device_index
+        logical(c_bool), value, intent(in) :: requires_grad
+        type(c_ptr)                       :: tensor
+      end function torch_empty_c
+    end interface
+
+    ! Process optional arguments
+    if (present(device_index)) then
+      device_index_value = device_index
+    else if (device_type == torch_kCPU) then
+      device_index_value = -1
+    else
+      device_index_value = 0
+    endif
+
+    if (.not. present(requires_grad)) then
+      requires_grad_value = logical(.false., c_bool)
+    else
+      requires_grad_value = requires_grad
+    end if
+
+    tensor%p = torch_empty_c(ndims, tensor_shape, dtype, device_type,          &
+                             device_index_value, requires_grad_value)
+  end subroutine torch_tensor_empty
+
   !> Returns a tensor filled with the scalar value 0.
   subroutine torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, &
                                 device_type, device_index, requires_grad)
@@ -558,7 +609,7 @@ contains
 
     ! inputs
     integer(kind=int8), intent(in), target :: data_in(:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(1) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -612,7 +663,7 @@ contains
 
     ! inputs
     integer(kind=int8), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(2) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -666,7 +717,7 @@ contains
 
     ! inputs
     integer(kind=int8), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(3) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -720,7 +771,7 @@ contains
 
     ! inputs
     integer(kind=int8), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(4) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -774,7 +825,7 @@ contains
 
     ! inputs
     integer(kind=int8), intent(in), target :: data_in(:,:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(5) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(5) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -828,7 +879,7 @@ contains
 
     ! inputs
     integer(kind=int16), intent(in), target :: data_in(:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(1) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -882,7 +933,7 @@ contains
 
     ! inputs
     integer(kind=int16), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(2) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -936,7 +987,7 @@ contains
 
     ! inputs
     integer(kind=int16), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(3) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -990,7 +1041,7 @@ contains
 
     ! inputs
     integer(kind=int16), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(4) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1044,7 +1095,7 @@ contains
 
     ! inputs
     integer(kind=int16), intent(in), target :: data_in(:,:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(5) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(5) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1098,7 +1149,7 @@ contains
 
     ! inputs
     integer(kind=int32), intent(in), target :: data_in(:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(1) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1152,7 +1203,7 @@ contains
 
     ! inputs
     integer(kind=int32), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(2) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1206,7 +1257,7 @@ contains
 
     ! inputs
     integer(kind=int32), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(3) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1260,7 +1311,7 @@ contains
 
     ! inputs
     integer(kind=int32), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(4) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1314,7 +1365,7 @@ contains
 
     ! inputs
     integer(kind=int32), intent(in), target :: data_in(:,:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(5) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(5) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1368,7 +1419,7 @@ contains
 
     ! inputs
     integer(kind=int64), intent(in), target :: data_in(:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(1) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1422,7 +1473,7 @@ contains
 
     ! inputs
     integer(kind=int64), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(2) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1476,7 +1527,7 @@ contains
 
     ! inputs
     integer(kind=int64), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(3) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1530,7 +1581,7 @@ contains
 
     ! inputs
     integer(kind=int64), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(4) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1584,7 +1635,7 @@ contains
 
     ! inputs
     integer(kind=int64), intent(in), target :: data_in(:,:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(5) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(5) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1638,7 +1689,7 @@ contains
 
     ! inputs
     real(kind=real32), intent(in), target :: data_in(:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(1) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1692,7 +1743,7 @@ contains
 
     ! inputs
     real(kind=real32), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(2) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1746,7 +1797,7 @@ contains
 
     ! inputs
     real(kind=real32), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(3) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1800,7 +1851,7 @@ contains
 
     ! inputs
     real(kind=real32), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(4) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1854,7 +1905,7 @@ contains
 
     ! inputs
     real(kind=real32), intent(in), target :: data_in(:,:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(5) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(5) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1908,7 +1959,7 @@ contains
 
     ! inputs
     real(kind=real64), intent(in), target :: data_in(:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(1) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(1) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1962,7 +2013,7 @@ contains
 
     ! inputs
     real(kind=real64), intent(in), target :: data_in(:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(2) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(2) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -2016,7 +2067,7 @@ contains
 
     ! inputs
     real(kind=real64), intent(in), target :: data_in(:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(3) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(3) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -2070,7 +2121,7 @@ contains
 
     ! inputs
     real(kind=real64), intent(in), target :: data_in(:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(4) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(4) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -2124,7 +2175,7 @@ contains
 
     ! inputs
     real(kind=real64), intent(in), target :: data_in(:,:,:,:,:)   !! Input data that tensor will point at
-    integer, intent(in)        :: layout(5) !! Control order of indices
+    integer(c_int64_t), intent(in) :: layout(5) !! Control order of indices
     integer(c_int), intent(in) :: c_device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor

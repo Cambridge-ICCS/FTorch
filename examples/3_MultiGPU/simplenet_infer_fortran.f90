@@ -2,6 +2,7 @@ program inference
 
    ! Import precision info from iso
    use, intrinsic :: iso_fortran_env, only : sp => real32
+   use, intrinsic :: iso_c_binding, only : c_int64_t
 
    ! Import our library for interfacing with PyTorch
    use ftorch, only : torch_model, torch_tensor, torch_kCUDA, torch_kCPU, &
@@ -22,7 +23,7 @@ program inference
    ! Set up Fortran data structures
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
-   integer, parameter :: tensor_layout(1) = [1]
+   integer(c_int64_t), parameter :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
    type(torch_model) :: model
