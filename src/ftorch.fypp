@@ -18,14 +18,14 @@ $:'integer' if PRECISION[:3] == 'int' else 'real'
 !| Main module for FTorch containing types and procedures.
 !  Generated from `ftorch.fypp` using the [fypp Fortran preprocessor](https://fypp.readthedocs.io/en/stable/index.html).
 !
-!  * License  
+!  * License
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 
 module ftorch
 
-  use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, c_int64_t, &
+  use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, &
                                          c_float, c_double, c_char, c_ptr, c_null_ptr, c_f_pointer
   use, intrinsic :: iso_fortran_env, only: int8, int16, int32, int64, real32, real64
 
@@ -44,8 +44,8 @@ module ftorch
     procedure :: get_shape
   end type torch_tensor
 
-  !| Enumerator for Torch data types  
-  !  From c_torch.h (torch_data_t)  
+  !| Enumerator for Torch data types
+  !  From c_torch.h (torch_data_t)
   !  Note that 0 `torch_kUInt8` and 5 `torch_kFloat16` are not sypported in Fortran
   enum, bind(c)
     enumerator :: torch_kUInt8 = 0 ! not supported in Fortran
@@ -59,7 +59,7 @@ module ftorch
   end enum
 
 
-  !| Enumerator for Torch devices  
+  !| Enumerator for Torch devices
   !  From c_torch.h (torch_device_t)
   enum, bind(c)
     enumerator :: torch_kCPU = 0
@@ -97,6 +97,8 @@ module ftorch
                                requires_grad) result(tensor_p) &
                                bind(c, name = 'torch_from_blob')
       use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
+
+      implicit none
 
       ! Arguments
       type(c_ptr), value, intent(in)    :: data
@@ -145,6 +147,9 @@ module ftorch
     function torch_to_blob_c(tensor, dtype) result(data) &
         bind(c, name = 'torch_to_blob')
       use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+
+      implicit none
+
       type(c_ptr), value, intent(in)    :: tensor
       integer(c_int), value, intent(in) :: dtype
       type(c_ptr)                       :: data
@@ -168,9 +173,13 @@ contains
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     interface
-      function torch_zeros_c(ndims, tensor_shape, dtype, device_type, device_index, requires_grad) result(tensor) &
+      function torch_zeros_c(ndims, tensor_shape, dtype, &
+                             device_type, device_index, requires_grad) result(tensor) &
           bind(c, name = 'torch_zeros')
         use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
+
+        implicit none
+
         integer(c_int), value, intent(in) :: ndims
         integer(c_int64_t), intent(in)    :: tensor_shape(*)
         integer(c_int), value, intent(in) :: dtype
@@ -215,9 +224,13 @@ contains
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     interface
-      function torch_ones_c(ndims, tensor_shape, dtype, device_type, device_index, requires_grad) result(tensor) &
+      function torch_ones_c(ndims, tensor_shape, dtype, &
+                            device_type, device_index, requires_grad) result(tensor) &
           bind(c, name = 'torch_ones')
         use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
+
+        implicit none
+
         integer(c_int), value, intent(in) :: ndims
         integer(c_int64_t), intent(in)    :: tensor_shape(*)
         integer(c_int), value, intent(in) :: dtype
@@ -302,6 +315,7 @@ contains
       subroutine torch_tensor_print_c(tensor) &
           bind(c, name = 'torch_tensor_print')
         use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: tensor
       end subroutine torch_tensor_print_c
     end interface
@@ -319,6 +333,7 @@ contains
       function torch_tensor_get_device_index_c(tensor) result(device_index) &
           bind(c, name = 'torch_tensor_get_device_index')
         use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: tensor
         integer(c_int) :: device_index
       end function torch_tensor_get_device_index_c
@@ -336,6 +351,7 @@ contains
       function torch_tensor_get_rank_c(tensor) result(rank) &
           bind(c, name = 'torch_tensor_get_rank')
         use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: tensor
         integer(c_int) :: rank
       end function torch_tensor_get_rank_c
@@ -356,6 +372,7 @@ contains
       function torch_tensor_get_sizes_c(tensor) result(sizes) &
           bind(c, name = 'torch_tensor_get_sizes')
         use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: tensor
         type(c_ptr) :: sizes
       end function torch_tensor_get_sizes_c
@@ -385,6 +402,7 @@ contains
       subroutine torch_tensor_delete_c(tensor) &
           bind(c, name = 'torch_tensor_delete')
         use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: tensor
       end subroutine torch_tensor_delete_c
     end interface
@@ -555,7 +573,8 @@ contains
 
   ! Torch Model API
   !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
-  subroutine torch_model_load(model, filename, device_type, device_index, requires_grad, is_training)
+  subroutine torch_model_load(model, filename, device_type, device_index, &
+                              requires_grad, is_training)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_null_char
     type(torch_model), intent(out)       :: model   !! Returned deserialized model
     character(*), intent(in)             :: filename !! Filename of saved TorchScript model
@@ -569,9 +588,11 @@ contains
     logical :: is_training_value  !! Whether the model is being trained, rather than evaluated
 
     interface
-      function torch_jit_load_c(filename, device_type, device_index, requires_grad, is_training) result(model) &
+      function torch_jit_load_c(filename, device_type, device_index, &
+                                requires_grad, is_training) result(model) &
           bind(c, name = 'torch_jit_load')
         use, intrinsic :: iso_c_binding, only : c_bool, c_char, c_int, c_ptr
+        implicit none
         character(c_char), intent(in) :: filename(*)
         integer(c_int), value, intent(in)    :: device_type
         integer(c_int), value, intent(in)    :: device_index
@@ -631,9 +652,10 @@ contains
 
     interface
       subroutine torch_jit_model_forward_c(model, input_tensors, n_inputs, &
-          output_tensors, n_outputs, requires_grad) &
+                                           output_tensors, n_outputs, requires_grad) &
           bind(c, name = 'torch_jit_module_forward')
         use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int
+        implicit none
         type(c_ptr), value, intent(in) :: model
         type(c_ptr), value, intent(in) :: input_tensors
         integer(c_int), value, intent(in) :: n_inputs
@@ -675,6 +697,7 @@ contains
       subroutine torch_jit_model_delete_c(model) &
           bind(c, name = 'torch_jit_module_delete')
         use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
         type(c_ptr), value, intent(in) :: model
       end subroutine torch_jit_model_delete_c
     end interface

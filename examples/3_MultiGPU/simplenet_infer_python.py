@@ -1,7 +1,7 @@
 """Load saved SimpleNet to TorchScript and run inference example."""
 
-from mpi4py import MPI
 import torch
+from mpi4py import MPI
 
 
 def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
@@ -43,7 +43,8 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         output = output_gpu.to(torch.device("cpu"))
 
     else:
-        raise ValueError(f"Device '{device}' not recognised.")
+        device_error = f"Device '{device}' not recognised."
+        raise ValueError(device_error)
 
     return output
 

@@ -16,4 +16,5 @@ Dependencies:
 3. Import your model into `pt2ts.py` and amend options as necessary (search for `FPTLIB-TODO`).
 4. Run with `python3 pt2ts.py`.
 
-The model will be saved in the location from which `pt2ts.py` is running.
+The Torchscript model will be saved locally in the same location from which the `pt2ts.py`
+script is being run.

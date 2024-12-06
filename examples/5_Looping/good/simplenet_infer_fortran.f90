@@ -7,19 +7,19 @@ program inference
    use ml_mod, only : ml_init, ml_routine, ml_final
 
    implicit none
-  
+
    ! Set working precision for reals
    integer, parameter :: wp = sp
    integer :: i
-   
+
    ! Set up Fortran data structures
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
    real(wp), dimension(5), target :: sum_data
 
    ! Initialise data
-   in_data = [0.0, 1.0, 2.0, 3.0, 4.0]
-   sum_data(:) = 0.0
+   in_data = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
+   sum_data(:) = 0.0_wp
 
    call ml_init()
 
@@ -28,7 +28,7 @@ program inference
       call ml_routine(in_data, out_data)
       sum_data(:) = sum_data(:) + out_data(:)
 
-      in_data(:) = in_data(:) + 1.0
+      in_data(:) = in_data(:) + 1.0_wp
    end do
 
    call ml_final()

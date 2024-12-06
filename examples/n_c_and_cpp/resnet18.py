@@ -12,7 +12,8 @@ def initialize():
 
     Returns
     -------
-    model : torch.nn.Module
+    model: torch.nn.Module
+        Pretrained model to run.
     """
     # Load a pre-trained PyTorch model
     print("Loading pre-trained ResNet-18 model...", end="")
@@ -32,7 +33,8 @@ def run_model(model):
 
     Parameters
     ----------
-    model : torch.nn.Module
+    model: torch.nn.Module
+        Pretrained model to run.
     """
     print("Running ResNet-18 model for ones...", end="")
     dummy_input = torch.ones(1, 3, 224, 224)
