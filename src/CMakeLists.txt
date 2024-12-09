@@ -103,10 +103,8 @@ install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch_test_utils.mod"
 # Build integration tests
 if(CMAKE_BUILD_TESTS)
 
-  if (WIN32)
-    find_package (Python COMPONENTS Interpreter)
-    set(PYTHON_EXECUTABLE ${Python_EXECUTABLE})
-  endif ()
+  set (Python_FIND_VIRTUALENV FIRST)
+  find_package (Python COMPONENTS Interpreter REQUIRED)
 
   file(MAKE_DIRECTORY test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/CMakeLists.txt
