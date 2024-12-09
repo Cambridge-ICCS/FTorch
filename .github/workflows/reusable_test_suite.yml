@@ -1,0 +1,84 @@
+name: ReusableTestSuite
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: 'Operating system to run the workflow on'
+        required: true
+        type: string
+      shell:
+        description: 'Shell type to run the workflow on'
+        required: true
+        type: string
+      compiler:
+        description: 'Compiler to build with'
+        required: true
+        type: string
+      compiler-version:
+        description: 'Version of the compiler'
+        required: true
+        type: string
+      name:
+        description: 'Name of the test workflow'
+        required: true
+        type: string
+      install-command:
+        description: 'Command to install FTorch'
+        required: true
+        type: string
+      build-command:
+        description: 'Command to build FTorch'
+        required: true
+        type: string
+      test-command:
+        description: 'Command to run the test suite'
+        required: true
+        type: string
+
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-suite:
+    name: ${{ inputs.name }}
+    runs-on: ${{ inputs.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["${{ inputs.os }}"]
+        std: ["f2008", "f2018"]  # TODO: Don't always test both
+        toolchain:
+          - {compiler: "${{ inputs.compiler }}", version: "${{ inputs.compiler-version }}"}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      # Checks-out your repository under ${GITHUB_WORKSPACE}, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install PyTorch
+        run: ${{ inputs.install-command }}
+        shell: ${{ inputs.shell }}
+
+      - name: Build FTorch
+        run: ${{ inputs.build-command }}
+        shell: ${{ inputs.shell }}
+
+      - name: Integration tests
+        run: ${{ inputs.test-command }}
+        shell: ${{ inputs.shell }}
