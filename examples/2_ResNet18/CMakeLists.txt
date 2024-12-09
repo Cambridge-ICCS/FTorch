@@ -28,16 +28,16 @@ if(CMAKE_BUILD_TESTS)
   # 1. Check the PyTorch model runs and its outputs meet expectations
   add_test(
     NAME resnet18
-    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/resnet18.py
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/resnet18.py
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
   # 1. Check the model is saved to file in the expected location with the
   #   pt2ts.py script
   add_test(
     NAME pt2ts
-    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py
-            ${PROJECT_BINARY_DIR}
-    # Command line argument: filepath for saving the model
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py
+            ${PROJECT_BINARY_DIR} # Command line argument: filepath for saving
+                                  # the model
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 1. Check the model can be loaded from file and run in Fortran and that its
@@ -45,8 +45,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME resnet_infer_fortran
     COMMAND
-      resnet_infer_fortran
-      ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt
+      resnet_infer_fortran ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt
       ${PROJECT_SOURCE_DIR}/data
       # Command line arguments: model file and data directory filepath
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
