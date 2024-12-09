@@ -206,7 +206,6 @@ EXPORT_C torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
 EXPORT_C torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
                                            const torch_data_t exponent);
 
-
 // =====================================================================================
 // Module API
 // =====================================================================================
