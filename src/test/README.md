@@ -30,5 +30,5 @@ which operating system you are running, you will need:
 - `./run_integration_tests.sh` for unix (mac and linux)
 - `run_integration_tests.bat` for windows
 
-This will automatically install any additional dependencies for the examples and
-run the tests.
+This will automatically install any additional Python dependencies for the
+examples and run the tests.
