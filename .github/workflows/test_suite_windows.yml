@@ -1,22 +1,45 @@
+# Workflow to run the FTorch test suite
 name: TestSuiteWindows
 
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
   push:
     branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with code changes
   pull_request:
-    branches:
+    paths:
+      - '.github/workflows/test_suite.yml'
+      - '**.c'
+      - '**.cpp'
+      - '**.fypp'
+      - '**.f90'
+      - '**.F90'
+      - '**.pf'
+      - '**.py'
+      - '**.sh'
+      - '**CMakeLists.txt'
+      - '**requirements.txt'
+      - '**data/*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
+  # This workflow contains a single job called "test-suite-windows"
   test-suite-windows:
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 15
+    # The type of runner that the job will run on
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
         toolchain:
           - {compiler: intel, version: '2023.2'}
 
@@ -28,19 +51,21 @@ jobs:
           compiler: ${{ matrix.toolchain.compiler }}
           version: ${{ matrix.toolchain.version }}
 
-      - uses: actions/checkout@v4
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # install latest python version
-      - uses: actions/setup-python@v5
+      - name: Install Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: install PyTorch
+      - name: Install PyTorch
         shell: cmd
         run: |
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
-      - name: build FTorch
+      - name: Build FTorch
         shell: cmd
         run: |
           cd src
@@ -48,7 +73,7 @@ jobs:
           cmake --build build
           cmake --install build
 
-      - name: run tests
+      - name: Integration tests
         shell: cmd
         run: |
           cd src
