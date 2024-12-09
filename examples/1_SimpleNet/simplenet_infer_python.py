@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Load saved SimpleNet to TorchScript and run inference example."""
 
 import os
