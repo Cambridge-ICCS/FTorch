@@ -4,8 +4,9 @@ program example
   use, intrinsic :: iso_fortran_env, only : sp => real32
 
   ! Import our library for interfacing with PyTorch's Autograd module
-  ! NOTE: Need bare import to get the operator overloading
-  use ftorch
+  use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
+    operator(**), torch_kCPU, torch_tensor, torch_tensor_delete, &
+    torch_tensor_from_array, torch_tensor_to_array
 
   ! Import our tools module for testing utils
   use ftorch_test_utils, only : assert_allclose
@@ -31,8 +32,8 @@ program example
   type(torch_tensor) :: a, b, Q
 
   ! Initialise input arrays as in Python example
-  in_data1(:,1) = [2.0, 3.0]
-  in_data2(:,1) = [6.0, 4.0]
+  in_data1(:,1) = [2.0_wp, 3.0_wp]
+  in_data2(:,1) = [6.0_wp, 4.0_wp]
 
   ! Construct a Torch Tensor from a Fortran array
   ! TODO: Implement requires_grad=.true.
@@ -59,7 +60,7 @@ program example
   write (*,*) "Q = 3 * a ** 3 - b ** 2 =", out_data(:,1)
 
   ! Check output tensor matches expected value
-  expected(:,1) = [-12.0, 65.0]
+  expected(:,1) = [-12.0_wp, 65.0_wp]
   test_pass = assert_allclose(out_data, expected, test_name="torch_tensor_to_array", rtol=1e-5)
   if (.not. test_pass) then
     call clean_up()
@@ -68,7 +69,7 @@ program example
   end if
 
   ! Check first input array is unchanged by the arithmetic operations
-  expected(:,1) = [2.0, 3.0]
+  expected(:,1) = [2.0_wp, 3.0_wp]
   test_pass = assert_allclose(in_data1, expected, test_name="torch_tensor_to_array", rtol=1e-5)
   if (.not. test_pass) then
     call clean_up()
@@ -77,7 +78,7 @@ program example
   end if
 
   ! Check second input array is unchanged by the arithmetic operations
-  expected(:,1) = [6.0, 4.0]
+  expected(:,1) = [6.0_wp, 4.0_wp]
   test_pass = assert_allclose(in_data2, expected, test_name="torch_tensor_to_array", rtol=1e-5)
   if (.not. test_pass) then
     call clean_up()
