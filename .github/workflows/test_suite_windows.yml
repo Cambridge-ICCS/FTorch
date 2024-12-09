@@ -1,4 +1,4 @@
-# Workflow to run the FTorch test suite
+# Workflow to run the FTorch test suite on Windows
 name: TestSuiteWindows
 
 # Controls when the workflow will run
@@ -10,7 +10,7 @@ on:
   # Triggers the workflow on pushes to open pull requests with code changes
   pull_request:
     paths:
-      - '.github/workflows/test_suite.yml'
+      - '.github/workflows/test_suite_windows.yml'
       - '**.c'
       - '**.cpp'
       - '**.fypp'
@@ -23,9 +23,6 @@ on:
       - '**requirements.txt'
       - '**data/*'
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
 # Cancel jobs running if new commits are pushed
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -35,47 +32,21 @@ concurrency:
 jobs:
   # This workflow contains a single job called "test-suite-windows"
   test-suite-windows:
-    # The type of runner that the job will run on
-    runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        toolchain:
-          - {compiler: intel, version: '2023.2'}
-
-    steps:
-      # configure windows VM with intel compilers
-      - uses: fortran-lang/setup-fortran@v1
-        id: setup-fortran
-        with:
-          compiler: ${{ matrix.toolchain.compiler }}
-          version: ${{ matrix.toolchain.version }}
-
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install PyTorch
-        shell: cmd
-        run: |
+    uses: Cambridge-ICCS/FTorch/.github/workflows/reusable_test_suite.yml@201_reusable-workflow
+    with:
+      os: windows-latest
+      shell: cmd
+      compiler: intel
+      compiler-version: 2023.2
+      name: TestSuiteUbuntu
+      install-command: |
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-
-      - name: Build FTorch
-        shell: cmd
-        run: |
+      build-command: |
           cd src
           cmake -Bbuild -G "NMake Makefiles" -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" -DCMAKE_PREFIX_PATH="C:\hostedtoolcache\windows\Python\3.12.7\x64\Lib\site-packages" -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=ifx -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icx -DCMAKE_BUILD_TESTS=TRUE
           cmake --build build
           cmake --install build
-
-      - name: Integration tests
-        shell: cmd
-        run: |
+      test-command: |
           cd src
           set PATH=C:\hostedtoolcache\windows\Python\3.12.7\x64\Lib\site-packages;%PATH%
           set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
