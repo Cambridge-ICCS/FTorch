@@ -10,7 +10,7 @@ on:
   # Triggers the workflow on pushes to open pull requests with code changes
   pull_request:
     paths:
-      - '.github/workflows/test_suite.yml'
+      - '.github/workflows/test_suite_windows.yml'
       - '**.c'
       - '**.cpp'
       - '**.fypp'
