@@ -13,8 +13,7 @@ If you need to build in native Windows please read the following information:
 
 ### Visual Studio
 
-It is possible to build using Visual Studio and the Intel Fortran Compiler  
-In this case you must install 
+It is possible to build using Visual Studio and the Intel Fortran Compiler. In this case you must install the following:
 
 * [Visual Studio](https://visualstudio.microsoft.com/) ensuring C++ tools are selected and installed.
 * [Intel OneAPI Basetoolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html)
@@ -37,6 +36,9 @@ cmake -G "NMake Makefiles" -DCMAKE_PREFIX_PATH="C:\Users\<path-to-libtorch-downl
 cmake --build .
 cmake --install .
 ```
+
+We would recommend Windows users to review the Windows CI workflow (`.github/workflows/test_suite_windows.yml`) for more
+information, as this provides an example of how to build and run FTorch and the tests from scratch.
 
 If using powershell the setvars and build commands become:
 ```
