@@ -110,7 +110,8 @@ We can use 64-bit integers by changing the above line to this
 integer, parameter :: ftorch_int = int64 ! set integer size for FTorch library
 ```
 
-Finally, you will need to run `fypp` e.g.,
+Finally, you will need to run `fypp` (`fypp` is not a core dependency, so you
+may need to install this separately) e.g.,
 ```bash
-fypp src/ftorch.fypp > src/ftorch.F90
+fypp src/ftorch.fypp src/ftorch.F90
 ```
