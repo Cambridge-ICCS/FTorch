@@ -80,4 +80,4 @@ jobs:
           set PATH=C:\hostedtoolcache\windows\Python\3.12.7\x64\Lib\site-packages;%PATH%
           set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
           set PATH=C:\hostedtoolcache\windows\Python\3.12.7\x64\Lib\site-packages\torch\lib;%PATH%
-          for /d %%i in (1_SimpleNet 2_ResNet18 4_MultiIO) do ..\run_integration_tests.bat build\test\examples\%%i
+          ..\run_integration_tests.bat
