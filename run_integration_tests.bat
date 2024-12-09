@@ -9,7 +9,7 @@ rem See `src/test/README.md` for more details on integration testing.
 rem ---
 
 for /d %%i in (1_SimpleNet 2_ResNet18 4_MultiIO) do (
-pushd build\test\examples\%%i
+pushd src\build\test\examples\%%i
 rem run the tests
 ctest
 rem The following line will propagate the error back to the cmd shell

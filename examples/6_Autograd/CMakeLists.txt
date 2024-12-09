@@ -24,7 +24,7 @@ if(CMAKE_BUILD_TESTS)
 
   # 1. Check the Python Autograd script runs successfully
   add_test(NAME pyautograd
-    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/autograd.py)
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/autograd.py)
 
   # 2. Check the Fortran Autograd script runs successfully
   add_test(NAME fautograd
