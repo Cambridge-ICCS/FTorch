@@ -36,8 +36,8 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME pt2ts
     COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath for saving
-                                  # the model
+            ${PROJECT_BINARY_DIR}
+    # Command line argument: filepath for saving the model
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 1. Check the model can be loaded from file and run in Fortran and that its
@@ -46,10 +46,9 @@ if(CMAKE_BUILD_TESTS)
     NAME resnet_infer_fortran
     COMMAND
       resnet_infer_fortran
-      ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt # Command line argument:
-                                                        # model file
-      ${PROJECT_SOURCE_DIR}/data # Command line argument: data directory
-                                 # filepath
+      ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt
+      ${PROJECT_SOURCE_DIR}/data
+      # Command line arguments: model file and data directory filepath
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     resnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION

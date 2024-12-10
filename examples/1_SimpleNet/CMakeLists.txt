@@ -34,8 +34,8 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME pt2ts
     COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath for saving
-                                  # the model
+            ${PROJECT_BINARY_DIR}
+    # Command line argument: filepath for saving the model
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 1. Check the model can be loaded from file and run in Python and that its
@@ -43,8 +43,8 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME simplenet_infer_python
     COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet_infer_python.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath to find the
-                                  # model
+            ${PROJECT_BINARY_DIR}
+    # Command line argument: filepath to find the model
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 1. Check the model can be loaded from file and run in Fortran and that its
@@ -53,8 +53,8 @@ if(CMAKE_BUILD_TESTS)
     NAME simplenet_infer_fortran
     COMMAND
       simplenet_infer_fortran
-      ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt # Command line
-                                                         # argument: model file
+      ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
+      # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
