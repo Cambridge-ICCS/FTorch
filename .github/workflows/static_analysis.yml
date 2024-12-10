@@ -62,6 +62,14 @@ jobs:
           cd ${BUILD_DIR}
           cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} -DCMAKE_Fortran_FLAGS="-std=f2008" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
+      # Apply CMake linter, cmake-lint
+      - name: cmake
+        if: always()
+        run: |
+          cd ${{ github.workspace }}
+          . ftorch_venv/bin/activate
+          cmake-lint $(find . -name CMakeLists.txt)
+
       # Apply Fortran linter, fortitude
       # Configurable using the fortitude.toml file if present
       - name: fortitude source
@@ -98,6 +106,7 @@ jobs:
           . ftorch_venv/bin/activate
           fortitude check examples
 
+      # Apply Python linter, ruff
       - name: ruff
         if: always()
         run: |
