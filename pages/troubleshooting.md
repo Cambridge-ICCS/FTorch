@@ -89,8 +89,10 @@ for details.
 
 ### How do I compile an int64 version of `ftorch` for large tensors?
 
-If your code uses large tensors (where large means more elements, in at least 1
-dimension, than the maximum size of a 32-bit integer (2,147,483,647)) you may
+Currently FTorch represents the number of elements in an array dimension using
+32-bit integers. For most users this will be more than enough, but if your code
+uses large tensors (where large means more than 2,147,483,647 elements
+in any one dimension (the maximum value of a 32-bit integer)), you may you may
 need to compile `ftorch` with 64-bit integers. If you do not, you may receive a
 compile time error like the following:
 ```
