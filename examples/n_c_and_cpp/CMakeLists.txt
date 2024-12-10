@@ -39,9 +39,11 @@ find_package(Torch REQUIRED)
 # Library with C and Fortran bindings
 add_library(${LIB_NAME} SHARED ctorch.cpp ftorch.f90)
 add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
+# cmake-format: off
 set_target_properties(
-  ${LIB_NAME} PROPERTIES PUBLIC_HEADER "ctorch.h" Fortran_MODULE_DIRECTORY
-                                                  "${CMAKE_BINARY_DIR}/modules")
+  ${LIB_NAME} PROPERTIES PUBLIC_HEADER "ctorch.h"
+  Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/modules")
+# cmake-format: on
 target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES})
 target_include_directories(
   ${LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/modules>
