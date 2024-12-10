@@ -82,7 +82,7 @@ _For a similar approach to calling TensorFlow models from Fortran please see [Fo
 
 To install the library requires the following to be installed on the system:
 
-* CMake >= 3.5
+* CMake >= 3.15
 * [libtorch](https://pytorch.org/cppdocs/installing.html)<sup>*</sup> or [PyTorch](https://pytorch.org/)
 * Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 

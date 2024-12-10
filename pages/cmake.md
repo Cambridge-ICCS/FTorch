@@ -10,7 +10,7 @@ This is controlled by the `CMakeLists.txt` file in `src/`.
 
 To install the library requires the following to be installed on the system:
 
-- CMake >= 3.5
+- CMake >= 3.15
 - libtorch or PyTorch
 - Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 
