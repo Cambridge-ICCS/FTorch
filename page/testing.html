@@ -116,21 +116,30 @@
 </ul>
 </div>
 <h2 id="testing">Testing</h2>
-<p>FTorch's test suite is currently comprised of integration tests based on a
-subset of the <a href="examples.html">examples</a>. These tests are built and run and their
+<p>FTorch's test suite currently comprises of integration tests based on a subset
+of the <a href="examples.html">examples</a>. These tests are built and run and their
 outputs are analysed to check they contain expected regular expressions.</p>
 <h3 id="building-the-integration-tests">Building the integration tests</h3>
 <p>To enable FTorch's integration tests, ensure that the <code>CMAKE_BUILD_TESTS</code> option
-is set to <code>TRUE</code> for the build.</p>
+is set to <code>TRUE</code> for the build i.e., <code>-DCMAKE_BUILD_TESTS=True</code>.</p>
 <h3 id="running-the-integration-tests">Running the integration tests</h3>
 <p>Once the build is complete, activate the Python virtual environment you created
 for FTorch<sup>1</sup> and simply run the
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/run_integration_tests.sh">helper script</a>
-in the root FTorch directory:</p>
-<div class="codehilite"><pre><span></span><code>./run_integration_tests.sh
-</code></pre></div>
-
-<p>This will automatically install any additional dependencies for the examples.</p>
+in the root FTorch directory. Depending on the OS you are running you will need
+to use either:</p>
+<ul>
+<li><code>./run_integration_tests.sh</code> for unix (mac and linux)</li>
+<li><code>run_integration_tests.bat</code> for windows</li>
+</ul>
+<p>This will automatically install any additional Python dependencies for the
+examples.</p>
+<p>Alternatively, individual tests may be run by going to the corresponding
+subdirectory of <code>${BUILD_DIR}/test/examples</code> (where <code>${BUILD_DIR}</code> is the build
+directory for FTorch) and calling <code>ctest</code>. This will produce a report on which
+tests passed and which failed for your build. Note that some of the examples
+have additional dependencies, which may need installing into your virtual
+environment.</p>
 <blockquote>
 <p><sup>1</sup> <em>If you built FTorch against libtorch (rather than creating a
 virtual environment) then either
@@ -138,12 +147,6 @@ virtual environment) then either
 the purposes of testing, or note that this script may have your Python
 environment install some modules.</em></p>
 </blockquote>
-<p>Alternatively, individual tests may be run by going to the corresponding
-subdirectory of <code>${BUILD_DIR}/test/examples</code> (where <code>${BUILD_DIR}</code> is the build
-directory for FTorch) and calling <code>ctest</code>. This will produce a report on which
-tests passed and which failed for your build. Note that some of the examples
-have additional dependencies, which may need installing into your virtual
-environment.</p>
     </div>
   </div>
       <hr>

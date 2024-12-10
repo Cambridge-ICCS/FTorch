@@ -80,14 +80,14 @@
 
             <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
-              <a href="../src/ftorch.f90"> Source File</a>
+              <a href="../src/ftorch.F90"> Source File</a>
             </li>
         </ul>
       </div>
       <div class="col">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='../sourcefile/ftorch.f90.html'>ftorch.f90</a></li>
+                <li class="breadcrumb-item"><a href='../sourcefile/ftorch.f90.html'>ftorch.F90</a></li>
                 <li class="breadcrumb-item"><a href='../module/ftorch.html'>ftorch</a></li>
             <li class="breadcrumb-item active" aria-current="page">torch_tensor_array_delete</li>
           </ol>
@@ -192,7 +192,7 @@
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_array_delete</span><span class="p">(</span><span class="n">tensor_array</span><span class="p">)</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(:),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_array</span>
-<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ftorch_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
 
 <span class="w">    </span><span class="c">! use bounds rather than (1, N) because it&#39;s safer</span>
 <span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">lbound</span><span class="p">(</span><span class="n">tensor_array</span><span class="p">,</span><span class="w"> </span><span class="nb">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="nb">ubound</span><span class="p">(</span><span class="n">tensor_array</span><span class="p">,</span><span class="w"> </span><span class="nb">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
