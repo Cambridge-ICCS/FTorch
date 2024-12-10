@@ -28,9 +28,9 @@ module ftorch_test_utils
     !> Print the result of a test to the terminal
     subroutine test_print(test_name, message, test_pass)
 
-      character(len=*), intent(in) :: test_name !! Name of the test being run
-      character(len=*), intent(in) :: message !! Message to print
-      logical, intent(in) :: test_pass !! Result of the assertion
+      character(len=*), intent(in) :: test_name  !! Name of the test being run
+      character(len=*), intent(in) :: message    !! Message to print
+      logical, intent(in) :: test_pass           !! Result of the assertion
 
       character(len=15) :: report
 
@@ -45,13 +45,13 @@ module ftorch_test_utils
     !> Asserts that two real32 values coincide to a given relative tolerance
     function assert_isclose_real32(got, expect, test_name, rtol, print_result) result(test_pass)
 
-      character(len=*), intent(in) :: test_name !! Name of the test being run
-      real(kind=real32), intent(in) :: got !! The value to be tested
-      real(kind=real32), intent(in) :: expect !! The expected value
-      real(kind=real32), intent(in), optional :: rtol !! Optional relative tolerance (defaults to 1e-5)
-      logical, intent(in), optional :: print_result !! Optionally print test result to screen (defaults to .true.)
+      character(len=*), intent(in) :: test_name                      !! Name of the test being run
+      real(kind=real32), intent(in) :: got             !! The value to be tested
+      real(kind=real32), intent(in) :: expect          !! The expected value
+      real(kind=real32), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass !! Did the assertion pass?
+      logical :: test_pass  !! Did the assertion pass?
 
       character(len=80) :: message
 
@@ -83,13 +83,13 @@ module ftorch_test_utils
     !> Asserts that two real64 values coincide to a given relative tolerance
     function assert_isclose_real64(got, expect, test_name, rtol, print_result) result(test_pass)
 
-      character(len=*), intent(in) :: test_name !! Name of the test being run
-      real(kind=real64), intent(in) :: got !! The value to be tested
-      real(kind=real64), intent(in) :: expect !! The expected value
-      real(kind=real64), intent(in), optional :: rtol !! Optional relative tolerance (defaults to 1e-5)
-      logical, intent(in), optional :: print_result !! Optionally print test result to screen (defaults to .true.)
+      character(len=*), intent(in) :: test_name                      !! Name of the test being run
+      real(kind=real64), intent(in) :: got             !! The value to be tested
+      real(kind=real64), intent(in) :: expect          !! The expected value
+      real(kind=real64), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass !! Did the assertion pass?
+      logical :: test_pass  !! Did the assertion pass?
 
       character(len=80) :: message
 
@@ -122,13 +122,13 @@ module ftorch_test_utils
     !> Asserts that two real32-valued 1D arrays coincide to a given relative tolerance
     function assert_allclose_real32_1d(got, expect, test_name, rtol, print_result) result(test_pass)
 
-      character(len=*), intent(in) :: test_name !! Name of the test being run
-      real(kind=real32), intent(in), dimension(:) :: got !! The array of values to be tested
-      real(kind=real32), intent(in), dimension(:) :: expect !! The array of expected values
-      real(kind=real32), intent(in), optional :: rtol !! Optional relative tolerance (defaults to 1e-5)
-      logical, intent(in), optional :: print_result !! Optionally print test result to screen (defaults to .true.)
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real32), intent(in), dimension(:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:) :: expect  !! The array of expected values
+      real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass !! Did the assertion pass?
+      logical :: test_pass  !! Did the assertion pass?
 
       character(len=80) :: message
 
@@ -168,13 +168,13 @@ module ftorch_test_utils
     !> Asserts that two real32-valued 2D arrays coincide to a given relative tolerance
     function assert_allclose_real32_2d(got, expect, test_name, rtol, print_result) result(test_pass)
 
-      character(len=*), intent(in) :: test_name !! Name of the test being run
-      real(kind=real32), intent(in), dimension(:,:) :: got !! The array of values to be tested
-      real(kind=real32), intent(in), dimension(:,:) :: expect !! The array of expected values
-      real(kind=real32), intent(in), optional :: rtol !! Optional relative tolerance (defaults to 1e-5)
-      logical, intent(in), optional :: print_result !! Optionally print test result to screen (defaults to .true.)
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real32), intent(in), dimension(:,:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:,:) :: expect  !! The array of expected values
+      real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass !! Did the assertion pass?
+      logical :: test_pass  !! Did the assertion pass?
 
       character(len=80) :: message
 
@@ -214,13 +214,13 @@ module ftorch_test_utils
     !> Asserts that two real64-valued 1D arrays coincide to a given relative tolerance
     function assert_allclose_real64_1d(got, expect, test_name, rtol, print_result) result(test_pass)
 
-      character(len=*), intent(in) :: test_name !! Name of the test being run
-      real(kind=real64), intent(in), dimension(:) :: got !! The array of values to be tested
-      real(kind=real64), intent(in), dimension(:) :: expect !! The array of expected values
-      real(kind=real64), intent(in), optional :: rtol !! Optional relative tolerance (defaults to 1e-5)
-      logical, intent(in), optional :: print_result !! Optionally print test result to screen (defaults to .true.)
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real64), intent(in), dimension(:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:) :: expect  !! The array of expected values
+      real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass !! Did the assertion pass?
+      logical :: test_pass  !! Did the assertion pass?
 
       character(len=80) :: message
 
@@ -260,13 +260,13 @@ module ftorch_test_utils
     !> Asserts that two real64-valued 2D arrays coincide to a given relative tolerance
     function assert_allclose_real64_2d(got, expect, test_name, rtol, print_result) result(test_pass)
 
-      character(len=*), intent(in) :: test_name !! Name of the test being run
-      real(kind=real64), intent(in), dimension(:,:) :: got !! The array of values to be tested
-      real(kind=real64), intent(in), dimension(:,:) :: expect !! The array of expected values
-      real(kind=real64), intent(in), optional :: rtol !! Optional relative tolerance (defaults to 1e-5)
-      logical, intent(in), optional :: print_result !! Optionally print test result to screen (defaults to .true.)
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real64), intent(in), dimension(:,:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:,:) :: expect  !! The array of expected values
+      real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass !! Did the assertion pass?
+      logical :: test_pass  !! Did the assertion pass?
 
       character(len=80) :: message
 
