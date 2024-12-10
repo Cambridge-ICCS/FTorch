@@ -107,11 +107,11 @@ jobs:
           ruff format --diff ./
           ruff check --diff ./
 
-      # Apply CMake formatter, cmake-format
+      # Apply CMake linter, cmake-lint
       - name: cmake
         if: always()
         run: |
           cd ${{ github.workspace }}
           . ftorch_venv/bin/activate
           pip install cmakelang
-          cmake-format -i $(find . -name CMakeLists.txt)
+          cmake-lint $(find . -name CMakeLists.txt)
