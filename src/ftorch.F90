@@ -1089,10 +1089,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(1)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt8  !! Data type
-    integer(c_int64_t)        :: strides(1)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 1                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
+    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1143,10 +1143,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(2)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt8  !! Data type
-    integer(c_int64_t)        :: strides(2)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 2                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
+    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1197,10 +1197,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(3)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt8  !! Data type
-    integer(c_int64_t)        :: strides(3)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 3                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
+    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1251,10 +1251,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(4)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt8  !! Data type
-    integer(c_int64_t)        :: strides(4)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 4                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
+    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1305,10 +1305,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(5)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt8  !! Data type
-    integer(c_int64_t)        :: strides(5)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 5                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
+    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1359,10 +1359,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(1)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt16  !! Data type
-    integer(c_int64_t)        :: strides(1)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 1                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
+    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1413,10 +1413,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(2)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt16  !! Data type
-    integer(c_int64_t)        :: strides(2)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 2                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
+    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1467,10 +1467,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(3)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt16  !! Data type
-    integer(c_int64_t)        :: strides(3)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 3                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
+    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1521,10 +1521,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(4)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt16  !! Data type
-    integer(c_int64_t)        :: strides(4)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 4                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
+    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1575,10 +1575,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(5)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt16  !! Data type
-    integer(c_int64_t)        :: strides(5)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 5                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
+    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1629,10 +1629,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(1)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt32  !! Data type
-    integer(c_int64_t)        :: strides(1)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 1                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
+    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1683,10 +1683,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(2)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt32  !! Data type
-    integer(c_int64_t)        :: strides(2)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 2                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
+    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1737,10 +1737,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(3)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt32  !! Data type
-    integer(c_int64_t)        :: strides(3)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 3                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
+    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1791,10 +1791,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(4)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt32  !! Data type
-    integer(c_int64_t)        :: strides(4)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 4                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
+    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1845,10 +1845,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(5)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt32  !! Data type
-    integer(c_int64_t)        :: strides(5)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 5                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
+    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1899,10 +1899,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(1)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt64  !! Data type
-    integer(c_int64_t)        :: strides(1)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 1                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
+    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -1953,10 +1953,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(2)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt64  !! Data type
-    integer(c_int64_t)        :: strides(2)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 2                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
+    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2007,10 +2007,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(3)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt64  !! Data type
-    integer(c_int64_t)        :: strides(3)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 3                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
+    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2061,10 +2061,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(4)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt64  !! Data type
-    integer(c_int64_t)        :: strides(4)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 4                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
+    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2115,10 +2115,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(5)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kInt64  !! Data type
-    integer(c_int64_t)        :: strides(5)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 5                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
+    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2169,10 +2169,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(1)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kFloat32  !! Data type
-    integer(c_int64_t)        :: strides(1)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 1                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
+    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2223,10 +2223,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(2)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kFloat32  !! Data type
-    integer(c_int64_t)        :: strides(2)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 2                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
+    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2277,10 +2277,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(3)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kFloat32  !! Data type
-    integer(c_int64_t)        :: strides(3)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 3                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
+    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2331,10 +2331,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(4)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kFloat32  !! Data type
-    integer(c_int64_t)        :: strides(4)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 4                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
+    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2385,10 +2385,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(5)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kFloat32  !! Data type
-    integer(c_int64_t)        :: strides(5)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 5                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
+    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2439,10 +2439,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(1)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kFloat64  !! Data type
-    integer(c_int64_t)        :: strides(1)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 1                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
+    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2493,10 +2493,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(2)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kFloat64  !! Data type
-    integer(c_int64_t)        :: strides(2)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 2                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
+    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2547,10 +2547,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(3)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kFloat64  !! Data type
-    integer(c_int64_t)        :: strides(3)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 3                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
+    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2601,10 +2601,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(4)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kFloat64  !! Data type
-    integer(c_int64_t)        :: strides(4)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 4                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
+    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2655,10 +2655,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(5)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = torch_kFloat64  !! Data type
-    integer(c_int64_t)        :: strides(5)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = 5                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
+    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -2703,7 +2703,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt8  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -2718,7 +2718,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int8_1d
@@ -2733,7 +2733,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt8  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -2748,7 +2748,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int8_2d
@@ -2763,7 +2763,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt8  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -2778,7 +2778,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int8_3d
@@ -2793,7 +2793,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt8  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -2808,7 +2808,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int8_4d
@@ -2823,7 +2823,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt8  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -2838,7 +2838,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int8_5d
@@ -2853,7 +2853,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt16  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -2868,7 +2868,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int16_1d
@@ -2883,7 +2883,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt16  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -2898,7 +2898,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int16_2d
@@ -2913,7 +2913,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt16  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -2928,7 +2928,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int16_3d
@@ -2943,7 +2943,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt16  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -2958,7 +2958,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int16_4d
@@ -2973,7 +2973,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt16  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -2988,7 +2988,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int16_5d
@@ -3003,7 +3003,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt32  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3018,7 +3018,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int32_1d
@@ -3033,7 +3033,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt32  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3048,7 +3048,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int32_2d
@@ -3063,7 +3063,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt32  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3078,7 +3078,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int32_3d
@@ -3093,7 +3093,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt32  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3108,7 +3108,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int32_4d
@@ -3123,7 +3123,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt32  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3138,7 +3138,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int32_5d
@@ -3153,7 +3153,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt64  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3168,7 +3168,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int64_1d
@@ -3183,7 +3183,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt64  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3198,7 +3198,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int64_2d
@@ -3213,7 +3213,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt64  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3228,7 +3228,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int64_3d
@@ -3243,7 +3243,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt64  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3258,7 +3258,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int64_4d
@@ -3273,7 +3273,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kInt64  !! Data type
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3288,7 +3288,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_int64_5d
@@ -3303,7 +3303,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kFloat32  !! Data type
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3318,7 +3318,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real32_1d
@@ -3333,7 +3333,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kFloat32  !! Data type
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3348,7 +3348,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real32_2d
@@ -3363,7 +3363,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kFloat32  !! Data type
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3378,7 +3378,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real32_3d
@@ -3393,7 +3393,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kFloat32  !! Data type
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3408,7 +3408,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real32_4d
@@ -3423,7 +3423,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kFloat32  !! Data type
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3438,7 +3438,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real32_5d
@@ -3453,7 +3453,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kFloat64  !! Data type
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3468,7 +3468,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real64_1d
@@ -3483,7 +3483,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kFloat64  !! Data type
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3498,7 +3498,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real64_2d
@@ -3513,7 +3513,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kFloat64  !! Data type
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3528,7 +3528,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real64_3d
@@ -3543,7 +3543,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kFloat64  !! Data type
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3558,7 +3558,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real64_4d
@@ -3573,7 +3573,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = torch_kFloat64  !! Data type
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -3588,7 +3588,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_real64_5d

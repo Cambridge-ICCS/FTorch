@@ -738,10 +738,10 @@ contains
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(${RANK}$)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = ${enum_from_prec(PREC)}$  !! Data type
-    integer(c_int64_t)        :: strides(${RANK}$)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = ${RANK}$                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(${RANK}$)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
+    integer(c_int64_t)        :: strides(${RANK}$)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = ${RANK}$                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -790,7 +790,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = ${enum_from_prec(PREC)}$  !! Data type
+    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -805,7 +805,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_${PREC}$_${RANK}$d
