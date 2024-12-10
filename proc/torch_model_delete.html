@@ -191,7 +191,7 @@
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_model_delete</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_model</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span><span class="w">     </span><span class="c">!! Torch Model to deallocate</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_model</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span><span class="w">  </span><span class="c">!! Torch Model to deallocate</span>
 
 <span class="w">    </span><span class="k">interface</span>
 <span class="k">      subroutine </span><span class="n">torch_jit_model_delete_c</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
