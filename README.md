@@ -203,10 +203,10 @@ For detailed guidance about running on GPU, including instructions for using mul
 devices, please see the
 [online GPU documentation](https://cambridge-iccs.github.io/FTorch/page/gpu.html).
 
-## Large tensors and 64-bit integer support
+## Large tensor support
 
-If your code uses large tensors (where large means more elements, in at least 1
-dimension, than the maximum size of a 32-bit integer (2,147,483,647)) you may
+If your code uses large tensors (where large means more than 2,147,483,647 elements
+in any one dimension (the maximum value of a 32-bit integer)), you may
 need to compile `ftorch` with 64-bit integers. For information on how to do
 this, please see our
 [FAQ](https://cambridge-iccs.github.io/FTorch/page/troubleshooting.html#faq)
