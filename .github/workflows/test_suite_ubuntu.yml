@@ -99,7 +99,7 @@ jobs:
           cmake --build .
           cmake --install .
 
-      - name: Integration tests
+      - name: Test suite
         run: |
           . ftorch/bin/activate
           ./run_test_suite.sh -V
