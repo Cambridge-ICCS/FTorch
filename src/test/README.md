@@ -24,8 +24,11 @@ which tests passed and which failed for your build. Note that the examples have
 additional dependencies, which may need installing into your virtual
 environment.
 
-Alternatively, run the helper script in the root FTorch directory:
-```
-./run_integration_tests.sh
-```
-This will automatically install any additional dependencies for the examples.
+Alternatively, run the helper script in the root FTorch directory. Depending on
+which operating system you are running, you will need:
+
+- `./run_integration_tests.sh` for unix (mac and linux)
+- `run_integration_tests.bat` for windows
+
+This will automatically install any additional Python dependencies for the
+examples and run the tests.

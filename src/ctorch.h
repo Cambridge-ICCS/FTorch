@@ -42,10 +42,9 @@ typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
  * @param device index for the CUDA case
  * @param whether gradient is required
  */
-EXPORT_C torch_tensor_t torch_zeros(int ndim, const int64_t *shape,
-                                    torch_data_t dtype,
-                                    torch_device_t device_type,
-                                    int device_index, const bool requires_grad);
+EXPORT_C torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
+                                    torch_device_t device_type, int device_index,
+                                    const bool requires_grad);
 
 /**
  * Function to generate a Torch Tensor of ones
@@ -56,8 +55,7 @@ EXPORT_C torch_tensor_t torch_zeros(int ndim, const int64_t *shape,
  * @param device index for the CUDA case
  * @param whether gradient is required
  */
-EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t *shape,
-                                   torch_data_t dtype,
+EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
                                    torch_device_t device_type, int device_index,
                                    const bool requires_grad);
 
@@ -70,10 +68,9 @@ EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t *shape,
  * @param device index for the CUDA case
  * @param whether gradient is required
  */
-EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t *shape,
-                                    torch_data_t dtype,
-                                    torch_device_t device_type,
-                                    int device_index, const bool requires_grad);
+EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
+                                    torch_device_t device_type, int device_index,
+                                    const bool requires_grad);
 
 /**
  * Function to create a Torch Tensor from memory location given extra
@@ -88,10 +85,10 @@ EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t *shape,
  * @param whether gradient is required
  * @return Torch Tensor interpretation of the data pointed at
  */
-EXPORT_C torch_tensor_t torch_from_blob(
-    void *data, int ndim, const int64_t *shape, const int64_t *strides,
-    torch_data_t dtype, torch_device_t device_type, int device_index,
-    const bool requires_grad);
+EXPORT_C torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
+                                        const int64_t *strides, torch_data_t dtype,
+                                        torch_device_t device_type, int device_index,
+                                        const bool requires_grad);
 
 /**
  * Function to extract a C-array from a Torch Tensor's data.
@@ -100,8 +97,7 @@ EXPORT_C torch_tensor_t torch_from_blob(
  * @param data type of the elements of the Tensor
  * @return pointer to the Tensor in memory
  */
-EXPORT_C void *torch_to_blob(const torch_tensor_t tensor,
-                             const torch_data_t dtype);
+EXPORT_C void *torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype);
 
 /**
  * Function to print out a Torch Tensor
@@ -128,7 +124,11 @@ EXPORT_C int torch_tensor_get_rank(const torch_tensor_t tensor);
  * @param Torch Tensor to determine the rank of
  * @return pointer to the sizes array of the Torch Tensor
  */
+#ifdef UNIX
 EXPORT_C const long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
+#else
+EXPORT_C const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
+#endif
 
 /**
  * Function to delete a Torch Tensor to clean up
@@ -219,9 +219,11 @@ EXPORT_C torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
  * @param whether model is being trained
  * @return Torch Module loaded in from file
  */
-EXPORT_C torch_jit_script_module_t torch_jit_load(
-    const char *filename, const torch_device_t device_type,
-    const int device_index, const bool requires_grad, const bool is_training);
+EXPORT_C torch_jit_script_module_t torch_jit_load(const char *filename,
+                                                  const torch_device_t device_type,
+                                                  const int device_index,
+                                                  const bool requires_grad,
+                                                  const bool is_training);
 
 /**
  * Function to run the `forward` method of a Torch Module
@@ -233,9 +235,8 @@ EXPORT_C torch_jit_script_module_t torch_jit_load(
  * @param whether gradient is required
  */
 EXPORT_C void torch_jit_module_forward(const torch_jit_script_module_t module,
-                                       const torch_tensor_t *inputs,
-                                       const int nin, torch_tensor_t *outputs,
-                                       const int nout,
+                                       const torch_tensor_t *inputs, const int nin,
+                                       torch_tensor_t *outputs, const int nout,
                                        const bool requires_grad);
 
 /**

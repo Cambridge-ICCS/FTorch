@@ -106,6 +106,7 @@ The tools we use are as follows on a language-by-language basis:
 * C++: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
 * C: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
 * Python: [ruff](https://docs.astral.sh/ruff/)
+* CMake: [cmake-format](https://github.com/cheshirekow/cmake_format)
 
 Instructions on installing these tools can be found in their respective documentations.
 Contributors should run them over their code and ensure that it conforms before submitting

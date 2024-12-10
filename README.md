@@ -82,7 +82,7 @@ _For a similar approach to calling TensorFlow models from Fortran please see [Fo
 
 To install the library requires the following to be installed on the system:
 
-* CMake >= 3.5
+* CMake >= 3.15
 * [libtorch](https://pytorch.org/cppdocs/installing.html)<sup>*</sup> or [PyTorch](https://pytorch.org/)
 * Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 
@@ -202,6 +202,14 @@ adaptations to the code:
 For detailed guidance about running on GPU, including instructions for using multiple
 devices, please see the
 [online GPU documentation](https://cambridge-iccs.github.io/FTorch/page/gpu.html).
+
+## Large tensor support
+
+If your code uses large tensors (where large means more than 2,147,483,647 elements
+in any one dimension (the maximum value of a 32-bit integer)), you may
+need to compile `ftorch` with 64-bit integers. For information on how to do
+this, please see our
+[FAQ](https://cambridge-iccs.github.io/FTorch/page/troubleshooting.html#faq)
 
 ## Examples
 

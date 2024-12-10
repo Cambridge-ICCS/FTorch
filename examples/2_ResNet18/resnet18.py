@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Load and run pretrained ResNet-18 from TorchVision."""
 
 import numpy as np
