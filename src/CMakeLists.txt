@@ -8,12 +8,12 @@ project(
   VERSION ${PACKAGE_VERSION}
   LANGUAGES C CXX Fortran)
 
-if (WIN32)
-    # if building on windows we need to make sure the symbols are exported
-    set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-    # required to build the .dll on windows
-    set (BUILD_SHARED_LIBS TRUE)
-endif ()
+if(WIN32)
+  # if building on windows we need to make sure the symbols are exported
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+  # required to build the .dll on windows
+  set(BUILD_SHARED_LIBS TRUE)
+endif()
 
 include(FortranCInterface)
 FortranCInterface_VERIFY(CXX QUIET)
@@ -103,8 +103,11 @@ install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch_test_utils.mod"
 # Build integration tests
 if(CMAKE_BUILD_TESTS)
 
-  set (Python_FIND_VIRTUALENV FIRST)
-  find_package (Python COMPONENTS Interpreter REQUIRED)
+  set(Python_FIND_VIRTUALENV FIRST) # cmake-lint: disable=C0103
+  find_package(
+    Python
+    COMPONENTS Interpreter
+    REQUIRED)
 
   file(MAKE_DIRECTORY test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/CMakeLists.txt
