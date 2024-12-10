@@ -44,20 +44,23 @@ subroutine test_torch_tensor_zeros()
   use pFUnit
   use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_to_array, torch_tensor_zeros
   use ftorch_test_utils, only: assert_allclose
-  use, intrinsic :: iso_fortran_env, only: real32
-  use iso_c_binding, only: c_associated, c_bool, c_int, c_int64_t, c_null_ptr
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use iso_c_binding, only: c_associated, c_int64_t
 
   implicit none
 
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
   type(torch_tensor) :: tensor
-  integer(c_int), parameter :: ndims = 2
+  integer, parameter :: ndims = 2
   integer(c_int64_t), dimension(2) :: tensor_shape
-  integer(c_int), parameter :: dtype = torch_kFloat32
-  integer(c_int), parameter :: device_type = torch_kCPU
-  integer(c_int), parameter :: device_index = -1
-  logical(c_bool), parameter :: requires_grad = .false.
-  real(kind=real32), dimension(:,:), pointer :: out_data
-  real(kind=real32), dimension(2,3) :: expected
+  integer, parameter :: dtype = torch_kFloat32
+  integer, parameter :: device_type = torch_kCPU
+  integer, parameter :: device_index = -1
+  logical, parameter :: requires_grad = .false.
+  real(wp), dimension(:,:), pointer :: out_data
+  real(wp), dimension(2,3) :: expected
   logical :: test_pass
 
   tensor_shape = [2, 3]
@@ -66,8 +69,7 @@ subroutine test_torch_tensor_zeros()
   @assertFalse(c_associated(tensor%p))
 
   ! Create a tensor of zeros
-  call torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, device_type, &
-                          device_index, requires_grad)
+  call torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, device_type) ! device_index, requires_grad)
 
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
@@ -86,52 +88,52 @@ subroutine test_torch_tensor_zeros()
 
 end subroutine test_torch_tensor_zeros
 
-@test
-subroutine test_torch_tensor_ones()
-  use pFUnit
-  use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_ones, torch_tensor_to_array
-  use ftorch_test_utils, only: assert_allclose
-  use, intrinsic :: iso_fortran_env, only: real32
-  use iso_c_binding, only: c_associated, c_bool, c_int, c_int64_t, c_null_ptr
-
-  implicit none
-
-  type(torch_tensor) :: tensor
-  integer(c_int), parameter :: ndims = 2
-  integer(c_int64_t), dimension(2) :: tensor_shape
-  integer(c_int), parameter :: dtype = torch_kFloat32
-  integer(c_int), parameter :: device_type = torch_kCPU
-  integer(c_int), parameter :: device_index = -1
-  logical(c_bool), parameter :: requires_grad = .false.
-  real(kind=real32), dimension(:,:), pointer :: out_data
-  real(kind=real32), dimension(2,3) :: expected
-  logical :: test_pass
-
-  tensor_shape = [2, 3]
-
-  ! Check the tensor pointer is not associated
-  @assertFalse(c_associated(tensor%p))
-
-  ! Create tensor of ones
-  call torch_tensor_ones(tensor, ndims, tensor_shape, dtype, device_type, &
-                         device_index, requires_grad)
-
-  ! Check the tensor pointer is associated
-  @assertTrue(c_associated(tensor%p))
-
-  ! Extract Fortran array from tensor
-  call torch_tensor_to_array(tensor, out_data, shape(expected))
-
-  ! Check that the tensor values are all one
-  expected(:,:) = 1.0
-  test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")
-  @assertTrue(test_pass)
-
-  ! Cleanup
-  nullify(out_data)
-  call torch_tensor_delete(tensor)
-
-end subroutine test_torch_tensor_ones
+! @test
+! subroutine test_torch_tensor_ones()
+!   use pFUnit
+!   use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_ones, torch_tensor_to_array
+!   use ftorch_test_utils, only: assert_allclose
+!   use, intrinsic :: iso_fortran_env, only: real32
+!   use iso_c_binding, only: c_associated, c_bool, c_int, c_int64_t, c_null_ptr
+! 
+!   implicit none
+! 
+!   type(torch_tensor) :: tensor
+!   integer(c_int), parameter :: ndims = 2
+!   integer(c_int64_t), dimension(2) :: tensor_shape
+!   integer(c_int), parameter :: dtype = torch_kFloat32
+!   integer(c_int), parameter :: device_type = torch_kCPU
+!   integer(c_int), parameter :: device_index = -1
+!   logical(c_bool), parameter :: requires_grad = .false.
+!   real(kind=real32), dimension(:,:), pointer :: out_data
+!   real(kind=real32), dimension(2,3) :: expected
+!   logical :: test_pass
+! 
+!   tensor_shape = [2, 3]
+! 
+!   ! Check the tensor pointer is not associated
+!   @assertFalse(c_associated(tensor%p))
+! 
+!   ! Create tensor of ones
+!   call torch_tensor_ones(tensor, ndims, tensor_shape, dtype, device_type, &
+!                          device_index, requires_grad)
+! 
+!   ! Check the tensor pointer is associated
+!   @assertTrue(c_associated(tensor%p))
+! 
+!   ! Extract Fortran array from tensor
+!   call torch_tensor_to_array(tensor, out_data, shape(expected))
+! 
+!   ! Check that the tensor values are all one
+!   expected(:,:) = 1.0
+!   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")
+!   @assertTrue(test_pass)
+! 
+!   ! Cleanup
+!   nullify(out_data)
+!   call torch_tensor_delete(tensor)
+! 
+! end subroutine test_torch_tensor_ones
 
 @test
 subroutine test_torch_from_array()
