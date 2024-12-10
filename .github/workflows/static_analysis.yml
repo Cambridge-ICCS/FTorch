@@ -98,6 +98,7 @@ jobs:
           . ftorch_venv/bin/activate
           fortitude check examples
 
+      # Apply Python linter, ruff
       - name: ruff
         if: always()
         run: |
@@ -105,3 +106,12 @@ jobs:
           . ftorch_venv/bin/activate
           ruff format --diff ./
           ruff check --diff ./
+
+      # Apply CMake formatter, cmake-format
+      - name: cmake
+        if: always()
+        run: |
+          cd ${{ github.workspace }}
+          . ftorch_venv/bin/activate
+          pip install cmakelang
+          cmake-format -i $(find . -name CMakeLists.txt)
