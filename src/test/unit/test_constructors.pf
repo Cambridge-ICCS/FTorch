@@ -10,17 +10,17 @@ subroutine test_torch_tensor_empty()
   use pFUnit
   use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_empty
   use ftorch_test_utils, only: assert_allclose
-  use iso_c_binding, only: c_associated, c_bool, c_int, c_int64_t, c_null_ptr
+  use iso_c_binding, only: c_associated, c_int64_t
 
   implicit none
 
   type(torch_tensor) :: tensor
-  integer(c_int), parameter :: ndims = 2
+  integer, parameter :: ndims = 2
   integer(c_int64_t), dimension(2) :: tensor_shape
-  integer(c_int), parameter :: dtype = torch_kFloat32
-  integer(c_int), parameter :: device_type = torch_kCPU
-  integer(c_int), parameter :: device_index = -1
-  logical(c_bool), parameter :: requires_grad = .false.
+  integer, parameter :: dtype = torch_kFloat32
+  integer, parameter :: device_type = torch_kCPU
+  integer, parameter :: device_index = -1
+  logical, parameter :: requires_grad = .false.
   logical :: test_pass
 
   tensor_shape = [2, 3]
@@ -29,8 +29,7 @@ subroutine test_torch_tensor_empty()
   @assertFalse(c_associated(tensor%p))
 
   ! Create a tensor of zeros
-  call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, &
-                          device_index, requires_grad)
+  call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type) ! device_index, requires_grad)
 
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
