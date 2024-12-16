@@ -149,7 +149,7 @@ subroutine test_torch_from_array()
 
   type(torch_tensor) :: tensor
   integer, parameter :: ndims = 2
-  integer(ftorch_int), parameter :: tensor_layout(ndims) = [2, 3]
+  integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1]
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
   real(wp), dimension(2,3), target :: in_data
