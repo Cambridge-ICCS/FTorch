@@ -70,12 +70,12 @@ jobs:
         run: |
           cd src
           rem find torch location
-          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set package_path=%%i
+          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           cmake ^
             -Bbuild ^
             -G "NMake Makefiles" ^
             -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
-            -DCMAKE_PREFIX_PATH=%package_path% ^
+            -DCMAKE_PREFIX_PATH=%torch_path% ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DCMAKE_Fortran_COMPILER=ifx ^
             -DCMAKE_C_COMPILER=icx ^
@@ -87,7 +87,7 @@ jobs:
       - name: Integration tests
         shell: cmd
         run: |
-          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set package_path=%%i
+          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
-          set PATH=%package_path%\torch\lib;%PATH%
+          set PATH=%torch_path%\torch\lib;%PATH%
           run_integration_tests.bat
