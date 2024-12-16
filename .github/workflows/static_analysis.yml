@@ -10,7 +10,7 @@ on:
   # Triggers the workflow on pushes to open pull requests with code changes
   pull_request:
     paths:
-      - '.github/workflows/static_analysis.yml'
+      - '.github/workflows/*.yml'
       - '**.c'
       - '**.cpp'
       - '**.fypp'
@@ -81,6 +81,14 @@ jobs:
           for FILE in $(find . -name "*.sh"); do
             shellcheck ${FILE}
           done
+
+      # Apply GitHub Actions linter, zizmor
+      - name: zizmor
+        if: always()
+        run: |
+          cd ${{ github.workspace }}
+          . ftorch_venv/bin/activate
+          zizmor .github/workflows/*.yml
 
       # Apply Fortran linter, fortitude
       # Configurable using the fortitude.toml file if present
