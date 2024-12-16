@@ -12,14 +12,55 @@
 
 set -eu
 
-BUILD_DIR=src/build
+# Function to display help text
+show_help() {
+  echo "Usage: $0 [BUILD_DIR=<build_dir>] [--verbose | -V]"
+  echo
+  echo "Options:"
+  echo "  BUILD_DIR=<build_dir> Specify the build directory (default: src/build)."
+  echo "  --verbose | -V        Run with verbose ctest output."
+  echo "  --help                Show this help message and exit."
+}
 
-# Unit tests
+# Check for --help option
+if [ "$1" = "--help" ]; then
+  show_help
+  exit 0
+fi
+
+# Parse command line arguments
+BUILD_DIR="src/build"
+VERBOSE=false
+for ARG in "$@"; do
+  case ${ARG} in
+  BUILD_DIR=*)
+    BUILD_DIR="${ARG#*=}"
+    ;;
+  --verbose | -V)
+    VERBOSE=true
+    shift
+    ;;
+  *)
+    echo "Unknown argument: ${ARG}"
+    show_help
+    exit 1
+    ;;
+  esac
+done
+
+# Process command line arguments
+if [ "${VERBOSE}" = true ]; then
+  CTEST_ARGS="-V"
+else
+  CTEST_ARGS=""
+fi
+
+# Run unit tests
 cd ${BUILD_DIR}/test/unit
 ctest ${CTEST_ARGS}
 cd -
 
-# Integration tests
+# Run integration tests
 EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
 for EXAMPLE in ${EXAMPLES}; do
   pip -q install -r examples/"${EXAMPLE}"/requirements.txt
