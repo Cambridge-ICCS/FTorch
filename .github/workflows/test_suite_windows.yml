@@ -92,4 +92,4 @@ jobs:
           for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
           set PATH=%torch_path%\torch\lib;%PATH%
-          run_integration_tests.bat
+          run_test_suite.bat
