@@ -8,6 +8,9 @@ rem
 rem See `src/test/README.md` for more details on integration testing.
 rem ---
 
+rem NOTE: This version of run_test_suite only runs the integration tests, not
+rem       the unit tests. These are not currently supported on Windows.
+
 for /d %%i in (1_SimpleNet 2_ResNet18 4_MultiIO) do (
 pushd src\build\test\examples\%%i
 rem run the tests
