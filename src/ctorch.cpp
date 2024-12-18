@@ -1,3 +1,8 @@
+/*
+ * See
+ * https://pytorch.org/cppdocs/api/classat_1_1_tensor.html#exhale-class-classat-1-1-tensor
+ * for more details on the Torch Tensor C++ API.
+ */
 #include <torch/script.h>
 #include <torch/torch.h>
 
