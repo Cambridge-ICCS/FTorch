@@ -53,11 +53,11 @@ program example
   ! Check arithmetic operations work for torch_tensors
   write (*,*) "a = ", in_data1(:,1)
   write (*,*) "b = ", in_data2(:,1)
-  Q = 3 * a ** 3 - b ** 2
+  Q = 3 * (a**3 - b * b / 3)
 
   ! Extract a Fortran array from a Torch tensor
   call torch_tensor_to_array(Q, out_data, shape(in_data1))
-  write (*,*) "Q = 3 * a ** 3 - b ** 2 =", out_data(:,1)
+  write (*,*) "Q = 3 * (a ** 3 - b * b / 2) =", out_data(:,1)
 
   ! Check output tensor matches expected value
   expected(:,1) = [-12.0_wp, 65.0_wp]
