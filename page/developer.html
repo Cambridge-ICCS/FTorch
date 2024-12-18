@@ -200,10 +200,17 @@ conforms to quality and legibility. These tools are a mixture of formatters and 
 <li>C++: <a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format</a> and <a href="https://clang.llvm.org/extra/clang-tidy/">clang-tidy</a></li>
 <li>C: <a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format</a> and <a href="https://clang.llvm.org/extra/clang-tidy/">clang-tidy</a></li>
 <li>Python: <a href="https://docs.astral.sh/ruff/">ruff</a></li>
+<li>Shell: <a href="https://github.com/koalaman/shellcheck">ShellCheck</a></li>
 <li>CMake: <a href="https://github.com/cheshirekow/cmake_format">cmake-format</a></li>
+<li>GitHub Actions workflows: <a href="https://woodruffw.github.io/zizmor">zizmor</a></li>
 </ul>
 <p>Instructions on installing these tools can be found in their respective documentations.
-Contributors should run them over their code and ensure that it conforms before submitting
+Note that all but ShellCheck may be installed with pip. A shortcut for doing
+this is to run the following from the base FTorch directory:</p>
+<div class="codehilite"><pre><span></span><code>pip install -r requirements.txt
+</code></pre></div>
+
+<p>Contributors should run them over their code and ensure that it conforms before submitting
 a pull request. If there is a good reason to ignore a particular rule this should be
 justified in the pull request and ideally documented in the code.</p>
 <p>There is a GitHub action as part of the continuous integration that will perform these
