@@ -137,6 +137,9 @@ module ftorch
 
   interface operator (/)
     module procedure torch_tensor_divide
+    #:for PREC in PRECISIONS
+    module procedure torch_tensor_postdivide_${PREC}$
+    #:endfor
   end interface
 
   interface operator (**)
@@ -560,6 +563,30 @@ contains
 
     output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
   end function torch_tensor_divide
+
+  #:for PREC in PRECISIONS
+  !> Overloads division operator for a tensor and a scalar of type ${PREC}$.
+  function torch_tensor_postdivide_${PREC}$(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postdivide')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postdivide_c
+    end interface
+
+    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
+  end function torch_tensor_postdivide_${PREC}$
+
+  #:endfor
 
   #:for PREC in PRECISIONS
   !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`

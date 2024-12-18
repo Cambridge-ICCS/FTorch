@@ -5,7 +5,7 @@ program example
 
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
-    operator(**), torch_kCPU, torch_tensor, torch_tensor_delete, &
+    operator(/), operator(**), torch_kCPU, torch_tensor, torch_tensor_delete, &
     torch_tensor_from_array, torch_tensor_to_array
 
   ! Import our tools module for testing utils

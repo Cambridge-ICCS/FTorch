@@ -300,6 +300,15 @@ torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
   return output;
 }
 
+torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
+                                       const torch_data_t scalar) {
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = *t / scalar;
+  return output;
+}
+
 torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
                                   const torch_data_t exponent) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
