@@ -187,9 +187,16 @@ data to multiple GPU devices.
 considers a variant of the SimpleNet demo, which demonstrates how to account for
 multiple input tensors and multiple output tensors.
 
-#### 7) Autograd
+#### 5) Looping
 
-[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_Autograd)
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_Looping)
+demonstrates best practices for performing inference on the same network with
+different input multiple times in the same workflow.
+
+#### 6) Autograd
+
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd)
 is currently under development. Eventually, it will demonstrate how to perform
 automatic differentiation in FTorch by leveraging PyTorch's Autograd module.
-Currently, it just demonstrates how to use `torch_tensor_to_array`.
+Currently, it just demonstrates how to use `torch_tensor_to_array` and compute
+mathematical expressions involving Torch tensors.
