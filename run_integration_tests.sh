@@ -11,7 +11,6 @@
 
 set -eu
 
-CTEST_ARGS=$@
 EXAMPLES="
   1_SimpleNet
   2_ResNet18
@@ -21,8 +20,8 @@ EXAMPLES="
 BUILD_DIR=src/build
 
 for EXAMPLE in ${EXAMPLES}; do
-  pip -q install -r examples/${EXAMPLE}/requirements.txt
-  cd ${BUILD_DIR}/test/examples/${EXAMPLE}
-  ctest ${CTEST_ARGS}
+  pip -q install -r examples/"${EXAMPLE}"/requirements.txt
+  cd "${BUILD_DIR}"/test/examples/"${EXAMPLE}"
+  ctest "$@"
   cd -
 done
