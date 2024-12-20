@@ -136,6 +136,85 @@ EXPORT_C const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor
  */
 EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
 
+/**
+ * Overloads the assignment operator for Torch Tensor
+ * @param input Tensor
+ * @return copy of input Tensor
+ */
+EXPORT_C torch_tensor_t torch_tensor_assign(const torch_tensor_t input);
+
+/**
+ * Overloads the addition operator for two Torch Tensors
+ * @param first Tensor to be added
+ * @param second Tensor to be added
+ * @return sum of the Tensors
+ */
+EXPORT_C torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
+                                         const torch_tensor_t tensor2);
+
+/**
+ * Overloads the subtraction operator for two Torch Tensors
+ * @param first Tensor to be subtracted
+ * @param second Tensor to be subtracted
+ * @return difference of the Tensors
+ */
+EXPORT_C torch_tensor_t torch_tensor_subtract(const torch_tensor_t tensor1,
+                                              const torch_tensor_t tensor2);
+
+/**
+ * Overloads the multiplication operator for two Torch Tensors
+ * @param first Tensor to be multiplied
+ * @param second Tensor to be multiplied
+ * @return product of the Tensors
+ */
+EXPORT_C torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
+                                              const torch_tensor_t tensor2);
+
+/**
+ * Overloads the premultiplication operator for a scalar and a Torch Tensor
+ * @param scalar to multiply by
+ * @param Tensor to be multiplied
+ * @return product of the scalar and Tensor
+ */
+EXPORT_C torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
+                                                 const torch_tensor_t tensor);
+
+/**
+ * Overloads the postmultiplication operator for a Torch Tensor and a scalar
+ * @param Tensor to be multiplied
+ * @param scalar to multiply by
+ * @return product of the Tensor and scalar
+ */
+EXPORT_C torch_tensor_t torch_tensor_postmultiply(const torch_tensor_t tensor,
+                                                  const torch_data_t scalar);
+
+/**
+ * Overloads the division operator for two Torch Tensors
+ * @param first Tensor to be divided
+ * @param second Tensor to be divided
+ * @return quotient of the Tensors
+ */
+EXPORT_C torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
+                                            const torch_tensor_t tensor2);
+
+/**
+ * Overloads the post-division operator for a Torch Tensor and a scalar
+ * @param Tensor to be divided
+ * @param scalar to divide by
+ * @return quotient of the Tensor and scalar
+ */
+EXPORT_C torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
+                                                const torch_data_t scalar);
+
+/**
+ * Overloads the exponentiation operator for two Torch Tensors
+ * @param Tensor to take the power of
+ * @param scalar exponent
+ * @return power of the Tensor
+ */
+EXPORT_C torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
+                                           const torch_data_t exponent);
+
 // =====================================================================================
 // Module API
 // =====================================================================================
