@@ -55,6 +55,8 @@ module ftorch
   enum, bind(c)
     enumerator :: torch_kCPU = 0
     enumerator :: torch_kCUDA = 1
+    enumerator :: torch_kMPS = 2
+    enumerator :: torch_kXPU = 3
   end enum
 
   ! ============================================================================
