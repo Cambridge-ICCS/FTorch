@@ -1,7 +1,7 @@
 /*
- * See
- * https://pytorch.org/cppdocs/api/classat_1_1_tensor.html#exhale-class-classat-1-1-tensor
- * for more details on the Torch Tensor C++ API.
+ * For more details on the Torch Tensor C++ API, we refer to the Torch C++ documentation
+ * (https://pytorch.org/cppdocs) and more specifically the C++ API documentation
+ * (https://pytorch.org/cppdocs/api/library_root.html) pages on the PyTorch website.
  */
 #include <torch/script.h>
 #include <torch/torch.h>

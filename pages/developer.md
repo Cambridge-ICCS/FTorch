@@ -80,9 +80,10 @@ Development should only take place in `ftorch.fypp`, however._
 ### Torch C++ API
 
 When extending or modifying functionality related to C++ header and/or source
-files `src/ctorch.h` and `src/ctorch.cpp`, we refer to the Torch C++
-[API documentation](https://pytorch.org/cppdocs/api/classat_1_1_tensor.html#exhale-class-classat-1-1-tensor)
-page on the PyTorch website for details.
+files `src/ctorch.h` and `src/ctorch.cpp`, we refer to the Torch
+[C++ documentation](https://pytorch.org/cppdocs) and more specifically the
+[C++ API documentation](https://pytorch.org/cppdocs/api/library_root.html)
+pages on the PyTorch website for details.
 
 
 ### git hook
