@@ -7,7 +7,7 @@ title: Online training
 FTorch has supported offline training of ML models for some time. We are
 currently working on extending its functionality to support online training,
 too. This will involve exposing the automatic differentiation and
-back-propagation functionality in PyTorch/libtorch.
+back-propagation functionality in PyTorch/LibTorch.
 
 In the following, we document a workplan of the related functionality. Each step
 below will be updated upon completion.
