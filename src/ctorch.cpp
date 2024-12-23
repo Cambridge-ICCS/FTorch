@@ -1,3 +1,8 @@
+/*
+ * For more details on the Torch Tensor C++ API, we refer to the Torch C++ documentation
+ * (https://pytorch.org/cppdocs) and more specifically the C++ API documentation
+ * (https://pytorch.org/cppdocs/api/library_root.html) pages on the PyTorch website.
+ */
 #include <torch/script.h>
 #include <torch/torch.h>
 
@@ -231,6 +236,91 @@ const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
 void torch_tensor_delete(torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   delete t;
+}
+
+torch_tensor_t torch_tensor_assign(const torch_tensor_t input) {
+  auto in = reinterpret_cast<torch::Tensor *const>(input);
+  torch::AutoGradMode enable_grad(in->requires_grad());
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = in->detach().clone();
+  return output;
+}
+
+torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
+                                const torch_tensor_t tensor2) {
+  auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
+  auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = *t1 + *t2;
+  return output;
+}
+
+torch_tensor_t torch_tensor_subtract(const torch_tensor_t tensor1,
+                                     const torch_tensor_t tensor2) {
+  auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
+  auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = *t1 - *t2;
+  return output;
+}
+
+torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
+                                     const torch_tensor_t tensor2) {
+  auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
+  auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = *t1 * *t2;
+  return output;
+}
+
+torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
+                                        const torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = scalar * *t;
+  return output;
+}
+
+torch_tensor_t torch_tensor_postmultiply(const torch_tensor_t tensor,
+                                         const torch_data_t scalar) {
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = *t * scalar;
+  return output;
+}
+
+torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
+                                   const torch_tensor_t tensor2) {
+  auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
+  auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = *t1 / *t2;
+  return output;
+}
+
+torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
+                                       const torch_data_t scalar) {
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = *t / scalar;
+  return output;
+}
+
+torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
+                                  const torch_data_t exponent) {
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = pow(*t, exponent);
+  return output;
 }
 
 torch_jit_script_module_t torch_jit_load(const char *filename,

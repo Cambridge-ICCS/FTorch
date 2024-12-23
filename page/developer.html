@@ -93,6 +93,7 @@
           <hr>
           <nav class="nav nav-pills flex-column">
               <a class="nav-link" href="LICENSE.html">FTorch License</a>
+              <a class="nav-link" href="autograd.html">Online training</a>
               <a class="nav-link" href="cmake.html">Installation and Build Process</a>
               <a class="nav-link active disabled" href="developer.html">Developer Guide</a>
               <a class="nav-link" href="examples.html">Examples</a>
@@ -116,6 +117,7 @@ level, please see below for guidance.</p>
 </li>
 <li><a href="#extending-the-api">Extending the API</a><ul>
 <li><a href="#fortran-source-and-fypp">Fortran source and Fypp</a></li>
+<li><a href="#torch-c-api">Torch C++ API</a></li>
 <li><a href="#git-hook">git hook</a></li>
 <li><a href="#code-style">Code style</a></li>
 <li><a href="#general-guidelines">General guidelines</a></li>
@@ -177,6 +179,12 @@ By using Fypp we can generate these programatically.</p>
 reduce duplication and confusion. However, because it is a relatively small file
 and many of our users wish to </em>"clone-and-go"<em> rather than develop, we provide both.<br>
 Development should only take place in <code>ftorch.fypp</code>, however.</em></p>
+<h3 id="torch-c-api">Torch C++ API</h3>
+<p>When extending or modifying functionality related to C++ header and/or source
+files <code>src/ctorch.h</code> and <code>src/ctorch.cpp</code>, we refer to the Torch
+<a href="https://pytorch.org/cppdocs">C++ documentation</a> and more specifically the
+<a href="https://pytorch.org/cppdocs/api/library_root.html">C++ API documentation</a>
+pages on the PyTorch website for details.</p>
 <h3 id="git-hook">git hook</h3>
 <p>In order to streamline the process of uploading we provide a pre-commit hook in
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/.githooks/pre-commit"><code>.githooks/pre-commit</code></a>.

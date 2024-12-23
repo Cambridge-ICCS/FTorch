@@ -93,6 +93,7 @@
           <hr>
           <nav class="nav nav-pills flex-column">
               <a class="nav-link" href="LICENSE.html">FTorch License</a>
+              <a class="nav-link" href="autograd.html">Online training</a>
               <a class="nav-link" href="cmake.html">Installation and Build Process</a>
               <a class="nav-link" href="developer.html">Developer Guide</a>
               <a class="nav-link active disabled" href="examples.html">Examples</a>
@@ -127,7 +128,8 @@
 <li><a href="#2-resnet">2) Resnet</a></li>
 <li><a href="#3-multigpu">3) MultiGPU</a></li>
 <li><a href="#4-multiio">4) MultiIO</a></li>
-<li><a href="#7-autograd">7) Autograd</a></li>
+<li><a href="#5-looping">5) Looping</a></li>
+<li><a href="#6-autograd">6) Autograd</a></li>
 </ul>
 </li>
 </ul>
@@ -288,11 +290,16 @@ data to multiple GPU devices.</p>
 <p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_MultiIO">This worked example</a>
 considers a variant of the SimpleNet demo, which demonstrates how to account for
 multiple input tensors and multiple output tensors.</p>
-<h4 id="7-autograd">7) Autograd</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_Autograd">This worked example</a>
+<h4 id="5-looping">5) Looping</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_Looping">This worked example</a>
+demonstrates best practices for performing inference on the same network with
+different input multiple times in the same workflow.</p>
+<h4 id="6-autograd">6) Autograd</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd">This worked example</a>
 is currently under development. Eventually, it will demonstrate how to perform
 automatic differentiation in FTorch by leveraging PyTorch's Autograd module.
-Currently, it just demonstrates how to use <code>torch_tensor_to_array</code>.</p>
+Currently, it just demonstrates how to use <code>torch_tensor_to_array</code> and compute
+mathematical expressions involving Torch tensors.</p>
     </div>
   </div>
       <hr>

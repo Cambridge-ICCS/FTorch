@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p> 1.4% of total for procedures.</p>Including implementation: 1082 statements, 47.7% of total for procedures.">32 statements</a>
+                 title="<p> 1.2% of total for procedures.</p>Including implementation: 1082 statements, 39.1% of total for procedures.">32 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -181,7 +181,7 @@
 
         <h2>Module Procedures</h2>
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int8_1d.html'>torch_tensor_from_array_int8_1d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int8_1d.html'>torch_tensor_from_array_int8_1d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -200,7 +200,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~15"></span>
+              <span class="anchor" id="variable-tensor~39"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -245,7 +245,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type"></span>
+              <span class="anchor" id="variable-device_type~9"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -253,7 +253,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -296,7 +296,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int8_2d.html'>torch_tensor_from_array_int8_2d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int8_2d.html'>torch_tensor_from_array_int8_2d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -315,7 +315,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~16"></span>
+              <span class="anchor" id="variable-tensor~40"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -360,7 +360,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~2"></span>
+              <span class="anchor" id="variable-device_type~10"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -368,7 +368,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -411,7 +411,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int8_3d.html'>torch_tensor_from_array_int8_3d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int8_3d.html'>torch_tensor_from_array_int8_3d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -430,7 +430,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~17"></span>
+              <span class="anchor" id="variable-tensor~41"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -475,7 +475,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~3"></span>
+              <span class="anchor" id="variable-device_type~11"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -483,7 +483,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -526,7 +526,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int8_4d.html'>torch_tensor_from_array_int8_4d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int8_4d.html'>torch_tensor_from_array_int8_4d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -545,7 +545,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~18"></span>
+              <span class="anchor" id="variable-tensor~42"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -590,7 +590,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~4"></span>
+              <span class="anchor" id="variable-device_type~12"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -598,7 +598,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -641,7 +641,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int8_5d.html'>torch_tensor_from_array_int8_5d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int8_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int8_5d.html'>torch_tensor_from_array_int8_5d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -660,7 +660,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~19"></span>
+              <span class="anchor" id="variable-tensor~43"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -705,7 +705,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~5"></span>
+              <span class="anchor" id="variable-device_type~13"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -713,7 +713,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -756,7 +756,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int16_1d.html'>torch_tensor_from_array_int16_1d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int16_1d.html'>torch_tensor_from_array_int16_1d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -775,7 +775,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~20"></span>
+              <span class="anchor" id="variable-tensor~44"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -820,7 +820,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~6"></span>
+              <span class="anchor" id="variable-device_type~14"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -828,7 +828,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -871,7 +871,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int16_2d.html'>torch_tensor_from_array_int16_2d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int16_2d.html'>torch_tensor_from_array_int16_2d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -890,7 +890,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~21"></span>
+              <span class="anchor" id="variable-tensor~45"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -935,7 +935,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~7"></span>
+              <span class="anchor" id="variable-device_type~15"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -943,7 +943,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -986,7 +986,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int16_3d.html'>torch_tensor_from_array_int16_3d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int16_3d.html'>torch_tensor_from_array_int16_3d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -1005,7 +1005,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~22"></span>
+              <span class="anchor" id="variable-tensor~46"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1050,7 +1050,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~8"></span>
+              <span class="anchor" id="variable-device_type~16"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -1058,7 +1058,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -1101,7 +1101,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int16_4d.html'>torch_tensor_from_array_int16_4d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int16_4d.html'>torch_tensor_from_array_int16_4d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -1120,7 +1120,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~23"></span>
+              <span class="anchor" id="variable-tensor~47"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1165,7 +1165,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~9"></span>
+              <span class="anchor" id="variable-device_type~17"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -1173,7 +1173,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -1216,7 +1216,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int16_5d.html'>torch_tensor_from_array_int16_5d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int16_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int16_5d.html'>torch_tensor_from_array_int16_5d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -1235,7 +1235,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~24"></span>
+              <span class="anchor" id="variable-tensor~48"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1280,7 +1280,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~10"></span>
+              <span class="anchor" id="variable-device_type~18"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -1288,7 +1288,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -1331,7 +1331,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int32_1d.html'>torch_tensor_from_array_int32_1d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int32_1d.html'>torch_tensor_from_array_int32_1d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -1350,7 +1350,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~25"></span>
+              <span class="anchor" id="variable-tensor~49"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1395,7 +1395,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~11"></span>
+              <span class="anchor" id="variable-device_type~19"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -1403,7 +1403,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -1446,7 +1446,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int32_2d.html'>torch_tensor_from_array_int32_2d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int32_2d.html'>torch_tensor_from_array_int32_2d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -1465,7 +1465,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~26"></span>
+              <span class="anchor" id="variable-tensor~50"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1510,7 +1510,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~12"></span>
+              <span class="anchor" id="variable-device_type~20"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -1518,7 +1518,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -1561,7 +1561,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int32_3d.html'>torch_tensor_from_array_int32_3d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int32_3d.html'>torch_tensor_from_array_int32_3d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -1580,7 +1580,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~27"></span>
+              <span class="anchor" id="variable-tensor~51"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1625,7 +1625,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~13"></span>
+              <span class="anchor" id="variable-device_type~21"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -1633,7 +1633,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -1676,7 +1676,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int32_4d.html'>torch_tensor_from_array_int32_4d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int32_4d.html'>torch_tensor_from_array_int32_4d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -1695,7 +1695,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~28"></span>
+              <span class="anchor" id="variable-tensor~52"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1740,7 +1740,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~14"></span>
+              <span class="anchor" id="variable-device_type~22"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -1748,7 +1748,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -1791,7 +1791,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int32_5d.html'>torch_tensor_from_array_int32_5d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int32_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int32_5d.html'>torch_tensor_from_array_int32_5d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -1810,7 +1810,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~29"></span>
+              <span class="anchor" id="variable-tensor~53"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1855,7 +1855,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~15"></span>
+              <span class="anchor" id="variable-device_type~23"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -1863,7 +1863,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -1906,7 +1906,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int64_1d.html'>torch_tensor_from_array_int64_1d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int64_1d.html'>torch_tensor_from_array_int64_1d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -1925,7 +1925,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~30"></span>
+              <span class="anchor" id="variable-tensor~54"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -1970,7 +1970,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~16"></span>
+              <span class="anchor" id="variable-device_type~24"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -1978,7 +1978,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -2021,7 +2021,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int64_2d.html'>torch_tensor_from_array_int64_2d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int64_2d.html'>torch_tensor_from_array_int64_2d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -2040,7 +2040,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~31"></span>
+              <span class="anchor" id="variable-tensor~55"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2085,7 +2085,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~17"></span>
+              <span class="anchor" id="variable-device_type~25"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -2093,7 +2093,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -2136,7 +2136,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int64_3d.html'>torch_tensor_from_array_int64_3d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int64_3d.html'>torch_tensor_from_array_int64_3d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -2155,7 +2155,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~32"></span>
+              <span class="anchor" id="variable-tensor~56"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2200,7 +2200,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~18"></span>
+              <span class="anchor" id="variable-device_type~26"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -2208,7 +2208,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -2251,7 +2251,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int64_4d.html'>torch_tensor_from_array_int64_4d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int64_4d.html'>torch_tensor_from_array_int64_4d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -2270,7 +2270,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~33"></span>
+              <span class="anchor" id="variable-tensor~57"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2315,7 +2315,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~19"></span>
+              <span class="anchor" id="variable-device_type~27"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -2323,7 +2323,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -2366,7 +2366,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int64_5d.html'>torch_tensor_from_array_int64_5d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_int64_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_int64_5d.html'>torch_tensor_from_array_int64_5d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -2385,7 +2385,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~34"></span>
+              <span class="anchor" id="variable-tensor~58"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2430,7 +2430,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~20"></span>
+              <span class="anchor" id="variable-device_type~28"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -2438,7 +2438,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -2481,7 +2481,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real32_1d.html'>torch_tensor_from_array_real32_1d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real32_1d.html'>torch_tensor_from_array_real32_1d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -2500,7 +2500,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~35"></span>
+              <span class="anchor" id="variable-tensor~59"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2545,7 +2545,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~21"></span>
+              <span class="anchor" id="variable-device_type~29"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -2553,7 +2553,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -2596,7 +2596,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real32_2d.html'>torch_tensor_from_array_real32_2d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real32_2d.html'>torch_tensor_from_array_real32_2d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -2615,7 +2615,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~36"></span>
+              <span class="anchor" id="variable-tensor~60"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2660,7 +2660,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~22"></span>
+              <span class="anchor" id="variable-device_type~30"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -2668,7 +2668,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -2711,7 +2711,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real32_3d.html'>torch_tensor_from_array_real32_3d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real32_3d.html'>torch_tensor_from_array_real32_3d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -2730,7 +2730,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~37"></span>
+              <span class="anchor" id="variable-tensor~61"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2775,7 +2775,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~23"></span>
+              <span class="anchor" id="variable-device_type~31"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -2783,7 +2783,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -2826,7 +2826,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real32_4d.html'>torch_tensor_from_array_real32_4d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real32_4d.html'>torch_tensor_from_array_real32_4d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -2845,7 +2845,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~38"></span>
+              <span class="anchor" id="variable-tensor~62"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -2890,7 +2890,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~24"></span>
+              <span class="anchor" id="variable-device_type~32"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -2898,7 +2898,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -2941,7 +2941,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real32_5d.html'>torch_tensor_from_array_real32_5d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real32_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real32_5d.html'>torch_tensor_from_array_real32_5d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -2960,7 +2960,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~39"></span>
+              <span class="anchor" id="variable-tensor~63"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3005,7 +3005,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~25"></span>
+              <span class="anchor" id="variable-device_type~33"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -3013,7 +3013,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -3056,7 +3056,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real64_1d.html'>torch_tensor_from_array_real64_1d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_1d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real64_1d.html'>torch_tensor_from_array_real64_1d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -3075,7 +3075,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~40"></span>
+              <span class="anchor" id="variable-tensor~64"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3120,7 +3120,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~26"></span>
+              <span class="anchor" id="variable-device_type~34"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -3128,7 +3128,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -3171,7 +3171,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real64_2d.html'>torch_tensor_from_array_real64_2d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_2d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real64_2d.html'>torch_tensor_from_array_real64_2d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -3190,7 +3190,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~41"></span>
+              <span class="anchor" id="variable-tensor~65"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3235,7 +3235,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~27"></span>
+              <span class="anchor" id="variable-device_type~35"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -3243,7 +3243,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -3286,7 +3286,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real64_3d.html'>torch_tensor_from_array_real64_3d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_3d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real64_3d.html'>torch_tensor_from_array_real64_3d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -3305,7 +3305,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~42"></span>
+              <span class="anchor" id="variable-tensor~66"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3350,7 +3350,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~28"></span>
+              <span class="anchor" id="variable-device_type~36"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -3358,7 +3358,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -3401,7 +3401,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real64_4d.html'>torch_tensor_from_array_real64_4d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_4d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real64_4d.html'>torch_tensor_from_array_real64_4d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -3420,7 +3420,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~43"></span>
+              <span class="anchor" id="variable-tensor~67"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3465,7 +3465,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~29"></span>
+              <span class="anchor" id="variable-device_type~37"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -3473,7 +3473,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
@@ -3516,7 +3516,7 @@
   </div>
 
             <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real64_5d.html'>torch_tensor_from_array_real64_5d</a>(tensor, data_in, layout, c_device_type, device_index, requires_grad)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_from_array_real64_5d"></span> <h3>public  subroutine <a href='../proc/torch_tensor_from_array_real64_5d.html'>torch_tensor_from_array_real64_5d</a>(tensor, data_in, layout, device_type, device_index, requires_grad)  
 </h3></div>
     <div class="card-body">
           
@@ -3535,7 +3535,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~44"></span>
+              <span class="anchor" id="variable-tensor~68"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -3580,7 +3580,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-c_device_type~30"></span>
+              <span class="anchor" id="variable-device_type~38"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -3588,7 +3588,7 @@
               
             </td>
             <td>::</td>
-            <td><strong>c_device_type</strong></td>
+            <td><strong>device_type</strong></td>
             <td>
 <p>Device type the tensor will live on (<code>torch_kCPU</code> or <code>torch_kCUDA</code>)</p>
             </td>
