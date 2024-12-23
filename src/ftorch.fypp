@@ -115,6 +115,39 @@ module ftorch
     end function torch_from_blob_c
   end interface
 
+  interface assignment (=)
+    module procedure torch_tensor_assign
+  end interface
+
+  interface operator (+)
+    module procedure torch_tensor_add
+  end interface
+
+  interface operator (-)
+    module procedure torch_tensor_subtract
+  end interface
+
+  interface operator (*)
+    module procedure torch_tensor_multiply
+    #:for PREC in PRECISIONS
+    module procedure torch_tensor_premultiply_${PREC}$
+    module procedure torch_tensor_postmultiply_${PREC}$
+    #:endfor
+  end interface
+
+  interface operator (/)
+    module procedure torch_tensor_divide
+    #:for PREC in PRECISIONS
+    module procedure torch_tensor_postdivide_${PREC}$
+    #:endfor
+  end interface
+
+  interface operator (**)
+    #:for PREC in PRECISIONS
+    module procedure torch_tensor_power_${PREC}$
+    #:endfor
+  end interface
+
   interface
     function torch_to_blob_c(tensor, dtype) result(data) &
         bind(c, name = 'torch_to_blob')
@@ -386,6 +419,199 @@ contains
     call torch_tensor_delete_c(tensor%p)
   end subroutine torch_tensor_delete
 
+  !> Overloads assignment operator for tensors.
+  subroutine torch_tensor_assign(output, input)
+    type(torch_tensor), intent(out) :: output
+    type(torch_tensor), intent(in) :: input
+
+    interface
+      function torch_tensor_assign_c(input_c) result(output_c)                 &
+          bind(c, name = 'torch_tensor_assign')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: input_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_assign_c
+    end interface
+
+    output%p = torch_tensor_assign_c(input%p)
+  end subroutine torch_tensor_assign
+
+  !> Overloads addition operator for two tensors.
+  function torch_tensor_add(tensor1, tensor2) result(output)
+    type(torch_tensor), intent(in) :: tensor1
+    type(torch_tensor), intent(in) :: tensor2
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_add_c(tensor1_c, tensor2_c) result(output_c)       &
+          bind(c, name = 'torch_tensor_add')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor1_c
+        type(c_ptr), value, intent(in) :: tensor2_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_add_c
+    end interface
+
+    output%p = torch_tensor_add_c(tensor1%p, tensor2%p)
+  end function torch_tensor_add
+
+  !> Overloads subtraction operator for two tensors.
+  function torch_tensor_subtract(tensor1, tensor2) result(output)
+    type(torch_tensor), intent(in) :: tensor1
+    type(torch_tensor), intent(in) :: tensor2
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_subtract_c(tensor1_c, tensor2_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_subtract')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor1_c
+        type(c_ptr), value, intent(in) :: tensor2_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_subtract_c
+    end interface
+
+    output%p = torch_tensor_subtract_c(tensor1%p, tensor2%p)
+  end function torch_tensor_subtract
+
+  !> Overloads multiplication operator for two tensors.
+  function torch_tensor_multiply(tensor1, tensor2) result(output)
+    type(torch_tensor), intent(in) :: tensor1
+    type(torch_tensor), intent(in) :: tensor2
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_multiply_c(tensor1_c, tensor2_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_multiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor1_c
+        type(c_ptr), value, intent(in) :: tensor2_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_multiply_c
+    end interface
+
+    output%p = torch_tensor_multiply_c(tensor1%p, tensor2%p)
+  end function torch_tensor_multiply
+
+  #:for PREC in PRECISIONS
+  !> Overloads multiplication operator for a scalar of type ${PREC}$ and a tensor.
+  function torch_tensor_premultiply_${PREC}$(scalar, tensor) result(output)
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        implicit none
+        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_${PREC}$
+
+  #:endfor
+
+  #:for PREC in PRECISIONS
+  !> Overloads multiplication operator for a tensor and a scalar of type ${PREC}$.
+  function torch_tensor_postmultiply_${PREC}$(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_${PREC}$
+
+  #:endfor
+  !> Overloads division operator for two tensors.
+  function torch_tensor_divide(tensor1, tensor2) result(output)
+    type(torch_tensor), intent(in) :: tensor1
+    type(torch_tensor), intent(in) :: tensor2
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_divide')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor1_c
+        type(c_ptr), value, intent(in) :: tensor2_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_divide_c
+    end interface
+
+    output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
+  end function torch_tensor_divide
+
+  #:for PREC in PRECISIONS
+  !> Overloads division operator for a tensor and a scalar of type ${PREC}$.
+  function torch_tensor_postdivide_${PREC}$(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postdivide')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postdivide_c
+    end interface
+
+    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
+  end function torch_tensor_postdivide_${PREC}$
+
+  #:endfor
+
+  #:for PREC in PRECISIONS
+  !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
+  function torch_tensor_power_${PREC}$(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_${PREC}$
+
+  #:endfor
+
   ! Torch Model API
   !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
   subroutine torch_model_load(model, filename, device_type, device_index, &
@@ -524,7 +750,7 @@ contains
   #:for RANK in RANKS
   !> Return a Torch tensor pointing to data_in array of rank ${RANK}$ containing data of type `${PREC}$`
   subroutine torch_tensor_from_array_${PREC}$_${RANK}$d(tensor, data_in, layout, &
-                                                        c_device_type, device_index, requires_grad)
+                                                        device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
 
@@ -534,15 +760,15 @@ contains
     ! inputs
     ${f_type(PREC)}$(kind=${PREC}$), intent(in), target :: data_in${ranksuffix(RANK)}$  !! Input data that tensor will point at
     integer(ftorch_int), intent(in)      :: layout(${RANK}$)  !! Control order of indices
-    integer(c_int), intent(in)           :: c_device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), intent(in)           :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index   !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in)        :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: c_tensor_shape(${RANK}$)            !! Shape of the tensor
-    integer(c_int), parameter :: c_dtype = ${enum_from_prec(PREC)}$  !! Data type
-    integer(c_int64_t)        :: strides(${RANK}$)                   !! Strides for accessing data
-    integer(c_int), parameter :: ndims = ${RANK}$                    !! Number of dimension of input data
+    integer(c_int64_t)        :: tensor_shape(${RANK}$)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
+    integer(c_int64_t)        :: strides(${RANK}$)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = ${RANK}$                  !! Number of dimension of input data
     integer(ftorch_int)       :: i
     integer(c_int)            :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -550,7 +776,7 @@ contains
     ! Process optional arguments
     if (present(device_index)) then
       device_index_value = device_index
-    else if (c_device_type == torch_kCPU) then
+    else if (device_type == torch_kCPU) then
       device_index_value = -1
     else
       device_index_value = 0
@@ -562,15 +788,15 @@ contains
       requires_grad_value = requires_grad
     end if
 
-    c_tensor_shape = shape(data_in)
+    tensor_shape = shape(data_in)
 
     strides(layout(1)) = 1
     do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * c_tensor_shape(layout(i - 1))
+      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
     end do
 
-    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, c_tensor_shape,        &
-                                 strides, c_dtype, c_device_type,              &
+    tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
+                                 strides, dtype, device_type,                  &
                                  device_index_value,                           &
                                  logical(requires_grad_value, c_bool))
 
@@ -591,7 +817,7 @@ contains
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
-    integer(c_int), parameter :: c_dtype = ${enum_from_prec(PREC)}$  !! Data type
+    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -606,7 +832,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, c_dtype)
+    cptr = torch_to_blob_c(tensor%p, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_${PREC}$_${RANK}$d

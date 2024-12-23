@@ -5,7 +5,7 @@ import torch
 a = torch.tensor([2.0, 3.0], requires_grad=True)
 b = torch.tensor([6.0, 4.0], requires_grad=True)
 
-Q = 3 * a**3 - b**2
+Q = 3 * (a**3 - b * b / 3)
 print(Q)
 expect = torch.tensor([-12.0, 65.0])
 if not torch.allclose(Q, expect):
