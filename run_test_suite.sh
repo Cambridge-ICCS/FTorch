@@ -19,18 +19,13 @@ show_help() {
   echo "Options:"
   echo "  BUILD_DIR=<build_dir> Specify the build directory (default: src/build)."
   echo "  --verbose | -V        Run with verbose ctest output."
-  echo "  --help                Show this help message and exit."
+  echo "  --help | -h           Show this help message and exit."
 }
-
-# Check for --help option
-if [ "$1" = "--help" ]; then
-  show_help
-  exit 0
-fi
 
 # Parse command line arguments
 BUILD_DIR="src/build"
 VERBOSE=false
+HELP=false
 for ARG in "$@"; do
   case ${ARG} in
   BUILD_DIR=*)
@@ -38,6 +33,10 @@ for ARG in "$@"; do
     ;;
   --verbose | -V)
     VERBOSE=true
+    shift
+    ;;
+  --help | -h)
+    HELP=true
     shift
     ;;
   *)
@@ -48,6 +47,12 @@ for ARG in "$@"; do
   esac
 done
 
+# Check for --help option
+if [ "${HELP}" = true ]; then
+  show_help
+  exit 0
+fi
+
 # Process command line arguments
 if [ "${VERBOSE}" = true ]; then
   CTEST_ARGS="-V"
@@ -56,8 +61,8 @@ else
 fi
 
 # Run unit tests
-cd ${BUILD_DIR}/test/unit
-ctest ${CTEST_ARGS}
+cd "${BUILD_DIR}/test/unit"
+ctest "${CTEST_ARGS}"
 cd -
 
 # Run integration tests
@@ -65,6 +70,6 @@ EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
 for EXAMPLE in ${EXAMPLES}; do
   pip -q install -r examples/"${EXAMPLE}"/requirements.txt
   cd "${BUILD_DIR}"/test/examples/"${EXAMPLE}"
-  ctest "$@"
+  ctest "${CTEST_ARGS}"
   cd -
 done
