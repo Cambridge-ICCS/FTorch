@@ -66,7 +66,6 @@ module ftorch_test_utils
 
       character(len=80) :: message
 
-      ${f_type(PREC)}$(kind=${PREC}$) :: relative_error
       ${f_type(PREC)}$(kind=${PREC}$) :: rtol_value
       logical :: print_result_value
 
@@ -108,7 +107,6 @@ module ftorch_test_utils
 
       character(len=80) :: message
 
-      ${f_type(PREC)}$(kind=${PREC}$) :: relative_error
       ${f_type(PREC)}$(kind=${PREC}$) :: rtol_value
       integer :: shape_error
       logical :: print_result_value
