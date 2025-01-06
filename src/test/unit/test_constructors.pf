@@ -20,7 +20,6 @@ subroutine test_torch_tensor_empty()
   integer, parameter :: dtype = torch_kFloat32
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
-  logical :: test_pass
 
   tensor_shape = [2, 3]
 
