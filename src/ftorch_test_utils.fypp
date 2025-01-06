@@ -2,7 +2,7 @@
 $:'' if RANK == 0 else '(' + ':' + ',:' * (RANK - 1) + ')'
 #:enddef ranksuffix
 #:set PRECISIONS = ['real32', 'real64']
-#:set RANKS = range(1, 3)
+#:set RANKS = range(1, 4)
 #:def f_type(PRECISION)
 $:'integer' if PRECISION[:3] == 'int' else 'real'
 #:enddef f_type

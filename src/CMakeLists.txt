@@ -109,6 +109,15 @@ if(CMAKE_BUILD_TESTS)
     COMPONENTS Interpreter
     REQUIRED)
 
+  enable_testing()
+
+  # Unit tests
+  # NOTE: We do not currently support unit testing on Windows
+  if(UNIX)
+    add_subdirectory(test/unit)
+  endif()
+
+  # Integration tests
   file(MAKE_DIRECTORY test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/CMakeLists.txt
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
