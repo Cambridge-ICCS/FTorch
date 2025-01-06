@@ -23,7 +23,6 @@ program example
   real(wp), dimension(:,:), pointer :: out_data
   real(wp), dimension(n,m) :: expected
   integer :: tensor_layout(2) = [1, 2]
-  integer :: i, j
 
   ! Flag for testing
   logical :: test_pass
