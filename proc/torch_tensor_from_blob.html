@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.3% of total for procedures.">36 statements</a>
+                 title=" 1.6% of total for procedures.">36 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -173,7 +173,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~6"></span>
+              <span class="anchor" id="variable-tensor~8"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(out)</td>
@@ -203,7 +203,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-ndims~6"></span>
+              <span class="anchor" id="variable-ndims~8"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -218,7 +218,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor_shape~6"></span>
+              <span class="anchor" id="variable-tensor_shape~8"></span>
               integer(kind=c_int64_t),
             </td>
 <td>intent(in)</td>
@@ -248,7 +248,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-dtype~7"></span>
+              <span class="anchor" id="variable-dtype~9"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -263,7 +263,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device_type~6"></span>
+              <span class="anchor" id="variable-device_type~8"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -278,7 +278,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device_index~6"></span>
+              <span class="anchor" id="variable-device_index~8"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in),</td>
@@ -293,8 +293,8 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-requires_grad~6"></span>
-              logical(kind=c_bool),
+              <span class="anchor" id="variable-requires_grad~8"></span>
+              logical,
             </td>
 <td>intent(in),</td>
               <td>optional</td>            <td>
@@ -335,7 +335,7 @@
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">dtype</span><span class="w">      </span><span class="c">!! Data type of the tensor</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">device_type</span><span class="w">  </span><span class="c">!! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index</span><span class="w">    </span><span class="c">!! device index to use for `torch_kCUDA` case</span>
-<span class="w">    </span><span class="kt">logical</span><span class="p">(</span><span class="kt">c_bool</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
 
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w">                  </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="w">                    </span><span class="c">!! loop index</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int64_t</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">strides</span><span class="p">(</span><span class="n">ndims</span><span class="p">)</span><span class="w">       </span><span class="c">!! Strides for accessing data</span>

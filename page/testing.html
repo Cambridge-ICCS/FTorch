@@ -110,37 +110,39 @@
       <div class="toc">
 <ul>
 <li><a href="#testing">Testing</a><ul>
-<li><a href="#building-the-integration-tests">Building the integration tests</a></li>
-<li><a href="#running-the-integration-tests">Running the integration tests</a></li>
+<li><a href="#building">Building</a></li>
+<li><a href="#running">Running</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <h2 id="testing">Testing</h2>
-<p>FTorch's test suite currently comprises of integration tests based on a subset
-of the <a href="examples.html">examples</a>. These tests are built and run and their
-outputs are analysed to check they contain expected regular expressions.</p>
-<h3 id="building-the-integration-tests">Building the integration tests</h3>
-<p>To enable FTorch's integration tests, ensure that the <code>CMAKE_BUILD_TESTS</code> option
-is set to <code>TRUE</code> for the build i.e., <code>-DCMAKE_BUILD_TESTS=True</code>.</p>
-<h3 id="running-the-integration-tests">Running the integration tests</h3>
+<p>FTorch's test suite is currently comprised of unit tests, as well as integration
+tests based on a subset of the <a href="examples.html">examples</a>. These tests are built
+and run and their outputs are analysed.</p>
+<h3 id="building">Building</h3>
+<p>To enable FTorch's test suite, ensure that the <code>CMAKE_BUILD_TESTS</code> option
+is set to <code>TRUE</code> for the build,  i.e., <code>-DCMAKE_BUILD_TESTS=True</code>.. For the unit
+tests, you will also need to install
+<a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a> and pass its
+install directory to the <code>CMAKE_PREFIX_PATH</code> when building FTorch.</p>
+<h3 id="running">Running</h3>
 <p>Once the build is complete, activate the Python virtual environment you created
 for FTorch<sup>1</sup> and simply run the
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/run_integration_tests.sh">helper script</a>
 in the root FTorch directory. Depending on the OS you are running you will need
-to use either:</p>
-<ul>
-<li><code>./run_integration_tests.sh</code> for unix (mac and linux)</li>
-<li><code>run_integration_tests.bat</code> for windows</li>
-</ul>
+to use either:
+<code>``
+-</code>./run_test_suite.sh<code>for Unix (Mac and Linux)
+-</code>run_test_suite.bat` for Windows (note this will only run the integration tests, not unit tests).</p>
 <p>This will automatically install any additional Python dependencies for the
 examples.</p>
-<p>Alternatively, individual tests may be run by going to the corresponding
-subdirectory of <code>${BUILD_DIR}/test/examples</code> (where <code>${BUILD_DIR}</code> is the build
-directory for FTorch) and calling <code>ctest</code>. This will produce a report on which
-tests passed and which failed for your build. Note that some of the examples
-have additional dependencies, which may need installing into your virtual
-environment.</p>
+<p>Alternatively, individual tests may be run by going to <code>${BUILD_DIR}/test/unit</code>
+or the corresponding subdirectory of <code>${BUILD_DIR}/test/examples</code> (where
+<code>${BUILD_DIR}</code> is the build directory for FTorch) and calling <code>ctest</code>. This
+will produce a report on which tests passed and which failed for your build.
+Note that some of the examples have additional dependencies, which may need
+installing into your virtual environment.</p>
 <blockquote>
 <p><sup>1</sup> <em>If you built FTorch against libtorch (rather than creating a
 virtual environment) then either
