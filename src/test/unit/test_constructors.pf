@@ -20,6 +20,7 @@ subroutine test_torch_tensor_empty()
   integer, parameter :: dtype = torch_kFloat32
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
+  logical, parameter :: requires_grad = .false.
   logical :: test_pass
 
   tensor_shape = [2, 3]
@@ -28,7 +29,8 @@ subroutine test_torch_tensor_empty()
   @assertFalse(c_associated(tensor%p))
 
   ! Create a tensor of zeros
-  call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index)
+  call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+                          requires_grad)
 
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
@@ -57,6 +59,7 @@ subroutine test_torch_tensor_zeros()
   integer, parameter :: dtype = torch_kFloat32
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
+  logical, parameter :: requires_grad = .false.
   real(wp), dimension(:,:), pointer :: out_data
   real(wp), dimension(2,3) :: expected
   logical :: test_pass
@@ -67,7 +70,8 @@ subroutine test_torch_tensor_zeros()
   @assertFalse(c_associated(tensor%p))
 
   ! Create a tensor of zeros
-  call torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, device_type, device_index)
+  call torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+                          requires_grad)
 
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
@@ -105,6 +109,7 @@ subroutine test_torch_tensor_ones()
   integer, parameter :: dtype = torch_kFloat32
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
+  logical, parameter :: requires_grad = .false.
   real(wp), dimension(:,:), pointer :: out_data
   real(wp), dimension(2,3) :: expected
   logical :: test_pass
@@ -115,7 +120,8 @@ subroutine test_torch_tensor_ones()
   @assertFalse(c_associated(tensor%p))
 
   ! Create tensor of ones
-  call torch_tensor_ones(tensor, ndims, tensor_shape, dtype, device_type, device_index)
+  call torch_tensor_ones(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+                         requires_grad)
 
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
@@ -152,6 +158,7 @@ subroutine test_torch_from_array_1d()
   integer(ftorch_int), parameter :: tensor_layout(ndims) = [1]
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
+  logical, parameter :: requires_grad = .false.
   real(wp), dimension(6), target :: in_data
   real(wp), dimension(:), pointer :: out_data
   real(wp), dimension(6) :: expected
@@ -164,7 +171,8 @@ subroutine test_torch_from_array_1d()
   @assertFalse(c_associated(tensor%p))
 
   ! Create a tensor based off an input array
-  call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index)
+  call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index, &
+                               requires_grad)
 
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
@@ -201,6 +209,7 @@ subroutine test_torch_from_array_2d()
   integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1]
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
+  logical, parameter :: requires_grad = .false.
   real(wp), dimension(2,3), target :: in_data
   real(wp), dimension(:,:), pointer :: out_data
   real(wp), dimension(2,3) :: expected
@@ -213,7 +222,8 @@ subroutine test_torch_from_array_2d()
   @assertFalse(c_associated(tensor%p))
 
   ! Create a tensor based off an input array
-  call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index)
+  call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index, &
+                               requires_grad)
 
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
@@ -252,6 +262,7 @@ subroutine test_torch_from_blob()
   integer, parameter :: dtype = torch_kFloat32
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
+  logical, parameter :: requires_grad = .false.
   real(wp), dimension(2,3), target :: in_data
   real(wp), dimension(:,:), pointer :: out_data
   real(wp), dimension(2,3) :: expected
@@ -264,7 +275,8 @@ subroutine test_torch_from_blob()
   @assertFalse(c_associated(tensor%p))
 
   ! Create a tensor based off an input array
-  call torch_tensor_from_blob(tensor, c_loc(in_data), ndims, tensor_layout, layout, dtype, device_type, device_index)
+  call torch_tensor_from_blob(tensor, c_loc(in_data), ndims, tensor_layout, layout, dtype, &
+                              device_type, device_index, requires_grad)
 
   ! Check the tensor pointer is associated
   @assertTrue(c_associated(tensor%p))
