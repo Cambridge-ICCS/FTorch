@@ -310,7 +310,7 @@ subroutine test_torch_from_blob()
 
   type(torch_tensor) :: tensor
   integer, parameter :: ndims = 2
-  integer(kind=c_int64_t), parameter :: tensor_layout(ndims) = [2,3]
+  integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
   integer, parameter :: layout(ndims) = [1, 1]
   integer, parameter :: dtype = torch_kFloat32
   integer, parameter :: device_type = torch_kCPU
@@ -328,7 +328,7 @@ subroutine test_torch_from_blob()
   @assertFalse(c_associated(tensor%p))
 
   ! Create a tensor based off an input array
-  call torch_tensor_from_blob(tensor, c_loc(in_data), ndims, tensor_layout, layout, dtype, &
+  call torch_tensor_from_blob(tensor, c_loc(in_data), ndims, tensor_shape, layout, dtype, &
                               device_type, device_index, requires_grad)
 
   ! Check the tensor pointer is associated
