@@ -78,7 +78,8 @@ subroutine test_torch_tensor_zeros()
   expected(:,:) = 0.0
   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_zeros")
   @assertTrue(test_pass)
-@assertEqual(shape(out_data), shape(expected))
+  @assertEqual(shape(out_data), shape(expected))
+
   ! Cleanup
   nullify(out_data)
   call torch_tensor_delete(tensor)
@@ -126,6 +127,7 @@ subroutine test_torch_tensor_ones()
   expected(:,:) = 1.0
   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")
   @assertTrue(test_pass)
+  @assertEqual(shape(out_data), shape(expected))
 
   ! Cleanup
   nullify(out_data)
@@ -175,6 +177,7 @@ subroutine test_torch_from_array_1d()
   expected(:) = in_data
   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
   @assertTrue(test_pass)
+  @assertEqual(shape(out_data), shape(expected))
 
   ! Cleanup
   nullify(out_data)
@@ -224,6 +227,7 @@ subroutine test_torch_from_array_2d()
   expected(:,:) = in_data
   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
   @assertTrue(test_pass)
+  @assertEqual(shape(out_data), shape(expected))
 
   ! Cleanup
   nullify(out_data)
@@ -275,6 +279,7 @@ subroutine test_torch_from_blob()
   expected(:,:) = in_data
   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_blob")
   @assertTrue(test_pass)
+  @assertEqual(shape(out_data), shape(expected))
 
   ! Cleanup
   nullify(out_data)
