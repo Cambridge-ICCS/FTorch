@@ -205,7 +205,7 @@ saving their PyTorch models to TorchScript.
 # Comparison to other approaches
 
 * **Replicating a net in Fortran**\
-  That is, a user takes a model developed and trainied in PyTorch and reimplements
+  That is, a user takes a model developed and trained in PyTorch and reimplements
   it from scratch using only Fortran, loading weights saved from PyTorch.
   This is likely to require considerable development effort, re-writing code
   that already exists and missing opportunities to use the diverse and highly-optimised
