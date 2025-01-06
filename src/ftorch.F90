@@ -556,10 +556,9 @@ contains
     interface
       function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
           bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int8
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
         implicit none
-        integer(kind=int8), value, intent(in) :: scalar_c
+        integer(kind=c_int8_t), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
       end function torch_tensor_premultiply_c
@@ -577,10 +576,9 @@ contains
     interface
       function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
           bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int16
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
         implicit none
-        integer(kind=int16), value, intent(in) :: scalar_c
+        integer(kind=c_int16_t), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
       end function torch_tensor_premultiply_c
@@ -598,10 +596,9 @@ contains
     interface
       function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
           bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int32
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
         implicit none
-        integer(kind=int32), value, intent(in) :: scalar_c
+        integer(kind=c_int32_t), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
       end function torch_tensor_premultiply_c
@@ -619,10 +616,9 @@ contains
     interface
       function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
           bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int64
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
         implicit none
-        integer(kind=int64), value, intent(in) :: scalar_c
+        integer(kind=c_int64_t), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
       end function torch_tensor_premultiply_c
@@ -640,10 +636,9 @@ contains
     interface
       function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
           bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : real32
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
         implicit none
-        real(kind=real32), value, intent(in) :: scalar_c
+        real(kind=c_float), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
       end function torch_tensor_premultiply_c
@@ -661,10 +656,9 @@ contains
     interface
       function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
           bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : real64
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
         implicit none
-        real(kind=real64), value, intent(in) :: scalar_c
+        real(kind=c_double), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
       end function torch_tensor_premultiply_c
@@ -683,11 +677,10 @@ contains
     interface
       function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int8
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int8), value, intent(in) :: scalar_c
+        integer(kind=c_int8_t), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postmultiply_c
     end interface
@@ -704,11 +697,10 @@ contains
     interface
       function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int16
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int16), value, intent(in) :: scalar_c
+        integer(kind=c_int16_t), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postmultiply_c
     end interface
@@ -725,11 +717,10 @@ contains
     interface
       function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int32
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int32), value, intent(in) :: scalar_c
+        integer(kind=c_int32_t), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postmultiply_c
     end interface
@@ -746,11 +737,10 @@ contains
     interface
       function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int64
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int64), value, intent(in) :: scalar_c
+        integer(kind=c_int64_t), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postmultiply_c
     end interface
@@ -767,11 +757,10 @@ contains
     interface
       function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : real32
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        real(kind=real32), value, intent(in) :: scalar_c
+        real(kind=c_float), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postmultiply_c
     end interface
@@ -788,11 +777,10 @@ contains
     interface
       function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : real64
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        real(kind=real64), value, intent(in) :: scalar_c
+        real(kind=c_double), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postmultiply_c
     end interface
@@ -829,11 +817,10 @@ contains
     interface
       function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int8
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int8), value, intent(in) :: scalar_c
+        integer(kind=c_int8_t), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postdivide_c
     end interface
@@ -850,11 +837,10 @@ contains
     interface
       function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int16
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int16), value, intent(in) :: scalar_c
+        integer(kind=c_int16_t), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postdivide_c
     end interface
@@ -871,11 +857,10 @@ contains
     interface
       function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int32
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int32), value, intent(in) :: scalar_c
+        integer(kind=c_int32_t), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postdivide_c
     end interface
@@ -892,11 +877,10 @@ contains
     interface
       function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int64
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int64), value, intent(in) :: scalar_c
+        integer(kind=c_int64_t), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postdivide_c
     end interface
@@ -913,11 +897,10 @@ contains
     interface
       function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : real32
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        real(kind=real32), value, intent(in) :: scalar_c
+        real(kind=c_float), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postdivide_c
     end interface
@@ -934,11 +917,10 @@ contains
     interface
       function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : real64
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        real(kind=real64), value, intent(in) :: scalar_c
+        real(kind=c_double), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postdivide_c
     end interface
@@ -956,11 +938,10 @@ contains
     interface
       function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
           bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int8
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int8), value, intent(in) :: power_c
+        integer(c_int8_t), value, intent(in) :: power_c
         type(c_ptr) :: output_c
       end function torch_tensor_power_c
     end interface
@@ -977,11 +958,10 @@ contains
     interface
       function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
           bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int16
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int16), value, intent(in) :: power_c
+        integer(c_int16_t), value, intent(in) :: power_c
         type(c_ptr) :: output_c
       end function torch_tensor_power_c
     end interface
@@ -998,11 +978,10 @@ contains
     interface
       function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
           bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int32
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int32), value, intent(in) :: power_c
+        integer(c_int32_t), value, intent(in) :: power_c
         type(c_ptr) :: output_c
       end function torch_tensor_power_c
     end interface
@@ -1019,11 +998,10 @@ contains
     interface
       function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
           bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : int64
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=int64), value, intent(in) :: power_c
+        integer(c_int64_t), value, intent(in) :: power_c
         type(c_ptr) :: output_c
       end function torch_tensor_power_c
     end interface
@@ -1040,11 +1018,10 @@ contains
     interface
       function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
           bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : real32
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        real(kind=real32), value, intent(in) :: power_c
+        real(c_float), value, intent(in) :: power_c
         type(c_ptr) :: output_c
       end function torch_tensor_power_c
     end interface
@@ -1061,11 +1038,10 @@ contains
     interface
       function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
           bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : real64
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        real(kind=real64), value, intent(in) :: power_c
+        real(c_double), value, intent(in) :: power_c
         type(c_ptr) :: output_c
       end function torch_tensor_power_c
     end interface
