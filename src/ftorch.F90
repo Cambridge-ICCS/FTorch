@@ -8,13 +8,10 @@
 
 module ftorch
 
-  use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, &
-                                         c_float, c_double, c_char, c_ptr, c_null_ptr, c_f_pointer
-  use, intrinsic :: iso_fortran_env, only: int8, int16, int32, int64, real32, real64
+  use, intrinsic :: iso_c_binding, only: c_ptr, c_null_ptr
+  use, intrinsic :: iso_fortran_env, only: ftorch_int => int32 ! set integer size for FTorch library
 
   implicit none
-
-  integer, parameter :: ftorch_int = int32  ! set integer size for FTorch library
 
   !> Type for holding a torch neural net (nn.Module).
   type torch_model
@@ -420,7 +417,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_1d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -450,7 +447,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_2d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -480,7 +477,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_3d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -510,7 +507,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_4d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -540,7 +537,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_5d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -570,7 +567,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_1d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -600,7 +597,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_2d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -630,7 +627,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_3d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -660,7 +657,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_4d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -690,7 +687,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_5d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -720,7 +717,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_1d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -750,7 +747,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_2d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -780,7 +777,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_3d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -810,7 +807,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_4d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -840,7 +837,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_5d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -870,7 +867,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_1d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -900,7 +897,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_2d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -930,7 +927,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_3d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -960,7 +957,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_4d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -990,7 +987,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_5d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -1020,7 +1017,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_1d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -1050,7 +1047,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_2d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -1080,7 +1077,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_3d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -1110,7 +1107,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_4d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -1140,7 +1137,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_5d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -1170,7 +1167,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_1d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -1200,7 +1197,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_2d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -1230,7 +1227,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_3d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -1260,7 +1257,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_4d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -1290,7 +1287,7 @@ contains
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_5d(tensor, data_in, layout, &
                                                         device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -1322,7 +1319,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `int8`
   subroutine torch_tensor_to_array_int8_1d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int8), pointer, intent(out) :: data_out(:)  !! Pointer to tensor data
@@ -1352,7 +1349,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `int8`
   subroutine torch_tensor_to_array_int8_2d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int8), pointer, intent(out) :: data_out(:,:)  !! Pointer to tensor data
@@ -1382,7 +1379,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `int8`
   subroutine torch_tensor_to_array_int8_3d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int8), pointer, intent(out) :: data_out(:,:,:)  !! Pointer to tensor data
@@ -1412,7 +1409,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `int8`
   subroutine torch_tensor_to_array_int8_4d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int8), pointer, intent(out) :: data_out(:,:,:,:)  !! Pointer to tensor data
@@ -1442,7 +1439,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 5 and data type `int8`
   subroutine torch_tensor_to_array_int8_5d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int8), pointer, intent(out) :: data_out(:,:,:,:,:)  !! Pointer to tensor data
@@ -1472,7 +1469,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `int16`
   subroutine torch_tensor_to_array_int16_1d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int16), pointer, intent(out) :: data_out(:)  !! Pointer to tensor data
@@ -1502,7 +1499,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `int16`
   subroutine torch_tensor_to_array_int16_2d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int16), pointer, intent(out) :: data_out(:,:)  !! Pointer to tensor data
@@ -1532,7 +1529,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `int16`
   subroutine torch_tensor_to_array_int16_3d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int16), pointer, intent(out) :: data_out(:,:,:)  !! Pointer to tensor data
@@ -1562,7 +1559,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `int16`
   subroutine torch_tensor_to_array_int16_4d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int16), pointer, intent(out) :: data_out(:,:,:,:)  !! Pointer to tensor data
@@ -1592,7 +1589,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 5 and data type `int16`
   subroutine torch_tensor_to_array_int16_5d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int16), pointer, intent(out) :: data_out(:,:,:,:,:)  !! Pointer to tensor data
@@ -1622,7 +1619,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `int32`
   subroutine torch_tensor_to_array_int32_1d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int32), pointer, intent(out) :: data_out(:)  !! Pointer to tensor data
@@ -1652,7 +1649,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `int32`
   subroutine torch_tensor_to_array_int32_2d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int32), pointer, intent(out) :: data_out(:,:)  !! Pointer to tensor data
@@ -1682,7 +1679,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `int32`
   subroutine torch_tensor_to_array_int32_3d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int32), pointer, intent(out) :: data_out(:,:,:)  !! Pointer to tensor data
@@ -1712,7 +1709,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `int32`
   subroutine torch_tensor_to_array_int32_4d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int32), pointer, intent(out) :: data_out(:,:,:,:)  !! Pointer to tensor data
@@ -1742,7 +1739,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 5 and data type `int32`
   subroutine torch_tensor_to_array_int32_5d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int32), pointer, intent(out) :: data_out(:,:,:,:,:)  !! Pointer to tensor data
@@ -1772,7 +1769,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `int64`
   subroutine torch_tensor_to_array_int64_1d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int64), pointer, intent(out) :: data_out(:)  !! Pointer to tensor data
@@ -1802,7 +1799,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `int64`
   subroutine torch_tensor_to_array_int64_2d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int64), pointer, intent(out) :: data_out(:,:)  !! Pointer to tensor data
@@ -1832,7 +1829,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `int64`
   subroutine torch_tensor_to_array_int64_3d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int64), pointer, intent(out) :: data_out(:,:,:)  !! Pointer to tensor data
@@ -1862,7 +1859,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `int64`
   subroutine torch_tensor_to_array_int64_4d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int64), pointer, intent(out) :: data_out(:,:,:,:)  !! Pointer to tensor data
@@ -1892,7 +1889,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 5 and data type `int64`
   subroutine torch_tensor_to_array_int64_5d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     integer(kind=int64), pointer, intent(out) :: data_out(:,:,:,:,:)  !! Pointer to tensor data
@@ -1922,7 +1919,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `real32`
   subroutine torch_tensor_to_array_real32_1d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     real(kind=real32), pointer, intent(out) :: data_out(:)  !! Pointer to tensor data
@@ -1952,7 +1949,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `real32`
   subroutine torch_tensor_to_array_real32_2d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     real(kind=real32), pointer, intent(out) :: data_out(:,:)  !! Pointer to tensor data
@@ -1982,7 +1979,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `real32`
   subroutine torch_tensor_to_array_real32_3d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     real(kind=real32), pointer, intent(out) :: data_out(:,:,:)  !! Pointer to tensor data
@@ -2012,7 +2009,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `real32`
   subroutine torch_tensor_to_array_real32_4d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     real(kind=real32), pointer, intent(out) :: data_out(:,:,:,:)  !! Pointer to tensor data
@@ -2042,7 +2039,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 5 and data type `real32`
   subroutine torch_tensor_to_array_real32_5d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     real(kind=real32), pointer, intent(out) :: data_out(:,:,:,:,:)  !! Pointer to tensor data
@@ -2072,7 +2069,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `real64`
   subroutine torch_tensor_to_array_real64_1d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     real(kind=real64), pointer, intent(out) :: data_out(:)  !! Pointer to tensor data
@@ -2102,7 +2099,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 2 and data type `real64`
   subroutine torch_tensor_to_array_real64_2d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     real(kind=real64), pointer, intent(out) :: data_out(:,:)  !! Pointer to tensor data
@@ -2132,7 +2129,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 3 and data type `real64`
   subroutine torch_tensor_to_array_real64_3d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     real(kind=real64), pointer, intent(out) :: data_out(:,:,:)  !! Pointer to tensor data
@@ -2162,7 +2159,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 4 and data type `real64`
   subroutine torch_tensor_to_array_real64_4d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     real(kind=real64), pointer, intent(out) :: data_out(:,:,:,:)  !! Pointer to tensor data
@@ -2192,7 +2189,7 @@ contains
 
   !> Return the array data associated with a Torch tensor of rank 5 and data type `real64`
   subroutine torch_tensor_to_array_real64_5d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64, int64
     type(torch_tensor), intent(in) :: tensor  !! Returned tensor
     real(kind=real64), pointer, intent(out) :: data_out(:,:,:,:,:)  !! Pointer to tensor data
@@ -2259,7 +2256,7 @@ contains
   !> Determines the rank of a tensor.
   function get_rank(self) result(rank)
     class(torch_tensor), intent(in) :: self
-    integer(kind=int32) :: rank  !! rank of tensor
+    integer(kind=ftorch_int) :: rank  !! rank of tensor
 
     interface
       function torch_tensor_get_rank_c(tensor) result(rank) &
@@ -2276,14 +2273,14 @@ contains
 
   !> Determines the shape of a tensor.
   function get_shape(self) result(sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_long, c_long_long, c_ptr
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_long, c_long_long, c_ptr
     class(torch_tensor), intent(in) :: self
 #ifdef UNIX
     integer(kind=c_long), pointer :: sizes(:)  !! Pointer to tensor data
 #else
     integer(kind=c_long_long), pointer :: sizes(:)  !! Pointer to tensor data
 #endif
-    integer(kind=int32) :: ndims(1)
+    integer(kind=ftorch_int) :: ndims(1)
     type(c_ptr) :: cptr
 
     interface
@@ -2412,7 +2409,8 @@ contains
 
   !> Overloads multiplication operator for a scalar of type int8 and a tensor.
   function torch_tensor_premultiply_int8(scalar, tensor) result(output)
-    integer(kind=int8), intent(in) :: scalar
+    use, intrinsic :: iso_fortran_env, only : int8
+    integer(int8), intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: output
 
@@ -2432,7 +2430,8 @@ contains
 
   !> Overloads multiplication operator for a scalar of type int16 and a tensor.
   function torch_tensor_premultiply_int16(scalar, tensor) result(output)
-    integer(kind=int16), intent(in) :: scalar
+    use, intrinsic :: iso_fortran_env, only : int16
+    integer(int16), intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: output
 
@@ -2452,7 +2451,8 @@ contains
 
   !> Overloads multiplication operator for a scalar of type int32 and a tensor.
   function torch_tensor_premultiply_int32(scalar, tensor) result(output)
-    integer(kind=int32), intent(in) :: scalar
+    use, intrinsic :: iso_fortran_env, only : int32
+    integer(int32), intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: output
 
@@ -2472,7 +2472,8 @@ contains
 
   !> Overloads multiplication operator for a scalar of type int64 and a tensor.
   function torch_tensor_premultiply_int64(scalar, tensor) result(output)
-    integer(kind=int64), intent(in) :: scalar
+    use, intrinsic :: iso_fortran_env, only : int64
+    integer(int64), intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: output
 
@@ -2492,7 +2493,8 @@ contains
 
   !> Overloads multiplication operator for a scalar of type real32 and a tensor.
   function torch_tensor_premultiply_real32(scalar, tensor) result(output)
-    real(kind=real32), intent(in) :: scalar
+    use, intrinsic :: iso_fortran_env, only : real32
+    real(real32), intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: output
 
@@ -2512,7 +2514,8 @@ contains
 
   !> Overloads multiplication operator for a scalar of type real64 and a tensor.
   function torch_tensor_premultiply_real64(scalar, tensor) result(output)
-    real(kind=real64), intent(in) :: scalar
+    use, intrinsic :: iso_fortran_env, only : real64
+    real(real64), intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: output
 
@@ -2533,8 +2536,9 @@ contains
 
   !> Overloads multiplication operator for a tensor and a scalar of type int8.
   function torch_tensor_postmultiply_int8(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : int8
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int8), intent(in) :: scalar
+    integer(int8), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2553,8 +2557,9 @@ contains
 
   !> Overloads multiplication operator for a tensor and a scalar of type int16.
   function torch_tensor_postmultiply_int16(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : int16
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int16), intent(in) :: scalar
+    integer(int16), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2573,8 +2578,9 @@ contains
 
   !> Overloads multiplication operator for a tensor and a scalar of type int32.
   function torch_tensor_postmultiply_int32(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : int32
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int32), intent(in) :: scalar
+    integer(int32), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2593,8 +2599,9 @@ contains
 
   !> Overloads multiplication operator for a tensor and a scalar of type int64.
   function torch_tensor_postmultiply_int64(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : int64
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int64), intent(in) :: scalar
+    integer(int64), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2613,8 +2620,9 @@ contains
 
   !> Overloads multiplication operator for a tensor and a scalar of type real32.
   function torch_tensor_postmultiply_real32(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : real32
     type(torch_tensor), intent(in) :: tensor
-    real(kind=real32), intent(in) :: scalar
+    real(real32), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2633,8 +2641,9 @@ contains
 
   !> Overloads multiplication operator for a tensor and a scalar of type real64.
   function torch_tensor_postmultiply_real64(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : real64
     type(torch_tensor), intent(in) :: tensor
-    real(kind=real64), intent(in) :: scalar
+    real(real64), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2673,8 +2682,9 @@ contains
 
   !> Overloads division operator for a tensor and a scalar of type int8.
   function torch_tensor_postdivide_int8(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : int8
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int8), intent(in) :: scalar
+    integer(int8), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2693,8 +2703,9 @@ contains
 
   !> Overloads division operator for a tensor and a scalar of type int16.
   function torch_tensor_postdivide_int16(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : int16
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int16), intent(in) :: scalar
+    integer(int16), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2713,8 +2724,9 @@ contains
 
   !> Overloads division operator for a tensor and a scalar of type int32.
   function torch_tensor_postdivide_int32(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : int32
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int32), intent(in) :: scalar
+    integer(int32), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2733,8 +2745,9 @@ contains
 
   !> Overloads division operator for a tensor and a scalar of type int64.
   function torch_tensor_postdivide_int64(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : int64
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int64), intent(in) :: scalar
+    integer(int64), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2753,8 +2766,9 @@ contains
 
   !> Overloads division operator for a tensor and a scalar of type real32.
   function torch_tensor_postdivide_real32(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : real32
     type(torch_tensor), intent(in) :: tensor
-    real(kind=real32), intent(in) :: scalar
+    real(real32), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2773,8 +2787,9 @@ contains
 
   !> Overloads division operator for a tensor and a scalar of type real64.
   function torch_tensor_postdivide_real64(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : real64
     type(torch_tensor), intent(in) :: tensor
-    real(kind=real64), intent(in) :: scalar
+    real(real64), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -2794,8 +2809,9 @@ contains
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `int8`
   function torch_tensor_power_int8(tensor, power) result(output)
+    use, intrinsic :: iso_fortran_env, only : int8
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int8), intent(in) :: power
+    integer(int8), intent(in) :: power
     type(torch_tensor) :: output
 
     interface
@@ -2814,8 +2830,9 @@ contains
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `int16`
   function torch_tensor_power_int16(tensor, power) result(output)
+    use, intrinsic :: iso_fortran_env, only : int16
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int16), intent(in) :: power
+    integer(int16), intent(in) :: power
     type(torch_tensor) :: output
 
     interface
@@ -2834,8 +2851,9 @@ contains
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `int32`
   function torch_tensor_power_int32(tensor, power) result(output)
+    use, intrinsic :: iso_fortran_env, only : int32
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int32), intent(in) :: power
+    integer(int32), intent(in) :: power
     type(torch_tensor) :: output
 
     interface
@@ -2854,8 +2872,9 @@ contains
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `int64`
   function torch_tensor_power_int64(tensor, power) result(output)
+    use, intrinsic :: iso_fortran_env, only : int64
     type(torch_tensor), intent(in) :: tensor
-    integer(kind=int64), intent(in) :: power
+    integer(int64), intent(in) :: power
     type(torch_tensor) :: output
 
     interface
@@ -2874,8 +2893,9 @@ contains
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `real32`
   function torch_tensor_power_real32(tensor, power) result(output)
+    use, intrinsic :: iso_fortran_env, only : real32
     type(torch_tensor), intent(in) :: tensor
-    real(kind=real32), intent(in) :: power
+    real(real32), intent(in) :: power
     type(torch_tensor) :: output
 
     interface
@@ -2894,8 +2914,9 @@ contains
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `real64`
   function torch_tensor_power_real64(tensor, power) result(output)
+    use, intrinsic :: iso_fortran_env, only : real64
     type(torch_tensor), intent(in) :: tensor
-    real(kind=real64), intent(in) :: power
+    real(real64), intent(in) :: power
     type(torch_tensor) :: output
 
     interface
