@@ -76,7 +76,7 @@ jobs:
           git clone -b v4.10.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake -DMPI=YES ..
+          cmake ..
           make -j 4 install
 
       - name: Build FTorch
