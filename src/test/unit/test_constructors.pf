@@ -21,7 +21,6 @@ subroutine test_torch_tensor_empty()
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
   logical, parameter :: requires_grad = .false.
-  logical :: test_pass
 
   tensor_shape = [2, 3]
 
@@ -42,7 +41,7 @@ end subroutine test_torch_tensor_empty
 
 @test
 subroutine test_torch_tensor_zeros()
-  use pFUnit
+  use FUnit
   use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_to_array, torch_tensor_zeros
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -83,6 +82,7 @@ subroutine test_torch_tensor_zeros()
   expected(:,:) = 0.0
   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_zeros")
   @assertTrue(test_pass)
+  @assertEqual(shape(out_data), shape(expected))
 
   ! Cleanup
   nullify(out_data)
@@ -92,7 +92,7 @@ end subroutine test_torch_tensor_zeros
 
 @test
 subroutine test_torch_tensor_ones()
-  use pFUnit
+  use FUnit
   use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_ones, torch_tensor_to_array
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -133,6 +133,7 @@ subroutine test_torch_tensor_ones()
   expected(:,:) = 1.0
   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")
   @assertTrue(test_pass)
+  @assertEqual(shape(out_data), shape(expected))
 
   ! Cleanup
   nullify(out_data)
@@ -142,7 +143,7 @@ end subroutine test_torch_tensor_ones
 
 @test
 subroutine test_torch_from_array_1d()
-  use pFUnit
+  use FUnit
   use ftorch, only: ftorch_int, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_from_array, torch_tensor_to_array
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -184,6 +185,7 @@ subroutine test_torch_from_array_1d()
   expected(:) = in_data
   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
   @assertTrue(test_pass)
+  @assertEqual(shape(out_data), shape(expected))
 
   ! Cleanup
   nullify(out_data)
@@ -193,7 +195,7 @@ end subroutine test_torch_from_array_1d
 
 @test
 subroutine test_torch_from_array_2d()
-  use pFUnit
+  use FUnit
   use ftorch, only: ftorch_int, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_from_array, torch_tensor_to_array
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -235,6 +237,7 @@ subroutine test_torch_from_array_2d()
   expected(:,:) = in_data
   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
   @assertTrue(test_pass)
+  @assertEqual(shape(out_data), shape(expected))
 
   ! Cleanup
   nullify(out_data)
@@ -243,8 +246,58 @@ subroutine test_torch_from_array_2d()
 end subroutine test_torch_from_array_2d
 
 @test
+subroutine test_torch_from_array_3d()
+  use FUnit
+  use ftorch, only: ftorch_int, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_from_array, torch_tensor_to_array
+  use ftorch_test_utils, only: assert_allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use, intrinsic :: iso_c_binding, only : c_associated
+
+  implicit none
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  type(torch_tensor) :: tensor
+  integer, parameter :: ndims = 3
+  integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1, 1]
+  integer, parameter :: device_type = torch_kCPU
+  integer, parameter :: device_index = -1
+  real(wp), dimension(1,2,3), target :: in_data
+  real(wp), dimension(:,:,:), pointer :: out_data
+  real(wp), dimension(1,2,3) :: expected
+  logical :: test_pass
+
+  ! Create an arbitrary input array
+  in_data(:,:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [1,2,3])
+
+  ! Check the tensor pointer is not associated
+  @assertFalse(c_associated(tensor%p))
+
+  ! Create a tensor based off an input array
+  call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index)
+
+  ! Check the tensor pointer is associated
+  @assertTrue(c_associated(tensor%p))
+
+  ! Extract Fortran array from tensor
+  call torch_tensor_to_array(tensor, out_data, shape(in_data))
+
+  ! Compare the data in the tensor to the input data
+  expected(:,:,:) = in_data
+  test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
+  @assertTrue(test_pass)
+  @assertEqual(shape(out_data), shape(expected))
+
+  ! Cleanup
+  nullify(out_data)
+  call torch_tensor_delete(tensor)
+
+end subroutine test_torch_from_array_3d
+
+@test
 subroutine test_torch_from_blob()
-  use pFUnit
+  use FUnit
   use ftorch, only: torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_delete, torch_tensor_from_blob, torch_tensor_to_array
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -288,6 +341,7 @@ subroutine test_torch_from_blob()
   expected(:,:) = in_data
   test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_blob")
   @assertTrue(test_pass)
+  @assertEqual(shape(out_data), shape(expected))
 
   ! Cleanup
   nullify(out_data)
