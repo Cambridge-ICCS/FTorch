@@ -7,7 +7,7 @@
 
 @test
 subroutine test_torch_tensor_empty()
-  use pFUnit
+  use FUnit
   use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, torch_tensor_empty
   use ftorch_test_utils, only: assert_allclose
   use iso_c_binding, only: c_associated, c_int64_t
