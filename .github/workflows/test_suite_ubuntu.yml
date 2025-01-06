@@ -76,7 +76,7 @@ jobs:
           git clone -b v4.10.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake -DMPI=YES ..
+          cmake ..
           make -j 4 install
 
       - name: Build FTorch
@@ -85,7 +85,7 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/src/build
-          # TODO: How can we avoid the pFUnit version ending up in the install path?
+          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.10
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}

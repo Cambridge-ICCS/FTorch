@@ -6,8 +6,7 @@ title: FTorch test suite
 
 FTorch's test suite is currently comprised of unit tests, as well as integration
 tests based on a subset of the [examples](examples.html). These tests are built
-and run and their outputs are analysed to check they contain expected regular
-expressions.
+and run and their outputs are analysed.
 
 ### Building
 
@@ -26,7 +25,7 @@ in the root FTorch directory. Depending on the OS you are running you will need
 to use either:
 ```
 - `./run_test_suite.sh` for Unix (Mac and Linux)
-- `run_test_suite.bat` for Windows
+- `run_test_suite.bat` for Windows (note this will only run the integration tests, not unit tests).
 
 This will automatically install any additional Python dependencies for the
 examples.

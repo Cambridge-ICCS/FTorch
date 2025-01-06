@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
 cmake_policy (SET CMP0076 NEW)
 
 project("FTorch unit tests" VERSION 1.0.0 LANGUAGES Fortran)
