@@ -13,6 +13,8 @@ module ftorch
 
   implicit none
 
+  ! --- Derived types and enums
+
   !> Type for holding a torch neural net (nn.Module).
   type torch_model
     type(c_ptr) :: p = c_null_ptr  !! pointer to the neural net in memory
