@@ -340,9 +340,12 @@ contains
       requires_grad_value = requires_grad
     end if
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     ! Process optional arguments
@@ -1247,9 +1250,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1301,9 +1307,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1355,9 +1364,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1409,9 +1421,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1463,9 +1478,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1517,9 +1535,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1571,9 +1592,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1625,9 +1649,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1679,9 +1706,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1733,9 +1763,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1787,9 +1820,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1841,9 +1877,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1895,9 +1934,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -1949,9 +1991,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2003,9 +2048,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2057,9 +2105,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2111,9 +2162,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2165,9 +2219,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2219,9 +2276,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2273,9 +2333,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2327,9 +2390,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2381,9 +2447,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2435,9 +2504,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2489,9 +2561,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2543,9 +2618,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2597,9 +2675,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2651,9 +2732,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2705,9 +2789,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2759,9 +2846,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
@@ -2813,9 +2903,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
