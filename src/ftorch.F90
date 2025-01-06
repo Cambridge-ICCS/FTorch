@@ -43,13 +43,14 @@ module ftorch
     enumerator :: torch_kFloat64 = 7
   end enum
 
-
   !| Enumerator for Torch devices
   !  From c_torch.h (torch_device_t)
   enum, bind(c)
     enumerator :: torch_kCPU = 0
     enumerator :: torch_kCUDA = 1
   end enum
+
+  ! --- Interfaces for core FTorch procedures
 
   !> Interface for directing `torch_tensor_from_array` to possible input types and ranks
   interface torch_tensor_from_array
@@ -148,6 +149,21 @@ module ftorch
     end function torch_from_blob_c
   end interface
 
+  interface
+    function torch_to_blob_c(tensor, dtype) result(data) &
+        bind(c, name = 'torch_to_blob')
+      use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+
+      implicit none
+
+      type(c_ptr), value, intent(in)    :: tensor
+      integer(c_int), value, intent(in) :: dtype
+      type(c_ptr)                       :: data
+    end function torch_to_blob_c
+  end interface
+
+  ! --- Interfaces for overloaded operators acting on tensors
+
   interface assignment (=)
     module procedure torch_tensor_assign
   end interface
@@ -195,20 +211,9 @@ module ftorch
     module procedure torch_tensor_power_real64
   end interface
 
-  interface
-    function torch_to_blob_c(tensor, dtype) result(data) &
-        bind(c, name = 'torch_to_blob')
-      use, intrinsic :: iso_c_binding, only : c_int, c_ptr
-
-      implicit none
-
-      type(c_ptr), value, intent(in)    :: tensor
-      integer(c_int), value, intent(in) :: dtype
-      type(c_ptr)                       :: data
-    end function torch_to_blob_c
-  end interface
-
 contains
+
+  ! --- Procedures for constructing tensors
 
   !> Returns a tensor with uninitialised values.
   subroutine torch_tensor_empty(tensor, ndims, tensor_shape, dtype, &
@@ -363,7 +368,6 @@ contains
                             device_index_value, requires_grad_value)
   end subroutine torch_tensor_ones
 
-  ! Torch Tensor API
   !| Exposes the given data as a tensor without taking ownership of the original data.
   !  This routine will take an (i, j, k) array and return an (k, j, i) tensor.
   subroutine torch_tensor_from_blob(tensor, data, ndims, tensor_shape, layout, dtype, &
@@ -412,828 +416,6 @@ contains
                                  device_type, device_index_value,              &
                                  requires_grad_value)
   end subroutine torch_tensor_from_blob
-
-  !> Prints the contents of a tensor.
-  subroutine torch_tensor_print(tensor)
-    type(torch_tensor), intent(in) :: tensor  !! Input tensor
-
-    interface
-      subroutine torch_tensor_print_c(tensor) &
-          bind(c, name = 'torch_tensor_print')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor
-      end subroutine torch_tensor_print_c
-    end interface
-
-    call torch_tensor_print_c(tensor%p)
-  end subroutine torch_tensor_print
-
-  !> Determines the device index of a tensor.
-  function torch_tensor_get_device_index(tensor) result(device_index)
-    use, intrinsic :: iso_c_binding, only : c_int
-    type(torch_tensor), intent(in) :: tensor  !! Input tensor
-    integer(c_int) :: device_index            !! Device index of tensor
-
-    interface
-      function torch_tensor_get_device_index_c(tensor) result(device_index) &
-          bind(c, name = 'torch_tensor_get_device_index')
-        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor
-        integer(c_int) :: device_index
-      end function torch_tensor_get_device_index_c
-    end interface
-
-    device_index = torch_tensor_get_device_index_c(tensor%p)
-  end function torch_tensor_get_device_index
-
-  !> Determines the rank of a tensor.
-  function get_rank(self) result(rank)
-    class(torch_tensor), intent(in) :: self
-    integer(kind=int32) :: rank  !! rank of tensor
-
-    interface
-      function torch_tensor_get_rank_c(tensor) result(rank) &
-          bind(c, name = 'torch_tensor_get_rank')
-        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor
-        integer(c_int) :: rank
-      end function torch_tensor_get_rank_c
-    end interface
-
-    rank = torch_tensor_get_rank_c(self%p)
-  end function get_rank
-
-  !> Determines the shape of a tensor.
-  function get_shape(self) result(sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_long, c_long_long, c_ptr
-    class(torch_tensor), intent(in) :: self
-#ifdef UNIX
-    integer(kind=c_long), pointer :: sizes(:)  !! Pointer to tensor data
-#else
-    integer(kind=c_long_long), pointer :: sizes(:)  !! Pointer to tensor data
-#endif
-    integer(kind=int32) :: ndims(1)
-    type(c_ptr) :: cptr
-
-    interface
-      function torch_tensor_get_sizes_c(tensor) result(sizes) &
-          bind(c, name = 'torch_tensor_get_sizes')
-        use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor
-        type(c_ptr) :: sizes
-      end function torch_tensor_get_sizes_c
-    end interface
-
-    ndims(1) = self%get_rank()
-    cptr = torch_tensor_get_sizes_c(self%p)
-    call c_f_pointer(cptr, sizes, ndims)
-  end function get_shape
-
-  !> Deallocates an array of tensors.
-  subroutine torch_tensor_array_delete(tensor_array)
-    type(torch_tensor), dimension(:), intent(inout) :: tensor_array
-    integer(ftorch_int) :: i
-
-    ! use bounds rather than (1, N) because it's safer
-    do i = lbound(tensor_array, dim=1), ubound(tensor_array, dim=1)
-      call torch_tensor_delete(tensor_array(i))
-    end do
-  end subroutine torch_tensor_array_delete
-
-  !> Deallocates a tensor.
-  subroutine torch_tensor_delete(tensor)
-    type(torch_tensor), intent(inout) :: tensor
-
-    interface
-      subroutine torch_tensor_delete_c(tensor) &
-          bind(c, name = 'torch_tensor_delete')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor
-      end subroutine torch_tensor_delete_c
-    end interface
-
-    call torch_tensor_delete_c(tensor%p)
-  end subroutine torch_tensor_delete
-
-  !> Overloads assignment operator for tensors.
-  subroutine torch_tensor_assign(output, input)
-    type(torch_tensor), intent(out) :: output
-    type(torch_tensor), intent(in) :: input
-
-    interface
-      function torch_tensor_assign_c(input_c) result(output_c)                 &
-          bind(c, name = 'torch_tensor_assign')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: input_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_assign_c
-    end interface
-
-    output%p = torch_tensor_assign_c(input%p)
-  end subroutine torch_tensor_assign
-
-  !> Overloads addition operator for two tensors.
-  function torch_tensor_add(tensor1, tensor2) result(output)
-    type(torch_tensor), intent(in) :: tensor1
-    type(torch_tensor), intent(in) :: tensor2
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_add_c(tensor1_c, tensor2_c) result(output_c)       &
-          bind(c, name = 'torch_tensor_add')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor1_c
-        type(c_ptr), value, intent(in) :: tensor2_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_add_c
-    end interface
-
-    output%p = torch_tensor_add_c(tensor1%p, tensor2%p)
-  end function torch_tensor_add
-
-  !> Overloads subtraction operator for two tensors.
-  function torch_tensor_subtract(tensor1, tensor2) result(output)
-    type(torch_tensor), intent(in) :: tensor1
-    type(torch_tensor), intent(in) :: tensor2
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_subtract_c(tensor1_c, tensor2_c) result(output_c)  &
-          bind(c, name = 'torch_tensor_subtract')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor1_c
-        type(c_ptr), value, intent(in) :: tensor2_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_subtract_c
-    end interface
-
-    output%p = torch_tensor_subtract_c(tensor1%p, tensor2%p)
-  end function torch_tensor_subtract
-
-  !> Overloads multiplication operator for two tensors.
-  function torch_tensor_multiply(tensor1, tensor2) result(output)
-    type(torch_tensor), intent(in) :: tensor1
-    type(torch_tensor), intent(in) :: tensor2
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_multiply_c(tensor1_c, tensor2_c) result(output_c)  &
-          bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor1_c
-        type(c_ptr), value, intent(in) :: tensor2_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_multiply_c
-    end interface
-
-    output%p = torch_tensor_multiply_c(tensor1%p, tensor2%p)
-  end function torch_tensor_multiply
-
-  !> Overloads multiplication operator for a scalar of type int8 and a tensor.
-  function torch_tensor_premultiply_int8(scalar, tensor) result(output)
-    integer(kind=int8), intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
-        implicit none
-        integer(kind=c_int8_t), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
-    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
-  end function torch_tensor_premultiply_int8
-
-  !> Overloads multiplication operator for a scalar of type int16 and a tensor.
-  function torch_tensor_premultiply_int16(scalar, tensor) result(output)
-    integer(kind=int16), intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
-        implicit none
-        integer(kind=c_int16_t), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
-    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
-  end function torch_tensor_premultiply_int16
-
-  !> Overloads multiplication operator for a scalar of type int32 and a tensor.
-  function torch_tensor_premultiply_int32(scalar, tensor) result(output)
-    integer(kind=int32), intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
-        implicit none
-        integer(kind=c_int32_t), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
-    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
-  end function torch_tensor_premultiply_int32
-
-  !> Overloads multiplication operator for a scalar of type int64 and a tensor.
-  function torch_tensor_premultiply_int64(scalar, tensor) result(output)
-    integer(kind=int64), intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
-        implicit none
-        integer(kind=c_int64_t), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
-    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
-  end function torch_tensor_premultiply_int64
-
-  !> Overloads multiplication operator for a scalar of type real32 and a tensor.
-  function torch_tensor_premultiply_real32(scalar, tensor) result(output)
-    real(kind=real32), intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
-        implicit none
-        real(kind=c_float), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
-    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
-  end function torch_tensor_premultiply_real32
-
-  !> Overloads multiplication operator for a scalar of type real64 and a tensor.
-  function torch_tensor_premultiply_real64(scalar, tensor) result(output)
-    real(kind=real64), intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
-        implicit none
-        real(kind=c_double), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
-    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
-  end function torch_tensor_premultiply_real64
-
-
-  !> Overloads multiplication operator for a tensor and a scalar of type int8.
-  function torch_tensor_postmultiply_int8(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int8), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=c_int8_t), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
-    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
-  end function torch_tensor_postmultiply_int8
-
-  !> Overloads multiplication operator for a tensor and a scalar of type int16.
-  function torch_tensor_postmultiply_int16(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int16), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=c_int16_t), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
-    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
-  end function torch_tensor_postmultiply_int16
-
-  !> Overloads multiplication operator for a tensor and a scalar of type int32.
-  function torch_tensor_postmultiply_int32(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int32), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=c_int32_t), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
-    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
-  end function torch_tensor_postmultiply_int32
-
-  !> Overloads multiplication operator for a tensor and a scalar of type int64.
-  function torch_tensor_postmultiply_int64(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int64), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=c_int64_t), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
-    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
-  end function torch_tensor_postmultiply_int64
-
-  !> Overloads multiplication operator for a tensor and a scalar of type real32.
-  function torch_tensor_postmultiply_real32(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    real(kind=real32), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        real(kind=c_float), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
-    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
-  end function torch_tensor_postmultiply_real32
-
-  !> Overloads multiplication operator for a tensor and a scalar of type real64.
-  function torch_tensor_postmultiply_real64(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    real(kind=real64), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        real(kind=c_double), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
-    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
-  end function torch_tensor_postmultiply_real64
-
-  !> Overloads division operator for two tensors.
-  function torch_tensor_divide(tensor1, tensor2) result(output)
-    type(torch_tensor), intent(in) :: tensor1
-    type(torch_tensor), intent(in) :: tensor2
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c)  &
-          bind(c, name = 'torch_tensor_divide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor1_c
-        type(c_ptr), value, intent(in) :: tensor2_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_divide_c
-    end interface
-
-    output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
-  end function torch_tensor_divide
-
-  !> Overloads division operator for a tensor and a scalar of type int8.
-  function torch_tensor_postdivide_int8(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int8), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=c_int8_t), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
-    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
-  end function torch_tensor_postdivide_int8
-
-  !> Overloads division operator for a tensor and a scalar of type int16.
-  function torch_tensor_postdivide_int16(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int16), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=c_int16_t), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
-    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
-  end function torch_tensor_postdivide_int16
-
-  !> Overloads division operator for a tensor and a scalar of type int32.
-  function torch_tensor_postdivide_int32(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int32), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=c_int32_t), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
-    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
-  end function torch_tensor_postdivide_int32
-
-  !> Overloads division operator for a tensor and a scalar of type int64.
-  function torch_tensor_postdivide_int64(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int64), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(kind=c_int64_t), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
-    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
-  end function torch_tensor_postdivide_int64
-
-  !> Overloads division operator for a tensor and a scalar of type real32.
-  function torch_tensor_postdivide_real32(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    real(kind=real32), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        real(kind=c_float), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
-    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
-  end function torch_tensor_postdivide_real32
-
-  !> Overloads division operator for a tensor and a scalar of type real64.
-  function torch_tensor_postdivide_real64(tensor, scalar) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    real(kind=real64), intent(in) :: scalar
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        real(kind=c_double), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
-    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
-  end function torch_tensor_postdivide_real64
-
-
-  !> Overloads exponentiation operator for a tensor and a scalar of type `int8`
-  function torch_tensor_power_int8(tensor, power) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int8), intent(in) :: power
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(c_int8_t), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_c
-    end interface
-
-    output%p = torch_tensor_power_c(tensor%p, power)
-  end function torch_tensor_power_int8
-
-  !> Overloads exponentiation operator for a tensor and a scalar of type `int16`
-  function torch_tensor_power_int16(tensor, power) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int16), intent(in) :: power
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(c_int16_t), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_c
-    end interface
-
-    output%p = torch_tensor_power_c(tensor%p, power)
-  end function torch_tensor_power_int16
-
-  !> Overloads exponentiation operator for a tensor and a scalar of type `int32`
-  function torch_tensor_power_int32(tensor, power) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int32), intent(in) :: power
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(c_int32_t), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_c
-    end interface
-
-    output%p = torch_tensor_power_c(tensor%p, power)
-  end function torch_tensor_power_int32
-
-  !> Overloads exponentiation operator for a tensor and a scalar of type `int64`
-  function torch_tensor_power_int64(tensor, power) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    integer(kind=int64), intent(in) :: power
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        integer(c_int64_t), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_c
-    end interface
-
-    output%p = torch_tensor_power_c(tensor%p, power)
-  end function torch_tensor_power_int64
-
-  !> Overloads exponentiation operator for a tensor and a scalar of type `real32`
-  function torch_tensor_power_real32(tensor, power) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    real(kind=real32), intent(in) :: power
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        real(c_float), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_c
-    end interface
-
-    output%p = torch_tensor_power_c(tensor%p, power)
-  end function torch_tensor_power_real32
-
-  !> Overloads exponentiation operator for a tensor and a scalar of type `real64`
-  function torch_tensor_power_real64(tensor, power) result(output)
-    type(torch_tensor), intent(in) :: tensor
-    real(kind=real64), intent(in) :: power
-    type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        real(c_double), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_c
-    end interface
-
-    output%p = torch_tensor_power_c(tensor%p, power)
-  end function torch_tensor_power_real64
-
-
-  ! Torch Model API
-  !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
-  subroutine torch_model_load(model, filename, device_type, device_index, &
-                              requires_grad, is_training)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_null_char
-    type(torch_model), intent(out)       :: model         !! Returned deserialized model
-    character(*), intent(in)             :: filename      !! Filename of saved TorchScript model
-    integer(c_int), optional, intent(in) :: device_type   !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), optional, intent(in) :: device_index  !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-    logical, optional, intent(in) :: is_training    !! Whether gradients need to be computed for the created tensor
-    integer(c_int) :: device_type_value
-    integer(c_int) :: device_index_value
-    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
-    logical :: is_training_value  !! Whether the model is being trained, rather than evaluated
-
-    interface
-      function torch_jit_load_c(filename, device_type, device_index, &
-                                requires_grad, is_training) result(model) &
-          bind(c, name = 'torch_jit_load')
-        use, intrinsic :: iso_c_binding, only : c_bool, c_char, c_int, c_ptr
-        implicit none
-        character(c_char), intent(in) :: filename(*)
-        integer(c_int), value, intent(in)    :: device_type
-        integer(c_int), value, intent(in)    :: device_index
-        logical(c_bool), value, intent(in) :: requires_grad
-        logical(c_bool), value, intent(in) :: is_training
-        type(c_ptr)                   :: model
-      end function torch_jit_load_c
-    end interface
-
-    ! Process optional arguments
-    if (present(device_type)) then
-      device_type_value = device_type
-    else
-      device_type_value = torch_kCPU
-    endif
-    if (present(device_index)) then
-      device_index_value = device_index
-    else if (device_type_value == torch_kCPU) then
-      device_index_value = -1
-    else
-      device_index_value = 0
-    endif
-
-    if (.not. present(requires_grad)) then
-      requires_grad_value = .false.
-    else
-      requires_grad_value = requires_grad
-    end if
-
-    if (.not. present(is_training)) then
-      is_training_value = .false.
-    else
-      is_training_value = is_training
-    end if
-
-    ! Need to append c_null_char at end of filename
-    model%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char,           &
-                                device_type_value, device_index_value,         &
-                                logical(requires_grad_value, c_bool),          &
-                                logical(is_training_value, c_bool))
-  end subroutine torch_model_load
-
-  !> Performs a forward pass of the model with the input tensors
-  subroutine torch_model_forward(model, input_tensors, output_tensors, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int, c_loc
-    type(torch_model), intent(in) :: model  !! Model
-    type(torch_tensor), intent(in), dimension(:) :: input_tensors   !! Array of Input tensors
-    type(torch_tensor), intent(in), dimension(:) :: output_tensors  !! Returned output tensors
-    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
-
-    integer(ftorch_int) :: i
-    integer(c_int)      :: n_inputs
-    integer(c_int)      :: n_outputs
-    type(c_ptr), dimension(size(input_tensors)), target  :: input_ptrs
-    type(c_ptr), dimension(size(output_tensors)), target  :: output_ptrs
-
-    interface
-      subroutine torch_jit_model_forward_c(model, input_tensors, n_inputs, &
-                                           output_tensors, n_outputs, requires_grad) &
-          bind(c, name = 'torch_jit_module_forward')
-        use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int
-        implicit none
-        type(c_ptr), value, intent(in) :: model
-        type(c_ptr), value, intent(in) :: input_tensors
-        integer(c_int), value, intent(in) :: n_inputs
-        type(c_ptr), value, intent(in) :: output_tensors
-        integer(c_int), value, intent(in) :: n_outputs
-        logical(c_bool), value, intent(in) :: requires_grad
-      end subroutine torch_jit_model_forward_c
-    end interface
-
-    n_inputs = size(input_tensors)
-    n_outputs = size(output_tensors)
-
-    if (.not. present(requires_grad)) then
-      requires_grad_value = .false.
-    else
-      requires_grad_value = requires_grad
-    end if
-
-    ! Assign array of pointers to the input tensors
-    do i = 1, n_inputs
-      input_ptrs(i) = input_tensors(i)%p
-    end do
-
-    ! Assign array of pointers to the output tensors
-    do i = 1, n_outputs
-      output_ptrs(i) = output_tensors(i)%p
-    end do
-
-    call torch_jit_model_forward_c(model%p, c_loc(input_ptrs), n_inputs,       &
-                                   c_loc(output_ptrs), n_outputs,              &
-                                   logical(requires_grad_value, c_bool))
-  end subroutine torch_model_forward
-
-  !> Deallocates a TorchScript model
-  subroutine torch_model_delete(model)
-    type(torch_model), intent(in) :: model  !! Torch Model to deallocate
-
-    interface
-      subroutine torch_jit_model_delete_c(model) &
-          bind(c, name = 'torch_jit_module_delete')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: model
-      end subroutine torch_jit_model_delete_c
-    end interface
-
-    call torch_jit_model_delete_c(model%p)
-  end subroutine torch_model_delete
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_1d(tensor, data_in, layout, &
@@ -2136,6 +1318,8 @@ contains
   end subroutine torch_tensor_from_array_real64_5d
 
 
+  ! --- Procedures for interrogating tensors
+
   !> Return the array data associated with a Torch tensor of rank 1 and data type `int8`
   subroutine torch_tensor_to_array_int8_1d(tensor, data_out, sizes)
     use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
@@ -3036,5 +2220,832 @@ contains
 
   end subroutine torch_tensor_to_array_real64_5d
 
+
+  !> Prints the contents of a tensor.
+  subroutine torch_tensor_print(tensor)
+    type(torch_tensor), intent(in) :: tensor  !! Input tensor
+
+    interface
+      subroutine torch_tensor_print_c(tensor) &
+          bind(c, name = 'torch_tensor_print')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+      end subroutine torch_tensor_print_c
+    end interface
+
+    call torch_tensor_print_c(tensor%p)
+  end subroutine torch_tensor_print
+
+  !> Determines the device index of a tensor.
+  function torch_tensor_get_device_index(tensor) result(device_index)
+    use, intrinsic :: iso_c_binding, only : c_int
+    type(torch_tensor), intent(in) :: tensor  !! Input tensor
+    integer(c_int) :: device_index            !! Device index of tensor
+
+    interface
+      function torch_tensor_get_device_index_c(tensor) result(device_index) &
+          bind(c, name = 'torch_tensor_get_device_index')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+        integer(c_int) :: device_index
+      end function torch_tensor_get_device_index_c
+    end interface
+
+    device_index = torch_tensor_get_device_index_c(tensor%p)
+  end function torch_tensor_get_device_index
+
+  !> Determines the rank of a tensor.
+  function get_rank(self) result(rank)
+    class(torch_tensor), intent(in) :: self
+    integer(kind=int32) :: rank  !! rank of tensor
+
+    interface
+      function torch_tensor_get_rank_c(tensor) result(rank) &
+          bind(c, name = 'torch_tensor_get_rank')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+        integer(c_int) :: rank
+      end function torch_tensor_get_rank_c
+    end interface
+
+    rank = torch_tensor_get_rank_c(self%p)
+  end function get_rank
+
+  !> Determines the shape of a tensor.
+  function get_shape(self) result(sizes)
+    use, intrinsic :: iso_c_binding, only : c_int, c_long, c_long_long, c_ptr
+    class(torch_tensor), intent(in) :: self
+#ifdef UNIX
+    integer(kind=c_long), pointer :: sizes(:)  !! Pointer to tensor data
+#else
+    integer(kind=c_long_long), pointer :: sizes(:)  !! Pointer to tensor data
+#endif
+    integer(kind=int32) :: ndims(1)
+    type(c_ptr) :: cptr
+
+    interface
+      function torch_tensor_get_sizes_c(tensor) result(sizes) &
+          bind(c, name = 'torch_tensor_get_sizes')
+        use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+        type(c_ptr) :: sizes
+      end function torch_tensor_get_sizes_c
+    end interface
+
+    ndims(1) = self%get_rank()
+    cptr = torch_tensor_get_sizes_c(self%p)
+    call c_f_pointer(cptr, sizes, ndims)
+  end function get_shape
+
+  ! --- Procedures for deallocating tensors
+
+  !> Deallocates an array of tensors.
+  subroutine torch_tensor_array_delete(tensor_array)
+    type(torch_tensor), dimension(:), intent(inout) :: tensor_array
+    integer(ftorch_int) :: i
+
+    ! use bounds rather than (1, N) because it's safer
+    do i = lbound(tensor_array, dim=1), ubound(tensor_array, dim=1)
+      call torch_tensor_delete(tensor_array(i))
+    end do
+  end subroutine torch_tensor_array_delete
+
+  !> Deallocates a tensor.
+  subroutine torch_tensor_delete(tensor)
+    type(torch_tensor), intent(inout) :: tensor
+
+    interface
+      subroutine torch_tensor_delete_c(tensor) &
+          bind(c, name = 'torch_tensor_delete')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+      end subroutine torch_tensor_delete_c
+    end interface
+
+    call torch_tensor_delete_c(tensor%p)
+  end subroutine torch_tensor_delete
+
+  ! --- Overloaded operators acting on tensors
+
+  !> Overloads assignment operator for tensors.
+  subroutine torch_tensor_assign(output, input)
+    type(torch_tensor), intent(out) :: output
+    type(torch_tensor), intent(in) :: input
+
+    interface
+      function torch_tensor_assign_c(input_c) result(output_c)                 &
+          bind(c, name = 'torch_tensor_assign')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: input_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_assign_c
+    end interface
+
+    output%p = torch_tensor_assign_c(input%p)
+  end subroutine torch_tensor_assign
+
+  !> Overloads addition operator for two tensors.
+  function torch_tensor_add(tensor1, tensor2) result(output)
+    type(torch_tensor), intent(in) :: tensor1
+    type(torch_tensor), intent(in) :: tensor2
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_add_c(tensor1_c, tensor2_c) result(output_c)       &
+          bind(c, name = 'torch_tensor_add')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor1_c
+        type(c_ptr), value, intent(in) :: tensor2_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_add_c
+    end interface
+
+    output%p = torch_tensor_add_c(tensor1%p, tensor2%p)
+  end function torch_tensor_add
+
+  !> Overloads subtraction operator for two tensors.
+  function torch_tensor_subtract(tensor1, tensor2) result(output)
+    type(torch_tensor), intent(in) :: tensor1
+    type(torch_tensor), intent(in) :: tensor2
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_subtract_c(tensor1_c, tensor2_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_subtract')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor1_c
+        type(c_ptr), value, intent(in) :: tensor2_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_subtract_c
+    end interface
+
+    output%p = torch_tensor_subtract_c(tensor1%p, tensor2%p)
+  end function torch_tensor_subtract
+
+  !> Overloads multiplication operator for two tensors.
+  function torch_tensor_multiply(tensor1, tensor2) result(output)
+    type(torch_tensor), intent(in) :: tensor1
+    type(torch_tensor), intent(in) :: tensor2
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_multiply_c(tensor1_c, tensor2_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_multiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor1_c
+        type(c_ptr), value, intent(in) :: tensor2_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_multiply_c
+    end interface
+
+    output%p = torch_tensor_multiply_c(tensor1%p, tensor2%p)
+  end function torch_tensor_multiply
+
+  !> Overloads multiplication operator for a scalar of type int8 and a tensor.
+  function torch_tensor_premultiply_int8(scalar, tensor) result(output)
+    integer(kind=int8), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
+        implicit none
+        integer(kind=c_int8_t), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_int8
+
+  !> Overloads multiplication operator for a scalar of type int16 and a tensor.
+  function torch_tensor_premultiply_int16(scalar, tensor) result(output)
+    integer(kind=int16), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
+        implicit none
+        integer(kind=c_int16_t), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_int16
+
+  !> Overloads multiplication operator for a scalar of type int32 and a tensor.
+  function torch_tensor_premultiply_int32(scalar, tensor) result(output)
+    integer(kind=int32), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
+        implicit none
+        integer(kind=c_int32_t), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_int32
+
+  !> Overloads multiplication operator for a scalar of type int64 and a tensor.
+  function torch_tensor_premultiply_int64(scalar, tensor) result(output)
+    integer(kind=int64), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
+        implicit none
+        integer(kind=c_int64_t), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_int64
+
+  !> Overloads multiplication operator for a scalar of type real32 and a tensor.
+  function torch_tensor_premultiply_real32(scalar, tensor) result(output)
+    real(kind=real32), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
+        implicit none
+        real(kind=c_float), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_real32
+
+  !> Overloads multiplication operator for a scalar of type real64 and a tensor.
+  function torch_tensor_premultiply_real64(scalar, tensor) result(output)
+    real(kind=real64), intent(in) :: scalar
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
+          bind(c, name = 'torch_tensor_premultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
+        implicit none
+        real(kind=c_double), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_premultiply_c
+    end interface
+
+    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+  end function torch_tensor_premultiply_real64
+
+
+  !> Overloads multiplication operator for a tensor and a scalar of type int8.
+  function torch_tensor_postmultiply_int8(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int8), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=c_int8_t), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_int8
+
+  !> Overloads multiplication operator for a tensor and a scalar of type int16.
+  function torch_tensor_postmultiply_int16(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int16), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=c_int16_t), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_int16
+
+  !> Overloads multiplication operator for a tensor and a scalar of type int32.
+  function torch_tensor_postmultiply_int32(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int32), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=c_int32_t), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_int32
+
+  !> Overloads multiplication operator for a tensor and a scalar of type int64.
+  function torch_tensor_postmultiply_int64(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int64), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=c_int64_t), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_int64
+
+  !> Overloads multiplication operator for a tensor and a scalar of type real32.
+  function torch_tensor_postmultiply_real32(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real32), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        real(kind=c_float), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_real32
+
+  !> Overloads multiplication operator for a tensor and a scalar of type real64.
+  function torch_tensor_postmultiply_real64(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real64), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postmultiply')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        real(kind=c_double), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postmultiply_c
+    end interface
+
+    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+  end function torch_tensor_postmultiply_real64
+
+  !> Overloads division operator for two tensors.
+  function torch_tensor_divide(tensor1, tensor2) result(output)
+    type(torch_tensor), intent(in) :: tensor1
+    type(torch_tensor), intent(in) :: tensor2
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_divide')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor1_c
+        type(c_ptr), value, intent(in) :: tensor2_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_divide_c
+    end interface
+
+    output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
+  end function torch_tensor_divide
+
+  !> Overloads division operator for a tensor and a scalar of type int8.
+  function torch_tensor_postdivide_int8(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int8), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postdivide')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=c_int8_t), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postdivide_c
+    end interface
+
+    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
+  end function torch_tensor_postdivide_int8
+
+  !> Overloads division operator for a tensor and a scalar of type int16.
+  function torch_tensor_postdivide_int16(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int16), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postdivide')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=c_int16_t), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postdivide_c
+    end interface
+
+    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
+  end function torch_tensor_postdivide_int16
+
+  !> Overloads division operator for a tensor and a scalar of type int32.
+  function torch_tensor_postdivide_int32(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int32), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postdivide')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=c_int32_t), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postdivide_c
+    end interface
+
+    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
+  end function torch_tensor_postdivide_int32
+
+  !> Overloads division operator for a tensor and a scalar of type int64.
+  function torch_tensor_postdivide_int64(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int64), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postdivide')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(kind=c_int64_t), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postdivide_c
+    end interface
+
+    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
+  end function torch_tensor_postdivide_int64
+
+  !> Overloads division operator for a tensor and a scalar of type real32.
+  function torch_tensor_postdivide_real32(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real32), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postdivide')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        real(kind=c_float), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postdivide_c
+    end interface
+
+    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
+  end function torch_tensor_postdivide_real32
+
+  !> Overloads division operator for a tensor and a scalar of type real64.
+  function torch_tensor_postdivide_real64(tensor, scalar) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real64), intent(in) :: scalar
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
+          result(output_c) bind(c, name = 'torch_tensor_postdivide')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        real(kind=c_double), value, intent(in) :: scalar_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_postdivide_c
+    end interface
+
+    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
+  end function torch_tensor_postdivide_real64
+
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int8`
+  function torch_tensor_power_int8(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int8), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(c_int8_t), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_int8
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int16`
+  function torch_tensor_power_int16(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int16), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(c_int16_t), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_int16
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int32`
+  function torch_tensor_power_int32(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int32), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(c_int32_t), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_int32
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int64`
+  function torch_tensor_power_int64(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    integer(kind=int64), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(c_int64_t), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_int64
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `real32`
+  function torch_tensor_power_real32(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real32), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        real(c_float), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_real32
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `real64`
+  function torch_tensor_power_real64(tensor, power) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real64), intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        real(c_double), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_c
+    end interface
+
+    output%p = torch_tensor_power_c(tensor%p, power)
+  end function torch_tensor_power_real64
+
+
+  ! --- Torch Model API
+
+  !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
+  subroutine torch_model_load(model, filename, device_type, device_index, &
+                              requires_grad, is_training)
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_null_char
+    type(torch_model), intent(out)       :: model         !! Returned deserialized model
+    character(*), intent(in)             :: filename      !! Filename of saved TorchScript model
+    integer(c_int), optional, intent(in) :: device_type   !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer(c_int), optional, intent(in) :: device_index  !! device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: is_training    !! Whether gradients need to be computed for the created tensor
+    integer(c_int) :: device_type_value
+    integer(c_int) :: device_index_value
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
+    logical :: is_training_value  !! Whether the model is being trained, rather than evaluated
+
+    interface
+      function torch_jit_load_c(filename, device_type, device_index, &
+                                requires_grad, is_training) result(model) &
+          bind(c, name = 'torch_jit_load')
+        use, intrinsic :: iso_c_binding, only : c_bool, c_char, c_int, c_ptr
+        implicit none
+        character(c_char), intent(in) :: filename(*)
+        integer(c_int), value, intent(in)    :: device_type
+        integer(c_int), value, intent(in)    :: device_index
+        logical(c_bool), value, intent(in) :: requires_grad
+        logical(c_bool), value, intent(in) :: is_training
+        type(c_ptr)                   :: model
+      end function torch_jit_load_c
+    end interface
+
+    ! Process optional arguments
+    if (present(device_type)) then
+      device_type_value = device_type
+    else
+      device_type_value = torch_kCPU
+    endif
+    if (present(device_index)) then
+      device_index_value = device_index
+    else if (device_type_value == torch_kCPU) then
+      device_index_value = -1
+    else
+      device_index_value = 0
+    endif
+
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
+    else
+      requires_grad_value = requires_grad
+    end if
+
+    if (.not. present(is_training)) then
+      is_training_value = .false.
+    else
+      is_training_value = is_training
+    end if
+
+    ! Need to append c_null_char at end of filename
+    model%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char,           &
+                                device_type_value, device_index_value,         &
+                                logical(requires_grad_value, c_bool),          &
+                                logical(is_training_value, c_bool))
+  end subroutine torch_model_load
+
+  !> Performs a forward pass of the model with the input tensors
+  subroutine torch_model_forward(model, input_tensors, output_tensors, requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int, c_loc
+    type(torch_model), intent(in) :: model  !! Model
+    type(torch_tensor), intent(in), dimension(:) :: input_tensors   !! Array of Input tensors
+    type(torch_tensor), intent(in), dimension(:) :: output_tensors  !! Returned output tensors
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
+
+    integer(ftorch_int) :: i
+    integer(c_int)      :: n_inputs
+    integer(c_int)      :: n_outputs
+    type(c_ptr), dimension(size(input_tensors)), target  :: input_ptrs
+    type(c_ptr), dimension(size(output_tensors)), target  :: output_ptrs
+
+    interface
+      subroutine torch_jit_model_forward_c(model, input_tensors, n_inputs, &
+                                           output_tensors, n_outputs, requires_grad) &
+          bind(c, name = 'torch_jit_module_forward')
+        use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int
+        implicit none
+        type(c_ptr), value, intent(in) :: model
+        type(c_ptr), value, intent(in) :: input_tensors
+        integer(c_int), value, intent(in) :: n_inputs
+        type(c_ptr), value, intent(in) :: output_tensors
+        integer(c_int), value, intent(in) :: n_outputs
+        logical(c_bool), value, intent(in) :: requires_grad
+      end subroutine torch_jit_model_forward_c
+    end interface
+
+    n_inputs = size(input_tensors)
+    n_outputs = size(output_tensors)
+
+    if (.not. present(requires_grad)) then
+      requires_grad_value = .false.
+    else
+      requires_grad_value = requires_grad
+    end if
+
+    ! Assign array of pointers to the input tensors
+    do i = 1, n_inputs
+      input_ptrs(i) = input_tensors(i)%p
+    end do
+
+    ! Assign array of pointers to the output tensors
+    do i = 1, n_outputs
+      output_ptrs(i) = output_tensors(i)%p
+    end do
+
+    call torch_jit_model_forward_c(model%p, c_loc(input_ptrs), n_inputs,       &
+                                   c_loc(output_ptrs), n_outputs,              &
+                                   logical(requires_grad_value, c_bool))
+  end subroutine torch_model_forward
+
+  !> Deallocates a TorchScript model
+  subroutine torch_model_delete(model)
+    type(torch_model), intent(in) :: model  !! Torch Model to deallocate
+
+    interface
+      subroutine torch_jit_model_delete_c(model) &
+          bind(c, name = 'torch_jit_module_delete')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: model
+      end subroutine torch_jit_model_delete_c
+    end interface
+
+    call torch_jit_model_delete_c(model%p)
+  end subroutine torch_model_delete
 
 end module ftorch
