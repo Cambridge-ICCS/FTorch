@@ -55,7 +55,6 @@ module ftorch_test_utils
 
       character(len=80) :: message
 
-      real(kind=real32) :: relative_error
       real(kind=real32) :: rtol_value
       logical :: print_result_value
 
@@ -93,7 +92,6 @@ module ftorch_test_utils
 
       character(len=80) :: message
 
-      real(kind=real64) :: relative_error
       real(kind=real64) :: rtol_value
       logical :: print_result_value
 
@@ -132,7 +130,6 @@ module ftorch_test_utils
 
       character(len=80) :: message
 
-      real(kind=real32) :: relative_error
       real(kind=real32) :: rtol_value
       integer :: shape_error
       logical :: print_result_value
@@ -178,7 +175,6 @@ module ftorch_test_utils
 
       character(len=80) :: message
 
-      real(kind=real32) :: relative_error
       real(kind=real32) :: rtol_value
       integer :: shape_error
       logical :: print_result_value
@@ -224,7 +220,6 @@ module ftorch_test_utils
 
       character(len=80) :: message
 
-      real(kind=real64) :: relative_error
       real(kind=real64) :: rtol_value
       integer :: shape_error
       logical :: print_result_value
@@ -270,7 +265,6 @@ module ftorch_test_utils
 
       character(len=80) :: message
 
-      real(kind=real64) :: relative_error
       real(kind=real64) :: rtol_value
       integer :: shape_error
       logical :: print_result_value

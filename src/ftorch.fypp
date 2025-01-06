@@ -293,9 +293,12 @@ contains
       requires_grad_value = requires_grad
     end if
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     ! Process optional arguments
@@ -507,10 +510,9 @@ contains
     interface
       function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
           bind(c, name = 'torch_tensor_premultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        use, intrinsic :: iso_c_binding, only : c_ptr, ${c_prec(PREC)}$
         implicit none
-        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: scalar_c
+        ${f_type(PREC)}$(kind=${c_prec(PREC)}$), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
       end function torch_tensor_premultiply_c
@@ -531,11 +533,10 @@ contains
     interface
       function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postmultiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        use, intrinsic :: iso_c_binding, only : c_ptr, ${c_prec(PREC)}$
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: scalar_c
+        ${f_type(PREC)}$(kind=${c_prec(PREC)}$), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postmultiply_c
     end interface
@@ -574,11 +575,10 @@ contains
     interface
       function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
           result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        use, intrinsic :: iso_c_binding, only : c_ptr, ${c_prec(PREC)}$
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: scalar_c
+        ${f_type(PREC)}$(kind=${c_prec(PREC)}$), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postdivide_c
     end interface
@@ -598,11 +598,10 @@ contains
     interface
       function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
           bind(c, name = 'torch_tensor_power')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        use, intrinsic :: iso_fortran_env, only : ${PREC}$
+        use, intrinsic :: iso_c_binding, only : c_ptr, ${c_prec(PREC)}$
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        ${f_type(PREC)}$(kind=${PREC}$), value, intent(in) :: power_c
+        ${f_type(PREC)}$(${c_prec(PREC)}$), value, intent(in) :: power_c
         type(c_ptr) :: output_c
       end function torch_tensor_power_c
     end interface
@@ -790,9 +789,12 @@ contains
 
     tensor_shape = shape(data_in)
 
-    strides(layout(1)) = 1
-    do i = 2, ndims
-      strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
     end do
 
     tensor%p = torch_from_blob_c(c_loc(data_in), ndims, tensor_shape,          &
