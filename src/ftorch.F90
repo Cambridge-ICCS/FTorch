@@ -8,8 +8,10 @@
 
 module ftorch
 
-  use, intrinsic :: iso_c_binding, only: c_ptr, c_null_ptr
-  use, intrinsic :: iso_fortran_env, only: ftorch_int => int32 ! set integer size for FTorch library
+  use, intrinsic :: iso_c_binding, only: c_null_ptr, c_ptr
+
+  ! Set integer size for FTorch library
+  use, intrinsic :: iso_fortran_env, only: ftorch_int => int32
 
   implicit none
 
