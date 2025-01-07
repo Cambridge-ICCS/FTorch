@@ -277,30 +277,6 @@ torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
   return output;
 }
 
-torch_tensor_t torch_tensor_premultiply(const torch_scalar_t premultiplier,
-                                        const torch_tensor_t tensor) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  // FIXME: Don't cast to float. Now doesn't work for integers
-  auto pm = reinterpret_cast<float *const>(premultiplier);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  std::cout << "DEBUG: pre-multiplier = " << *pm << std::endl;
-  *output = *pm * *t;
-  return output;
-}
-
-torch_tensor_t torch_tensor_postmultiply(const torch_tensor_t tensor,
-                                         const torch_scalar_t postmultiplier) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  // FIXME: Don't cast to float. Now doesn't work for integers
-  auto pm = reinterpret_cast<float *const>(postmultiplier);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  std::cout << "DEBUG: post-multiplier = " << *pm << std::endl;
-  *output = *t * *pm;
-  return output;
-}
-
 torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
                                    const torch_tensor_t tensor2) {
   auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
@@ -311,26 +287,11 @@ torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
   return output;
 }
 
-torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
-                                       const torch_scalar_t divisor) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  // FIXME: Don't cast to float. Now doesn't work for integers
-  auto div = reinterpret_cast<float *const>(divisor);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  // torch::Scalar *alpha = nullptr;
-  // alpha = new torch::Scalar;
-  // *alpha = *scalar;
-  std::cout << "DEBUG: divisor = " << *div << std::endl;
-  *output = *t / *div;
-  return output;
-}
-
 torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
                                   const torch_scalar_t exponent) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  // FIXME: Don't cast to float. Now doesn't work for integers
-  auto exp = reinterpret_cast<float *const>(exponent);
+  // FIXME: Don't cast to int. Now doesn't work for floats.
+  auto exp = reinterpret_cast<int *const>(exponent);
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
   std::cout << "DEBUG: exponent = " << *exp << std::endl;
