@@ -124,9 +124,9 @@ on locating Torch within a virtual environment (venv) for CMake.
 
 ## FAQ
 
-### Why are inputs to torch models an array?
+### Why are inputs/outputs to/from torch models arrays?
 
-The reason input and output tensors to [[torch_model_forward(subroutine)]] are
+The reason input and output tensors to/from [[torch_model_forward(subroutine)]] are
 contained in arrays is because it is possible to pass multiple input tensors to
 the `forward()` method of a torch net, and it is possible for the net to return
 multiple output arrays.<br>
