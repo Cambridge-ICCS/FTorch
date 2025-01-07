@@ -37,7 +37,7 @@ will produce a report on which tests passed and which failed for your build.
 Note that some of the examples have additional dependencies, which may need
 installing into your virtual environment.
 
-> <sup>1</sup> _If you built FTorch against libtorch (rather than creating a
+> <sup>1</sup> _If you built FTorch against LibTorch (rather than creating a
 virtual environment) then either
 [create a virtual environment](https://docs.python.org/3/library/venv.html) for
 the purposes of testing, or note that this script may have your Python

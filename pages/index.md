@@ -7,5 +7,5 @@ _FTorch_.
 
 ## Useful resources
 
-* [The libtorch C++ API documentation](https://pytorch.org/cppdocs/)
+* [The LibTorch C++ API documentation](https://pytorch.org/cppdocs/)
 

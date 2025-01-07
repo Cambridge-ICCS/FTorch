@@ -37,7 +37,7 @@ the FTorch Fortran API the steps are generally as follows:
   that binds to the version in `ctorch.cpp`.
 
 Details of C++ functionalities available to be wrapped can be found
-in the [libtorch C++ API](https://pytorch.org/cppdocs/).
+in the [LibTorch C++ API](https://pytorch.org/cppdocs/).
 
 As this is an open-source project we appreciate any contributions
 back from users that have extended the functionality.
