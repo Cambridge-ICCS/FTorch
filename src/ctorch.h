@@ -174,7 +174,7 @@ EXPORT_C torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
                                               const torch_tensor_t tensor2);
 
 /**
- * Overloads the division operator for two Torch Tensors
+ * Overloads the division operator for two Torch Tensors.
  * @param first Tensor to be divided
  * @param second Tensor to be divided
  * @return quotient of the Tensors
@@ -183,7 +183,7 @@ EXPORT_C torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
                                             const torch_tensor_t tensor2);
 
 /**
- * Overloads the exponentiation operator for two Torch Tensors
+ * Overloads the exponentiation operator for a Torch Tensor and an integer exponent
  * @param Tensor to take the power of
  * @param scalar exponent
  * @return power of the Tensor

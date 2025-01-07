@@ -290,7 +290,7 @@ torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
 torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
                                   const torch_scalar_t exponent) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  // FIXME: Don't cast to int. Now doesn't work for floats.
+  // NOTE: The following cast will only work for integer exponents
   auto exp = reinterpret_cast<int *const>(exponent);
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;

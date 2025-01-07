@@ -1,6 +1,7 @@
 #:def ranksuffix(RANK)
 $:'' if RANK == 0 else '(' + ':' + ',:' * (RANK - 1) + ')'
 #:enddef ranksuffix
+#:set INT_PRECISIONS = ['int8', 'int16', 'int32', 'int64']
 #:set PRECISIONS = ['int8', 'int16', 'int32', 'int64', 'real32', 'real64']
 #:set C_PRECISIONS = ['c_int8_t', 'c_int16_t', 'c_int32_t', 'c_int64_t', 'c_float', 'c_double']
 #:set C_PRECISIONS = dict(zip(PRECISIONS, C_PRECISIONS))
@@ -172,7 +173,7 @@ module ftorch
   end interface
 
   interface operator (**)
-    #:for PREC in PRECISIONS
+    #:for PREC in INT_PRECISIONS
     module procedure torch_tensor_power_${PREC}$
     #:endfor
   end interface
@@ -746,8 +747,8 @@ contains
 
   #:endfor
 
-  #:for PREC in PRECISIONS
-  !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
+  #:for PREC in INT_PRECISIONS
+  !> Overloads exponentiation operator for a tensor and an integer of type `${PREC}$`
   function torch_tensor_power_${PREC}$(tensor, power) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
     type(torch_tensor), intent(in) :: tensor
