@@ -205,6 +205,17 @@ module ftorch
     module procedure torch_tensor_postmultiply_real64
   end interface
 
+  interface
+    function torch_tensor_multiply_c(tensor1_c, tensor2_c) result(output_c)  &
+        bind(c, name = 'torch_tensor_multiply')
+      use, intrinsic :: iso_c_binding, only : c_ptr
+      implicit none
+      type(c_ptr), value, intent(in) :: tensor1_c
+      type(c_ptr), value, intent(in) :: tensor2_c
+      type(c_ptr) :: output_c
+    end function torch_tensor_multiply_c
+  end interface
+
   interface operator (/)
     module procedure torch_tensor_divide
     module procedure torch_tensor_postdivide_int8
@@ -213,6 +224,17 @@ module ftorch
     module procedure torch_tensor_postdivide_int64
     module procedure torch_tensor_postdivide_real32
     module procedure torch_tensor_postdivide_real64
+  end interface
+
+  interface
+    function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c)  &
+        bind(c, name = 'torch_tensor_divide')
+      use, intrinsic :: iso_c_binding, only : c_ptr
+      implicit none
+      type(c_ptr), value, intent(in) :: tensor1_c
+      type(c_ptr), value, intent(in) :: tensor2_c
+      type(c_ptr) :: output_c
+    end function torch_tensor_divide_c
   end interface
 
   interface operator (**)
@@ -2415,17 +2437,6 @@ contains
     type(torch_tensor), intent(in) :: tensor2
     type(torch_tensor) :: output
 
-    interface
-      function torch_tensor_multiply_c(tensor1_c, tensor2_c) result(output_c)  &
-          bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor1_c
-        type(c_ptr), value, intent(in) :: tensor2_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_multiply_c
-    end interface
-
     output%p = torch_tensor_multiply_c(tensor1%p, tensor2%p)
   end function torch_tensor_multiply
 
@@ -2436,19 +2447,9 @@ contains
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
-        implicit none
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar pre-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_premultiply_c(wrk%p, tensor%p)
+    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int8
 
   !> Overloads multiplication operator for a scalar of type int16 and a tensor.
@@ -2458,19 +2459,9 @@ contains
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
-        implicit none
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar pre-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_premultiply_c(wrk%p, tensor%p)
+    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int16
 
   !> Overloads multiplication operator for a scalar of type int32 and a tensor.
@@ -2480,19 +2471,9 @@ contains
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
-        implicit none
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar pre-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_premultiply_c(wrk%p, tensor%p)
+    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int32
 
   !> Overloads multiplication operator for a scalar of type int64 and a tensor.
@@ -2502,19 +2483,9 @@ contains
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
-        implicit none
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar pre-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_premultiply_c(wrk%p, tensor%p)
+    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int64
 
   !> Overloads multiplication operator for a scalar of type real32 and a tensor.
@@ -2524,19 +2495,9 @@ contains
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
-        implicit none
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar pre-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_premultiply_c(wrk%p, tensor%p)
+    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_real32
 
   !> Overloads multiplication operator for a scalar of type real64 and a tensor.
@@ -2546,19 +2507,9 @@ contains
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_premultiply_c(scalar_c, tensor_c) result(output_c) &
-          bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
-        implicit none
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_premultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar pre-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_premultiply_c(wrk%p, tensor%p)
+    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_real64
 
 
@@ -2569,19 +2520,9 @@ contains
     integer(int8), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_postmultiply_c(tensor%p, wrk%p)
+    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int8
 
   !> Overloads multiplication operator for a tensor and a scalar of type int16.
@@ -2591,19 +2532,9 @@ contains
     integer(int16), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_postmultiply_c(tensor%p, wrk%p)
+    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int16
 
   !> Overloads multiplication operator for a tensor and a scalar of type int32.
@@ -2613,19 +2544,9 @@ contains
     integer(int32), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_postmultiply_c(tensor%p, wrk%p)
+    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int32
 
   !> Overloads multiplication operator for a tensor and a scalar of type int64.
@@ -2635,19 +2556,9 @@ contains
     integer(int64), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_postmultiply_c(tensor%p, wrk%p)
+    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int64
 
   !> Overloads multiplication operator for a tensor and a scalar of type real32.
@@ -2657,19 +2568,9 @@ contains
     real(real32), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_postmultiply_c(tensor%p, wrk%p)
+    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_real32
 
   !> Overloads multiplication operator for a tensor and a scalar of type real64.
@@ -2679,19 +2580,9 @@ contains
     real(real64), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postmultiply_c(tensor_c, scalar_c)                 &
-          result(output_c) bind(c, name = 'torch_tensor_multiply')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: scalar_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postmultiply_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-multiplier
     call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
-    output%p = torch_tensor_postmultiply_c(tensor%p, wrk%p)
+    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_real64
 
   !> Overloads division operator for two tensors.
@@ -2699,17 +2590,6 @@ contains
     type(torch_tensor), intent(in) :: tensor1
     type(torch_tensor), intent(in) :: tensor2
     type(torch_tensor) :: output
-
-    interface
-      function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c)  &
-          bind(c, name = 'torch_tensor_divide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor1_c
-        type(c_ptr), value, intent(in) :: tensor2_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_divide_c
-    end interface
 
     output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
   end function torch_tensor_divide
@@ -2721,19 +2601,9 @@ contains
     integer(int8), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postdivide_c(tensor_c, divisor_c) &
-          result(output_c) bind(c, name = 'torch_tensor_divide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: divisor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-divisor
     call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
-    output%p = torch_tensor_postdivide_c(tensor%p, wrk%p)
+    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int8
 
   !> Overloads division operator for a tensor and a scalar of type int16.
@@ -2743,19 +2613,9 @@ contains
     integer(int16), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postdivide_c(tensor_c, divisor_c) &
-          result(output_c) bind(c, name = 'torch_tensor_divide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: divisor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-divisor
     call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
-    output%p = torch_tensor_postdivide_c(tensor%p, wrk%p)
+    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int16
 
   !> Overloads division operator for a tensor and a scalar of type int32.
@@ -2765,19 +2625,9 @@ contains
     integer(int32), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postdivide_c(tensor_c, divisor_c) &
-          result(output_c) bind(c, name = 'torch_tensor_divide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: divisor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-divisor
     call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
-    output%p = torch_tensor_postdivide_c(tensor%p, wrk%p)
+    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int32
 
   !> Overloads division operator for a tensor and a scalar of type int64.
@@ -2787,19 +2637,9 @@ contains
     integer(int64), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postdivide_c(tensor_c, divisor_c) &
-          result(output_c) bind(c, name = 'torch_tensor_divide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: divisor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-divisor
     call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
-    output%p = torch_tensor_postdivide_c(tensor%p, wrk%p)
+    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int64
 
   !> Overloads division operator for a tensor and a scalar of type real32.
@@ -2809,19 +2649,9 @@ contains
     real(real32), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postdivide_c(tensor_c, divisor_c) &
-          result(output_c) bind(c, name = 'torch_tensor_divide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: divisor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-divisor
     call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
-    output%p = torch_tensor_postdivide_c(tensor%p, wrk%p)
+    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_real32
 
   !> Overloads division operator for a tensor and a scalar of type real64.
@@ -2831,19 +2661,9 @@ contains
     real(real64), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
 
-    interface
-      function torch_tensor_postdivide_c(tensor_c, divisor_c) &
-          result(output_c) bind(c, name = 'torch_tensor_divide')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr), value, intent(in) :: divisor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_postdivide_c
-    end interface
-
+    ! Create a tensor with a single entry, the scalar post-divisor
     call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
-    output%p = torch_tensor_postdivide_c(tensor%p, wrk%p)
+    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_real64
 
 
