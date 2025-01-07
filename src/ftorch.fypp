@@ -650,8 +650,8 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads multiplication operator for a scalar of type ${PREC}$ and a tensor.
   function torch_tensor_premultiply_${PREC}$(scalar, tensor) result(output)
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
-    ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
+    use, intrinsic :: iso_c_binding, only : c_loc
+    ${f_type(PREC)}$(${PREC}$), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: output
 
@@ -660,13 +660,13 @@ contains
           bind(c, name = 'torch_tensor_premultiply')
         use, intrinsic :: iso_c_binding, only : c_ptr, ${c_prec(PREC)}$
         implicit none
-        ${f_type(PREC)}$(kind=${c_prec(PREC)}$), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: scalar_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: output_c
       end function torch_tensor_premultiply_c
     end interface
 
-    output%p = torch_tensor_premultiply_c(scalar, tensor%p)
+    output%p = torch_tensor_premultiply_c(c_loc(scalar), tensor%p)
   end function torch_tensor_premultiply_${PREC}$
 
   #:endfor
@@ -674,9 +674,9 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads multiplication operator for a tensor and a scalar of type ${PREC}$.
   function torch_tensor_postmultiply_${PREC}$(tensor, scalar) result(output)
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
+    use, intrinsic :: iso_c_binding, only : c_loc
     type(torch_tensor), intent(in) :: tensor
-    ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
+    ${f_type(PREC)}$(${PREC}$), target, intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -685,12 +685,12 @@ contains
         use, intrinsic :: iso_c_binding, only : c_ptr, ${c_prec(PREC)}$
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        ${f_type(PREC)}$(kind=${c_prec(PREC)}$), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: scalar_c
         type(c_ptr) :: output_c
       end function torch_tensor_postmultiply_c
     end interface
 
-    output%p = torch_tensor_postmultiply_c(tensor%p, scalar)
+    output%p = torch_tensor_postmultiply_c(tensor%p, c_loc(scalar))
   end function torch_tensor_postmultiply_${PREC}$
 
   #:endfor
@@ -716,24 +716,24 @@ contains
 
   #:for PREC in PRECISIONS
   !> Overloads division operator for a tensor and a scalar of type ${PREC}$.
-  function torch_tensor_postdivide_${PREC}$(tensor, scalar) result(output)
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
+  function torch_tensor_postdivide_${PREC}$(tensor, divisor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_loc
     type(torch_tensor), intent(in) :: tensor
-    ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
+    ${f_type(PREC)}$(${PREC}$), target, intent(in) :: divisor
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_postdivide_c(tensor_c, scalar_c)                 &
+      function torch_tensor_postdivide_c(tensor_c, divisor_c) &
           result(output_c) bind(c, name = 'torch_tensor_postdivide')
-        use, intrinsic :: iso_c_binding, only : c_ptr, ${c_prec(PREC)}$
+        use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        ${f_type(PREC)}$(kind=${c_prec(PREC)}$), value, intent(in) :: scalar_c
+        type(c_ptr), value, intent(in) :: divisor_c
         type(c_ptr) :: output_c
       end function torch_tensor_postdivide_c
     end interface
 
-    output%p = torch_tensor_postdivide_c(tensor%p, scalar)
+    output%p = torch_tensor_postdivide_c(tensor%p, c_loc(divisor))
   end function torch_tensor_postdivide_${PREC}$
 
   #:endfor
@@ -741,9 +741,9 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
   function torch_tensor_power_${PREC}$(tensor, power) result(output)
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
+    use, intrinsic :: iso_c_binding, only : c_loc
     type(torch_tensor), intent(in) :: tensor
-    ${f_type(PREC)}$(${PREC}$), intent(in) :: power
+    ${f_type(PREC)}$(${PREC}$), target, intent(in) :: power
     type(torch_tensor) :: output
 
     interface
@@ -752,12 +752,12 @@ contains
         use, intrinsic :: iso_c_binding, only : c_ptr, ${c_prec(PREC)}$
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        ${f_type(PREC)}$(${c_prec(PREC)}$), value, intent(in) :: power_c
+        type(c_ptr), value, intent(in) :: power_c
         type(c_ptr) :: output_c
       end function torch_tensor_power_c
     end interface
 
-    output%p = torch_tensor_power_c(tensor%p, power)
+    output%p = torch_tensor_power_c(tensor%p, c_loc(power))
   end function torch_tensor_power_${PREC}$
 
   #:endfor

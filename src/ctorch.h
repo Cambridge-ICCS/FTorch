@@ -15,6 +15,9 @@ typedef void *torch_jit_script_module_t;
 // Opaque pointer type alias for at::Tensor
 typedef void *torch_tensor_t;
 
+// Opaque pointer type alias for at::Scalar
+typedef void *torch_scalar_t;
+
 // Data types
 typedef enum {
   torch_kUInt8,
@@ -176,7 +179,7 @@ EXPORT_C torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
  * @param Tensor to be multiplied
  * @return product of the scalar and Tensor
  */
-EXPORT_C torch_tensor_t torch_tensor_premultiply(const float scalar,
+EXPORT_C torch_tensor_t torch_tensor_premultiply(const torch_scalar_t scalar,
                                                  const torch_tensor_t tensor);
 
 /**
@@ -186,7 +189,7 @@ EXPORT_C torch_tensor_t torch_tensor_premultiply(const float scalar,
  * @return product of the Tensor and scalar
  */
 EXPORT_C torch_tensor_t torch_tensor_postmultiply(const torch_tensor_t tensor,
-                                                  const float scalar);
+                                                  const torch_scalar_t scalar);
 
 /**
  * Overloads the division operator for two Torch Tensors
@@ -204,7 +207,7 @@ EXPORT_C torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
  * @return quotient of the Tensor and scalar
  */
 EXPORT_C torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
-                                                const float scalar);
+                                                const torch_scalar_t scalar);
 
 /**
  * Overloads the exponentiation operator for two Torch Tensors
@@ -213,7 +216,7 @@ EXPORT_C torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
  * @return power of the Tensor
  */
 EXPORT_C torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
-                                           const float exponent);
+                                           const torch_scalar_t exponent);
 
 // =====================================================================================
 // Module API
