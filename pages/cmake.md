@@ -11,7 +11,7 @@ This is controlled by the `CMakeLists.txt` file in `src/`.
 To install the library requires the following to be installed on the system:
 
 - CMake >= 3.15
-- libtorch or PyTorch
+- LibTorch or PyTorch
 - Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 
 
@@ -70,8 +70,8 @@ The following CMake flags are available and can be passed as arguments through `
 > cannot locate it by default._
 > 
 > <sup>2</sup> _The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.  
->       If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
->       then this should be the absolute path to the unzipped libtorch distribution.
+>       If Torch has been [installed as LibTorch](https://pytorch.org/cppdocs/installing.html)
+>       then this should be the absolute path to the unzipped LibTorch distribution.
 >       If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
 >       e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
 > 
