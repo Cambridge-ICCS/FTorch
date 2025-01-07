@@ -176,7 +176,7 @@ EXPORT_C torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
  * @param Tensor to be multiplied
  * @return product of the scalar and Tensor
  */
-EXPORT_C torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
+EXPORT_C torch_tensor_t torch_tensor_premultiply(const float scalar,
                                                  const torch_tensor_t tensor);
 
 /**
@@ -186,7 +186,7 @@ EXPORT_C torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
  * @return product of the Tensor and scalar
  */
 EXPORT_C torch_tensor_t torch_tensor_postmultiply(const torch_tensor_t tensor,
-                                                  const torch_data_t scalar);
+                                                  const float scalar);
 
 /**
  * Overloads the division operator for two Torch Tensors
@@ -204,7 +204,7 @@ EXPORT_C torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
  * @return quotient of the Tensor and scalar
  */
 EXPORT_C torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
-                                                const torch_data_t scalar);
+                                                const float scalar);
 
 /**
  * Overloads the exponentiation operator for two Torch Tensors
@@ -213,7 +213,7 @@ EXPORT_C torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
  * @return power of the Tensor
  */
 EXPORT_C torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
-                                           const torch_data_t exponent);
+                                           const float exponent);
 
 // =====================================================================================
 // Module API

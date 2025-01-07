@@ -246,9 +246,7 @@ subroutine test_torch_tensor_scalar_multiply()
   integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
   integer, parameter :: dtype = torch_kFloat32
   integer, parameter :: device_type = torch_kCPU
-  ! real(wp), parameter :: scalar = 3.14 ! FIXME: Segfault
-  ! real(wp), parameter :: scalar = 3 ! FIXME: Segfault
-  integer, parameter :: scalar = 3
+  real(wp), parameter :: scalar = 3.14
   real(wp), dimension(2,3), target :: in_data
   real(wp), dimension(:,:), pointer :: out_data2, out_data3
   real(wp), dimension(2,3) :: expected
@@ -366,9 +364,7 @@ subroutine test_torch_tensor_scalar_divide()
   integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
   integer, parameter :: dtype = torch_kFloat32
   integer, parameter :: device_type = torch_kCPU
-  ! real(wp), parameter :: scalar = 3.14 ! FIXME: Segfault
-  ! real(wp), parameter :: scalar = 3 ! FIXME: Gives zeros
-  integer, parameter :: scalar = 3
+  real(wp), parameter :: scalar = 3.14
   real(wp), dimension(2,3), target :: in_data
   real(wp), dimension(:,:), pointer :: out_data
   real(wp), dimension(2,3) :: expected
