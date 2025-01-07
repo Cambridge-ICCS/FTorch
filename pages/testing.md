@@ -23,7 +23,7 @@ for FTorch<sup>1</sup> and simply run the
 [helper script](https://github.com/Cambridge-ICCS/FTorch/blob/main/run_test_suite.sh)
 in the root FTorch directory. Depending on the OS you are running you will need
 to use either:
-```
+
 - `./run_test_suite.sh` for Unix (Mac and Linux)
 - `run_test_suite.bat` for Windows (note this will only run the integration tests, not unit tests).
 
