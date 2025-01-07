@@ -282,6 +282,7 @@ torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
+  std::cout << "DEBUG: scalar = " << scalar << std::endl;
   *output = scalar * *t;
   return output;
 }
@@ -291,6 +292,7 @@ torch_tensor_t torch_tensor_postmultiply(const torch_tensor_t tensor,
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
+  std::cout << "DEBUG: scalar = " << scalar << std::endl;
   *output = *t * scalar;
   return output;
 }
@@ -310,6 +312,7 @@ torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
+  std::cout << "DEBUG: scalar = " << scalar << std::endl;
   *output = *t / scalar;
   return output;
 }
@@ -319,6 +322,7 @@ torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
+  std::cout << "DEBUG: exponent = " << exponent << std::endl;
   *output = pow(*t, exponent);
   return output;
 }
