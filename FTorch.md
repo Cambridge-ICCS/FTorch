@@ -45,6 +45,12 @@ Presentations
 
 The following presentations contain information about FTorch:
 
+* Coupling Machine Learning to Numerical (Climate) Models<br>
+  Platform for Advanced Scientific Computing, Zurich - June 2024<br>
+  [Slides](https://jackatkinson.net/slides/PASC24)
+* Blending Machine Learning and Numerical Simulation, with Applications to Climate Modelling<br>
+  Durham HPC days, Durham - May 2024<br>
+  [Slides](https://jackatkinson.net/slides/HPC_Durham_2024)
 * Reducing the overheads for coupling PyTorch machine learning models to Fortran<br>
   ML & DL Seminars, LSCE, IPSL, Paris - November 2023<br>
   [Slides](https://jackatkinson.net/slides/IPSL_FTorch) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)

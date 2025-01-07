@@ -12,12 +12,6 @@ For full API and user documentation please see the
 [online documentation](https://cambridge-iccs.github.io/FTorch/) which is 
 significantly more detailed than this README.
 
-**NOTE:** _We recently made breaking changes to the API as it heads towards a stable release.
-Please see the
-[online updates documentation](https://cambridge-iccs.github.io/FTorch/page/updates.html)
-for clear guidance on how to easily update your older code to run with the latest version of
-FTorch._
-
 
 ## Contents
 - [Description](#description)
@@ -59,6 +53,12 @@ call torch_model_forward(model, model_input_arr, model_output_arr)
 
 The following presentations provide an introduction and overview of _FTorch_:
 
+* Coupling Machine Learning to Numerical (Climate) Models\
+  Platform for Advanced Scientific Computing, Zurich - June 2024\
+  [Slides](https://jackatkinson.net/slides/PASC24)
+* Blending Machine Learning and Numerical Simulation, with Applications to Climate Modelling\
+  Durham HPC days, Durham - May 2024\
+  [Slides](https://jackatkinson.net/slides/HPC_Durham_2024)
 * Reducing the overheads for coupling PyTorch machine learning models to Fortran\
   ML & DL Seminars, LSCE, IPSL, Paris - November 2023\
   [Slides](https://jackatkinson.net/slides/IPSL_FTorch) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
