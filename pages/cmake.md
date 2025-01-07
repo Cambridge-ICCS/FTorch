@@ -68,6 +68,7 @@ The following CMake flags are available and can be passed as arguments through `
 
 > <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake
 > cannot locate it by default._
+> 
 > <sup>2</sup> _The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.  
 >       If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
 >       then this should be the absolute path to the unzipped libtorch distribution.
