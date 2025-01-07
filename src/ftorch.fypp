@@ -26,11 +26,12 @@ $:'integer' if PRECISION[:3] == 'int' else 'real'
 module ftorch
 
   use, intrinsic :: iso_c_binding, only: c_null_ptr, c_ptr
-
-  ! Set integer size for FTorch library
-  use, intrinsic :: iso_fortran_env, only: ftorch_int => int32
+  use, intrinsic :: iso_fortran_env, only: int32
 
   implicit none
+
+  ! Set integer size for FTorch library
+  integer, parameter :: ftorch_int = int32
 
   ! --- Derived types and enums
 
@@ -481,7 +482,7 @@ contains
   !> Determines the rank of a tensor.
   function get_rank(self) result(rank)
     class(torch_tensor), intent(in) :: self
-    integer(kind=ftorch_int) :: rank  !! rank of tensor
+    integer(kind=int32) :: rank  !! rank of tensor
 
     interface
       function torch_tensor_get_rank_c(tensor) result(rank) &
@@ -505,7 +506,7 @@ contains
 #else
     integer(kind=c_long_long), pointer :: sizes(:)  !! Pointer to tensor data
 #endif
-    integer(kind=ftorch_int) :: ndims(1)
+    integer(kind=int32) :: ndims(1)
     type(c_ptr) :: cptr
 
     interface
