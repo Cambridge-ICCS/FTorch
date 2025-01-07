@@ -20,7 +20,7 @@ install directory to the `CMAKE_PREFIX_PATH` when building FTorch.
 
 Once the build is complete, activate the Python virtual environment you created
 for FTorch<sup>1</sup> and simply run the
-[helper script](https://github.com/Cambridge-ICCS/FTorch/blob/main/run_integration_tests.sh)
+[helper script](https://github.com/Cambridge-ICCS/FTorch/blob/main/run_test_suite.sh)
 in the root FTorch directory. Depending on the OS you are running you will need
 to use either:
 ```
