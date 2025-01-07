@@ -226,6 +226,70 @@ subroutine test_torch_tensor_multiply()
 end subroutine test_torch_tensor_multiply
 
 @test
+subroutine test_torch_tensor_scalar_multiply()
+  use FUnit
+  use ftorch, only: assignment(=), operator(*), ftorch_int, torch_kCPU, torch_kFloat32, &
+                    torch_tensor, torch_tensor_delete, torch_tensor_empty, &
+                    torch_tensor_from_array, torch_tensor_to_array
+  use ftorch_test_utils, only: assert_allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
+
+  implicit none
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  type(torch_tensor) :: tensor1, tensor2, tensor3
+  integer, parameter :: ndims = 2
+  integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
+  integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+  integer, parameter :: dtype = torch_kFloat32
+  integer, parameter :: device_type = torch_kCPU
+  ! real(wp), parameter :: scalar = 3.14 ! FIXME: Segfault
+  ! real(wp), parameter :: scalar = 3 ! FIXME: Segfault
+  integer, parameter :: scalar = 3
+  real(wp), dimension(2,3), target :: in_data
+  real(wp), dimension(:,:), pointer :: out_data2, out_data3
+  real(wp), dimension(2,3) :: expected
+  logical :: test_pass
+
+  ! Create an arbitrary input array
+  in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+  ! Create a tensor based off the input array
+  call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+
+  ! Create another two empty tensors and assign them to the products of a scalar constant and the
+  ! first tensor using the overloaded multiplication operator (in each order)
+  call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
+  call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
+  tensor2 = scalar * tensor1
+  tensor3 = tensor1 * scalar
+
+  ! Extract Fortran arrays from the assigned tensors
+  call torch_tensor_to_array(tensor2, out_data2, shape(in_data))
+  call torch_tensor_to_array(tensor3, out_data3, shape(in_data))
+
+  ! Compare the data in the tensors to the input data
+  expected(:,:) = scalar * in_data
+  test_pass = assert_allclose(out_data2, expected, test_name="test_torch_tensor_premultiply")
+  @assertTrue(test_pass)
+  @assertEqual(shape(expected), shape(out_data2))
+  test_pass = assert_allclose(out_data3, expected, test_name="test_torch_tensor_postmultiply")
+  @assertTrue(test_pass)
+  @assertEqual(shape(expected), shape(out_data3))
+
+  ! Cleanup
+  nullify(out_data2)
+  nullify(out_data3)
+  call torch_tensor_delete(tensor1)
+  call torch_tensor_delete(tensor2)
+  call torch_tensor_delete(tensor3)
+
+end subroutine test_torch_tensor_scalar_multiply
+
+@test
 subroutine test_torch_tensor_divide()
   use FUnit
   use ftorch, only: assignment(=), operator(/), ftorch_int, torch_kCPU, torch_kFloat32, &
