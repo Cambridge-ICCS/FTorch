@@ -103,6 +103,11 @@ if __name__ == "__main__":
     # trained_model = trained_model.to(device)
     # trained_model.eval()
     # trained_model_dummy_input = trained_model_dummy_input.to(device)
+    
+    device = torch.device('xpu')
+    trained_model = trained_model.to(device)
+    trained_model.eval()
+    trained_model_dummy_input = trained_model_dummy_input.to(device)
 
     # FPTLIB-TODO
     # Run model for dummy inputs

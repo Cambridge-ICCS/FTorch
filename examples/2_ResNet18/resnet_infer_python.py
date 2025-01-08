@@ -50,6 +50,15 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         output_gpu = model.forward(input_tensor_gpu)
         output = output_gpu.to(torch.device("cpu"))
 
+    elif device == "xpu":
+        # All previously saved modules, no matter their device, are first
+        # loaded onto CPU, and then are moved to the devices they were saved
+        # from, so we don't need to manually transfer the model to the GPU
+        input_tensor_gpu = input_tensor.to(torch.device("xpu"))
+        model = torch.jit.load(saved_model)
+        output_gpu = model.forward(input_tensor_gpu)
+        output = output_gpu.to(torch.device("cpu"))
+
     else:
         device_error = f"Device '{device}' not recognised."
         raise ValueError(device_error)
@@ -81,8 +90,9 @@ if __name__ == "__main__":
     filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
     saved_model_file = os.path.join(filepath, "saved_resnet18_model_cpu.pt")
 
-    device_to_run = "cpu"
+    # device_to_run = "cpu"
     # device_to_run = "cuda"
+    device_to_run = "xpu"
 
     batch_size_to_run = 1
 
