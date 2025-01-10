@@ -16,7 +16,9 @@ module ftorch
   ! Set integer size for FTorch library
   integer, parameter :: ftorch_int = int32
 
+  ! ============================================================================
   ! --- Derived types and enums
+  ! ============================================================================
 
   !> Type for holding a torch neural net (nn.Module).
   type torch_model
@@ -52,7 +54,9 @@ module ftorch
     enumerator :: torch_kCUDA = 1
   end enum
 
+  ! ============================================================================
   ! --- Interfaces for core FTorch procedures
+  ! ============================================================================
 
   !> Interface for directing `torch_tensor_from_array` to possible input types and ranks
   interface torch_tensor_from_array
@@ -164,7 +168,9 @@ module ftorch
     end function torch_to_blob_c
   end interface
 
+  ! ============================================================================
   ! --- Interfaces for overloaded operators acting on tensors
+  ! ============================================================================
 
   interface assignment (=)
     module procedure torch_tensor_assign
@@ -215,7 +221,9 @@ module ftorch
 
 contains
 
+  ! ============================================================================
   ! --- Procedures for constructing tensors
+  ! ============================================================================
 
   !> Returns a tensor with uninitialised values.
   subroutine torch_tensor_empty(tensor, ndims, tensor_shape, dtype, &
@@ -1320,7 +1328,9 @@ contains
   end subroutine torch_tensor_from_array_real64_5d
 
 
+  ! ============================================================================
   ! --- Procedures for interrogating tensors
+  ! ============================================================================
 
   !> Return the array data associated with a Torch tensor of rank 1 and data type `int8`
   subroutine torch_tensor_to_array_int8_1d(tensor, data_out, sizes)
@@ -2303,7 +2313,9 @@ contains
     call c_f_pointer(cptr, sizes, ndims)
   end function get_shape
 
+  ! ============================================================================
   ! --- Procedures for deallocating tensors
+  ! ============================================================================
 
   !> Deallocates an array of tensors.
   subroutine torch_tensor_array_delete(tensor_array)
@@ -2332,7 +2344,9 @@ contains
     call torch_tensor_delete_c(tensor%p)
   end subroutine torch_tensor_delete
 
+  ! ============================================================================
   ! --- Overloaded operators acting on tensors
+  ! ============================================================================
 
   !> Overloads assignment operator for tensors.
   subroutine torch_tensor_assign(output, input)
@@ -2939,7 +2953,9 @@ contains
   end function torch_tensor_power_real64
 
 
+  ! ============================================================================
   ! --- Torch Model API
+  ! ============================================================================
 
   !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
   subroutine torch_model_load(model, filename, device_type, device_index, &
