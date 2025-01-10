@@ -25,13 +25,17 @@ $:'integer' if PRECISION[:3] == 'int' else 'real'
 
 module ftorch
 
-  use, intrinsic :: iso_c_binding, only: c_int, c_int8_t, c_int16_t, c_int32_t, c_int64_t, &
-                                         c_float, c_double, c_char, c_ptr, c_null_ptr, c_f_pointer
-  use, intrinsic :: iso_fortran_env, only: int8, int16, int32, int64, real32, real64
+  use, intrinsic :: iso_c_binding, only: c_null_ptr, c_ptr
+  use, intrinsic :: iso_fortran_env, only: int32
 
   implicit none
 
-  integer, parameter :: ftorch_int = int32  ! set integer size for FTorch library
+  ! Set integer size for FTorch library
+  integer, parameter :: ftorch_int = int32
+
+  ! ============================================================================
+  ! --- Derived types and enums
+  ! ============================================================================
 
   !> Type for holding a torch neural net (nn.Module).
   type torch_model
@@ -60,13 +64,16 @@ module ftorch
     enumerator :: torch_kFloat64 = 7
   end enum
 
-
   !| Enumerator for Torch devices
   !  From c_torch.h (torch_device_t)
   enum, bind(c)
     enumerator :: torch_kCPU = 0
     enumerator :: torch_kCUDA = 1
   end enum
+
+  ! ============================================================================
+  ! --- Interfaces for core FTorch procedures
+  ! ============================================================================
 
   !> Interface for directing `torch_tensor_from_array` to possible input types and ranks
   interface torch_tensor_from_array
@@ -115,6 +122,23 @@ module ftorch
     end function torch_from_blob_c
   end interface
 
+  interface
+    function torch_to_blob_c(tensor, dtype) result(data) &
+        bind(c, name = 'torch_to_blob')
+      use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+
+      implicit none
+
+      type(c_ptr), value, intent(in)    :: tensor
+      integer(c_int), value, intent(in) :: dtype
+      type(c_ptr)                       :: data
+    end function torch_to_blob_c
+  end interface
+
+  ! ============================================================================
+  ! --- Interfaces for overloaded operators acting on tensors
+  ! ============================================================================
+
   interface assignment (=)
     module procedure torch_tensor_assign
   end interface
@@ -148,20 +172,11 @@ module ftorch
     #:endfor
   end interface
 
-  interface
-    function torch_to_blob_c(tensor, dtype) result(data) &
-        bind(c, name = 'torch_to_blob')
-      use, intrinsic :: iso_c_binding, only : c_int, c_ptr
-
-      implicit none
-
-      type(c_ptr), value, intent(in)    :: tensor
-      integer(c_int), value, intent(in) :: dtype
-      type(c_ptr)                       :: data
-    end function torch_to_blob_c
-  end interface
-
 contains
+
+  ! ============================================================================
+  ! --- Procedures for constructing tensors
+  ! ============================================================================
 
   !> Returns a tensor with uninitialised values.
   subroutine torch_tensor_empty(tensor, ndims, tensor_shape, dtype, &
@@ -172,7 +187,7 @@ contains
     integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), optional, intent(in) :: device_index     !! device index to use for `torch_kCUDA` case
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
     integer(c_int)                  :: device_index_value  !! device index used
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -223,7 +238,7 @@ contains
     integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
     integer(c_int)                  :: device_index_value   !! device index used
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
@@ -274,8 +289,8 @@ contains
     integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype        !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), optional, intent(in) :: device_index     !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad   !! Whether gradients need to be computed for the created tensor
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
     integer(c_int)                  :: device_index_value    !! device index used
     logical(c_bool)                 :: requires_grad_value   !! Whether gradients need to be computed for the created tensor
 
@@ -316,7 +331,6 @@ contains
                             device_index_value, requires_grad_value)
   end subroutine torch_tensor_ones
 
-  ! Torch Tensor API
   !| Exposes the given data as a tensor without taking ownership of the original data.
   !  This routine will take an (i, j, k) array and return an (k, j, i) tensor.
   subroutine torch_tensor_from_blob(tensor, data, ndims, tensor_shape, layout, dtype, &
@@ -330,7 +344,7 @@ contains
     integer(c_int), intent(in)      :: layout(*)  !! Layout for strides for accessing data
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), optional, intent(in) :: device_index    !! device index to use for `torch_kCUDA` case
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     integer(c_int)                  :: i                    !! loop index
@@ -365,6 +379,80 @@ contains
                                  device_type, device_index_value,              &
                                  requires_grad_value)
   end subroutine torch_tensor_from_blob
+
+  #:for PREC in PRECISIONS
+  #:for RANK in RANKS
+  !> Return a Torch tensor pointing to data_in array of rank ${RANK}$ containing data of type `${PREC}$`
+  subroutine torch_tensor_from_array_${PREC}$_${RANK}$d(tensor, data_in, layout, &
+                                                        device_type, device_index, requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in), target :: data_in${ranksuffix(RANK)}$  !! Input data that tensor will point at
+    integer(ftorch_int), intent(in) :: layout(${RANK}$)  !! Control order of indices
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(c_int64_t)        :: tensor_shape(${RANK}$)            !! Shape of the tensor
+    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
+    integer(c_int64_t)        :: strides(${RANK}$)                 !! Strides for accessing data
+    integer(c_int), parameter :: ndims = ${RANK}$                  !! Number of dimension of input data
+
+    tensor_shape = shape(data_in)
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
+                                layout, dtype, device_type, device_index, &
+                                requires_grad)
+
+  end subroutine torch_tensor_from_array_${PREC}$_${RANK}$d
+
+  #:endfor
+  #:endfor
+
+  ! ============================================================================
+  ! --- Procedures for interrogating tensors
+  ! ============================================================================
+
+  #:for PREC in PRECISIONS
+  #:for RANK in RANKS
+  !> Return the array data associated with a Torch tensor of rank ${RANK}$ and data type `${PREC}$`
+  subroutine torch_tensor_to_array_${PREC}$_${RANK}$d(tensor, data_out, sizes)
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$, int64
+    type(torch_tensor), intent(in) :: tensor  !! Returned tensor
+    ${f_type(PREC)}$(kind=${PREC}$), pointer, intent(out) :: data_out${ranksuffix(RANK)}$  !! Pointer to tensor data
+    integer, optional, intent(in) :: sizes(${RANK}$)  !! Number of entries for each rank
+    integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
+
+    ! Local data
+    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
+    type(c_ptr) :: cptr
+
+    my_shape = tensor%get_shape()
+
+    if (present(sizes)) then
+      if (.not. all(my_shape == sizes)) then
+        write(*,*) 'Error :: sizes argument does not match shape of tensor'
+        write(*,'(A, ${RANK}$(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
+        write(*,'(A, ${RANK}$(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
+        stop 1
+      end if
+    end if
+
+    ! Have the data_out array point to the Tensor data
+    cptr = torch_to_blob_c(tensor%p, dtype)
+    call c_f_pointer(cptr, data_out, my_shape)
+
+  end subroutine torch_tensor_to_array_${PREC}$_${RANK}$d
+
+  #:endfor
+  #:endfor
 
   !> Prints the contents of a tensor.
   subroutine torch_tensor_print(tensor)
@@ -421,7 +509,7 @@ contains
 
   !> Determines the shape of a tensor.
   function get_shape(self) result(sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_long, c_long_long, c_ptr
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_long, c_long_long, c_ptr
     class(torch_tensor), intent(in) :: self
 #ifdef UNIX
     integer(kind=c_long), pointer :: sizes(:)  !! Pointer to tensor data
@@ -445,6 +533,10 @@ contains
     cptr = torch_tensor_get_sizes_c(self%p)
     call c_f_pointer(cptr, sizes, ndims)
   end function get_shape
+
+  ! ============================================================================
+  ! --- Procedures for deallocating tensors
+  ! ============================================================================
 
   !> Deallocates an array of tensors.
   subroutine torch_tensor_array_delete(tensor_array)
@@ -472,6 +564,10 @@ contains
 
     call torch_tensor_delete_c(tensor%p)
   end subroutine torch_tensor_delete
+
+  ! ============================================================================
+  ! --- Overloaded operators acting on tensors
+  ! ============================================================================
 
   !> Overloads assignment operator for tensors.
   subroutine torch_tensor_assign(output, input)
@@ -554,7 +650,8 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads multiplication operator for a scalar of type ${PREC}$ and a tensor.
   function torch_tensor_premultiply_${PREC}$(scalar, tensor) result(output)
-    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: scalar
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
+    ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: output
 
@@ -577,8 +674,9 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads multiplication operator for a tensor and a scalar of type ${PREC}$.
   function torch_tensor_postmultiply_${PREC}$(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
-    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: scalar
+    ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -619,8 +717,9 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads division operator for a tensor and a scalar of type ${PREC}$.
   function torch_tensor_postdivide_${PREC}$(tensor, scalar) result(output)
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
-    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: scalar
+    ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
     type(torch_tensor) :: output
 
     interface
@@ -642,8 +741,9 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
   function torch_tensor_power_${PREC}$(tensor, power) result(output)
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
-    ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: power
+    ${f_type(PREC)}$(${PREC}$), intent(in) :: power
     type(torch_tensor) :: output
 
     interface
@@ -662,7 +762,10 @@ contains
 
   #:endfor
 
-  ! Torch Model API
+  ! ============================================================================
+  ! --- Torch Model API
+  ! ============================================================================
+
   !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
   subroutine torch_model_load(model, filename, device_type, device_index, &
                               requires_grad, is_training)
@@ -795,75 +898,5 @@ contains
 
     call torch_jit_model_delete_c(model%p)
   end subroutine torch_model_delete
-
-  #:for PREC in PRECISIONS
-  #:for RANK in RANKS
-  !> Return a Torch tensor pointing to data_in array of rank ${RANK}$ containing data of type `${PREC}$`
-  subroutine torch_tensor_from_array_${PREC}$_${RANK}$d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_float, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    ${f_type(PREC)}$(kind=${PREC}$), intent(in), target :: data_in${ranksuffix(RANK)}$  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in)      :: layout(${RANK}$)  !! Control order of indices
-    integer(c_int), intent(in)           :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
-    integer(c_int), optional, intent(in) :: device_index   !! device index to use for `torch_kCUDA` case
-    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: tensor_shape(${RANK}$)            !! Shape of the tensor
-    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
-    integer(c_int64_t)        :: strides(${RANK}$)                 !! Strides for accessing data
-    integer(c_int), parameter :: ndims = ${RANK}$                  !! Number of dimension of input data
-
-    tensor_shape = shape(data_in)
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                layout, dtype, device_type, device_index, &
-                                requires_grad)
-
-  end subroutine torch_tensor_from_array_${PREC}$_${RANK}$d
-
-  #:endfor
-  #:endfor
-
-  #:for PREC in PRECISIONS
-  #:for RANK in RANKS
-  !> Return the array data associated with a Torch tensor of rank ${RANK}$ and data type `${PREC}$`
-  subroutine torch_tensor_to_array_${PREC}$_${RANK}$d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$, int64
-    type(torch_tensor), intent(in) :: tensor  !! Returned tensor
-    ${f_type(PREC)}$(kind=${PREC}$), pointer, intent(out) :: data_out${ranksuffix(RANK)}$  !! Pointer to tensor data
-    integer, optional, intent(in) :: sizes(${RANK}$)  !! Number of entries for each rank
-    integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
-
-    ! Local data
-    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
-    type(c_ptr) :: cptr
-
-    my_shape = tensor%get_shape()
-
-    if (present(sizes)) then
-      if (.not. all(my_shape == sizes)) then
-        write(*,*) 'Error :: sizes argument does not match shape of tensor'
-        write(*,'(A, ${RANK}$(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
-        write(*,'(A, ${RANK}$(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
-        stop 1
-      end if
-    end if
-
-    ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, dtype)
-    call c_f_pointer(cptr, data_out, my_shape)
-
-  end subroutine torch_tensor_to_array_${PREC}$_${RANK}$d
-
-  #:endfor
-  #:endfor
 
 end module ftorch
