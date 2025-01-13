@@ -1,11 +1,13 @@
 """Load a PyTorch model and convert it to TorchScript."""
 
+import os
+import sys
 from typing import Optional
 
 # FPTLIB-TODO
 # Add a module import with your model here:
 # This example assumes the model architecture is in an adjacent module `my_ml_model.py`
-import simplenet
+import multigpu
 import torch
 
 
@@ -79,7 +81,7 @@ if __name__ == "__main__":
     # Insert code here to load your model as `trained_model`.
     # This example assumes my_ml_model has a method `initialize` to load
     # architecture, weights, and place in inference mode
-    trained_model = simplenet.SimpleNet()
+    trained_model = multigpu.MultiGPUNet()
 
     # Switch off specific layers/parts of the model that behave
     # differently during training and inference.
@@ -115,7 +117,7 @@ if __name__ == "__main__":
 
     # FPTLIB-TODO
     # Set the name of the file you want to save the torchscript model to:
-    saved_ts_filename = "saved_simplenet_model_cuda.pt"
+    saved_ts_filename = "saved_multigpu_model_cuda.pt"
     # A filepath may also be provided. To do this, pass the filepath as an argument to
     # this script when it is run from the command line, i.e. `./pt2ts.py path/to/model`.
 
