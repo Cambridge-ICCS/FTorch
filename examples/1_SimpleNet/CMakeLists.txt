@@ -29,7 +29,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(NAME simplenet COMMAND ${Python_EXECUTABLE}
                                   ${PROJECT_SOURCE_DIR}/simplenet.py)
 
-  # 1. Check the model is saved to file in the expected location with the
+  # 2. Check the model is saved to file in the expected location with the
   #   pt2ts.py script
   add_test(
     NAME pt2ts
@@ -38,7 +38,7 @@ if(CMAKE_BUILD_TESTS)
                                   # the model
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-  # 1. Check the model can be loaded from file and run in Python and that its
+  # 3. Check the model can be loaded from file and run in Python and that its
   #   outputs meet expectations
   add_test(
     NAME simplenet_infer_python
@@ -47,7 +47,7 @@ if(CMAKE_BUILD_TESTS)
                                   # model
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-  # 1. Check the model can be loaded from file and run in Fortran and that its
+  # 4. Check the model can be loaded from file and run in Fortran and that its
   #   outputs meet expectations
   add_test(
     NAME simplenet_infer_fortran
