@@ -52,11 +52,6 @@ module ftorch
     procedure :: get_shape
   end type torch_tensor
 
-  !> Type for holding a Torch scalar.
-  type torch_scalar
-    type(c_ptr) :: p = c_null_ptr  !! pointer to the scalar in memory
-  end type torch_scalar
-
   !| Enumerator for Torch data types
   !  From c_torch.h (torch_data_t)
   !  Note that 0 `torch_kUInt8` and 5 `torch_kFloat16` are not sypported in Fortran
@@ -669,6 +664,7 @@ contains
   !> Overloads multiplication operator for a scalar of type ${PREC}$ and a tensor.
   function torch_tensor_premultiply_${PREC}$(scalar, tensor) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
     ${f_type(PREC)}$(${PREC}$), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
@@ -684,6 +680,7 @@ contains
   !> Overloads multiplication operator for a tensor and a scalar of type ${PREC}$.
   function torch_tensor_postmultiply_${PREC}$(tensor, scalar) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
@@ -707,6 +704,7 @@ contains
   !> Overloads division operator for a tensor and a scalar of type ${PREC}$.
   function torch_tensor_postdivide_${PREC}$(tensor, divisor) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(${PREC}$), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
@@ -722,6 +720,7 @@ contains
   !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
   function torch_tensor_power_${PREC}$(tensor, power) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(${PREC}$), target, intent(in) :: power
     type(torch_tensor) :: output
@@ -746,6 +745,7 @@ contains
   !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
   function torch_tensor_power_${PREC}$(tensor, power) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(kind=${PREC}$), target, intent(in) :: power
     type(torch_tensor) :: output
