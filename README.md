@@ -96,7 +96,8 @@ FTorch's test suite has some additional dependencies.
   [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit).
 * FTorch's test suite requires that [PyTorch](https://pytorch.org/) has been
   installed, as opposed to LibTorch. We recommend installing `torchvision` in
-  the same command (e.g., `pip install torch torchvision`)<sup>*</sup>.
+  the same command (e.g., `pip install torch torchvision`)<sup>*</sup>. Doing so
+  ensures that `torch` and `torchvision` are configured in the same way.
 * Other Python modules are installed automatically by the `run_test_suite.sh`
   test script (or `run_test_suite.bat` on Windows).
 
