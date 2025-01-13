@@ -15,8 +15,11 @@ typedef void *torch_jit_script_module_t;
 // Opaque pointer type alias for at::Tensor
 typedef void *torch_tensor_t;
 
-// Opaque pointer type alias for at::Scalar
-typedef void *torch_scalar_t;
+// Opaque pointer type alias for integer scalars
+typedef void *torch_int_t;
+
+// Opaque pointer type alias for float scalars
+typedef void *torch_float_t;
 
 // Data types
 typedef enum {
@@ -185,11 +188,21 @@ EXPORT_C torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
 /**
  * Overloads the exponentiation operator for a Torch Tensor and an integer exponent
  * @param Tensor to take the power of
- * @param scalar exponent
+ * @param integer exponent
  * @return power of the Tensor
  */
-EXPORT_C torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
-                                           const torch_scalar_t exponent);
+EXPORT_C torch_tensor_t torch_tensor_power_int(const torch_tensor_t tensor,
+                                               const torch_int_t exponent);
+
+/**
+ * Overloads the exponentiation operator for a Torch Tensor and a floating point
+ * exponent
+ * @param Tensor to take the power of
+ * @param floating point exponent
+ * @return power of the Tensor
+ */
+EXPORT_C torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
+                                                 const torch_float_t exponent);
 
 // =====================================================================================
 // Module API

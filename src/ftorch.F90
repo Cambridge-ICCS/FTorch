@@ -242,6 +242,8 @@ module ftorch
     module procedure torch_tensor_power_int16
     module procedure torch_tensor_power_int32
     module procedure torch_tensor_power_int64
+    module procedure torch_tensor_power_real32
+    module procedure torch_tensor_power_real64
   end interface
 
 contains
@@ -2667,7 +2669,7 @@ contains
   end function torch_tensor_postdivide_real64
 
 
-  !> Overloads exponentiation operator for a tensor and an integer of type `int8`
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int8`
   function torch_tensor_power_int8(tensor, power) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
     type(torch_tensor), intent(in) :: tensor
@@ -2675,20 +2677,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
+      function torch_tensor_power_int_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power_int')
         use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
         type(c_ptr) :: output_c
-      end function torch_tensor_power_c
+      end function torch_tensor_power_int_c
     end interface
 
-    output%p = torch_tensor_power_c(tensor%p, c_loc(power))
+    output%p = torch_tensor_power_int_c(tensor%p, c_loc(power))
   end function torch_tensor_power_int8
 
-  !> Overloads exponentiation operator for a tensor and an integer of type `int16`
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int16`
   function torch_tensor_power_int16(tensor, power) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
     type(torch_tensor), intent(in) :: tensor
@@ -2696,20 +2698,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
+      function torch_tensor_power_int_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power_int')
         use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
         type(c_ptr) :: output_c
-      end function torch_tensor_power_c
+      end function torch_tensor_power_int_c
     end interface
 
-    output%p = torch_tensor_power_c(tensor%p, c_loc(power))
+    output%p = torch_tensor_power_int_c(tensor%p, c_loc(power))
   end function torch_tensor_power_int16
 
-  !> Overloads exponentiation operator for a tensor and an integer of type `int32`
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int32`
   function torch_tensor_power_int32(tensor, power) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
     type(torch_tensor), intent(in) :: tensor
@@ -2717,20 +2719,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
+      function torch_tensor_power_int_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power_int')
         use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
         type(c_ptr) :: output_c
-      end function torch_tensor_power_c
+      end function torch_tensor_power_int_c
     end interface
 
-    output%p = torch_tensor_power_c(tensor%p, c_loc(power))
+    output%p = torch_tensor_power_int_c(tensor%p, c_loc(power))
   end function torch_tensor_power_int32
 
-  !> Overloads exponentiation operator for a tensor and an integer of type `int64`
+  !> Overloads exponentiation operator for a tensor and a scalar of type `int64`
   function torch_tensor_power_int64(tensor, power) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
     type(torch_tensor), intent(in) :: tensor
@@ -2738,18 +2740,61 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
+      function torch_tensor_power_int_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power_int')
         use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
         type(c_ptr) :: output_c
-      end function torch_tensor_power_c
+      end function torch_tensor_power_int_c
     end interface
 
-    output%p = torch_tensor_power_c(tensor%p, c_loc(power))
+    output%p = torch_tensor_power_int_c(tensor%p, c_loc(power))
   end function torch_tensor_power_int64
+
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `real32`
+  function torch_tensor_power_real32(tensor, power) result(output)
+    use, intrinsic :: iso_c_binding, only : c_loc
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real32), target, intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_float_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power_float')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_float_c
+    end interface
+
+    output%p = torch_tensor_power_float_c(tensor%p, c_loc(power))
+  end function torch_tensor_power_real32
+
+  !> Overloads exponentiation operator for a tensor and a scalar of type `real64`
+  function torch_tensor_power_real64(tensor, power) result(output)
+    use, intrinsic :: iso_c_binding, only : c_loc
+    type(torch_tensor), intent(in) :: tensor
+    real(kind=real64), target, intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_float_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power_float')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_float_c
+    end interface
+
+    output%p = torch_tensor_power_float_c(tensor%p, c_loc(power))
+  end function torch_tensor_power_real64
 
 
   ! ============================================================================

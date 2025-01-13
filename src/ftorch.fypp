@@ -2,7 +2,8 @@
 $:'' if RANK == 0 else '(' + ':' + ',:' * (RANK - 1) + ')'
 #:enddef ranksuffix
 #:set INT_PRECISIONS = ['int8', 'int16', 'int32', 'int64']
-#:set PRECISIONS = ['int8', 'int16', 'int32', 'int64', 'real32', 'real64']
+#:set FLOAT_PRECISIONS = ['real32', 'real64']
+#:set PRECISIONS = INT_PRECISIONS + FLOAT_PRECISIONS
 #:set C_PRECISIONS = ['c_int8_t', 'c_int16_t', 'c_int32_t', 'c_int64_t', 'c_float', 'c_double']
 #:set C_PRECISIONS = dict(zip(PRECISIONS, C_PRECISIONS))
 #:set ENUMS = dict(zip(PRECISIONS, ['torch_kInt8', 'torch_kInt16', 'torch_kInt32', 'torch_kInt64', 'torch_kFloat32', 'torch_kFloat64']))
@@ -195,7 +196,7 @@ module ftorch
   end interface
 
   interface operator (**)
-    #:for PREC in INT_PRECISIONS
+    #:for PREC in PRECISIONS
     module procedure torch_tensor_power_${PREC}$
     #:endfor
   end interface
@@ -718,7 +719,7 @@ contains
   #:endfor
 
   #:for PREC in INT_PRECISIONS
-  !> Overloads exponentiation operator for a tensor and an integer of type `${PREC}$`
+  !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
   function torch_tensor_power_${PREC}$(tensor, power) result(output)
     use, intrinsic :: iso_c_binding, only : c_loc
     type(torch_tensor), intent(in) :: tensor
@@ -726,17 +727,41 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_c(tensor_c, power_c) result(output_c)        &
-          bind(c, name = 'torch_tensor_power')
+      function torch_tensor_power_int_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power_int')
         use, intrinsic :: iso_c_binding, only : c_ptr, ${c_prec(PREC)}$
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
         type(c_ptr) :: output_c
-      end function torch_tensor_power_c
+      end function torch_tensor_power_int_c
     end interface
 
-    output%p = torch_tensor_power_c(tensor%p, c_loc(power))
+    output%p = torch_tensor_power_int_c(tensor%p, c_loc(power))
+  end function torch_tensor_power_${PREC}$
+
+  #:endfor
+
+  #:for PREC in FLOAT_PRECISIONS
+  !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
+  function torch_tensor_power_${PREC}$(tensor, power) result(output)
+    use, intrinsic :: iso_c_binding, only : c_loc
+    type(torch_tensor), intent(in) :: tensor
+    ${f_type(PREC)}$(kind=${PREC}$), target, intent(in) :: power
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_power_float_c(tensor_c, power_c) result(output_c)        &
+          bind(c, name = 'torch_tensor_power_float')
+        use, intrinsic :: iso_c_binding, only : c_ptr, ${c_prec(PREC)}$
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr), value, intent(in) :: power_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_power_float_c
+    end interface
+
+    output%p = torch_tensor_power_float_c(tensor%p, c_loc(power))
   end function torch_tensor_power_${PREC}$
 
   #:endfor
