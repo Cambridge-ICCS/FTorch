@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="88.0% of total for modules and submodules.">2053 statements</a>
+                 title="87.4% of total for modules and submodules.">1933 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -152,7 +152,9 @@
             <a class="list-group-item" href="../module/ftorch.html#interface-operator%20%28SLASH%29">operator (/)</a>
             <a class="list-group-item" href="../module/ftorch.html#interface-torch_delete">torch_delete</a>
             <a class="list-group-item" href="../module/ftorch.html#interface-torch_from_blob_c">torch_from_blob_c</a>
+            <a class="list-group-item" href="../module/ftorch.html#interface-torch_tensor_divide_c">torch_tensor_divide_c</a>
             <a class="list-group-item" href="../module/ftorch.html#interface-torch_tensor_from_array">torch_tensor_from_array</a>
+            <a class="list-group-item" href="../module/ftorch.html#interface-torch_tensor_multiply_c">torch_tensor_multiply_c</a>
             <a class="list-group-item" href="../module/ftorch.html#interface-torch_tensor_to_array">torch_tensor_to_array</a>
             <a class="list-group-item" href="../module/ftorch.html#interface-torch_to_blob_c">torch_to_blob_c</a>
         </div>
@@ -604,9 +606,9 @@ parameter
               <span class="anchor" id="variable-scalar"></span>
               integer(kind=int8),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -722,9 +724,9 @@ parameter
               <span class="anchor" id="variable-scalar~2"></span>
               integer(kind=int16),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -840,9 +842,9 @@ parameter
               <span class="anchor" id="variable-scalar~3"></span>
               integer(kind=int32),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -958,9 +960,9 @@ parameter
               <span class="anchor" id="variable-scalar~4"></span>
               integer(kind=int64),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -1076,9 +1078,9 @@ parameter
               <span class="anchor" id="variable-scalar~5"></span>
               real(kind=real32),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -1194,9 +1196,9 @@ parameter
               <span class="anchor" id="variable-scalar~6"></span>
               real(kind=real64),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -1337,9 +1339,9 @@ parameter
               <span class="anchor" id="variable-power"></span>
               integer(kind=int8),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -1396,9 +1398,9 @@ parameter
               <span class="anchor" id="variable-power~2"></span>
               integer(kind=int16),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -1455,9 +1457,9 @@ parameter
               <span class="anchor" id="variable-power~3"></span>
               integer(kind=int32),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -1514,9 +1516,9 @@ parameter
               <span class="anchor" id="variable-power~4"></span>
               integer(kind=int64),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -1573,9 +1575,9 @@ parameter
               <span class="anchor" id="variable-power~5"></span>
               real(kind=real32),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -1632,9 +1634,9 @@ parameter
               <span class="anchor" id="variable-power~6"></span>
               real(kind=real64),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -1861,7 +1863,7 @@ parameter
           </li>
           <li class="list-group-item">
                 <h3>
-    public  function <a href='../proc/torch_tensor_postdivide_int8.html'>torch_tensor_postdivide_int8</a>(tensor, scalar) result(output)  
+    public  function <a href='../proc/torch_tensor_postdivide_int8.html'>torch_tensor_postdivide_int8</a>(tensor, divisor) result(output)  
 
     </h3>
     
@@ -1895,7 +1897,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~13"></span>
+              <span class="anchor" id="variable-divisor"></span>
               integer(kind=int8),
             </td>
 <td>intent(in)</td>
@@ -1903,7 +1905,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -1920,7 +1922,7 @@ parameter
           </li>
           <li class="list-group-item">
                 <h3>
-    public  function <a href='../proc/torch_tensor_postdivide_int16.html'>torch_tensor_postdivide_int16</a>(tensor, scalar) result(output)  
+    public  function <a href='../proc/torch_tensor_postdivide_int16.html'>torch_tensor_postdivide_int16</a>(tensor, divisor) result(output)  
 
     </h3>
     
@@ -1954,7 +1956,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~14"></span>
+              <span class="anchor" id="variable-divisor~2"></span>
               integer(kind=int16),
             </td>
 <td>intent(in)</td>
@@ -1962,7 +1964,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -1979,7 +1981,7 @@ parameter
           </li>
           <li class="list-group-item">
                 <h3>
-    public  function <a href='../proc/torch_tensor_postdivide_int32.html'>torch_tensor_postdivide_int32</a>(tensor, scalar) result(output)  
+    public  function <a href='../proc/torch_tensor_postdivide_int32.html'>torch_tensor_postdivide_int32</a>(tensor, divisor) result(output)  
 
     </h3>
     
@@ -2013,7 +2015,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~15"></span>
+              <span class="anchor" id="variable-divisor~3"></span>
               integer(kind=int32),
             </td>
 <td>intent(in)</td>
@@ -2021,7 +2023,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -2038,7 +2040,7 @@ parameter
           </li>
           <li class="list-group-item">
                 <h3>
-    public  function <a href='../proc/torch_tensor_postdivide_int64.html'>torch_tensor_postdivide_int64</a>(tensor, scalar) result(output)  
+    public  function <a href='../proc/torch_tensor_postdivide_int64.html'>torch_tensor_postdivide_int64</a>(tensor, divisor) result(output)  
 
     </h3>
     
@@ -2072,7 +2074,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~16"></span>
+              <span class="anchor" id="variable-divisor~4"></span>
               integer(kind=int64),
             </td>
 <td>intent(in)</td>
@@ -2080,7 +2082,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -2097,7 +2099,7 @@ parameter
           </li>
           <li class="list-group-item">
                 <h3>
-    public  function <a href='../proc/torch_tensor_postdivide_real32.html'>torch_tensor_postdivide_real32</a>(tensor, scalar) result(output)  
+    public  function <a href='../proc/torch_tensor_postdivide_real32.html'>torch_tensor_postdivide_real32</a>(tensor, divisor) result(output)  
 
     </h3>
     
@@ -2131,7 +2133,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~17"></span>
+              <span class="anchor" id="variable-divisor~5"></span>
               real(kind=real32),
             </td>
 <td>intent(in)</td>
@@ -2139,7 +2141,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -2156,7 +2158,7 @@ parameter
           </li>
           <li class="list-group-item">
                 <h3>
-    public  function <a href='../proc/torch_tensor_postdivide_real64.html'>torch_tensor_postdivide_real64</a>(tensor, scalar) result(output)  
+    public  function <a href='../proc/torch_tensor_postdivide_real64.html'>torch_tensor_postdivide_real64</a>(tensor, divisor) result(output)  
 
     </h3>
     
@@ -2190,7 +2192,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~18"></span>
+              <span class="anchor" id="variable-divisor~6"></span>
               real(kind=real64),
             </td>
 <td>intent(in)</td>
@@ -2198,7 +2200,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -2487,6 +2489,74 @@ parameter
             </td>
             <td>::</td>
             <td><strong>requires_grad</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(c_ptr)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-torch_tensor_divide_c"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    public  function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c) bind(c, name = 'torch_tensor_divide')  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor1_c~2"></span>
+              type(c_ptr),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>tensor1_c</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor2_c~2"></span>
+              type(c_ptr),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>tensor2_c</strong></td>
             <td>
                 
             </td>
@@ -5939,6 +6009,74 @@ parameter
 
               <div class="card">
     <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-torch_tensor_multiply_c"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    public  function torch_tensor_multiply_c(tensor1_c, tensor2_c) result(output_c) bind(c, name = 'torch_tensor_multiply')  
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor1_c"></span>
+              type(c_ptr),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>tensor1_c</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor2_c"></span>
+              type(c_ptr),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>tensor2_c</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(c_ptr)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
       <span class="anchor" id="interface-torch_tensor_to_array"></span>
       <h3>public        interface <a href='../interface/torch_tensor_to_array.html'>torch_tensor_to_array</a> 
       </h3>
@@ -8528,7 +8666,7 @@ parameter
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_int16"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_int16.html'>torch_tensor_postdivide_int16</a>(tensor, scalar) result(output)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_int16"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_int16.html'>torch_tensor_postdivide_int16</a>(tensor, divisor) result(output)  
 </h3></div>
     <div class="card-body">
           
@@ -8562,7 +8700,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~14"></span>
+              <span class="anchor" id="variable-divisor~2"></span>
               integer(kind=int16),
             </td>
 <td>intent(in)</td>
@@ -8570,7 +8708,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -8588,7 +8726,7 @@ parameter
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_int32"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_int32.html'>torch_tensor_postdivide_int32</a>(tensor, scalar) result(output)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_int32"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_int32.html'>torch_tensor_postdivide_int32</a>(tensor, divisor) result(output)  
 </h3></div>
     <div class="card-body">
           
@@ -8622,7 +8760,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~15"></span>
+              <span class="anchor" id="variable-divisor~3"></span>
               integer(kind=int32),
             </td>
 <td>intent(in)</td>
@@ -8630,7 +8768,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -8648,7 +8786,7 @@ parameter
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_int64"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_int64.html'>torch_tensor_postdivide_int64</a>(tensor, scalar) result(output)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_int64"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_int64.html'>torch_tensor_postdivide_int64</a>(tensor, divisor) result(output)  
 </h3></div>
     <div class="card-body">
           
@@ -8682,7 +8820,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~16"></span>
+              <span class="anchor" id="variable-divisor~4"></span>
               integer(kind=int64),
             </td>
 <td>intent(in)</td>
@@ -8690,7 +8828,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -8708,7 +8846,7 @@ parameter
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_int8"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_int8.html'>torch_tensor_postdivide_int8</a>(tensor, scalar) result(output)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_int8"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_int8.html'>torch_tensor_postdivide_int8</a>(tensor, divisor) result(output)  
 </h3></div>
     <div class="card-body">
           
@@ -8742,7 +8880,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~13"></span>
+              <span class="anchor" id="variable-divisor"></span>
               integer(kind=int8),
             </td>
 <td>intent(in)</td>
@@ -8750,7 +8888,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -8768,7 +8906,7 @@ parameter
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_real32"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_real32.html'>torch_tensor_postdivide_real32</a>(tensor, scalar) result(output)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_real32"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_real32.html'>torch_tensor_postdivide_real32</a>(tensor, divisor) result(output)  
 </h3></div>
     <div class="card-body">
           
@@ -8802,7 +8940,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~17"></span>
+              <span class="anchor" id="variable-divisor~5"></span>
               real(kind=real32),
             </td>
 <td>intent(in)</td>
@@ -8810,7 +8948,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -8828,7 +8966,7 @@ parameter
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_real64"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_real64.html'>torch_tensor_postdivide_real64</a>(tensor, scalar) result(output)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_postdivide_real64"></span> <h3>public  function <a href='../proc/torch_tensor_postdivide_real64.html'>torch_tensor_postdivide_real64</a>(tensor, divisor) result(output)  
 </h3></div>
     <div class="card-body">
           
@@ -8862,7 +9000,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-scalar~18"></span>
+              <span class="anchor" id="variable-divisor~6"></span>
               real(kind=real64),
             </td>
 <td>intent(in)</td>
@@ -8870,7 +9008,7 @@ parameter
               
             </td>
             <td>::</td>
-            <td><strong>scalar</strong></td>
+            <td><strong>divisor</strong></td>
             <td>
 
             </td>
@@ -9285,9 +9423,9 @@ parameter
               <span class="anchor" id="variable-power~2"></span>
               integer(kind=int16),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -9345,9 +9483,9 @@ parameter
               <span class="anchor" id="variable-power~3"></span>
               integer(kind=int32),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -9405,9 +9543,9 @@ parameter
               <span class="anchor" id="variable-power~4"></span>
               integer(kind=int64),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -9465,9 +9603,9 @@ parameter
               <span class="anchor" id="variable-power"></span>
               integer(kind=int8),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -9525,9 +9663,9 @@ parameter
               <span class="anchor" id="variable-power~5"></span>
               real(kind=real32),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -9585,9 +9723,9 @@ parameter
               <span class="anchor" id="variable-power~6"></span>
               real(kind=real64),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>power</strong></td>
@@ -9630,9 +9768,9 @@ parameter
               <span class="anchor" id="variable-scalar~2"></span>
               integer(kind=int16),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -9690,9 +9828,9 @@ parameter
               <span class="anchor" id="variable-scalar~3"></span>
               integer(kind=int32),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -9750,9 +9888,9 @@ parameter
               <span class="anchor" id="variable-scalar~4"></span>
               integer(kind=int64),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -9810,9 +9948,9 @@ parameter
               <span class="anchor" id="variable-scalar"></span>
               integer(kind=int8),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -9870,9 +10008,9 @@ parameter
               <span class="anchor" id="variable-scalar~5"></span>
               real(kind=real32),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
@@ -9930,9 +10068,9 @@ parameter
               <span class="anchor" id="variable-scalar~6"></span>
               real(kind=real64),
             </td>
-<td>intent(in)</td>
+<td>intent(in),</td>
               <td></td>            <td>
-              
+              target
             </td>
             <td>::</td>
             <td><strong>scalar</strong></td>
