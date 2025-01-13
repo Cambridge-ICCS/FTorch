@@ -42,7 +42,7 @@ class SimpleNet(nn.Module):
 
 
 if __name__ == "__main__":
-    model = SimpleNet()
+    model = SimpleNet().to(torch.device("cuda"))
     model.eval()
 
     input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0])
@@ -50,4 +50,5 @@ if __name__ == "__main__":
 
     print(f"SimpleNet forward pass on CUDA device {input_tensor_gpu.get_device()}")
     with torch.no_grad():
-        print(model(input_tensor_gpu))
+        output = model(input_tensor_gpu)
+    print(output)
