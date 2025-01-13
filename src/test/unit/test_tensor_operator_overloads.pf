@@ -457,3 +457,56 @@ subroutine test_torch_tensor_square()
   call torch_tensor_delete(tensor3)
 
 end subroutine test_torch_tensor_square
+
+@test
+subroutine test_torch_tensor_sqrt()
+  use FUnit
+  use ftorch, only: assignment(=), operator(**), ftorch_int, torch_kCPU, torch_kFloat32, &
+                    torch_tensor, torch_tensor_delete, torch_tensor_empty, &
+                    torch_tensor_from_array, torch_tensor_to_array
+  use ftorch_test_utils, only: assert_allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
+
+  implicit none
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  type(torch_tensor) :: tensor1, tensor2
+  integer, parameter :: ndims = 2
+  integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
+  integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+  integer, parameter :: dtype = torch_kFloat32
+  integer, parameter :: device_type = torch_kCPU
+  real(wp), dimension(2,3), target :: in_data
+  real(wp), dimension(:,:), pointer :: out_data
+  real(wp), dimension(2,3) :: expected
+  logical :: test_pass
+
+  ! Create an arbitrary input array
+  in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+  ! Create a tensor based off the input array
+  call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+
+  ! Create another empty tensors and assign it to the first tensor to the power of 0.5 using the
+  ! overloaded exponentiation operator
+  call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
+  tensor2 = tensor1 ** 0.5
+
+  ! Extract Fortran arrays from the assigned tensors
+  call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+
+  ! Compare the data in the tensors to the input data
+  expected(:,:) = in_data ** 0.5
+  test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")
+  @assertTrue(test_pass)
+  @assertEqual(shape(expected), shape(out_data))
+
+  ! Cleanup
+  nullify(out_data)
+  call torch_tensor_delete(tensor1)
+  call torch_tensor_delete(tensor2)
+
+end subroutine test_torch_tensor_sqrt
