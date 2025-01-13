@@ -125,7 +125,7 @@
 <p>To install the library requires the following to be installed on the system:</p>
 <ul>
 <li>CMake &gt;= 3.15</li>
-<li>libtorch or PyTorch</li>
+<li>LibTorch or PyTorch</li>
 <li>Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers</li>
 </ul>
 <h2 id="basic-instructions">Basic instructions</h2>
@@ -171,17 +171,17 @@ The following CMake flags are available and can be passed as arguments through <
 <tbody>
 <tr>
 <td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html"><code>CMAKE_Fortran_COMPILER</code></a></td>
-<td><code>ifort</code> / <code>gfortran</code></td>
+<td><code>gfortran</code> / <code>ifx</code> / <code>ifort</code></td>
 <td>Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup>1</sup></td>
 </tr>
 <tr>
 <td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html"><code>CMAKE_C_COMPILER</code></a></td>
-<td><code>icc</code> / <code>gcc</code></td>
+<td><code>gcc</code> / <code>icx</code> / <code>icc</code></td>
 <td>Specify a C compiler to build the library with.<sup>1</sup></td>
 </tr>
 <tr>
 <td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html"><code>CMAKE_CXX_COMPILER</code></a></td>
-<td><code>icpc</code> / <code>g++</code></td>
+<td><code>g++</code> / <code>icx</code> / <code>icpc</code></td>
 <td>Specify a C++ compiler to build the library with.<sup>1</sup></td>
 </tr>
 <tr>
@@ -213,10 +213,10 @@ The following CMake flags are available and can be passed as arguments through <
 </table>
 <blockquote>
 <p><sup>1</sup> <em>On Windows this may need to be the full path to the compiler if CMake
-cannot locate it by default.</em>
-<sup>2</sup> <em>The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.<br>
-      If Torch has been <a href="https://pytorch.org/cppdocs/installing.html">installed as libtorch</a>
-      then this should be the absolute path to the unzipped libtorch distribution.
+cannot locate it by default.</em></p>
+<p><sup>2</sup> <em>The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.<br>
+      If Torch has been <a href="https://pytorch.org/cppdocs/installing.html">installed as LibTorch</a>
+      then this should be the absolute path to the unzipped LibTorch distribution.
       If Torch has been installed as PyTorch in a Python <a href="https://docs.python.org/3/library/venv.html">venv (virtual environment)</a>,
       e.g. with <code>pip install torch</code>, then this should be <code>&lt;/path/to/venv/&gt;lib/python&lt;3.xx&gt;/site-packages/torch/</code>.</em></p>
 <p><sup>3</sup> <em>This is often overridden by PyTorch. When installing with pip, the <code>index-url</code> flag can be used to ensure a CPU or GPU only version is installed, e.g.

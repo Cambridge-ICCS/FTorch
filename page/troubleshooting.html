@@ -117,7 +117,7 @@
 </li>
 <li><a href="#apple-silicon">Apple Silicon</a></li>
 <li><a href="#faq">FAQ</a><ul>
-<li><a href="#why-are-inputs-to-torch-models-an-array">Why are inputs to torch models an array?</a></li>
+<li><a href="#why-are-inputsoutputs-tofrom-torch-models-arrays">Why are inputs/outputs to/from torch models arrays?</a></li>
 <li><a href="#do-i-need-to-set-torchno_grad-or-torcheval-somewhere-like-in-pytorch">Do I need to set torch.no_grad() or torch.eval() somewhere like in PyTorch?</a></li>
 <li><a href="#how-do-i-compile-an-int64-version-of-ftorch-for-large-tensors">How do I compile an int64 version of ftorch for large tensors?</a></li>
 </ul>
@@ -217,19 +217,19 @@ information, as this provides another example of how to build and run FTorch and
 
 <h3 id="mingw">MinGW</h3>
 <p>It may be tempting to build on Windows using MinGW.
-However, <a href="https://github.com/pytorch/pytorch/issues/15099">libtorch does not currently support MinGW</a>.
+However, <a href="https://github.com/pytorch/pytorch/issues/15099">LibTorch does not currently support MinGW</a>.
 Instead please build using Visual Studio and the intel Fortran compiler (ifort) as
 detailed in the project README.</p>
 <h2 id="apple-silicon">Apple Silicon</h2>
-<p>At the time of writing, libtorch is currently only officially available for x86
+<p>At the time of writing, LibTorch is currently only officially available for x86
 architectures (according to <a href="https://pytorch.org/">pytorch.org</a>).
 However, the version of PyTorch provided by pip install provides an ARM binary
-for libtorch which works on Apple Silicon.
+for LibTorch which works on Apple Silicon.
 Therefore you should <code>pip install torch</code> in this situation and follow the guidance
 on locating Torch within a virtual environment (venv) for CMake.</p>
 <h2 id="faq">FAQ</h2>
-<h3 id="why-are-inputs-to-torch-models-an-array">Why are inputs to torch models an array?</h3>
-<p>The reason input and output tensors to <a href="../proc/torch_model_forward.html">torch_model_forward</a> are
+<h3 id="why-are-inputsoutputs-tofrom-torch-models-arrays">Why are inputs/outputs to/from torch models arrays?</h3>
+<p>The reason input and output tensors to/from <a href="../proc/torch_model_forward.html">torch_model_forward</a> are
 contained in arrays is because it is possible to pass multiple input tensors to
 the <code>forward()</code> method of a torch net, and it is possible for the net to return
 multiple output arrays.<br>

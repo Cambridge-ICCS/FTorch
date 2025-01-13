@@ -195,7 +195,7 @@ advise handling this using the <code>torch_tensor_from_array</code> function des
 <h4 id="1-transpose-before-passing">1) Transpose before passing</h4>
 <p>As seen from the above example, writing out from Fortran and reading directly in to
 Torch results in us recieving the transpose.</p>
-<p>Therefore we could transpose out Fortran data immediately before passing it to Torch.
+<p>Therefore we could transpose our Fortran data immediately before passing it to Torch.
 As a result we will read in to Torch indexed the same as in Fortran pre-transposition.</p>
 <p>For arrays of dimension 2 this can be done using the intrinsic
 <a href="https://gcc.gnu.org/onlinedocs/gcc-12.1.0/gfortran/TRANSPOSE.html"><code>transpose()</code></a>

@@ -129,12 +129,13 @@ install directory to the <code>CMAKE_PREFIX_PATH</code> when building FTorch.</p
 <h3 id="running">Running</h3>
 <p>Once the build is complete, activate the Python virtual environment you created
 for FTorch<sup>1</sup> and simply run the
-<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/run_integration_tests.sh">helper script</a>
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/run_test_suite.sh">helper script</a>
 in the root FTorch directory. Depending on the OS you are running you will need
-to use either:
-<code>``
--</code>./run_test_suite.sh<code>for Unix (Mac and Linux)
--</code>run_test_suite.bat` for Windows (note this will only run the integration tests, not unit tests).</p>
+to use either:</p>
+<ul>
+<li><code>./run_test_suite.sh</code> for Unix (Mac and Linux)</li>
+<li><code>run_test_suite.bat</code> for Windows (note this will only run the integration tests, not unit tests).</li>
+</ul>
 <p>This will automatically install any additional Python dependencies for the
 examples.</p>
 <p>Alternatively, individual tests may be run by going to <code>${BUILD_DIR}/test/unit</code>
@@ -144,7 +145,7 @@ will produce a report on which tests passed and which failed for your build.
 Note that some of the examples have additional dependencies, which may need
 installing into your virtual environment.</p>
 <blockquote>
-<p><sup>1</sup> <em>If you built FTorch against libtorch (rather than creating a
+<p><sup>1</sup> <em>If you built FTorch against LibTorch (rather than creating a
 virtual environment) then either
 <a href="https://docs.python.org/3/library/venv.html">create a virtual environment</a> for
 the purposes of testing, or note that this script may have your Python
