@@ -22,7 +22,7 @@ check_language(CUDA)
 if(CMAKE_CUDA_COMPILER)
   enable_language(CUDA)
 else()
-  message(WARNING "No CUDA support")
+  message(ERROR "No CUDA support")
 endif()
 
 # Fortran example
