@@ -61,7 +61,7 @@ if (CMAKE_BUILD_TESTS)
   add_test(
     NAME multigpu_infer_fortran
     COMMAND
-      multigpu_infer_fortran ${PROJECT_BINARY_DIR}/saved_multigpu_model_cpu.pt
+      multigpu_infer_fortran ${PROJECT_BINARY_DIR}/saved_multigpu_model_cuda.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
