@@ -88,6 +88,22 @@ To install the library requires the following to be installed on the system:
 
 <sup>*</sup> _The minimal example provided downloads the CPU-only Linux Nightly binary. [Alternative versions](https://pytorch.org/get-started/locally/) may be required._
 
+#### Additional dependencies of the test suite
+
+FTorch's test suite has some additional dependencies.
+
+* You will also need to install the unit testing framework
+  [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit).
+* FTorch's test suite requires that [PyTorch](https://pytorch.org/) has been
+  installed, as opposed to LibTorch. We recommend installing `torchvision` in
+  the same command (e.g., `pip install torch torchvision`)<sup>*</sup>. Doing so
+  ensures that `torch` and `torchvision` are configured in the same way.
+* Other Python modules are installed automatically by the `run_test_suite.sh`
+  test script (or `run_test_suite.bat` on Windows).
+
+
+<sup>*</sup> _For more details, see [here](https://pytorch.org/get-started/locally/)._
+
 #### Windows Support
 
 If building in a Windows environment then you can either use
