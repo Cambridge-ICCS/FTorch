@@ -3,9 +3,11 @@
 import torch
 try:
     from mpi4py import MPI
+
     rank = MPI.COMM_WORLD.rank
 except ModuleNotFoundError:
     from warnings import warn
+
     warn("Running with rank 0 under the assumption that MPI is not being used.")
     rank = 0
 
