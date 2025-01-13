@@ -294,7 +294,6 @@ torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
   auto exp = reinterpret_cast<int *const>(exponent);
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
-  std::cout << "DEBUG: exponent = " << *exp << std::endl;
   *output = pow(*t, *exp);
   return output;
 }
