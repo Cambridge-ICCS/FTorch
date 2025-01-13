@@ -277,24 +277,6 @@ torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
   return output;
 }
 
-torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
-                                        const torch_tensor_t tensor) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = scalar * *t;
-  return output;
-}
-
-torch_tensor_t torch_tensor_postmultiply(const torch_tensor_t tensor,
-                                         const torch_data_t scalar) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = *t * scalar;
-  return output;
-}
-
 torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
                                    const torch_tensor_t tensor2) {
   auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
@@ -305,21 +287,25 @@ torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
   return output;
 }
 
-torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
-                                       const torch_data_t scalar) {
+torch_tensor_t torch_tensor_power_int(const torch_tensor_t tensor,
+                                      const torch_int_t exponent) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  // NOTE: The following cast will only work for integer exponents
+  auto exp = reinterpret_cast<int *const>(exponent);
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
-  *output = *t / scalar;
+  *output = pow(*t, *exp);
   return output;
 }
 
-torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
-                                  const torch_data_t exponent) {
+torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
+                                        const torch_float_t exponent) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  // NOTE: The following cast will only work for floating point exponents
+  auto exp = reinterpret_cast<float *const>(exponent);
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
-  *output = pow(*t, exponent);
+  *output = pow(*t, *exp);
   return output;
 }
 
