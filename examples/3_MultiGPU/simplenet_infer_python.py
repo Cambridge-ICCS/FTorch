@@ -60,4 +60,4 @@ if __name__ == "__main__":
     with torch.no_grad():
         result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
-    print(f"{rank}: {result}")
+    print(f"Output on device {device_to_run}: {result}")
