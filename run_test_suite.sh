@@ -66,7 +66,11 @@ ctest "${CTEST_ARGS}"
 cd -
 
 # Run integration tests
-EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
+if [ -e "${BUILD_DIR}/test/examples/3_MultiGPU" ]; then
+  EXAMPLES="1_SimpleNet 2_ResNet18 3_MultiGPU 4_MultiIO 6_Autograd"
+else
+  EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
+fi
 for EXAMPLE in ${EXAMPLES}; do
   pip -q install -r examples/"${EXAMPLE}"/requirements.txt
   cd "${BUILD_DIR}"/test/examples/"${EXAMPLE}"
