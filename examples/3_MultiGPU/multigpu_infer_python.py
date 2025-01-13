@@ -1,7 +1,13 @@
-"""Load saved SimpleNet to TorchScript and run inference example."""
+"""Load saved MultiGPUNet to TorchScript and run inference example."""
 
 import torch
-from mpi4py import MPI
+try:
+    from mpi4py import MPI
+    rank = MPI.COMM_WORLD.rank
+except ModuleNotFoundError:
+    from warnings import warn
+    warn("Running with rank 0 under the assumption that MPI is not being used.")
+    rank = 0
 
 
 def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
@@ -25,7 +31,7 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     input_tensor = torch.tensor([0.0, 1.0, 2.0, 3.0, 4.0]).repeat(batch_size, 1)
 
     # Add the rank (device index) to each tensor to make them differ
-    input_tensor += MPI.COMM_WORLD.rank
+    input_tensor += rank
 
     if device == "cpu":
         # Load saved TorchScript model
@@ -50,9 +56,8 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 
 
 if __name__ == "__main__":
-    saved_model_file = "saved_simplenet_model_cuda.pt"
+    saved_model_file = "saved_multigpu_model_cuda.pt"
 
-    rank = MPI.COMM_WORLD.rank
     device_to_run = f"cuda:{rank}"
 
     batch_size_to_run = 1
