@@ -23,6 +23,11 @@ This directory contains a number of examples of how to use the library:
       This example demonstrates how to structure code in these cases, separating reading
       in of a net from the call to the forward pass.
 
+6. Autograd
+    - **This example is currently under development.** Eventually, it will
+      demonstrate automatic differentation in FTorch by leveraging PyTorch's
+      Autograd module.
+
 To run select examples as integration tests, use the CMake argument
 ```
 -DCMAKE_BUILD_TESTS=TRUE
