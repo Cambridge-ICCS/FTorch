@@ -70,10 +70,17 @@ program example
   ! Back-propagation
   ! TODO: Requires API extension
 
-  nullify(out_data)
-  call torch_tensor_delete(a)
-  call torch_tensor_delete(b)
-  call torch_tensor_delete(Q)
+  call clean_up()
   write (*,*) "Autograd example ran successfully"
+
+  contains
+
+    ! Subroutine for freeing memory and nullifying pointers used in the example
+    subroutine clean_up()
+      nullify(out_data)
+      call torch_tensor_delete(a)
+      call torch_tensor_delete(b)
+      call torch_tensor_delete(Q)
+    end subroutine clean_up
 
 end program example
