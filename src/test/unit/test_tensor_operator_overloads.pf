@@ -6,19 +6,23 @@
 !    file for details.
 module test_tensor_operator_overloads
   use funit
+  use ftorch, only: assignment(=), ftorch_int, torch_kCPU, torch_kFloat32, torch_tensor, &
+                    torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
+                    torch_tensor_to_array
+  use ftorch_test_utils, only: assert_allclose
+  use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
   implicit none
 
   public
 
+  integer, parameter :: device_type = torch_kCPU
+
+contains
+
   @test
   subroutine test_torch_tensor_assign()
-    use ftorch, only: assignment(=), ftorch_int, torch_kCPU, torch_kFloat32, torch_tensor, &
-                      torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
-                      torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
     implicit none
 
@@ -30,7 +34,6 @@ module test_tensor_operator_overloads
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
@@ -81,12 +84,8 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_add()
-    use ftorch, only: assignment(=), operator(+), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_delete, torch_tensor_empty, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: operator(+)
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
     implicit none
 
@@ -98,7 +97,6 @@ module test_tensor_operator_overloads
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
@@ -160,12 +158,8 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_subtract()
-    use ftorch, only: assignment(=), operator(-), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_delete, torch_tensor_empty, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: operator(-)
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
     implicit none
 
@@ -177,7 +171,6 @@ module test_tensor_operator_overloads
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
@@ -241,12 +234,8 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_multiply()
-    use ftorch, only: assignment(=), operator(*), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_delete, torch_tensor_empty, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: operator(*)
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
     implicit none
 
@@ -258,7 +247,6 @@ module test_tensor_operator_overloads
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
@@ -322,12 +310,8 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_scalar_multiply()
-    use ftorch, only: assignment(=), operator(*), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_delete, torch_tensor_empty, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: operator(*)
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
     implicit none
 
@@ -339,7 +323,6 @@ module test_tensor_operator_overloads
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data2, out_data3
@@ -415,12 +398,8 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_divide()
-    use ftorch, only: assignment(=), operator(/), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_delete, torch_tensor_empty, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: operator(/)
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
     implicit none
 
@@ -432,7 +411,6 @@ module test_tensor_operator_overloads
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
@@ -494,12 +472,8 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_scalar_divide()
-    use ftorch, only: assignment(=), operator(/), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_delete, torch_tensor_empty, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: operator(/)
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
     implicit none
 
@@ -511,7 +485,6 @@ module test_tensor_operator_overloads
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
@@ -565,12 +538,8 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_square()
-    use ftorch, only: assignment(=), operator(**), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_delete, torch_tensor_empty, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: operator(**)
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
     implicit none
 
@@ -582,7 +551,6 @@ module test_tensor_operator_overloads
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data2, out_data3
     real(wp), dimension(2,3) :: expected
@@ -658,10 +626,7 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_sqrt()
-    use ftorch, only: assignment(=), operator(**), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_delete, torch_tensor_empty, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: operator(**)
     use, intrinsic :: iso_fortran_env, only: sp => real32
     use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
@@ -675,7 +640,6 @@ module test_tensor_operator_overloads
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected

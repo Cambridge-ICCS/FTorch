@@ -6,17 +6,23 @@
 !    file for details.
 module test_tensor_constructors
   use funit
+  use ftorch, only: ftorch_int, torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, &
+                    torch_tensor_to_array
+  use ftorch_test_utils, only: assert_allclose
+  use iso_c_binding, only: c_associated, c_int64_t
 
   implicit none
 
   public
 
+  integer, parameter :: device_type = torch_kCPU
+  integer, parameter :: device_index = -1
+
+contains
+
   @test
   subroutine test_torch_tensor_empty()
-    use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, &
-                      torch_tensor_empty
-    use ftorch_test_utils, only: assert_allclose
-    use iso_c_binding, only: c_associated, c_int64_t
+    use ftorch, only: torch_tensor_empty
 
     implicit none
 
@@ -24,8 +30,6 @@ module test_tensor_constructors
     integer, parameter :: ndims = 2
     integer(c_int64_t), dimension(2) :: tensor_shape
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
-    integer, parameter :: device_index = -1
     logical, parameter :: requires_grad = .false.
 
     tensor_shape = [2, 3]
@@ -47,11 +51,8 @@ module test_tensor_constructors
 
   @test
   subroutine test_torch_tensor_zeros()
-    use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, &
-                      torch_tensor_to_array, torch_tensor_zeros
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: torch_tensor_zeros
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use iso_c_binding, only: c_associated, c_int64_t
 
     implicit none
 
@@ -62,8 +63,6 @@ module test_tensor_constructors
     integer, parameter :: ndims = 2
     integer(c_int64_t), dimension(2) :: tensor_shape
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
-    integer, parameter :: device_index = -1
     logical, parameter :: requires_grad = .false.
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
@@ -107,11 +106,8 @@ module test_tensor_constructors
 
   @test
   subroutine test_torch_tensor_ones()
-    use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, &
-                      torch_tensor_ones, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: torch_tensor_ones
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use iso_c_binding, only: c_associated, c_int64_t
 
     implicit none
 
@@ -122,8 +118,6 @@ module test_tensor_constructors
     integer, parameter :: ndims = 2
     integer(c_int64_t), dimension(2) :: tensor_shape
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
-    integer, parameter :: device_index = -1
     logical, parameter :: requires_grad = .false.
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
@@ -167,11 +161,8 @@ module test_tensor_constructors
 
   @test
   subroutine test_torch_from_array_1d()
-    use ftorch, only: ftorch_int, torch_kCPU, torch_tensor, torch_tensor_delete, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: torch_tensor_from_array
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated
 
     implicit none
 
@@ -181,8 +172,6 @@ module test_tensor_constructors
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1]
-    integer, parameter :: device_type = torch_kCPU
-    integer, parameter :: device_index = -1
     logical, parameter :: requires_grad = .false.
     real(wp), dimension(6), target :: in_data
     real(wp), dimension(:), pointer :: out_data
@@ -228,11 +217,8 @@ module test_tensor_constructors
 
   @test
   subroutine test_torch_from_array_2d()
-    use ftorch, only: ftorch_int, torch_kCPU, torch_tensor, torch_tensor_delete, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: torch_tensor_from_array
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated
 
     implicit none
 
@@ -242,8 +228,6 @@ module test_tensor_constructors
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1]
-    integer, parameter :: device_type = torch_kCPU
-    integer, parameter :: device_index = -1
     logical, parameter :: requires_grad = .false.
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
@@ -289,11 +273,8 @@ module test_tensor_constructors
 
   @test
   subroutine test_torch_from_array_3d()
-    use ftorch, only: ftorch_int, torch_kCPU, torch_tensor, torch_tensor_delete, &
-                      torch_tensor_from_array, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: torch_tensor_from_array
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated
 
     implicit none
 
@@ -303,8 +284,6 @@ module test_tensor_constructors
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1, 1]
-    integer, parameter :: device_type = torch_kCPU
-    integer, parameter :: device_index = -1
     real(wp), dimension(1,2,3), target :: in_data
     real(wp), dimension(:,:,:), pointer :: out_data
     real(wp), dimension(1,2,3) :: expected
@@ -348,12 +327,9 @@ module test_tensor_constructors
 
   @test
   subroutine test_torch_from_blob()
-    use ftorch, only: torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_delete, &
-                      torch_tensor_from_blob, torch_tensor_to_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: torch_tensor_from_blob
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_bool, c_int, c_int64_t, c_loc, &
-                                            c_null_ptr, c_ptr
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_loc, c_null_ptr, c_ptr
 
     implicit none
 
@@ -365,8 +341,6 @@ module test_tensor_constructors
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
     integer, parameter :: layout(ndims) = [1, 1]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
-    integer, parameter :: device_index = -1
     logical, parameter :: requires_grad = .false.
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
