@@ -1,6 +1,6 @@
 !| Unit tests for FTorch's overloaded operators involving tensors.
 !
-!  * License  
+!  * License
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
