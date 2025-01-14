@@ -83,7 +83,6 @@ contains
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -98,8 +97,7 @@ contains
 
     ! Check input array is unchanged by the assignment
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_assign", rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_assign")) then
       call clean_up()
       print *, "Error :: input array was changed during assignment"
       stop 999
@@ -108,8 +106,7 @@ contains
     ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the input
     ! array
     call torch_tensor_to_array(tensor2, out_data, shape(in_data))
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_assign")
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_assign")) then
       call clean_up()
       print *, "Error :: incorrect output from overloaded assignment operator"
       stop 999
@@ -147,7 +144,6 @@ contains
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Create two arbitrary input arrays
     in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -164,15 +160,13 @@ contains
 
     ! Check input arrays are unchanged by the addition
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data1, expected, test_name="test_torch_tensor_add", rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data1, expected, test_name="test_torch_tensor_add")) then
       call clean_up()
       print *, "Error :: first input array was changed during addition"
       stop 999
     end if
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
-    test_pass = assert_allclose(in_data2, expected, test_name="test_torch_tensor_add", rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data2, expected, test_name="test_torch_tensor_add")) then
       call clean_up()
       print *, "Error :: second input array was changed during addition"
       stop 999
@@ -182,8 +176,7 @@ contains
     ! of the input arrays
     call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
     expected(:,:) = in_data1 + in_data2
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_add")
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_add")) then
       call clean_up()
       print *, "Error :: incorrect output from overloaded addition operator"
       stop 999
@@ -222,7 +215,6 @@ contains
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Create two arbitrary input arrays
     in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -239,17 +231,13 @@ contains
 
     ! Check input arrays are unchanged by the subtraction
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data1, expected, test_name="test_torch_tensor_subtract", &
-                                rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data1, expected, test_name="test_torch_tensor_subtract")) then
       call clean_up()
       print *, "Error :: first input array was changed during subtraction"
       stop 999
     end if
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
-    test_pass = assert_allclose(in_data2, expected, test_name="test_torch_tensor_subtract", &
-                                rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data2, expected, test_name="test_torch_tensor_subtract")) then
       call clean_up()
       print *, "Error :: second input array was changed during subtraction"
       stop 999
@@ -259,8 +247,7 @@ contains
     ! difference of the input arrays
     call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
     expected(:,:) = in_data1 - in_data2
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract")
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract")) then
       call clean_up()
       print *, "Error :: incorrect output from overloaded subtraction operator"
       stop 999
@@ -299,7 +286,6 @@ contains
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Create two arbitrary input arrays
     in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -316,17 +302,13 @@ contains
 
     ! Check input arrays are unchanged by the multiplication
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data1, expected, test_name="test_torch_tensor_multiply", &
-                                rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data1, expected, test_name="test_torch_tensor_multiply")) then
       call clean_up()
       print *, "Error :: first input array was changed during multiplication"
       stop 999
     end if
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
-    test_pass = assert_allclose(in_data2, expected, test_name="test_torch_tensor_multiply", &
-                                rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data2, expected, test_name="test_torch_tensor_multiply")) then
       call clean_up()
       print *, "Error :: second input array was changed during multiplication"
       stop 999
@@ -336,8 +318,7 @@ contains
     ! product of the input arrays
     call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
     expected(:,:) = in_data1 * in_data2
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_multiply")
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_multiply")) then
       call clean_up()
       print *, "Error :: incorrect output from overloaded multiplication operator"
       stop 999
@@ -396,8 +377,7 @@ contains
 
     ! Check input array is unchanged by scalar multiplication
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_scalar_multiply", &
-                                rtol=1e-5)
+    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_scalar_multiply")
     if (.not. test_pass) then
       call clean_up()
       print *, "Error :: input array was changed during scalar multiplication"
@@ -447,7 +427,6 @@ contains
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Create two arbitrary input arrays
     in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -464,15 +443,13 @@ contains
 
     ! Check input arrays are unchanged by the division
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data1, expected, test_name="test_torch_tensor_divide", rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data1, expected, test_name="test_torch_tensor_divide")) then
       call clean_up()
       print *, "Error :: first input array was changed during division"
       stop 999
     end if
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
-    test_pass = assert_allclose(in_data2, expected, test_name="test_torch_tensor_divide", rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data2, expected, test_name="test_torch_tensor_divide")) then
       call clean_up()
       print *, "Error :: second input array was changed during division"
       stop 999
@@ -482,8 +459,7 @@ contains
     ! quotient of the input arrays
     call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
     expected(:,:) = in_data1 / in_data2
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_divide")
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_divide")) then
       call clean_up()
       print *, "Error :: incorrect output from overloaded division operator"
       stop 999
@@ -538,8 +514,7 @@ contains
 
     ! Check input array is unchanged by post-division
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_postdivide", &
-                                rtol=1e-5)
+    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_scalar_divide")
     if (.not. test_pass) then
       call clean_up()
       print *, "Error :: input array was changed during scalar division"
@@ -550,7 +525,7 @@ contains
     ! scaled input array
     call torch_tensor_to_array(tensor2, out_data, shape(in_data))
     expected(:,:) = in_data / scalar
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_postdivide")
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide")
     if (.not. test_pass) then
       call clean_up()
       print *, "Error :: incorrect output from overloaded scalar division operator"
@@ -589,7 +564,6 @@ contains
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -609,11 +583,9 @@ contains
 
     ! Check input array is unchanged by pre-multiplication
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_square_int", &
-                                rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_square")) then
       call clean_up()
-      print *, "Error :: input array was changed during integer exponentation"
+      print *, "Error :: input array was changed during exponentation (square)"
       stop 999
     end if
 
@@ -621,8 +593,7 @@ contains
     ! squared input array
     call torch_tensor_to_array(tensor2, out_data, shape(in_data))
     expected(:,:) = in_data ** 2
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_square")
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_square")) then
       call clean_up()
       print *, "Error :: incorrect output from overloaded exponentation operator (square)"
       stop 999
@@ -661,7 +632,6 @@ contains
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -676,10 +646,9 @@ contains
 
     ! Check input array is unchanged by taking the square root
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_sqrt", rtol=1e-5)
-    if (.not. test_pass) then
+    if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_sqrt")) then
       call clean_up()
-      print *, "Error :: input array was changed during taking the square root"
+      print *, "Error :: input array was changed during exponentation (square root)"
       stop 999
     end if
 
@@ -687,8 +656,7 @@ contains
     ! square root of the input array
     call torch_tensor_to_array(tensor2, out_data, shape(in_data))
     expected(:,:) = in_data ** 0.5
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")) then
       call clean_up()
       print *, "Error :: incorrect output from overloaded exponentiation operator (square root)"
       stop 999
