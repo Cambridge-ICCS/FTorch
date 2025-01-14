@@ -8,6 +8,10 @@
 
 #include "ctorch.h"
 
+// =============================================================================
+// --- Constant expressions
+// =============================================================================
+
 constexpr auto get_dtype(torch_data_t dtype) {
   switch (dtype) {
   case torch_kUInt8:
@@ -61,13 +65,31 @@ const auto get_device(torch_device_t device_type, int device_index) {
   }
 }
 
-void set_is_training(torch_jit_script_module_t module, const bool is_training = false) {
-  auto model = static_cast<torch::jit::script::Module *>(module);
-  if (is_training) {
-    model->train();
-  } else {
-    model->eval();
+// =============================================================================
+// --- Functions for constructing tensors
+// =============================================================================
+
+torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
+                           torch_device_t device_type, int device_index = -1,
+                           const bool requires_grad = false) {
+  torch::AutoGradMode enable_grad(requires_grad);
+  torch::Tensor *tensor = nullptr;
+  try {
+    // This doesn't throw if shape and dimensions are incompatible
+    c10::IntArrayRef vshape(shape, ndim);
+    tensor = new torch::Tensor;
+    *tensor = torch::empty(vshape, torch::dtype(get_dtype(dtype)))
+                  .to(get_device(device_type, device_index));
+  } catch (const torch::Error &e) {
+    std::cerr << "[ERROR]: " << e.msg() << std::endl;
+    delete tensor;
+    exit(EXIT_FAILURE);
+  } catch (const std::exception &e) {
+    std::cerr << "[ERROR]: " << e.what() << std::endl;
+    delete tensor;
+    exit(EXIT_FAILURE);
   }
+  return tensor;
 }
 
 torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
@@ -116,29 +138,6 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
   return tensor;
 }
 
-torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
-                           torch_device_t device_type, int device_index = -1,
-                           const bool requires_grad = false) {
-  torch::AutoGradMode enable_grad(requires_grad);
-  torch::Tensor *tensor = nullptr;
-  try {
-    // This doesn't throw if shape and dimensions are incompatible
-    c10::IntArrayRef vshape(shape, ndim);
-    tensor = new torch::Tensor;
-    *tensor = torch::empty(vshape, torch::dtype(get_dtype(dtype)))
-                  .to(get_device(device_type, device_index));
-  } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
-  } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
-  }
-  return tensor;
-}
-
 // Exposes the given data as a Tensor without taking ownership of the original
 // data
 torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
@@ -167,6 +166,10 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
   }
   return tensor;
 }
+
+// =====================================================================================
+// --- Functions for interrogating tensors
+// =====================================================================================
 
 void *torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
@@ -233,10 +236,18 @@ const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
 }
 #endif
 
+// =====================================================================================
+// --- Functions for deallocating tensors
+// =====================================================================================
+
 void torch_tensor_delete(torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   delete t;
 }
+
+// =====================================================================================
+// --- Operator overloads acting on tensors
+// =====================================================================================
 
 torch_tensor_t torch_tensor_assign(const torch_tensor_t input) {
   auto in = reinterpret_cast<torch::Tensor *const>(input);
@@ -307,6 +318,19 @@ torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
   output = new torch::Tensor;
   *output = pow(*t, *exp);
   return output;
+}
+
+// =============================================================================
+// --- Torch model API
+// =============================================================================
+
+void set_is_training(torch_jit_script_module_t module, const bool is_training = false) {
+  auto model = static_cast<torch::jit::script::Module *>(module);
+  if (is_training) {
+    model->train();
+  } else {
+    model->eval();
+  }
 }
 
 torch_jit_script_module_t torch_jit_load(const char *filename,
