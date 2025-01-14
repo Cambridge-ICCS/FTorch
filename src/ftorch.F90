@@ -253,7 +253,7 @@ contains
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
@@ -304,7 +304,7 @@ contains
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
@@ -355,7 +355,7 @@ contains
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype        !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
