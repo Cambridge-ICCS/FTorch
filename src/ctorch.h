@@ -221,9 +221,9 @@ EXPORT_C torch_tensor_t torch_tensor_power_int(const torch_tensor_t tensor,
 EXPORT_C torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
                                                  const torch_float_t exponent);
 
-// =====================================================================================
+// =============================================================================
 // --- Torch model API
-// =====================================================================================
+// =============================================================================
 
 /**
  * Function to load in a Torch model from a TorchScript file and store in a

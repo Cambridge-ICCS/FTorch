@@ -320,9 +320,9 @@ torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
   return output;
 }
 
-// =====================================================================================
+// =============================================================================
 // --- Torch model API
-// =====================================================================================
+// =============================================================================
 
 void set_is_training(torch_jit_script_module_t module, const bool is_training = false) {
   auto model = static_cast<torch::jit::script::Module *>(module);
