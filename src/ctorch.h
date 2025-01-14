@@ -9,6 +9,10 @@
 
 #include <stdint.h>
 
+// =============================================================================
+// --- Typedefs
+// =============================================================================
+
 // Opaque pointer type alias for torch::jit::script::Module class
 typedef void *torch_jit_script_module_t;
 
@@ -36,9 +40,23 @@ typedef enum {
 // Device types
 typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
 
-// =====================================================================================
-// Tensor API
-// =====================================================================================
+// =============================================================================
+// --- Functions for constructing tensors
+// =============================================================================
+
+/**
+ * Function to generate an empty Torch Tensor
+ * @param number of dimensions of the Tensor
+ * @param shape of the Tensor
+ * @param data type of the elements of the Tensor
+ * @param device type used (cpu, CUDA, etc.)
+ * @param device index for the CUDA case
+ * @param whether gradient is required
+ */
+EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
+                                    torch_device_t device_type, int device_index,
+                                    const bool requires_grad);
+
 /**
  * Function to generate a Torch Tensor of zeros
  * @param number of dimensions of the Tensor
@@ -66,19 +84,6 @@ EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t 
                                    const bool requires_grad);
 
 /**
- * Function to generate an empty Torch Tensor
- * @param number of dimensions of the Tensor
- * @param shape of the Tensor
- * @param data type of the elements of the Tensor
- * @param device type used (cpu, CUDA, etc.)
- * @param device index for the CUDA case
- * @param whether gradient is required
- */
-EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
-                                    torch_device_t device_type, int device_index,
-                                    const bool requires_grad);
-
-/**
  * Function to create a Torch Tensor from memory location given extra
  * information
  * @param pointer to the Tensor in memory
@@ -95,6 +100,10 @@ EXPORT_C torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *sha
                                         const int64_t *strides, torch_data_t dtype,
                                         torch_device_t device_type, int device_index,
                                         const bool requires_grad);
+
+// =============================================================================
+// --- Functions for interrogating tensors
+// =============================================================================
 
 /**
  * Function to extract a C-array from a Torch Tensor's data.
@@ -136,11 +145,19 @@ EXPORT_C const long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
 EXPORT_C const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
 #endif
 
+// =============================================================================
+// --- Functions for deallocating tensors
+// =============================================================================
+
 /**
  * Function to delete a Torch Tensor to clean up
  * @param Torch Tensor to delete
  */
 EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
+
+// =============================================================================
+// --- Operator overloads acting on tensors
+// =============================================================================
 
 /**
  * Overloads the assignment operator for Torch Tensor
@@ -205,8 +222,9 @@ EXPORT_C torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
                                                  const torch_float_t exponent);
 
 // =====================================================================================
-// Module API
+// --- Torch model API
 // =====================================================================================
+
 /**
  * Function to load in a Torch model from a TorchScript file and store in a
  * Torch Module
