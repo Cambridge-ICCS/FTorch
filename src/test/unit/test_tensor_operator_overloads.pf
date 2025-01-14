@@ -18,10 +18,55 @@ module test_tensor_operator_overloads
 
   integer, parameter :: device_type = torch_kCPU
 
+  ! Typedef holding a set of parameter values
+  @testParameter
+  type, extends(AbstractTestParameter) :: TestParametersType
+    logical :: switch
+  contains
+    procedure :: toString
+  end type TestParametersType
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_ctor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(TestParametersType) :: param
+  end type TestCaseType
+
 contains
 
-  @test
-  subroutine test_torch_tensor_assign()
+  ! A fixture comprised of a full list of parameter sets
+  function get_parameters_full() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.), &
+      TestParametersType(.true.) &
+    ]
+  end function get_parameters_full
+
+  ! A fixture comprised of a short list of parameter sets
+  function get_parameters_short() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [TestParametersType(.false.)]
+  end function get_parameters_short
+
+  ! Constructor for the test case type
+  function test_case_ctor(param)
+    type(TestCaseType) :: test_case_ctor
+    type(TestParametersType) :: param
+    test_case_ctor%param = param
+  end function test_case_ctor
+
+  ! Function for representing a parameter set as a string
+  function toString(this) result(string)
+    class(TestParametersType), intent(in) :: this
+    character(:), allocatable :: string
+    character(len=1) :: str
+    write(str,'(l1)') this%switch
+    string = str
+  end function toString
+
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_assign(this)
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
@@ -29,6 +74,7 @@ contains
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
@@ -82,8 +128,8 @@ contains
 
   end subroutine test_torch_tensor_assign
 
-  @test
-  subroutine test_torch_tensor_add()
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_add(this)
     use ftorch, only: operator(+)
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
@@ -92,6 +138,7 @@ contains
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
@@ -156,8 +203,8 @@ contains
 
   end subroutine test_torch_tensor_add
 
-  @test
-  subroutine test_torch_tensor_subtract()
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_subtract(this)
     use ftorch, only: operator(-)
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
@@ -166,6 +213,7 @@ contains
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
@@ -232,8 +280,8 @@ contains
 
   end subroutine test_torch_tensor_subtract
 
-  @test
-  subroutine test_torch_tensor_multiply()
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_multiply(this)
     use ftorch, only: operator(*)
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
@@ -242,6 +290,7 @@ contains
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
@@ -308,8 +357,8 @@ contains
 
   end subroutine test_torch_tensor_multiply
 
-  @test
-  subroutine test_torch_tensor_scalar_multiply()
+  @test(testParameters={get_parameters_full()})
+  subroutine test_torch_tensor_scalar_multiply(this)
     use ftorch, only: operator(*)
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
@@ -318,14 +367,15 @@ contains
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
-    type(torch_tensor) :: tensor1, tensor2, tensor3
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data2, out_data3
+    real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -338,46 +388,30 @@ contains
     ! Create another two empty tensors and assign them to the products of a scalar constant and the
     ! first tensor using the overloaded multiplication operator (in each order)
     call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
-    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
-    tensor2 = scalar * tensor1
-
-    ! Check input array is unchanged by pre-multiplication
-    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_premultiply", &
-                                rtol=1e-5)
-    if (.not. test_pass) then
-      call clean_up()
-      print *, "Error :: input array was changed during scalar pre-multiplication"
-      stop 999
+    if (this%param%switch) then
+      tensor2 = scalar * tensor1
+    else
+      tensor2 = tensor1 * scalar
     end if
 
-    tensor3 = tensor1 * scalar
-
-    ! Check input array is unchanged by post-multiplication
+    ! Check input array is unchanged by scalar multiplication
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_postmultiply", &
+    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_scalar_multiply", &
                                 rtol=1e-5)
     if (.not. test_pass) then
       call clean_up()
-      print *, "Error :: input array was changed during scalar post-multiplication"
+      print *, "Error :: input array was changed during scalar multiplication"
       stop 999
     end if
 
     ! Extract Fortran arrays from the assigned tensors and compare the data in the tensors to the
     ! scaled input arrays
-    call torch_tensor_to_array(tensor2, out_data2, shape(in_data))
-    call torch_tensor_to_array(tensor3, out_data3, shape(in_data))
+    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
     expected(:,:) = scalar * in_data
-    test_pass = assert_allclose(out_data2, expected, test_name="test_torch_tensor_premultiply")
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply")
     if (.not. test_pass) then
       call clean_up()
-      print *, "Error :: incorrect output from overloaded post-multiplication operator"
-      stop 999
-    end if
-    test_pass = assert_allclose(out_data3, expected, test_name="test_torch_tensor_postmultiply")
-    if (.not. test_pass) then
-      call clean_up()
-      print *, "Error :: incorrect output from overloaded pre-multiplication operator"
+      print *, "Error :: incorrect output from overloaded scalar multiplication operator"
       stop 999
     end if
 
@@ -387,17 +421,15 @@ contains
 
       ! Subroutine for freeing memory and nullifying pointers used in the unit test
       subroutine clean_up()
-        nullify(out_data2)
-        nullify(out_data3)
+        nullify(out_data)
         call torch_tensor_delete(tensor1)
         call torch_tensor_delete(tensor2)
-        call torch_tensor_delete(tensor3)
       end subroutine clean_up
 
   end subroutine test_torch_tensor_scalar_multiply
 
-  @test
-  subroutine test_torch_tensor_divide()
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_divide(this)
     use ftorch, only: operator(/)
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
@@ -406,6 +438,7 @@ contains
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
@@ -470,8 +503,8 @@ contains
 
   end subroutine test_torch_tensor_divide
 
-  @test
-  subroutine test_torch_tensor_scalar_divide()
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_scalar_divide(this)
     use ftorch, only: operator(/)
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
@@ -480,6 +513,7 @@ contains
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
@@ -536,8 +570,8 @@ contains
 
   end subroutine test_torch_tensor_scalar_divide
 
-  @test
-  subroutine test_torch_tensor_square()
+  @test(testParameters={get_parameters_full()})
+  subroutine test_torch_tensor_square(this)
     use ftorch, only: operator(**)
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
@@ -546,13 +580,14 @@ contains
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
-    type(torch_tensor) :: tensor1, tensor2, tensor3
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data2, out_data3
+    real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -566,8 +601,11 @@ contains
     ! integer exponent and float exponent, respectively, using the overloaded exponentiation
     ! operator
     call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
-    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
-    tensor2 = tensor1 ** 2
+    if (this%param%switch) then
+      tensor2 = tensor1 ** 2
+    else
+      tensor2 = tensor1 ** 2.0
+    end if
 
     ! Check input array is unchanged by pre-multiplication
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -579,33 +617,14 @@ contains
       stop 999
     end if
 
-    tensor3 = tensor1 ** 2.0
-
-    ! Check input array is unchanged by pre-multiplication
-    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_square_float", &
-                                rtol=1e-5)
-    if (.not. test_pass) then
-      call clean_up()
-      print *, "Error :: input array was changed during floating point exponentation"
-      stop 999
-    end if
-
     ! Extract Fortran arrays from the assigned tensors and compare the data in the tensors to the
     ! squared input array
-    call torch_tensor_to_array(tensor2, out_data2, shape(in_data))
-    call torch_tensor_to_array(tensor3, out_data3, shape(in_data))
+    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
     expected(:,:) = in_data ** 2
-    test_pass = assert_allclose(out_data2, expected, test_name="test_torch_tensor_square_int")
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_square")
     if (.not. test_pass) then
       call clean_up()
-      print *, "Error :: incorrect output from overloaded integer exponentation operator"
-      stop 999
-    end if
-    test_pass = assert_allclose(out_data3, expected, test_name="test_torch_tensor_square_float")
-    if (.not. test_pass) then
-      call clean_up()
-      print *, "Error :: incorrect output from overloaded floating point exponentation operator"
+      print *, "Error :: incorrect output from overloaded exponentation operator (square)"
       stop 999
     end if
 
@@ -615,17 +634,15 @@ contains
 
       ! Subroutine for freeing memory and nullifying pointers used in the unit test
       subroutine clean_up()
-        nullify(out_data2)
-        nullify(out_data3)
+        nullify(out_data)
         call torch_tensor_delete(tensor1)
         call torch_tensor_delete(tensor2)
-        call torch_tensor_delete(tensor3)
       end subroutine clean_up
 
   end subroutine test_torch_tensor_square
 
-  @test
-  subroutine test_torch_tensor_sqrt()
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_sqrt(this)
     use ftorch, only: operator(**)
     use, intrinsic :: iso_fortran_env, only: sp => real32
     use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
@@ -635,6 +652,7 @@ contains
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
@@ -672,7 +690,7 @@ contains
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")
     if (.not. test_pass) then
       call clean_up()
-      print *, "Error :: incorrect output from overloaded square root operator"
+      print *, "Error :: incorrect output from overloaded exponentiation operator (square root)"
       stop 999
     end if
 
