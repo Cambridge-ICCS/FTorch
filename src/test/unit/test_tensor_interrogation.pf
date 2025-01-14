@@ -1,0 +1,88 @@
+!| Unit tests for FTorch subroutines that interrogate tensors.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module test_tensor_interrogation
+  use funit
+  use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, &
+                    torch_tensor_empty
+  use iso_c_binding, only: c_int64_t
+
+  implicit none
+
+  public
+
+  ! Parameters common across all test cases
+  integer, parameter :: device_type = torch_kCPU
+
+contains
+
+  ! Unit test for the get_rank method of a 1D tensor
+  @test
+  subroutine test_get_rank_1D()
+
+    implicit none
+
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 1
+    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [6]
+    integer, parameter :: dtype = torch_kFloat32
+
+    ! Create a tensor with uninitialised values and check get_rank can correctly identify its rank
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+    if (ndims /= tensor%get_rank()) then
+      call torch_tensor_delete(tensor)
+      print *, "Error :: get_rank returned incorrect rank for 1D tensor"
+      stop 999
+    end if
+    call torch_tensor_delete(tensor)
+
+  end subroutine test_get_rank_1D
+
+  ! Unit test for the get_rank method of a 2D tensor
+  @test
+  subroutine test_get_rank_2D()
+
+    implicit none
+
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
+    integer, parameter :: dtype = torch_kFloat32
+
+    ! Create a tensor with uninitialised values and check get_rank can correctly identify its rank
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+    if (ndims /= tensor%get_rank()) then
+      call torch_tensor_delete(tensor)
+      print *, "Error :: get_rank returned incorrect rank for 2D tensor"
+      stop 999
+    end if
+    call torch_tensor_delete(tensor)
+
+  end subroutine test_get_rank_2D
+
+  ! Unit test for the get_rank method of a 3D tensor
+  @test
+  subroutine test_get_rank_3D()
+
+    implicit none
+
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 3
+    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1,2,3]
+    integer, parameter :: dtype = torch_kFloat32
+
+    ! Create a tensor with uninitialised values and check get_rank can correctly identify its rank
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+    if (ndims /= tensor%get_rank()) then
+      call torch_tensor_delete(tensor)
+      print *, "Error :: get_rank returned incorrect rank for 3D tensor"
+      stop 999
+    end if
+    call torch_tensor_delete(tensor)
+
+  end subroutine test_get_rank_3D
+
+end module test_tensor_interrogation
