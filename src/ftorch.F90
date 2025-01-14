@@ -409,8 +409,8 @@ contains
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     type(c_ptr), intent(in)         :: data       !! Pointer to data
     integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(*)  !! Shape of the tensor
-    integer(c_int), intent(in)      :: layout(*)  !! Layout for strides for accessing data
+    integer(c_int64_t), intent(in)  :: tensor_shape(:)  !! Shape of the tensor
+    integer(c_int), intent(in)      :: layout(:)  !! Layout for strides for accessing data
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
@@ -427,6 +427,7 @@ contains
       requires_grad_value = requires_grad
     end if
 
+    strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
         strides(layout(i)) = 1
