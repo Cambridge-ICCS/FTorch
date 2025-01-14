@@ -383,7 +383,7 @@ contains
   subroutine test_torch_from_blob(this)
     use ftorch, only: torch_tensor_from_blob
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_loc, c_null_ptr, c_ptr
+    use, intrinsic :: iso_c_binding, only : c_loc
 
     implicit none
 
