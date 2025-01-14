@@ -76,10 +76,8 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2) :: tensor_shape
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-
-    tensor_shape = [2, 3]
 
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor%p))
@@ -110,13 +108,11 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2) :: tensor_shape
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
-
-    tensor_shape = [2, 3]
 
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor%p))
@@ -166,13 +162,11 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2) :: tensor_shape
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
-
-    tensor_shape = [2, 3]
 
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor%p))
