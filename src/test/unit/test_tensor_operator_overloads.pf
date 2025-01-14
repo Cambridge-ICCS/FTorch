@@ -5,6 +5,7 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module test_tensor_operator_overloads
+  use funit
 
   implicit none
 
@@ -12,7 +13,6 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_assign()
-    use FUnit
     use ftorch, only: assignment(=), ftorch_int, torch_kCPU, torch_kFloat32, torch_tensor, &
                       torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
                       torch_tensor_to_array
@@ -81,7 +81,6 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_add()
-    use FUnit
     use ftorch, only: assignment(=), operator(+), ftorch_int, torch_kCPU, torch_kFloat32, &
                       torch_tensor, torch_tensor_delete, torch_tensor_empty, &
                       torch_tensor_from_array, torch_tensor_to_array
@@ -161,7 +160,6 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_subtract()
-    use FUnit
     use ftorch, only: assignment(=), operator(-), ftorch_int, torch_kCPU, torch_kFloat32, &
                       torch_tensor, torch_tensor_delete, torch_tensor_empty, &
                       torch_tensor_from_array, torch_tensor_to_array
@@ -243,7 +241,6 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_multiply()
-    use FUnit
     use ftorch, only: assignment(=), operator(*), ftorch_int, torch_kCPU, torch_kFloat32, &
                       torch_tensor, torch_tensor_delete, torch_tensor_empty, &
                       torch_tensor_from_array, torch_tensor_to_array
@@ -325,7 +322,6 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_scalar_multiply()
-    use FUnit
     use ftorch, only: assignment(=), operator(*), ftorch_int, torch_kCPU, torch_kFloat32, &
                       torch_tensor, torch_tensor_delete, torch_tensor_empty, &
                       torch_tensor_from_array, torch_tensor_to_array
@@ -419,7 +415,6 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_divide()
-    use FUnit
     use ftorch, only: assignment(=), operator(/), ftorch_int, torch_kCPU, torch_kFloat32, &
                       torch_tensor, torch_tensor_delete, torch_tensor_empty, &
                       torch_tensor_from_array, torch_tensor_to_array
@@ -499,7 +494,6 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_scalar_divide()
-    use FUnit
     use ftorch, only: assignment(=), operator(/), ftorch_int, torch_kCPU, torch_kFloat32, &
                       torch_tensor, torch_tensor_delete, torch_tensor_empty, &
                       torch_tensor_from_array, torch_tensor_to_array
@@ -571,7 +565,6 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_square()
-    use FUnit
     use ftorch, only: assignment(=), operator(**), ftorch_int, torch_kCPU, torch_kFloat32, &
                       torch_tensor, torch_tensor_delete, torch_tensor_empty, &
                       torch_tensor_from_array, torch_tensor_to_array
@@ -665,7 +658,6 @@ module test_tensor_operator_overloads
 
   @test
   subroutine test_torch_tensor_sqrt()
-    use FUnit
     use ftorch, only: assignment(=), operator(**), ftorch_int, torch_kCPU, torch_kFloat32, &
                       torch_tensor, torch_tensor_delete, torch_tensor_empty, &
                       torch_tensor_from_array, torch_tensor_to_array
