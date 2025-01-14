@@ -62,7 +62,7 @@ contains
     class(TestParametersType), intent(in) :: this
     character(:), allocatable :: string
     character(len=1) :: str
-    write(str,'(l0)') this%requires_grad
+    write(str,'(l1)') this%requires_grad
     string = str
   end function toString
 
