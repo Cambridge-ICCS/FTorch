@@ -20,7 +20,7 @@ if(ENABLE_CUDA)
   if(CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
   else()
-  message(ERROR "No CUDA support")
+    message(ERROR "No CUDA support")
   endif()
   add_pfunit_ctest(test_tensor_interrogation_cuda
     TEST_SOURCES test_tensor_interrogation_cuda.pf
