@@ -16,7 +16,7 @@ contains
   @test
   subroutine test_torch_tensor_get_device_index_default()
     use funit
-    use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete &
+    use ftorch, only: torch_kFloat32, torch_kCUDA, torch_tensor, torch_tensor_delete, &
                       torch_tensor_empty, torch_tensor_get_device_index
     use iso_c_binding, only: c_int64_t
 
