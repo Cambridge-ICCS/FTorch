@@ -14,3 +14,7 @@ add_pfunit_ctest(test_tensor_interrogation
   TEST_SOURCES test_tensor_interrogation.pf LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(test_operator_overloads
   TEST_SOURCES test_tensor_operator_overloads.pf LINK_LIBRARIES FTorch::ftorch)
+if(ENABLE_CUDA)
+  add_pfunit_ctest(test_operator_overloads_cuda
+    TEST_SOURCES test_tensor_operator_overloads_cuda.pf LINK_LIBRARIES FTorch::ftorch)
+endif()

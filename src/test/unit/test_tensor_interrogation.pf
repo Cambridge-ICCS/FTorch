@@ -1,4 +1,4 @@
-!| Unit tests for FTorch subroutines that interrogate tensors.
+!| Unit tests for FTorch subroutines that interrogate tensors on the CPU.
 !
 !  * License
 !    FTorch is released under an MIT license.
