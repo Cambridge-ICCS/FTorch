@@ -18,18 +18,24 @@ show_help() {
   echo
   echo "Options:"
   echo "  BUILD_DIR=<build_dir> Specify the build directory (default: src/build)."
-  echo "  --verbose | -V        Run with verbose ctest output."
-  echo "  --help | -h           Show this help message and exit."
+  echo "  --unit-only | -u        Run unit tests only."
+  echo "  --verbose   | -V        Run with verbose ctest output."
+  echo "  --help      | -h        Show this help message and exit."
 }
 
 # Parse command line arguments
 BUILD_DIR="src/build"
+UNIT_ONLY=false
 VERBOSE=false
 HELP=false
 for ARG in "$@"; do
   case ${ARG} in
   BUILD_DIR=*)
     BUILD_DIR="${ARG#*=}"
+    ;;
+  --unit-only | -u)
+    UNIT_ONLY=true
+    shift
     ;;
   --verbose | -V)
     VERBOSE=true
@@ -66,10 +72,12 @@ ctest "${CTEST_ARGS}"
 cd -
 
 # Run integration tests
-EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
-for EXAMPLE in ${EXAMPLES}; do
-  pip -q install -r examples/"${EXAMPLE}"/requirements.txt
-  cd "${BUILD_DIR}"/test/examples/"${EXAMPLE}"
-  ctest "${CTEST_ARGS}"
-  cd -
-done
+if [ "${UNIT_ONLY}" = false ]; then
+  EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
+  for EXAMPLE in ${EXAMPLES}; do
+    pip -q install -r examples/"${EXAMPLE}"/requirements.txt
+    cd "${BUILD_DIR}"/test/examples/"${EXAMPLE}"
+    ctest "${CTEST_ARGS}"
+    cd -
+  done
+fi
