@@ -1,0 +1,15 @@
+spack:
+  packages:
+    all:
+      compiler: [gcc@11:]
+  specs:
+  - cmake
+  - pfunit~mpi~openmp
+  - py-torch~cuda~mpi~openmp~mkldnn
+  - py-torchvision
+  - py-pip
+  concretizer:
+    unify: true
+  config:
+    install_tree: /opt/software
+  view: /opt/views/view
