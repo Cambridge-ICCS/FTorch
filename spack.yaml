@@ -4,8 +4,8 @@ spack:
       compiler: [gcc@11.4.0]
   specs:
   - cmake
-  - pfunit
-  - py-torch
+  - pfunit~mpi~openmp
+  - py-torch~cuda~mpi~openmp
   - py-pip
   concretizer:
     unify: true
