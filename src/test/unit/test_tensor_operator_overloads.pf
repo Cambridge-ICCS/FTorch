@@ -190,7 +190,7 @@ subroutine test_torch_tensor_negative()
   call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
   tensor2 = -tensor1
 
-  ! Check input arrays are unchanged by the subtraction
+  ! Check input arrays are unchanged by the negation
   expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
   if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_negative")) then
     call clean_up()
@@ -202,7 +202,7 @@ subroutine test_torch_tensor_negative()
   ! negative of the input array
   call torch_tensor_to_array(tensor2, out_data, shape(in_data))
   expected(:,:) = -in_data
-  if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract")) then
+  if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_negative")) then
     call clean_up()
     print *, "Error :: incorrect output from overloaded subtraction operator"
     stop 999
