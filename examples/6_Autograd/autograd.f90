@@ -35,9 +35,8 @@ program example
   in_data2(:,1) = [6.0_wp, 4.0_wp]
 
   ! Construct a Torch Tensor from a Fortran array
-  ! TODO: Implement requires_grad=.true.
-  call torch_tensor_from_array(a, in_data1, tensor_layout, torch_kCPU)
-  call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU)
+  call torch_tensor_from_array(a, in_data1, tensor_layout, torch_kCPU, requires_grad=.true.)
+  call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU, requires_grad=.true.)
 
   ! Check arithmetic operations work for torch_tensors
   write (*,*) "a = ", in_data1(:,1)
