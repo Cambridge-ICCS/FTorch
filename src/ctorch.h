@@ -243,6 +243,19 @@ EXPORT_C torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
                                                  const torch_float_t exponent);
 
 // =============================================================================
+// --- Functions related to automatic differentiation functionality for tensors
+// =============================================================================
+
+/**
+ * Function to perform back-propagation on a Torch Tensor.
+ * Note that the Tensor must have the requires_grad attribute set to true.
+ * @param Tensor to perform back-propagation on
+ * @param Tensor with an external gradient to supply for the back-propagation
+ */
+EXPORT_C void torch_tensor_backward(const torch_tensor_t tensor,
+                                    const torch_tensor_t external_gradient);
+
+// =============================================================================
 // --- Torch model API
 // =============================================================================
 

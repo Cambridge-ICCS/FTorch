@@ -831,6 +831,30 @@ contains
   #:endfor
 
   ! ============================================================================
+  ! --- Procedures related to automatic differentation functionality for tensors
+  ! ============================================================================
+
+  !> Performs back-propagation on a Torch Tensor, given some external gradient.
+  subroutine torch_tensor_backward(tensor, external_gradient)
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor), intent(in) :: external_gradient
+
+    interface
+      subroutine torch_tensor_backward_c(tensor_c, external_gradient_c) &
+          bind(c, name = 'torch_tensor_backward')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr), value, intent(in) :: external_gradient_c
+      end subroutine torch_tensor_backward_c
+    end interface
+
+    ! TODO: Make external_gradient optional, setting to ones by default
+
+    call torch_tensor_backward_c(tensor%p, external_gradient%p)
+  end subroutine torch_tensor_backward
+
+  ! ============================================================================
   ! --- Torch Model API
   ! ============================================================================
 
