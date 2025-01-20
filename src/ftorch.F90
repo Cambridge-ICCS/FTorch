@@ -2919,6 +2919,24 @@ contains
     call torch_tensor_backward_c(tensor%p, external_gradient%p)
   end subroutine torch_tensor_backward
 
+  !> Retreives the gradient of a Torch Tensor.
+  function get_gradient(tensor) result(gradient)
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: gradient
+
+    interface
+      function get_gradient_c(tensor_c) result(gradient_c) &
+          bind(c, name = 'get_gradient')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: gradient_c
+      end function get_gradient_c
+    end interface
+
+    gradient%p = get_gradient_c(tensor%p)
+  end function get_gradient
+
   ! ============================================================================
   ! --- Torch Model API
   ! ============================================================================

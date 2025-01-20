@@ -255,6 +255,13 @@ EXPORT_C torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
 EXPORT_C void torch_tensor_backward(const torch_tensor_t tensor,
                                     const torch_tensor_t external_gradient);
 
+/**
+ * Function to return the grad attribute of a Torch Tensor.
+ * @param Tensor to get the gradient of
+ * @return Tensor for the gradient
+ */
+EXPORT_C torch_tensor_t get_gradient(const torch_tensor_t tensor);
+
 // =============================================================================
 // --- Torch model API
 // =============================================================================
