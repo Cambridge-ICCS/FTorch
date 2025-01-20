@@ -265,7 +265,7 @@ address an [open issue](https://github.com/Cambridge-ICCS/FTorch/issues), please
 pull request.
 
 Detailed guidelines can be found in the
-[online developer documentation](page/developer.html).
+[online developer documentation](https://cambridge-iccs.github.io/FTorch/page/developer.html).
 
 
 ### Code of Conduct
@@ -300,6 +300,6 @@ The following projects make use of this code or derivatives in some way:
 * [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)\
   See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
 * [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization)\
-  See Heuer et al (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
+  See Heuer et al. (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
 
 Are we missing anyone? Let us know.
