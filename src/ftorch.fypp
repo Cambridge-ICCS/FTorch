@@ -633,7 +633,7 @@ contains
     output%p = torch_tensor_add_c(tensor1%p, tensor2%p)
   end function torch_tensor_add
 
-  !> Overloads negative operator for a tensor.
+  !> Overloads negative operator for a single tensor.
   function torch_tensor_negative(tensor) result(output)
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: output
