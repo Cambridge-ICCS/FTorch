@@ -154,7 +154,7 @@ subroutine test_torch_tensor_add()
 end subroutine test_torch_tensor_add
 
 @test
-subroutine test_torch_tensor_minus()
+subroutine test_torch_tensor_negative()
   use FUnit
   use ftorch, only: assignment(=), operator(-), ftorch_int, torch_kCPU, torch_kFloat32, &
                     torch_tensor, torch_tensor_delete, torch_tensor_empty, &
@@ -186,13 +186,13 @@ subroutine test_torch_tensor_minus()
   call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
   ! Create another empty tensor and assign it to the negative of the first using the overloaded
-  ! minus operator
+  ! negative operator
   call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
   tensor2 = -tensor1
 
   ! Check input arrays are unchanged by the subtraction
   expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-  if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_minus")) then
+  if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_negative")) then
     call clean_up()
     print *, "Error :: first input array was changed during subtraction"
     stop 999
@@ -219,7 +219,7 @@ subroutine test_torch_tensor_minus()
       call torch_tensor_delete(tensor2)
     end subroutine clean_up
 
-end subroutine test_torch_tensor_minus
+end subroutine test_torch_tensor_negative
 
 @test
 subroutine test_torch_tensor_subtract()

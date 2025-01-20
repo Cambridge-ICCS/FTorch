@@ -176,11 +176,11 @@ EXPORT_C torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
                                          const torch_tensor_t tensor2);
 
 /**
- * Overloads the minus operator for a Torch Tensor
+ * Overloads the minus operator for a single Torch Tensor
  * @param Tensor to take the negative of
  * @return the negative Tensor
  */
-EXPORT_C torch_tensor_t torch_tensor_minus(const torch_tensor_t tensor);
+EXPORT_C torch_tensor_t torch_tensor_negative(const torch_tensor_t tensor);
 
 /**
  * Overloads the subtraction operator for two Torch Tensors
