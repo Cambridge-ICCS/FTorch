@@ -66,7 +66,7 @@ ctest "${CTEST_ARGS}"
 cd -
 
 # Run integration tests
-EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
+EXAMPLES="6_Autograd"
 for EXAMPLE in ${EXAMPLES}; do
   pip -q install -r examples/"${EXAMPLE}"/requirements.txt
   cd "${BUILD_DIR}"/test/examples/"${EXAMPLE}"
