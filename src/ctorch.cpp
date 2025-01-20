@@ -151,9 +151,12 @@ torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::empty(vshape, torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::empty(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -174,9 +177,12 @@ torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::zeros(vshape, torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::zeros(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -197,9 +203,12 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::ones(vshape, torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::ones(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -225,10 +234,12 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
     c10::IntArrayRef vstrides(strides, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::from_blob(data, vshape, vstrides,
-                               torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::from_blob(data, vshape, vstrides, options);
 
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
