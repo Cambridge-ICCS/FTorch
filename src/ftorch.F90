@@ -181,6 +181,7 @@ module ftorch
   end interface
 
   interface operator (-)
+    module procedure torch_tensor_minus
     module procedure torch_tensor_subtract
   end interface
 
@@ -2408,6 +2409,24 @@ contains
 
     output%p = torch_tensor_add_c(tensor1%p, tensor2%p)
   end function torch_tensor_add
+
+  !> Overloads minus operator for a tensor.
+  function torch_tensor_minus(tensor) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_minus_c(tensor_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_minus')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_minus_c
+    end interface
+
+    output%p = torch_tensor_minus_c(tensor%p)
+  end function torch_tensor_minus
 
   !> Overloads subtraction operator for two tensors.
   function torch_tensor_subtract(tensor1, tensor2) result(output)
