@@ -12,3 +12,5 @@ add_pfunit_ctest(test_constructors
   TEST_SOURCES test_constructors.pf LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(test_operator_overloads
   TEST_SOURCES test_tensor_operator_overloads.pf LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(test_operator_overloads_autograd
+  TEST_SOURCES test_tensor_operator_overloads_autograd.pf LINK_LIBRARIES FTorch::ftorch)
