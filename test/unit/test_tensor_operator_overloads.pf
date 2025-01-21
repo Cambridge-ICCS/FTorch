@@ -433,8 +433,8 @@ contains
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
-    ! Create another two empty tensors and assign them to the products of a scalar constant and the
-    ! first tensor using the overloaded multiplication operator (in each order)
+    ! Create another empty tensors and assign it to the product of a scalar constant and the first
+    ! tensor using the overloaded multiplication operator
     call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
     if (this%param%switch) then
       tensor2 = scalar * tensor1
