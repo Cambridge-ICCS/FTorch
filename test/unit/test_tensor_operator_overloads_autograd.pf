@@ -203,6 +203,83 @@ contains
 
   end subroutine test_torch_tensor_add
 
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_subtract(this)
+    use, intrinsic :: iso_fortran_env, only: sp => real32
+    use ftorch, only: operator(-)
+
+    implicit none
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: Q, a, b, external_gradient, dQda, dQdb
+    integer, parameter :: ndims = 2
+    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: dtype = torch_kFloat32
+    real(wp), dimension(2,3), target :: in_data1, in_data2
+    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create an arbitrary input array
+    in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
+
+    ! Create tensor based off input arrays
+    call torch_tensor_from_array(a, in_data1, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(b, in_data2, tensor_layout, device_type, requires_grad=.true.)
+
+    ! Create another empty tensor and assign it to the difference of the first two using the
+    ! overloaded subtraction operator
+    call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
+    Q = a - b
+
+    ! Apply back-propagation
+    ! TODO: Automate choice of ones for external_gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+    call torch_tensor_backward(Q, external_gradient)
+    dQda = get_gradient(a)
+    dQdb = get_gradient(b)
+
+    ! Extract Fortran array from the first computed gradient and its data with the expected value:
+    !   Q(a,b) = a - b => dQ/da = 1
+    call torch_tensor_to_array(dQda, out_data, shape(in_data1))
+    expected(:,:) = 1.0
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract1")) then
+      call clean_up()
+      print *, "Error :: incorrect gradient w.r.t. first input for subtraction"
+      stop 999
+    end if
+
+    ! Extract Fortran array from the second computed gradient and its data with the expected value:
+    !   Q(a,b) = a - b => dQ/db = -1
+    call torch_tensor_to_array(dQdb, out_data, shape(in_data2))
+    expected(:,:) = -1.0
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract2")) then
+      call clean_up()
+      print *, "Error :: incorrect gradient w.r.t. second input for subtraction"
+      stop 999
+    end if
+
+    call clean_up()
+
+    contains
+
+      ! Subroutine for freeing memory and nullifying pointers used in the unit test
+      subroutine clean_up()
+        nullify(out_data)
+        call torch_tensor_delete(a)
+        call torch_tensor_delete(b)
+        call torch_tensor_delete(Q)
+        call torch_tensor_delete(dQda)
+        call torch_tensor_delete(dQdb)
+        call torch_tensor_delete(external_gradient)
+      end subroutine clean_up
+
+  end subroutine test_torch_tensor_subtract
+
   ! TODO: Other operators
 
 end module test_tensor_operator_overloads_autograd
