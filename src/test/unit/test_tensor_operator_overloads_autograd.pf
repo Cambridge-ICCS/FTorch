@@ -418,6 +418,8 @@ contains
 
   end subroutine test_torch_tensor_multiply
 
+  ! TODO: Scalar multiply
+
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_divide(this)
     use, intrinsic :: iso_fortran_env, only: sp => real32
