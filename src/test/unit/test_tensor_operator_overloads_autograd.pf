@@ -497,6 +497,6 @@ contains
 
   end subroutine test_torch_tensor_divide
 
-  ! TODO: Other operators
+  ! TODO: Scalar divide
 
 end module test_tensor_operator_overloads_autograd
