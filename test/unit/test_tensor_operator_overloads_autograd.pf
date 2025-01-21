@@ -497,4 +497,69 @@ contains
 
   ! TODO: Other operators
 
+  @test(testParameters={get_parameters_full()})
+  subroutine test_torch_tensor_square(this)
+    use, intrinsic :: iso_fortran_env, only: sp => real32
+    use ftorch, only: operator(**)
+
+    implicit none
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: Q, a, external_gradient, dQda
+    integer, parameter :: ndims = 2
+    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: dtype = torch_kFloat32
+    real(wp), dimension(2,3), target :: in_data
+    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create an arbitrary input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create a tensor based off the input array
+    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+
+    ! Create another empty tensor and assign it to the square of the first one using the
+    ! overloaded power operator
+    call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
+    if (this%param%switch) then
+      Q = a ** 2.0
+    else
+      Q = a ** 2
+    end if
+
+    ! Apply back-propagation
+    ! TODO: Automate choice of ones for external_gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+    call torch_tensor_backward(Q, external_gradient)
+    dQda = get_gradient(a)
+
+    ! Extract Fortran array from the computed gradient and its data with the expected value:
+    !   Q(a) = a^2 => dQ/da = 2 * a
+    call torch_tensor_to_array(dQda, out_data, shape(in_data))
+    expected(:,:) = 2.0 * in_data
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_square")) then
+      call clean_up()
+      print *, "Error :: incorrect gradient for square"
+      stop 999
+    end if
+
+    call clean_up()
+
+    contains
+
+      ! Subroutine for freeing memory and nullifying pointers used in the unit test
+      subroutine clean_up()
+        nullify(out_data)
+        call torch_tensor_delete(a)
+        call torch_tensor_delete(Q)
+        call torch_tensor_delete(dQda)
+      end subroutine clean_up
+
+  end subroutine test_torch_tensor_square
+
 end module test_tensor_operator_overloads_autograd
