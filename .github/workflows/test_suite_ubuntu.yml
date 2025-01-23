@@ -102,9 +102,9 @@ jobs:
       - name: Run unit tests
         run: |
           . ftorch/bin/activate
-          ./run_test_suite.sh -V -u
+          ./run_test_suite.sh --verbose --unit-only
 
       - name: Run integration tests
         run: |
           . ftorch/bin/activate
-          ./run_test_suite.sh -V -i
+          ./run_test_suite.sh --verbose --integration-only
