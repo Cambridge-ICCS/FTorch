@@ -18,13 +18,15 @@ show_help() {
   echo
   echo "Options:"
   echo "  BUILD_DIR=<build_dir> Specify the build directory (default: src/build)."
-  echo "  --unit-only | -u        Run unit tests only."
-  echo "  --verbose   | -V        Run with verbose ctest output."
-  echo "  --help      | -h        Show this help message and exit."
+  echo "  --integration-only | -i        Run integration tests only."
+  echo "  --unit-only        | -u        Run unit tests only."
+  echo "  --verbose          | -V        Run with verbose ctest output."
+  echo "  --help             | -h        Show this help message and exit."
 }
 
 # Parse command line arguments
 BUILD_DIR="src/build"
+INTEGRATION_ONLY=false
 UNIT_ONLY=false
 VERBOSE=false
 HELP=false
@@ -32,6 +34,10 @@ for ARG in "$@"; do
   case ${ARG} in
   BUILD_DIR=*)
     BUILD_DIR="${ARG#*=}"
+    ;;
+  --integration-only | -i)
+    INTEGRATION_ONLY=true
+    shift
     ;;
   --unit-only | -u)
     UNIT_ONLY=true
@@ -67,9 +73,11 @@ else
 fi
 
 # Run unit tests
-cd "${BUILD_DIR}/test/unit"
-ctest "${CTEST_ARGS}"
-cd -
+if [ "${INTEGRATION_ONLY}" = false ]; then
+  cd "${BUILD_DIR}/test/unit"
+  ctest "${CTEST_ARGS}"
+  cd -
+fi
 
 # Run integration tests
 if [ "${UNIT_ONLY}" = false ]; then
