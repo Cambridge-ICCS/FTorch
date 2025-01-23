@@ -181,6 +181,7 @@ module ftorch
   end interface
 
   interface operator (-)
+    module procedure torch_tensor_negative
     module procedure torch_tensor_subtract
   end interface
 
@@ -253,7 +254,7 @@ contains
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
@@ -304,7 +305,7 @@ contains
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
@@ -355,7 +356,7 @@ contains
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(*)   !! Shape of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype        !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
@@ -409,8 +410,8 @@ contains
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     type(c_ptr), intent(in)         :: data       !! Pointer to data
     integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(*)  !! Shape of the tensor
-    integer(c_int), intent(in)      :: layout(*)  !! Layout for strides for accessing data
+    integer(c_int64_t), intent(in)  :: tensor_shape(:)  !! Shape of the tensor
+    integer(c_int), intent(in)      :: layout(:)  !! Layout for strides for accessing data
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
@@ -427,6 +428,7 @@ contains
       requires_grad_value = requires_grad
     end if
 
+    strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
         strides(layout(i)) = 1
@@ -2407,6 +2409,24 @@ contains
 
     output%p = torch_tensor_add_c(tensor1%p, tensor2%p)
   end function torch_tensor_add
+
+  !> Overloads negative operator for a single tensor.
+  function torch_tensor_negative(tensor) result(output)
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: output
+
+    interface
+      function torch_tensor_negative_c(tensor_c) result(output_c)  &
+          bind(c, name = 'torch_tensor_negative')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: output_c
+      end function torch_tensor_negative_c
+    end interface
+
+    output%p = torch_tensor_negative_c(tensor%p)
+  end function torch_tensor_negative
 
   !> Overloads subtraction operator for two tensors.
   function torch_tensor_subtract(tensor1, tensor2) result(output)
