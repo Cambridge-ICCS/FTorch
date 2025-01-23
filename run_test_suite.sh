@@ -14,7 +14,8 @@ set -eu
 
 # Function to display help text
 show_help() {
-  echo "Usage: $0 [BUILD_DIR=<build_dir>] [--verbose | -V]"
+  echo "Usage: $0 [BUILD_DIR=<build_dir>] [--integration-only | i] [--unit-only | -u]"
+  echo "          [--verbose | -V] [--help | h]"
   echo
   echo "Options:"
   echo "  BUILD_DIR=<build_dir> Specify the build directory (default: src/build)."
