@@ -32,6 +32,8 @@ if(ENABLE_CUDA)
   endif()
 endif()
 
+set(CMAKE_Fortran_FLAGS "-fpscomp logicals ${CMAKE_Fortran_FLAGS}")
+
 # Set RPATH behaviour
 set(CMAKE_SKIP_RPATH FALSE)
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
