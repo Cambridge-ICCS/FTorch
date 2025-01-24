@@ -157,6 +157,32 @@ contains
 
   end subroutine test_torch_tensor_get_shape_3D
 
+  ! Unit test for the torch_tensor_get_device_type function applied to a tensor on the CPU
+  @test
+  subroutine test_torch_tensor_get_device_type()
+    use ftorch, only: torch_tensor_get_device_type
+
+    implicit none
+
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer, parameter :: dtype = torch_kFloat32
+    integer, parameter :: expected = torch_kCPU
+
+    ! Create an empty tensor on the CPU with the default device type
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+
+    ! Check that torch_tensor_get_device_type can get the device type
+    if (expected /= tensor%torch_tensor_get_device_type()) then
+      call torch_tensor_delete(tensor)
+      print *, "Error :: torch_tensor_get_device_type returned incorrect device type"
+      stop 999
+    end if
+    call torch_tensor_delete(tensor)
+
+  end subroutine test_torch_tensor_get_device_type
+
   ! Unit test for the torch_tensor_get_device_index function applied to a tensor on the CPU
   @test
   subroutine test_torch_tensor_get_device_index_default()
