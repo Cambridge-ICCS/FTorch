@@ -39,16 +39,6 @@ program example
   call torch_tensor_from_array(a, in_data1, tensor_layout, torch_kCPU)
   call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU)
 
-  ! check tensor rank and shape match those of in_data
-  if ((a%get_rank() /= 2) .or. (b%get_rank() /= 2)) then
-    print *, "Error :: rank should be 2"
-    stop 1
-  end if
-  if (any(a%get_shape() /= [n, m]) .or. any(b%get_shape() /= [n, m])) then
-    write(6,"('Error :: shape should be (',i1,', ',i1,')')") n, m
-    stop 1
-  end if
-
   ! Check arithmetic operations work for torch_tensors
   write (*,*) "a = ", in_data1(:,1)
   write (*,*) "b = ", in_data2(:,1)
