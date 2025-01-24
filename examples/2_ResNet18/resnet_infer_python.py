@@ -88,7 +88,7 @@ def check_results(output: torch.Tensor) -> None:
 
 if __name__ == "__main__":
     filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
-    saved_model_file = os.path.join(filepath, "saved_resnet18_model_cpu.pt")
+    saved_model_file = os.path.join(filepath, "saved_resnet18_model_xpu.pt")
 
     # device_to_run = "cpu"
     # device_to_run = "cuda"

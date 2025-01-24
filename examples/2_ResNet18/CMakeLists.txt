@@ -45,7 +45,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME resnet_infer_fortran
     COMMAND
-      resnet_infer_fortran ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt
+      resnet_infer_fortran ${PROJECT_BINARY_DIR}/saved_resnet18_model_xpu.pt
       ${PROJECT_SOURCE_DIR}/data
       # Command line arguments: model file and data directory filepath
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
