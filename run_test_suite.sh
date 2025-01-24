@@ -29,8 +29,8 @@ show_help() {
 BUILD_DIR="src/build"
 INTEGRATION_ONLY=false
 UNIT_ONLY=false
-VERBOSE=false
 HELP=false
+CTEST_ARGS=""
 for ARG in "$@"; do
   case ${ARG} in
   BUILD_DIR=*)
@@ -44,18 +44,13 @@ for ARG in "$@"; do
     UNIT_ONLY=true
     shift
     ;;
-  --verbose | -V)
-    VERBOSE=true
-    shift
-    ;;
   --help | -h)
     HELP=true
     shift
     ;;
   *)
-    echo "Unknown argument: ${ARG}"
-    show_help
-    exit 1
+    CTEST_ARGS="${ARG#*=} ${CTEST_ARGS}"
+    shift
     ;;
   esac
 done
@@ -66,17 +61,10 @@ if [ "${HELP}" = true ]; then
   exit 0
 fi
 
-# Process command line arguments
-if [ "${VERBOSE}" = true ]; then
-  CTEST_ARGS="-V"
-else
-  CTEST_ARGS=""
-fi
-
 # Run unit tests
 if [ "${INTEGRATION_ONLY}" = false ]; then
   cd "${BUILD_DIR}/test/unit"
-  ctest "${CTEST_ARGS}"
+  ctest ${CTEST_ARGS}
   cd -
 fi
 
@@ -86,7 +74,7 @@ if [ "${UNIT_ONLY}" = false ]; then
   for EXAMPLE in ${EXAMPLES}; do
     pip -q install -r examples/"${EXAMPLE}"/requirements.txt
     cd "${BUILD_DIR}"/test/examples/"${EXAMPLE}"
-    ctest "${CTEST_ARGS}"
+    ctest ${CTEST_ARGS}
     cd -
   done
 fi
