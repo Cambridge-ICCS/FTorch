@@ -2341,10 +2341,21 @@ contains
 
   !> Returns the device type of a tensor.
   function torch_tensor_get_device_type(tensor) result(device_type)
+    use, intrinsic :: iso_c_binding, only : c_int
     class(torch_tensor), intent(in) :: tensor  !! Input tensor
-    integer :: device_type                     !! Device type of tensor
+    integer(c_int) :: device_type              !! Device type of tensor
 
-    device_type = tensor%device_type
+    interface
+      function torch_tensor_get_device_type_c(tensor) result(device_type) &
+          bind(c, name = 'torch_tensor_get_device_type')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+        integer(c_int) :: device_type
+      end function torch_tensor_get_device_type_c
+    end interface
+
+    device_type = torch_tensor_get_device_type_c(tensor%p)
   end function torch_tensor_get_device_type
 
   !> Determines the device index of a tensor.

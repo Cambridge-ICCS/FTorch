@@ -121,13 +121,6 @@ EXPORT_C void *torch_to_blob(const torch_tensor_t tensor, const torch_data_t dty
 EXPORT_C void torch_tensor_print(const torch_tensor_t tensor);
 
 /**
- * Function to determine the device index of a Torch Tensor
- * @param Torch Tensor to determine the device index of
- * @return device index of the Torch Tensor
- */
-EXPORT_C int torch_tensor_get_device_index(const torch_tensor_t tensor);
-
-/**
  * Function to determine the rank of a Torch Tensor
  * @param Torch Tensor to determine the rank of
  * @return rank of the Torch Tensor
@@ -144,6 +137,20 @@ EXPORT_C const long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
 #else
 EXPORT_C const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
 #endif
+
+/**
+ * Function to determine the device type of a Torch Tensor
+ * @param Torch Tensor to determine the device type of
+ * @return device type of the Torch Tensor represented as an enum
+ */
+EXPORT_C torch_device_t torch_tensor_get_device_type(const torch_tensor_t tensor);
+
+/**
+ * Function to determine the device index of a Torch Tensor
+ * @param Torch Tensor to determine the device index of
+ * @return device index of the Torch Tensor
+ */
+EXPORT_C int torch_tensor_get_device_index(const torch_tensor_t tensor);
 
 // =============================================================================
 // --- Functions for deallocating tensors
