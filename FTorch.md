@@ -33,7 +33,7 @@ Brief description
 It is desirable to be able to run machine learning (ML) models directly in Fortran.
 ML models are often trained in some other language (say, Python) using a popular frameworks (say, PyTorch) and saved.
 We want to run inference on this model without having to call a Python executable.
-To achieve this we use the existing Torch C++ interface, libtorch.
+To achieve this we use the existing Torch C++ interface, LibTorch.
 
 FTorch provides a library enabling a user to directly couple their PyTorch models to Fortran code.
 There are also installation instructions for the library and examples of performing coupling.
@@ -45,6 +45,12 @@ Presentations
 
 The following presentations contain information about FTorch:
 
+* Coupling Machine Learning to Numerical (Climate) Models<br>
+  Platform for Advanced Scientific Computing, Zurich - June 2024<br>
+  [Slides](https://jackatkinson.net/slides/PASC24)
+* Blending Machine Learning and Numerical Simulation, with Applications to Climate Modelling<br>
+  Durham HPC days, Durham - May 2024<br>
+  [Slides](https://jackatkinson.net/slides/HPC_Durham_2024)
 * Reducing the overheads for coupling PyTorch machine learning models to Fortran<br>
   ML & DL Seminars, LSCE, IPSL, Paris - November 2023<br>
   [Slides](https://jackatkinson.net/slides/IPSL_FTorch) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)

@@ -109,24 +109,24 @@ cmake --install .
 ### MinGW
 
 It may be tempting to build on Windows using MinGW.
-However, [libtorch does not currently support MinGW](https://github.com/pytorch/pytorch/issues/15099).
+However, [LibTorch does not currently support MinGW](https://github.com/pytorch/pytorch/issues/15099).
 Instead please build using Visual Studio and the intel Fortran compiler (ifort) as
 detailed in the project README.
 
 ## Apple Silicon
 
-At the time of writing, libtorch is currently only officially available for x86
+At the time of writing, LibTorch is currently only officially available for x86
 architectures (according to [pytorch.org](https://pytorch.org/)).
 However, the version of PyTorch provided by pip install provides an ARM binary
-for libtorch which works on Apple Silicon.
+for LibTorch which works on Apple Silicon.
 Therefore you should `pip install torch` in this situation and follow the guidance
 on locating Torch within a virtual environment (venv) for CMake.
 
 ## FAQ
 
-### Why are inputs to torch models an array?
+### Why are inputs/outputs to/from torch models arrays?
 
-The reason input and output tensors to [[torch_model_forward(subroutine)]] are
+The reason input and output tensors to/from [[torch_model_forward(subroutine)]] are
 contained in arrays is because it is possible to pass multiple input tensors to
 the `forward()` method of a torch net, and it is possible for the net to return
 multiple output arrays.<br>

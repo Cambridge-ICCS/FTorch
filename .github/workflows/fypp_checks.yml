@@ -23,12 +23,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        persist-credentials: false
     - uses: actions/setup-python@v4
       with:
         python-version: "3.11"
     - run: pip install fypp
 
-    - name: Check ftorch.fypp matches ftorch.f90
+    - name: Check ftorch.fypp matches ftorch.F90
       run: |
         fypp src/ftorch.fypp src/temp.F90_temp
         if ! diff -q src/ftorch.F90 src/temp.F90_temp; then

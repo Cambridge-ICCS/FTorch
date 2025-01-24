@@ -1,0 +1,435 @@
+!| Unit tests for FTorch subroutines that construct tensors.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module test_tensor_constructors
+  use funit
+  use ftorch, only: ftorch_int, torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, &
+                    torch_tensor_to_array
+  use ftorch_test_utils, only: assert_allclose
+  use iso_c_binding, only: c_associated, c_int64_t
+
+  implicit none
+
+  public
+
+  ! Parameters common across all test cases
+  integer, parameter :: device_type = torch_kCPU
+  integer, parameter :: device_index = -1
+
+  ! Typedef holding a set of parameter values
+  @testParameter
+  type, extends(AbstractTestParameter) :: TestParametersType
+    logical :: requires_grad
+  contains
+    procedure :: toString
+  end type TestParametersType
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_ctor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(TestParametersType) :: param
+  end type TestCaseType
+
+contains
+
+  ! Constructor for the test case type
+  function test_case_ctor(param)
+    type(TestCaseType) :: test_case_ctor
+    type(TestParametersType) :: param
+    test_case_ctor%param = param
+  end function test_case_ctor
+
+  ! A fixture comprised of a full list of parameter sets
+  function get_parameters_full() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.), &
+      TestParametersType(.true.) &
+    ]
+  end function get_parameters_full
+
+  ! A fixture comprised of a short list of parameter sets
+  function get_parameters_short() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [TestParametersType(.false.)]
+  end function get_parameters_short
+
+  ! Function for representing a parameter set as a string
+  function toString(this) result(string)
+    class(TestParametersType), intent(in) :: this
+    character(:), allocatable :: string
+    character(len=1) :: str
+    write(str,'(l1)') this%requires_grad
+    string = str
+  end function toString
+
+  ! Unit test for the torch_tensor_empty subroutine
+  @test(testParameters={get_parameters_full()})
+  subroutine test_torch_tensor_empty(this)
+    use ftorch, only: torch_tensor_empty
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer, parameter :: dtype = torch_kFloat32
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor%p))
+
+    ! Create a tensor of zeros
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+                            this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor%p))
+
+    ! Cleanup
+    call torch_tensor_delete(tensor)
+
+  end subroutine test_torch_tensor_empty
+
+  ! Unit test for the torch_tensor_zeros subroutine
+  @test(testParameters={get_parameters_full()})
+  subroutine test_torch_tensor_zeros(this)
+    use ftorch, only: torch_tensor_zeros
+    use, intrinsic :: iso_fortran_env, only: sp => real32
+
+    implicit none
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer, parameter :: dtype = torch_kFloat32
+    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3) :: expected
+    logical :: test_pass
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor%p))
+
+    ! Create a tensor of zeros
+    call torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+                            this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor%p))
+
+    ! Extract Fortran array from tensor
+    call torch_tensor_to_array(tensor, out_data, shape(expected))
+
+    ! Check that the tensor values are all zero
+    expected(:,:) = 0.0
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_zeros")
+    if (.not. test_pass) then
+      call clean_up()
+      print *, "Error :: incorrect output from torch_tensor_zeros subroutine"
+      stop 999
+    end if
+
+    call clean_up()
+
+    contains
+
+      ! Subroutine for freeing memory and nullifying pointers used in the unit test
+      subroutine clean_up()
+        nullify(out_data)
+        call torch_tensor_delete(tensor)
+      end subroutine clean_up
+
+  end subroutine test_torch_tensor_zeros
+
+  ! Unit test for the torch_tensor_ones subroutine
+  @test(testParameters={get_parameters_full()})
+  subroutine test_torch_tensor_ones(this)
+    use ftorch, only: torch_tensor_ones
+    use, intrinsic :: iso_fortran_env, only: sp => real32
+
+    implicit none
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer, parameter :: dtype = torch_kFloat32
+    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3) :: expected
+    logical :: test_pass
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor%p))
+
+    ! Create tensor of ones
+    call torch_tensor_ones(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+                           this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor%p))
+
+    ! Extract Fortran array from tensor
+    call torch_tensor_to_array(tensor, out_data, shape(expected))
+
+    ! Check that the tensor values are all one
+    expected(:,:) = 1.0
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")
+    if (.not. test_pass) then
+      call clean_up()
+      print *, "Error :: incorrect output from torch_tensor_ones subroutine"
+      stop 999
+    end if
+
+    call clean_up()
+
+    contains
+
+      ! Subroutine for freeing memory and nullifying pointers used in the unit test
+      subroutine clean_up()
+        nullify(out_data)
+        call torch_tensor_delete(tensor)
+      end subroutine clean_up
+
+  end subroutine test_torch_tensor_ones
+
+  ! Unit test for the torch_tensor_from_array subroutine in the 1D case
+  @test(testParameters={get_parameters_full()})
+  subroutine test_torch_from_array_1d(this)
+    use ftorch, only: torch_tensor_from_array
+    use, intrinsic :: iso_fortran_env, only: sp => real32
+
+    implicit none
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 1
+    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1]
+    real(wp), dimension(6), target :: in_data
+    real(wp), dimension(:), pointer :: out_data
+    real(wp), dimension(6) :: expected
+    logical :: test_pass
+
+    ! Create an arbitrary input array
+    in_data(:) = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor%p))
+
+    ! Create a tensor based off an input array
+    call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index, &
+                                 this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor%p))
+
+    ! Extract Fortran array from tensor
+    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+
+    ! Compare the data in the tensor to the input data
+    expected(:) = in_data
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
+    if (.not. test_pass) then
+      call clean_up()
+      print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
+      stop 999
+    end if
+
+    call clean_up()
+
+    contains
+
+      ! Subroutine for freeing memory and nullifying pointers used in the unit test
+      subroutine clean_up()
+        nullify(out_data)
+        call torch_tensor_delete(tensor)
+      end subroutine clean_up
+
+  end subroutine test_torch_from_array_1d
+
+  ! Unit test for the torch_tensor_from_array subroutine in the 2D case
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_from_array_2d(this)
+    use ftorch, only: torch_tensor_from_array
+    use, intrinsic :: iso_fortran_env, only: sp => real32
+
+    implicit none
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1]
+    real(wp), dimension(2,3), target :: in_data
+    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3) :: expected
+    logical :: test_pass
+
+    ! Create an arbitrary input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor%p))
+
+    ! Create a tensor based off an input array
+    call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index, &
+                                 this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor%p))
+
+    ! Extract Fortran array from tensor
+    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+
+    ! Compare the data in the tensor to the input data
+    expected(:,:) = in_data
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
+    if (.not. test_pass) then
+      call clean_up()
+      print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
+      stop 999
+    end if
+
+    call clean_up()
+
+    contains
+
+      ! Subroutine for freeing memory and nullifying pointers used in the unit test
+      subroutine clean_up()
+        nullify(out_data)
+        call torch_tensor_delete(tensor)
+      end subroutine clean_up
+
+  end subroutine test_torch_from_array_2d
+
+  ! Unit test for the torch_tensor_from_array subroutine in the 3D case
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_from_array_3d(this)
+    use ftorch, only: torch_tensor_from_array
+    use, intrinsic :: iso_fortran_env, only: sp => real32
+
+    implicit none
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 3
+    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1, 1]
+    real(wp), dimension(1,2,3), target :: in_data
+    real(wp), dimension(:,:,:), pointer :: out_data
+    real(wp), dimension(1,2,3) :: expected
+    logical :: test_pass
+
+    ! Create an arbitrary input array
+    in_data(:,:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [1,2,3])
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor%p))
+
+    ! Create a tensor based off an input array
+    call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor%p))
+
+    ! Extract Fortran array from tensor
+    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+
+    ! Compare the data in the tensor to the input data
+    expected(:,:,:) = in_data
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
+    if (.not. test_pass) then
+      call clean_up()
+      print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
+      stop 999
+    end if
+
+    call clean_up()
+
+    contains
+
+      ! Subroutine for freeing memory and nullifying pointers used in the unit test
+      subroutine clean_up()
+        nullify(out_data)
+        call torch_tensor_delete(tensor)
+      end subroutine clean_up
+
+  end subroutine test_torch_from_array_3d
+
+  ! Unit test for the torch_tensor_from_blob subroutine
+  @test(testParameters={get_parameters_full()})
+  subroutine test_torch_from_blob(this)
+    use ftorch, only: torch_tensor_from_blob
+    use, intrinsic :: iso_fortran_env, only: sp => real32
+    use, intrinsic :: iso_c_binding, only : c_loc
+
+    implicit none
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
+    integer, parameter :: layout(ndims) = [1, 1]
+    integer, parameter :: dtype = torch_kFloat32
+    real(wp), dimension(2,3), target :: in_data
+    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3) :: expected
+    logical :: test_pass
+
+    ! Create an arbitrary input array
+    in_data = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor%p))
+
+    ! Create a tensor based off an input array
+    call torch_tensor_from_blob(tensor, c_loc(in_data), ndims, tensor_shape, layout, dtype, &
+                                device_type, device_index, this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor%p))
+
+    ! Extract Fortran array from tensor
+    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+
+    ! Compare the data in the tensor to the input data 
+    expected(:,:) = in_data
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_blob")
+    if (.not. test_pass) then
+      call clean_up()
+      print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
+      stop 999
+    end if
+
+    call clean_up()
+
+    contains
+
+      ! Subroutine for freeing memory and nullifying pointers used in the unit test
+      subroutine clean_up()
+        nullify(out_data)
+        call torch_tensor_delete(tensor)
+      end subroutine clean_up
+
+  end subroutine test_torch_from_blob
+
+end module test_tensor_constructors

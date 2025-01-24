@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15...3.31)
 set(PROJECT_NAME FTorch)
 set(LIB_NAME ftorch)
 set(PACKAGE_VERSION 0.1)
@@ -109,6 +109,15 @@ if(CMAKE_BUILD_TESTS)
     COMPONENTS Interpreter
     REQUIRED)
 
+  enable_testing()
+
+  # Unit tests
+  # NOTE: We do not currently support unit testing on Windows
+  if(UNIX)
+    add_subdirectory(test/unit)
+  endif()
+
+  # Integration tests
   file(MAKE_DIRECTORY test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/CMakeLists.txt
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
@@ -116,12 +125,12 @@ if(CMAKE_BUILD_TESTS)
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/2_ResNet18
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  # file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/3_MultiGPU DESTINATION
-  # ${CMAKE_CURRENT_SOURCE_DIR}/test/examples )
+  # file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/3_MultiGPU
+  #      DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/4_MultiIO
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  # file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/5_Looping DESTINATION
-  # ${CMAKE_CURRENT_SOURCE_DIR}/test/examples )
+  # file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/5_Looping
+  #      DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/6_Autograd
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
   add_subdirectory(test/examples)

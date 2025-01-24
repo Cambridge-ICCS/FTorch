@@ -37,7 +37,7 @@ the FTorch Fortran API the steps are generally as follows:
   that binds to the version in `ctorch.cpp`.
 
 Details of C++ functionalities available to be wrapped can be found
-in the [libtorch C++ API](https://pytorch.org/cppdocs/).
+in the [LibTorch C++ API](https://pytorch.org/cppdocs/).
 
 As this is an open-source project we appreciate any contributions
 back from users that have extended the functionality.
@@ -77,6 +77,15 @@ and many of our users wish to _"clone-and-go"_ rather than develop, we provide b
 Development should only take place in `ftorch.fypp`, however._
 
 
+### Torch C++ API
+
+When extending or modifying functionality related to C++ header and/or source
+files `src/ctorch.h` and `src/ctorch.cpp`, we refer to the Torch
+[C++ documentation](https://pytorch.org/cppdocs) and more specifically the
+[C++ API documentation](https://pytorch.org/cppdocs/api/library_root.html)
+pages on the PyTorch website for details.
+
+
 ### git hook
 
 In order to streamline the process of uploading we provide a pre-commit hook in
@@ -106,9 +115,17 @@ The tools we use are as follows on a language-by-language basis:
 * C++: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
 * C: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
 * Python: [ruff](https://docs.astral.sh/ruff/)
+* Shell: [ShellCheck](https://github.com/koalaman/shellcheck)
 * CMake: [cmake-format](https://github.com/cheshirekow/cmake_format)
+* GitHub Actions workflows: [zizmor](https://woodruffw.github.io/zizmor)
 
 Instructions on installing these tools can be found in their respective documentations.
+Note that all but ShellCheck may be installed with pip. A shortcut for doing
+this is to run the following from the base FTorch directory:
+```
+pip install -r requirements.txt
+```
+
 Contributors should run them over their code and ensure that it conforms before submitting
 a pull request. If there is a good reason to ignore a particular rule this should be
 justified in the pull request and ideally documented in the code.

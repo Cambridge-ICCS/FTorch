@@ -11,6 +11,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/test_suite_windows.yml'
+      - '**.bat'
       - '**.c'
       - '**.cpp'
       - '**.fypp'
@@ -18,7 +19,6 @@ on:
       - '**.F90'
       - '**.pf'
       - '**.py'
-      - '**.sh'
       - '**CMakeLists.txt'
       - '**requirements.txt'
       - '**data/*'
@@ -53,6 +53,8 @@ jobs:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
+        with:
+          persist-credentials: false
         uses: actions/checkout@v4
 
       - name: Install Python
@@ -69,11 +71,13 @@ jobs:
         shell: cmd
         run: |
           cd src
+          rem find torch location
+          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           cmake ^
             -Bbuild ^
             -G "NMake Makefiles" ^
             -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
-            -DCMAKE_PREFIX_PATH="C:\hostedtoolcache\windows\Python\3.12.7\x64\Lib\site-packages" ^
+            -DCMAKE_PREFIX_PATH=%torch_path% ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DCMAKE_Fortran_COMPILER=ifx ^
             -DCMAKE_C_COMPILER=icx ^
@@ -85,7 +89,7 @@ jobs:
       - name: Integration tests
         shell: cmd
         run: |
-          set PATH=C:\hostedtoolcache\windows\Python\3.12.7\x64\Lib\site-packages;%PATH%
+          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
-          set PATH=C:\hostedtoolcache\windows\Python\3.12.7\x64\Lib\site-packages\torch\lib;%PATH%
-          run_integration_tests.bat
+          set PATH=%torch_path%\torch\lib;%PATH%
+          run_test_suite.bat

@@ -91,7 +91,7 @@ advise handling this using the `torch_tensor_from_array` function described in
 As seen from the above example, writing out from Fortran and reading directly in to
 Torch results in us recieving the transpose.
 
-Therefore we could transpose out Fortran data immediately before passing it to Torch.
+Therefore we could transpose our Fortran data immediately before passing it to Torch.
 As a result we will read in to Torch indexed the same as in Fortran pre-transposition.
 
 For arrays of dimension 2 this can be done using the intrinsic

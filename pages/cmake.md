@@ -11,7 +11,7 @@ This is controlled by the `CMakeLists.txt` file in `src/`.
 To install the library requires the following to be installed on the system:
 
 - CMake >= 3.15
-- libtorch or PyTorch
+- LibTorch or PyTorch
 - Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 
 
@@ -55,9 +55,9 @@ The following CMake flags are available and can be passed as arguments through `
 
 | Option                                                                                            | Value                        | Description                                                   |
 | ------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------|
-| [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `ifort` / `gfortran`         | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup>1</sup>        |
-| [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `icc` / `gcc`                | Specify a C compiler to build the library with.<sup>1</sup>                |
-| [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `icpc` / `g++`               | Specify a C++ compiler to build the library with.<sup>1</sup>              |
+| [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `gfortran` / `ifx` / `ifort` | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup>1</sup>        |
+| [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `gcc` / `icx` / `icc`        | Specify a C compiler to build the library with.<sup>1</sup>                |
+| [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `g++` / `icx` / `icpc`       | Specify a C++ compiler to build the library with.<sup>1</sup>              |
 | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`       | Location of Torch installation<sup>2</sup>                    |
 | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
 | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
@@ -68,9 +68,10 @@ The following CMake flags are available and can be passed as arguments through `
 
 > <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake
 > cannot locate it by default._
+> 
 > <sup>2</sup> _The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.  
->       If Torch has been [installed as libtorch](https://pytorch.org/cppdocs/installing.html)
->       then this should be the absolute path to the unzipped libtorch distribution.
+>       If Torch has been [installed as LibTorch](https://pytorch.org/cppdocs/installing.html)
+>       then this should be the absolute path to the unzipped LibTorch distribution.
 >       If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
 >       e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
 > 

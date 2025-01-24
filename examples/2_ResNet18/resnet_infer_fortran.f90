@@ -38,7 +38,7 @@ contains
       integer, parameter :: out_layout(out_dims) = [1, 2]
 
       ! Path to input data
-      character(len=100) :: data_dir
+      character(len=128) :: data_dir
       ! Binary file containing input tensor
       character(len=116) :: filename
       ! Text file containing categories
@@ -52,7 +52,7 @@ contains
       integer :: idx(2)
       real(wp), dimension(:,:), allocatable :: probabilities
       real(wp), parameter :: expected_prob = 0.8846225142478943_wp
-      character(len=100) :: categories(N_cats)
+      character(len=128) :: categories(N_cats)
       real(wp) :: probability
 
       ! Flag for testing

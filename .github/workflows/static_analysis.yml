@@ -10,7 +10,7 @@ on:
   # Triggers the workflow on pushes to open pull requests with code changes
   pull_request:
     paths:
-      - '.github/workflows/static_analysis.yml'
+      - '.github/workflows/*.yml'
       - '**.c'
       - '**.cpp'
       - '**.fypp'
@@ -18,6 +18,8 @@ on:
       - '**.F90'
       - '**.pf'
       - '**.py'
+      - '**.sh'
+      - '**CMakeLists.txt'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -35,6 +37,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
+        with:
+          persist-credentials: false
         uses: actions/checkout@v4
 
       - name: Install Python
@@ -63,12 +67,30 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} -DCMAKE_Fortran_FLAGS="-std=f2008" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       # Apply CMake linter, cmake-lint
-      - name: cmake
+      - name: cmake-lint
         if: always()
         run: |
           cd ${{ github.workspace }}
           . ftorch_venv/bin/activate
           cmake-lint $(find . -name CMakeLists.txt)
+
+      # Apply Shell linter, shellcheck
+      - name: shellcheck
+        if: always()
+        run: |
+          cd ${{ github.workspace }}
+          sudo apt install shellcheck
+          for FILE in $(find . -name "*.sh"); do
+            shellcheck ${FILE}
+          done
+
+      # Apply GitHub Actions linter, zizmor
+      - name: zizmor
+        if: always()
+        run: |
+          cd ${{ github.workspace }}
+          . ftorch_venv/bin/activate
+          zizmor .github/workflows/*.yml
 
       # Apply Fortran linter, fortitude
       # Configurable using the fortitude.toml file if present

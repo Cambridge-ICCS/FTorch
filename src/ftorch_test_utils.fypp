@@ -2,7 +2,7 @@
 $:'' if RANK == 0 else '(' + ':' + ',:' * (RANK - 1) + ')'
 #:enddef ranksuffix
 #:set PRECISIONS = ['real32', 'real64']
-#:set RANKS = range(1, 3)
+#:set RANKS = range(1, 4)
 #:def f_type(PRECISION)
 $:'integer' if PRECISION[:3] == 'int' else 'real'
 #:enddef f_type
@@ -66,7 +66,6 @@ module ftorch_test_utils
 
       character(len=80) :: message
 
-      ${f_type(PREC)}$(kind=${PREC}$) :: relative_error
       ${f_type(PREC)}$(kind=${PREC}$) :: rtol_value
       logical :: print_result_value
 
@@ -108,7 +107,6 @@ module ftorch_test_utils
 
       character(len=80) :: message
 
-      ${f_type(PREC)}$(kind=${PREC}$) :: relative_error
       ${f_type(PREC)}$(kind=${PREC}$) :: rtol_value
       integer :: shape_error
       logical :: print_result_value
