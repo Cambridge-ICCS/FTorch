@@ -22,7 +22,6 @@ contains
   ! Unit test for the torch_tensor_get_device_type function applied to a tensor on a CUDA device
   @test
   subroutine test_torch_tensor_get_device_type()
-    use ftorch, only: torch_tensor_get_device_type
 
     implicit none
 
@@ -49,7 +48,6 @@ contains
   ! Tensor is created without specifying a device_index so should default to device 0
   @test
   subroutine test_torch_tensor_get_device_index_default()
-    use ftorch, only: torch_tensor_get_device_index
 
     implicit none
 

@@ -139,6 +139,13 @@ EXPORT_C const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor
 #endif
 
 /**
+ * Function to determine the data type of a Torch Tensor
+ * @param Torch Tensor to determine the data type of
+ * @return data type of the Torch Tensor represented as an enum
+ */
+EXPORT_C torch_data_t torch_tensor_get_dtype(const torch_tensor_t tensor);
+
+/**
  * Function to determine the device type of a Torch Tensor
  * @param Torch Tensor to determine the device type of
  * @return device type of the Torch Tensor represented as an enum

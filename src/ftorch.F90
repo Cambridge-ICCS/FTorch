@@ -2333,10 +2333,21 @@ contains
 
   !> Returns the data type of a tensor.
   function torch_tensor_get_dtype(tensor) result(dtype)
+    use, intrinsic :: iso_c_binding, only : c_int
     class(torch_tensor), intent(in) :: tensor  !! Input tensor
-    integer :: dtype                           !! Data type of tensor
+    integer(c_int) :: dtype                !! Data type of tensor
 
-    dtype = tensor%dtype
+    interface
+      function torch_tensor_get_dtype_c(tensor) result(dtype) &
+          bind(c, name = 'torch_tensor_get_dtype')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+        integer(c_int) :: dtype
+      end function torch_tensor_get_dtype_c
+    end interface
+
+    dtype = torch_tensor_get_dtype_c(tensor%p)
   end function torch_tensor_get_dtype
 
   !> Returns the device type of a tensor.

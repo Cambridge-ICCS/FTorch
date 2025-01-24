@@ -160,7 +160,6 @@ contains
   ! Unit test for the torch_tensor_get_dtype function
   @test
   subroutine test_torch_tensor_get_dtype()
-    use ftorch, only: torch_tensor_get_dtype
 
     implicit none
 
@@ -186,7 +185,6 @@ contains
   ! Unit test for the torch_tensor_get_device_type function applied to a tensor on the CPU
   @test
   subroutine test_torch_tensor_get_device_type()
-    use ftorch, only: torch_tensor_get_device_type
 
     implicit none
 
@@ -212,7 +210,6 @@ contains
   ! Unit test for the torch_tensor_get_device_index function applied to a tensor on the CPU
   @test
   subroutine test_torch_tensor_get_device_index_default()
-    use ftorch, only: torch_tensor_get_device_index
 
     implicit none
 
