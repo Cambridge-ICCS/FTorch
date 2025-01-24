@@ -42,13 +42,13 @@ class MultiGPUNet(nn.Module):
 
 
 if __name__ == "__main__":
-    model = MultiGPUNet().to(torch.device("cuda"))
+    model = MultiGPUNet().to(torch.device("xpu"))
     model.eval()
 
     input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0])
-    input_tensor_gpu = input_tensor.to(torch.device("cuda"))
+    input_tensor_gpu = input_tensor.to(torch.device("xpu"))
 
-    print(f"SimpleNet forward pass on CUDA device {input_tensor_gpu.get_device()}")
+    print(f"SimpleNet forward pass on XPU device {input_tensor_gpu.get_device()}")
     with torch.no_grad():
         output = model(input_tensor_gpu)
     print(output)

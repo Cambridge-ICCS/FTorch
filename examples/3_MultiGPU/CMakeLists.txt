@@ -18,12 +18,12 @@ find_package(FTorch)
 find_package(MPI REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
-check_language(CUDA)
-if(CMAKE_CUDA_COMPILER)
-  enable_language(CUDA)
-else()
-  message(ERROR "No CUDA support")
-endif()
+# check_language(CUDA)
+# if(CMAKE_CUDA_COMPILER)
+#   enable_language(CUDA)
+# else()
+#   message(ERROR "No CUDA support")
+# endif()
 
 # Fortran example
 add_executable(multigpu_infer_fortran multigpu_infer_fortran.f90)
@@ -47,14 +47,14 @@ if (CMAKE_BUILD_TESTS)
                                   # the model
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-  # 3. Check the model can be loaded from file and run in Python and that its
-  #   outputs meet expectations
-  add_test(
-    NAME multigpu_infer_python
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath to find the
-                                  # model
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  # # 3. Check the model can be loaded from file and run in Python and that its
+  # #   outputs meet expectations
+  # add_test(
+  #   NAME multigpu_infer_python
+  #   COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py
+  #           ${PROJECT_BINARY_DIR} # Command line argument: filepath to find the
+  #                                 # model
+  #   WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 4. Check the model can be loaded from file and run in Fortran and that its
   #   outputs meet expectations

@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
     # FPTLIB-TODO
     # Uncomment the following lines to save for inference on GPU (rather than CPU):
-    device = torch.device("cuda")
+    device = torch.device("xpu")
     trained_model = trained_model.to(device)
     trained_model.eval()
     trained_model_dummy_input = trained_model_dummy_input.to(device)
@@ -117,7 +117,7 @@ if __name__ == "__main__":
 
     # FPTLIB-TODO
     # Set the name of the file you want to save the torchscript model to:
-    saved_ts_filename = "saved_multigpu_model_cuda.pt"
+    saved_ts_filename = "saved_multigpu_model_xpu.pt"
     # A filepath may also be provided. To do this, pass the filepath as an argument to
     # this script when it is run from the command line, i.e. `./pt2ts.py path/to/model`.
 
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     # FPTLIB-TODO
     # Scale inputs as above and, if required, move inputs and mode to GPU
     trained_model_dummy_input = 2.0 * trained_model_dummy_input
-    trained_model_dummy_input = trained_model_dummy_input.to("cuda")
+    trained_model_dummy_input = trained_model_dummy_input.to("xpu")
     trained_model_testing_outputs = trained_model(
         trained_model_dummy_input,
     )

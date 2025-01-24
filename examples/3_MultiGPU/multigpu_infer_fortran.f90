@@ -4,7 +4,7 @@ program inference
    use, intrinsic :: iso_fortran_env, only : sp => real32
 
    ! Import our library for interfacing with PyTorch
-   use ftorch, only : torch_model, torch_tensor, torch_kCUDA, torch_kCPU, &
+   use ftorch, only : torch_model, torch_tensor, torch_kXPU, torch_kCPU, &
                       torch_tensor_from_array, torch_model_load, torch_model_forward, &
                       torch_delete
 
@@ -49,9 +49,9 @@ program inference
 
    ! Create Torch input tensor from the above array and assign it to the first (and only)
    ! element in the array of input tensors.
-   ! We use the torch_kCUDA device type with device index corresponding to the MPI rank.
+   ! We use the torch_kXPU device type with device index corresponding to the MPI rank.
    call torch_tensor_from_array(in_tensors(1), in_data, tensor_layout, &
-                                torch_kCUDA, device_index=rank)
+                                torch_kXPU, device_index=rank)
 
    ! Create Torch output tensor from the above array.
    ! Here we use the torch_kCPU device type since the tensor is for output only
@@ -60,7 +60,7 @@ program inference
 
    ! Load ML model. Ensure that the same device type and device index are used
    ! as for the input data.
-   call torch_model_load(model, args(1), device_type=torch_kCUDA,                 &
+   call torch_model_load(model, args(1), device_type=torch_kXPU,                 &
                              device_index=rank)
 
    ! Infer

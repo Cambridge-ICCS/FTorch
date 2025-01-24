@@ -127,10 +127,10 @@ if(CMAKE_BUILD_TESTS)
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/2_ResNet18
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  if(ENABLE_CUDA AND ENABLE_MPI)
+  # if(ENABLE_CUDA AND ENABLE_MPI)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/3_MultiGPU
         DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  endif()
+  # endif()
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/4_MultiIO
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
   # file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/5_Looping
