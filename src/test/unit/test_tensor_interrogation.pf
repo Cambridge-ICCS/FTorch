@@ -157,6 +157,32 @@ contains
 
   end subroutine test_torch_tensor_get_shape_3D
 
+  ! Unit test for the torch_tensor_get_dtype function
+  @test
+  subroutine test_torch_tensor_get_dtype()
+    use ftorch, only: torch_tensor_get_dtype
+
+    implicit none
+
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer, parameter :: dtype = torch_kFloat32
+    integer, parameter :: expected = torch_kFloat32
+
+    ! Create an empty tensor for 32-bit floats
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+
+    ! Check that torch_tensor_get_dtype can get the device type
+    if (expected /= tensor%torch_tensor_get_dtype()) then
+      call torch_tensor_delete(tensor)
+      print *, "Error :: torch_tensor_get_dtype returned incorrect dtype"
+      stop 999
+    end if
+    call torch_tensor_delete(tensor)
+
+  end subroutine test_torch_tensor_get_dtype
+
   ! Unit test for the torch_tensor_get_device_type function applied to a tensor on the CPU
   @test
   subroutine test_torch_tensor_get_device_type()
