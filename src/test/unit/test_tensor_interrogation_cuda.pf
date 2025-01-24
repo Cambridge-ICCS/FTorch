@@ -36,7 +36,7 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
 
     ! Check that torch_tensor_get_device_type can get the device type
-    if (expected /= tensor%torch_tensor_get_device_type()) then
+    if (expected /= tensor%get_device_type()) then
       call torch_tensor_delete(tensor)
       print *, "Error :: torch_tensor_get_device_type returned incorrect device type"
       stop 999

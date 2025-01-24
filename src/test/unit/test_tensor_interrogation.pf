@@ -33,9 +33,9 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (ndims /= tensor%torch_tensor_get_rank()) then
+    if (ndims /= tensor%get_rank()) then
       call torch_tensor_delete(tensor)
-      print *, "Error :: torch_tensor_get_rank returned incorrect rank for 1D tensor"
+      print *, "Error :: tensor%get_rank() returned incorrect rank for 1D tensor"
       stop 999
     end if
     call torch_tensor_delete(tensor)
@@ -56,9 +56,9 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (ndims /= tensor%torch_tensor_get_rank()) then
+    if (ndims /= tensor%get_rank()) then
       call torch_tensor_delete(tensor)
-      print *, "Error :: torch_tensor_get_rank returned incorrect rank for 2D tensor"
+      print *, "Error :: tensor%get_rank() returned incorrect rank for 2D tensor"
       stop 999
     end if
     call torch_tensor_delete(tensor)
@@ -79,9 +79,9 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (ndims /= tensor%torch_tensor_get_rank()) then
+    if (ndims /= tensor%get_rank()) then
       call torch_tensor_delete(tensor)
-      print *, "Error :: torch_tensor_get_rank returned incorrect rank for 3D tensor"
+      print *, "Error :: tensor%get_rank() returned incorrect rank for 3D tensor"
       stop 999
     end if
     call torch_tensor_delete(tensor)
@@ -102,9 +102,9 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (.not. all(tensor_shape == tensor%torch_tensor_get_shape())) then
+    if (.not. all(tensor_shape == tensor%get_shape())) then
       call torch_tensor_delete(tensor)
-      print *, "Error :: torch_tensor_get_rank returned incorrect shape for 1D tensor"
+      print *, "Error :: tensor%get_shape() returned incorrect shape for 1D tensor"
       stop 999
     end if
     call torch_tensor_delete(tensor)
@@ -125,9 +125,9 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (.not. all(tensor_shape == tensor%torch_tensor_get_shape())) then
+    if (.not. all(tensor_shape == tensor%get_shape())) then
       call torch_tensor_delete(tensor)
-      print *, "Error :: torch_tensor_get_rank returned incorrect shape for 2D tensor"
+      print *, "Error :: tensor%get_shape() returned incorrect shape for 2D tensor"
       stop 999
     end if
     call torch_tensor_delete(tensor)
@@ -148,9 +148,9 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (.not. all(tensor_shape == tensor%torch_tensor_get_shape())) then
+    if (.not. all(tensor_shape == tensor%get_shape())) then
       call torch_tensor_delete(tensor)
-      print *, "Error :: torch_tensor_get_rank returned incorrect shape for 3D tensor"
+      print *, "Error :: tensor%get_shape() returned incorrect shape for 3D tensor"
       stop 999
     end if
     call torch_tensor_delete(tensor)
@@ -174,9 +174,9 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
 
     ! Check that torch_tensor_get_dtype can get the device type
-    if (expected /= tensor%torch_tensor_get_dtype()) then
+    if (expected /= tensor%get_dtype()) then
       call torch_tensor_delete(tensor)
-      print *, "Error :: torch_tensor_get_dtype returned incorrect dtype"
+      print *, "Error :: tensor%get_dtype() returned incorrect dtype"
       stop 999
     end if
     call torch_tensor_delete(tensor)
@@ -200,9 +200,9 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
 
     ! Check that torch_tensor_get_device_type can get the device type
-    if (expected /= tensor%torch_tensor_get_device_type()) then
+    if (expected /= tensor%get_device_type()) then
       call torch_tensor_delete(tensor)
-      print *, "Error :: torch_tensor_get_device_type returned incorrect device type"
+      print *, "Error :: tensor%get_device_type() returned incorrect device type"
       stop 999
     end if
     call torch_tensor_delete(tensor)
@@ -226,9 +226,9 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
 
     ! Check that torch_tensor_get_device_index can get the device index
-    if (expected /= tensor%torch_tensor_get_device_index()) then
+    if (expected /= tensor%get_device_index()) then
       call torch_tensor_delete(tensor)
-      print *, "Error :: torch_tensor_get_device_index returned incorrect CPU device index"
+      print *, "Error :: tensor%get_device_index() returned incorrect CPU device index"
       stop 999
     end if
     call torch_tensor_delete(tensor)

@@ -27,15 +27,15 @@ module ftorch
 
   !> Type for holding a Torch tensor.
   type torch_tensor
-    type(c_ptr) :: p = c_null_ptr  !! pointer to the tensor in memory
-    integer, private :: dtype
-    integer, private :: device_type
+    type(c_ptr) :: p = c_null_ptr    !! pointer to the tensor in memory
+    integer, private :: dtype        !! integer representing the tensor's data type
+    integer, private :: device_type  !! integer representing the tensor's device type
   contains
-    procedure :: torch_tensor_get_rank
-    procedure :: torch_tensor_get_shape
-    procedure :: torch_tensor_get_dtype
-    procedure :: torch_tensor_get_device_type
-    procedure :: torch_tensor_get_device_index
+    procedure :: get_rank => torch_tensor_get_rank
+    procedure :: get_shape => torch_tensor_get_shape
+    procedure :: get_dtype => torch_tensor_get_dtype
+    procedure :: get_device_type => torch_tensor_get_device_type
+    procedure :: get_device_index => torch_tensor_get_device_index
   end type torch_tensor
 
   !| Enumerator for Torch data types
@@ -1382,7 +1382,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1412,7 +1412,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1442,7 +1442,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1472,7 +1472,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1502,7 +1502,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1532,7 +1532,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1562,7 +1562,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1592,7 +1592,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1622,7 +1622,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1652,7 +1652,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1682,7 +1682,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1712,7 +1712,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1742,7 +1742,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1772,7 +1772,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1802,7 +1802,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1832,7 +1832,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1862,7 +1862,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1892,7 +1892,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1922,7 +1922,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1952,7 +1952,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1982,7 +1982,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2012,7 +2012,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2042,7 +2042,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2072,7 +2072,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2102,7 +2102,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2132,7 +2132,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2162,7 +2162,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2192,7 +2192,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2222,7 +2222,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2252,7 +2252,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%torch_tensor_get_shape()
+    my_shape = tensor%get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2326,7 +2326,7 @@ contains
       end function torch_tensor_get_sizes_c
     end interface
 
-    ndims(1) = self%torch_tensor_get_rank()
+    ndims(1) = self%get_rank()
     cptr = torch_tensor_get_sizes_c(self%p)
     call c_f_pointer(cptr, sizes, ndims)
   end function torch_tensor_get_shape
@@ -2497,8 +2497,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int8
@@ -2514,8 +2514,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int16
@@ -2531,8 +2531,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int32
@@ -2548,8 +2548,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int64
@@ -2565,8 +2565,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_real32
@@ -2582,8 +2582,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_real64
@@ -2600,8 +2600,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int8
@@ -2617,8 +2617,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int16
@@ -2634,8 +2634,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int32
@@ -2651,8 +2651,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int64
@@ -2668,8 +2668,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_real32
@@ -2685,8 +2685,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_real64
@@ -2711,8 +2711,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int8
@@ -2728,8 +2728,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int16
@@ -2745,8 +2745,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int32
@@ -2762,8 +2762,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int64
@@ -2779,8 +2779,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_real32
@@ -2796,8 +2796,8 @@ contains
     integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    device_type = tensor%torch_tensor_get_device_type()
-    device_index = tensor%torch_tensor_get_device_index()
+    device_type = tensor%get_device_type()
+    device_index = tensor%get_device_index()
     call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_real64
