@@ -2493,9 +2493,13 @@ contains
     integer(int8), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int8
 
@@ -2506,9 +2510,13 @@ contains
     integer(int16), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int16
 
@@ -2519,9 +2527,13 @@ contains
     integer(int32), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int32
 
@@ -2532,9 +2544,13 @@ contains
     integer(int64), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_int64
 
@@ -2545,9 +2561,13 @@ contains
     real(real32), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_real32
 
@@ -2558,9 +2578,13 @@ contains
     real(real64), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_real64
 
@@ -2572,9 +2596,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     integer(int8), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int8
 
@@ -2585,9 +2613,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     integer(int16), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int16
 
@@ -2598,9 +2630,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     integer(int32), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int32
 
@@ -2611,9 +2647,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     integer(int64), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int64
 
@@ -2624,9 +2664,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     real(real32), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_real32
 
@@ -2637,9 +2681,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     real(real64), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_real64
 
@@ -2659,9 +2707,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     integer(int8), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int8
 
@@ -2672,9 +2724,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     integer(int16), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int16
 
@@ -2685,9 +2741,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     integer(int32), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int32
 
@@ -2698,9 +2758,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     integer(int64), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_int64
 
@@ -2711,9 +2775,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     real(real32), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_real32
 
@@ -2724,9 +2792,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     real(real64), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_real64
 

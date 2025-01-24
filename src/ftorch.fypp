@@ -717,9 +717,13 @@ contains
     ${f_type(PREC)}$(${PREC}$), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
   end function torch_tensor_premultiply_${PREC}$
 
@@ -733,9 +737,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [scalar], [1], device_type, device_index)
     output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
   end function torch_tensor_postmultiply_${PREC}$
 
@@ -757,9 +765,13 @@ contains
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(${PREC}$), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
+    integer :: device_type
+    integer :: device_index
 
     ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], torch_kCPU)
+    device_type = tensor%torch_tensor_get_device_type()
+    device_index = tensor%torch_tensor_get_device_index()
+    call torch_tensor_from_array(wrk, [divisor], [1], device_type, device_index)
     output%p = torch_tensor_divide_c(tensor%p, wrk%p)
   end function torch_tensor_postdivide_${PREC}$
 
