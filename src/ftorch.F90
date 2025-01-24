@@ -35,6 +35,7 @@ module ftorch
     procedure :: torch_tensor_get_shape
     procedure :: torch_tensor_get_dtype
     procedure :: torch_tensor_get_device_type
+    procedure :: torch_tensor_get_device_index
   end type torch_tensor
 
   !| Enumerator for Torch data types
@@ -2349,8 +2350,8 @@ contains
   !> Determines the device index of a tensor.
   function torch_tensor_get_device_index(tensor) result(device_index)
     use, intrinsic :: iso_c_binding, only : c_int
-    type(torch_tensor), intent(in) :: tensor  !! Input tensor
-    integer(c_int) :: device_index            !! Device index of tensor
+    class(torch_tensor), intent(in) :: tensor  !! Input tensor
+    integer(c_int) :: device_index             !! Device index of tensor
 
     interface
       function torch_tensor_get_device_index_c(tensor) result(device_index) &

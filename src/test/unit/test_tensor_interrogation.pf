@@ -19,32 +19,6 @@ module test_tensor_interrogation
 
 contains
 
-  ! Unit test for the torch_tensor_get_device_index function applied to a tensor on the CPU
-  @test
-  subroutine test_torch_tensor_get_device_index_default()
-    use ftorch, only: torch_tensor_get_device_index
-
-    implicit none
-
-    type(torch_tensor) :: tensor
-    integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: expected = -1
-
-    ! Create an empty tensor on the CPU with the default device index
-    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-
-    ! Check that torch_tensor_get_device_index can get the device index
-    if (expected /= torch_tensor_get_device_index(tensor)) then
-      call torch_tensor_delete(tensor)
-      print *, "Error :: torch_tensor_get_device_index returned incorrect CPU device index"
-      stop 999
-    end if
-    call torch_tensor_delete(tensor)
-
-  end subroutine test_torch_tensor_get_device_index_default
-
   ! Unit test for the torch_tensor_get_rank method of a 1D tensor
   @test
   subroutine test_torch_tensor_get_rank_1D()
@@ -182,5 +156,31 @@ contains
     call torch_tensor_delete(tensor)
 
   end subroutine test_torch_tensor_get_shape_3D
+
+  ! Unit test for the torch_tensor_get_device_index function applied to a tensor on the CPU
+  @test
+  subroutine test_torch_tensor_get_device_index_default()
+    use ftorch, only: torch_tensor_get_device_index
+
+    implicit none
+
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer, parameter :: dtype = torch_kFloat32
+    integer, parameter :: expected = -1
+
+    ! Create an empty tensor on the CPU with the default device index
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+
+    ! Check that torch_tensor_get_device_index can get the device index
+    if (expected /= tensor%torch_tensor_get_device_index()) then
+      call torch_tensor_delete(tensor)
+      print *, "Error :: torch_tensor_get_device_index returned incorrect CPU device index"
+      stop 999
+    end if
+    call torch_tensor_delete(tensor)
+
+  end subroutine test_torch_tensor_get_device_index_default
 
 end module test_tensor_interrogation
