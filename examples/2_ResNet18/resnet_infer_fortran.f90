@@ -87,7 +87,7 @@ contains
       call torch_tensor_from_array(out_tensors(1), out_data, out_layout, torch_kCPU)
 
       ! Load ML model (edit this line to use different models)
-      call torch_model_load(model, args(1))
+      call torch_model_load(model, args(1), torch_kCPU)
 
       ! Infer
       call torch_model_forward(model, in_tensors, out_tensors)
