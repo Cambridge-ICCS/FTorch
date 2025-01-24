@@ -28,9 +28,13 @@ module ftorch
   !> Type for holding a Torch tensor.
   type torch_tensor
     type(c_ptr) :: p = c_null_ptr  !! pointer to the tensor in memory
+    integer, private :: dtype
+    integer, private :: device_type
   contains
     procedure :: get_rank
     procedure :: get_shape
+    procedure :: torch_tensor_get_dtype
+    procedure :: torch_tensor_get_device_type
   end type torch_tensor
 
   !| Enumerator for Torch data types
@@ -297,6 +301,8 @@ contains
 
     tensor%p = torch_empty_c(ndims, tensor_shape, dtype, device_type,          &
                              device_index_value, requires_grad_value)
+    tensor%dtype = dtype
+    tensor%device_type = device_type
   end subroutine torch_tensor_empty
 
   !> Returns a tensor filled with the scalar value 0.
@@ -348,6 +354,8 @@ contains
 
     tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device_type,          &
                              device_index_value, requires_grad_value)
+    tensor%dtype = dtype
+    tensor%device_type = device_type
   end subroutine torch_tensor_zeros
 
   !> Returns a tensor filled with the scalar value 1.
@@ -399,6 +407,8 @@ contains
 
     tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device_type,           &
                             device_index_value, requires_grad_value)
+    tensor%dtype = dtype
+    tensor%device_type = device_type
   end subroutine torch_tensor_ones
 
   !| Exposes the given data as a tensor without taking ownership of the original data.
@@ -449,6 +459,8 @@ contains
     tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype,    &
                                  device_type, device_index_value,              &
                                  requires_grad_value)
+    tensor%dtype = dtype
+    tensor%device_type = device_type
   end subroutine torch_tensor_from_blob
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
@@ -2273,25 +2285,6 @@ contains
     call torch_tensor_print_c(tensor%p)
   end subroutine torch_tensor_print
 
-  !> Determines the device index of a tensor.
-  function torch_tensor_get_device_index(tensor) result(device_index)
-    use, intrinsic :: iso_c_binding, only : c_int
-    type(torch_tensor), intent(in) :: tensor  !! Input tensor
-    integer(c_int) :: device_index            !! Device index of tensor
-
-    interface
-      function torch_tensor_get_device_index_c(tensor) result(device_index) &
-          bind(c, name = 'torch_tensor_get_device_index')
-        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: tensor
-        integer(c_int) :: device_index
-      end function torch_tensor_get_device_index_c
-    end interface
-
-    device_index = torch_tensor_get_device_index_c(tensor%p)
-  end function torch_tensor_get_device_index
-
   !> Determines the rank of a tensor.
   function get_rank(self) result(rank)
     class(torch_tensor), intent(in) :: self
@@ -2336,6 +2329,41 @@ contains
     cptr = torch_tensor_get_sizes_c(self%p)
     call c_f_pointer(cptr, sizes, ndims)
   end function get_shape
+
+  !> Returns the data type of a tensor.
+  function torch_tensor_get_dtype(tensor) result(dtype)
+    class(torch_tensor), intent(in) :: tensor  !! Input tensor
+    integer :: dtype                           !! Data type of tensor
+
+    dtype = tensor%dtype
+  end function torch_tensor_get_dtype
+
+  !> Returns the device type of a tensor.
+  function torch_tensor_get_device_type(tensor) result(device_type)
+    class(torch_tensor), intent(in) :: tensor  !! Input tensor
+    integer :: device_type                     !! Device type of tensor
+
+    device_type = tensor%device_type
+  end function torch_tensor_get_device_type
+
+  !> Determines the device index of a tensor.
+  function torch_tensor_get_device_index(tensor) result(device_index)
+    use, intrinsic :: iso_c_binding, only : c_int
+    type(torch_tensor), intent(in) :: tensor  !! Input tensor
+    integer(c_int) :: device_index            !! Device index of tensor
+
+    interface
+      function torch_tensor_get_device_index_c(tensor) result(device_index) &
+          bind(c, name = 'torch_tensor_get_device_index')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+        integer(c_int) :: device_index
+      end function torch_tensor_get_device_index_c
+    end interface
+
+    device_index = torch_tensor_get_device_index_c(tensor%p)
+  end function torch_tensor_get_device_index
 
   ! ============================================================================
   ! --- Procedures for deallocating tensors
