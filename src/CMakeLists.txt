@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15...3.31 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15...3.31)
 set(PROJECT_NAME FTorch)
 set(LIB_NAME ftorch)
 set(PACKAGE_VERSION 0.1)

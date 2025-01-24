@@ -88,6 +88,22 @@ To install the library requires the following to be installed on the system:
 
 <sup>*</sup> _The minimal example provided downloads the CPU-only Linux Nightly binary. [Alternative versions](https://pytorch.org/get-started/locally/) may be required._
 
+#### Additional dependencies of the test suite
+
+FTorch's test suite has some additional dependencies.
+
+* You will also need to install the unit testing framework
+  [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit).
+* FTorch's test suite requires that [PyTorch](https://pytorch.org/) has been
+  installed, as opposed to LibTorch. We recommend installing `torchvision` in
+  the same command (e.g., `pip install torch torchvision`)<sup>*</sup>. Doing so
+  ensures that `torch` and `torchvision` are configured in the same way.
+* Other Python modules are installed automatically by the `run_test_suite.sh`
+  test script (or `run_test_suite.bat` on Windows).
+
+
+<sup>*</sup> _For more details, see [here](https://pytorch.org/get-started/locally/)._
+
 #### Windows Support
 
 If building in a Windows environment then you can either use
@@ -249,7 +265,7 @@ address an [open issue](https://github.com/Cambridge-ICCS/FTorch/issues), please
 pull request.
 
 Detailed guidelines can be found in the
-[online developer documentation](page/developer.html).
+[online developer documentation](https://cambridge-iccs.github.io/FTorch/page/developer.html).
 
 
 ### Code of Conduct
@@ -284,6 +300,6 @@ The following projects make use of this code or derivatives in some way:
 * [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)\
   See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
 * [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization)\
-  See Heuer et al (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
+  See Heuer et al. (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
 
 Are we missing anyone? Let us know.

@@ -39,16 +39,6 @@ program example
   call torch_tensor_from_array(a, in_data1, tensor_layout, torch_kCPU)
   call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU)
 
-  ! check tensor rank and shape match those of in_data
-  if ((a%get_rank() /= 2) .or. (b%get_rank() /= 2)) then
-    print *, "Error :: rank should be 2"
-    stop 1
-  end if
-  if (any(a%get_shape() /= [n, m]) .or. any(b%get_shape() /= [n, m])) then
-    write(6,"('Error :: shape should be (',i1,', ',i1,')')") n, m
-    stop 1
-  end if
-
   ! Check arithmetic operations work for torch_tensors
   write (*,*) "a = ", in_data1(:,1)
   write (*,*) "b = ", in_data2(:,1)
@@ -67,28 +57,9 @@ program example
     stop 999
   end if
 
-  ! Check first input array is unchanged by the arithmetic operations
-  expected(:,1) = [2.0_wp, 3.0_wp]
-  test_pass = assert_allclose(in_data1, expected, test_name="torch_tensor_to_array", rtol=1e-5)
-  if (.not. test_pass) then
-    call clean_up()
-    print *, "Error :: in_data1 was changed during arithmetic operations"
-    stop 999
-  end if
-
-  ! Check second input array is unchanged by the arithmetic operations
-  expected(:,1) = [6.0_wp, 4.0_wp]
-  test_pass = assert_allclose(in_data2, expected, test_name="torch_tensor_to_array", rtol=1e-5)
-  if (.not. test_pass) then
-    call clean_up()
-    print *, "Error :: in_data2 was changed during arithmetic operations"
-    stop 999
-  end if
-
   ! Back-propagation
   ! TODO: Requires API extension
 
-  ! Cleanup
   call clean_up()
   write (*,*) "Autograd example ran successfully"
 

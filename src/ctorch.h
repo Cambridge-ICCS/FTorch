@@ -9,11 +9,21 @@
 
 #include <stdint.h>
 
+// =============================================================================
+// --- Typedefs
+// =============================================================================
+
 // Opaque pointer type alias for torch::jit::script::Module class
 typedef void *torch_jit_script_module_t;
 
 // Opaque pointer type alias for at::Tensor
 typedef void *torch_tensor_t;
+
+// Opaque pointer type alias for integer scalars
+typedef void *torch_int_t;
+
+// Opaque pointer type alias for float scalars
+typedef void *torch_float_t;
 
 // Data types
 typedef enum {
@@ -30,9 +40,23 @@ typedef enum {
 // Device types
 typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
 
-// =====================================================================================
-// Tensor API
-// =====================================================================================
+// =============================================================================
+// --- Functions for constructing tensors
+// =============================================================================
+
+/**
+ * Function to generate an empty Torch Tensor
+ * @param number of dimensions of the Tensor
+ * @param shape of the Tensor
+ * @param data type of the elements of the Tensor
+ * @param device type used (cpu, CUDA, etc.)
+ * @param device index for the CUDA case
+ * @param whether gradient is required
+ */
+EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
+                                    torch_device_t device_type, int device_index,
+                                    const bool requires_grad);
+
 /**
  * Function to generate a Torch Tensor of zeros
  * @param number of dimensions of the Tensor
@@ -60,19 +84,6 @@ EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t 
                                    const bool requires_grad);
 
 /**
- * Function to generate an empty Torch Tensor
- * @param number of dimensions of the Tensor
- * @param shape of the Tensor
- * @param data type of the elements of the Tensor
- * @param device type used (cpu, CUDA, etc.)
- * @param device index for the CUDA case
- * @param whether gradient is required
- */
-EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
-                                    torch_device_t device_type, int device_index,
-                                    const bool requires_grad);
-
-/**
  * Function to create a Torch Tensor from memory location given extra
  * information
  * @param pointer to the Tensor in memory
@@ -89,6 +100,10 @@ EXPORT_C torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *sha
                                         const int64_t *strides, torch_data_t dtype,
                                         torch_device_t device_type, int device_index,
                                         const bool requires_grad);
+
+// =============================================================================
+// --- Functions for interrogating tensors
+// =============================================================================
 
 /**
  * Function to extract a C-array from a Torch Tensor's data.
@@ -130,11 +145,19 @@ EXPORT_C const long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
 EXPORT_C const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
 #endif
 
+// =============================================================================
+// --- Functions for deallocating tensors
+// =============================================================================
+
 /**
  * Function to delete a Torch Tensor to clean up
  * @param Torch Tensor to delete
  */
 EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
+
+// =============================================================================
+// --- Operator overloads acting on tensors
+// =============================================================================
 
 /**
  * Overloads the assignment operator for Torch Tensor
@@ -151,6 +174,13 @@ EXPORT_C torch_tensor_t torch_tensor_assign(const torch_tensor_t input);
  */
 EXPORT_C torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
                                          const torch_tensor_t tensor2);
+
+/**
+ * Overloads the minus operator for a single Torch Tensor
+ * @param Tensor to take the negative of
+ * @return the negative Tensor
+ */
+EXPORT_C torch_tensor_t torch_tensor_negative(const torch_tensor_t tensor);
 
 /**
  * Overloads the subtraction operator for two Torch Tensors
@@ -171,25 +201,7 @@ EXPORT_C torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
                                               const torch_tensor_t tensor2);
 
 /**
- * Overloads the premultiplication operator for a scalar and a Torch Tensor
- * @param scalar to multiply by
- * @param Tensor to be multiplied
- * @return product of the scalar and Tensor
- */
-EXPORT_C torch_tensor_t torch_tensor_premultiply(const torch_data_t scalar,
-                                                 const torch_tensor_t tensor);
-
-/**
- * Overloads the postmultiplication operator for a Torch Tensor and a scalar
- * @param Tensor to be multiplied
- * @param scalar to multiply by
- * @return product of the Tensor and scalar
- */
-EXPORT_C torch_tensor_t torch_tensor_postmultiply(const torch_tensor_t tensor,
-                                                  const torch_data_t scalar);
-
-/**
- * Overloads the division operator for two Torch Tensors
+ * Overloads the division operator for two Torch Tensors.
  * @param first Tensor to be divided
  * @param second Tensor to be divided
  * @return quotient of the Tensors
@@ -198,26 +210,28 @@ EXPORT_C torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
                                             const torch_tensor_t tensor2);
 
 /**
- * Overloads the post-division operator for a Torch Tensor and a scalar
- * @param Tensor to be divided
- * @param scalar to divide by
- * @return quotient of the Tensor and scalar
- */
-EXPORT_C torch_tensor_t torch_tensor_postdivide(const torch_tensor_t tensor,
-                                                const torch_data_t scalar);
-
-/**
- * Overloads the exponentiation operator for two Torch Tensors
+ * Overloads the exponentiation operator for a Torch Tensor and an integer exponent
  * @param Tensor to take the power of
- * @param scalar exponent
+ * @param integer exponent
  * @return power of the Tensor
  */
-EXPORT_C torch_tensor_t torch_tensor_power(const torch_tensor_t tensor,
-                                           const torch_data_t exponent);
+EXPORT_C torch_tensor_t torch_tensor_power_int(const torch_tensor_t tensor,
+                                               const torch_int_t exponent);
 
-// =====================================================================================
-// Module API
-// =====================================================================================
+/**
+ * Overloads the exponentiation operator for a Torch Tensor and a floating point
+ * exponent
+ * @param Tensor to take the power of
+ * @param floating point exponent
+ * @return power of the Tensor
+ */
+EXPORT_C torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
+                                                 const torch_float_t exponent);
+
+// =============================================================================
+// --- Torch model API
+// =============================================================================
+
 /**
  * Function to load in a Torch model from a TorchScript file and store in a
  * Torch Module
