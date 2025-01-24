@@ -31,8 +31,8 @@ module ftorch
     integer, private :: dtype
     integer, private :: device_type
   contains
-    procedure :: get_rank
-    procedure :: get_shape
+    procedure :: torch_tensor_get_rank
+    procedure :: torch_tensor_get_shape
     procedure :: torch_tensor_get_dtype
     procedure :: torch_tensor_get_device_type
   end type torch_tensor
@@ -1381,7 +1381,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1411,7 +1411,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1441,7 +1441,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1471,7 +1471,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1501,7 +1501,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1531,7 +1531,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1561,7 +1561,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1591,7 +1591,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1621,7 +1621,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1651,7 +1651,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1681,7 +1681,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1711,7 +1711,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1741,7 +1741,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1771,7 +1771,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1801,7 +1801,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1831,7 +1831,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1861,7 +1861,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1891,7 +1891,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1921,7 +1921,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1951,7 +1951,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -1981,7 +1981,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2011,7 +2011,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2041,7 +2041,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2071,7 +2071,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2101,7 +2101,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2131,7 +2131,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2161,7 +2161,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2191,7 +2191,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2221,7 +2221,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2251,7 +2251,7 @@ contains
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     type(c_ptr) :: cptr
 
-    my_shape = tensor%get_shape()
+    my_shape = tensor%torch_tensor_get_shape()
 
     if (present(sizes)) then
       if (.not. all(my_shape == sizes)) then
@@ -2286,7 +2286,7 @@ contains
   end subroutine torch_tensor_print
 
   !> Determines the rank of a tensor.
-  function get_rank(self) result(rank)
+  function torch_tensor_get_rank(self) result(rank)
     class(torch_tensor), intent(in) :: self
     integer(kind=int32) :: rank  !! rank of tensor
 
@@ -2301,10 +2301,10 @@ contains
     end interface
 
     rank = torch_tensor_get_rank_c(self%p)
-  end function get_rank
+  end function torch_tensor_get_rank
 
   !> Determines the shape of a tensor.
-  function get_shape(self) result(sizes)
+  function torch_tensor_get_shape(self) result(sizes)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_long, c_long_long, c_ptr
     class(torch_tensor), intent(in) :: self
 #ifdef UNIX
@@ -2325,10 +2325,10 @@ contains
       end function torch_tensor_get_sizes_c
     end interface
 
-    ndims(1) = self%get_rank()
+    ndims(1) = self%torch_tensor_get_rank()
     cptr = torch_tensor_get_sizes_c(self%p)
     call c_f_pointer(cptr, sizes, ndims)
-  end function get_shape
+  end function torch_tensor_get_shape
 
   !> Returns the data type of a tensor.
   function torch_tensor_get_dtype(tensor) result(dtype)
