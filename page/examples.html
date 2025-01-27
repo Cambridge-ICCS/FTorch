@@ -192,7 +192,7 @@ before writing your own code to fully explore the features.</p>
 <span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">out_layout</span><span class="p">(</span><span class="n">out_dims</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="c">! Initialise the Torch model to be used</span>
-<span class="n">torch_model_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/path/to/saved/model.pt&quot;</span><span class="p">)</span>
+<span class="n">torch_model_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/path/to/saved/model.pt&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 
 <span class="c">! Initialise the inputs as Fortran array of ones</span>
 <span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>

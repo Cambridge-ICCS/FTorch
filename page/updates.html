@@ -107,7 +107,21 @@
       </div>
 
     <div class="col-9" id='text'>
-      <p>If you use a version of FTorch from before commit 
+      <h2 id="january-2025">January 2025</h2>
+<p>If you use a version of FTorch from before commit
+<a href="c488f20d8d49a15f98176c39a6c8e8db8e708f51">c488f20</a>
+(January 2025) you may notice that the <code>device_type</code> argument for
+<code>torch_model_load</code> changed from being optional to being compulsory. This is
+because the optional argument defaulted to <code>torch_kCPU</code>, which is not suitable
+for GPU workloads. For recent FTorch configurations, simply specify the device
+type as the third argument. For example:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">type</span><span class="p">(</span><span class="n">torch_module</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span>
+<span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">17</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my_saved_model.pt&quot;</span>
+<span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_module_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="june-2024">June 2024</h2>
+<p>If you use a version of FTorch from before commit
 <a href="https://github.com/Cambridge-ICCS/FTorch/commit/e92ad9ec7c2198dbb2ca819854d604b984d293c4">e92ad9e</a>
 (June 2024) you will notice that the latest API documentation is not suitable.
 This is because a number of breaking changes were made to the FTorch API in preparation
@@ -116,6 +130,8 @@ for implementing new functionalities.</p>
 <p>If you are already using a more recent version there is no need to read this page.</p>
 <div class="toc">
 <ul>
+<li><a href="#january-2025">January 2025</a></li>
+<li><a href="#june-2024">June 2024</a><ul>
 <li><a href="#why">Why?</a></li>
 <li><a href="#changes-and-how-to-update-your-code">Changes and how to update your code</a><ul>
 <li><a href="#torch_tensors-are-created-using-a-subroutine-call-not-a-function">torch_tensors are created using a subroutine call, not a function</a></li>
@@ -125,11 +141,13 @@ for implementing new functionalities.</p>
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 </div>
-<h2 id="why">Why?</h2>
+<h3 id="why">Why?</h3>
 <p>We realise that this forms an inconvenience to those of you who are actively
 using FTorch and is not something we did lightly.
-These changes were neccessary to improve functionality and we have made them in one go
+These changes were necessary to improve functionality and we have made them in one go
 as we move towards a stable API and first release in the very near future.
 Once the first release is set then the API becomes standardised then changes like this
 will be avoided. We hope that this is the last time we have such a shift.</p>
@@ -137,7 +155,7 @@ will be avoided. We hope that this is the last time we have such a shift.</p>
 <ol>
 <li>Multiple output tensors
    Previously you could pass an array of several input tensors to a Torch model, but
-   only recieve a single output tensor back. Now you can use models that return several
+   only receive a single output tensor back. Now you can use models that return several
    output tensors by passing an array of output tensors instead.</li>
 <li>Preparation for autograd functionality
    We hope to make it easier to access the autograd features of PyTorch from within Fortran.
@@ -145,7 +163,7 @@ will be avoided. We hope that this is the last time we have such a shift.</p>
    This is now done via a subroutine call rather than a function.</li>
 </ol>
 <p><br></p>
-<h2 id="changes-and-how-to-update-your-code">Changes and how to update your code</h2>
+<h3 id="changes-and-how-to-update-your-code">Changes and how to update your code</h3>
 <p><br></p>
 <h4 id="torch_tensors-are-created-using-a-subroutine-call-not-a-function"><code>torch_tensor</code>s are created using a subroutine call, not a function</h4>
 <p>Previously you would have created a Torch tensor and assigned some fortran data to it as follows:</p>
@@ -180,10 +198,12 @@ as a '<code>model</code>'.
 The process of loading a net is also now a subroutine call for consistency with the
 tensor creation operations:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">type</span><span class="p">(</span><span class="n">torch_model</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span>
-<span class="k">call </span><span class="n">torch_model_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;path_to_saved_net.pt&#39;</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_model_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;path_to_saved_net.pt&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 <span class="k">call </span><span class="n">torch_model_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">in_tensors</span><span class="p">,</span><span class="w"> </span><span class="n">out_tensors</span><span class="p">)</span>
 </code></pre></div>
 
+<p>Note that the <code>device_type</code> argument has also been specified in the call to
+<code>torch_model_load</code>, for the reason mentioned <a href="#january-2025">above</a>.</p>
 <p><br></p>
 <h4 id="n_inputs-is-no-longer-required"><code>n_inputs</code> is no longer required</h4>
 <p>Previously when you called the forward method on a net you had to specify the number of tensors

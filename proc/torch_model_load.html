@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 2.2% of total for procedures.">48 statements</a>
+                 title=" 1.9% of total for procedures.">42 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -205,8 +205,8 @@
               <span class="anchor" id="variable-device_type~39"></span>
               integer(kind=c_int),
             </td>
-<td>intent(in),</td>
-              <td>optional</td>            <td>
+<td>intent(in)</td>
+              <td></td>            <td>
               
             </td>
             <td>::</td>
@@ -280,13 +280,12 @@
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_model_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">                              </span><span class="n">requires_grad</span><span class="p">,</span><span class="w"> </span><span class="n">is_training</span><span class="p">)</span>
 <span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="nb">c_null_char</span>
-<span class="nb">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_model</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">       </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span><span class="w">         </span><span class="c">!! Returned deserialized model</span>
-<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">             </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="w">      </span><span class="c">!! Filename of saved TorchScript model</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_type</span><span class="w">   </span><span class="c">!! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)</span>
+<span class="nb">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_model</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span><span class="w">    </span><span class="c">!! Returned deserialized model</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="w">       </span><span class="c">!! Filename of saved TorchScript model</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_type</span><span class="w">  </span><span class="c">!! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index</span><span class="w">  </span><span class="c">!! device index to use for `torch_kCUDA` case</span>
 <span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
 <span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_training</span><span class="w">    </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_type_value</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index_value</span>
 <span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad_value</span><span class="w">  </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
 <span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_training_value</span><span class="w">  </span><span class="c">!! Whether the model is being trained, rather than evaluated</span>
@@ -307,14 +306,9 @@
 <span class="w">    </span><span class="k">end interface</span>
 
 <span class="w">    </span><span class="c">! Process optional arguments</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">device_type</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
-<span class="k">      </span><span class="n">device_type_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">device_type</span>
-<span class="w">    </span><span class="k">else</span>
-<span class="k">      </span><span class="n">device_type_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_kCPU</span>
-<span class="w">    </span><span class="k">endif</span>
-<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">device_index</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">device_index</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
 <span class="k">      </span><span class="n">device_index_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">device_index</span>
-<span class="w">    </span><span class="k">else if</span><span class="w"> </span><span class="p">(</span><span class="n">device_type_value</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="k">else if</span><span class="w"> </span><span class="p">(</span><span class="n">device_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="k">      </span><span class="n">device_index_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
 <span class="w">    </span><span class="k">else</span>
 <span class="k">      </span><span class="n">device_index_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
@@ -333,10 +327,9 @@
 <span class="w">    </span><span class="k">end if</span>
 
 <span class="w">    </span><span class="c">! Need to append c_null_char at end of filename</span>
-<span class="w">    </span><span class="n">model</span><span class="p">%</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_jit_load_c</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span><span class="o">//</span><span class="nb">c_null_char</span><span class="p">,</span><span class="w">           </span><span class="p">&amp;</span>
-<span class="w">                                </span><span class="n">device_type_value</span><span class="p">,</span><span class="w"> </span><span class="n">device_index_value</span><span class="p">,</span><span class="w">         </span><span class="p">&amp;</span>
-<span class="w">                                </span><span class="kt">logical</span><span class="p">(</span><span class="n">requires_grad_value</span><span class="p">,</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">),</span><span class="w">          </span><span class="p">&amp;</span>
-<span class="w">                                </span><span class="kt">logical</span><span class="p">(</span><span class="n">is_training_value</span><span class="p">,</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">))</span>
+<span class="w">    </span><span class="n">model</span><span class="p">%</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_jit_load_c</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span><span class="o">//</span><span class="nb">c_null_char</span><span class="p">,</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                               </span><span class="n">device_index_value</span><span class="p">,</span><span class="w"> </span><span class="kt">logical</span><span class="p">(</span><span class="n">requires_grad_value</span><span class="p">,</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">),</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                               </span><span class="kt">logical</span><span class="p">(</span><span class="n">is_training_value</span><span class="p">,</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">))</span>
 <span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_model_load</span>
 </pre></div>
 
