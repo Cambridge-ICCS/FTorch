@@ -11,7 +11,8 @@ program inference
    use ftorch_test_utils, only : assert_allclose
 
    ! Import MPI
-   use mpi, only : mpi_init, mpi_finalize, mpi_comm_world, mpi_comm_rank
+   use mpi, only : mpi_comm_rank, mpi_comm_size, mpi_comm_world, mpi_finalize, mpi_float, &
+                   mpi_gather, mpi_init
 
    implicit none
 
@@ -37,7 +38,12 @@ program inference
    logical :: test_pass
 
    ! MPI configuration
-   integer :: rank, ierr, i
+   integer :: rank, size, ierr, i
+
+   ! Variables for testing
+   real(wp), allocatable, dimension(:,:) :: recvbuf
+   real(wp), dimension(5) :: result_chk
+   integer :: rank_chk
 
    call mpi_init(ierr)
    call mpi_comm_rank(mpi_comm_world, rank, ierr)
@@ -51,7 +57,9 @@ program inference
 
    ! Initialise data and print the values used on each MPI rank
    in_data = [(rank + i, i = 0, 4)]
-   write (6, "('input on rank ',i1,': [',4(f5.1,','),f5.1,']')") rank, in_data(:)
+   write(unit=6, fmt="('input on rank ',i1,': ')", advance="no") rank
+   write(unit=6, fmt=100) in_data(:)
+   100 format('[',4(f5.1,','),f5.1,']')
 
    ! Create Torch input/output tensors from the above arrays
    call torch_tensor_from_array(in_tensors(1), in_data, tensor_layout, torch_kCPU)
@@ -60,22 +68,36 @@ program inference
    ! Load ML model
    call torch_model_load(model, args(1), torch_kCPU)
 
-   ! Infer
+   ! Run inference on each MPI rank
    call torch_model_forward(model, in_tensors, out_tensors)
 
    ! Print the values computed on each MPI rank
-   write (6, "('output on rank ',i1,': [',4(f5.1,','),f5.1,']')") rank, out_data(:)
+   write(unit=6, fmt="('output on rank ',i1,': ')", advance="no")
+   write(unit=6, fmt=100) out_data(:)
 
-   ! Check output tensor matches expected value
-   expected = [(2 * (rank + i), i = 0, 4)]
-   test_pass = assert_allclose(out_data, expected, test_name="MPI", rtol=1e-5)
+   ! Gather the outputs onto rank 0
+   call mpi_comm_size(mpi_comm_world, size, ierr)
+   allocate(recvbuf(5,size))
+   call mpi_gather(out_data, 5, mpi_float, recvbuf, 5, mpi_float, 0, mpi_comm_world, ierr)
 
-   if (.not. test_pass) then
-     call clean_up()
-     stop 999
-   end if
-
+   ! Check that the correct values were attained
    if (rank == 0) then
+
+      ! Check output tensor matches expected value
+      do rank_chk = 0, size-1
+        expected = [(2 * (rank_chk + i), i = 0, 4)]
+        result_chk(:) = recvbuf(:,rank_chk+1)
+        test_pass = assert_allclose(result_chk, expected, test_name="MPI")
+        if (.not. test_pass) then
+          write(unit=6, fmt="('rank ',i1,' result: ')") rank_chk
+          write(unit=6, fmt=100) result_chk(:)
+          write(unit=6, fmt="('does not match expected value')")
+          write(unit=6, fmt=100) expected(:)
+          call clean_up()
+          stop 999
+        end if
+      end do
+
       write (*,*) "MPI Fortran example ran successfully"
    end if
 
@@ -88,6 +110,7 @@ program inference
       call torch_delete(in_tensors)
       call torch_delete(out_tensors)
       call mpi_finalize(ierr)
+      deallocate(recvbuf)
     end subroutine clean_up
 
 end program inference
