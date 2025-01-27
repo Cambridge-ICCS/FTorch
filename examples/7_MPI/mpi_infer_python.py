@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     print(f"rank {rank}: result:\n{result}")
 
-    expected = torch.Tensor([2 * (i+rank) for i in range(5)])
+    expected = torch.Tensor([2 * (i + rank) for i in range(5)])
     if not torch.allclose(result, expected):
         result_error = (
             f"rank {rank}: result:\n{result}\ndoes not match expected value:\n"
