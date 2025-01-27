@@ -3,8 +3,9 @@ if(CMAKE_BUILD_TESTS)
   add_subdirectory(2_ResNet18)
   # add_subdirectory(3_MultiGPU)
   add_subdirectory(4_MultiIO)
-  # NOTE: Example 5_Looping is built here but not run as part of the integration test suite.
-  #       This is because it demonstrates 'good' versus 'bad' practice, as opposed to testing functionality.
+  # NOTE: Example 5_Looping is built here but not run as part of the integration
+  #       test suite. This is because it demonstrates 'good' versus 'bad'
+  #       practice, as opposed to testing functionality.
   add_subdirectory(5_Looping)
   add_subdirectory(6_Autograd)
 endif()
