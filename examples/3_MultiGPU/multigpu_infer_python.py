@@ -1,16 +1,16 @@
-"""Load saved MultiGPUNet to TorchScript and run inference example."""
+"""Load saved SimpleNet to TorchScript and run inference example."""
 
 import torch
 
 
 def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     """
-    Load TorchScript MultiGPUNet and run inference with example Tensor.
+    Load TorchScript SimpleNet and run inference with example Tensor.
 
     Parameters
     ----------
     saved_model : str
-        location of MultiGPUNet model saved to Torchscript
+        location of SimpleNet model saved to Torchscript
     device : str
         Torch device to run model on, 'cpu' or 'cuda'. May be followed by a colon and
         then a device index, e.g., 'cuda:0' for the 0th CUDA device.
