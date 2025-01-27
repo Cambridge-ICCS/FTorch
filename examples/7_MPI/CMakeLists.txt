@@ -15,11 +15,13 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 find_package(FTorch)
+find_package(MPI REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Fortran example
 add_executable(mpi_infer_fortran mpi_infer_fortran.f90)
 target_link_libraries(mpi_infer_fortran PRIVATE FTorch::ftorch)
+target_link_libraries(mpi_infer_fortran PRIVATE MPI::MPI_Fortran)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
@@ -42,20 +44,25 @@ if(CMAKE_BUILD_TESTS)
   #   outputs meet expectations
   add_test(
     NAME mpi_infer_python
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/mpi_infer_python.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath to find the
-                                  # model
+    COMMAND
+      ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${Python_EXECUTABLE}
+      ${PROJECT_SOURCE_DIR}/mpi_infer_python.py
+      ${PROJECT_BINARY_DIR} # Command line argument: filepath to find the model
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_tests_properties(
+    mpi_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
+    "MPI Python example ran successfully")
 
   # 4. Check the model can be loaded from file and run in Fortran and that its
   #   outputs meet expectations
   add_test(
     NAME mpi_infer_fortran
     COMMAND
-      mpi_infer_fortran ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
+      ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 mpi_infer_fortran
+      ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     mpi_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-                                       "SimpleNet example ran successfully")
+    "MPI Fortran example ran successfully")
 endif()
