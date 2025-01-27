@@ -33,9 +33,9 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-You can check that everything is working by running `multigpu.py`:
+You can check that everything is working by running `simplenet.py`:
 ```
-python3 multigpu.py
+python3 simplenet.py
 ```
 As before, this defines the network and runs it with an input tensor
 [0.0, 1.0, 2.0, 3.0, 4.0]. The difference is that the code will make use of the
@@ -96,8 +96,8 @@ Fortran, run the executable with an argument of the saved model file:
 This runs the model with the same inputs as described above and should produce (some
 permutation of) the output:
 ```
-input on rank0: [  0.0,  1.0,  2.0,  3.0,  4.0]
-input on rank1: [  1.0,  2.0,  3.0,  4.0,  5.0]
+input on device 0: [  0.0,  1.0,  2.0,  3.0,  4.0]
+input on device 1: [  1.0,  2.0,  3.0,  4.0,  5.0]
 output on device 0: [  0.0,  2.0,  4.0,  6.0,  8.0]
 output on device 1: [  2.0,  4.0,  6.0,  8.0, 10.0]
 ```

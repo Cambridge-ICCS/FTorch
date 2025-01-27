@@ -26,6 +26,7 @@ program inference
    type(torch_tensor), dimension(1) :: in_tensors
    type(torch_tensor), dimension(1) :: out_tensors
 
+   ! Variables for multi-GPU setup
    integer, parameter :: num_devices = 2
    integer :: device_index, i
 
