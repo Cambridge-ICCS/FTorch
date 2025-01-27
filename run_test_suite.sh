@@ -83,9 +83,9 @@ fi
 # Run integration tests
 if [ "${UNIT_ONLY}" = false ]; then
   if [ -e "${BUILD_DIR}/test/examples/3_MultiGPU" ]; then
-    EXAMPLES="1_SimpleNet 2_ResNet18 3_MultiGPU 4_MultiIO 6_Autograd"
+    EXAMPLES="1_SimpleNet 2_ResNet18 3_MultiGPU 4_MultiIO 6_Autograd 7_MPI"
   else
-    EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
+    EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd 7_MPI"
   fi
   for EXAMPLE in ${EXAMPLES}; do
     pip -q install -r examples/"${EXAMPLE}"/requirements.txt
