@@ -28,8 +28,6 @@ module ftorch
   !> Type for holding a Torch tensor.
   type torch_tensor
     type(c_ptr) :: p = c_null_ptr    !! pointer to the tensor in memory
-    integer, private :: dtype        !! integer representing the tensor's data type
-    integer, private :: device_type  !! integer representing the tensor's device type
   contains
     procedure :: get_rank => torch_tensor_get_rank
     procedure :: get_shape => torch_tensor_get_shape
@@ -302,8 +300,6 @@ contains
 
     tensor%p = torch_empty_c(ndims, tensor_shape, dtype, device_type,          &
                              device_index_value, requires_grad_value)
-    tensor%dtype = dtype
-    tensor%device_type = device_type
   end subroutine torch_tensor_empty
 
   !> Returns a tensor filled with the scalar value 0.
@@ -355,8 +351,6 @@ contains
 
     tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device_type,          &
                              device_index_value, requires_grad_value)
-    tensor%dtype = dtype
-    tensor%device_type = device_type
   end subroutine torch_tensor_zeros
 
   !> Returns a tensor filled with the scalar value 1.
@@ -408,8 +402,6 @@ contains
 
     tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device_type,           &
                             device_index_value, requires_grad_value)
-    tensor%dtype = dtype
-    tensor%device_type = device_type
   end subroutine torch_tensor_ones
 
   !| Exposes the given data as a tensor without taking ownership of the original data.
@@ -460,8 +452,6 @@ contains
     tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype,    &
                                  device_type, device_index_value,              &
                                  requires_grad_value)
-    tensor%dtype = dtype
-    tensor%device_type = device_type
   end subroutine torch_tensor_from_blob
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
