@@ -35,8 +35,8 @@ if (CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME multigpu COMMAND ${Python_EXECUTABLE}
-                                  ${PROJECT_SOURCE_DIR}/multigpu.py)
+  add_test(NAME simplenet COMMAND ${Python_EXECUTABLE}
+                                  ${PROJECT_SOURCE_DIR}/simplenet.py)
 
   # 2. Check the model is saved to file in the expected location with the
   #   pt2ts.py script
