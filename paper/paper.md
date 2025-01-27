@@ -193,9 +193,11 @@ calling a net from both Python and Fortran. These cover basic use, running with 
 inputs/outputs, using (multiple) GPU devices, and structuring code for deployment in
 scientific applications.
 
-These examples underpin the testing suite which performs a series of
-integration tests running as part of a Continuous Integration workflow
-over various platforms and compilers.
+These examples underpin the integration testing suite which runs a subset to check
+`FTorch` performs as expected in end-to-end workflows.
+There is also a unit testing suite based on [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit).
+Both of these are run as part of a Continuous Integration workflow over various
+platforms and compilers.
 Other components include fypp templating checks and code quality checks using
 fortitude [@fortitude] for Fortran, clang-format [@clangformat] and
 clang-tidy [@clangtidy] for `C` and `C++`, and ruff [@ruff] for Python.
