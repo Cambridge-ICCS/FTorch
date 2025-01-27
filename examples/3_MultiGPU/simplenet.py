@@ -4,7 +4,7 @@ import torch
 from torch import nn
 
 
-class MultiGPUNet(nn.Module):
+class SimpleNet(nn.Module):
     """PyTorch module multiplying an input vector by 2."""
 
     def __init__(
@@ -42,7 +42,7 @@ class MultiGPUNet(nn.Module):
 
 
 if __name__ == "__main__":
-    model = MultiGPUNet().to(torch.device("cuda"))
+    model = SimpleNet().to(torch.device("cuda"))
     model.eval()
 
     input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0])
