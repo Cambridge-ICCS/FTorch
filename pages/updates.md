@@ -97,7 +97,7 @@ call torch_model_load(model, 'path_to_saved_net.pt', torch_kCPU)
 call torch_model_forward(model, in_tensors, out_tensors)
 ```
 Note that the `device_type` argument has also been specified in the call to
-`torch_model_load`, for the reason mentioned [above](./January-2025).
+`torch_model_load`, for the reason mentioned [above](#january-2025).
 
 <br>
 
