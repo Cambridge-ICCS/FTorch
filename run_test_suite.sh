@@ -88,8 +88,8 @@ if [ "${UNIT_ONLY}" = false ]; then
     EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd 7_MPI"
   fi
   for EXAMPLE in ${EXAMPLES}; do
-    pip -q install -r examples/"${EXAMPLE}"/requirements.txt
-    cd "${BUILD_DIR}"/test/examples/"${EXAMPLE}"
+    pip install -r "examples/${EXAMPLE}/requirements.txt"
+    cd "${BUILD_DIR}/test/examples/${EXAMPLE}"
     ctest "${CTEST_ARGS}"
     cd -
   done
