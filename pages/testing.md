@@ -18,7 +18,7 @@ install directory to the `CMAKE_PREFIX_PATH` when building FTorch.
 
 Note that, whilst example `5_Looping` is built if `CMAKE_BUILD_TESTS=TRUE` is
 specified, it is not run as part of the integration test suite because it
-demonstrates 'good' versus 'bad' practice, as opposed to testing functionality.
+demonstrates 'good' versus 'bad' practice, as opposed to functionality.
 
 ### Running
 
