@@ -31,7 +31,6 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         output = model.forward(input_tensor)
 
     elif device.startswith("cuda"):
-
         # Add the device index to each tensor to make them differ
         input_tensor += int(device.split(":")[-1] or 0)
 
