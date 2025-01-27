@@ -129,6 +129,8 @@ if(CMAKE_BUILD_TESTS)
   #      DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/4_MultiIO
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
+  # NOTE: Example 5_Looping is built here but not run as part of the integration test suite.
+  #       This is because it demonstrates 'good' versus 'bad' practice, as opposed to testing functionality.
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/5_Looping
        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/6_Autograd
