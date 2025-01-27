@@ -1,3 +1,2 @@
 torch
 mpi4py
-numpy
