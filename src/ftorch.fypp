@@ -794,13 +794,12 @@ contains
   subroutine torch_model_load(model, filename, device_type, device_index, &
                               requires_grad, is_training)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_null_char
-    type(torch_model), intent(out)       :: model         !! Returned deserialized model
-    character(*), intent(in)             :: filename      !! Filename of saved TorchScript model
-    integer(c_int), optional, intent(in) :: device_type   !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    type(torch_model), intent(out) :: model    !! Returned deserialized model
+    character(*), intent(in) :: filename       !! Filename of saved TorchScript model
+    integer(c_int), intent(in) :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index  !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
     logical, optional, intent(in) :: is_training    !! Whether gradients need to be computed for the created tensor
-    integer(c_int) :: device_type_value
     integer(c_int) :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
     logical :: is_training_value  !! Whether the model is being trained, rather than evaluated
@@ -821,14 +820,9 @@ contains
     end interface
 
     ! Process optional arguments
-    if (present(device_type)) then
-      device_type_value = device_type
-    else
-      device_type_value = torch_kCPU
-    endif
     if (present(device_index)) then
       device_index_value = device_index
-    else if (device_type_value == torch_kCPU) then
+    else if (device_type == torch_kCPU) then
       device_index_value = -1
     else
       device_index_value = 0
@@ -847,10 +841,9 @@ contains
     end if
 
     ! Need to append c_null_char at end of filename
-    model%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char,           &
-                                device_type_value, device_index_value,         &
-                                logical(requires_grad_value, c_bool),          &
-                                logical(is_training_value, c_bool))
+    model%p = torch_jit_load_c(trim(adjustl(filename))//c_null_char, device_type, &
+                               device_index_value, logical(requires_grad_value, c_bool), &
+                               logical(is_training_value, c_bool))
   end subroutine torch_model_load
 
   !> Performs a forward pass of the model with the input tensors

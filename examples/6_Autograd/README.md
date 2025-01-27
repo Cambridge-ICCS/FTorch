@@ -1,4 +1,4 @@
-# Example 5 - Autograd
+# Example 6 - Autograd
 
 **This example is currently under development.** Eventually, it will demonstrate
 automatic differentation in FTorch by leveraging PyTorch's Autograd module.
