@@ -152,7 +152,8 @@ multiple GPUs through the optional `device_index` argument.
 The device types available can be extended as `LibTorch` adds support for new devices.
 
 TorchScript models are represented by the `torch_model` derived type to which saved
-models can be loaded using the `torch_model_load()` subroutine.
+models can be loaded using the `torch_model_load()` subroutine, specifying the device
+similarly to tensors.
 Models can be run for inference using the `torch_model_forward()` subroutine with
 input and output `torch_tensor`s supplied as arguments.
 Finally, FTorch types can be deallocated using `torch_delete()`.
@@ -167,7 +168,7 @@ type(torch_model) :: model
 type(torch_tensor), dimension(n_inputs)  :: model_inputs
 type(torch_tensor), dimension(n_outputs) :: model_outputs
 ...
-call torch_model_load(model, "/path/to/saved_TorchScript_model.pt")
+call torch_model_load(model, "/path/to/saved_TorchScript_model.pt", torch_kCPU)
 call torch_tensor_from_array(model_inputs(1),  fortran_inputs,  &
                              in_layout, torch_kCPU)
 call torch_tensor_from_array(model_outputs(1), fortran_outputs, &
