@@ -27,8 +27,8 @@ show_help() {
 
 # Parse command line arguments
 BUILD_DIR="src/build"
-INTEGRATION_ONLY=false
-UNIT_ONLY=false
+RUN_INTEGRATION=true
+RUN_UNIT=true
 VERBOSE=false
 HELP=false
 for ARG in "$@"; do
@@ -37,11 +37,11 @@ for ARG in "$@"; do
     BUILD_DIR="${ARG#*=}"
     ;;
   --integration-only | -i)
-    INTEGRATION_ONLY=true
+    RUN_UNIT=false
     shift
     ;;
   --unit-only | -u)
-    UNIT_ONLY=true
+    RUN_INTEGRATION=false
     shift
     ;;
   --verbose | -V)
@@ -74,14 +74,14 @@ else
 fi
 
 # Run unit tests
-if [ "${INTEGRATION_ONLY}" = false ]; then
+if [ "${RUN_UNIT}" = true ]; then
   cd "${BUILD_DIR}/test/unit"
   ctest "${CTEST_ARGS}"
   cd -
 fi
 
 # Run integration tests
-if [ "${UNIT_ONLY}" = false ]; then
+if [ "${RUN_INTEGRATION}" = true ]; then
   EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
   for EXAMPLE in ${EXAMPLES}; do
     pip -q install -r examples/"${EXAMPLE}"/requirements.txt
