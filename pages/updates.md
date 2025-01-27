@@ -17,7 +17,7 @@ model = torch_module_load(model, filename, torch_kCPU)
 
 ## June 2024
 
-If you use a version of FTorch from before commit 
+If you use a version of FTorch from before commit
 [e92ad9e](https://github.com/Cambridge-ICCS/FTorch/commit/e92ad9ec7c2198dbb2ca819854d604b984d293c4)
 (June 2024) you will notice that the latest API documentation is not suitable.
 This is because a number of breaking changes were made to the FTorch API in preparation
@@ -33,7 +33,7 @@ If you are already using a more recent version there is no need to read this pag
 
 We realise that this forms an inconvenience to those of you who are actively
 using FTorch and is not something we did lightly.
-These changes were neccessary to improve functionality and we have made them in one go
+These changes were necessary to improve functionality and we have made them in one go
 as we move towards a stable API and first release in the very near future.
 Once the first release is set then the API becomes standardised then changes like this
 will be avoided. We hope that this is the last time we have such a shift.
@@ -42,7 +42,7 @@ The changes allow us to implement two new features:
 
 1. Multiple output tensors
    Previously you could pass an array of several input tensors to a Torch model, but
-   only recieve a single output tensor back. Now you can use models that return several
+   only receive a single output tensor back. Now you can use models that return several
    output tensors by passing an array of output tensors instead.
 2. Preparation for autograd functionality
    We hope to make it easier to access the autograd features of PyTorch from within Fortran.
@@ -93,10 +93,11 @@ The process of loading a net is also now a subroutine call for consistency with 
 tensor creation operations:
 ```fortran
 type(torch_model) :: model
-call torch_model_load(model, 'path_to_saved_net.pt')
+call torch_model_load(model, 'path_to_saved_net.pt', torch_kCPU)
 call torch_model_forward(model, in_tensors, out_tensors)
-
 ```
+Note that the `device_type` argument has also been specified in the call to
+`torch_model_load`, for the reason mentioned [above](./January-2025).
 
 <br>
 
