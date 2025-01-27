@@ -40,8 +40,8 @@ if(CMAKE_BUILD_TESTS)
                                   # the model
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-  # 3. Check the model can be loaded from file and run in Python and that its
-  #   outputs meet expectations
+  # 3. Check the model can be loaded from file and run with MPI in Python and
+  #   that its outputs meet expectations
   add_test(
     NAME mpi_infer_python
     COMMAND
@@ -53,8 +53,8 @@ if(CMAKE_BUILD_TESTS)
     mpi_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
     "MPI Python example ran successfully")
 
-  # 4. Check the model can be loaded from file and run in Fortran and that its
-  #   outputs meet expectations
+  # 4. Check the model can be loaded from file and run with MPI in Fortran and
+  #   that its outputs meet expectations
   add_test(
     NAME mpi_infer_fortran
     COMMAND
