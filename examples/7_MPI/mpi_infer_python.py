@@ -59,6 +59,12 @@ if __name__ == "__main__":
     comm = MPI.COMM_WORLD
     rank = comm.rank
     device_to_run = "cpu"
+    if comm.size == 1:
+        size_error = (
+            "MPI communicator size is 1, indicating that it is not configured correctly"
+            " (assuming you specified more than one rank)"
+        )
+        raise ValueError(size_error)
 
     batch_size_to_run = 1
 

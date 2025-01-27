@@ -47,6 +47,15 @@ program inference
 
    call mpi_init(ierr)
    call mpi_comm_rank(mpi_comm_world, rank, ierr)
+   call mpi_comm_size(mpi_comm_world, size, ierr)
+
+   ! Check MPI was configured correctly
+   if (size == 1) then
+      write(*,*) "MPI communicator size is 1, indicating that it is not configured correctly"
+      write(*,*) "(assuming you specified more than one rank)"
+      call clean_up()
+      stop 999
+   end if
 
    ! Get TorchScript model file as a command line argument
    num_args = command_argument_count()
@@ -76,7 +85,6 @@ program inference
    write(unit=6, fmt=100) out_data(:)
 
    ! Gather the outputs onto rank 0
-   call mpi_comm_size(mpi_comm_world, size, ierr)
    allocate(recvbuf(5,size))
    call mpi_gather(out_data, 5, mpi_float, recvbuf, 5, mpi_float, 0, mpi_comm_world, ierr)
 
