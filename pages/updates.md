@@ -1,5 +1,22 @@
 title: Recent API Changes
 
+## January 2025
+
+If you use a version of FTorch from before commit
+[c488f20](c488f20d8d49a15f98176c39a6c8e8db8e708f51)
+(January 2025) you may notice that the `device_type` argument for
+`torch_model_load` changed from being optional to being compulsory. This is
+because the optional argument defaulted to `torch_kCPU`, which is not suitable
+for GPU workloads. For recent FTorch configurations, simply specify the device
+type as the third argument. For example:
+```fortran
+type(torch_module) :: model
+character(len=17), parameter :: filename = "my_saved_model.pt"
+model = torch_module_load(model, filename, torch_kCPU)
+```
+
+## June 2024
+
 If you use a version of FTorch from before commit 
 [e92ad9e](https://github.com/Cambridge-ICCS/FTorch/commit/e92ad9ec7c2198dbb2ca819854d604b984d293c4)
 (June 2024) you will notice that the latest API documentation is not suitable.
@@ -12,7 +29,7 @@ If you are already using a more recent version there is no need to read this pag
 
 [TOC]
 
-## Why?
+### Why?
 
 We realise that this forms an inconvenience to those of you who are actively
 using FTorch and is not something we did lightly.
@@ -34,7 +51,7 @@ The changes allow us to implement two new features:
 
 <br>
 
-## Changes and how to update your code
+### Changes and how to update your code
 
 <br>
 
