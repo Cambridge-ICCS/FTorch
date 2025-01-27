@@ -15,7 +15,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 find_package(FTorch)
-find_package(MPI REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 check_language(CUDA)
@@ -28,7 +27,6 @@ endif()
 # Fortran example
 add_executable(multigpu_infer_fortran multigpu_infer_fortran.f90)
 target_link_libraries(multigpu_infer_fortran PRIVATE FTorch::ftorch)
-target_link_libraries(multigpu_infer_fortran PRIVATE MPI::MPI_Fortran)
 
 # Integration testing
 if (CMAKE_BUILD_TESTS)
