@@ -6,13 +6,14 @@ multiple GPU devices.
 
 ## Description
 
-The same Python file `simplenet.py` is used from the earlier example. Recall that it
-defines a very simple PyTorch network that takes an input of length 5 and applies a
-single `Linear` layer to multiply it by 2.
+The Python file `multigpu.py` is used, which is similar to the `simplenet.py`
+from the earlier example.
+Recall that it defines a very simple PyTorch network that takes an input of length 5
+and applies a single `Linear` layer to multiply it by 2.
 
 The same `pt2ts.py` tool is used to save the simple network to TorchScript.
 
-A series of files `simplenet_infer_<LANG>` then bind from other languages to run the
+A series of files `multigpu_infer_<LANG>` then bind from other languages to run the
 TorchScript model in inference mode.
 
 ## Dependencies
@@ -35,9 +36,9 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-You can check that everything is working by running `simplenet.py`:
+You can check that everything is working by running `multigpu.py`:
 ```
-python3 simplenet.py
+python3 multigpu.py
 ```
 As before, this defines the network and runs it with an input tensor
 [0.0, 1.0, 2.0, 3.0, 4.0] to produce the result:
@@ -45,20 +46,20 @@ As before, this defines the network and runs it with an input tensor
 tensor([[0, 2, 4, 6, 8]])
 ```
 
-To save the SimpleNet model to TorchScript run the modified version of the `pt2ts.py`
+To save the MultiGPUNet model to TorchScript run the modified version of the `pt2ts.py`
 tool:
 ```
 python3 pt2ts.py
 ```
-which will generate `saved_simplenet_model_cuda.pt` - the TorchScript instance of the
+which will generate `saved_multigpu_model_cuda.pt` - the TorchScript instance of the
 network. The only difference with the earlier example is that the model is built to
 be run using CUDA rather than on CPU.
 
-You can check that everything is working by running the `simplenet_infer_python.py`
+You can check that everything is working by running the `multigpu_infer_python.py`
 script. It's set up with MPI such that a different GPU device is associated with each
 MPI rank. You should substitute `<NP>` with the number of GPUs you wish to run with:
 ```
-mpiexec -np <NP> python3 simplenet_infer_python.py
+mpiexec -np <NP> python3 multigpu_infer_python.py
 ```
 This reads the model in from the TorchScript file and runs it with an different input
 tensor on each GPU device: [0.0, 1.0, 2.0, 3.0, 4.0], plus the device index in each
@@ -75,8 +76,8 @@ At this point we no longer require Python, so can deactivate the virtual environ
 deactivate
 ```
 
-To call the saved SimpleNet model from Fortran we need to compile the
-`simplenet_infer_fortran.f90` file. This can be done using the included
+To call the saved MultiGPUNet model from Fortran we need to compile the
+`multigpu_infer_fortran.f90` file. This can be done using the included
 `CMakeLists.txt` as follows, noting that we need to use an MPI-enabled Fortran
 compiler:
 ```
@@ -89,11 +90,11 @@ cmake --build .
 (Note that the Fortran compiler can be chosen explicitly with the `-DCMAKE_Fortran_COMPILER` flag,
 and should match the compiler that was used to locally build FTorch.)
 
-To run the compiled code calling the saved SimpleNet TorchScript from Fortran, run the
+To run the compiled code calling the saved MultiGPUNet TorchScript from Fortran, run the
 executable with an argument of the saved model file. Again, specify the number of MPI
 processes according to the desired number of GPUs:
 ```
-mpiexec -np <NP> ./simplenet_infer_fortran ../saved_simplenet_model_cuda.pt
+mpiexec -np <NP> ./multigpu_infer_fortran ../saved_multigpu_model_cuda.pt
 ```
 
 This runs the model with the same inputs as described above and should produce (some
