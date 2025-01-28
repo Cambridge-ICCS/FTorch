@@ -38,6 +38,7 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         # loaded onto CPU, and then are moved to the devices they were saved
         # from, so we don't need to manually transfer the model to the GPU
         model = torch.jit.load(saved_model)
+        model = model.to(device)
         input_tensor_gpu = input_tensor.to(torch.device(device))
         output_gpu = model.forward(input_tensor_gpu)
         output = output_gpu.to(torch.device("cpu"))
