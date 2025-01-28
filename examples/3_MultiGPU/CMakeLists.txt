@@ -18,6 +18,7 @@ find_package(FTorch)
 find_package(MPI REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
+include(CheckLanguage)
 check_language(CUDA)
 if(CMAKE_CUDA_COMPILER)
   enable_language(CUDA)
