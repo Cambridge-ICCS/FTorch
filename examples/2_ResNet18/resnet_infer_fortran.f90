@@ -161,7 +161,7 @@ contains
 
       character(len=*), intent(in) :: filename_cats
       integer, intent(in) :: N_cats
-      character(len=100), intent(out) :: categories(N_cats)
+      character(len=128), intent(out) :: categories(N_cats)
 
       integer :: ios
       character(len=100) :: ioerrmsg
