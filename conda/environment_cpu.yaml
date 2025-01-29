@@ -1,0 +1,11 @@
+name: FTorch-cpu
+channels:
+  - conda-forge
+dependencies:
+  - fortran-compiler
+  - cxx-compiler
+  - cmake
+  - openmpi  # For pFUnit
+  - pytorch-cpu  # Force cpu-only version
+  - torchvision  # For example 2
+  - zlib  # missing dependency for pytorch
