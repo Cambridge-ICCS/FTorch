@@ -1,4 +1,4 @@
-# FTorch
+# FTorch Waheeeeyyyyy
 
 **_A library for coupling (Py)Torch machine learning models to Fortran_**
 
