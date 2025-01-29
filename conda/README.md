@@ -47,16 +47,21 @@ conda env create -f environment_cuda.yaml
 ```
 from this directory to create the environment and install dependencies.
 
-FTorch can then be built as described in the main documentation from within this
-activated environment.
-As nopted above it is convenient to install FTorch into the conda environment using
-`$CONDA_PREFIX`, and locate the CMake headers for torch using the Python utility:
+At time of writing building FTorch in this environment requires some additional
+CMake flags to be set in order to correctly locate CUDA components within the
+conda environment, namely `CUDA_TOOLKIT_ROOT_DIR` and `nvtx3_dir`
+(see [this comment](https://github.com/conda-forge/cuda-feedstock/issues/59#issuecomment-2620910028)
+for details).
+Doing this, with the tips described above for CPU builds, results in a CMake command
+similar to the following:
 ```sh
 cmake \
     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
     -DCMAKE_PREFIX_PATH=`python3 -c 'import torch;print(torch.utils.cmake_prefix_path)'` \
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_CUDA=TRUE \
+    -DCUDA_TOOLKIT_ROOT_DIR=$CONDA_PREFIX/targets/x86_64-linux \
+    -Dnvtx3_dir=$CONDA_PREFIX/targets/x86_64-linux/include/nvtx3 \
     ..
 cmake --build . --target install
 ```
@@ -75,9 +80,20 @@ or submit a pull request.
 > PyTorch and Python should follow the non-conda build procedure.
 
 
+## Examples
+
+The instructions for running the examples make use of virtual environments
+and pip to install dependencies for running any Python code within them.
+
+This is not neccessary from within the conda environment as these dependencies are
+installed as part of the environment files provided.
+
+Conda users should adjust their approach accordingly.
+
+
 ## Tests
 
-If running the unit tests it is recommended that pFUnit is build an d installed into the
+If running the unit tests it is recommended that pFUnit is build and installed into the
 conda environment at `$CONDA_PREFIX`:
 ```sh
 git clone --recursive git@github.com:Goddard-Fortran-Ecosystem/pFUnit.git
@@ -93,18 +109,13 @@ make tests
 make install
 ```
 
-
-## Examples
-
-The instructions for running the examples make use of virtual environments
-and pip to install dependencies for running any Python code within them.
-
-This is not neccessary from within the conda environment as these dependencies are
-installed as part of the environment files provided.
-
-Conda users should adjust their approach accordingly.
+The unit tests only can be run using the provided script:
+```sh
+./run_test_suite.sh -u
+```
 
 > [!NOTE]  
 > The automated integration testing also makes use of pip to install pytorch and other
 > python dependencies. Conda users wishing to run this should amend the test script
-> as appropriate before running.
+> to  remove the `pip install` command as these additional requirements are included
+> in the environment files provided.
