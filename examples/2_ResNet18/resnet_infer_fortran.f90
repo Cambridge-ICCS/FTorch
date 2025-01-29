@@ -40,9 +40,9 @@ contains
       ! Path to input data
       character(len=128) :: data_dir
       ! Binary file containing input tensor
-      character(len=116) :: filename
+      character(len=128) :: filename
       ! Text file containing categories
-      character(len=114) :: filename_cats
+      character(len=128) :: filename_cats
 
       ! Length of tensor and number of categories
       integer, parameter :: tensor_length = 150528
