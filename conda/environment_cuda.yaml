@@ -1,0 +1,18 @@
+name: FTorch-cuda
+channels:
+  - conda-forge
+  - nvidia
+  - nodefaults
+dependencies:
+  - fortran-compiler
+  - cxx-compiler
+  - cmake
+  - openmpi  # For pFUnit to run the test suite and example 3
+  - cuda-version 12.6  # Set version of cuda here
+  - cuda-compiler
+  - cuda-libraries-dev
+  - cuda-nvtx-dev
+  - python <3.13  # Restrict as PyTorch not functional in 3.13 at present
+  - pytorch
+  - torchvision  # For example 2 only
+  - zlib  # missing dependency of pytorch

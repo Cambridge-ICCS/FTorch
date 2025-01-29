@@ -39,6 +39,32 @@ cmake \
 cmake --build . --target install
 ```
 
+### CUDA
+
+From a conda base environment run:
+```sh
+conda env create -f environment_cuda.yaml
+```
+from this directory to create the environment and install dependencies.
+
+FTorch can then be built as described in the main documentation from within this
+activated environment.
+As nopted above it is convenient to install FTorch into the conda environment using
+`$CONDA_PREFIX`, and locate the CMake headers for torch using the Python utility:
+```sh
+cmake \
+    -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
+    -DCMAKE_PREFIX_PATH=`python3 -c 'import torch;print(torch.utils.cmake_prefix_path)'` \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DENABLE_CUDA=TRUE \
+    ..
+cmake --build . --target install
+```
+
+### Other Backends
+
+We currently only provide conda environments for CPU and CUDA backends.
+
 If you require something else please [get in touch](https://github.com/Cambridge-ICCS/FTorch/issues)
 or submit a pull request.
 
@@ -47,6 +73,25 @@ or submit a pull request.
 > These environments will install PyTorch (and associated dependencies) to couple to
 > from FTorch. Users wanting a minimal build that relies on LibTorch rather than
 > PyTorch and Python should follow the non-conda build procedure.
+
+
+## Tests
+
+If running the unit tests it is recommended that pFUnit is build an d installed into the
+conda environment at `$CONDA_PREFIX`:
+```sh
+git clone --recursive git@github.com:Goddard-Fortran-Ecosystem/pFUnit.git
+
+cd pFUnit
+mkdir build
+cd build
+
+cmake \
+  -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
+  ..
+make tests
+make install
+```
 
 
 ## Examples
