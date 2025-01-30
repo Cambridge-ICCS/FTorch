@@ -58,6 +58,12 @@ jobs:
           persist-credentials: false
         uses: actions/checkout@v4
 
+      - name: Create virtual environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m venv ftorch
+          . ftorch/bin/activate
+
       - name: Build FTorch
         run: |
           . ftorch/bin/activate
