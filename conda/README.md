@@ -32,7 +32,7 @@ A CMake build command utilising this may look something like:
 ```sh
 cmake \
     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
-    -DCMAKE_PREFIX_PATH=`python3 -c 'import torch;print(torch.utils.cmake_prefix_path)'` \
+    -DCMAKE_PREFIX_PATH=$(python -c 'import torch;print(torch.utils.cmake_prefix_path)') \
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_CUDA=FALSE \
     ..
@@ -57,7 +57,7 @@ similar to the following:
 ```sh
 cmake \
     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
-    -DCMAKE_PREFIX_PATH=`python3 -c 'import torch;print(torch.utils.cmake_prefix_path)'` \
+    -DCMAKE_PREFIX_PATH=$(python -c 'import torch;print(torch.utils.cmake_prefix_path)') \
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_CUDA=TRUE \
     -DCUDA_TOOLKIT_ROOT_DIR=$CONDA_PREFIX/targets/x86_64-linux \
