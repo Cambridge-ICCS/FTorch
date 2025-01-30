@@ -2428,6 +2428,11 @@ contains
       end function torch_tensor_assign_c
     end interface
 
+    if (input%get_device_type() /= output%get_device_type()) then
+      write(*,*) "Error :: cannot assign tensors with different device types"
+      stop 1
+    end if
+
     output%p = torch_tensor_assign_c(input%p)
   end subroutine torch_tensor_assign
 
@@ -2447,6 +2452,11 @@ contains
         type(c_ptr) :: output_c
       end function torch_tensor_add_c
     end interface
+
+    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+      write(*,*) "Error :: cannot add tensors with different device types"
+      stop 1
+    end if
 
     output%p = torch_tensor_add_c(tensor1%p, tensor2%p)
   end function torch_tensor_add
@@ -2486,6 +2496,11 @@ contains
       end function torch_tensor_subtract_c
     end interface
 
+    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+      write(*,*) "Error :: cannot subtract tensors with different device types"
+      stop 1
+    end if
+
     output%p = torch_tensor_subtract_c(tensor1%p, tensor2%p)
   end function torch_tensor_subtract
 
@@ -2494,6 +2509,11 @@ contains
     type(torch_tensor), intent(in) :: tensor1
     type(torch_tensor), intent(in) :: tensor2
     type(torch_tensor) :: output
+
+    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+      write(*,*) "Error :: cannot multiply tensors with different device types"
+      stop 1
+    end if
 
     output%p = torch_tensor_multiply_c(tensor1%p, tensor2%p)
   end function torch_tensor_multiply
@@ -2672,6 +2692,11 @@ contains
     type(torch_tensor), intent(in) :: tensor1
     type(torch_tensor), intent(in) :: tensor2
     type(torch_tensor) :: output
+
+    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+      write(*,*) "Error :: cannot divide tensors with different device types"
+      stop 1
+    end if
 
     output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
   end function torch_tensor_divide
