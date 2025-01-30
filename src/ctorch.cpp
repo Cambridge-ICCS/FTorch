@@ -12,7 +12,8 @@
 // --- Constant expressions
 // =============================================================================
 
-constexpr auto get_dtype(torch_data_t dtype) {
+// Mapping from FTorch device_data_t to libtorch Dtype
+constexpr auto get_libtorch_dtype(torch_data_t dtype) {
   switch (dtype) {
   case torch_kUInt8:
     std::cerr << "[WARNING]: uint8 not supported in Fortran" << std::endl;
@@ -40,7 +41,37 @@ constexpr auto get_dtype(torch_data_t dtype) {
   }
 }
 
-const auto get_device(torch_device_t device_type, int device_index) {
+// Mapping from libtorch Dtype to FTorch device_data_t
+torch_data_t get_ftorch_dtype(caffe2::TypeMeta dtype) {
+  if (dtype == torch::kUInt8) {
+    std::cerr << "[WARNING]: uint8 not supported in Fortran" << std::endl;
+    // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
+    exit(EXIT_FAILURE);
+  } else if (dtype == torch::kInt8) {
+    return torch_kInt8;
+  } else if (dtype == torch::kInt16) {
+    return torch_kInt16;
+  } else if (dtype == torch::kInt32) {
+    return torch_kInt32;
+  } else if (dtype == torch::kInt64) {
+    return torch_kInt64;
+  } else if (dtype == torch::kFloat16) {
+    std::cerr << "[WARNING]: float16 not supported in Fortran" << std::endl;
+    // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
+    exit(EXIT_FAILURE);
+  } else if (dtype == torch::kFloat32) {
+    return torch_kFloat32;
+  } else if (dtype == torch::kFloat64) {
+    return torch_kFloat64;
+  } else {
+    std::cerr << "[ERROR]: data type " << dtype << " not supported in Fortran"
+              << std::endl;
+    exit(EXIT_FAILURE);
+  }
+}
+
+// Mapping from FTorch device_type_t to libtorch DeviceType
+const auto get_libtorch_device(torch_device_t device_type, int device_index) {
   switch (device_type) {
   case torch_kCPU:
     if (device_index != -1) {
@@ -65,6 +96,20 @@ const auto get_device(torch_device_t device_type, int device_index) {
   }
 }
 
+// Mapping from libtorch DeviceType to FTorch device_type_t
+const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
+  switch (device_type) {
+  case torch::kCPU:
+    return torch_kCPU;
+  case torch::kCUDA:
+    return torch_kCUDA;
+  default:
+    std::cerr << "[ERROR]: device type " << device_type << " not implemented in FTorch"
+              << std::endl;
+    exit(EXIT_FAILURE);
+  }
+}
+
 // =============================================================================
 // --- Functions for constructing tensors
 // =============================================================================
@@ -78,8 +123,8 @@ torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
     tensor = new torch::Tensor;
-    *tensor = torch::empty(vshape, torch::dtype(get_dtype(dtype)))
-                  .to(get_device(device_type, device_index));
+    *tensor = torch::empty(vshape, torch::dtype(get_libtorch_dtype(dtype)))
+                  .to(get_libtorch_device(device_type, device_index));
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -101,8 +146,8 @@ torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
     tensor = new torch::Tensor;
-    *tensor = torch::zeros(vshape, torch::dtype(get_dtype(dtype)))
-                  .to(get_device(device_type, device_index));
+    *tensor = torch::zeros(vshape, torch::dtype(get_libtorch_dtype(dtype)))
+                  .to(get_libtorch_device(device_type, device_index));
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -124,8 +169,8 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
     tensor = new torch::Tensor;
-    *tensor = torch::ones(vshape, torch::dtype(get_dtype(dtype)))
-                  .to(get_device(device_type, device_index));
+    *tensor = torch::ones(vshape, torch::dtype(get_libtorch_dtype(dtype)))
+                  .to(get_libtorch_device(device_type, device_index));
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -152,8 +197,9 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
     c10::IntArrayRef vshape(shape, ndim);
     c10::IntArrayRef vstrides(strides, ndim);
     tensor = new torch::Tensor;
-    *tensor = torch::from_blob(data, vshape, vstrides, torch::dtype(get_dtype(dtype)))
-                  .to(get_device(device_type, device_index));
+    *tensor = torch::from_blob(data, vshape, vstrides,
+                               torch::dtype(get_libtorch_dtype(dtype)))
+                  .to(get_libtorch_device(device_type, device_index));
 
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
@@ -214,11 +260,6 @@ void torch_tensor_print(const torch_tensor_t tensor) {
   std::cout << *t << std::endl;
 }
 
-int torch_tensor_get_device_index(const torch_tensor_t tensor) {
-  auto t = reinterpret_cast<torch::Tensor *>(tensor);
-  return t->device().index();
-}
-
 int torch_tensor_get_rank(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   return t->sizes().size();
@@ -235,6 +276,21 @@ const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
   return t->sizes().data();
 }
 #endif
+
+torch_data_t torch_tensor_get_dtype(const torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  return get_ftorch_dtype(t->dtype());
+}
+
+torch_device_t torch_tensor_get_device_type(const torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  return get_ftorch_device(t->device().type());
+}
+
+int torch_tensor_get_device_index(const torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  return t->device().index();
+}
 
 // =====================================================================================
 // --- Functions for deallocating tensors
@@ -350,7 +406,8 @@ torch_jit_script_module_t torch_jit_load(const char *filename,
   torch::jit::script::Module *module = nullptr;
   try {
     module = new torch::jit::script::Module;
-    *module = torch::jit::load(filename, get_device(device_type, device_index));
+    *module =
+        torch::jit::load(filename, get_libtorch_device(device_type, device_index));
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete module;

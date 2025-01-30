@@ -5,21 +5,23 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module test_tensor_interrogation_cuda
+  use funit
+  use ftorch, only: torch_kFloat32, torch_kCUDA, torch_tensor, torch_tensor_delete, &
+                    torch_tensor_empty
+  use iso_c_binding, only: c_int64_t
 
   implicit none
 
   public
 
+  ! Parameters common across all test cases
+  integer, parameter :: device_type = torch_kCUDA
+
 contains
 
-  ! Unit test for the torch_tensor_get_device_index function applied to a tensor on a CUDA device
-  ! Tensor is created without specifying a device_index so should default to device 0
+  ! Unit test for the torch_tensor_get_device_type function applied to a tensor on a CUDA device
   @test
-  subroutine test_torch_tensor_get_device_index_default()
-    use funit
-    use ftorch, only: torch_kFloat32, torch_kCUDA, torch_tensor, torch_tensor_delete, &
-                      torch_tensor_empty, torch_tensor_get_device_index
-    use iso_c_binding, only: c_int64_t
+  subroutine test_torch_tensor_get_device_type()
 
     implicit none
 
@@ -27,7 +29,32 @@ contains
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
     integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCUDA
+    integer, parameter :: expected = torch_kCUDA
+
+    ! Create an empty tensor on the CUDAD device
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+
+    ! Check that torch_tensor_get_device_type can get the device type
+    if (expected /= tensor%get_device_type()) then
+      call torch_tensor_delete(tensor)
+      print *, "Error :: torch_tensor_get_device_type returned incorrect device type"
+      stop 999
+    end if
+    call torch_tensor_delete(tensor)
+
+  end subroutine test_torch_tensor_get_device_type
+
+  ! Unit test for the torch_tensor_get_device_index function applied to a tensor on a CUDA device
+  ! Tensor is created without specifying a device_index so should default to device 0
+  @test
+  subroutine test_torch_tensor_get_device_index_default()
+
+    implicit none
+
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer, parameter :: dtype = torch_kFloat32
     integer, parameter :: expected = 0
 
     ! Create an empty tensor on the CUDA device with the default device index
