@@ -1,12 +1,14 @@
 program example
 
+  use, intrinsic :: iso_c_binding, only : c_int64_t
+
   ! Import precision info from iso
   use, intrinsic :: iso_fortran_env, only : sp => real32
 
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
-    operator(/), operator(**), torch_kCPU, torch_tensor, torch_tensor_delete, &
-    torch_tensor_from_array, torch_tensor_to_array
+    operator(/), operator(**), torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_delete, &
+    torch_tensor_empty, torch_tensor_from_array, torch_tensor_to_array
 
   ! Import our tools module for testing utils
   use ftorch_test_utils, only : assert_allclose
@@ -17,12 +19,14 @@ program example
   integer, parameter :: wp = sp
 
   ! Set up Fortran data structures
+  integer, parameter :: ndims = 2
   integer, parameter :: n=2, m=1
+  integer(c_int64_t), dimension(ndims), parameter :: tensor_shape = [n, m]
   real(wp), dimension(n,m), target :: in_data1
   real(wp), dimension(n,m), target :: in_data2
   real(wp), dimension(:,:), pointer :: out_data
   real(wp), dimension(n,m) :: expected
-  integer :: tensor_layout(2) = [1, 2]
+  integer :: tensor_layout(ndims) = [1, 2]
 
   ! Flag for testing
   logical :: test_pass
@@ -40,6 +44,7 @@ program example
   call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU)
 
   ! Check arithmetic operations work for torch_tensors
+  call torch_tensor_empty(Q, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
   write (*,*) "a = ", in_data1(:,1)
   write (*,*) "b = ", in_data2(:,1)
   Q = 3 * (a**3 - b * b / 3)
