@@ -2424,7 +2424,10 @@ contains
 
   !> Overloads assignment operator for tensors.
   subroutine torch_tensor_assign(output, input)
+<<<<<<< HEAD
     use, intrinsic :: iso_c_binding, only : c_associated
+=======
+>>>>>>> 2c14d87 (Assigned tensor needs to be inout)
     type(torch_tensor), intent(inout) :: output
     type(torch_tensor), intent(in) :: input
 
