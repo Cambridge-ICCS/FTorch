@@ -6,8 +6,8 @@
 !    file for details.
 module test_tensor_interrogation_cuda
   use funit
-  use ftorch, only: torch_kFloat32, torch_kCUDA, torch_tensor, torch_tensor_delete, &
-                    torch_tensor_empty
+  use ftorch, only: torch_kFloat32, torch_kCPU, torch_kCUDA, torch_tensor, torch_tensor_delete, &
+                    torch_tensor_empty, torch_tensor_zeros
   use iso_c_binding, only: c_int64_t
 
   implicit none
@@ -25,22 +25,26 @@ contains
 
     implicit none
 
-    type(torch_tensor) :: tensor
+    type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
     integer, parameter :: dtype = torch_kFloat32
     integer, parameter :: expected = torch_kCUDA
 
     ! Create an empty tensor on the CUDAD device
-    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+    call torch_tensor_zeros(tensor1, ndims, tensor_shape, dtype, torch_kCPU)
+    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, torch_kCUDA)
+    tensor2 = tensor1
 
     ! Check that torch_tensor_get_device_type can get the device type
-    if (expected /= tensor%get_device_type()) then
-      call torch_tensor_delete(tensor)
+    if (expected /= tensor2%get_device_type()) then
+      call torch_tensor_delete(tensor1)
+      call torch_tensor_delete(tensor2)
       print *, "Error :: torch_tensor_get_device_type returned incorrect device type"
       stop 999
     end if
-    call torch_tensor_delete(tensor)
+    call torch_tensor_delete(tensor1)
+    call torch_tensor_delete(tensor2)
 
   end subroutine test_torch_tensor_get_device_type
 
