@@ -34,7 +34,7 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
 
     ! Check that torch_tensor_get_device_index can get the device index
-    if (expected /= torch_tensor_get_device_index(tensor)) then
+    if (expected /= tensor%get_device_index()) then
       call torch_tensor_delete(tensor)
       print *, "Error :: torch_tensor_get_device_index returned incorrect CUDA device index"
       stop 999
