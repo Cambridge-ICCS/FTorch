@@ -8,7 +8,7 @@
 
 module ftorch
 
-  use, intrinsic :: iso_c_binding, only: c_null_ptr, c_ptr
+  use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
   use, intrinsic :: iso_fortran_env, only: int32
 
   implicit none
@@ -2295,6 +2295,10 @@ contains
       end function torch_tensor_get_rank_c
     end interface
 
+    if (.not. c_associated(self%p)) then
+      write(*,*) "Error :: tensor has not been constructed so its rank is unset"
+      stop 1
+    end if
     rank = torch_tensor_get_rank_c(self%p)
   end function torch_tensor_get_rank
 
@@ -2320,16 +2324,20 @@ contains
       end function torch_tensor_get_sizes_c
     end interface
 
+    if (.not. c_associated(self%p)) then
+      write(*,*) "Error :: tensor has not been constructed so its shape is unset"
+      stop 1
+    end if
     ndims(1) = self%get_rank()
     cptr = torch_tensor_get_sizes_c(self%p)
     call c_f_pointer(cptr, sizes, ndims)
   end function torch_tensor_get_shape
 
   !> Returns the data type of a tensor.
-  function torch_tensor_get_dtype(tensor) result(dtype)
+  function torch_tensor_get_dtype(self) result(dtype)
     use, intrinsic :: iso_c_binding, only : c_int
-    class(torch_tensor), intent(in) :: tensor  !! Input tensor
-    integer(c_int) :: dtype                !! Data type of tensor
+    class(torch_tensor), intent(in) :: self  !! Input tensor
+    integer(c_int) :: dtype                  !! Data type of tensor
 
     interface
       function torch_tensor_get_dtype_c(tensor) result(dtype) &
@@ -2341,14 +2349,18 @@ contains
       end function torch_tensor_get_dtype_c
     end interface
 
-    dtype = torch_tensor_get_dtype_c(tensor%p)
+    if (.not. c_associated(self%p)) then
+      write(*,*) "Error :: tensor has not been constructed so its data type is unset"
+      stop 1
+    end if
+    dtype = torch_tensor_get_dtype_c(self%p)
   end function torch_tensor_get_dtype
 
   !> Returns the device type of a tensor.
-  function torch_tensor_get_device_type(tensor) result(device_type)
+  function torch_tensor_get_device_type(self) result(device_type)
     use, intrinsic :: iso_c_binding, only : c_int
-    class(torch_tensor), intent(in) :: tensor  !! Input tensor
-    integer(c_int) :: device_type              !! Device type of tensor
+    class(torch_tensor), intent(in) :: self  !! Input tensor
+    integer(c_int) :: device_type            !! Device type of tensor
 
     interface
       function torch_tensor_get_device_type_c(tensor) result(device_type) &
@@ -2360,14 +2372,18 @@ contains
       end function torch_tensor_get_device_type_c
     end interface
 
-    device_type = torch_tensor_get_device_type_c(tensor%p)
+    if (.not. c_associated(self%p)) then
+      write(*,*) "Error :: tensor has not been constructed so its device type is unset"
+      stop 1
+    end if
+    device_type = torch_tensor_get_device_type_c(self%p)
   end function torch_tensor_get_device_type
 
   !> Determines the device index of a tensor.
-  function torch_tensor_get_device_index(tensor) result(device_index)
+  function torch_tensor_get_device_index(self) result(device_index)
     use, intrinsic :: iso_c_binding, only : c_int
-    class(torch_tensor), intent(in) :: tensor  !! Input tensor
-    integer(c_int) :: device_index             !! Device index of tensor
+    class(torch_tensor), intent(in) :: self  !! Input tensor
+    integer(c_int) :: device_index           !! Device index of tensor
 
     interface
       function torch_tensor_get_device_index_c(tensor) result(device_index) &
@@ -2379,7 +2395,11 @@ contains
       end function torch_tensor_get_device_index_c
     end interface
 
-    device_index = torch_tensor_get_device_index_c(tensor%p)
+    if (.not. c_associated(self%p)) then
+      write(*,*) "Error :: tensor has not been constructed so its device index is unset"
+      stop 1
+    end if
+    device_index = torch_tensor_get_device_index_c(self%p)
   end function torch_tensor_get_device_index
 
   ! ============================================================================
