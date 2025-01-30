@@ -6,7 +6,7 @@ program inference
    ! Import our library for interfacing with PyTorch
    use ftorch, only : torch_model, torch_tensor, torch_kCUDA, torch_kCPU, &
                       torch_tensor_from_array, torch_model_load, torch_model_forward, &
-                      torch_delete
+                      torch_delete, assignment(=)
 
    ! Import MPI
    use mpi, only : mpi_init, mpi_finalize, mpi_comm_world, mpi_comm_rank
@@ -57,6 +57,9 @@ program inference
    ! Here we use the torch_kCPU device type since the tensor is for output only
    ! i.e. to be subsequently used by Fortran on CPU.
    call torch_tensor_from_array(out_tensors(1), out_data, tensor_layout, torch_kCPU)
+
+   ! NOTE: Expected to break
+   out_tensors(1) = in_tensors(1)
 
    ! Load ML model. Ensure that the same device type and device index are used
    ! as for the input data.

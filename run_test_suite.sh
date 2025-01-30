@@ -83,7 +83,7 @@ fi
 # Run integration tests
 if [ "${RUN_INTEGRATION}" = true ]; then
   if [ -e "${BUILD_DIR}/test/examples/3_MultiGPU" ]; then
-    EXAMPLES="1_SimpleNet 2_ResNet18 3_MultiGPU 4_MultiIO 6_Autograd"
+    EXAMPLES="3_MultiGPU"
   else
     EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
   fi
