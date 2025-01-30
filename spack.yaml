@@ -5,7 +5,7 @@ spack:
   specs:
   - cmake
   - pfunit~mpi~openmp
-  - py-torch~cuda~mpi~openmp~mkldnn
+  - py-torch~cuda~mpi~openmp
   - py-torchvision
   - py-pip
   concretizer:
