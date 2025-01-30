@@ -87,8 +87,9 @@ if [ "${RUN_INTEGRATION}" = true ]; then
   else
     EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
   fi
+  export PIP_REQUIRE_VIRTUALENV=true
   for EXAMPLE in ${EXAMPLES}; do
-    pip -q install -r examples/"${EXAMPLE}"/requirements.txt
+    python -m pip -q install -r examples/"${EXAMPLE}"/requirements.txt
     cd "${BUILD_DIR}"/test/examples/"${EXAMPLE}"
     ctest "${CTEST_ARGS}"
     cd -
