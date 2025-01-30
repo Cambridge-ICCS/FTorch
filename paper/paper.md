@@ -220,7 +220,7 @@ saving their PyTorch models to TorchScript.
   Whilst it does not allow interaction with PyTorch, neural-fortran provides
   many neural network components for building nets directly in Fortran.
   However, the set of features is not as rich as PyTorch and GPU offloading
-  is not currently supported.
+  is not currently supported.\
   The [Fiats](https://berkeleylab.github.io/fiats) (`Functional Inference And Training
   for Surrogates') package is another approach for developing, training, and deploying
   ML models directly in Fortran, with experimental GPU support at present.
@@ -232,10 +232,18 @@ saving their PyTorch models to TorchScript.
   challenging interface with more boilerplate. It also requires access to the Python
   runtime from Fortran.
 
-* **TorchFort** [@torchfort]
-  Since we started our work on `FTorch` a similar library has been released by NVIDIA.
+* **TorchFort** [@torchfort]\
+  Since we started our work on `FTorch` NVIDIA has released `torchfort`.
   This has a similar approach to `FTorch`, in that it avoids Python and links against
   the `LibTorch` backend. It has a focus on enabling GPU deployment on NVIDIA hardware.
+
+* **fortran-tf-lib** [@fortran-tf-lib]\
+  Whilst `FTorch` allows coupling of PyTorch models to Fortran, there are
+  some who use the TensorFlow framework [@Abadi_TensorFlow_Large-scale_machine_2015] to
+  develop and train models. In this case models saved from TensorFlow can be coupled to
+  Fortran in a similar manner to `FTorch` by using `fortran-tf-lib`.
+  Whilst it provides an alternative solution the library is less rich in features and
+  software sustainability than `FTorch`.
 
 * **SmartSim** [@partee2022using]\
   SmartSim is a workflow library developed by HPE and built upon Redis API.
