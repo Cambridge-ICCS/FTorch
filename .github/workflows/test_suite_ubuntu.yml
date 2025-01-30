@@ -37,10 +37,18 @@ jobs:
   test-suite-ubuntu:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
+    fail-fast: false
+    matrix:
+      std: ["f2008", "f2018"]
       matrix:
-        std: ["f2008", "f2018"]
+        container: ["ghcr.io/cambridge-iccs/ftorch-dev-env:latest"]
+
+    # The Docker container that the job will use
+    container:
+      image: ${{ matrix.container }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -50,35 +58,6 @@ jobs:
           persist-credentials: false
         uses: actions/checkout@v4
 
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install PyTorch
-        run: |
-          python -m pip install --upgrade pip
-          python -m venv ftorch
-          . ftorch/bin/activate
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-
-      # MPI is required by pFUnit
-      - name: Install an MPI distribution
-        run: |
-          sudo apt update
-          sudo apt install mpich
-
-      - name: Install pFUnit
-        run: |
-          export FC=/usr/bin/gfortran
-          export MPIF90=/usr/bin/mpif90
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.10.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
-          mkdir pFUnit/build
-          cd pFUnit/build
-          cmake ..
-          make -j 4 install
-
       - name: Build FTorch
         run: |
           . ftorch/bin/activate
@@ -86,6 +65,7 @@ jobs:
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/src/build
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
+          # FIXME: Path to pFUnit
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.10
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
