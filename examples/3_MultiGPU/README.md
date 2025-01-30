@@ -20,7 +20,8 @@ the TorchScript model in inference mode.
 To run this example requires:
 
 - CMake
-- FTorch (installed as described in main package)
+- Two GPU devices that support CUDA and have it installed.
+- FTorch (installed with CUDA enabled as described in main package)
 - Python 3
 
 ## Running
