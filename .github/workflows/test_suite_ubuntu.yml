@@ -64,9 +64,7 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/src/build
-          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          # FIXME: Path to pFUnit
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.10
+          export PFUNIT_DIR="/opt/view/$(ls /opt/view | grep PFUNIT)"
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
           cmake .. \
