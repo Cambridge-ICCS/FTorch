@@ -60,8 +60,7 @@ program inference
 
    ! Load ML model. Ensure that the same device type and device index are used
    ! as for the input data.
-   call torch_model_load(model, args(1), device_type=torch_kCUDA,                 &
-                             device_index=rank)
+   call torch_model_load(model, args(1), torch_kCUDA, device_index=rank)
 
    ! Infer
    call torch_model_forward(model, in_tensors, out_tensors)

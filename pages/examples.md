@@ -70,7 +70,7 @@ integer, parameter :: out_dims = 1
 integer :: out_layout(out_dims) = [1]
 
 ! Initialise the Torch model to be used
-torch_model_load(model, "/path/to/saved/model.pt")
+torch_model_load(model, "/path/to/saved/model.pt", torch_kCPU)
 
 ! Initialise the inputs as Fortran array of ones
 input = 1.0

@@ -16,6 +16,10 @@ to run the unit tests, you will also need to install
 [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit) and pass its
 install directory to the `CMAKE_PREFIX_PATH` when building FTorch.
 
+Note that, whilst example `5_Looping` is built if `CMAKE_BUILD_TESTS=TRUE` is
+specified, it is not run as part of the integration test suite because it
+demonstrates 'good' versus 'bad' practice, as opposed to functionality.
+
 ### Running
 
 Once the build is complete, activate the Python virtual environment you created

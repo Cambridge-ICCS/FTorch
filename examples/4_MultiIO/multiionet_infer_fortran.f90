@@ -54,7 +54,7 @@ program inference
    call torch_tensor_from_array(out_tensors(2), out_data2, tensor_layout, torch_kCPU)
 
    ! Load ML model
-   call torch_model_load(model, args(1))
+   call torch_model_load(model, args(1), torch_kCPU)
 
    ! Infer
    call torch_model_forward(model, in_tensors, out_tensors)

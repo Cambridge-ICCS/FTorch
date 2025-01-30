@@ -40,9 +40,9 @@ contains
       ! Path to input data
       character(len=128) :: data_dir
       ! Binary file containing input tensor
-      character(len=116) :: filename
+      character(len=128) :: filename
       ! Text file containing categories
-      character(len=114) :: filename_cats
+      character(len=128) :: filename_cats
 
       ! Length of tensor and number of categories
       integer, parameter :: tensor_length = 150528
@@ -87,7 +87,7 @@ contains
       call torch_tensor_from_array(out_tensors(1), out_data, out_layout, torch_kCPU)
 
       ! Load ML model (edit this line to use different models)
-      call torch_model_load(model, args(1))
+      call torch_model_load(model, args(1), torch_kCPU)
 
       ! Infer
       call torch_model_forward(model, in_tensors, out_tensors)
@@ -161,7 +161,7 @@ contains
 
       character(len=*), intent(in) :: filename_cats
       integer, intent(in) :: N_cats
-      character(len=100), intent(out) :: categories(N_cats)
+      character(len=128), intent(out) :: categories(N_cats)
 
       integer :: ios
       character(len=100) :: ioerrmsg

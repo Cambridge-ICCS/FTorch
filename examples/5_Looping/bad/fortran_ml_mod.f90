@@ -38,7 +38,7 @@ module ml_mod
 
     ! Load ML model
     model_torchscript_file = '../saved_simplenet_model.pt'
-    call torch_model_load(torch_net, model_torchscript_file)
+    call torch_model_load(torch_net, model_torchscript_file, torch_kCPU)
 
     ! Infer
     call torch_model_forward(torch_net, input_tensors, output_tensors)

@@ -44,7 +44,7 @@ type(torch_model) :: model
 type(torch_tensor), dimension(n_inputs)  :: model_inputs_arr
 type(torch_tensor), dimension(n_outputs) :: model_output_arr
 ...
-call torch_model_load(model, "/my/saved/TorchScript/model.pt")
+call torch_model_load(model, "/my/saved/TorchScript/model.pt", torch_kCPU)
 call torch_tensor_from_array(model_inputs_arr(1), input_fortran, in_layout, torch_kCPU)
 call torch_tensor_from_array(model_output_arr(1), output_fortran, out_layout, torch_kCPU)
 
