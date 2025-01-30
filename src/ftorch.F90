@@ -2415,7 +2415,7 @@ contains
 
   !> Overloads assignment operator for tensors.
   subroutine torch_tensor_assign(output, input)
-    type(torch_tensor), intent(out) :: output
+    type(torch_tensor), intent(inout) :: output
     type(torch_tensor), intent(in) :: input
 
     interface
