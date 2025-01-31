@@ -3,12 +3,12 @@ name: Periodic Docker build
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on pushes to open pull requests with changes to the Spack or Docker configuration
-  pull_request:
-    paths:
-      - .github/workflows/docker.yml
-      - docker/Dockerfile.devenv
-      - spack.yaml
+  # # Triggers the workflow on pushes to open pull requests with changes to the Spack or Docker configuration
+  # pull_request:
+  #   paths:
+  #     - .github/workflows/docker.yml
+  #     - docker/Dockerfile.devenv
+  #     - spack.yaml
 
   # Triggers the workflow at 00:00 on the first day of every 3 months
   schedule:
