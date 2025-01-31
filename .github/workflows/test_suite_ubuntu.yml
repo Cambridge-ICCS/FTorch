@@ -60,12 +60,14 @@ jobs:
 
       - name: Create virtual environment
         run: |
+          . /opt/spack-environment/activate.sh
           python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
 
       - name: Build FTorch
         run: |
+          . /opt/spack-environment/activate.sh
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
@@ -85,10 +87,12 @@ jobs:
 
       - name: Run unit tests
         run: |
+          . /opt/spack-environment/activate.sh
           . ftorch/bin/activate
           ./run_test_suite.sh --verbose --unit-only
 
       - name: Run integration tests
         run: |
+          . /opt/spack-environment/activate.sh
           . ftorch/bin/activate
           ./run_test_suite.sh --verbose --integration-only
