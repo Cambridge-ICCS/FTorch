@@ -65,6 +65,13 @@ jobs:
           python -m venv ftorch
           . ftorch/bin/activate
 
+      # tmate can be used to get an interactive ssh session to the github runner
+      # for debugging actions. See
+      # [here](https://github.com/mxschmitt/action-tmate) for more information.
+      # Uncomment these lines to debug the FTorch build.
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+
       - name: Build FTorch
         run: |
           . /opt/spack-environment/activate.sh
