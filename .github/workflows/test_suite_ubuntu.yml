@@ -61,7 +61,6 @@ jobs:
       - name: Create virtual environment
         run: |
           . /opt/spack-environment/activate.sh
-          python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
 
