@@ -40,12 +40,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: ["ghcr.io/cambridge-iccs/ftorch-dev-env:latest"]
         std: ["f2008", "f2018"]
 
     # The Docker container that the job will use
     container:
-      image: ${{ matrix.container }}
+      image: ghcr.io/cambridge-iccs/ftorch-dev-env:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.github_token }}
