@@ -75,10 +75,7 @@ jobs:
           . /opt/spack-environment/activate.sh
           . ftorch/bin/activate
           VN="$(python -c 'import sys; print(".".join(sys.version.split(".")[:2]))')"
-          PLATFORM="$(ls /opt/software | grep linux)"
-          COMPILER="$(ls /opt/software/${PLATFORM} | grep gcc)"
-          PYTORCH="$(ls /opt/software/${PLATFORM}/${COMPILER} | grep py-torch-)"
-          export Torch_DIR="/opt/software/${PLATFORM}/${COMPILER}/${PYTORCH}/lib/python${VN}/site-packages"
+          export Torch_DIR="/opt/views/view/lib/python${VN}/site-packages"
           export PFUNIT_DIR="/opt/view/$(ls /opt/view | grep PFUNIT)"
           export BUILD_DIR="$(pwd)/src/build"
           mkdir "${BUILD_DIR}"
