@@ -45,9 +45,6 @@ jobs:
     # The Docker container that the job will use
     container:
       image: ghcr.io/cambridge-iccs/ftorch-dev-env:latest
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.github_token }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
