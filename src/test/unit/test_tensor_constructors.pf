@@ -82,7 +82,7 @@ contains
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor%p))
 
-    ! Create a tensor of zeros
+    ! Create a tensor with values unset
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
                             this%param%requires_grad)
 
