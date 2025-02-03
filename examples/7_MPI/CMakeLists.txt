@@ -58,7 +58,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME mpi_infer_fortran
     COMMAND
-      ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 mpi_infer_fortran
+      ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ./mpi_infer_fortran
       ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
