@@ -189,14 +189,6 @@ To build and install the library:
    See the [CMake documentation](https://cmake.org/cmake/help/latest/manual/cmake.1.html#cmdoption-cmake-build-j)
    for more information.
 
-    Note: If you are using CMake < 3.15 then you will need to build and install separately
-    using the make system specific commands.
-    For example, if using `make` on UNIX this would be:
-    ```
-    make
-    make install
-    ```
-
     Installation will place the following directories at the install location:  
     * `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
     * `CMAKE_INSTALL_PREFIX/lib/` - contains `cmake` directory and `.so` files  
