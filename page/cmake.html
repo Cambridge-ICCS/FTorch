@@ -241,14 +241,11 @@ we would need to run:</p>
 </code></pre></div>
 
 <blockquote>
-<p>Note: <em>If you are using CMake &lt; 3.15 then you will need to build and install separately
-using the make system specific commands.</em>
-For example, if using <code>make</code> on UNIX this would be:</p>
+<p>Note: <em>If using a machine capable of running multiple jobs this can be sped up by
+adding <code>--parallel [&lt;jobs&gt;]</code> or <code>-j [&lt;jobs&gt;]</code> to the <code>cmake build</code> command.
+See the <a href="https://cmake.org/cmake/help/latest/manual/cmake.1.html#cmdoption-cmake-build-j">CMake documentation</a>
+for more information.</em></p>
 </blockquote>
-<div class="codehilite"><pre><span></span><code>make
-make install
-</code></pre></div>
-
 <p>Installation will place the following directories at the install location:</p>
 <ul>
 <li><code>CMAKE_INSTALL_PREFIX/include/</code> - contains C header and Fortran mod files</li>
