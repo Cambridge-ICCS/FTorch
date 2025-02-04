@@ -184,6 +184,11 @@ To build and install the library:
     cmake --install .
     ```
 
+   Note: If using a machine capable of running multiple jobs this can be sped up by
+   adding `--parallel [<jobs>]` or `-j [<jobs>]` to the `cmake build` command.
+   See the [CMake documentation](https://cmake.org/cmake/help/latest/manual/cmake.1.html#cmdoption-cmake-build-j)
+   for more information.
+
     Note: If you are using CMake < 3.15 then you will need to build and install separately
     using the make system specific commands.
     For example, if using `make` on UNIX this would be:
