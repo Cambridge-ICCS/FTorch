@@ -152,3 +152,10 @@ unless installing in a default location:
 ```
 export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
 ```
+
+## Conda Support
+
+Conda is not our preferred approach for managing dependencies, but for users who want
+an environment to build FTorch in we provide [guidance and environment files](https://github.com/Cambridge-ICCS/FTorch/tree/main/conda).
+Note that these are not minimal and will install Python, PyTorch, and modules required
+for running the tests and examples.
