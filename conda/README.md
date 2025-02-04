@@ -38,6 +38,8 @@ cmake \
     ..
 cmake --build . --target install
 ```
+Note: There is the option of using `--parallel` to speed this up as described in
+the main documentation.
 
 ### CUDA
 
@@ -65,6 +67,9 @@ cmake \
     ..
 cmake --build . --target install
 ```
+Note: There is the option of using `--parallel` to speed this up as described in
+the main documentation.
+
 
 ### Other Backends
 
