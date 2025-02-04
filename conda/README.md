@@ -15,6 +15,10 @@ or submit a pull request if you have a fix.
 
 ## Environments
 
+Environments can be generated from the yaml files in this directory as described below.
+Lower bounds are set to versions which been successfully tested but can be adjusted
+by the user as desired.
+
 ### CPU only
 
 From a conda base environment run:
