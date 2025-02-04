@@ -103,14 +103,6 @@ cmake --build . --target install
 > See the [CMake documentation](https://cmake.org/cmake/help/latest/manual/cmake.1.html#cmdoption-cmake-build-j)
 > for more information._
 
-> Note: _If you are using CMake < 3.15 then you will need to build and install separately
-> using the make system specific commands._
-For example, if using `make` on UNIX this would be:
-```
-make
-make install
-```
-
 Installation will place the following directories at the install location:
 
 * `CMAKE_INSTALL_PREFIX/include/` - contains C header and Fortran mod files
