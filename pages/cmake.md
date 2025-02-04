@@ -98,6 +98,11 @@ Once this completes you should be able to generate the code and install using:
 cmake --build . --target install
 ```
 
+> Note: _If using a machine capable of running multiple jobs this can be sped up by
+> adding `--parallel [<jobs>]` or `-j [<jobs>]` to the `cmake build` command.
+> See the [CMake documentation](https://cmake.org/cmake/help/latest/manual/cmake.1.html#cmdoption-cmake-build-j)
+> for more information._
+
 > Note: _If you are using CMake < 3.15 then you will need to build and install separately
 > using the make system specific commands._
 For example, if using `make` on UNIX this would be:
