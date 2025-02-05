@@ -102,7 +102,7 @@ Conda users should adjust their approach accordingly.
 
 ## Tests
 
-If running the unit tests it is recommended that pFUnit is build and installed into the
+If running the unit tests it is recommended that pFUnit is built and installed into the
 conda environment at `$CONDA_PREFIX`:
 ```sh
 git clone --recursive git@github.com:Goddard-Fortran-Ecosystem/pFUnit.git
@@ -120,11 +120,11 @@ make install
 
 The unit tests only can be run using the provided script:
 ```sh
-./run_test_suite.sh -u
+./run_test_suite.sh --unit-only
 ```
 
 > [!NOTE]  
 > The automated integration testing also makes use of pip to install pytorch and other
-> python dependencies. Conda users wishing to run this should amend the test script
+> Python dependencies. Conda users wishing to run this should amend the test script
 > to  remove the `pip install` command as these additional requirements are included
 > in the environment files provided.
