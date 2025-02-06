@@ -53,7 +53,9 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 if __name__ == "__main__":
     saved_model_file = "saved_multigpu_model_cuda.pt"
 
-    for device_index in range(2):
+    num_devices = 2
+
+    for device_index in range(num_devices):
         device_to_run = f"cuda:{device_index}"
 
         batch_size_to_run = 1
