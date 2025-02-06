@@ -38,7 +38,14 @@ typedef enum {
 } torch_data_t;
 
 // Device types
-typedef enum { torch_kCPU, torch_kCUDA, torch_kMPS, torch_kXPU } torch_device_t;
+// NOTE: Numbered consistently with
+//       https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
+typedef enum {
+  torch_kCPU = 0,
+  torch_kCUDA = 1,
+  torch_kXPU = 12,
+  torch_kMPS = 13,
+} torch_device_t;
 
 // =============================================================================
 // --- Functions for constructing tensors

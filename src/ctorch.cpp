@@ -92,22 +92,19 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
     }
   case torch_kMPS:
     if (device_index != -1 && device_index != 0) {
-      std::cerr << "[WARNING]: Only one device is available for MPS runs"
-                << std::endl;
+      std::cerr << "[WARNING]: Only one device is available for MPS runs" << std::endl;
     }
     return torch::Device(torch::kMPS);
   case torch_kXPU:
     if (device_index == -1) {
-      std::cerr << "[WARNING]: device index unset, defaulting to 0"
-                << std::endl;
+      std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;
       device_index = 0;
     }
     if (device_index >= 0 && device_index < torch::xpu::device_count()) {
       return torch::Device(torch::kXPU, device_index);
     } else {
       std::cerr << "[ERROR]: invalid device index " << device_index
-                << " for XPU device count " << torch::xpu::device_count()
-                << std::endl;
+                << " for XPU device count " << torch::xpu::device_count() << std::endl;
       exit(EXIT_FAILURE);
     }
   default:
@@ -123,6 +120,10 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
     return torch_kCPU;
   case torch::kCUDA:
     return torch_kCUDA;
+  case torch::kXPU:
+    return torch_kXPU;
+  case torch::kMPS:
+    return torch_kMPS;
   default:
     std::cerr << "[ERROR]: device type " << device_type << " not implemented in FTorch"
               << std::endl;
