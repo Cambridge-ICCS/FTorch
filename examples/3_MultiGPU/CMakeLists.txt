@@ -36,7 +36,8 @@ if(CMAKE_BUILD_TESTS)
   include(CTest)
 
   if(ENABLE_CUDA)
-    # 1a. Check the PyTorch model runs on a CUDA device and its outputs meet expectations
+    # 1a. Check the PyTorch model runs on a CUDA device and its outputs meet
+    # expectations
     add_test(NAME simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
                      --device_type cuda)
@@ -49,16 +50,16 @@ if(CMAKE_BUILD_TESTS)
               cuda --filepath ${PROJECT_BINARY_DIR}
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 3a. Check the model can be loaded from file and run on two CUDA devices in Python and that its
-    # outputs meet expectations
+    # 3a. Check the model can be loaded from file and run on two CUDA devices
+    # in Python and that its outputs meet expectations
     add_test(
       NAME multigpu_infer_python
       COMMAND ${Python_EXECUTABLE}
               ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type cuda
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 4a. Check the model can be loaded from file and run on two CUDA devices in Fortran and that
-    # its outputs meet expectations
+    # 4a. Check the model can be loaded from file and run on two CUDA devices
+    # in Fortran and that its outputs meet expectations
     add_test(
       NAME multigpu_infer_fortran
       COMMAND multigpu_infer_fortran cuda
@@ -71,7 +72,8 @@ if(CMAKE_BUILD_TESTS)
   endif()
 
   if(ENABLE_XPU)
-    # 1b. Check the PyTorch model runs on an XPU device and its outputs meet expectations
+    # 1b. Check the PyTorch model runs on an XPU device and its outputs meet
+    # expectations
     add_test(NAME simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
                      --device_type xpu)
@@ -84,16 +86,16 @@ if(CMAKE_BUILD_TESTS)
               xpu --filepath ${PROJECT_BINARY_DIR}
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 3b. Check the model can be loaded from file and run on two XPU devices in Python and that its
-    # outputs meet expectations
+    # 3b. Check the model can be loaded from file and run on two XPU devices
+    # in Python and that its outputs meet expectations
     add_test(
       NAME multigpu_infer_python
       COMMAND ${Python_EXECUTABLE}
               ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type xpu
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 4b. Check the model can be loaded from file and run on two XPU devices in Fortran and that
-    # its outputs meet expectations
+    # 4b. Check the model can be loaded from file and run on two XPU devices
+    # in Fortran and that its outputs meet expectations
     add_test(
       NAME multigpu_infer_fortran
       COMMAND multigpu_infer_fortran xpu
@@ -106,7 +108,8 @@ if(CMAKE_BUILD_TESTS)
   endif()
 
   if(ENABLE_MPS)
-    # 1c. Check the PyTorch model runs on an MPS device and its outputs meet expectations
+    # 1c. Check the PyTorch model runs on an MPS device and its outputs meet
+    # expectations
     add_test(NAME simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
                      --device_type mps)
