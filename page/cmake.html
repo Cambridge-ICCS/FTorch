@@ -117,6 +117,7 @@
 </ul>
 </li>
 <li><a href="#building-other-projects-with-make">Building other projects with make</a></li>
+<li><a href="#conda-support">Conda Support</a></li>
 </ul>
 </div>
 <p>Installation of FTorch is done by CMake.</p>
@@ -281,6 +282,12 @@ use ftorch:</p>
 unless installing in a default location:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">LD_LIBRARY_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">LD_LIBRARY_PATH</span><span class="p">:</span><span class="o">&lt;</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">installation</span><span class="o">&gt;/</span><span class="n">lib64</span>
 </code></pre></div>
+
+<h2 id="conda-support">Conda Support</h2>
+<p>Conda is not our preferred approach for managing dependencies, but for users who want
+an environment to build FTorch in we provide <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/conda">guidance and environment files</a>.
+Note that these are not minimal and will install Python, PyTorch, and modules required
+for running the tests and examples.</p>
     </div>
   </div>
       <hr>
