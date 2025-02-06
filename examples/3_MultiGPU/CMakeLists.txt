@@ -18,11 +18,13 @@ find_package(FTorch)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 include(CheckLanguage)
-check_language(CUDA)
-if(CMAKE_CUDA_COMPILER)
-  enable_language(CUDA)
-else()
-  message(ERROR "No CUDA support")
+if(ENABLE_CUDA)
+  check_language(CUDA)
+  if(CMAKE_CUDA_COMPILER)
+    enable_language(CUDA)
+  else()
+    message(ERROR "No CUDA support")
+  endif()
 endif()
 
 # Fortran example
@@ -54,16 +56,33 @@ if (CMAKE_BUILD_TESTS)
             ${PROJECT_BINARY_DIR} # Command line argument: filepath to find the
                                   # model
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  # TODO: Separate out XPU and CUDA
 
-  # 4. Check the model can be loaded from file and run in Fortran and that its
-  #   outputs meet expectations
-  add_test(
-    NAME multigpu_infer_fortran
-    COMMAND
-      multigpu_infer_fortran ${PROJECT_BINARY_DIR}/saved_multigpu_model_cuda.pt
-      # Command line argument: model file
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(
-    multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-    "MultiGPU example ran successfully")
+  if(ENABLE_CUDA)
+    # 4. Check the model can be loaded from file and run in Fortran and that its
+    #   outputs meet expectations
+    add_test(
+      NAME multigpu_infer_fortran
+      COMMAND
+        multigpu_infer_fortran ${PROJECT_BINARY_DIR}/saved_multigpu_model_cuda.pt
+        # Command line argument: model file
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    set_tests_properties(
+      multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+      "MultiGPU example ran successfully")
+  endif()
+
+  if(ENABLE_XPU)
+    # 5. Check the model can be loaded from file and run in Fortran and that its
+    #   outputs meet expectations
+    add_test(
+      NAME multigpu_infer_fortran
+      COMMAND
+        multigpu_infer_fortran ${PROJECT_BINARY_DIR}/saved_multigpu_model_xpu.pt
+        # Command line argument: model file
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    set_tests_properties(
+      multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+      "MultiGPU example ran successfully")
+  endif()
 endif()

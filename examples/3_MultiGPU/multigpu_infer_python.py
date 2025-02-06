@@ -28,35 +28,42 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         # Load saved TorchScript model
         model = torch.jit.load(saved_model)
         # Inference
-        output = model.forward(input_tensor)
+        return model.forward(input_tensor)
 
-    elif device.startswith("cuda"):
-        # Add the device index to each tensor to make them differ
-        input_tensor += int(device.split(":")[-1] or 0)
-
-        # All previously saved modules, no matter their device, are first
-        # loaded onto CPU, and then are moved to the devices they were saved
-        # from, so we don't need to manually transfer the model to the GPU
-        model = torch.jit.load(saved_model)
-        model = model.to(device)
-        input_tensor_gpu = input_tensor.to(torch.device(device))
-        output_gpu = model.forward(input_tensor_gpu)
-        output = output_gpu.to(torch.device("cpu"))
-
+    if device.startswith("cuda"):
+        pass
+    elif device.startswith("xpu"):
+        # XPU devices need to be initialised before use
+        torch.xpu.init()
     else:
         device_error = f"Device '{device}' not recognised."
         raise ValueError(device_error)
+
+    # Add the device index to each tensor to make them differ
+    input_tensor += int(device.split(":")[-1] or 0)
+
+    # All previously saved modules, no matter their device, are first
+    # loaded onto CPU, and then are moved to the devices they were saved
+    # from, so we don't need to manually transfer the model to the GPU
+    model = torch.jit.load(saved_model)
+    model = model.to(device)
+    input_tensor_gpu = input_tensor.to(torch.device(device))
+    output_gpu = model.forward(input_tensor_gpu)
+    output = output_gpu.to(torch.device("cpu"))
 
     return output
 
 
 if __name__ == "__main__":
-    saved_model_file = "saved_multigpu_model_cuda.pt"
+    # TODO: Accept command line argument for device type
+    device_type = "cuda"
+
+    saved_model_file = f"saved_multigpu_model_{device_type}.pt"
 
     num_devices = 2
 
     for device_index in range(num_devices):
-        device_to_run = f"cuda:{device_index}"
+        device_to_run = f"{device_type}:{device_index}"
 
         batch_size_to_run = 1
 

@@ -1,7 +1,7 @@
 if(CMAKE_BUILD_TESTS)
   add_subdirectory(1_SimpleNet)
   add_subdirectory(2_ResNet18)
-  if(ENABLE_CUDA)
+  if(ENABLE_CUDA OR ENABLE_XPU)
     add_subdirectory(3_MultiGPU)
   endif()
   add_subdirectory(4_MultiIO)
