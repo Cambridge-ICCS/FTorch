@@ -7,7 +7,7 @@ from typing import Optional
 # FPTLIB-TODO
 # Add a module import with your model here:
 # This example assumes the model architecture is in an adjacent module `my_ml_model.py`
-import multigpu
+import simplenet
 import torch
 
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     # Insert code here to load your model as `trained_model`.
     # This example assumes my_ml_model has a method `initialize` to load
     # architecture, weights, and place in inference mode
-    trained_model = multigpu.MultiGPUNet()
+    trained_model = simplenet.SimpleNet()
 
     # Switch off specific layers/parts of the model that behave
     # differently during training and inference.
