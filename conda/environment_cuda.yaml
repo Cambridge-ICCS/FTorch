@@ -1,0 +1,18 @@
+name: FTorch-cuda
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - fortran-compiler
+  - cxx-compiler
+  - cmake >=3.15
+  - openmpi-mpifort >=5.0.6  # For pFUnit to run the test suite and MultiGPU example
+  - cuda-version 12.6  # Set version of cuda here
+  - cuda-compiler >=12.6.3
+  - cuda-libraries-dev >=12.6.3
+  - cuda-nvtx-dev >=12.6.77
+  - python <3.13  # Restrict as PyTorch not functional in 3.13 at present
+  - pytorch >=2.5.1
+  - torchvision  # For ResNet example only
+  - mpi4py >=4.0.1  # For MultiGPU example only
+  - zlib  # missing dependency of pytorch

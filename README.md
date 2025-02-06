@@ -119,6 +119,14 @@ At the time of writing, LibTorch is only officially available for x86 architectu
 (according to https://pytorch.org/). However, the version of PyTorch provided by
 `pip install torch` uses an ARM binary for LibTorch which works on Apple Silicon.
 
+#### Conda Support
+
+Conda is not our preferred approach for managing dependencies, but for users who want
+an environment to build FTorch in we provide guidance and environment files in
+[`conda/`](https://github.com/Cambridge-ICCS/FTorch/tree/main/conda). Note that these
+are not minimal and will install Python, PyTorch, and modules required for running the
+tests and examples.
+
 ### Library installation
 
 For detailed installation instructions please see the
