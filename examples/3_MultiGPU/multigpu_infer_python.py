@@ -35,6 +35,9 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     elif device.startswith("xpu"):
         # XPU devices need to be initialised before use
         torch.xpu.init()
+    elif device.startswith("mps"):
+        mps_error = "FTorch has not been tested with multiple MPS devices"
+        raise ValueError(mps_error)
     else:
         device_error = f"Device '{device}' not recognised."
         raise ValueError(device_error)

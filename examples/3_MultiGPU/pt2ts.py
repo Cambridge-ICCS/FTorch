@@ -81,7 +81,7 @@ if __name__ == "__main__":
         "--device_type",
         description="Device type to run the inference on",
         type=str,
-        options=["cpu", "cuda", "xpu"],
+        options=["cpu", "cuda", "xpu", "mps"],
         default="cuda",
     )
     parser.add_argument(
