@@ -55,8 +55,20 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 
 
 if __name__ == "__main__":
-    # TODO: Accept command line argument for device type
-    device_type = "cuda"
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentParserDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--device_type",
+        description="Device type to run the inference on",
+        type=str,
+        options=["cpu", "cuda", "xpu"],
+        default="cuda",
+    )
+    parsed_args = parser.parse_args()
+    device_type = parsed_args.device_type
 
     saved_model_file = f"saved_multigpu_model_{device_type}.pt"
 

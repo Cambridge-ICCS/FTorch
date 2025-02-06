@@ -32,57 +32,76 @@ add_executable(multigpu_infer_fortran multigpu_infer_fortran.f90)
 target_link_libraries(multigpu_infer_fortran PRIVATE FTorch::ftorch)
 
 # Integration testing
-if (CMAKE_BUILD_TESTS)
+if(CMAKE_BUILD_TESTS)
   include(CTest)
 
-  # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME simplenet COMMAND ${Python_EXECUTABLE}
-                                  ${PROJECT_SOURCE_DIR}/simplenet.py)
-
-  # 2. Check the model is saved to file in the expected location with the
-  #   pt2ts.py script
-  add_test(
-    NAME pt2ts
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath for saving
-                                  # the model
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-
-  # 3. Check the model can be loaded from file and run in Python and that its
-  #   outputs meet expectations
-  add_test(
-    NAME multigpu_infer_python
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath to find the
-                                  # model
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  # TODO: Separate out XPU and CUDA
-
   if(ENABLE_CUDA)
-    # 4. Check the model can be loaded from file and run in Fortran and that its
-    #   outputs meet expectations
+    # 1a. Check the PyTorch model runs and its outputs meet expectations
+    add_test(NAME simplenet
+             COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
+                     --device_type cuda)
+
+    # 2a. Check the model is saved to file in the expected location with the
+    # pt2ts.py script
+    add_test(
+      NAME pt2ts
+      COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --device_type
+              cuda --filepath ${PROJECT_BINARY_DIR}
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+    # 3a. Check the model can be loaded from file and run in Python and that its
+    # outputs meet expectations
+    add_test(
+      NAME multigpu_infer_python
+      COMMAND ${Python_EXECUTABLE}
+              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type cuda
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+    # 4a. Check the model can be loaded from file and run in Fortran and that
+    # its outputs meet expectations
     add_test(
       NAME multigpu_infer_fortran
-      COMMAND
-        multigpu_infer_fortran ${PROJECT_BINARY_DIR}/saved_multigpu_model_cuda.pt
-        # Command line argument: model file
+      COMMAND multigpu_infer_fortran cuda
+              ${PROJECT_BINARY_DIR}/saved_multigpu_model_cuda.pt
+      # Command line arguments for device type and model file
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
     set_tests_properties(
       multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-      "MultiGPU example ran successfully")
+                                        "MultiGPU example ran successfully")
   endif()
 
   if(ENABLE_XPU)
-    # 5. Check the model can be loaded from file and run in Fortran and that its
-    #   outputs meet expectations
+    # 1b. Check the PyTorch model runs and its outputs meet expectations
+    add_test(NAME simplenet
+             COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
+                     --device_type xpu)
+
+    # 2b. Check the model is saved to file in the expected location with the
+    # pt2ts.py script
+    add_test(
+      NAME pt2ts
+      COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --device_type
+              xpu --filepath ${PROJECT_BINARY_DIR}
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+    # 3b. Check the model can be loaded from file and run in Python and that its
+    # outputs meet expectations
+    add_test(
+      NAME multigpu_infer_python
+      COMMAND ${Python_EXECUTABLE}
+              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type xpu
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+    # 4b. Check the model can be loaded from file and run in Fortran and that
+    # its outputs meet expectations
     add_test(
       NAME multigpu_infer_fortran
-      COMMAND
-        multigpu_infer_fortran ${PROJECT_BINARY_DIR}/saved_multigpu_model_xpu.pt
-        # Command line argument: model file
+      COMMAND multigpu_infer_fortran xpu
+              ${PROJECT_BINARY_DIR}/saved_multigpu_model_xpu.pt
+      # Command line arguments for device type and model file
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
     set_tests_properties(
       multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-      "MultiGPU example ran successfully")
+                                        "MultiGPU example ran successfully")
   endif()
 endif()

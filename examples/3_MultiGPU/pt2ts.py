@@ -72,12 +72,31 @@ def load_torchscript(filename: Optional[str] = "saved_model.pt") -> torch.nn.Mod
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentParserDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--device_type",
+        description="Device type to run the inference on",
+        type=str,
+        options=["cpu", "cuda", "xpu"],
+        default="cuda",
+    )
+    parser.add_argument(
+        "--filepath",
+        description="Path to the file containing the PyTorch model",
+        type=str,
+        default=os.path.dirname(__file__),
+    )
+    parsed_args = parser.parse_args()
+    device_type = parsed_args.device_type
+    filepath = parsed_args.filepath
+
     # =====================================================
     # Load model and prepare for saving
     # =====================================================
-
-    # TODO: Accept command line argument for device type
-    device_type = "cuda"
 
     # FPTLIB-TODO
     # Load a pre-trained PyTorch model
@@ -173,7 +192,6 @@ if __name__ == "__main__":
             raise RuntimeError(model_error)
 
     # Check that the model file is created
-    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
     if not os.path.exists(os.path.join(filepath, saved_ts_filename)):
         torchscript_file_error = (
             f"Saved TorchScript file {os.path.join(filepath, saved_ts_filename)} "

@@ -30,15 +30,21 @@ program inference
    integer, parameter :: num_devices = 2
    integer :: device_type, device_index, i
 
-   ! Get TorchScript model file as a command line argument
+   ! Get device type as first command line argument and TorchScript model file as second command
+   ! line argument
    num_args = command_argument_count()
    allocate(args(num_args))
    do ix = 1, num_args
       call get_command_argument(ix,args(ix))
    end do
-
-   ! TODO: Accept command line argument for device type
-   device_type = torch_kCUDA
+   if (trim(args(1)) == "cuda") then
+      device_type = torch_kCUDA
+   else if (trim(args(1)) == "xpu") then
+      device_type = torch_kXPU
+   else
+      write (*,*) "Error :: invalid device type", trim(args(1))
+      stop 999
+   end if
 
    do device_index = 0, num_devices-1
 
@@ -60,7 +66,7 @@ program inference
 
       ! Load ML model. Ensure that the same device type and device index are used
       ! as for the input data.
-      call torch_model_load(model, args(1), device_type, device_index=device_index)
+      call torch_model_load(model, args(2), device_type, device_index=device_index)
 
       ! Infer
       call torch_model_forward(model, in_tensors, out_tensors)

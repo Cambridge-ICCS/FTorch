@@ -42,8 +42,20 @@ class SimpleNet(nn.Module):
 
 
 if __name__ == "__main__":
-    # TODO: Accept command line argument for device type
-    device_type = "cuda"
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentParserDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--device_type",
+        description="Device type to run the inference on",
+        type=str,
+        options=["cpu", "cuda", "xpu"],
+        default="cuda",
+    )
+    parsed_args = parser.parse_args()
+    device_type = parsed_args.device_type
 
     model = SimpleNet().to(torch.device(device_type))
     model.eval()
