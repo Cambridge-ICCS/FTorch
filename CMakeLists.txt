@@ -22,6 +22,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# GPU specific setup
 include(CheckLanguage)
 if(ENABLE_CUDA)
   check_language(CUDA)
@@ -30,6 +31,9 @@ if(ENABLE_CUDA)
   else()
     message(WARNING "No CUDA support")
   endif()
+endif()
+if(ENABLE_XPU)
+  set(CMAKE_Fortran_FLAGS "-fpscomp logicals ${CMAKE_Fortran_FLAGS}")
 endif()
 
 # Set RPATH behaviour
