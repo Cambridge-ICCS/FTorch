@@ -15,7 +15,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 find_package(FTorch)
-find_package(MPI REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 include(CheckLanguage)
@@ -29,15 +28,14 @@ endif()
 # Fortran example
 add_executable(multigpu_infer_fortran multigpu_infer_fortran.f90)
 target_link_libraries(multigpu_infer_fortran PRIVATE FTorch::ftorch)
-target_link_libraries(multigpu_infer_fortran PRIVATE MPI::MPI_Fortran)
 
 # Integration testing
 if (CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME multigpu COMMAND ${Python_EXECUTABLE}
-                                  ${PROJECT_SOURCE_DIR}/multigpu.py)
+  add_test(NAME simplenet COMMAND ${Python_EXECUTABLE}
+                                  ${PROJECT_SOURCE_DIR}/simplenet.py)
 
   # 2. Check the model is saved to file in the expected location with the
   #   pt2ts.py script
