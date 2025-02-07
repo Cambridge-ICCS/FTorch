@@ -75,18 +75,18 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentParserDefaultsHelpFormatter,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
         "--device_type",
-        description="Device type to run the inference on",
+        help="Device type to run the inference on",
         type=str,
-        options=["cpu", "cuda", "xpu", "mps"],
+        choices=["cpu", "cuda", "xpu", "mps"],
         default="cuda",
     )
     parser.add_argument(
         "--filepath",
-        description="Path to the file containing the PyTorch model",
+        help="Path to the file containing the PyTorch model",
         type=str,
         default=os.path.dirname(__file__),
     )

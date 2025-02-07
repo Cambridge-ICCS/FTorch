@@ -45,13 +45,13 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentParserDefaultsHelpFormatter,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
         "--device_type",
-        description="Device type to run the inference on",
+        help="Device type to run the inference on",
         type=str,
-        options=["cpu", "cuda", "xpu"],
+        choices=["cpu", "cuda", "xpu"],
         default="cuda",
     )
     parsed_args = parser.parse_args()
