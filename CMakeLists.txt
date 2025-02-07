@@ -8,6 +8,9 @@ project(
   VERSION ${PACKAGE_VERSION}
   LANGUAGES C CXX Fortran)
 
+option(ENABLE_CUDA "Enable running on CUDA GPU devices" OFF)
+option(ENABLE_XPU "Enable running on XPU GPU devices" OFF)
+
 if(WIN32)
   # if building on windows we need to make sure the symbols are exported
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)

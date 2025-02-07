@@ -78,6 +78,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
       std::cerr << "[WARNING]: device index unused for CPU-only runs" << std::endl;
     }
     return torch::Device(torch::kCPU);
+#ifdef ENABLE_CUDA
   case torch_kCUDA:
     if (device_index == -1) {
       std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;
@@ -90,11 +91,13 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
                 << " for device count " << torch::cuda::device_count() << std::endl;
       exit(EXIT_FAILURE);
     }
+#endif
   case torch_kMPS:
     if (device_index != -1 && device_index != 0) {
       std::cerr << "[WARNING]: Only one device is available for MPS runs" << std::endl;
     }
     return torch::Device(torch::kMPS);
+#ifdef ENABLE_XPU
   case torch_kXPU:
     if (device_index == -1) {
       std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;
@@ -107,6 +110,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
                 << " for XPU device count " << torch::xpu::device_count() << std::endl;
       exit(EXIT_FAILURE);
     }
+#endif
   default:
     std::cerr << "[WARNING]: unknown device type, setting to torch_kCPU" << std::endl;
     return torch::Device(torch::kCPU);
