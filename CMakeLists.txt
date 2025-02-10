@@ -12,6 +12,9 @@ project(
 # consistently with
 # https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
 option(GPU_DEVICE "Set the GPU device (NONE [default], CUDA, XPU, or MPS)" NONE)
+if("${GPU_DEVICE}" STREQUAL "OFF")
+  set(GPU_DEVICE NONE)
+endif()
 if("${GPU_DEVICE}" STREQUAL "NONE")
   set(GPU_DEVICE_CODE 0)
 elseif("${GPU_DEVICE}" STREQUAL "CUDA")
