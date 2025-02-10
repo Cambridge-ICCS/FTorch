@@ -26,7 +26,7 @@ show_help() {
 }
 
 # Parse command line arguments
-BUILD_DIR="src/build"
+BUILD_DIR="build"
 RUN_INTEGRATION=true
 RUN_UNIT=true
 VERBOSE=false
@@ -82,7 +82,7 @@ fi
 
 # Run integration tests
 if [ "${RUN_INTEGRATION}" = true ]; then
-  if [ -e "${BUILD_DIR}/test/examples/3_MultiGPU" ]; then
+  if [ -e "${BUILD_DIR}/examples/3_MultiGPU" ]; then
     EXAMPLES="1_SimpleNet 2_ResNet18 3_MultiGPU 4_MultiIO 6_Autograd"
   else
     EXAMPLES="1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd"
@@ -90,7 +90,7 @@ if [ "${RUN_INTEGRATION}" = true ]; then
   export PIP_REQUIRE_VIRTUALENV=true
   for EXAMPLE in ${EXAMPLES}; do
     python -m pip -q install -r examples/"${EXAMPLE}"/requirements.txt
-    cd "${BUILD_DIR}"/test/examples/"${EXAMPLE}"
+    cd "${BUILD_DIR}"/examples/"${EXAMPLE}"
     ctest "${CTEST_ARGS}"
     cd -
   done
