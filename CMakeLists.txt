@@ -89,12 +89,11 @@ if(UNIX AND NOT APPLE)
   # only add UNIX definition for linux (not apple which is also unix)
   set(COMPILE_DEFS UNIX)
 endif()
-target_compile_definitions(${LIB_NAME} PRIVATE ${COMPILE_DEFS}
-                                                GPU_DEVICE=${GPU_DEVICE_CODE}
-                                                GPU_DEVICE_NONE=${GPU_DEVICE_NONE}
-                                                GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA}
-                                                GPU_DEVICE_XPU=${GPU_DEVICE_XPU}
-                                                GPU_DEVICE_MPS=${GPU_DEVICE_MPS})
+target_compile_definitions(
+  ${LIB_NAME}
+  PRIVATE ${COMPILE_DEFS} GPU_DEVICE=${GPU_DEVICE_CODE}
+          GPU_DEVICE_NONE=${GPU_DEVICE_NONE} GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA}
+          GPU_DEVICE_XPU=${GPU_DEVICE_XPU} GPU_DEVICE_MPS=${GPU_DEVICE_MPS})
 
 # Add an alias FTorch::ftorch for the library
 add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
