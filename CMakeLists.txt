@@ -8,25 +8,6 @@ project(
   VERSION ${PACKAGE_VERSION}
   LANGUAGES C CXX Fortran)
 
-# Set GPU device type using consistent numbering as in PyTorch NOTE: numbered
-# consistently with
-# https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
-option(GPU_DEVICE "Set the GPU device (NONE [default], CUDA, XPU, or MPS)" NONE)
-if("${GPU_DEVICE}" STREQUAL "OFF")
-  set(GPU_DEVICE NONE)
-endif()
-if("${GPU_DEVICE}" STREQUAL "NONE")
-  set(GPU_DEVICE_CODE 0)
-elseif("${GPU_DEVICE}" STREQUAL "CUDA")
-  set(GPU_DEVICE_CODE 1)
-elseif("${GPU_DEVICE}" STREQUAL "XPU")
-  set(GPU_DEVICE_CODE 12)
-elseif("${GPU_DEVICE}" STREQUAL "MPS")
-  set(GPU_DEVICE_CODE 13)
-else()
-  message(SEND_ERROR "GPU_DEVICE '${GPU_DEVICE}' not recognised")
-endif()
-
 if(WIN32)
   # if building on windows we need to make sure the symbols are exported
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
@@ -41,7 +22,29 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# GPU specific setup
+# Set GPU device type using consistent numbering as in PyTorch
+# https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
+set(GPU_DEVICE_NONE 0)
+set(GPU_DEVICE_CUDA 1)
+set(GPU_DEVICE_XPU 12)
+set(GPU_DEVICE_MPS 13)
+option(GPU_DEVICE "Set the GPU device (NONE [default], CUDA, XPU, or MPS)" NONE)
+if("${GPU_DEVICE}" STREQUAL "OFF")
+  set(GPU_DEVICE NONE)
+endif()
+if("${GPU_DEVICE}" STREQUAL "NONE")
+  set(GPU_DEVICE_CODE ${GPU_DEVICE_NONE})
+elseif("${GPU_DEVICE}" STREQUAL "CUDA")
+  set(GPU_DEVICE_CODE ${GPU_DEVICE_CUDA})
+elseif("${GPU_DEVICE}" STREQUAL "XPU")
+  set(GPU_DEVICE_CODE ${GPU_DEVICE_XPU})
+elseif("${GPU_DEVICE}" STREQUAL "MPS")
+  set(GPU_DEVICE_CODE ${GPU_DEVICE_MPS})
+else()
+  message(SEND_ERROR "GPU_DEVICE '${GPU_DEVICE}' not recognised")
+endif()
+
+# Other GPU specific setup
 include(CheckLanguage)
 if("${GPU_DEVICE}" STREQUAL "CUDA")
   check_language(CUDA)
@@ -51,7 +54,7 @@ if("${GPU_DEVICE}" STREQUAL "CUDA")
     message(WARNING "No CUDA support")
   endif()
 endif()
-if(ENABLE_XPU)
+if("${GPU_DEVICE}" STREQUAL "XPU")
   set(CMAKE_Fortran_FLAGS "-fpscomp logicals ${CMAKE_Fortran_FLAGS}")
 endif()
 
@@ -80,13 +83,18 @@ find_package(Torch REQUIRED)
 add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90
                                src/ftorch_test_utils.f90)
 
+# Define compile definitions, including GPU devices
+set(COMPILE_DEFS "")
 if(UNIX AND NOT APPLE)
   # only add UNIX definition for linux (not apple which is also unix)
-  target_compile_definitions(${LIB_NAME} PRIVATE UNIX
-                                                 GPU_DEVICE=${GPU_DEVICE_CODE})
-else()
-  target_compile_definitions(${LIB_NAME} PRIVATE GPU_DEVICE=${GPU_DEVICE_CODE})
+  set(COMPILE_DEFS UNIX)
 endif()
+target_compile_definitions(${LIB_NAME} PRIVATE ${COMPILE_DEFS}
+                                                GPU_DEVICE=${GPU_DEVICE_CODE}
+                                                GPU_DEVICE_NONE=${GPU_DEVICE_NONE}
+                                                GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA}
+                                                GPU_DEVICE_XPU=${GPU_DEVICE_XPU}
+                                                GPU_DEVICE_MPS=${GPU_DEVICE_MPS})
 
 # Add an alias FTorch::ftorch for the library
 add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})

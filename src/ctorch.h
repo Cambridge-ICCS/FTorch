@@ -7,13 +7,6 @@
 #define EXPORT_C
 #endif
 
-// GPU device codes numbered consistently with
-//     https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
-#define GPU_DEVICE_NONE 0
-#define GPU_DEVICE_CUDA 1
-#define GPU_DEVICE_XPU 12
-#define GPU_DEVICE_MPS 13
-
 #include <stdint.h>
 
 // =============================================================================
