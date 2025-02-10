@@ -70,7 +70,6 @@ jobs:
       - name: Build FTorch
         shell: cmd
         run: |
-          cd src
           rem find torch location
           for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           cmake ^

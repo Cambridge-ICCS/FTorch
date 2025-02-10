@@ -61,7 +61,7 @@ jobs:
           export FT_DIR=$(pwd)
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
-          export BUILD_DIR=$(pwd)/src/build
+          export BUILD_DIR=$(pwd)/build
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
           cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} -DCMAKE_Fortran_FLAGS="-std=f2008" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
