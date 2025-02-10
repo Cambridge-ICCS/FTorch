@@ -15,7 +15,7 @@ add_pfunit_ctest(test_tensor_interrogation
 add_pfunit_ctest(test_operator_overloads
   TEST_SOURCES test_tensor_operator_overloads.pf LINK_LIBRARIES FTorch::ftorch)
 
-if(ENABLE_CUDA)
+if("${GPU_DEVICE}" STREQUAL "CUDA")
   check_language(CUDA)
   if(CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
