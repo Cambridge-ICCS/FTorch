@@ -8,8 +8,21 @@ project(
   VERSION ${PACKAGE_VERSION}
   LANGUAGES C CXX Fortran)
 
-option(ENABLE_CUDA "Enable running on CUDA GPU devices" OFF)
-option(ENABLE_XPU "Enable running on XPU GPU devices" OFF)
+# Set GPU device type using consistent numbering as in PyTorch
+# NOTE: numbered consistently with
+#       https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
+option(GPU_DEVICE "Set the GPU device (NONE, CUDA, XPU, or MPS, defaulting to NONE)" NONE)
+if("${GPU_DEVICE}" STREQUAL "NONE")
+  set(GPU_DEVICE_CODE 0)
+elseif("${GPU_DEVICE}" STREQUAL "CUDA")
+  set(GPU_DEVICE_CODE 1)
+elseif("${GPU_DEVICE}" STREQUAL "XPU")
+  set(GPU_DEVICE_CODE 12)
+elseif("${GPU_DEVICE}" STREQUAL "MPS")
+  set(GPU_DEVICE_CODE 13)
+else()
+  message(SEND_ERROR "GPU_DEVICE '${GPU_DEVICE}' not recognised")
+endif()
 
 if(WIN32)
   # if building on windows we need to make sure the symbols are exported
@@ -27,7 +40,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # GPU specific setup
 include(CheckLanguage)
-if(ENABLE_CUDA)
+if("${GPU_DEVICE}" STREQUAL "CUDA")
   check_language(CUDA)
   if(CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
@@ -64,10 +77,11 @@ find_package(Torch REQUIRED)
 add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90
                                src/ftorch_test_utils.f90)
 
-if(UNIX)
-  if(NOT APPLE) # only add definition for linux (not apple which is also unix)
-    target_compile_definitions(${LIB_NAME} PRIVATE UNIX)
-  endif()
+if(UNIX AND NOT APPLE)
+  # only add UNIX definition for linux (not apple which is also unix)
+  target_compile_definitions(${LIB_NAME} PRIVATE UNIX GPU_DEVICE=${GPU_DEVICE_CODE})
+else()
+  target_compile_definitions(${LIB_NAME} PRIVATE GPU_DEVICE=${GPU_DEVICE_CODE})
 endif()
 
 # Add an alias FTorch::ftorch for the library

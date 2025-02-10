@@ -7,6 +7,13 @@
 #define EXPORT_C
 #endif
 
+// GPU device codes numbered consistently with
+//     https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
+#define GPU_DEVICE_NONE 0
+#define GPU_DEVICE_CUDA 1
+#define GPU_DEVICE_XPU 12
+#define GPU_DEVICE_MPS 13
+
 #include <stdint.h>
 
 // =============================================================================
@@ -38,13 +45,11 @@ typedef enum {
 } torch_data_t;
 
 // Device types
-// NOTE: Numbered consistently with
-//       https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
 typedef enum {
-  torch_kCPU = 0,
-  torch_kCUDA = 1,
-  torch_kXPU = 12,
-  torch_kMPS = 13,
+  torch_kCPU = GPU_DEVICE_NONE,
+  torch_kCUDA = GPU_DEVICE_CUDA,
+  torch_kXPU = GPU_DEVICE_XPU,
+  torch_kMPS = GPU_DEVICE_MPS,
 } torch_device_t;
 
 // =============================================================================

@@ -8,6 +8,10 @@
 
 #include "ctorch.h"
 
+#ifndef GPU_DEVICE
+#define GPU_DEVICE GPU_DEVICE_NONE
+#endif
+
 // =============================================================================
 // --- Constant expressions
 // =============================================================================
@@ -78,7 +82,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
       std::cerr << "[WARNING]: device index unused for CPU-only runs" << std::endl;
     }
     return torch::Device(torch::kCPU);
-#ifdef ENABLE_CUDA
+#if GPU_DEVICE == GPU_DEVICE_CUDA
   case torch_kCUDA:
     if (device_index == -1) {
       std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;
@@ -97,7 +101,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
       std::cerr << "[WARNING]: Only one device is available for MPS runs" << std::endl;
     }
     return torch::Device(torch::kMPS);
-#ifdef ENABLE_XPU
+#if GPU_DEVICE == GPU_DEVICE_XPU
   case torch_kXPU:
     if (device_index == -1) {
       std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;

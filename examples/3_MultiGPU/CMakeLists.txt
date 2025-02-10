@@ -18,7 +18,7 @@ find_package(FTorch)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 include(CheckLanguage)
-if(ENABLE_CUDA)
+if("${GPU_DEVICE}" STREQUAL "CUDA")
   check_language(CUDA)
   if(CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
@@ -35,7 +35,7 @@ target_link_libraries(multigpu_infer_fortran PRIVATE FTorch::ftorch)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
-  if(ENABLE_CUDA)
+  if("${GPU_DEVICE}" STREQUAL "CUDA")
     # 1a. Check the PyTorch model runs on a CUDA device and its outputs meet
     # expectations
     add_test(NAME simplenet
@@ -71,7 +71,7 @@ if(CMAKE_BUILD_TESTS)
                                         "MultiGPU example ran successfully")
   endif()
 
-  if(ENABLE_XPU)
+  if("${GPU_DEVICE}" STREQUAL "XPU")
     # 1b. Check the PyTorch model runs on an XPU device and its outputs meet
     # expectations
     add_test(NAME simplenet
@@ -107,7 +107,7 @@ if(CMAKE_BUILD_TESTS)
                                         "MultiGPU example ran successfully")
   endif()
 
-  if(ENABLE_MPS)
+  if("${GPU_DEVICE}" STREQUAL "MPS")
     # 1c. Check the PyTorch model runs on an MPS device and its outputs meet
     # expectations
     add_test(NAME simplenet
