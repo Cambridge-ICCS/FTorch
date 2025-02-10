@@ -39,14 +39,14 @@ Therefore before running the build you should ensure that you match the environm
 that which your code will be built with.
 This will usually be done by using the same `module` commands as you would use to build
 the model:
-```
+```sh
 module purge
 module load ...
 ```
 
 Alternatively you may be provided with a shell script that runs these commands and sets
 environment variables etc. that can be sourced:
-```
+```sh
 source model_environment.sh
 ```
 
@@ -69,26 +69,26 @@ compiling and _link_ the executable against it.
 
 To compile with make add the following compiler flag when compiling files that
 use ftorch to _include_ the library:
-```
+```sh
 -I<path/to/FTorch/install/location>/include/ftorch
 ```
 This is often done by appending to an `FCFLAGS` compiler flags variable or similar:
-```
+```sh
 FCFLAGS += -I<path/to/FTorch/install/location>/include/ftorch
 ```
 
 When compiling the final executable add the following link flag:
-```
+```sh
 -L<path/to/FTorch/install/location>/lib64 -lftorch
 ```
 This is often done by appending to an `LDFLAGS` linker flags variable or similar:
-```
+```sh
 LDFLAGS += -L<path/to/FTorch/install/location>/lib64 -lftorch
 ```
 
 You may also need to add the location of the dynamic library `.so` files to your
 `LD_LIBRARY_PATH` environment variable unless installing in a default location:
-```
+```sh
 export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/FTorch/installation>/lib64
 ```
 
@@ -120,7 +120,7 @@ and make it a loadable module to improve reproducibility and simplify the build 
 for subsequent users on the system.
 
 This can be done my the software manager after which you can use
-```
+```sh
 module load libtorch
 ```
 or similar instead of downloading the binary from the PyTorch website.
@@ -140,7 +140,7 @@ The build should be completed for `CMAKE_BUILD_TYPE=RELEASE` and run the unit te
 check successful installation.
 
 Once complete it should be possible to:
-```
+```sh
 module load ftorch
 ```
 or similar.
