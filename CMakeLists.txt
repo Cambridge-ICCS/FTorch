@@ -54,7 +54,8 @@ set(CMAKE_INSTALL_RPATH $ORIGIN/${relDir})
 find_package(Torch REQUIRED)
 
 # Library with C and Fortran bindings
-add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90 src/ftorch_test_utils.f90)
+add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90
+                               src/ftorch_test_utils.f90)
 
 if(UNIX)
   if(NOT APPLE) # only add definition for linux (not apple which is also unix)
