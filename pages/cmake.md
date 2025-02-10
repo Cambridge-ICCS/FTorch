@@ -130,25 +130,12 @@ when running CMake.
 
 ## Building other projects with make
 
-To build a project with make you need to include the FTorch library when compiling
+To build a project with `make` you need to include the FTorch library when compiling
 and link the executable against it.
 
-To compile with make add the following compiler flag when compiling files that
-use ftorch:
-```
-FCFLAGS += -I<path/to/install/location>/include/ftorch
-```
+For full details of the flags to set and the linking process see the
+[HPC build pages](page/hpc.html).
 
-When compiling the final executable add the following link flag:
-```
-LDFLAGS += -L<path/to/install/location>/lib64 -lftorch
-```
-
-You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
-unless installing in a default location:
-```
-export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/installation>/lib64
-```
 
 ## Conda Support
 
