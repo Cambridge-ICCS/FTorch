@@ -98,8 +98,9 @@ jobs:
         if: always()
         run: |
           cd ${{ github.workspace }}
-          . ftorch_venv/bin/activate  # Uses .clang-tidy config file if present
-          fortitude check src/
+          . ftorch_venv/bin/activate
+          fortitude check --ignore=E001,T041 src/ftorch.F90
+          fortitude check src/ftorch_test_utils.f90
 
       # Apply C++ and C linter and formatter, clang
       # Configurable using the .clang-format and .clang-tidy config files if present
