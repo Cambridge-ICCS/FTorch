@@ -5,7 +5,7 @@ title: Guidance for use in High Performance Computing (HPC)
 A common application of FTorch (indeed, the driving one for development) is the
 coupling of machine learning components to models running on HPC systems.
 
-Here we provide some guidance/hints to help with deploymwent in these settings.
+Here we provide some guidance/hints to help with deployment in these settings.
 
 ## Installation
 
@@ -35,7 +35,7 @@ See the [information below](#libtorch-as-a-module) for further details.
 It is important that FTorch is built using the same environment and compilers as the
 software to which it will be linked.
 
-Therefore before running the build you should ensure that you match the environment to
+Therefore before starting the build you should ensure that you match the environment to
 that which your code will be built with.
 This will usually be done by using the same `module` commands as you would use to build
 the model:
@@ -55,7 +55,7 @@ to probe the build system/scripts for this information.
 If in doubt speak to the maintainer of the software for your system, or the manager of
 the software stack on the machine.
 
-Because of the need to match compilers it is strongly recommended to use the
+Because of the need to match compilers it is strongly recommended to specify the
 `CMAKE_Fortran_COMPILER`, `CMAKE_C_COMPILER`, and `CMAKE_CXX_COMPILER` when building
 with CMake to enforce this.
 
@@ -107,10 +107,10 @@ To build FTorch it is important you
 [match the environment in which you build FTorch to that of the executable](#environment-management)
 by loading the same modules as when building the main code.
 
-As a minimal requirement you will need to load modules for compilers and cmake.
+As a minimal requirement you will need to load modules for compilers and CMake.
 Further functionalities may require loading of additional modules such as an
 MPI installation and CUDA.
-Some systems may also have pFUnit available ada loadable module to save you needing to
+Some systems may also have pFUnit available as a loadable module to save you needing to
 build from scratch per the documentation.
 
 #### LibTorch as a module
@@ -119,7 +119,7 @@ Once you have a working build of FTorch it is advisable to pin the version of Li
 and make it a loadable module to improve reproducibility and simplify the build process
 for subsequent users on the system.
 
-This can be done my the software manager after which you can use
+This can be done by the software manager after which you can use
 ```sh
 module load libtorch
 ```
@@ -133,7 +133,7 @@ version, compilers used, and a hash code.
 If there are many users who want to use FTorch on a system it may be worth building
 and making it loadable as a module itself.
 The module should be labelled with the compilers it was built with (see the
-[importance of enviroinment matching](#environment-management)) and automatically load
+[importance of environment matching](#environment-management)) and automatically load
 any subdependencies (CUDA)
 
 The build should be completed for `CMAKE_BUILD_TYPE=RELEASE` and run the unit tests to
