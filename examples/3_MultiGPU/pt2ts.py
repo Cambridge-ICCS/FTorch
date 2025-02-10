@@ -119,12 +119,12 @@ if __name__ == "__main__":
     # This example assumes one input of size (5)
     trained_model_dummy_input = torch.ones(5)
 
-    # FPTLIB-TODO
-    # Uncomment the following lines to save for inference on GPU (rather than CPU):
-    device = torch.device(device_type)
-    trained_model = trained_model.to(device)
-    trained_model.eval()
-    trained_model_dummy_input = trained_model_dummy_input.to(device)
+    # Transfer the model and inputs to GPU device, if appropriate
+    if device_type != "cpu":
+        device = torch.device(device_type)
+        trained_model = trained_model.to(device)
+        trained_model.eval()
+        trained_model_dummy_input = trained_model_dummy_input.to(device)
 
     # FPTLIB-TODO
     # Run model for dummy inputs
@@ -163,11 +163,8 @@ if __name__ == "__main__":
     # Check model saved OK
     # =====================================================
 
-    # Load torchscript and run model as a test
-    # FPTLIB-TODO
-    # Scale inputs as above and, if required, move inputs and mode to GPU
+    # Load torchscript and run model as a test, scaling inputs as above
     trained_model_dummy_input = 2.0 * trained_model_dummy_input
-    trained_model_dummy_input = trained_model_dummy_input.to(device_type)
     trained_model_testing_outputs = trained_model(
         trained_model_dummy_input,
     )

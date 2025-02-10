@@ -35,9 +35,8 @@ if(CMAKE_BUILD_TESTS)
   #   pt2ts.py script
   add_test(
     NAME pt2ts
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath for saving
-                                  # the model
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
+            ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 3. Check the model can be loaded from file and run in Fortran and that its
