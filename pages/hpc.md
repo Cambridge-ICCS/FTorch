@@ -12,7 +12,7 @@ Here we provide some guidance/hints to help with deployment in these settings.
 ### Building for basic use
 
 The basic installation procedure is the same as described in the
-[main documentation](page//cmake.html) and README, cloning from
+[main documentation](pages/cmake.html) and README, cloning from
 [GitHub](https://github.com/Cambridge-ICCS/FTorch) and building using CMake.
 
 ### Obtaining LibTorch
@@ -22,6 +22,8 @@ installing full PyTorch.
 This will reduce the dependencies and remove any requirement of Python.
 LibTorch can be obtained from the
 [PyTorch website](https://pytorch.org/get-started/locally/).
+The assumption here is that any Python/PyTorch development is done elsewhere with a
+model being saved to TorchScript for use by FTorch.
 
 Once you have successfully tested and deployed FTorch in your code we recommend speaking
 to your administrator/software stack manager to make your chosen version of libtorch
@@ -111,7 +113,7 @@ As a minimal requirement you will need to load modules for compilers and CMake.
 Further functionalities may require loading of additional modules such as an
 MPI installation and CUDA.
 Some systems may also have pFUnit available as a loadable module to save you needing to
-build from scratch per the documentation.
+build from scratch per the documentation if you are running FTorch's test suite.
 
 #### LibTorch as a module
 
