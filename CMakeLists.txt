@@ -8,10 +8,10 @@ project(
   VERSION ${PACKAGE_VERSION}
   LANGUAGES C CXX Fortran)
 
-# Set GPU device type using consistent numbering as in PyTorch
-# NOTE: numbered consistently with
-#       https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
-option(GPU_DEVICE "Set the GPU device (NONE, CUDA, XPU, or MPS, defaulting to NONE)" NONE)
+# Set GPU device type using consistent numbering as in PyTorch NOTE: numbered
+# consistently with
+# https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
+option(GPU_DEVICE "Set the GPU device (NONE [default], CUDA, XPU, or MPS)" NONE)
 if("${GPU_DEVICE}" STREQUAL "NONE")
   set(GPU_DEVICE_CODE 0)
 elseif("${GPU_DEVICE}" STREQUAL "CUDA")
@@ -79,7 +79,8 @@ add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90
 
 if(UNIX AND NOT APPLE)
   # only add UNIX definition for linux (not apple which is also unix)
-  target_compile_definitions(${LIB_NAME} PRIVATE UNIX GPU_DEVICE=${GPU_DEVICE_CODE})
+  target_compile_definitions(${LIB_NAME} PRIVATE UNIX
+                                                 GPU_DEVICE=${GPU_DEVICE_CODE})
 else()
   target_compile_definitions(${LIB_NAME} PRIVATE GPU_DEVICE=${GPU_DEVICE_CODE})
 endif()
