@@ -139,7 +139,7 @@ This will reduce the dependencies and remove any requirement of Python.
 LibTorch can be obtained from the
 <a href="https://pytorch.org/get-started/locally/">PyTorch website</a>.
 The assumption here is that any Python/PyTorch development is done elsewhere with a
-model being saved to TorchScript for use by FTorch.</p>
+model being saved to TorchScript for subsequent use by FTorch.</p>
 <p>Once you have successfully tested and deployed FTorch in your code we recommend speaking
 to your administrator/software stack manager to make your chosen version of libtorch
 loadable as a <code>module</code>.
@@ -177,8 +177,8 @@ To build a project with <code>make</code> or similar you need to <em>include</em
 header (<code>.h</code>) and module (<code>.mod</code>) files and <em>link</em> the executable
 to the Ftorch library (e.g., <code>.so</code>, <code>.dll</code>, <code>.dylib</code> depending on your system) when
 compiling.</p>
-<p>To compile with make add the following compiler flag when compiling files that
-use ftorch to <em>include</em> the library:</p>
+<p>To compile with <code>make</code> use the following compiler flag for any files that
+use ftorch to <em>include</em> the module and header files:</p>
 <div class="codehilite"><pre><span></span><code>-I&lt;path/to/FTorch/install/location&gt;/include/ftorch
 </code></pre></div>
 
@@ -186,17 +186,17 @@ use ftorch to <em>include</em> the library:</p>
 <div class="codehilite"><pre><span></span><code><span class="nv">FCFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-I&lt;path/to/FTorch/install/location&gt;/include/ftorch
 </code></pre></div>
 
-<p>When compiling the final executable add the following <em>link</em> flag:</p>
-<div class="codehilite"><pre><span></span><code>-L&lt;path/to/FTorch/install/location&gt;/lib64<span class="w"> </span>-lftorch
+<p>When compiling the final executable add the following <em>linker</em> flag:</p>
+<div class="codehilite"><pre><span></span><code>-L&lt;path/to/FTorch/install/location&gt;/lib<span class="w"> </span>-lftorch
 </code></pre></div>
 
 <p>This is often done by appending to an <code>LDFLAGS</code> linker flags variable or similar:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">LDFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-L&lt;path/to/FTorch/install/location&gt;/lib64<span class="w"> </span>-lftorch
+<div class="codehilite"><pre><span></span><code><span class="nv">LDFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-L&lt;path/to/FTorch/install/location&gt;/lib<span class="w"> </span>-lftorch
 </code></pre></div>
 
 <p>You may also need to add the location of the dynamic library <code>.so</code> files to your
 <code>LD_LIBRARY_PATH</code> environment variable unless installing in a default location:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$LD_LIBRARY_PATH</span>:&lt;path/to/FTorch/installation&gt;/lib64
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$LD_LIBRARY_PATH</span>:&lt;path/to/FTorch/installation&gt;/lib
 </code></pre></div>
 
 <blockquote>
@@ -211,10 +211,13 @@ To build FTorch it is important you
 <a href="#environment-management">match the environment in which you build FTorch to that of the executable</a>
 by loading the same modules as when building the main code.</p>
 <p>As a minimal requirement you will need to load modules for compilers and CMake.
-Further functionalities may require loading of additional modules such as an
+These may be installed by the base OS/environment, but it is recommended to use modules
+for reproducibility, access to a wider range of versions, and to match the compilers
+used to build the main code.</p>
+<p>Further functionalities may require loading of additional modules such as an
 MPI installation and CUDA.
 Some systems may also have pFUnit available as a loadable module to save you needing to
-build from scratch per the documentation if you are running FTorch's test suite.</p>
+build from scratch per the documentation if you plan to run FTorch's test suite.</p>
 <h4 id="libtorch-as-a-module">LibTorch as a module</h4>
 <p>Once you have a working build of FTorch it is advisable to pin the version of LibTorch
 and make it a loadable module to improve reproducibility and simplify the build process
@@ -231,9 +234,12 @@ version, compilers used, and a hash code.</p>
 and making it loadable as a module itself.
 The module should be labelled with the compilers it was built with (see the
 <a href="#environment-management">importance of environment matching</a>) and automatically load
-any subdependencies (CUDA)</p>
-<p>The build should be completed for <code>CMAKE_BUILD_TYPE=RELEASE</code> and run the unit tests to
-check successful installation.</p>
+any subdependencies (e.g. CUDA)</p>
+<p>For production builds, ensure that FTorch is built using the <code>CMAKE_BUILD_TYPE=Release</code>
+CMake flag.
+This will build FTorch with optimization enabled.
+It is recommended to run FTorch's unit tests after building to verify successful
+installation.</p>
 <p>Once complete it should be possible to:</p>
 <div class="codehilite"><pre><span></span><code>module<span class="w"> </span>load<span class="w"> </span>ftorch
 </code></pre></div>
