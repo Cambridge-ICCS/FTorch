@@ -66,8 +66,10 @@ with CMake to enforce this.
 Whilst we describe how to link to FTorch using CMake to build a project on our main
 page, many HPC models do not use CMake and rely on `make` or more elaborate build
 systems.
-To build a project with `make` or similar you need to _include_ the FTorch library when
-compiling and _link_ the executable against it.
+To build a project with `make` or similar you need to _include_ the FTorch's
+header (`.h`) and module (`.mod`) files and _link_ the executable
+to the Ftorch library (e.g., `.so`, `.dll`, `.dylib` depending on your system) when
+compiling.
 
 To compile with make add the following compiler flag when compiling files that
 use ftorch to _include_ the library:
@@ -79,7 +81,7 @@ This is often done by appending to an `FCFLAGS` compiler flags variable or simil
 FCFLAGS += -I<path/to/FTorch/install/location>/include/ftorch
 ```
 
-When compiling the final executable add the following link flag:
+When compiling the final executable add the following _link_ flag:
 ```sh
 -L<path/to/FTorch/install/location>/lib64 -lftorch
 ```

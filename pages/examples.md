@@ -116,11 +116,11 @@ and using the `-DCMAKE_PREFIX_PATH=</path/to/install/location>` flag when runnin
 > then you should use the same path for `</path/to/install/location>`._
 
 ##### Make
-To build with make we need to _include_ the library when compiling and _link_ the
-executable against it.
+To build with `make` we need to _include_ the library and _link_ the
+executable against it when compiling.
 
 For full details of the flags to set and the linking process see the
-[HPC build pages](page/hpc.html).
+[HPC build pages](page/hpc.html/#building-projects-and-linking-to-ftorch).
 
 ### Running on GPUs
 
