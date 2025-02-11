@@ -4,7 +4,7 @@ title: Installation and Build Process
 
 Installation of FTorch is done by CMake.
 
-This is controlled by the `CMakeLists.txt` file in `src/`.
+This is controlled by the `CMakeLists.txt` file in the root FTorch directory.
 
 ## Dependencies
 
@@ -19,7 +19,7 @@ To install the library requires the following to be installed on the system:
 
 To build the library, first clone it from GitHub to your local machine and then run:
 ```
-cd FTorch/src/
+cd FTorch/
 mkdir build
 cd build
 ```

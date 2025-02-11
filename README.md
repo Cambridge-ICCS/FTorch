@@ -143,9 +143,9 @@ To build and install the library:
     git clone https://github.com/Cambridge-ICCS/FTorch.git
     ```
     to clone via https.  
-2. Navigate to the source directory by running:  
+2. Navigate to the root FTorch directory by running:  
     ```
-    cd FTorch/src/
+    cd FTorch/
     ```
 3. Build the library using CMake with the relevant options from the table below:  
     ```
@@ -248,7 +248,7 @@ instructions to modify, build, and run as necessary.
 
 For information on testing, see the corresponding
 [webpage](https://cambridge-iccs.github.io/FTorch/page/testing.html)
-or the [`README` in the `test` subdirectory](src/test/README.md).
+or the [`README` in the `test` subdirectory](test/README.md).
 
 ## License
 

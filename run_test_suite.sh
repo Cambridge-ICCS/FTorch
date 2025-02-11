@@ -7,7 +7,7 @@
 # The `BUILD_DIR` variable in this script should be updated as appropriate for
 # your configuration.
 #
-# See `src/test/README.md` for more details on the test suite.
+# See `test/README.md` for more details on the test suite.
 # ---
 
 set -eu
@@ -18,7 +18,7 @@ show_help() {
   echo "          [--verbose | -V] [--help | h]"
   echo
   echo "Options:"
-  echo "  BUILD_DIR=<build_dir> Specify the build directory (default: src/build)."
+  echo "  BUILD_DIR=<build_dir> Specify the build directory (default: build)."
   echo "  --integration-only | -i        Run integration tests only."
   echo "  --unit-only        | -u        Run unit tests only."
   echo "  --verbose          | -V        Run with verbose ctest output."
