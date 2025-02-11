@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15...3.31)
 # target_sources is run
 cmake_policy(SET CMP0076 NEW)
 
-set(PROJECT_NAME SimpleNetExample)
+set(PROJECT_NAME MPIExample)
 
 project(${PROJECT_NAME} LANGUAGES Fortran)
 
@@ -35,9 +35,8 @@ if(CMAKE_BUILD_TESTS)
   #   pt2ts.py script
   add_test(
     NAME pt2ts
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath for saving
-                                  # the model
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
+            ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 3. Check the model can be loaded from file and run with MPI in Python and
@@ -46,12 +45,11 @@ if(CMAKE_BUILD_TESTS)
     NAME mpi_infer_python
     COMMAND
       ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${Python_EXECUTABLE}
-      ${PROJECT_SOURCE_DIR}/mpi_infer_python.py
-      ${PROJECT_BINARY_DIR} # Command line argument: filepath to find the model
+      ${PROJECT_SOURCE_DIR}/mpi_infer_python.py --filepath ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     mpi_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
-    "MPI Python example ran successfully")
+                                "MPI Python example ran successfully")
 
   # 4. Check the model can be loaded from file and run with MPI in Fortran and
   #   that its outputs meet expectations
@@ -64,5 +62,5 @@ if(CMAKE_BUILD_TESTS)
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     mpi_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-    "MPI Fortran example ran successfully")
+                                 "MPI Fortran example ran successfully")
 endif()
