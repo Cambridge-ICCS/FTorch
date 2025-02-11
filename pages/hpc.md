@@ -81,7 +81,7 @@ This is often done by appending to an `FCFLAGS` compiler flags variable or simil
 FCFLAGS += -I<path/to/FTorch/install/location>/include/ftorch
 ```
 
-When compiling the final executable add the following _link_er flag:
+When compiling the final executable add the following _linker_ flag:
 ```sh
 -L<path/to/FTorch/install/location>/lib -lftorch
 ```
