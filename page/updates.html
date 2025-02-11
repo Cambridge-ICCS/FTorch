@@ -108,7 +108,27 @@
       </div>
 
     <div class="col-9" id='text'>
-      <h2 id="january-2025">January 2025</h2>
+      <h2 id="february-2025">February 2025</h2>
+<p>If you use a version of FTorch from before commit
+<a href="f7fbebfdad2a4801f57742a2bb12bc21e70881ff">f7fbebf</a>
+(February 2025) you will notice that the main <code>CMakeLists.txt</code> file has moved
+from <code>src/</code> to the root level of the FTorch repository. This move was mainly to
+simplify the development experience, such that the examples could be built as
+integration tests as part of FTorch, without needing to copy the examples into
+a subdirectory of <code>src/</code> (as was done previously). For consistency, the other
+tests have also been moved from <code>src/tests/</code> to <code>tests/</code>, with the
+<code>run_test_suite</code> scripts updated appropriately.</p>
+<p>The only difference most users should need to take account of is that the build
+directory should no longer be within <code>src/</code>. Instead, simply create the build
+directory in the root level of the FTorch repository. For example:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/FTorch
+rm<span class="w"> </span>-rf<span class="w"> </span>build
+mkdir<span class="w"> </span>build
+<span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>..<span class="w"> </span>&lt;CMAKE_ARGUMENTS&gt;
+</code></pre></div>
+
+<h2 id="january-2025">January 2025</h2>
 <p>If you use a version of FTorch from before commit
 <a href="c488f20d8d49a15f98176c39a6c8e8db8e708f51">c488f20</a>
 (January 2025) you may notice that the <code>device_type</code> argument for
@@ -131,6 +151,7 @@ for implementing new functionalities.</p>
 <p>If you are already using a more recent version there is no need to read this page.</p>
 <div class="toc">
 <ul>
+<li><a href="#february-2025">February 2025</a></li>
 <li><a href="#january-2025">January 2025</a></li>
 <li><a href="#june-2024">June 2024</a><ul>
 <li><a href="#why">Why?</a></li>
