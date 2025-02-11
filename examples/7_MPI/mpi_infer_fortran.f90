@@ -81,7 +81,7 @@ program inference
    call torch_model_forward(model, in_tensors, out_tensors)
 
    ! Print the values computed on each MPI rank
-   write(unit=6, fmt="('output on rank ',i1,': ')", advance="no")
+   write(unit=6, fmt="('output on rank ',i1,': ')", advance="no") rank
    write(unit=6, fmt=100) out_data(:)
 
    ! Gather the outputs onto rank 0
