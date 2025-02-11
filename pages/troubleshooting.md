@@ -66,7 +66,6 @@ ECHO ON
 
 rem run cmake to generate build scripts
 rem (update CMAKE_PREFIX_PATH depending on location of ftorch venv)
-cd src
 cmake -Bbuild -G "NMake Makefiles" -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
  -DCMAKE_PREFIX_PATH="C:\Users\Quickemu\Downloads\FTorch\.ftorch\Lib\site-packages" ^
  -DCMAKE_BUILD_TYPE=Release ^

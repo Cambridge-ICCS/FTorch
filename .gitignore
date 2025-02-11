@@ -87,7 +87,6 @@ coverage.xml
 .pytest_cache/
 cover/
 Testing/
-src/test/examples
 
 # Translations
 *.mo

@@ -54,7 +54,8 @@ set(CMAKE_INSTALL_RPATH $ORIGIN/${relDir})
 find_package(Torch REQUIRED)
 
 # Library with C and Fortran bindings
-add_library(${LIB_NAME} SHARED ctorch.cpp ftorch.F90 ftorch_test_utils.f90)
+add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90
+                               src/ftorch_test_utils.f90)
 
 if(UNIX)
   if(NOT APPLE) # only add definition for linux (not apple which is also unix)
@@ -66,7 +67,7 @@ endif()
 add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
 # cmake-format: off
 set_target_properties(
-  ${LIB_NAME} PROPERTIES PUBLIC_HEADER "ctorch.h"
+  ${LIB_NAME} PROPERTIES PUBLIC_HEADER "src/ctorch.h"
   Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/modules")
 # cmake-format: on
 # Link TorchScript
@@ -118,25 +119,5 @@ if(CMAKE_BUILD_TESTS)
   endif()
 
   # Integration tests
-  file(MAKE_DIRECTORY test/examples)
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/CMakeLists.txt
-       DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/1_SimpleNet
-       DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/2_ResNet18
-       DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  if(ENABLE_CUDA)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/3_MultiGPU
-        DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  endif()
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/4_MultiIO
-       DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  # NOTE: Example 5_Looping is built here but not run as part of the integration
-  #       test suite. This is because it demonstrates 'good' versus 'bad'
-  #       practice, as opposed to functionality.
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/5_Looping
-       DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../examples/6_Autograd
-       DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/test/examples)
-  add_subdirectory(test/examples)
+  add_subdirectory(examples)
 endif()

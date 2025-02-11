@@ -67,7 +67,7 @@ argument:
 ./run_test_suite.sh --integration-only
 ```
 or individually by navigating to the corresponding subdirectory of
-`${BUILD_DIR}/test/examples` (where `${BUILD_DIR}` is the build directory for
+`${BUILD_DIR}/examples` (where `${BUILD_DIR}` is the build directory for
 FTorch) and calling `ctest`. This will produce a report on which tests passed
 and which failed for your build. Note that some of the examples have additional
 dependencies, which may need installing into your virtual environment.
@@ -81,7 +81,7 @@ a suite with the command
 ./run_test_suite.bat
 ```
 or individually by navigating to the corresponding subdirectory of
-`${BUILD_DIR}/test/examples` (where `${BUILD_DIR}` is the build directory for
+`${BUILD_DIR}/examples` (where `${BUILD_DIR}` is the build directory for
 FTorch) and calling `ctest`. This will produce a report on which tests passed
 and which failed for your build. Note that some of the examples have additional
 dependencies, which may need installing into your virtual environment.

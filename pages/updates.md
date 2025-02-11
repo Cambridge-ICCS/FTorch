@@ -1,5 +1,28 @@
 title: Recent API Changes
 
+## February 2025
+
+If you use a version of FTorch from before commit
+[f7fbebf](f7fbebfdad2a4801f57742a2bb12bc21e70881ff)
+(February 2025) you will notice that the main `CMakeLists.txt` file has moved
+from `src/` to the root level of the FTorch repository. This move was mainly to
+simplify the development experience, such that the examples could be built as
+integration tests as part of FTorch, without needing to copy the examples into
+a subdirectory of `src/` (as was done previously). For consistency, the other
+tests have also been moved from `src/tests/` to `tests/`, with the
+`run_test_suite` scripts updated appropriately.
+
+The only difference most users should need to take account of is that the build
+directory should no longer be within `src/`. Instead, simply create the build
+directory in the root level of the FTorch repository. For example:
+```sh
+cd /path/to/FTorch
+rm -rf build
+mkdir build
+cd build
+cmake .. <CMAKE_ARGUMENTS>
+```
+
 ## January 2025
 
 If you use a version of FTorch from before commit
