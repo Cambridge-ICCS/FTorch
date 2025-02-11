@@ -116,26 +116,11 @@ and using the `-DCMAKE_PREFIX_PATH=</path/to/install/location>` flag when runnin
 > then you should use the same path for `</path/to/install/location>`._
 
 ##### Make
-To build with make we need to include the library when compiling and link the executable
-against it.
+To build with `make` we need to _include_ the library and _link_ the
+executable against it when compiling.
 
-To compile with make we need add the following compiler flag when compiling files that
-use FTorch:
-```
-FCFLAGS += -I<path/to/install/location>/include/ftorch
-```
-
-When compiling the final executable add the following link flag:
-```
-LDFLAGS += -L<path/to/install/location>/lib -lftorch
-```
-
-You may also need to add the location of the `.so` files to your `LD_LIBRARY_PATH`
-unless installing in a default location:
-```
-export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/install/location>/lib
-```
-> Note: _Depending on your system and architecture `lib` may be `lib64` or something similar._
+For full details of the flags to set and the linking process see the
+[HPC build pages](page/hpc.html/#building-projects-and-linking-to-ftorch).
 
 ### Running on GPUs
 
