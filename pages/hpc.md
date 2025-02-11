@@ -23,7 +23,7 @@ This will reduce the dependencies and remove any requirement of Python.
 LibTorch can be obtained from the
 [PyTorch website](https://pytorch.org/get-started/locally/).
 The assumption here is that any Python/PyTorch development is done elsewhere with a
-model being saved to TorchScript for use by FTorch.
+model being saved to TorchScript for subsequent use by FTorch.
 
 Once you have successfully tested and deployed FTorch in your code we recommend speaking
 to your administrator/software stack manager to make your chosen version of libtorch
@@ -71,8 +71,8 @@ header (`.h`) and module (`.mod`) files and _link_ the executable
 to the Ftorch library (e.g., `.so`, `.dll`, `.dylib` depending on your system) when
 compiling.
 
-To compile with make add the following compiler flag when compiling files that
-use ftorch to _include_ the library:
+To compile with `make` use the following compiler flag for any files that
+use ftorch to _include_ the module and header files:
 ```sh
 -I<path/to/FTorch/install/location>/include/ftorch
 ```
@@ -81,19 +81,19 @@ This is often done by appending to an `FCFLAGS` compiler flags variable or simil
 FCFLAGS += -I<path/to/FTorch/install/location>/include/ftorch
 ```
 
-When compiling the final executable add the following _link_ flag:
+When compiling the final executable add the following _linker_ flag:
 ```sh
--L<path/to/FTorch/install/location>/lib64 -lftorch
+-L<path/to/FTorch/install/location>/lib -lftorch
 ```
 This is often done by appending to an `LDFLAGS` linker flags variable or similar:
 ```sh
-LDFLAGS += -L<path/to/FTorch/install/location>/lib64 -lftorch
+LDFLAGS += -L<path/to/FTorch/install/location>/lib -lftorch
 ```
 
 You may also need to add the location of the dynamic library `.so` files to your
 `LD_LIBRARY_PATH` environment variable unless installing in a default location:
 ```sh
-export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/FTorch/installation>/lib64
+export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/FTorch/installation>/lib
 ```
 
 > Note: _Depending on your system and architecture `lib` may be `lib64` or something similar._
@@ -112,10 +112,14 @@ To build FTorch it is important you
 by loading the same modules as when building the main code.
 
 As a minimal requirement you will need to load modules for compilers and CMake.
+These may be installed by the base OS/environment, but it is recommended to use modules
+for reproducibility, access to a wider range of versions, and to match the compilers
+used to build the main code.
+
 Further functionalities may require loading of additional modules such as an
 MPI installation and CUDA.
 Some systems may also have pFUnit available as a loadable module to save you needing to
-build from scratch per the documentation if you are running FTorch's test suite.
+build from scratch per the documentation if you plan to run FTorch's test suite.
 
 #### LibTorch as a module
 
@@ -138,10 +142,13 @@ If there are many users who want to use FTorch on a system it may be worth build
 and making it loadable as a module itself.
 The module should be labelled with the compilers it was built with (see the
 [importance of environment matching](#environment-management)) and automatically load
-any subdependencies (CUDA)
+any subdependencies (e.g. CUDA)
 
-The build should be completed for `CMAKE_BUILD_TYPE=RELEASE` and run the unit tests to
-check successful installation.
+For production builds, ensure that FTorch is built using the `CMAKE_BUILD_TYPE=Release`
+CMake flag.
+This will build FTorch with optimization enabled.
+It is recommended to run FTorch's unit tests after building to verify successful
+installation.
 
 Once complete it should be possible to:
 ```sh
