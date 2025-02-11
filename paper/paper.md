@@ -73,23 +73,22 @@ climate science [@kashinath2021physics],
 and materials science [@bishara2023state].
 Common applications include the emulation of computationally intensive processes
 and the development of data-driven components.
-Such deployments of ML can achieve higher computational
-performance and/or improved predictive performance,
+Such deployments of ML can achieve improved computational and/or predictive performance,
 compared to traditional numerical techniques.
-A common example from the geosciences is the development of ML parameterisations
-of subgrid processes - currently a major source of uncertainty in many models.
+A common example from the geosciences is ML parameterisation
+of subgrid processes - a major source of uncertainty in many models.
 
 Fortran is widely used for scientific codes due to its performance,
 stability, array-oriented design, and native support for shared and distributed memory,
 amongst other features [@kedward2022state].
 Many ML frameworks, on the other hand, are accessed using Python.
-A commonly-used framework is PyTorch [@paszke2019pytorch] which
+The commonly-used PyTorch framework [@paszke2019pytorch]
 allows users to design and deploy ML models with many advanced features.
 
 Ideally users would develop and validate ML models in the PyTorch environment
 before deploying them into a scientific model.
-This deployment should be possible with minimal additional code, and guarantee
-identical results to those obtained with the PyTorch
+This deployment should require minimal additional code, and guarantee
+identical results as obtained with the PyTorch
 interface -- something not guaranteed if re-implementing by hand in Fortran.
 Ideally one would call out, from Fortran, to an ML model
 saved from PyTorch, with the results returned directly to the scientific code.
@@ -118,7 +117,7 @@ Using the `iso_c_binding` module, intrinsic to Fortran since the 2003 standard,
 we provide a Fortran wrapper to `LibTorch`.
 This enables shared memory use (where possible) to
 maximise efficiency by reducing data-transfer during coupling.^[i.e. the same
-data in memory is used by both `LibTorch` and `Fortran` without creating a copy.]
+data in memory is used by both `LibTorch` and Fortran without creating a copy.]
 
 `FTorch` is [open source](https://github.com/Cambridge-ICCS/FTorch).
 It can be built from source using CMake.
@@ -140,8 +139,7 @@ The library is primarily developed in Linux, but also runs on macOS and Windows.
 
 PyTorch tensors are represented by `FTorch` as a `torch_tensor` derived type, and
 created from Fortran arrays using the `torch_tensor_from_array()` subroutine.
-Tensors are supported across a range of data types up to rank
-5^[easily extendable at build time for users who require more.]
+Tensors are supported across a range of data types and ranks
 using the fypp preprocessor [@fypp]
 
 We utilise the existing support in `LibTorch` for
@@ -232,13 +230,13 @@ saving PyTorch models to TorchScript.
   runtime from Fortran.
 
 * **TorchFort** [@torchfort]\
-  Since we began `FTorch` NVIDIA has released `torchfort`.
+  Since we began `FTorch` NVIDIA has released `TorchFort`.
   This has a similar approach to `FTorch`, avoiding Python to link against
   the `LibTorch` backend. It has a focus on enabling GPU deployment on NVIDIA hardware.
 
 * **fortran-tf-lib** [@fortran-tf-lib]\
   Whilst `FTorch` allows coupling of PyTorch models to Fortran,
-  some TensorFlow [@Abadi_TensorFlow_Large-scale_machine_2015] to
+  some use TensorFlow [@Abadi_TensorFlow_Large-scale_machine_2015] to
   develop and train models. These can be coupled to
   Fortran in a similar manner to `FTorch` by using `fortran-tf-lib`.
   Whilst it provides an alternative solution, the library is less rich in features and
@@ -262,7 +260,7 @@ saving PyTorch models to TorchScript.
   host [@mansfield2024uncertainty].
 
 * to couple a U-Net based model of multi-scale convection into [ICON](https://www.icon-model.org/)
-  (the Icosahedral Non-hydrostatic modelling framework) and demonstrate via Shapley values that
+  and demonstrate via Shapley values that
   non-causal learnt relations are more stable when running online [@heuer2024interpretable].
 
 * in the DataWave project [@CAMGW] to couple emulators of gravity wave drag, and
