@@ -98,6 +98,7 @@
               <a class="nav-link" href="developer.html">Developer Guide</a>
               <a class="nav-link active disabled" href="examples.html">Examples</a>
               <a class="nav-link" href="gpu.html">GPU Support</a>
+              <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
               <a class="nav-link" href="testing.html">FTorch test suite</a>
               <a class="nav-link" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
@@ -235,25 +236,10 @@ file to find the FTorch installation and link it to the executable.</p>
 then you should use the same path for <code>&lt;/path/to/install/location&gt;</code>.</em></p>
 </blockquote>
 <h5 id="make">Make</h5>
-<p>To build with make we need to include the library when compiling and link the executable
-against it.</p>
-<p>To compile with make we need add the following compiler flag when compiling files that
-use FTorch:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">FCFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="o">-</span><span class="nv">I</span><span class="o">&lt;</span><span class="nv">path</span><span class="o">/</span><span class="nv">to</span><span class="o">/</span><span class="nv">install</span><span class="o">/</span><span class="nv">location</span><span class="o">&gt;/</span><span class="k">include</span><span class="o">/</span><span class="nv">ftorch</span>
-</code></pre></div>
-
-<p>When compiling the final executable add the following link flag:</p>
-<div class="codehilite"><pre><span></span><code>LDFLAGS += -L&lt;path/to/install/location&gt;/lib -lftorch
-</code></pre></div>
-
-<p>You may also need to add the location of the <code>.so</code> files to your <code>LD_LIBRARY_PATH</code>
-unless installing in a default location:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">LD_LIBRARY_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">LD_LIBRARY_PATH</span><span class="p">:</span><span class="o">&lt;</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">location</span><span class="o">&gt;/</span><span class="n">lib</span>
-</code></pre></div>
-
-<blockquote>
-<p>Note: <em>Depending on your system and architecture <code>lib</code> may be <code>lib64</code> or something similar.</em></p>
-</blockquote>
+<p>To build with <code>make</code> we need to <em>include</em> the library and <em>link</em> the
+executable against it when compiling.</p>
+<p>For full details of the flags to set and the linking process see the
+<a href="page/hpc.html/#building-projects-and-linking-to-ftorch">HPC build pages</a>.</p>
 <h3 id="running-on-gpus">Running on GPUs</h3>
 <p>In order to run a model on GPU, two main changes to the above process are required:</p>
 <ol>

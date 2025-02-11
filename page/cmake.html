@@ -98,6 +98,7 @@
               <a class="nav-link" href="developer.html">Developer Guide</a>
               <a class="nav-link" href="examples.html">Examples</a>
               <a class="nav-link" href="gpu.html">GPU Support</a>
+              <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
               <a class="nav-link" href="testing.html">FTorch test suite</a>
               <a class="nav-link" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
@@ -267,22 +268,10 @@ find the FTorch installation and link it to the executable.</p>
 <p>You will then need to use the <code>-DFTorch_DIR=&lt;/path/to/install/location&gt;</code> flag
 when running CMake.</p>
 <h2 id="building-other-projects-with-make">Building other projects with make</h2>
-<p>To build a project with make you need to include the FTorch library when compiling
+<p>To build a project with <code>make</code> you need to include the FTorch library when compiling
 and link the executable against it.</p>
-<p>To compile with make add the following compiler flag when compiling files that
-use ftorch:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">FCFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="o">-</span><span class="nv">I</span><span class="o">&lt;</span><span class="nv">path</span><span class="o">/</span><span class="nv">to</span><span class="o">/</span><span class="nv">install</span><span class="o">/</span><span class="nv">location</span><span class="o">&gt;/</span><span class="k">include</span><span class="o">/</span><span class="nv">ftorch</span>
-</code></pre></div>
-
-<p>When compiling the final executable add the following link flag:</p>
-<div class="codehilite"><pre><span></span><code>LDFLAGS += -L&lt;path/to/install/location&gt;/lib64 -lftorch
-</code></pre></div>
-
-<p>You may also need to add the location of the <code>.so</code> files to your <code>LD_LIBRARY_PATH</code>
-unless installing in a default location:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">LD_LIBRARY_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">LD_LIBRARY_PATH</span><span class="p">:</span><span class="o">&lt;</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">installation</span><span class="o">&gt;/</span><span class="n">lib64</span>
-</code></pre></div>
-
+<p>For full details of the flags to set and the linking process see the
+<a href="page/hpc.html">HPC build pages</a>.</p>
 <h2 id="conda-support">Conda Support</h2>
 <p>Conda is not our preferred approach for managing dependencies, but for users who want
 an environment to build FTorch in we provide <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/conda">guidance and environment files</a>.
