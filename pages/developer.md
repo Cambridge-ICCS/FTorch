@@ -85,6 +85,37 @@ files `src/ctorch.h` and `src/ctorch.cpp`, we refer to the Torch
 [C++ API documentation](https://pytorch.org/cppdocs/api/library_root.html)
 pages on the PyTorch website for details.
 
+### GPU device handling
+
+GPU device-specific code is handled in FTorch using codes defined in the root
+`CMakeLists.txt` file:
+```cmake
+set(GPU_DEVICE_NONE 0)
+set(GPU_DEVICE_CUDA 1)
+set(GPU_DEVICE_XPU 12)
+set(GPU_DEVICE_MPS 13)
+```
+These device codes are chosen to be consistent with the numbering used in
+PyTorch (see
+https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h). When a user
+specifies `-DGPU_DEVICE=XPU` (for example) in the FTorch CMake build, this is
+mapped to the appropriate device code (in this case 12). The chosen device code
+and all other ones defined are passed to the C++ compiler in the following step:
+```cmake
+target_compile_definitions(
+  ${LIB_NAME}
+  PRIVATE ${COMPILE_DEFS} GPU_DEVICE=${GPU_DEVICE_CODE}
+          GPU_DEVICE_NONE=${GPU_DEVICE_NONE} GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA}
+          GPU_DEVICE_XPU=${GPU_DEVICE_XPU} GPU_DEVICE_MPS=${GPU_DEVICE_MPS})
+```
+The chosen device code will enable the appropriate C pre-processor conditions in
+the C++ source so that that the code relevant to that device type becomes
+active.
+
+An example illustrating why this approach was taken is that if we removed the
+device codes and pre-processor conditions and tried to build with a CPU-only or
+CUDA LibTorch installation then compile errors would arise from the use of the
+`torch::xpu` module in `src/ctorch.cpp`.
 
 ### git hook
 
