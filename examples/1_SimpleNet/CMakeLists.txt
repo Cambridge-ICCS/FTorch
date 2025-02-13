@@ -33,9 +33,8 @@ if(CMAKE_BUILD_TESTS)
   #   pt2ts.py script
   add_test(
     NAME pt2ts
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath for saving
-                                  # the model
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
+            ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 3. Check the model can be loaded from file and run in Python and that its
@@ -43,8 +42,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME simplenet_infer_python
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet_infer_python.py
-            ${PROJECT_BINARY_DIR} # Command line argument: filepath to find the
-                                  # model
+            --filepath ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 4. Check the model can be loaded from file and run in Fortran and that its

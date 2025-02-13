@@ -71,6 +71,28 @@ def load_torchscript(filename: Optional[str] = "saved_model.pt") -> torch.nn.Mod
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--device_type",
+        help="Device type to run the inference on",
+        type=str,
+        choices=["cpu", "cuda", "xpu", "mps"],
+        default="cpu",
+    )
+    parser.add_argument(
+        "--filepath",
+        help="Path to the file containing the PyTorch model",
+        type=str,
+        default=os.path.dirname(__file__),
+    )
+    parsed_args = parser.parse_args()
+    device_type = parsed_args.device_type
+    filepath = parsed_args.filepath
+
     # =====================================================
     # Load model and prepare for saving
     # =====================================================
@@ -97,13 +119,13 @@ if __name__ == "__main__":
     trained_model_dummy_input_1 = torch.ones((512, 40), dtype=torch.float64)
     trained_model_dummy_input_2 = torch.ones((512, 1), dtype=torch.float64)
 
-    # FPTLIB-TODO
-    # Uncomment the following lines to save for inference on GPU (rather than CPU):
-    # device = torch.device('cuda')
-    # trained_model = trained_model.to(device)
-    # trained_model.eval()
-    # trained_model_dummy_input_1 = trained_model_dummy_input_1.to(device)
-    # trained_model_dummy_input_2 = trained_model_dummy_input_2.to(device)
+    # Transfer the model and inputs to GPU device, if appropriate
+    if device_type != "cpu":
+        device = torch.device(device_type)
+        trained_model = trained_model.to(device)
+        trained_model.eval()
+        trained_model_dummy_input_1 = trained_model_dummy_input_1.to(device)
+        trained_model_dummy_input_2 = trained_model_dummy_input_2.to(device)
 
     # FPTLIB-TODO
     # Run model for dummy inputs
@@ -119,7 +141,7 @@ if __name__ == "__main__":
 
     # FPTLIB-TODO
     # Set the name of the file you want to save the torchscript model to:
-    saved_ts_filename = "saved_model.pt"
+    saved_ts_filename = f"saved_model_{device_type}.pt"
     # A filepath may also be provided. To do this, pass the filepath as an argument to
     # this script when it is run from the command line, i.e. `./pt2ts.py path/to/model`.
 
@@ -141,9 +163,7 @@ if __name__ == "__main__":
     # Check model saved OK
     # =====================================================
 
-    # Load torchscript and run model as a test
-    # FPTLIB-TODO
-    # Scale inputs as above and, if required, move inputs and mode to GPU
+    # Load torchscript and run model as a test, scaling inputs as above
     trained_model_dummy_input_1 = 2.0 * trained_model_dummy_input_1
     trained_model_dummy_input_2 = 2.0 * trained_model_dummy_input_2
     trained_model_testing_outputs = trained_model(
@@ -172,7 +192,6 @@ if __name__ == "__main__":
             raise RuntimeError(model_error)
 
     # Check that the model file is created
-    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
     if not os.path.exists(os.path.join(filepath, saved_ts_filename)):
         torchscript_file_error = (
             f"Saved TorchScript file {os.path.join(filepath, saved_ts_filename)} "

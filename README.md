@@ -165,7 +165,7 @@ To build and install the library:
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
     | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`             | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build. |
-    | `ENABLE_CUDA`                                                                                     | `TRUE` / `FALSE`             | Specifies whether to check for and enable CUDA<sup>3</sup> |
+    | `GPU_DEVICE` | `NONE` / `CUDA` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>3</sup> |
 
     <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
 
