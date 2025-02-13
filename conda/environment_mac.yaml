@@ -1,0 +1,13 @@
+name: ftorch-mac
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - fortran-compiler
+  - cxx-compiler
+  - cmake >=3.15
+  - openmpi >=5.0.6  # For pFUnit
+  - pip
+  - pip:  # We install PyTorch using pip as recommended by PyTorch
+    - torch
+    - torchvision
