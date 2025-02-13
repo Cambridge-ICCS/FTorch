@@ -20,7 +20,7 @@ the TorchScript model in inference mode.
 To run this example requires:
 
 - CMake
-- Two (or more) CUDA or XPU GPU devices (or a single Mps device).
+- Two (or more) CUDA or XPU GPU devices (or a single MPS device).
 - FTorch (installed with a GPU_DEVICE enabled as described in main package)
 - Python 3
 
@@ -93,7 +93,7 @@ cmake --build .
 and should match the compiler that was used to locally build FTorch.)
 
 To run the compiled code calling the saved `SimpleNet` TorchScript from
-Fortran, run the executable with argumentsof device type and the saved model file:
+Fortran, run the executable with arguments of device type and the saved model file:
 ```
 ./multigpu_infer_fortran <cuda/xpu/mps> ../saved_multigpu_model_<cuda/xpu>.pt
 ```
@@ -106,7 +106,7 @@ input on device 1: [  1.0,  2.0,  3.0,  4.0,  5.0]
 output on device 0: [  0.0,  2.0,  4.0,  6.0,  8.0]
 output on device 1: [  2.0,  4.0,  6.0,  8.0, 10.0]
 ```
-Again, note that Mps will only use device 0.
+Again, note that MPS will only use device 0.
 
 Alternatively, we can use `make`, instead of CMake, copying the Makefile over from the
 first example:
