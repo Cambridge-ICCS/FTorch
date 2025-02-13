@@ -1,4 +1,4 @@
-# Workflow to run the FTorch test suite
+# Workflow to run the FTorch test suite on Macos platforms
 name: TestSuiteMacOS
 
 # Controls when the workflow will run
@@ -66,6 +66,9 @@ jobs:
             toolchain: {compiler: lfortran, version: '0.33.0'}
           - os: macos-13
             toolchain: {compiler: lfortran, version: '0.33.0'}
+    defaults:
+      run:
+        shell: bash -el {0}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -86,38 +89,50 @@ jobs:
         env: 
           FC: ${{ steps.setup-fortran.outputs.fc }}
 
-      - name: Install Python
-        uses: actions/setup-python@v5
+      # Conda following instructions at https://github.com/conda-incubator/setup-miniconda
+      - name: Setup Conda environment
+        uses: conda-incubator/setup-miniconda@v3
+        continue-on-error: true
         with:
-          python-version: '3.11'
-
-      - name: Install PyTorch
+          environment-file: conda/environment_mac.yaml
+          activate-environment: ftorch-mac
+          miniforge-version: latest
+      - name: Check arm64
         run: |
-          python -m pip install --upgrade pip
-          python -m venv ftorch
-          . ftorch/bin/activate
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          python -c "import platform; assert platform.machine() == 'arm64', platform.machine()"
+
+      - name: Check conda
+        run: |
+          conda info
+          conda list
+
+      - name: Install pFUnit
+        run: |
+          # TODO: Avoid version pinning (needed because version appears in install path)
+          git clone -b v4.10.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          mkdir pFUnit/build
+          cd pFUnit/build
+          cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+          make -j 4 install
 
       - name: Build FTorch
         run: |
-          . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
-          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
-          export BUILD_DIR=$(pwd)/src/build
+          export BUILD_DIR=$(pwd)/build
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
+          python -c 'import torch;print(torch.utils.cmake_prefix_path)'
           cmake .. \
-            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_PREFIX_PATH="${CONDA_PREFIX};$(python -c 'import torch;print(torch.utils.cmake_prefix_path)')" \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_Fortran_COMPILER=${FC} \
             -DCMAKE_C_COMPILER=${CC} \
             -DCMAKE_CXX_COMPILER=${CXX} \
-            -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} \
+            -DCMAKE_INSTALL_PREFIX=${CONDA_PREFIX} \
             -DCMAKE_BUILD_TESTS=TRUE
           cmake --build .
           cmake --install .
 
       - name: Integration tests
         run: |
-          . ftorch/bin/activate
           ./run_integration_tests.sh -V
