@@ -4,7 +4,8 @@ program inference
    use, intrinsic :: iso_fortran_env, only : sp => real32
 
    ! Import our library for interfacing with PyTorch
-   use ftorch, only : torch_model, torch_tensor, torch_kCPU, torch_kCUDA, torch_kXPU, &
+   use ftorch, only : torch_model, torch_tensor, &
+                      torch_kCPU, torch_kCUDA, torch_kXPU, torch_kMPS, &
                       torch_tensor_from_array, torch_model_load, torch_model_forward, &
                       torch_delete
 
@@ -27,7 +28,7 @@ program inference
    type(torch_tensor), dimension(1) :: out_tensors
 
    ! Variables for multi-GPU setup
-   integer, parameter :: num_devices = 2
+   integer :: num_devices = 2
    integer :: device_type, device_index, i
 
    ! Get device type as first command line argument and TorchScript model file as second command
@@ -41,6 +42,9 @@ program inference
       device_type = torch_kCUDA
    else if (trim(args(1)) == "xpu") then
       device_type = torch_kXPU
+   else if (trim(args(1)) == "mps") then
+      device_type = torch_kMPS
+      num_devices = 1
    else
       write (*,*) "Error :: invalid device type", trim(args(1))
       stop 999

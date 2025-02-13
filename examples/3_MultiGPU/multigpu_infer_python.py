@@ -36,8 +36,7 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         # XPU devices need to be initialised before use
         torch.xpu.init()
     elif device.startswith("mps"):
-        mps_error = "FTorch has not been tested with multiple MPS devices"
-        raise ValueError(mps_error)
+        pass
     else:
         device_error = f"Device '{device}' not recognised."
         raise ValueError(device_error)
@@ -67,7 +66,7 @@ if __name__ == "__main__":
         "--device_type",
         help="Device type to run the inference on",
         type=str,
-        choices=["cpu", "cuda", "xpu"],
+        choices=["cpu", "cuda", "xpu", "mps"],
         default="cuda",
     )
     parsed_args = parser.parse_args()
@@ -75,7 +74,8 @@ if __name__ == "__main__":
 
     saved_model_file = f"saved_multigpu_model_{device_type}.pt"
 
-    num_devices = 2
+    # Use 2 devices unless Mps for which there is only one
+    num_devices = 1 if device_type == "mps" else 2
 
     for device_index in range(num_devices):
         device_to_run = f"{device_type}:{device_index}"
