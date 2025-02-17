@@ -2883,23 +2883,31 @@ contains
   ! ============================================================================
 
   !> Performs back-propagation on a Torch Tensor, given some external gradient.
-  subroutine torch_tensor_backward(tensor, external_gradient)
-    type(torch_tensor), intent(inout) :: tensor
-    type(torch_tensor), intent(in) :: external_gradient
+  subroutine torch_tensor_backward(tensor)
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: external_gradient
 
     interface
       subroutine torch_tensor_backward_c(tensor_c, external_gradient_c) &
           bind(c, name = 'torch_tensor_backward')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
-        type(c_ptr), value, intent(inout) :: tensor_c
+        type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: external_gradient_c
       end subroutine torch_tensor_backward_c
     end interface
 
-    ! TODO: Make external_gradient optional, setting to ones by default
+    ! External gradient to provide to the back-propagation consisting of a tensor of ones
+    ! TODO: Accept other external gradients as an optional argument
+    call torch_tensor_ones(external_gradient, tensor%get_rank(), tensor%get_shape(), &
+                           tensor%get_dtype(), tensor%get_device_type(), &
+                           device_index=tensor%get_device_index())
 
+    ! Call back-propagation with the provided external gradient
     call torch_tensor_backward_c(tensor%p, external_gradient%p)
+
+    ! Delete the external gradient tensor
+    call torch_tensor_delete(external_gradient)
   end subroutine torch_tensor_backward
 
   !> Retreives the gradient of a Torch Tensor.

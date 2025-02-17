@@ -24,7 +24,7 @@ program example
   integer :: tensor_layout(1) = [1]
 
   ! Set up Torch data structures
-  type(torch_tensor) :: a, b, Q, external_gradient, dQda, dQdb
+  type(torch_tensor) :: a, b, Q, dQda, dQdb
 
   ! Initialise input arrays as in Python example
   in_data1(:) = [2.0_wp, 3.0_wp]
@@ -54,8 +54,7 @@ program example
 
   ! Back-propagation
   in_data3(:) = [1.0_wp, 1.0_wp]
-  call torch_tensor_from_array(external_gradient, in_data3, tensor_layout, torch_kCPU)
-  call torch_tensor_backward(Q, external_gradient)
+  call torch_tensor_backward(Q)
   dQda = a%grad()
   dQdb = b%grad()
 
@@ -90,7 +89,6 @@ program example
       call torch_tensor_delete(a)
       call torch_tensor_delete(b)
       call torch_tensor_delete(Q)
-      call torch_tensor_delete(external_gradient)
     end subroutine clean_up
 
 end program example
