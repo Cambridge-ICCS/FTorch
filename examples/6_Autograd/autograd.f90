@@ -5,7 +5,7 @@ program example
 
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only: assignment(=), operator(+), operator(-), operator(*), operator(/), &
-                    operator(**), get_gradient, torch_kCPU, torch_tensor, torch_tensor_backward, &
+                    operator(**), torch_kCPU, torch_tensor, torch_tensor_backward, &
                     torch_tensor_delete, torch_tensor_from_array, torch_tensor_to_array
 
   ! Import our tools module for testing utils
@@ -56,8 +56,8 @@ program example
   in_data3(:) = [1.0_wp, 1.0_wp]
   call torch_tensor_from_array(external_gradient, in_data3, tensor_layout, torch_kCPU)
   call torch_tensor_backward(Q, external_gradient)
-  dQda = get_gradient(a)
-  dQdb = get_gradient(b)
+  dQda = a%grad()
+  dQdb = b%grad()
 
   ! Extract Fortran arrays from the Torch tensors and check the gradients take expected values
   call torch_tensor_to_array(dQda, out_data2, shape(in_data1))

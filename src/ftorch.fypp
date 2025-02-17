@@ -53,6 +53,7 @@ module ftorch
     procedure :: get_dtype => torch_tensor_get_dtype
     procedure :: get_device_type => torch_tensor_get_device_type
     procedure :: get_device_index => torch_tensor_get_device_index
+    procedure :: grad => torch_tensor_get_gradient
   end type torch_tensor
 
   !| Enumerator for Torch data types
@@ -855,22 +856,22 @@ contains
   end subroutine torch_tensor_backward
 
   !> Retreives the gradient of a Torch Tensor.
-  function get_gradient(tensor) result(gradient)
-    type(torch_tensor), intent(in) :: tensor
+  function torch_tensor_get_gradient(tensor) result(gradient)
+    class(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: gradient
 
     interface
-      function get_gradient_c(tensor_c) result(gradient_c) &
-          bind(c, name = 'get_gradient')
+      function torch_tensor_get_gradient_c(tensor_c) result(gradient_c) &
+          bind(c, name = 'torch_tensor_get_gradient')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: gradient_c
-      end function get_gradient_c
+      end function torch_tensor_get_gradient_c
     end interface
 
-    gradient%p = get_gradient_c(tensor%p)
-  end function get_gradient
+    gradient%p = torch_tensor_get_gradient_c(tensor%p)
+  end function torch_tensor_get_gradient
 
   ! ============================================================================
   ! --- Torch Model API
