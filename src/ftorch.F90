@@ -2884,7 +2884,7 @@ contains
 
   !> Performs back-propagation on a Torch Tensor, given some external gradient.
   subroutine torch_tensor_backward(tensor, external_gradient)
-    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor), intent(inout) :: tensor
     type(torch_tensor), intent(in) :: external_gradient
 
     interface
@@ -2892,7 +2892,7 @@ contains
           bind(c, name = 'torch_tensor_backward')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr), value, intent(inout) :: tensor_c
         type(c_ptr), value, intent(in) :: external_gradient_c
       end subroutine torch_tensor_backward_c
     end interface
