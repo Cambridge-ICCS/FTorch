@@ -10,7 +10,7 @@ module test_tensor_operator_overloads
                     torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
                     torch_tensor_to_array
   use ftorch_test_utils, only: assert_allclose
-  use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
+  use, intrinsic :: iso_c_binding, only : c_int64_t
 
   implicit none
 
@@ -275,7 +275,6 @@ contains
                       torch_tensor_from_array, torch_tensor_to_array
     use ftorch_test_utils, only: assert_allclose
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
     implicit none
 
@@ -683,7 +682,6 @@ contains
   subroutine test_torch_tensor_sqrt(this)
     use ftorch, only: operator(**)
     use, intrinsic :: iso_fortran_env, only: sp => real32
-    use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
     implicit none
 
