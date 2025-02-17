@@ -725,7 +725,6 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads multiplication operator for a scalar of type ${PREC}$ and a tensor.
   function torch_tensor_premultiply_${PREC}$(scalar, tensor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     ${f_type(PREC)}$(${PREC}$), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
@@ -742,7 +741,6 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads multiplication operator for a tensor and a scalar of type ${PREC}$.
   function torch_tensor_postmultiply_${PREC}$(tensor, scalar) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
@@ -767,7 +765,6 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads division operator for a tensor and a scalar of type ${PREC}$.
   function torch_tensor_postdivide_${PREC}$(tensor, divisor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(${PREC}$), intent(in) :: divisor
