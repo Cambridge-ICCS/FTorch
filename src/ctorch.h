@@ -48,7 +48,7 @@ typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
 // =============================================================================
 
 /**
- * Function to generate an empty Torch Tensor
+ * Function to generate a Torch Scalar with value zero
  * @param data type of the Scalar
  * @return Torch Scalar zero
  */
