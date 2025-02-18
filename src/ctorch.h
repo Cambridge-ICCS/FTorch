@@ -44,6 +44,22 @@ typedef enum {
 typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
 
 // =============================================================================
+// --- Torch Scalar API
+// =============================================================================
+
+/**
+ * Function to generate an empty Torch Tensor
+ * @return Torch Scalar zero
+ */
+EXPORT_C torch_scalar_t torch_zero();
+
+/**
+ * Function to delete a Torch Scalar to clean up
+ * @param Torch Scalar to delete
+ */
+EXPORT_C void torch_scalar_delete(torch_scalar_t scalar);
+
+// =============================================================================
 // --- Functions for constructing tensors
 // =============================================================================
 
@@ -103,22 +119,6 @@ EXPORT_C torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *sha
                                         const int64_t *strides, torch_data_t dtype,
                                         torch_device_t device_type, int device_index,
                                         const bool requires_grad);
-
-// =============================================================================
-// --- Functions for constructing and deallocating scalars
-// =============================================================================
-
-/**
- * Function to generate an empty Torch Tensor
- * @return Torch Scalar zero
- */
-EXPORT_C torch_scalar_t torch_zero();
-
-/**
- * Function to delete a Torch Scalar to clean up
- * @param Torch Scalar to delete
- */
-EXPORT_C void torch_scalar_delete(torch_scalar_t scalar);
 
 // =============================================================================
 // --- Functions for interrogating tensors
