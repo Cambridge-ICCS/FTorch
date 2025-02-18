@@ -15,6 +15,9 @@ add_pfunit_ctest(test_tensor_interrogation
 add_pfunit_ctest(test_operator_overloads
   TEST_SOURCES test_tensor_operator_overloads.pf LINK_LIBRARIES FTorch::ftorch)
 
+add_pfunit_ctest(test_scalar_constructors
+  TEST_SOURCES test_scalar_constructors.pf LINK_LIBRARIES FTorch::ftorch)
+
 if(ENABLE_CUDA)
   check_language(CUDA)
   if(CMAKE_CUDA_COMPILER)

@@ -1,0 +1,54 @@
+!| Unit tests for FTorch subroutines that construct scalars.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module test_scalar_constructors
+  use funit
+  use ftorch
+  use ftorch_test_utils, only: assert_isclose
+  use iso_c_binding, only: c_associated, c_int64_t
+
+  implicit none
+
+  public
+
+contains
+
+  ! Unit test for the torch_scalar_zero subroutine
+  @test
+  subroutine test_torch_scalar_zero()
+    use ftorch, only: torch_scalar_zero
+    use, intrinsic :: iso_fortran_env, only: sp => real32
+
+    implicit none
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    type(torch_scalar) :: scalar
+
+    ! Check the scalar pointer is not associated
+    @assertFalse(c_associated(scalar%p))
+
+    ! Create a scalar of zeros
+    call torch_scalar_zero(scalar)
+
+    ! Check the scalar pointer is associated
+    @assertTrue(c_associated(scalar%p))
+
+    ! TODO: check values
+
+    call clean_up()
+
+    contains
+
+      ! Subroutine for freeing memory and nullifying pointers used in the unit test
+      subroutine clean_up()
+        call torch_scalar_delete(scalar)
+      end subroutine clean_up
+
+  end subroutine test_torch_scalar_zero
+
+end module test_scalar_constructors

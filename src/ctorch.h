@@ -19,6 +19,9 @@ typedef void *torch_jit_script_module_t;
 // Opaque pointer type alias for at::Tensor
 typedef void *torch_tensor_t;
 
+// Opaque pointer type alias for at::Scalar
+typedef void *torch_scalar_t;
+
 // Opaque pointer type alias for integer scalars
 typedef void *torch_int_t;
 
@@ -100,6 +103,22 @@ EXPORT_C torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *sha
                                         const int64_t *strides, torch_data_t dtype,
                                         torch_device_t device_type, int device_index,
                                         const bool requires_grad);
+
+// =============================================================================
+// --- Functions for constructing and deallocating scalars
+// =============================================================================
+
+/**
+ * Function to generate an empty Torch Tensor
+ * @return Torch Scalar zero
+ */
+EXPORT_C torch_scalar_t torch_zero();
+
+/**
+ * Function to delete a Torch Scalar to clean up
+ * @param Torch Scalar to delete
+ */
+EXPORT_C void torch_scalar_delete(torch_scalar_t scalar);
 
 // =============================================================================
 // --- Functions for interrogating tensors

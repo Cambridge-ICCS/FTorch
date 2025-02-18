@@ -111,6 +111,26 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
 }
 
 // =============================================================================
+// --- Torch Scalar API
+// =============================================================================
+
+/**
+ * Function to generate an empty Torch Tensor
+ * @return Torch Scalar zero
+ */
+torch_scalar_t torch_zero() {
+  torch::Scalar *zero = nullptr;
+  zero = new torch::Scalar;
+  *zero = torch::Scalar(0.0);
+  return zero;
+}
+
+void torch_scalar_delete(torch_scalar_t scalar) {
+  auto s = reinterpret_cast<torch::Scalar *>(scalar);
+  delete s;
+}
+
+// =============================================================================
 // --- Functions for constructing tensors
 // =============================================================================
 

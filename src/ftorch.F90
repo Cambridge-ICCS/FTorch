@@ -36,6 +36,11 @@ module ftorch
     procedure :: get_device_index => torch_tensor_get_device_index
   end type torch_tensor
 
+  !> Type for holding a Torch scalar.
+  type torch_scalar
+    type(c_ptr) :: p = c_null_ptr  !! pointer to the scalar in memory
+  end type torch_scalar
+
   !| Enumerator for Torch data types
   !  From c_torch.h (torch_data_t)
   !  Note that 0 `torch_kUInt8` and 5 `torch_kFloat16` are not sypported in Fortran
@@ -246,6 +251,41 @@ module ftorch
   end interface
 
 contains
+
+  ! ============================================================================
+  ! --- Torch Scalar API
+  ! ============================================================================
+
+  !> Returns a tensor with uninitialised values.
+  subroutine torch_scalar_zero(scalar)
+    type(torch_scalar), intent(out) :: scalar  !! Returned scalar
+
+    interface
+      function torch_zero_c() result(scalar) bind(c, name = 'torch_zero')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr) :: scalar
+      end function torch_zero_c
+    end interface
+
+    scalar%p = torch_zero_c()
+  end subroutine torch_scalar_zero
+
+  !> Deallocates a scalar.
+  subroutine torch_scalar_delete(scalar)
+    type(torch_scalar), intent(inout) :: scalar
+
+    interface
+      subroutine torch_scalar_delete_c(scalar) &
+          bind(c, name = 'torch_scalar_delete')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: scalar
+      end subroutine torch_scalar_delete_c
+    end interface
+
+    call torch_scalar_delete_c(scalar%p)
+  end subroutine torch_scalar_delete
 
   ! ============================================================================
   ! --- Procedures for constructing tensors
