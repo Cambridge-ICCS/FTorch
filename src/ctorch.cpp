@@ -125,6 +125,14 @@ torch_scalar_t torch_zero() {
   return zero;
 }
 
+void *torch_scalar_to_blob(const torch_scalar_t scalar, const torch_data_t dtype) {
+  auto s = reinterpret_cast<torch::Scalar *const>(scalar);
+  void *raw_ptr;
+  // TODO: Type checking
+  raw_ptr = (void *)s->data_ptr();
+  return raw_ptr;
+}
+
 void torch_scalar_delete(torch_scalar_t scalar) {
   auto s = reinterpret_cast<torch::Scalar *>(scalar);
   delete s;

@@ -28,6 +28,7 @@ contains
     integer, parameter :: wp = sp
 
     type(torch_scalar) :: scalar
+    real(wp), pointer  :: val
 
     ! Check the scalar pointer is not associated
     @assertFalse(c_associated(scalar%p))
@@ -38,7 +39,12 @@ contains
     ! Check the scalar pointer is associated
     @assertTrue(c_associated(scalar%p))
 
-    ! TODO: check values
+    ! Check the scalar contains the expected value
+    call torch_scalar_to_real32(scalar, val)
+    if (.not. assert_isclose(val, 0.0, "torch_scalar_zero")) then
+      call clean_up()
+      stop 999
+    end if
 
     call clean_up()
 
@@ -46,6 +52,7 @@ contains
 
       ! Subroutine for freeing memory and nullifying pointers used in the unit test
       subroutine clean_up()
+        nullify(val)
         call torch_scalar_delete(scalar)
       end subroutine clean_up
 

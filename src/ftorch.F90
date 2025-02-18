@@ -271,6 +271,175 @@ contains
     scalar%p = torch_zero_c()
   end subroutine torch_scalar_zero
 
+  !> Return the data associated with a Torch Scalar with data type `int8`
+  subroutine torch_scalar_to_int8(scalar, data_out)
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
+    use, intrinsic :: iso_fortran_env, only : int8
+    type(torch_scalar), intent(in) :: scalar  !! Returned tensor
+    integer(kind=int8), pointer, intent(out) :: data_out  !! Pointer to scalar data
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
+    type(c_ptr) :: cptr
+
+    interface
+      function torch_scalar_to_blob_c(scalar, dtype) result(data) &
+          bind(c, name = 'torch_scalar_to_blob')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in)    :: scalar
+        integer(c_int), value, intent(in) :: dtype
+        type(c_ptr)                       :: data
+      end function torch_scalar_to_blob_c
+    end interface
+
+    ! Have the data_out array point to the Scalar data
+    cptr = torch_scalar_to_blob_c(scalar%p, dtype)
+    call c_f_pointer(cptr, data_out)
+
+  end subroutine torch_scalar_to_int8
+
+  !> Return the data associated with a Torch Scalar with data type `int16`
+  subroutine torch_scalar_to_int16(scalar, data_out)
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
+    use, intrinsic :: iso_fortran_env, only : int16
+    type(torch_scalar), intent(in) :: scalar  !! Returned tensor
+    integer(kind=int16), pointer, intent(out) :: data_out  !! Pointer to scalar data
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
+    type(c_ptr) :: cptr
+
+    interface
+      function torch_scalar_to_blob_c(scalar, dtype) result(data) &
+          bind(c, name = 'torch_scalar_to_blob')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in)    :: scalar
+        integer(c_int), value, intent(in) :: dtype
+        type(c_ptr)                       :: data
+      end function torch_scalar_to_blob_c
+    end interface
+
+    ! Have the data_out array point to the Scalar data
+    cptr = torch_scalar_to_blob_c(scalar%p, dtype)
+    call c_f_pointer(cptr, data_out)
+
+  end subroutine torch_scalar_to_int16
+
+  !> Return the data associated with a Torch Scalar with data type `int32`
+  subroutine torch_scalar_to_int32(scalar, data_out)
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
+    use, intrinsic :: iso_fortran_env, only : int32
+    type(torch_scalar), intent(in) :: scalar  !! Returned tensor
+    integer(kind=int32), pointer, intent(out) :: data_out  !! Pointer to scalar data
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
+    type(c_ptr) :: cptr
+
+    interface
+      function torch_scalar_to_blob_c(scalar, dtype) result(data) &
+          bind(c, name = 'torch_scalar_to_blob')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in)    :: scalar
+        integer(c_int), value, intent(in) :: dtype
+        type(c_ptr)                       :: data
+      end function torch_scalar_to_blob_c
+    end interface
+
+    ! Have the data_out array point to the Scalar data
+    cptr = torch_scalar_to_blob_c(scalar%p, dtype)
+    call c_f_pointer(cptr, data_out)
+
+  end subroutine torch_scalar_to_int32
+
+  !> Return the data associated with a Torch Scalar with data type `int64`
+  subroutine torch_scalar_to_int64(scalar, data_out)
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
+    use, intrinsic :: iso_fortran_env, only : int64
+    type(torch_scalar), intent(in) :: scalar  !! Returned tensor
+    integer(kind=int64), pointer, intent(out) :: data_out  !! Pointer to scalar data
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
+    type(c_ptr) :: cptr
+
+    interface
+      function torch_scalar_to_blob_c(scalar, dtype) result(data) &
+          bind(c, name = 'torch_scalar_to_blob')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in)    :: scalar
+        integer(c_int), value, intent(in) :: dtype
+        type(c_ptr)                       :: data
+      end function torch_scalar_to_blob_c
+    end interface
+
+    ! Have the data_out array point to the Scalar data
+    cptr = torch_scalar_to_blob_c(scalar%p, dtype)
+    call c_f_pointer(cptr, data_out)
+
+  end subroutine torch_scalar_to_int64
+
+  !> Return the data associated with a Torch Scalar with data type `real32`
+  subroutine torch_scalar_to_real32(scalar, data_out)
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
+    use, intrinsic :: iso_fortran_env, only : real32
+    type(torch_scalar), intent(in) :: scalar  !! Returned tensor
+    real(kind=real32), pointer, intent(out) :: data_out  !! Pointer to scalar data
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
+    type(c_ptr) :: cptr
+
+    interface
+      function torch_scalar_to_blob_c(scalar, dtype) result(data) &
+          bind(c, name = 'torch_scalar_to_blob')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in)    :: scalar
+        integer(c_int), value, intent(in) :: dtype
+        type(c_ptr)                       :: data
+      end function torch_scalar_to_blob_c
+    end interface
+
+    ! Have the data_out array point to the Scalar data
+    cptr = torch_scalar_to_blob_c(scalar%p, dtype)
+    call c_f_pointer(cptr, data_out)
+
+  end subroutine torch_scalar_to_real32
+
+  !> Return the data associated with a Torch Scalar with data type `real64`
+  subroutine torch_scalar_to_real64(scalar, data_out)
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_scalar), intent(in) :: scalar  !! Returned tensor
+    real(kind=real64), pointer, intent(out) :: data_out  !! Pointer to scalar data
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
+    type(c_ptr) :: cptr
+
+    interface
+      function torch_scalar_to_blob_c(scalar, dtype) result(data) &
+          bind(c, name = 'torch_scalar_to_blob')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in)    :: scalar
+        integer(c_int), value, intent(in) :: dtype
+        type(c_ptr)                       :: data
+      end function torch_scalar_to_blob_c
+    end interface
+
+    ! Have the data_out array point to the Scalar data
+    cptr = torch_scalar_to_blob_c(scalar%p, dtype)
+    call c_f_pointer(cptr, data_out)
+
+  end subroutine torch_scalar_to_real64
+
+
   !> Deallocates a scalar.
   subroutine torch_scalar_delete(scalar)
     type(torch_scalar), intent(inout) :: scalar

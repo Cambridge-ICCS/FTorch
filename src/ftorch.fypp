@@ -226,6 +226,37 @@ contains
     scalar%p = torch_zero_c()
   end subroutine torch_scalar_zero
 
+  #:for PREC in PRECISIONS
+  !> Return the data associated with a Torch Scalar with data type `${PREC}$`
+  subroutine torch_scalar_to_${PREC}$(scalar, data_out)
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
+    type(torch_scalar), intent(in) :: scalar  !! Returned tensor
+    ${f_type(PREC)}$(kind=${PREC}$), pointer, intent(out) :: data_out  !! Pointer to scalar data
+
+    ! Local data
+    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
+    type(c_ptr) :: cptr
+
+    interface
+      function torch_scalar_to_blob_c(scalar, dtype) result(data) &
+          bind(c, name = 'torch_scalar_to_blob')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in)    :: scalar
+        integer(c_int), value, intent(in) :: dtype
+        type(c_ptr)                       :: data
+      end function torch_scalar_to_blob_c
+    end interface
+
+    ! Have the data_out array point to the Scalar data
+    cptr = torch_scalar_to_blob_c(scalar%p, dtype)
+    call c_f_pointer(cptr, data_out)
+
+  end subroutine torch_scalar_to_${PREC}$
+
+  #:endfor
+
   !> Deallocates a scalar.
   subroutine torch_scalar_delete(scalar)
     type(torch_scalar), intent(inout) :: scalar
