@@ -219,12 +219,16 @@ These steps are described in more detail in the
 
 ## GPU Support
 
-To run on GPU requires a CUDA-compatible installation of LibTorch and two main
-adaptations to the code:
+To run on GPU requires an installation of LibTorch compatible for the GPU device
+you wish to target and two main adaptations to the code:
 
-1. When saving a TorchScript model, ensure that it is on the GPU
+1. When saving a TorchScript model, ensure that it is on the appropriate GPU
+   device type. The `pt2ts.py` script has a command line argument
+   `--device_type`, which currently accepts four different device types: `cpu`
+   (default), `cuda`, `xpu`, or `mps`.
 2. When using FTorch in Fortran, set the device for the input
-   tensor(s) to `torch_kCUDA`, rather than `torch_kCPU`.
+   tensor(s) to the appropriate GPU device type, rather than `torch_kCPU`. There
+   are currently three options: `torch_kCUDA`, `torch_kXPU`, or `torch_kMPS`.
 
 For detailed guidance about running on GPU, including instructions for using multiple
 devices, please see the
