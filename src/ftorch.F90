@@ -66,6 +66,16 @@ module ftorch
   ! --- Interfaces for core FTorch procedures
   ! ============================================================================
 
+  !> Interface for directing `torch_scalar_from_value` to possible input types
+  interface torch_scalar_from_value
+    module procedure torch_scalar_from_value_int8
+    module procedure torch_scalar_from_value_int16
+    module procedure torch_scalar_from_value_int32
+    module procedure torch_scalar_from_value_int64
+    module procedure torch_scalar_from_value_real32
+    module procedure torch_scalar_from_value_real64
+  end interface
+
   !> Interface for directing `torch_scalar_get_data` to possible input types
   interface torch_scalar_get_data
     module procedure torch_scalar_get_data_int8
@@ -266,24 +276,143 @@ contains
   ! --- Torch Scalar API
   ! ============================================================================
 
-  !> Returns a tensor with uninitialised values.
-  subroutine torch_scalar_zero(scalar, dtype)
-    use, intrinsic :: iso_c_binding, only : c_int
-    use, intrinsic :: iso_fortran_env, only : real64
+  !> Returns a scalar with a given value with data type `int8`
+  subroutine torch_scalar_from_value_int8(scalar, val)
+    use, intrinsic :: iso_c_binding, only : c_int8_t, c_int
     type(torch_scalar), intent(out) :: scalar  !! Returned scalar
-    integer(c_int), intent(in) :: dtype  !! Data type
+    integer(c_int8_t), intent(in) :: val  !! Scalar value
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
 
     interface
-      function torch_zero_c(dtype) result(scalar) bind(c, name = 'torch_zero')
-        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+      function torch_scalar_int_c(val, dtype) result(scalar) bind(c, name = 'torch_scalar_int')
+        use, intrinsic :: iso_c_binding, only : c_int8_t, c_int, c_ptr
         implicit none
         type(c_ptr) :: scalar
+        integer(c_int8_t), value, intent(in) :: val
         integer(c_int), value, intent(in) :: dtype
-      end function torch_zero_c
+      end function torch_scalar_int_c
     end interface
 
-    scalar%p = torch_zero_c(dtype)
-  end subroutine torch_scalar_zero
+    scalar%p = torch_scalar_int_c(val, dtype)
+  end subroutine torch_scalar_from_value_int8
+
+  !> Returns a scalar with a given value with data type `int16`
+  subroutine torch_scalar_from_value_int16(scalar, val)
+    use, intrinsic :: iso_c_binding, only : c_int16_t, c_int
+    type(torch_scalar), intent(out) :: scalar  !! Returned scalar
+    integer(c_int16_t), intent(in) :: val  !! Scalar value
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
+
+    interface
+      function torch_scalar_int_c(val, dtype) result(scalar) bind(c, name = 'torch_scalar_int')
+        use, intrinsic :: iso_c_binding, only : c_int16_t, c_int, c_ptr
+        implicit none
+        type(c_ptr) :: scalar
+        integer(c_int16_t), value, intent(in) :: val
+        integer(c_int), value, intent(in) :: dtype
+      end function torch_scalar_int_c
+    end interface
+
+    scalar%p = torch_scalar_int_c(val, dtype)
+  end subroutine torch_scalar_from_value_int16
+
+  !> Returns a scalar with a given value with data type `int32`
+  subroutine torch_scalar_from_value_int32(scalar, val)
+    use, intrinsic :: iso_c_binding, only : c_int32_t, c_int
+    type(torch_scalar), intent(out) :: scalar  !! Returned scalar
+    integer(c_int32_t), intent(in) :: val  !! Scalar value
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
+
+    interface
+      function torch_scalar_int_c(val, dtype) result(scalar) bind(c, name = 'torch_scalar_int')
+        use, intrinsic :: iso_c_binding, only : c_int32_t, c_int, c_ptr
+        implicit none
+        type(c_ptr) :: scalar
+        integer(c_int32_t), value, intent(in) :: val
+        integer(c_int), value, intent(in) :: dtype
+      end function torch_scalar_int_c
+    end interface
+
+    scalar%p = torch_scalar_int_c(val, dtype)
+  end subroutine torch_scalar_from_value_int32
+
+  !> Returns a scalar with a given value with data type `int64`
+  subroutine torch_scalar_from_value_int64(scalar, val)
+    use, intrinsic :: iso_c_binding, only : c_int64_t, c_int
+    type(torch_scalar), intent(out) :: scalar  !! Returned scalar
+    integer(c_int64_t), intent(in) :: val  !! Scalar value
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
+
+    interface
+      function torch_scalar_int_c(val, dtype) result(scalar) bind(c, name = 'torch_scalar_int')
+        use, intrinsic :: iso_c_binding, only : c_int64_t, c_int, c_ptr
+        implicit none
+        type(c_ptr) :: scalar
+        integer(c_int64_t), value, intent(in) :: val
+        integer(c_int), value, intent(in) :: dtype
+      end function torch_scalar_int_c
+    end interface
+
+    scalar%p = torch_scalar_int_c(val, dtype)
+  end subroutine torch_scalar_from_value_int64
+
+
+  !> Returns a scalar with a given value with data type `real32`
+  subroutine torch_scalar_from_value_real32(scalar, val)
+    use, intrinsic :: iso_c_binding, only : c_float, c_int
+    type(torch_scalar), intent(out) :: scalar  !! Returned scalar
+    real(c_float), target, intent(in) :: val  !! Scalar value
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
+
+    interface
+      function torch_scalar_float_c(val, dtype) result(scalar) bind(c, name = 'torch_scalar_float')
+        use, intrinsic :: iso_c_binding, only : c_float, c_int, c_ptr
+        implicit none
+        type(c_ptr) :: scalar
+        real(c_float), value, intent(in) :: val
+        integer(c_int), value, intent(in) :: dtype
+      end function torch_scalar_float_c
+    end interface
+
+    print *, "DEBUG val=", val
+    print *, "DEBUG dtype=", dtype
+    scalar%p = torch_scalar_float_c(val, dtype)
+  end subroutine torch_scalar_from_value_real32
+
+  !> Returns a scalar with a given value with data type `real64`
+  subroutine torch_scalar_from_value_real64(scalar, val)
+    use, intrinsic :: iso_c_binding, only : c_double, c_int
+    type(torch_scalar), intent(out) :: scalar  !! Returned scalar
+    real(c_double), target, intent(in) :: val  !! Scalar value
+
+    ! Local data
+    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
+
+    interface
+      function torch_scalar_float_c(val, dtype) result(scalar) bind(c, name = 'torch_scalar_float')
+        use, intrinsic :: iso_c_binding, only : c_double, c_int, c_ptr
+        implicit none
+        type(c_ptr) :: scalar
+        real(c_double), value, intent(in) :: val
+        integer(c_int), value, intent(in) :: dtype
+      end function torch_scalar_float_c
+    end interface
+
+    print *, "DEBUG val=", val
+    print *, "DEBUG dtype=", dtype
+    scalar%p = torch_scalar_float_c(val, dtype)
+  end subroutine torch_scalar_from_value_real64
+
 
   !> Return the data associated with a Torch Scalar with data type `int8`
   subroutine torch_scalar_get_data_int8(scalar, data_out)

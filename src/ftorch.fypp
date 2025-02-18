@@ -85,6 +85,13 @@ module ftorch
   ! --- Interfaces for core FTorch procedures
   ! ============================================================================
 
+  !> Interface for directing `torch_scalar_from_value` to possible input types
+  interface torch_scalar_from_value
+    #:for PREC in PRECISIONS
+    module procedure torch_scalar_from_value_${PREC}$
+    #:endfor
+  end interface
+
   !> Interface for directing `torch_scalar_get_data` to possible input types
   interface torch_scalar_get_data
     #:for PREC in PRECISIONS
@@ -218,24 +225,57 @@ contains
   ! --- Torch Scalar API
   ! ============================================================================
 
-  !> Returns a tensor with uninitialised values.
-  subroutine torch_scalar_zero(scalar, dtype)
-    use, intrinsic :: iso_c_binding, only : c_int
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
+  #:for PREC in INT_PRECISIONS
+  !> Returns a scalar with a given value with data type `${PREC}$`
+  subroutine torch_scalar_from_value_${PREC}$(scalar, val)
+    use, intrinsic :: iso_c_binding, only : ${c_prec(PREC)}$, c_int
     type(torch_scalar), intent(out) :: scalar  !! Returned scalar
-    integer(c_int), intent(in) :: dtype  !! Data type
+    integer(${c_prec(PREC)}$), intent(in) :: val  !! Scalar value
+
+    ! Local data
+    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
 
     interface
-      function torch_zero_c(dtype) result(scalar) bind(c, name = 'torch_zero')
-        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+      function torch_scalar_int_c(val, dtype) result(scalar) bind(c, name = 'torch_scalar_int')
+        use, intrinsic :: iso_c_binding, only : ${c_prec(PREC)}$, c_int, c_ptr
         implicit none
         type(c_ptr) :: scalar
+        integer(${c_prec(PREC)}$), value, intent(in) :: val
         integer(c_int), value, intent(in) :: dtype
-      end function torch_zero_c
+      end function torch_scalar_int_c
     end interface
 
-    scalar%p = torch_zero_c(dtype)
-  end subroutine torch_scalar_zero
+    scalar%p = torch_scalar_int_c(val, dtype)
+  end subroutine torch_scalar_from_value_${PREC}$
+
+  #:endfor
+
+  #:for PREC in FLOAT_PRECISIONS
+  !> Returns a scalar with a given value with data type `${PREC}$`
+  subroutine torch_scalar_from_value_${PREC}$(scalar, val)
+    use, intrinsic :: iso_c_binding, only : ${c_prec(PREC)}$, c_int
+    type(torch_scalar), intent(out) :: scalar  !! Returned scalar
+    real(${c_prec(PREC)}$), target, intent(in) :: val  !! Scalar value
+
+    ! Local data
+    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
+
+    interface
+      function torch_scalar_float_c(val, dtype) result(scalar) bind(c, name = 'torch_scalar_float')
+        use, intrinsic :: iso_c_binding, only : ${c_prec(PREC)}$, c_int, c_ptr
+        implicit none
+        type(c_ptr) :: scalar
+        real(${c_prec(PREC)}$), value, intent(in) :: val
+        integer(c_int), value, intent(in) :: dtype
+      end function torch_scalar_float_c
+    end interface
+
+    print *, "DEBUG val=", val
+    print *, "DEBUG dtype=", dtype
+    scalar%p = torch_scalar_float_c(val, dtype)
+  end subroutine torch_scalar_from_value_${PREC}$
+
+  #:endfor
 
   #:for PREC in PRECISIONS
   !> Return the data associated with a Torch Scalar with data type `${PREC}$`

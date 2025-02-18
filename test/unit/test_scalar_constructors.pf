@@ -6,7 +6,7 @@
 !    file for details.
 module test_scalar_constructors
   use funit
-  use ftorch, only: torch_kFloat32, torch_scalar, torch_scalar_delete, torch_scalar_get_data
+  use ftorch, only: torch_scalar, torch_scalar_delete, torch_scalar_get_data
   use ftorch_test_utils, only: assert_isclose
   use iso_c_binding, only: c_associated
 
@@ -16,10 +16,10 @@ module test_scalar_constructors
 
 contains
 
-  ! Unit test for the torch_scalar_zero subroutine
+  ! Unit test for the torch_scalar_from_value subroutine
   @test
-  subroutine test_torch_scalar_zero()
-    use ftorch, only: torch_scalar_zero
+  subroutine test_torch_scalar_from_value()
+    use ftorch, only: torch_scalar_from_value
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
@@ -27,22 +27,26 @@ contains
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
-    integer, parameter :: dtype = torch_kFloat32
     type(torch_scalar) :: scalar
-    real(wp), pointer  :: val
+    real(wp), target   :: input_value
+    real(wp), pointer  :: output_value
+
+    input_value = 0.0
 
     ! Check the scalar pointer is not associated
     @assertFalse(c_associated(scalar%p))
 
-    ! Create a scalar of zeros
-    call torch_scalar_zero(scalar, dtype)
+    ! Create a scalar with the provided value
+    print *, "DEBUG: input=", input_value
+    call torch_scalar_from_value(scalar, input_value)
 
     ! Check the scalar pointer is associated
     @assertTrue(c_associated(scalar%p))
 
     ! Check the scalar contains the expected value
-    call torch_scalar_get_data(scalar, val)
-    if (.not. assert_isclose(val, 0.0, "torch_scalar_zero")) then
+    call torch_scalar_get_data(scalar, output_value)
+    print *, "DEBUG: output=", output_value
+    if (.not. assert_isclose(output_value, input_value, "torch_scalar_from_value")) then
       call clean_up()
       stop 999
     end if
@@ -53,10 +57,10 @@ contains
 
       ! Subroutine for freeing memory and nullifying pointers used in the unit test
       subroutine clean_up()
-        nullify(val)
+        nullify(output_value)
         call torch_scalar_delete(scalar)
       end subroutine clean_up
 
-  end subroutine test_torch_scalar_zero
+  end subroutine test_torch_scalar_from_value
 
 end module test_scalar_constructors
