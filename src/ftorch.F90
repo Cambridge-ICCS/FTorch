@@ -66,6 +66,16 @@ module ftorch
   ! --- Interfaces for core FTorch procedures
   ! ============================================================================
 
+  !> Interface for directing `torch_scalar_get_data` to possible input types
+  interface torch_scalar_get_data
+    module procedure torch_scalar_get_data_int8
+    module procedure torch_scalar_get_data_int16
+    module procedure torch_scalar_get_data_int32
+    module procedure torch_scalar_get_data_int64
+    module procedure torch_scalar_get_data_real32
+    module procedure torch_scalar_get_data_real64
+  end interface
+
   !> Interface for directing `torch_tensor_from_array` to possible input types and ranks
   interface torch_tensor_from_array
     module procedure torch_tensor_from_array_int8_1d
@@ -276,7 +286,7 @@ contains
   end subroutine torch_scalar_zero
 
   !> Return the data associated with a Torch Scalar with data type `int8`
-  subroutine torch_scalar_to_int8(scalar, data_out)
+  subroutine torch_scalar_get_data_int8(scalar, data_out)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
     type(torch_scalar), intent(in) :: scalar  !! Returned tensor
@@ -301,10 +311,10 @@ contains
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
 
-  end subroutine torch_scalar_to_int8
+  end subroutine torch_scalar_get_data_int8
 
   !> Return the data associated with a Torch Scalar with data type `int16`
-  subroutine torch_scalar_to_int16(scalar, data_out)
+  subroutine torch_scalar_get_data_int16(scalar, data_out)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
     type(torch_scalar), intent(in) :: scalar  !! Returned tensor
@@ -329,10 +339,10 @@ contains
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
 
-  end subroutine torch_scalar_to_int16
+  end subroutine torch_scalar_get_data_int16
 
   !> Return the data associated with a Torch Scalar with data type `int32`
-  subroutine torch_scalar_to_int32(scalar, data_out)
+  subroutine torch_scalar_get_data_int32(scalar, data_out)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
     type(torch_scalar), intent(in) :: scalar  !! Returned tensor
@@ -357,10 +367,10 @@ contains
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
 
-  end subroutine torch_scalar_to_int32
+  end subroutine torch_scalar_get_data_int32
 
   !> Return the data associated with a Torch Scalar with data type `int64`
-  subroutine torch_scalar_to_int64(scalar, data_out)
+  subroutine torch_scalar_get_data_int64(scalar, data_out)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
     type(torch_scalar), intent(in) :: scalar  !! Returned tensor
@@ -385,10 +395,10 @@ contains
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
 
-  end subroutine torch_scalar_to_int64
+  end subroutine torch_scalar_get_data_int64
 
   !> Return the data associated with a Torch Scalar with data type `real32`
-  subroutine torch_scalar_to_real32(scalar, data_out)
+  subroutine torch_scalar_get_data_real32(scalar, data_out)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
     type(torch_scalar), intent(in) :: scalar  !! Returned tensor
@@ -413,10 +423,10 @@ contains
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
 
-  end subroutine torch_scalar_to_real32
+  end subroutine torch_scalar_get_data_real32
 
   !> Return the data associated with a Torch Scalar with data type `real64`
-  subroutine torch_scalar_to_real64(scalar, data_out)
+  subroutine torch_scalar_get_data_real64(scalar, data_out)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
     type(torch_scalar), intent(in) :: scalar  !! Returned tensor
@@ -441,7 +451,7 @@ contains
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
 
-  end subroutine torch_scalar_to_real64
+  end subroutine torch_scalar_get_data_real64
 
 
   !> Deallocates a scalar.

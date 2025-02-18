@@ -85,6 +85,13 @@ module ftorch
   ! --- Interfaces for core FTorch procedures
   ! ============================================================================
 
+  !> Interface for directing `torch_scalar_get_data` to possible input types
+  interface torch_scalar_get_data
+    #:for PREC in PRECISIONS
+    module procedure torch_scalar_get_data_${PREC}$
+    #:endfor
+  end interface
+
   !> Interface for directing `torch_tensor_from_array` to possible input types and ranks
   interface torch_tensor_from_array
     #:for PREC in PRECISIONS
@@ -232,7 +239,7 @@ contains
 
   #:for PREC in PRECISIONS
   !> Return the data associated with a Torch Scalar with data type `${PREC}$`
-  subroutine torch_scalar_to_${PREC}$(scalar, data_out)
+  subroutine torch_scalar_get_data_${PREC}$(scalar, data_out)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_scalar), intent(in) :: scalar  !! Returned tensor
@@ -257,7 +264,7 @@ contains
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
 
-  end subroutine torch_scalar_to_${PREC}$
+  end subroutine torch_scalar_get_data_${PREC}$
 
   #:endfor
 
