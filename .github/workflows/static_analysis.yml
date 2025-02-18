@@ -113,7 +113,7 @@ jobs:
           style: 'file'
           tidy-checks: ''
           # Use the compile_commands.json from CMake to locate headers
-          database: ${{ github.workspace }}/src/build
+          database: ${{ github.workspace }}/build
           # only 'update' a single comment in a pull request thread.
           thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
       - name: Fail fast?!
