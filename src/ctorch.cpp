@@ -122,9 +122,12 @@ torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::empty(vshape, torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::empty(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -145,9 +148,12 @@ torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::zeros(vshape, torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::zeros(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -168,9 +174,12 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::ones(vshape, torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::ones(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -196,10 +205,12 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
     c10::IntArrayRef vstrides(strides, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::from_blob(data, vshape, vstrides,
-                               torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::from_blob(data, vshape, vstrides, options);
 
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
@@ -310,7 +321,7 @@ torch_tensor_t torch_tensor_assign(const torch_tensor_t input) {
   torch::AutoGradMode enable_grad(in->requires_grad());
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
-  *output = in->detach().clone();
+  *output = *in;
   return output;
 }
 
@@ -381,6 +392,25 @@ torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
   *output = pow(*t, *exp);
+  return output;
+}
+
+// =============================================================================
+// --- Functions related to automatic differentiation functionality for tensors
+// =============================================================================
+
+void torch_tensor_backward(const torch_tensor_t tensor,
+                           const torch_tensor_t external_gradient) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  auto g = reinterpret_cast<torch::Tensor *const>(external_gradient);
+  t->backward(*g);
+}
+
+EXPORT_C torch_tensor_t torch_tensor_get_gradient(const torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  torch::Tensor *output = nullptr;
+  output = new torch::Tensor;
+  *output = t->grad();
   return output;
 }
 
