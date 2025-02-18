@@ -117,18 +117,20 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
 torch_scalar_t torch_scalar_float(const torch_float_t val, const torch_data_t dtype) {
   torch::Scalar *scalar = nullptr;
   scalar = new torch::Scalar;
-  std::cout << "DEBUG: HERE FLOAT" << std::endl;
   std::cout << "DEBUG: dtype=" << dtype << std::endl;
-  *scalar = torch::Scalar(reinterpret_cast<float *const>(val));
-  // switch (dtype) {
-  // case torch_kFloat32:
-  //   *scalar = torch::Scalar(reinterpret_cast<float *const>(val));
-  // case torch_kFloat64:
-  //   *scalar = torch::Scalar(reinterpret_cast<double *const>(val));
-  // default:
-  //   std::cerr << "[ERROR]: unknown data type" << std::endl;
-  //   exit(EXIT_FAILURE);
-  // }
+  switch (dtype) {
+  case torch_kFloat32:
+    auto myval = reinterpret_cast<float *const>(val);
+    std::cout << "DEBUG: val=" << myval << std::endl;
+    *scalar = torch::Scalar(*myval);
+    break;
+  case torch_kFloat64:
+    *scalar = torch::Scalar(reinterpret_cast<double *const>(val));
+    break;
+  default:
+    std::cerr << "[ERROR]: unknown data type" << std::endl;
+    exit(EXIT_FAILURE);
+  }
   return scalar;
 }
 
@@ -142,12 +144,16 @@ torch_scalar_t torch_scalar_int(const torch_int_t val, const torch_data_t dtype)
     exit(EXIT_FAILURE);
   case torch_kInt8:
     *scalar = torch::Scalar(reinterpret_cast<int8_t *const>(val));
+    break;
   case torch_kInt16:
     *scalar = torch::Scalar(reinterpret_cast<int16_t *const>(val));
+    break;
   case torch_kInt32:
     *scalar = torch::Scalar(reinterpret_cast<int32_t *const>(val));
+    break;
   case torch_kInt64:
     *scalar = torch::Scalar(reinterpret_cast<int64_t *const>(val));
+    break;
   case torch_kFloat16:
     std::cerr << "[ERROR]: float16 not supported in Fortran" << std::endl;
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html

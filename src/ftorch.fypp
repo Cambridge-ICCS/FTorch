@@ -228,24 +228,24 @@ contains
   #:for PREC in INT_PRECISIONS
   !> Returns a scalar with a given value with data type `${PREC}$`
   subroutine torch_scalar_from_value_${PREC}$(scalar, val)
-    use, intrinsic :: iso_c_binding, only : ${c_prec(PREC)}$, c_int
+    use, intrinsic :: iso_c_binding, only : ${c_prec(PREC)}$, c_int, c_loc
     type(torch_scalar), intent(out) :: scalar  !! Returned scalar
-    integer(${c_prec(PREC)}$), intent(in) :: val  !! Scalar value
+    integer(${c_prec(PREC)}$), target, intent(in) :: val  !! Scalar value
 
     ! Local data
     integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
 
     interface
       function torch_scalar_int_c(val, dtype) result(scalar) bind(c, name = 'torch_scalar_int')
-        use, intrinsic :: iso_c_binding, only : ${c_prec(PREC)}$, c_int, c_ptr
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
         implicit none
         type(c_ptr) :: scalar
-        integer(${c_prec(PREC)}$), value, intent(in) :: val
+        type(c_ptr), value, intent(in) :: val
         integer(c_int), value, intent(in) :: dtype
       end function torch_scalar_int_c
     end interface
 
-    scalar%p = torch_scalar_int_c(val, dtype)
+    scalar%p = torch_scalar_int_c(c_loc(val), dtype)
   end subroutine torch_scalar_from_value_${PREC}$
 
   #:endfor
@@ -253,7 +253,7 @@ contains
   #:for PREC in FLOAT_PRECISIONS
   !> Returns a scalar with a given value with data type `${PREC}$`
   subroutine torch_scalar_from_value_${PREC}$(scalar, val)
-    use, intrinsic :: iso_c_binding, only : ${c_prec(PREC)}$, c_int
+    use, intrinsic :: iso_c_binding, only : ${c_prec(PREC)}$, c_int, c_loc
     type(torch_scalar), intent(out) :: scalar  !! Returned scalar
     real(${c_prec(PREC)}$), target, intent(in) :: val  !! Scalar value
 
@@ -262,17 +262,17 @@ contains
 
     interface
       function torch_scalar_float_c(val, dtype) result(scalar) bind(c, name = 'torch_scalar_float')
-        use, intrinsic :: iso_c_binding, only : ${c_prec(PREC)}$, c_int, c_ptr
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
         implicit none
         type(c_ptr) :: scalar
-        real(${c_prec(PREC)}$), value, intent(in) :: val
+        type(c_ptr), value, intent(in) :: val
         integer(c_int), value, intent(in) :: dtype
       end function torch_scalar_float_c
     end interface
 
     print *, "DEBUG val=", val
     print *, "DEBUG dtype=", dtype
-    scalar%p = torch_scalar_float_c(val, dtype)
+    scalar%p = torch_scalar_float_c(c_loc(val), dtype)
   end subroutine torch_scalar_from_value_${PREC}$
 
   #:endfor
@@ -280,7 +280,7 @@ contains
   #:for PREC in PRECISIONS
   !> Return the data associated with a Torch Scalar with data type `${PREC}$`
   subroutine torch_scalar_get_data_${PREC}$(scalar, data_out)
-    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_scalar), intent(in) :: scalar  !! Returned tensor
     ${f_type(PREC)}$(kind=${PREC}$), pointer, intent(out) :: data_out  !! Pointer to scalar data

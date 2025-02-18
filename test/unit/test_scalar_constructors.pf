@@ -31,7 +31,7 @@ contains
     real(wp), target   :: input_value
     real(wp), pointer  :: output_value
 
-    input_value = 0.0
+    input_value = 1.0
 
     ! Check the scalar pointer is not associated
     @assertFalse(c_associated(scalar%p))
