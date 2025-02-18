@@ -145,14 +145,53 @@ torch_scalar_t torch_zero(const torch_data_t dtype) {
     *zero = torch::Scalar(double(0.0));
     break;
   default:
-    std::cerr << "[ERROR]: unknown data type, setting to torch_kFloat32" << std::endl;
+    std::cerr << "[ERROR]: unknown data type" << std::endl;
     exit(EXIT_FAILURE);
   }
   return zero;
 }
 
+torch_scalar_t torch_one(const torch_data_t dtype) {
+  torch::Scalar *one = nullptr;
+  one = new torch::Scalar;
+  switch (dtype) {
+  case torch_kUInt8:
+    std::cerr << "[WARNING]: uint8 not supported in Fortran" << std::endl;
+    // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
+    exit(EXIT_FAILURE);
+  case torch_kInt8:
+    *one = torch::Scalar(int8_t(1));
+    break;
+  case torch_kInt16:
+    *one = torch::Scalar(int16_t(1));
+    break;
+  case torch_kInt32:
+    *one = torch::Scalar(int32_t(1));
+    break;
+  case torch_kInt64:
+    *one = torch::Scalar(int64_t(1));
+    break;
+  case torch_kFloat16:
+    std::cerr << "[WARNING]: float16 not supported in Fortran" << std::endl;
+    // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
+    exit(EXIT_FAILURE);
+  case torch_kFloat32:
+    *one = torch::Scalar(float(1.0));
+    break;
+  case torch_kFloat64:
+    *one = torch::Scalar(double(1.0));
+    break;
+  default:
+    std::cerr << "[ERROR]: unknown data type" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  std::cout << "DEBUG (ones): " << *one << std::endl;
+  return one;
+}
+
 void *torch_scalar_to_blob(const torch_scalar_t scalar, const torch_data_t dtype) {
   auto s = reinterpret_cast<torch::Scalar *const>(scalar);
+  std::cout << "DEBUG (to_blob):" << *s << std::endl;
   void *raw_ptr;
   // TODO: Type checking
   raw_ptr = (void *)s->data_ptr();

@@ -285,6 +285,25 @@ contains
     scalar%p = torch_zero_c(dtype)
   end subroutine torch_scalar_zero
 
+  !> Returns a scalar with value one
+  subroutine torch_scalar_one(scalar, dtype)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_scalar), intent(out) :: scalar  !! Returned scalar
+    integer(c_int), intent(in) :: dtype  !! Data type
+
+    interface
+      function torch_one_c(dtype) result(scalar) bind(c, name = 'torch_one')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+        implicit none
+        type(c_ptr) :: scalar
+        integer(c_int), value, intent(in) :: dtype
+      end function torch_one_c
+    end interface
+
+    scalar%p = torch_one_c(dtype)
+  end subroutine torch_scalar_one
+
   !> Return the data associated with a Torch Scalar with data type `int8`
   subroutine torch_scalar_get_data_int8(scalar, data_out)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
@@ -310,6 +329,7 @@ contains
     ! Have the data_out array point to the Scalar data
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
+    print *, "DEBUG (get_data)", data_out
 
   end subroutine torch_scalar_get_data_int8
 
@@ -338,6 +358,7 @@ contains
     ! Have the data_out array point to the Scalar data
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
+    print *, "DEBUG (get_data)", data_out
 
   end subroutine torch_scalar_get_data_int16
 
@@ -366,6 +387,7 @@ contains
     ! Have the data_out array point to the Scalar data
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
+    print *, "DEBUG (get_data)", data_out
 
   end subroutine torch_scalar_get_data_int32
 
@@ -394,6 +416,7 @@ contains
     ! Have the data_out array point to the Scalar data
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
+    print *, "DEBUG (get_data)", data_out
 
   end subroutine torch_scalar_get_data_int64
 
@@ -422,6 +445,7 @@ contains
     ! Have the data_out array point to the Scalar data
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
+    print *, "DEBUG (get_data)", data_out
 
   end subroutine torch_scalar_get_data_real32
 
@@ -450,6 +474,7 @@ contains
     ! Have the data_out array point to the Scalar data
     cptr = torch_scalar_to_blob_c(scalar%p, dtype)
     call c_f_pointer(cptr, data_out)
+    print *, "DEBUG (get_data)", data_out
 
   end subroutine torch_scalar_get_data_real64
 

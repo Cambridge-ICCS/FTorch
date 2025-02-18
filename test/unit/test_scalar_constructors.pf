@@ -59,4 +59,48 @@ contains
 
   end subroutine test_torch_scalar_zero
 
+  ! Unit test for the torch_scalar_one subroutine
+  @test
+  subroutine test_torch_scalar_one()
+    use ftorch, only: torch_scalar_one
+    use, intrinsic :: iso_fortran_env, only: sp => real32
+
+    implicit none
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    integer, parameter :: dtype = torch_kFloat32
+    type(torch_scalar) :: scalar
+    real(wp), pointer  :: val
+
+    ! Check the scalar pointer is not associated
+    @assertFalse(c_associated(scalar%p))
+
+    ! Create a scalar of ones
+    call torch_scalar_one(scalar, dtype)
+
+    ! Check the scalar pointer is associated
+    @assertTrue(c_associated(scalar%p))
+
+    ! Check the scalar contains the expected value
+    call torch_scalar_get_data(scalar, val)
+    print *, "DEBUG (test)", val
+    if (.not. assert_isclose(val, 1.0, "torch_scalar_one")) then
+      call clean_up()
+      stop 999
+    end if
+
+    call clean_up()
+
+    contains
+
+      ! Subroutine for freeing memory and nullifying pointers used in the unit test
+      subroutine clean_up()
+        nullify(val)
+        call torch_scalar_delete(scalar)
+      end subroutine clean_up
+
+  end subroutine test_torch_scalar_one
+
 end module test_scalar_constructors

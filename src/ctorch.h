@@ -55,6 +55,13 @@ typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
 EXPORT_C torch_scalar_t torch_zero(const torch_data_t dtype);
 
 /**
+ * Function to generate a Torch Scalar with value one
+ * @param data type of the Scalar
+ * @return Torch Scalar zero
+ */
+EXPORT_C torch_scalar_t torch_one(const torch_data_t dtype);
+
+/**
  * Function to extract a C-pointer from a Torch Scalar's data.
  *
  * @param the Torch Scalar
