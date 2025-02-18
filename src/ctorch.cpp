@@ -127,24 +127,30 @@ torch_scalar_t torch_zero(const torch_data_t dtype) {
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
     exit(EXIT_FAILURE);
   case torch_kInt8:
-    *zero = torch::Scalar(int8_t(0.0));
+    *zero = torch::Scalar(int8_t(0));
+    break;
   case torch_kInt16:
-    *zero = torch::Scalar(int16_t(0.0));
+    *zero = torch::Scalar(int16_t(0));
+    break;
   case torch_kInt32:
-    *zero = torch::Scalar(int32_t(0.0));
+    *zero = torch::Scalar(int32_t(0));
+    break;
   case torch_kInt64:
-    *zero = torch::Scalar(int64_t(0.0));
+    *zero = torch::Scalar(int64_t(0));
+    break;
   case torch_kFloat16:
     std::cerr << "[WARNING]: float16 not supported in Fortran" << std::endl;
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
     exit(EXIT_FAILURE);
   case torch_kFloat32:
     *zero = torch::Scalar(float(0.0));
+    break;
   case torch_kFloat64:
     *zero = torch::Scalar(double(0.0));
+    break;
   default:
-    std::cerr << "[WARNING]: unknown data type, setting to torch_kFloat32" << std::endl;
-    *zero = torch::Scalar(float(0.0));
+    std::cerr << "[ERROR]: unknown data type, setting to torch_kFloat32" << std::endl;
+    exit(EXIT_FAILURE);
   }
   return zero;
 }

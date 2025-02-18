@@ -218,7 +218,7 @@ contains
   ! --- Torch Scalar API
   ! ============================================================================
 
-  !> Returns a tensor with uninitialised values.
+  !> Returns a scalar with value zero
   subroutine torch_scalar_zero(scalar, dtype)
     use, intrinsic :: iso_c_binding, only : c_int
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
