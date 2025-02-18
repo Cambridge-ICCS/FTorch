@@ -114,10 +114,6 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
 // --- Torch Scalar API
 // =============================================================================
 
-/**
- * Function to generate an empty Torch Tensor
- * @return Torch Scalar zero
- */
 torch_scalar_t torch_zero(const torch_data_t dtype) {
   torch::Scalar *zero = nullptr;
   zero = new torch::Scalar;
