@@ -34,7 +34,7 @@ contains
     @assertFalse(c_associated(scalar%p))
 
     ! Create a scalar of zeros
-    call torch_scalar_zero(scalar)
+    call torch_scalar_zero(scalar, torch_kFloat32)
 
     ! Check the scalar pointer is associated
     @assertTrue(c_associated(scalar%p))

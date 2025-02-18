@@ -118,10 +118,34 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
  * Function to generate an empty Torch Tensor
  * @return Torch Scalar zero
  */
-torch_scalar_t torch_zero() {
+torch_scalar_t torch_zero(const torch_data_t dtype) {
   torch::Scalar *zero = nullptr;
   zero = new torch::Scalar;
-  *zero = torch::Scalar(0.0);
+  switch (dtype) {
+  case torch_kUInt8:
+    std::cerr << "[WARNING]: uint8 not supported in Fortran" << std::endl;
+    // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
+    exit(EXIT_FAILURE);
+  case torch_kInt8:
+    *zero = torch::Scalar(int8_t(0.0));
+  case torch_kInt16:
+    *zero = torch::Scalar(int16_t(0.0));
+  case torch_kInt32:
+    *zero = torch::Scalar(int32_t(0.0));
+  case torch_kInt64:
+    *zero = torch::Scalar(int64_t(0.0));
+  case torch_kFloat16:
+    std::cerr << "[WARNING]: float16 not supported in Fortran" << std::endl;
+    // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
+    exit(EXIT_FAILURE);
+  case torch_kFloat32:
+    *zero = torch::Scalar(float(0.0));
+  case torch_kFloat64:
+    *zero = torch::Scalar(double(0.0));
+  default:
+    std::cerr << "[WARNING]: unknown data type, setting to torch_kFloat32" << std::endl;
+    *zero = torch::Scalar(float(0.0));
+  }
   return zero;
 }
 

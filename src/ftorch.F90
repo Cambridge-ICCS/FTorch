@@ -257,18 +257,22 @@ contains
   ! ============================================================================
 
   !> Returns a tensor with uninitialised values.
-  subroutine torch_scalar_zero(scalar)
+  subroutine torch_scalar_zero(scalar, dtype)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real64
     type(torch_scalar), intent(out) :: scalar  !! Returned scalar
+    integer(c_int), intent(in) :: dtype  !! Data type
 
     interface
-      function torch_zero_c() result(scalar) bind(c, name = 'torch_zero')
-        use, intrinsic :: iso_c_binding, only : c_ptr
+      function torch_zero_c(dtype) result(scalar) bind(c, name = 'torch_zero')
+        use, intrinsic :: iso_c_binding, only : c_int, c_ptr
         implicit none
         type(c_ptr) :: scalar
+        integer(c_int), value, intent(in) :: dtype
       end function torch_zero_c
     end interface
 
-    scalar%p = torch_zero_c()
+    scalar%p = torch_zero_c(dtype)
   end subroutine torch_scalar_zero
 
   !> Return the data associated with a Torch Scalar with data type `int8`
