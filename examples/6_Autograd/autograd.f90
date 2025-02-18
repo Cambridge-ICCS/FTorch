@@ -18,59 +18,51 @@ program example
 
   ! Set up Fortran data structures
   integer, parameter :: n = 2
-  real(wp), dimension(n), target :: in_data1, in_data2, in_data3
   real(wp), dimension(:), pointer :: out_data1, out_data2, out_data3
-  real(wp), dimension(n) :: expected
   integer :: tensor_layout(1) = [1]
 
   ! Set up Torch data structures
-  type(torch_tensor) :: a, b, Q, dQda, dQdb
+  type(torch_tensor) :: a, b, Q, dQda, dQdb, multiplier, divisor
 
-  ! Initialise input arrays as in Python example
-  in_data1(:) = [2.0_wp, 3.0_wp]
-  in_data2(:) = [6.0_wp, 4.0_wp]
+  ! Initialise input arrays as in the Python example and construct Torch Tensors from them
+  call torch_tensor_from_array(a, [2.0_wp, 3.0_wp], tensor_layout, torch_kCPU, requires_grad=.true.)
+  call torch_tensor_from_array(b, [6.0_wp, 4.0_wp], tensor_layout, torch_kCPU, requires_grad=.true.)
 
-  ! Construct a Torch Tensor from a Fortran array
-  call torch_tensor_from_array(a, in_data1, tensor_layout, torch_kCPU, requires_grad=.true.)
-  call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU, requires_grad=.true.)
+  ! Scalar multiplication and division are not currently implemented in FTorch. However, you can
+  ! achieve the same thing by defining a rank-1 tensor with a single entry, as follows:
+  call torch_tensor_from_array(multiplier, [3.0_wp], tensor_layout, torch_kCPU)
+  call torch_tensor_from_array(divisor, [3.0_wp], tensor_layout, torch_kCPU)
 
-  ! Check arithmetic operations work for torch_tensors
-  write (*,*) "a = ", in_data1(:)
-  write (*,*) "b = ", in_data2(:)
-  Q = 3 * (a**3 - b * b / 3)
-  ! FIXME: Something seems off with gradients related to scalar multiplication and/or division
+  ! Compute the same mathematical expression as in the Python example
+  Q = multiplier * (a**3 - b * b / divisor)
 
-  ! Extract a Fortran array from a Torch tensor
-  call torch_tensor_to_array(Q, out_data1, shape(in_data1))
-  write (*,*) "Q = 3 * (a ** 3 - b * b / 2) =", out_data1(:)
+  ! Extract a Fortran array from the Torch tensor
+  call torch_tensor_to_array(Q, out_data1, [2])
+  write (*,*) "Q = 3 * (a^3 - b*b/3) = 3*a^3 - b^2 = ", out_data1(:)
 
   ! Check output tensor matches expected value
-  expected(:) = [-12.0_wp, 65.0_wp]
-  if (.not. assert_allclose(out_data1, expected, test_name="autograd_Q")) then
+  if (.not. assert_allclose(out_data1, [-12.0_wp, 65.0_wp], test_name="autograd_Q")) then
     call clean_up()
     print *, "Error :: value of Q does not match expected value"
     stop 999
   end if
 
-  ! Back-propagation
-  in_data3(:) = [1.0_wp, 1.0_wp]
+  ! Run the back-propagation operator
   call torch_tensor_backward(Q)
   dQda = a%grad()
   dQdb = b%grad()
 
   ! Extract Fortran arrays from the Torch tensors and check the gradients take expected values
-  call torch_tensor_to_array(dQda, out_data2, shape(in_data1))
-  print *, "dQda", out_data2
-  expected(:) = [36.0_wp, 81.0_wp]
-  if (.not. assert_allclose(out_data2, expected, test_name="autograd_dQdb")) then
+  call torch_tensor_to_array(dQda, out_data2, [2])
+  print *, "dQda = 9*a^2 = ", out_data2
+  if (.not. assert_allclose(out_data2, [36.0_wp, 81.0_wp], test_name="autograd_dQdb")) then
     call clean_up()
     print *, "Error :: value of dQdb does not match expected value"
     stop 999
   end if
-  call torch_tensor_to_array(dQdb, out_data3, shape(in_data1))
-  print *, "dQdb", out_data3
-  expected(:) = [-12.0_wp, -8.0_wp]
-  if (.not. assert_allclose(out_data3, expected, test_name="autograd_dQdb")) then
+  call torch_tensor_to_array(dQdb, out_data3, [2])
+  print *, "dQdb = - 2*b = ", out_data3
+  if (.not. assert_allclose(out_data3, [-12.0_wp, -8.0_wp], test_name="autograd_dQdb")) then
     call clean_up()
     print *, "Error :: value of dQdb does not match expected value"
     stop 999
@@ -88,6 +80,8 @@ program example
       nullify(out_data3)
       call torch_tensor_delete(a)
       call torch_tensor_delete(b)
+      call torch_tensor_delete(multiplier)
+      call torch_tensor_delete(divisor)
       call torch_tensor_delete(Q)
     end subroutine clean_up
 

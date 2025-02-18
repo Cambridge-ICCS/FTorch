@@ -415,7 +415,7 @@ contains
     integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor1, tensor2
+    type(torch_tensor) :: tensor1, tensor2, multiplier
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
@@ -432,13 +432,16 @@ contains
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
+    ! Create a single valued rank-1 tensor based off the scalar
+    call torch_tensor_from_array(multiplier, [scalar], [1], device_type)
+
     ! Create another empty tensors and assign it to the product of a scalar constant and the first
     ! tensor using the overloaded multiplication operator
     call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
     if (this%param%switch) then
-      tensor2 = scalar * tensor1
+      tensor2 = multiplier * tensor1
     else
-      tensor2 = tensor1 * scalar
+      tensor2 = tensor1 * multiplier
     end if
 
     ! Check input array is unchanged by scalar multiplication
@@ -470,6 +473,7 @@ contains
         nullify(out_data)
         call torch_tensor_delete(tensor1)
         call torch_tensor_delete(tensor2)
+        call torch_tensor_delete(multiplier)
       end subroutine clean_up
 
   end subroutine test_torch_tensor_scalar_multiply
@@ -556,7 +560,7 @@ contains
     integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor1, tensor2
+    type(torch_tensor) :: tensor1, tensor2, divisor
     integer, parameter :: ndims = 2
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
@@ -570,13 +574,16 @@ contains
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
+    ! Create a single valued rank-1 tensor based off the scalar
+    call torch_tensor_from_array(divisor, [scalar], [1], device_type)
+
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
     ! Create another empty tensor and assign it to the quotient of the first tensor and a scalar
     ! constant using the overloaded division operator
     call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
-    tensor2 = tensor1 / scalar
+    tensor2 = tensor1 / divisor
 
     ! Check input array is unchanged by post-division
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -607,6 +614,7 @@ contains
         nullify(out_data)
         call torch_tensor_delete(tensor1)
         call torch_tensor_delete(tensor2)
+        call torch_tensor_delete(divisor)
       end subroutine clean_up
 
   end subroutine test_torch_tensor_scalar_divide

@@ -212,7 +212,6 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
     tensor = new torch::Tensor;
     *tensor = torch::from_blob(data, vshape, vstrides, options);
 
-    std::cout << "[DEBUG]: blob " << tensor->requires_grad() << std::endl; // TODO
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -323,7 +322,6 @@ torch_tensor_t torch_tensor_assign(const torch_tensor_t input) {
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
   *output = *in;
-  std::cout << "[DEBUG]: assign " << output->requires_grad() << std::endl; // TODO
   return output;
 }
 
@@ -334,7 +332,6 @@ torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
   *output = *t1 + *t2;
-  std::cout << "[DEBUG]: add " << output->requires_grad() << std::endl; // TODO
   return output;
 }
 
@@ -353,7 +350,6 @@ torch_tensor_t torch_tensor_subtract(const torch_tensor_t tensor1,
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
   *output = *t1 - *t2;
-  std::cout << "[DEBUG]: subtract " << output->requires_grad() << std::endl; // TODO
   return output;
 }
 
@@ -364,7 +360,6 @@ torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
   *output = *t1 * *t2;
-  std::cout << "[DEBUG]: multiply " << output->requires_grad() << std::endl; // TODO
   return output;
 }
 
@@ -375,7 +370,6 @@ torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
   *output = *t1 / *t2;
-  std::cout << "[DEBUG]: divide " << output->requires_grad() << std::endl; // TODO
   return output;
 }
 
@@ -387,7 +381,6 @@ torch_tensor_t torch_tensor_power_int(const torch_tensor_t tensor,
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
   *output = pow(*t, *exp);
-  std::cout << "[DEBUG]: power_int " << output->requires_grad() << std::endl; // TODO
   return output;
 }
 
@@ -399,7 +392,6 @@ torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
   torch::Tensor *output = nullptr;
   output = new torch::Tensor;
   *output = pow(*t, *exp);
-  std::cout << "[DEBUG]: power_float " << output->requires_grad() << std::endl; // TODO
   return output;
 }
 
@@ -411,11 +403,6 @@ void torch_tensor_backward(const torch_tensor_t tensor,
                            const torch_tensor_t external_gradient) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   auto g = reinterpret_cast<torch::Tensor *const>(external_gradient);
-  std::cout << "[DEBUG] tensor";
-  torch_tensor_print(tensor);
-  std::cout << "[DEBUG] external_gradient";
-  torch_tensor_print(external_gradient);
-  // FIXME: tensor needs to not be const but this crashes
   t->backward(*g);
 }
 
