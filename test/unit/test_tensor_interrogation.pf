@@ -165,4 +165,30 @@ contains
 
   end subroutine test_torch_tensor_get_device_index_default
 
+  ! Unit test for the torch_tensor_requires_grad function
+  @test
+  subroutine test_torch_tensor_requires_grad()
+
+    implicit none
+
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer, parameter :: dtype = torch_kFloat32
+    logical, parameter :: expected = .true.
+
+    ! Create an empty tensor on the CPU with the default device type
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, &
+                            requires_grad=expected)
+
+    ! Check that torch_tensor_get_device_type can get the device type
+    if (expected .neqv. tensor%requires_grad()) then
+      call torch_tensor_delete(tensor)
+      print *, "Error :: tensor%requires_grad() returned incorrect value"
+      stop 999
+    end if
+    call torch_tensor_delete(tensor)
+
+  end subroutine test_torch_tensor_requires_grad
+
 end module test_tensor_interrogation

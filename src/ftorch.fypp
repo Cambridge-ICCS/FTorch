@@ -55,6 +55,7 @@ module ftorch
     procedure :: get_dtype => torch_tensor_get_dtype
     procedure :: get_device_type => torch_tensor_get_device_type
     procedure :: get_device_index => torch_tensor_get_device_index
+    procedure :: requires_grad => torch_tensor_requires_grad
     final :: torch_tensor_delete
   end type torch_tensor
 
@@ -569,6 +570,24 @@ contains
     end if
     device_index = torch_tensor_get_device_index_c(self%p)
   end function torch_tensor_get_device_index
+
+  !> Determines whether a tensor requires the autograd module.
+  function torch_tensor_requires_grad(self) result(requires_grad)
+    class(torch_tensor), intent(in) :: self
+    logical :: requires_grad
+
+    interface
+      function torch_tensor_requires_grad_c(tensor) result(requires_grad) &
+          bind(c, name = 'torch_tensor_requires_grad')
+        use, intrinsic :: iso_c_binding, only : c_bool, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+        logical(c_bool) :: requires_grad
+      end function torch_tensor_requires_grad_c
+    end interface
+
+    requires_grad = torch_tensor_requires_grad_c(self%p)
+  end function torch_tensor_requires_grad
 
   ! ============================================================================
   ! --- Procedures for deallocating tensors

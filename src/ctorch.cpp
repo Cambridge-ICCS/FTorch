@@ -294,6 +294,11 @@ int torch_tensor_get_device_index(const torch_tensor_t tensor) {
   return t->device().index();
 }
 
+bool torch_tensor_requires_grad(const torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  return t->requires_grad();
+}
+
 // =====================================================================================
 // --- Functions for deallocating tensors
 // =====================================================================================
