@@ -46,7 +46,9 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
 
     # All previously saved modules, no matter their device, are first
     # loaded onto CPU, and then are moved to the devices they were saved
-    # from, so we don't need to manually transfer the model to the GPU
+    # from.
+    # Since we are loading one saved model to multiple devices we explicitly
+    # transfer using `.to(device)` to ensure the model is on the correct index.
     model = torch.jit.load(saved_model)
     model = model.to(device)
     input_tensor_gpu = input_tensor.to(torch.device(device))

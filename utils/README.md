@@ -25,7 +25,7 @@ script is being run.
 
 The `pt2ts.py` script is set up with the `argparse` Python module such that it
 accepts two command line arguments:
-* `--filepath </path/to/save/model>`, which allows you to specify the file path
+* `--filepath </path/to/save/model>`, which allows you to specify the path
   to the directory in which the TorchScript model should be saved.
 * `--device_type <cpu/cuda/xpu/mps>`, which allows you to specify the CPU or GPU
   device type with which to save the model. (To read and make use of a model on

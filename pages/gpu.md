@@ -33,8 +33,8 @@ if device_type != "cpu":
 
 > Note: _This code moves the dummy input tensors to the GPU, as well as the
 > model.
-> Whilst not necessary for saving the model, but the tensors must also be on
-> the GPU to test that the models runs._
+> Whilst this is not necessary for saving the model the tensors must be on
+> the same GPU device to test that the models runs._
 
 3) When calling `torch_tensor_from_array` in Fortran, the device type for the
    input tensor(s) should be set to the relevant device type (`torch_kCUDA`,
