@@ -24,7 +24,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Set GPU device type using consistent numbering as in PyTorch
 # https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
-# Set in a single location here and passed as preprocessor flag for use throughout source files.
+# Set in a single location here and passed as preprocessor flag for use
+# throughout source files.
 set(GPU_DEVICE_NONE 0)
 set(GPU_DEVICE_CUDA 1)
 set(GPU_DEVICE_XPU 12)
