@@ -65,6 +65,12 @@ if __name__ == "__main__":
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "--filepath",
+        help="Path to the file containing the PyTorch model",
+        type=str,
+        default=os.path.dirname(__file__),
+    )
+    parser.add_argument(
         "--device_type",
         help="Device type to run the inference on",
         type=str,
@@ -72,11 +78,11 @@ if __name__ == "__main__":
         default="cuda",
     )
     parsed_args = parser.parse_args()
+    filepath = parsed_args.filepath
     device_type = parsed_args.device_type
+    saved_model_file = os.path.join(filepath, f"saved_multigpu_model_{device_type}.pt")
 
-    saved_model_file = f"saved_multigpu_model_{device_type}.pt"
-
-    # Use 2 devices unless Mps for which there is only one
+    # Use 2 devices unless MPS for which there is only one
     num_devices = 1 if device_type == "mps" else 2
 
     for device_index in range(num_devices):
