@@ -68,18 +68,16 @@ The following CMake flags are available and can be passed as arguments through `
 
 > <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake
 > cannot locate it by default._
-> 
+>
 > <sup>2</sup> _The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.  
 >       If Torch has been [installed as LibTorch](https://pytorch.org/cppdocs/installing.html)
 >       then this should be the absolute path to the unzipped LibTorch distribution.
 >       If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
 >       e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
-> 
-> <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU or GPU only version is installed, e.g.
->       `pip install torch --index-url https://download.pytorch.org/whl/cpu`
->       or
->       `pip install torch --index-url https://download.pytorch.org/whl/cu118`
->       (for CUDA 11.8). URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
+>
+> <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
+>       `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
+>       URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
 
 For example, to build on a unix system using the gnu compilers and install to `$HOME/FTorchbin/`
 we would need to run:
