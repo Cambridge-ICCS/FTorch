@@ -1,0 +1,138 @@
+# Workflow to run the FTorch test suite on Macos platforms
+name: TestSuiteMacOS
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with code changes
+  pull_request:
+    paths:
+      - '.github/workflows/test_suite_macos.yml'
+      - '**.c'
+      - '**.cpp'
+      - '**.fypp'
+      - '**.f90'
+      - '**.F90'
+      - '**.pf'
+      - '**.py'
+      - '**.sh'
+      - '**CMakeLists.txt'
+      - '**requirements.txt'
+      - '**data/*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Workflow run - one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "test-suite-macos"
+  test-suite-macos:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Newest possible gcc on macos-latest (arm64)
+          - os: macos-latest
+            toolchain: {compiler: gcc, version: 13}
+          # Oldest possible gcc on macos-latest (arm64)
+          - os: macos-latest
+            toolchain: {compiler: gcc, version: 11}
+          # Newest possible gcc on macos (x86)
+          - os: macos-15
+            toolchain: {compiler: gcc, version: 13}
+          - os: macos-13
+            toolchain: {compiler: gcc, version: 13}
+          # Newest possible intel-classic on macos
+          - os: macos-15
+            toolchain: {compiler: intel-classic, version: '2021.10'}
+          - os: macos-14
+            toolchain: {compiler: intel-classic, version: '2021.10'}
+          - os: macos-13
+            toolchain: {compiler: intel-classic, version: '2021.10'}
+          # Newest possible lfortran on macos
+          - os: macos-15
+            toolchain: {compiler: lfortran, version: '0.33.0'}
+          - os: macos-14
+            toolchain: {compiler: lfortran, version: '0.33.0'}
+          - os: macos-13
+            toolchain: {compiler: lfortran, version: '0.33.0'}
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        with:
+          persist-credentials: false
+        uses: actions/checkout@v4
+
+      - name: setup-fortran
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - name: check-compilers-env
+        run: ${FC}
+        env: 
+          FC: ${{ steps.setup-fortran.outputs.fc }}
+
+      # Conda following instructions at https://github.com/conda-incubator/setup-miniconda
+      - name: Setup Conda environment
+        uses: conda-incubator/setup-miniconda@v3
+        continue-on-error: true
+        with:
+          environment-file: conda/environment_mac.yaml
+          activate-environment: ftorch-mac
+          miniforge-version: latest
+      - name: Check arm64
+        run: |
+          python -c "import platform; assert platform.machine() == 'arm64', platform.machine()"
+
+      - name: Check conda
+        run: |
+          conda info
+          conda list
+
+      - name: Install pFUnit
+        run: |
+          # TODO: Avoid version pinning (needed because version appears in install path)
+          git clone -b v4.10.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          mkdir pFUnit/build
+          cd pFUnit/build
+          cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+          make -j 4 install
+
+      - name: Build FTorch
+        run: |
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export BUILD_DIR=$(pwd)/build
+          mkdir ${BUILD_DIR}
+          cd ${BUILD_DIR}
+          python -c 'import torch;print(torch.utils.cmake_prefix_path)'
+          cmake .. \
+            -DCMAKE_PREFIX_PATH="${CONDA_PREFIX};$(python -c 'import torch;print(torch.utils.cmake_prefix_path)')" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_Fortran_COMPILER=${FC} \
+            -DCMAKE_C_COMPILER=${CC} \
+            -DCMAKE_CXX_COMPILER=${CXX} \
+            -DCMAKE_INSTALL_PREFIX=${CONDA_PREFIX} \
+            -DCMAKE_BUILD_TESTS=TRUE
+          cmake --build .
+          cmake --install .
+
+      - name: Integration tests
+        run: |
+          ./run_integration_tests.sh -V
