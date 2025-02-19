@@ -68,7 +68,7 @@ if __name__ == "__main__":
         f" {input_tensor_gpu.get_device()}"
     )
     with torch.no_grad():
-        output_tensor = model(input_tensor_gpu)
+        output_tensor = model(input_tensor_gpu).to("cpu")
 
     print(output_tensor)
     if not torch.allclose(output_tensor, 2 * input_tensor):

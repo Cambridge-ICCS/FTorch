@@ -87,7 +87,7 @@ program inference
       200 format("output on device ", i1,": [", 4(f5.1,","), f5.1,"]")
 
       ! Check output tensor matches expected value
-      expected = [(device_index + 2*i, i = 0, 4)]
+      expected = [(2 * (device_index + i), i = 0, 4)]
       test_pass = assert_allclose(out_data, expected, test_name="MultiGPU")
 
       ! Cleanup

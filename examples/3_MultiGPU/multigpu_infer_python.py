@@ -1,5 +1,7 @@
 """Load saved SimpleNet to TorchScript and run inference example."""
 
+import os
+
 import torch
 
 

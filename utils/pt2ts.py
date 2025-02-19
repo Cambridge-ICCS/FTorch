@@ -1,7 +1,6 @@
 """Load a PyTorch model and convert it to TorchScript."""
 
 import os
-import sys
 from typing import Optional
 
 # FPTLIB-TODO

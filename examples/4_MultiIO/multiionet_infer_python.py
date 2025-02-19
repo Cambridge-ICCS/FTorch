@@ -1,7 +1,6 @@
 """Load saved MultIONet to TorchScript and run inference example."""
 
 import os
-import sys
 
 import torch
 

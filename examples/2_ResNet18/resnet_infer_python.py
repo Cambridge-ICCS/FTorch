@@ -1,7 +1,6 @@
 """Load ResNet-18 saved to TorchScript and run inference with an example image."""
 
 import os
-import sys
 from math import isclose
 
 import numpy as np
