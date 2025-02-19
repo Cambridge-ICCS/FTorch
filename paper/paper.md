@@ -145,9 +145,8 @@ using the fypp preprocessor [@fypp]
 We utilise the existing support in `LibTorch` for
 GPU acceleration without additional device-specific code.
 `torch_tensor`s are targeted to a device through a
-`device_type` enum -- `torch_kCPU`, `torch_kCUDA` etc. with targeting
-multiple GPUs through the optional `device_index` argument.
-The device types available can be extended as `LibTorch` adds support for new devices.
+`device_type` enum, currently supporting CPU, CUDA, XPU, and MPS.
+Multiple GPUs may be targeted through the optional `device_index` argument.
 
 Saved TorchScript models are loaded to the `torch_model` derived type
 using the `torch_model_load()` subroutine, specifying the device
