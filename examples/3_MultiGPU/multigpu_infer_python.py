@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
         print(f"Output on device {device_to_run}: {result}")
 
-        expected = torch.Tensor([2*i + device_index for i in range(5)])
+        expected = torch.Tensor([2 * i + device_index for i in range(5)])
         if not torch.allclose(result, expected):
             result_error = (
                 f"result:\n{result}\ndoes not match expected value:\n{expected}"
