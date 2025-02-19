@@ -55,9 +55,6 @@ if("${GPU_DEVICE}" STREQUAL "CUDA")
     message(WARNING "No CUDA support")
   endif()
 endif()
-if("${GPU_DEVICE}" STREQUAL "XPU")
-  set(CMAKE_Fortran_FLAGS "-fpscomp logicals ${CMAKE_Fortran_FLAGS}")
-endif()
 
 # Set RPATH behaviour
 set(CMAKE_SKIP_RPATH FALSE)
