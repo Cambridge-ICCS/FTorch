@@ -38,7 +38,7 @@ typedef enum {
 } torch_data_t;
 
 // Device types
-// Defined in main CMakeLists and passed via preprocessor
+// NOTE: Defined in main CMakeLists and passed via preprocessor
 typedef enum {
   torch_kCPU = GPU_DEVICE_NONE,
   torch_kCUDA = GPU_DEVICE_CUDA,
