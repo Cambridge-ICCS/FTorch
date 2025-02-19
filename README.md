@@ -176,11 +176,9 @@ To build and install the library:
           e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
 		  You can find the location of your torch install by importing torch from your Python environment (`import torch`) and running `print(torch.__file__)`_
 
-    <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU or GPU only version is installed, e.g.
-          `pip install torch --index-url https://download.pytorch.org/whl/cpu`
-          or
-          `pip install torch --index-url https://download.pytorch.org/whl/cu118`
-          (for CUDA 11.8). URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
+    <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
+          `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
+          URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
 
 4. Make and install the library to the desired location with either:
 	```
