@@ -92,6 +92,7 @@ if(CMAKE_BUILD_TESTS)
       NAME multigpu_infer_python
       COMMAND ${Python_EXECUTABLE}
               ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type xpu
+              --filepath ${PROJECT_BINARY_DIR}
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
     # 4b. Check the model can be loaded from file and run on two XPU devices in

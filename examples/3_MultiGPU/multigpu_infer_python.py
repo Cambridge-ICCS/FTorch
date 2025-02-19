@@ -82,15 +82,22 @@ if __name__ == "__main__":
     device_type = parsed_args.device_type
     saved_model_file = os.path.join(filepath, f"saved_multigpu_model_{device_type}.pt")
 
+    batch_size_to_run = 1
+
     # Use 2 devices unless MPS for which there is only one
     num_devices = 1 if device_type == "mps" else 2
 
     for device_index in range(num_devices):
         device_to_run = f"{device_type}:{device_index}"
 
-        batch_size_to_run = 1
-
         with torch.no_grad():
             result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
         print(f"Output on device {device_to_run}: {result}")
+
+        expected = torch.Tensor([2*i + device_index for i in range(5)])
+        if not torch.allclose(result, expected):
+            result_error = (
+                f"result:\n{result}\ndoes not match expected value:\n{expected}"
+            )
+            raise ValueError(result_error)

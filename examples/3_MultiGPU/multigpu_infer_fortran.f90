@@ -9,6 +9,9 @@ program inference
                       torch_tensor_from_array, torch_model_load, torch_model_forward, &
                       torch_delete
 
+   ! Import our tools module for testing utils
+   use ftorch_test_utils, only : assert_allclose
+
    implicit none
 
    ! Set precision for reals
@@ -20,6 +23,7 @@ program inference
    ! Set up Fortran data structures
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
+   real(wp), dimension(5) :: expected
    integer, parameter :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
@@ -30,6 +34,9 @@ program inference
    ! Variables for multi-GPU setup
    integer :: num_devices = 2
    integer :: device_type, device_index, i
+
+   ! Flag for testing
+   logical :: test_pass
 
    ! Get device type as first command line argument and TorchScript model file as second command
    ! line argument
@@ -79,10 +86,18 @@ program inference
       write (6, 200) device_index, out_data(:)
       200 format("output on device ", i1,": [", 4(f5.1,","), f5.1,"]")
 
+      ! Check output tensor matches expected value
+      expected = [(device_index + 2*i, i = 0, 4)]
+      test_pass = assert_allclose(out_data, expected, test_name="MultiGPU")
+
       ! Cleanup
       call torch_delete(model)
       call torch_delete(in_tensors)
       call torch_delete(out_tensors)
+
+      if (.not. test_pass) then
+        stop 999
+      end if
 
    end do
 

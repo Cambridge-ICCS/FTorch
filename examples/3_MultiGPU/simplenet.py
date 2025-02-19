@@ -68,5 +68,12 @@ if __name__ == "__main__":
         f" {input_tensor_gpu.get_device()}"
     )
     with torch.no_grad():
-        output = model(input_tensor_gpu)
-    print(output)
+        output_tensor = model(input_tensor_gpu)
+
+    print(output_tensor)
+    if not torch.allclose(output_tensor, 2 * input_tensor):
+        result_error = (
+            f"result:\n{output_tensor}\ndoes not match expected value:\n"
+            f"{2 * input_tensor}"
+        )
+        raise ValueError(result_error)
