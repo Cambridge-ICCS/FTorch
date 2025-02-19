@@ -78,21 +78,21 @@ if __name__ == "__main__":
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "--filepath",
+        help="Path to the file containing the PyTorch model",
+        type=str,
+        default=os.path.dirname(__file__),
+    )
+    parser.add_argument(
         "--device_type",
         help="Device type to run the inference on",
         type=str,
         choices=["cpu", "cuda", "xpu", "mps"],
         default="cuda",
     )
-    parser.add_argument(
-        "--filepath",
-        help="Path to the file containing the PyTorch model",
-        type=str,
-        default=os.path.dirname(__file__),
-    )
     parsed_args = parser.parse_args()
-    device_type = parsed_args.device_type
     filepath = parsed_args.filepath
+    device_type = parsed_args.device_type
 
     # =====================================================
     # Load model and prepare for saving

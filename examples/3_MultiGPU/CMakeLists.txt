@@ -114,5 +114,33 @@ if(CMAKE_BUILD_TESTS)
     add_test(NAME simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
                      --device_type mps)
+    # 2c. Check the model is saved to file in the expected location with the
+    # pt2ts.py script
+    add_test(
+      NAME pt2ts
+      COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --device_type
+              mps --filepath ${PROJECT_BINARY_DIR}
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+    # 3c. Check the model can be loaded from file and run on one MPS device in
+    # Python and that its outputs meet expectations
+    add_test(
+      NAME multigpu_infer_python
+      COMMAND ${Python_EXECUTABLE}
+              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type mps
+              --filepath ${PROJECT_BINARY_DIR}
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+    # 4c. Check the model can be loaded from file and run on one MPS device in
+    # Fortran and that its outputs meet expectations
+    add_test(
+      NAME multigpu_infer_fortran
+      COMMAND multigpu_infer_fortran mps
+              ${PROJECT_BINARY_DIR}/saved_multigpu_model_mps.pt
+      # Command line arguments for device type and model file
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    set_tests_properties(
+      multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+                                        "MultiGPU example ran successfully")
   endif()
 endif()
