@@ -62,24 +62,22 @@ The following CMake flags are available and can be passed as arguments through `
 | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
 | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
 | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`             | Specifies whether to compile FTorch's [test suite](testing.html) as part of the build. |
-| `ENABLE_CUDA`                                                                                     | `TRUE` / `FALSE`             | Specifies whether to check for and enable CUDA<sup>3</sup> |
+| `GPU_DEVICE` | `NONE` / `CUDA` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>3</sup> |
 
 
 
 > <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake
 > cannot locate it by default._
-> 
+>
 > <sup>2</sup> _The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.  
 >       If Torch has been [installed as LibTorch](https://pytorch.org/cppdocs/installing.html)
 >       then this should be the absolute path to the unzipped LibTorch distribution.
 >       If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
 >       e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
-> 
-> <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU or GPU only version is installed, e.g.
->       `pip install torch --index-url https://download.pytorch.org/whl/cpu`
->       or
->       `pip install torch --index-url https://download.pytorch.org/whl/cu118`
->       (for CUDA 11.8). URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
+>
+> <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
+>       `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
+>       URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
 
 For example, to build on a unix system using the gnu compilers and install to `$HOME/FTorchbin/`
 we would need to run:

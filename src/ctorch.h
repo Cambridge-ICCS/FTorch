@@ -38,7 +38,13 @@ typedef enum {
 } torch_data_t;
 
 // Device types
-typedef enum { torch_kCPU, torch_kCUDA } torch_device_t;
+// NOTE: Defined in main CMakeLists and passed via preprocessor
+typedef enum {
+  torch_kCPU = GPU_DEVICE_NONE,
+  torch_kCUDA = GPU_DEVICE_CUDA,
+  torch_kXPU = GPU_DEVICE_XPU,
+  torch_kMPS = GPU_DEVICE_MPS,
+} torch_device_t;
 
 // =============================================================================
 // --- Functions for constructing tensors

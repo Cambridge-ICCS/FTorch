@@ -165,7 +165,7 @@ To build and install the library:
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
     | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`             | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build. |
-    | `ENABLE_CUDA`                                                                                     | `TRUE` / `FALSE`             | Specifies whether to check for and enable CUDA<sup>3</sup> |
+    | `GPU_DEVICE` | `NONE` / `CUDA` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>3</sup> |
 
     <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
 
@@ -176,11 +176,9 @@ To build and install the library:
           e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
 		  You can find the location of your torch install by importing torch from your Python environment (`import torch`) and running `print(torch.__file__)`_
 
-    <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU or GPU only version is installed, e.g.
-          `pip install torch --index-url https://download.pytorch.org/whl/cpu`
-          or
-          `pip install torch --index-url https://download.pytorch.org/whl/cu118`
-          (for CUDA 11.8). URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
+    <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
+          `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
+          URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
 
 4. Make and install the library to the desired location with either:
 	```
@@ -219,12 +217,16 @@ These steps are described in more detail in the
 
 ## GPU Support
 
-To run on GPU requires a CUDA-compatible installation of LibTorch and two main
-adaptations to the code:
+To run on GPU requires an installation of LibTorch compatible for the GPU device
+you wish to target and two main adaptations to the code:
 
-1. When saving a TorchScript model, ensure that it is on the GPU
+1. When saving a TorchScript model, ensure that it is on the appropriate GPU
+   device type. The `pt2ts.py` script has a command line argument
+   `--device_type`, which currently accepts four different device types: `cpu`
+   (default), `cuda`, `xpu`, or `mps`.
 2. When using FTorch in Fortran, set the device for the input
-   tensor(s) to `torch_kCUDA`, rather than `torch_kCPU`.
+   tensor(s) to the appropriate GPU device type, rather than `torch_kCPU`. There
+   are currently three options: `torch_kCUDA`, `torch_kXPU`, or `torch_kMPS`.
 
 For detailed guidance about running on GPU, including instructions for using multiple
 devices, please see the

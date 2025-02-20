@@ -38,7 +38,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
     -DCMAKE_PREFIX_PATH=$(python -c 'import torch;print(torch.utils.cmake_prefix_path)') \
     -DCMAKE_BUILD_TYPE=Release \
-    -DENABLE_CUDA=FALSE \
+    -DGPU_DEVICE=NONE \
     ..
 cmake --build . --target install
 ```
@@ -65,7 +65,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
     -DCMAKE_PREFIX_PATH=$(python -c 'import torch;print(torch.utils.cmake_prefix_path)') \
     -DCMAKE_BUILD_TYPE=Release \
-    -DENABLE_CUDA=TRUE \
+    -DGPU_DEVICE=CUDA \
     -DCUDA_TOOLKIT_ROOT_DIR=$CONDA_PREFIX/targets/x86_64-linux \
     -Dnvtx3_dir=$CONDA_PREFIX/targets/x86_64-linux/include/nvtx3 \
     ..

@@ -52,9 +52,12 @@ module ftorch
 
   !| Enumerator for Torch devices
   !  From c_torch.h (torch_device_t)
+  !  NOTE: Defined in main CMakeLists and passed via preprocessor
   enum, bind(c)
-    enumerator :: torch_kCPU = 0
-    enumerator :: torch_kCUDA = 1
+    enumerator :: torch_kCPU = GPU_DEVICE_NONE
+    enumerator :: torch_kCUDA = GPU_DEVICE_CUDA
+    enumerator :: torch_kXPU = GPU_DEVICE_XPU
+    enumerator :: torch_kMPS = GPU_DEVICE_MPS
   end enum
 
   ! ============================================================================

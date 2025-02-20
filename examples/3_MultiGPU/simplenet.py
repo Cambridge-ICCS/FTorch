@@ -42,13 +42,38 @@ class SimpleNet(nn.Module):
 
 
 if __name__ == "__main__":
-    model = SimpleNet().to(torch.device("cuda"))
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--device_type",
+        help="Device type to run the inference on",
+        type=str,
+        choices=["cpu", "cuda", "xpu", "mps"],
+        default="cuda",
+    )
+    parsed_args = parser.parse_args()
+    device_type = parsed_args.device_type
+
+    model = SimpleNet().to(torch.device(device_type))
     model.eval()
 
     input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0])
-    input_tensor_gpu = input_tensor.to(torch.device("cuda"))
+    input_tensor_gpu = input_tensor.to(torch.device(device_type))
 
-    print(f"SimpleNet forward pass on CUDA device {input_tensor_gpu.get_device()}")
+    print(
+        f"SimpleNet forward pass on {device_type.capitalize()} device"
+        f" {input_tensor_gpu.get_device()}"
+    )
     with torch.no_grad():
-        output = model(input_tensor_gpu)
-    print(output)
+        output_tensor = model(input_tensor_gpu).to("cpu")
+
+    print(output_tensor)
+    if not torch.allclose(output_tensor, 2 * input_tensor):
+        result_error = (
+            f"result:\n{output_tensor}\ndoes not match expected value:\n"
+            f"{2 * input_tensor}"
+        )
+        raise ValueError(result_error)
