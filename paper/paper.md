@@ -51,8 +51,8 @@ revolutionised many fields within science, industry, and beyond.
 Researchers across domains are increasingly seeking to combine ML
 with numerical modelling to advance research.
 This typically brings about the challenge of _programming
-language interoperation_. PyTorch is a popular framework for designing and
-training ML/DL models whilst Fortran remains a language of choice for many
+language interoperation_. PyTorch [@paszke2019pytorch] is a popular framework for
+designing and training ML/DL models whilst Fortran remains a language of choice for many
 high-performance computing (HPC) scientific models.
 The `FTorch` library provides an easy-to-use, performant method for coupling
 the two, allowing users to call PyTorch models from Fortran.
@@ -76,20 +76,20 @@ and the development of data-driven components.
 Such deployments of ML can achieve improved computational and/or predictive performance,
 compared to traditional numerical techniques.
 A common example from the geosciences is ML parameterisation
-of subgrid processes - a major source of uncertainty in many models.
+of subgrid processes &mdash; a major source of uncertainty in many models.
 
 Fortran is widely used for scientific codes due to its performance,
 stability, array-oriented design, and native support for shared and distributed memory,
 amongst other features [@kedward2022state].
 Many ML frameworks, on the other hand, are accessed using Python.
-The commonly-used PyTorch framework [@paszke2019pytorch]
+The commonly-used PyTorch framework
 allows users to design and deploy ML models with many advanced features.
 
-Ideally users would develop and validate ML models in the PyTorch environment
+Ideally, users would develop and validate ML models in the PyTorch environment
 before deploying them into a scientific model.
 This deployment should require minimal additional code, and guarantee
 identical results as obtained with the PyTorch
-interface -- something not guaranteed if re-implementing by hand in Fortran.
+interface &mdash; something not guaranteed if re-implementing by hand in Fortran.
 Ideally one would call out, from Fortran, to an ML model
 saved from PyTorch, with the results returned directly to the scientific code.
 
