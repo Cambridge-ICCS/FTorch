@@ -47,9 +47,6 @@
                 <li class="nav-item">
                   <a class="nav-link" href="../lists/procedures.html">Procedures</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
-                </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
                 <form action="../search.html" role="search" class="ms-auto">
@@ -119,6 +116,7 @@ level, please see below for guidance.</p>
 <li><a href="#extending-the-api">Extending the API</a><ul>
 <li><a href="#fortran-source-and-fypp">Fortran source and Fypp</a></li>
 <li><a href="#torch-c-api">Torch C++ API</a></li>
+<li><a href="#gpu-device-handling">GPU device handling</a></li>
 <li><a href="#git-hook">git hook</a></li>
 <li><a href="#code-style">Code style</a></li>
 <li><a href="#general-guidelines">General guidelines</a></li>
@@ -186,6 +184,35 @@ files <code>src/ctorch.h</code> and <code>src/ctorch.cpp</code>, we refer to the
 <a href="https://pytorch.org/cppdocs">C++ documentation</a> and more specifically the
 <a href="https://pytorch.org/cppdocs/api/library_root.html">C++ API documentation</a>
 pages on the PyTorch website for details.</p>
+<h3 id="gpu-device-handling">GPU device handling</h3>
+<p>GPU device-specific code is handled in FTorch using codes defined in the root
+<code>CMakeLists.txt</code> file:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">set</span><span class="p">(</span><span class="s">GPU_DEVICE_NONE</span><span class="w"> </span><span class="s">0</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">GPU_DEVICE_CUDA</span><span class="w"> </span><span class="s">1</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">GPU_DEVICE_XPU</span><span class="w"> </span><span class="s">12</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">GPU_DEVICE_MPS</span><span class="w"> </span><span class="s">13</span><span class="p">)</span>
+</code></pre></div>
+
+<p>These device codes are chosen to be consistent with the numbering used in
+PyTorch (see
+https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h). When a user
+specifies <code>-DGPU_DEVICE=XPU</code> (for example) in the FTorch CMake build, this is
+mapped to the appropriate device code (in this case 12). The chosen device code
+and all other ones defined are passed to the C++ compiler in the following step:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">target_compile_definitions</span><span class="p">(</span>
+<span class="w">  </span><span class="o">${</span><span class="nv">LIB_NAME</span><span class="o">}</span>
+<span class="w">  </span><span class="s">PRIVATE</span><span class="w"> </span><span class="o">${</span><span class="nv">COMPILE_DEFS</span><span class="o">}</span><span class="w"> </span><span class="s">GPU_DEVICE=</span><span class="o">${</span><span class="nv">GPU_DEVICE_CODE</span><span class="o">}</span>
+<span class="w">          </span><span class="s">GPU_DEVICE_NONE=</span><span class="o">${</span><span class="nv">GPU_DEVICE_NONE</span><span class="o">}</span><span class="w"> </span><span class="s">GPU_DEVICE_CUDA=</span><span class="o">${</span><span class="nv">GPU_DEVICE_CUDA</span><span class="o">}</span>
+<span class="w">          </span><span class="s">GPU_DEVICE_XPU=</span><span class="o">${</span><span class="nv">GPU_DEVICE_XPU</span><span class="o">}</span><span class="w"> </span><span class="s">GPU_DEVICE_MPS=</span><span class="o">${</span><span class="nv">GPU_DEVICE_MPS</span><span class="o">}</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The chosen device code will enable the appropriate C pre-processor conditions in
+the C++ source so that that the code relevant to that device type becomes
+active.</p>
+<p>An example illustrating why this approach was taken is that if we removed the
+device codes and pre-processor conditions and tried to build with a CPU-only or
+CUDA LibTorch installation then compile errors would arise from the use of the
+<code>torch::xpu</code> module in <code>src/ctorch.cpp</code>.</p>
 <h3 id="git-hook">git hook</h3>
 <p>In order to streamline the process of uploading we provide a pre-commit hook in
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/.githooks/pre-commit"><code>.githooks/pre-commit</code></a>.

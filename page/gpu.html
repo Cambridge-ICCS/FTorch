@@ -47,9 +47,6 @@
                 <li class="nav-item">
                   <a class="nav-link" href="../lists/procedures.html">Procedures</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
-                </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
                 <form action="../search.html" role="search" class="ms-auto">
@@ -117,46 +114,67 @@
 </ul>
 </div>
 <h2 id="gpu-support">GPU Support</h2>
-<p>In order to run a model on GPU, two main changes are required:</p>
-<p>1) When saving your TorchScript model, ensure that it is on the GPU.
+<p>In order to run a model on GPU, three main changes are required:</p>
+<p>1) When building FTorch, specify the target GPU architecture using the
+<code>GPU_DEVICE</code> argument. That is, set</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span>-DGPU_DEVICE<span class="o">=</span>&lt;CUDA/XPU/MPS&gt;
+</code></pre></div>
+
+<p>as appropriate. The default setting is equivalent to</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span>-DGPU_DEVICE<span class="o">=</span>NONE
+</code></pre></div>
+
+<p>i.e., CPU-only.</p>
+<p>2) When saving your TorchScript model, ensure that it is on the GPU.
 For example, when using
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py"><code>pt2ts.py</code></a>,
-this can be done by uncommenting the following lines:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">device_type</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
-<span class="n">trained_model</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
-<span class="n">trained_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-<span class="n">trained_model_dummy_input_1</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_1</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
-<span class="n">trained_model_dummy_input_2</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
+this can be done by passing the <code>--device_type &lt;cuda/xpu/mps&gt;</code> argument. This
+sets the <code>device_type</code> variable, which has the effect of transferring the model
+and any input arrays to the specified GPU device in the following lines:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span> <span class="n">device_type</span> <span class="o">!=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">:</span>
+    <span class="n">trained_model</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
+    <span class="n">trained_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">trained_model_dummy_input_1</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_1</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
+    <span class="n">trained_model_dummy_input_2</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
 </code></pre></div>
 
 <blockquote>
-<p>Note: <em>This code also moves the dummy input tensors to the GPU.
-Whilst not necessary for saving the model, but the tensors must also be on the GPU
-to test that the models runs.</em></p>
+<p>Note: <em>This code moves the dummy input tensors to the GPU, as well as the
+model.
+Whilst this is not necessary for saving the model the tensors must be on
+the same GPU device to test that the models runs.</em></p>
 </blockquote>
-<p>2) When calling <code>torch_tensor_from_array</code> in Fortran, the device type for the input
-   tensor(s) should be set to <code>torch_kCUDA</code>, rather than <code>torch_kCPU</code>.
+<p>3) When calling <code>torch_tensor_from_array</code> in Fortran, the device type for the
+   input tensor(s) should be set to the relevant device type (<code>torch_kCUDA</code>,
+   <code>torch_kXPU</code>, or <code>torch_kMPS</code>) rather than <code>torch_kCPU</code>.
    This ensures that the inputs are on the same device type as the model.</p>
 <blockquote>
 <p>Note: <em>You do <strong>not</strong> need to change the device type for the output tensors as we
 want them to be on the CPU for subsequent use in Fortran.</em></p>
 </blockquote>
 <h3 id="multi-gpu-runs">Multi-GPU runs</h3>
-<p>In the case of having multiple GPU devices, as well as setting <code>torch_kCUDA</code> as the
-device type for any input tensors and models, you should also specify their device index
-as the GPU device to be targeted. This argument is optional and will default to device
-index 0 if unset.</p>
-<p>For example, the following code snippet sets up a Torch tensor with GPU device index 2:</p>
+<p>In the case of having multiple GPU devices, as well as setting the device type
+for any input tensors and models, you should also specify their device index
+as the GPU device to be targeted. This argument is optional and will default to
+device index 0 if unset.</p>
+<p>For example, the following code snippet sets up a Torch tensor with CUDA GPU
+device index 2:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">device_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
 <span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">in_tensors</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">in_data</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">                             </span><span class="n">torch_kCUDA</span><span class="p">,</span><span class="w"> </span><span class="n">device_index</span><span class="o">=</span><span class="n">device_index</span><span class="p">)</span>
 </code></pre></div>
 
-<p>Whereas the following code snippet sets up a Torch tensor with (default) device index 0:</p>
+<p>Whereas the following code snippet sets up a Torch tensor with (default) CUDA
+device index 0:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">in_tensors</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">in_data</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">                             </span><span class="n">torch_kCUDA</span><span class="p">)</span>
 </code></pre></div>
 
+<p>Similarly for the XPU device type.</p>
+<blockquote>
+<p>Note: The MPS device type does not currently support multiple devices, so the
+default device index should always be used.</p>
+</blockquote>
 <p>See the
 <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU">MultiGPU example</a>
 for a worked example of running with multiple GPUs.</p>
