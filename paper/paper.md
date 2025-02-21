@@ -218,7 +218,7 @@ saving PyTorch models to TorchScript.
   However, the set of features is not as rich as PyTorch and GPU offloading
   is not currently supported.\
   The [Fiats](https://berkeleylab.github.io/fiats) (`Functional Inference And Training
-  for Surrogates') package is another approach for developing, training, and deploying
+  for Surrogates') library [@fiats] is another approach for developing, training, and deploying
   ML models directly in Fortran, with experimental GPU support at present.
 
 * **Forpy** [@forpy]\
