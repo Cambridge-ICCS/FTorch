@@ -77,7 +77,8 @@ and the development of data-driven components.
 Such deployments of ML can achieve improved computational and/or predictive performance,
 compared to traditional numerical techniques.
 A common example from the geosciences is ML parameterisation
-of subgrid processes &mdash; a major source of uncertainty in many models.
+of subgrid processes &mdash; a major source of uncertainty in many models
+[e.g. @bony2015clouds; @rasp2018deep].
 
 Fortran is widely used for scientific codes due to its performance,
 stability, array-oriented design, and native support for shared and distributed memory,
