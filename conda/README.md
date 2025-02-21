@@ -95,6 +95,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
     -DCMAKE_PREFIX_PATH=$(python -c 'import torch;print(torch.utils.cmake_prefix_path)') \
     -DCMAKE_BUILD_TYPE=Release \
+    -DGPU_DEVICE=MPS \
     ..
 cmake --build . --target install
 ```
