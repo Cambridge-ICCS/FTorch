@@ -232,7 +232,7 @@ saving PyTorch models to TorchScript.
   model [@MiMAML] demonstrating variability of models trained offline when coupled to a
   host [@mansfield2024uncertainty].
 
-* to couple a U-Net based model of multi-scale convection into [ICON](https://www.icon-model.org/)
+* to couple a U-Net based model of multi-scale convection into [ICON](https://www.icon-model.org/) [@ICON]
   and demonstrate via Shapley values that
   non-causal learnt relations are more stable when running online [@heuer2024interpretable].
 
@@ -240,9 +240,9 @@ saving PyTorch models to TorchScript.
   new data-driven parameterisations to the Community Atmosphere Model (CAM) running on
   HPC systems.
 
-* As part of CESM (the Community Earth System Model) working to provide a general
-  approach for researchers to couple ML models to the various components of the model
-  suite.
+* As part of [CESM](https://www.cesm.ucar.edu/) (the Community Earth System Model) [@CESM]
+  working to provide a general approach for researchers to couple ML models to the
+  various components of the model suite.
 
 
 # Future development
