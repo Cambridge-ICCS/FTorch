@@ -54,13 +54,14 @@ This typically brings about the challenge of _programming
 language interoperation_. PyTorch [@paszke2019pytorch] is a popular framework for
 designing and training ML/DL models whilst Fortran remains a language of choice for many
 high-performance computing (HPC) scientific models.
-The `FTorch` library provides an easy-to-use, performant method for coupling
-the two, allowing users to call PyTorch models from Fortran.
+The `FTorch` library provides an easy-to-use, performant, cross-platform method for
+coupling the two, allowing users to call PyTorch models from Fortran.
 
 `FTorch` is open-source, open-development, and well-documented with minimal dependencies.
 A central tenet of its design, in contrast to other approaches, is
 that FTorch removes dependence on the Python runtime (and virtual environments).
-By building on the `LibTorch` backend it allows users to run ML models on both
+By building on the `LibTorch` backend (written in C++ and accessible via an API) it
+allows users to run ML models on both
 CPU and GPU architectures without the need for porting code to device-specific languages.
 
 
@@ -109,38 +110,14 @@ Python environments can be challenging.
 
 # Software description
 
-PyTorch itself builds on an underlying `C++` framework `LibTorch` which can be obtained
-as a separate library accessible through a `C++` API.
-By accessing this directly (rather than via PyTorch), `FTorch` avoids the use of Python at run-time.
-
-Using the `iso_c_binding` module, intrinsic to Fortran since the 2003 standard,
-we provide a Fortran wrapper to `LibTorch`.
+`FTorch` is a Fortran wrapper to the `LibTorch` C++ framework using the `iso_c_binding`
+module, intrinsic to Fortran since the 2003 standard
 This enables shared memory use (where possible) to
-maximise efficiency by reducing data-transfer during coupling.^[i.e. the same
+maximise efficiency by reducing data-transfer during coupling^[i.e. the same
 data in memory is used by both `LibTorch` and Fortran without creating a copy.]
-
-`FTorch` is [open source](https://github.com/Cambridge-ICCS/FTorch).
-It can be built from source using CMake.
-Minimum dependencies are `LibTorch`, CMake,
-and Fortran (2008 standard), `C`, and `C++` (`C++17` standard) compilers.^[To utilise GPU devices, users require the appropriate `LibTorch` binary plus any relevant dependencies, e.g. CUDA for NVIDIA devices.]
-The library is primarily developed in Linux, but also runs on macOS and Windows.
-
-## Key components and workflow leveraging FTorch
-
-#. Build, train, and validate a model in PyTorch.
-#. Save model as TorchScript, a strongly-typed subset of Python.
-#. Write Fortran using the `FTorch` module to:
-   - load the TorchScript model;
-   - create Torch tensors from Fortran arrays;
-   - run the model for inference;
-   - use the returned data as a Fortran array;
-   - deallocate any temporary FTorch objects;
-#. Compile the Fortran code, linking to the FTorch installation.
-
-PyTorch tensors are represented by `FTorch` as a `torch_tensor` derived type, and
-created from Fortran arrays using the `torch_tensor_from_array()` subroutine.
-Tensors are supported across a range of data types and ranks
-using the fypp preprocessor [@fypp]
+and avoids any use of Python at runtime.
+PyTorch types are represented through derived types in `FTorch`, with Tensors supported
+across a range of data types and ranks by using the `fypp` preprocessor [@fypp]
 
 We utilise the existing support in `LibTorch` for
 GPU acceleration without additional device-specific code.
@@ -148,15 +125,10 @@ GPU acceleration without additional device-specific code.
 `device_type` enum, currently supporting CPU, CUDA, XPU, and MPS.
 Multiple GPUs may be targeted through the optional `device_index` argument.
 
-Saved TorchScript models are loaded to the `torch_model` derived type
-using the `torch_model_load()` subroutine, specifying the device
-similarly to tensors.
-Models can be run for inference using the `torch_model_forward()` subroutine with
-input and output `torch_tensor`s supplied as arguments.
-Finally, FTorch types can be deallocated using `torch_delete()`.
-
-The following provides a minimal example:
-
+Typically, users train a model in PyTorch and save it as TorchScript, a strongly-typed
+subset of Python.
+This is loaded by `FTorch` and run using `LibTorch`.
+The following provides a minimal representative example:
 
 ```fortranfree
 use ftorch
@@ -179,7 +151,8 @@ call torch_delete(model_outputs)
 ...
 ```
 
-A user guide, API documentation, slides and videos, and links to projects is available at 
+Full details, including user guide, API documentation, slides and videos, and links to
+projects is available at 
 [https://cambridge-iccs.github.io/FTorch](https://cambridge-iccs.github.io/FTorch).
 
 ## Examples and Tooling
@@ -200,6 +173,7 @@ clang-tidy [@clangtidy] for `C` and `C++`, and ruff [@ruff] for Python.
 
 The library also provides a script (`pt2ts.py`) to assist users with
 saving PyTorch models to TorchScript.
+
 
 # Comparison to other approaches
 
@@ -270,6 +244,7 @@ saving PyTorch models to TorchScript.
   approach for researchers to couple ML models to the various components of the model
   suite.
 
+
 # Future development
 
 Recent work in scientific domains suggests that online training is
@@ -277,6 +252,7 @@ likely important for long-term stability of hybrid models [@brenowitz2020machine
 We therefore plan to extend FTorch to expose PyTorch's autograd functionality to support this.
 
 We welcome feature requests and are open to discussion and collaboration.
+
 
 # Acknowledgments
 
