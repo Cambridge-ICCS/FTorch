@@ -118,7 +118,8 @@ maximise efficiency by reducing data-transfer during coupling^[i.e. the same
 data in memory is used by both `LibTorch` and Fortran without creating a copy.]
 and avoids any use of Python at runtime.
 PyTorch types are represented through derived types in `FTorch`, with Tensors supported
-across a range of data types and ranks by using the `fypp` preprocessor [@fypp]
+across a range of data types and ranks by using the `fypp` preprocessor [@fypp].
+Fortran code quality is enforced using fortitude [@fortitude], alongside other tools.
 
 We utilise the existing support in `LibTorch` for
 GPU acceleration without additional device-specific code.
@@ -128,7 +129,9 @@ Multiple GPUs may be targeted through the optional `device_index` argument.
 
 Typically, users train a model in PyTorch and save it as TorchScript, a strongly-typed
 subset of Python.
-This is loaded by `FTorch` and run using `LibTorch`.
+`FTorch` provides a utility script (`pt2ts.py`) to assist users with this process.
+The Torchscript model is then loaded by `FTorch` and run using `LibTorch`.
+
 The following provides a minimal representative example:
 
 ```fortranfree
@@ -152,28 +155,16 @@ call torch_delete(model_outputs)
 ...
 ```
 
+Included with `FTorch` is a directory of examples covering an extensive range of use
+cases.
+Each guides users through a complete workflow from Python to Fortran.
+These examples underpin integration testing alongside unit testing with
+[pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit), both running in
+Continuous Integration workflows.
+
 Full details, including user guide, API documentation, slides and videos, and links to
 projects is available at 
 [https://cambridge-iccs.github.io/FTorch](https://cambridge-iccs.github.io/FTorch).
-
-## Examples and Tooling
-
-`FTorch` includes a directory of documented examples covering basic use,
-running with multiple inputs/outputs, using (multiple) GPU devices, and structuring code
-for deployment in scientific applications.
-They guide users through the full workflow from Python to Fortran.
-
-These examples underpin the integration testing suite that checks
-`FTorch` performs as expected in end-to-end workflows.
-There is also a unit testing suite based on [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit).
-Both are run as part of a Continuous Integration workflow over various
-platforms and compilers.
-Other components include fypp templating checks and code quality checks using
-fortitude [@fortitude] for Fortran, clang-format [@clangformat] and
-clang-tidy [@clangtidy] for `C` and `C++`, and ruff [@ruff] for Python.
-
-The library also provides a script (`pt2ts.py`) to assist users with
-saving PyTorch models to TorchScript.
 
 
 # Comparison to other approaches
