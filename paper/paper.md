@@ -62,7 +62,7 @@ A central tenet of its design, in contrast to other approaches, is
 that FTorch removes dependence on the Python runtime (and virtual environments).
 By building on the `LibTorch` backend (written in C++ and accessible via an API) it
 allows users to run ML models on both
-CPU and GPU architectures without the need for porting code to device-specific languages.
+CPU and GPU architectures without needing to port code to device-specific languages.
 
 
 # Statement of need
@@ -118,7 +118,7 @@ maximise efficiency by reducing data-transfer during coupling^[i.e. the same
 data in memory is used by both `LibTorch` and Fortran without creating a copy.]
 and avoids any use of Python at runtime.
 PyTorch types are represented through derived types in `FTorch`, with Tensors supported
-across a range of data types and ranks by using the `fypp` preprocessor [@fypp].
+across a range of data types and ranks using the `fypp` preprocessor [@fypp].
 Fortran code quality is enforced using fortitude [@fortitude], alongside other tools.
 
 We utilise the existing support in `LibTorch` for
@@ -155,7 +155,7 @@ call torch_delete(model_outputs)
 ...
 ```
 
-Included with `FTorch` is a directory of examples covering an extensive range of use
+`FTorch` includes a directory of examples covering an extensive range of use
 cases.
 Each guides users through a complete workflow from Python to Fortran.
 These examples underpin integration testing alongside unit testing with
