@@ -227,18 +227,18 @@ saving PyTorch models to TorchScript.
 
 `FTorch` is actively used in scientific research:
 
-* in the [DataWave project](https://datawaveproject.github.io/) to
-  couple a neural net emulation for gravity wave drag to an atmospheric
-  model [@MiMAML] demonstrating variability of models trained offline when coupled to a
-  host [@mansfield2024uncertainty].
+* in the [DataWave project](https://datawaveproject.github.io/) exploring gravity wave
+  drag in atmospheric models to:
+
+  * couple an emulator into the MiMA model [@MiMAML] demonstrating variability of models
+    trained offline when coupled back to a host [@mansfield2024uncertainty].
+
+  * couple emulators and new data-driven parameterisations to the Community Atmosphere
+    Model (CAM).
 
 * to couple a U-Net based model of multi-scale convection into [ICON](https://www.icon-model.org/) [@ICON]
   and demonstrate via Shapley values that
   non-causal learnt relations are more stable when running online [@heuer2024interpretable].
-
-* in the DataWave project [@CAMGW] to couple emulators of gravity wave drag, and
-  new data-driven parameterisations to the Community Atmosphere Model (CAM) running on
-  HPC systems.
 
 * As part of [CESM](https://www.cesm.ucar.edu/) (the Community Earth System Model) [@CESM]
   working to provide a general approach for researchers to couple ML models to the
