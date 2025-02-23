@@ -34,6 +34,7 @@ module ftorch
     procedure :: get_dtype => torch_tensor_get_dtype
     procedure :: get_device_type => torch_tensor_get_device_type
     procedure :: get_device_index => torch_tensor_get_device_index
+    procedure :: grad => torch_tensor_get_gradient
   end type torch_tensor
 
   !| Enumerator for Torch data types
@@ -193,18 +194,6 @@ module ftorch
 
   interface operator (*)
     module procedure torch_tensor_multiply
-    module procedure torch_tensor_premultiply_int8
-    module procedure torch_tensor_postmultiply_int8
-    module procedure torch_tensor_premultiply_int16
-    module procedure torch_tensor_postmultiply_int16
-    module procedure torch_tensor_premultiply_int32
-    module procedure torch_tensor_postmultiply_int32
-    module procedure torch_tensor_premultiply_int64
-    module procedure torch_tensor_postmultiply_int64
-    module procedure torch_tensor_premultiply_real32
-    module procedure torch_tensor_postmultiply_real32
-    module procedure torch_tensor_premultiply_real64
-    module procedure torch_tensor_postmultiply_real64
   end interface
 
   interface
@@ -220,12 +209,6 @@ module ftorch
 
   interface operator (/)
     module procedure torch_tensor_divide
-    module procedure torch_tensor_postdivide_int8
-    module procedure torch_tensor_postdivide_int16
-    module procedure torch_tensor_postdivide_int32
-    module procedure torch_tensor_postdivide_int64
-    module procedure torch_tensor_postdivide_real32
-    module procedure torch_tensor_postdivide_real64
   end interface
 
   interface
@@ -2501,175 +2484,6 @@ contains
     output%p = torch_tensor_multiply_c(tensor1%p, tensor2%p)
   end function torch_tensor_multiply
 
-  !> Overloads multiplication operator for a scalar of type int8 and a tensor.
-  function torch_tensor_premultiply_int8(scalar, tensor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
-    integer(int8), target, intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
-  end function torch_tensor_premultiply_int8
-
-  !> Overloads multiplication operator for a scalar of type int16 and a tensor.
-  function torch_tensor_premultiply_int16(scalar, tensor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
-    integer(int16), target, intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
-  end function torch_tensor_premultiply_int16
-
-  !> Overloads multiplication operator for a scalar of type int32 and a tensor.
-  function torch_tensor_premultiply_int32(scalar, tensor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
-    integer(int32), target, intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
-  end function torch_tensor_premultiply_int32
-
-  !> Overloads multiplication operator for a scalar of type int64 and a tensor.
-  function torch_tensor_premultiply_int64(scalar, tensor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
-    integer(int64), target, intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
-  end function torch_tensor_premultiply_int64
-
-  !> Overloads multiplication operator for a scalar of type real32 and a tensor.
-  function torch_tensor_premultiply_real32(scalar, tensor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
-    real(real32), target, intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
-  end function torch_tensor_premultiply_real32
-
-  !> Overloads multiplication operator for a scalar of type real64 and a tensor.
-  function torch_tensor_premultiply_real64(scalar, tensor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
-    real(real64), target, intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
-  end function torch_tensor_premultiply_real64
-
-
-  !> Overloads multiplication operator for a tensor and a scalar of type int8.
-  function torch_tensor_postmultiply_int8(tensor, scalar) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
-    type(torch_tensor), intent(in) :: tensor
-    integer(int8), intent(in) :: scalar
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
-  end function torch_tensor_postmultiply_int8
-
-  !> Overloads multiplication operator for a tensor and a scalar of type int16.
-  function torch_tensor_postmultiply_int16(tensor, scalar) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
-    type(torch_tensor), intent(in) :: tensor
-    integer(int16), intent(in) :: scalar
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
-  end function torch_tensor_postmultiply_int16
-
-  !> Overloads multiplication operator for a tensor and a scalar of type int32.
-  function torch_tensor_postmultiply_int32(tensor, scalar) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
-    type(torch_tensor), intent(in) :: tensor
-    integer(int32), intent(in) :: scalar
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
-  end function torch_tensor_postmultiply_int32
-
-  !> Overloads multiplication operator for a tensor and a scalar of type int64.
-  function torch_tensor_postmultiply_int64(tensor, scalar) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
-    type(torch_tensor), intent(in) :: tensor
-    integer(int64), intent(in) :: scalar
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
-  end function torch_tensor_postmultiply_int64
-
-  !> Overloads multiplication operator for a tensor and a scalar of type real32.
-  function torch_tensor_postmultiply_real32(tensor, scalar) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
-    type(torch_tensor), intent(in) :: tensor
-    real(real32), intent(in) :: scalar
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
-  end function torch_tensor_postmultiply_real32
-
-  !> Overloads multiplication operator for a tensor and a scalar of type real64.
-  function torch_tensor_postmultiply_real64(tensor, scalar) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
-    type(torch_tensor), intent(in) :: tensor
-    real(real64), intent(in) :: scalar
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
-  end function torch_tensor_postmultiply_real64
-
   !> Overloads division operator for two tensors.
   function torch_tensor_divide(tensor1, tensor2) result(output)
     type(torch_tensor), intent(in) :: tensor1
@@ -2678,91 +2492,6 @@ contains
 
     output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
   end function torch_tensor_divide
-
-  !> Overloads division operator for a tensor and a scalar of type int8.
-  function torch_tensor_postdivide_int8(tensor, divisor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
-    type(torch_tensor), intent(in) :: tensor
-    integer(int8), intent(in) :: divisor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
-  end function torch_tensor_postdivide_int8
-
-  !> Overloads division operator for a tensor and a scalar of type int16.
-  function torch_tensor_postdivide_int16(tensor, divisor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
-    type(torch_tensor), intent(in) :: tensor
-    integer(int16), intent(in) :: divisor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
-  end function torch_tensor_postdivide_int16
-
-  !> Overloads division operator for a tensor and a scalar of type int32.
-  function torch_tensor_postdivide_int32(tensor, divisor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
-    type(torch_tensor), intent(in) :: tensor
-    integer(int32), intent(in) :: divisor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
-  end function torch_tensor_postdivide_int32
-
-  !> Overloads division operator for a tensor and a scalar of type int64.
-  function torch_tensor_postdivide_int64(tensor, divisor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
-    type(torch_tensor), intent(in) :: tensor
-    integer(int64), intent(in) :: divisor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
-  end function torch_tensor_postdivide_int64
-
-  !> Overloads division operator for a tensor and a scalar of type real32.
-  function torch_tensor_postdivide_real32(tensor, divisor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
-    type(torch_tensor), intent(in) :: tensor
-    real(real32), intent(in) :: divisor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
-  end function torch_tensor_postdivide_real32
-
-  !> Overloads division operator for a tensor and a scalar of type real64.
-  function torch_tensor_postdivide_real64(tensor, divisor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
-    type(torch_tensor), intent(in) :: tensor
-    real(real64), intent(in) :: divisor
-    type(torch_tensor) :: wrk, output
-
-    ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
-  end function torch_tensor_postdivide_real64
-
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `int8`
   function torch_tensor_power_int8(tensor, power) result(output)
@@ -2897,6 +2626,56 @@ contains
     output%p = torch_tensor_power_float_c(tensor%p, c_loc(power))
   end function torch_tensor_power_real64
 
+
+  ! ============================================================================
+  ! --- Procedures related to automatic differentation functionality for tensors
+  ! ============================================================================
+
+  !> Performs back-propagation on a Torch Tensor, given some external gradient.
+  subroutine torch_tensor_backward(tensor)
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: external_gradient
+
+    interface
+      subroutine torch_tensor_backward_c(tensor_c, external_gradient_c) &
+          bind(c, name = 'torch_tensor_backward')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr), value, intent(in) :: external_gradient_c
+      end subroutine torch_tensor_backward_c
+    end interface
+
+    ! External gradient to provide to the back-propagation consisting of a tensor of ones
+    ! TODO: Accept other external gradients as an optional argument
+    call torch_tensor_ones(external_gradient, tensor%get_rank(), tensor%get_shape(), &
+                           tensor%get_dtype(), tensor%get_device_type(), &
+                           device_index=tensor%get_device_index())
+
+    ! Call back-propagation with the provided external gradient
+    call torch_tensor_backward_c(tensor%p, external_gradient%p)
+
+    ! Delete the external gradient tensor
+    call torch_tensor_delete(external_gradient)
+  end subroutine torch_tensor_backward
+
+  !> Retreives the gradient of a Torch Tensor.
+  function torch_tensor_get_gradient(tensor) result(gradient)
+    class(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: gradient
+
+    interface
+      function torch_tensor_get_gradient_c(tensor_c) result(gradient_c) &
+          bind(c, name = 'torch_tensor_get_gradient')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: gradient_c
+      end function torch_tensor_get_gradient_c
+    end interface
+
+    gradient%p = torch_tensor_get_gradient_c(tensor%p)
+  end function torch_tensor_get_gradient
 
   ! ============================================================================
   ! --- Torch Model API
