@@ -40,7 +40,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        std: ["f2008", "f2018"]
+        toolchain:
+          - {compiler: gcc, version: 13}
+          - {compiler: gcc, version: 12}
+          - {compiler: gcc, version: 11}
+          - {compiler: gcc, version: 10}
+          - {compiler: gcc, version: 9}
+          - {compiler: intel, version: '2024.1'}
+          - {compiler: intel-classic, version: '2021.10'}
+          - {compiler: lfortran, version: '0.33.0'}
+          - {compiler: nvidia-hpc, version: '23.11'}
+        std: ["f2008"]
+        include:
+          # Run 2018 Fortran standards on latest gcc only
+          - toolchain: {compiler: gcc, version: 13}
+            std: "f2018"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -50,10 +64,21 @@ jobs:
           persist-credentials: false
         uses: actions/checkout@v4
 
+      - name: setup-fortran
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - name: check-compilers-env
+        run: ${FC}
+        env:
+          FC: ${{ steps.setup-fortran.outputs.fc }}
+
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.11'
 
       - name: Install PyTorch
         run: |
@@ -92,6 +117,9 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_Fortran_COMPILER=${FC} \
+            -DCMAKE_C_COMPILER=${CC} \
+            -DCMAKE_CXX_COMPILER=${CXX} \
             -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
