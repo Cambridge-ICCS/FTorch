@@ -35,7 +35,8 @@ Torch tensors, see the associated
 
 ### The `requires_grad` property
 
-*Not yet implemented.*
+For Tensors that you would like to differentiate with respect to, be sure to
+set the `requires_grad` optional argument to `.true.` when you construct it.
 
 ### The `backward` operator
 
