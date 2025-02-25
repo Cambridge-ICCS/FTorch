@@ -5,6 +5,8 @@ program tensor_manipulation
                     torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
                     torch_tensor_ones, torch_tensor_print, torch_tensor_to_array
 
+  use, intrinsic :: iso_c_binding, only: c_int64_t
+
   ! Import the real32 type for 32-bit floating point numbers
   use, intrinsic :: iso_fortran_env, only: sp => real32
 
