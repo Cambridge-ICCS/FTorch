@@ -249,39 +249,45 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
 void *torch_to_blob(const torch_tensor_t tensor, int ndim, const int64_t *shape,
                     const int64_t *strides, const torch_data_t dtype) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  torch::Tensor *strided = nullptr;
+  strided = new torch::Tensor;
+  c10::IntArrayRef vshape(shape, ndim);
+  c10::IntArrayRef vstrides(strides, ndim);
+  *strided = at::as_strided(*t, vshape, vstrides);
   void *raw_ptr;
   switch (dtype) {
   case torch_kUInt8:
     std::cerr << "[WARNING]: uint8 not supported" << std::endl;
     exit(EXIT_FAILURE);
   case torch_kInt8:
-    raw_ptr = (void *)t->data_ptr<int8_t>();
+    raw_ptr = (void *)strided->data_ptr<int8_t>();
     break;
   case torch_kInt16:
-    raw_ptr = (void *)t->data_ptr<int16_t>();
+    raw_ptr = (void *)strided->data_ptr<int16_t>();
     break;
   case torch_kInt32:
-    raw_ptr = (void *)t->data_ptr<int32_t>();
+    raw_ptr = (void *)strided->data_ptr<int32_t>();
     break;
   case torch_kInt64:
-    raw_ptr = (void *)t->data_ptr<int64_t>();
+    raw_ptr = (void *)strided->data_ptr<int64_t>();
     break;
   case torch_kFloat16:
     std::cerr << "[WARNING]: float16 not supported" << std::endl;
     // NOTE: std::float16_t is available but only with C++23
     exit(EXIT_FAILURE);
   case torch_kFloat32:
-    raw_ptr = (void *)t->data_ptr<float>();
+    raw_ptr = (void *)strided->data_ptr<float>();
     // NOTE: std::float32_t is available but only with C++23
     break;
   case torch_kFloat64:
-    raw_ptr = (void *)t->data_ptr<double>();
+    raw_ptr = (void *)strided->data_ptr<double>();
     // NOTE: std::float64_t is available but only with C++23
     break;
   default:
     std::cerr << "[WARNING]: unknown data type" << std::endl;
     exit(EXIT_FAILURE);
   }
+  // TODO: strided tensor needs deleting!
   return raw_ptr;
 }
 
