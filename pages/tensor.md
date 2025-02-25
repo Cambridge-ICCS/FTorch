@@ -9,6 +9,11 @@ of the `torch::Tensor` C++ class. The interface is designed to be familiar to
 Fortran programmers, whilst retaining strong similarity with `torch::Tensor` and
 the `torch.Tensor` Python class.
 
+Under the hood, the `torch_tensor` type holds a pointer to a `torch::Tensor`
+object in C++ (implemented using `c_ptr` from the `iso_c_binding` intrinsic
+module). This allows us to avoid unnecessary data copies between C++ and
+Fortran.
+
 ## Procedures
 
 ### Constructors
@@ -25,6 +30,11 @@ include:
   with the same rank, shape, and data type as a given Fortran array. Note that
   the data is *not* copied - the tensor data points to the Fortran array,
   meaning the array must have been declared with the `target` property.
+
+It is *compulsory* to call one of the constructors before interacting with it in
+any of the ways described in the following. Each of the constructors sets the
+pointer attribute of the `torch_tensor`; without this being set, most of the
+other operations are meaningless.
 
 ### Tensor interrogation
 
