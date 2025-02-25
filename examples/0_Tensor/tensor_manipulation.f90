@@ -23,7 +23,7 @@ program tensor_manipulation
   integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
 
   ! Variables for constructing tensors with torch_tensor_from_array
-  integer, parameter :: tensor_layout(ndims) = [1, 1]
+  integer, parameter :: tensor_layout(ndims) = [1, 2]
   real(wp), dimension(2,3), target :: in_data
 
   ! Array for extracting an array from a tensor
