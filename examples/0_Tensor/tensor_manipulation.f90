@@ -45,7 +45,7 @@ program tensor_manipulation
   ! Note that the API is slightly different for this subroutine. In particular, the dimension,
   ! shape and data type of the tensor are automatically inherited from the input array. Further,
   ! the tensor layout should be specified, which determines the indexing order.
-  in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
+  in_data(:,:) = reshape([1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp], [2,3])
   call torch_tensor_from_array(b, in_data, tensor_layout, torch_kCPU)
   ! Another way of viewing the contents of a tensor is to print the array used as its input.
   write(*,*) "Contents of second input tensor:"
