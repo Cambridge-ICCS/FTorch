@@ -119,7 +119,6 @@ data in memory is used by both `LibTorch` and Fortran without creating a copy.]
 and avoids any use of Python at runtime.
 PyTorch types are represented through derived types in `FTorch`, with Tensors supported
 across a range of data types and ranks using the `fypp` preprocessor [@fypp].
-Fortran code quality is enforced using fortitude [@fortitude], alongside other tools.
 
 We utilise the existing support in `LibTorch` for
 GPU acceleration without additional device-specific code.
@@ -129,38 +128,13 @@ Multiple GPUs may be targeted through the optional `device_index` argument.
 
 Typically, users train a model in PyTorch and save it as TorchScript, a strongly-typed
 subset of Python.
-`FTorch` provides a utility script (`pt2ts.py`) to assist users with this process.
-The Torchscript model is then loaded by `FTorch` and run using `LibTorch`.
-
-The following provides a minimal representative example:
-
-```fortranfree
-use ftorch
-...
-type(torch_model) :: model
-type(torch_tensor), dimension(n_inputs)  :: model_inputs
-type(torch_tensor), dimension(n_outputs) :: model_outputs
-...
-call torch_model_load(model, "/path/to/saved_TorchScript_model.pt", torch_kCPU)
-call torch_tensor_from_array(model_inputs(1),  fortran_inputs,  &
-                             in_layout, torch_kCPU)
-call torch_tensor_from_array(model_outputs(1), fortran_outputs, &
-                             out_layout, torch_kCPU)
-...
-call torch_model_forward(model, model_inputs, model_outputs)
-...
-call torch_delete(model)
-call torch_delete(model_inputs)
-call torch_delete(model_outputs)
-...
-```
-
-`FTorch` includes a directory of examples covering an extensive range of use
-cases.
-Each guides users through a complete workflow from Python to Fortran.
-These examples underpin integration testing alongside unit testing with
-[pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit), both running in
-Continuous Integration workflows.
+Once saved, the Torchscript model can be loaded from Fortran using `FTorch` and run
+via the `LibTorch` backend.
+The library comes with a utility script (`pt2ts.py`) to assist with the process of
+saving models as well as a comprehensive set of examples guiding users
+through complete Python to Fortran workflows.
+A focus on user experience underpins the development and is a key aspect behind the
+adoption of `FTorch` by various scientific communities.
 
 Full details, including user guide, API documentation, slides and videos, and links to
 projects is available at 
