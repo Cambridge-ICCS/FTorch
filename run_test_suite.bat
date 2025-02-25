@@ -11,7 +11,7 @@ rem ---
 rem NOTE: This version of run_test_suite only runs the integration tests, not
 rem       the unit tests. These are not currently supported on Windows.
 
-for /d %%i in (1_SimpleNet 2_ResNet18 4_MultiIO) do (
+for /d %%i in (0_Tensor 1_SimpleNet 2_ResNet18 4_MultiIO 6_Autograd) do (
 pushd build\examples\%%i
 rem run the tests
 ctest
