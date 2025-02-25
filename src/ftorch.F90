@@ -1358,6 +1358,24 @@ contains
   end subroutine torch_tensor_from_array_real64_5d
 
 
+  !> Reshape a Torch tensor to a specified shape.
+  subroutine torch_tensor_reshape(output, input, layout, ndims, tensor_shape)
+    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
+    type(torch_tensor), intent(inout) :: output           !! Reshaped tensor
+    type(torch_tensor), intent(in)    :: input            !! Tensor to be reshaped
+    integer(c_int), intent(in)        :: layout(:)        !! Layout for strides for accessing data
+    integer(c_int), intent(in)        :: ndims            !! Number of dimensions of the tensor
+    integer(c_int64_t), intent(in)    :: tensor_shape(:)  !! Shape of the tensor
+
+    ! Local data
+    type(c_ptr) :: cptr
+
+    cptr = torch_to_blob_c(input%p, input%get_dtype())
+    call torch_tensor_from_blob(output, cptr, ndims, tensor_shape, layout, input%get_dtype(), &
+                                input%get_device_type(), input%get_device_index())
+                                ! TODO: input%requires_grad)
+  end subroutine torch_tensor_reshape
+
   ! ============================================================================
   ! --- Procedures for interrogating tensors
   ! ============================================================================

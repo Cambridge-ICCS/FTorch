@@ -3,7 +3,8 @@ program tensor_manipulation
   ! Import the FTorch procedures that are used in this worked example
   use ftorch, only: assignment(=), operator(+), torch_kCPU, torch_kFloat32, torch_tensor, &
                     torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
-                    torch_tensor_ones, torch_tensor_print, torch_tensor_to_array
+                    torch_tensor_ones, torch_tensor_print, torch_tensor_reshape, &
+                    torch_tensor_to_array
 
   use, intrinsic :: iso_c_binding, only: c_int64_t
 
@@ -16,11 +17,12 @@ program tensor_manipulation
   integer, parameter :: wp = sp
 
   ! Define some tensors
-  type(torch_tensor) :: a, b, c
+  type(torch_tensor) :: a, b, c, d
 
   ! Variables for constructing tensors with torch_tensor_ones
   integer, parameter :: ndims = 2
   integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+  integer(c_int64_t), dimension(2), parameter :: tensor_shape_transposed = [3, 2]
 
   ! Variables for constructing tensors with torch_tensor_from_array
   integer, parameter :: tensor_layout(ndims) = [1, 2]
@@ -67,6 +69,11 @@ program tensor_manipulation
   write(*,*) "Output:"
   write(*,*) out_data
 
+  ! TODO: Transpose...
+  call torch_tensor_reshape(d, c, tensor_layout, ndims, tensor_shape)
+  write(*,*) "Contents of transposed tensor:"
+  call torch_tensor_print(d)
+
   ! Clean up
   ! --------
   ! It's good practice to free the memory associated with the tensors after use. We should also
@@ -74,6 +81,7 @@ program tensor_manipulation
   call torch_tensor_delete(a)
   call torch_tensor_delete(b)
   call torch_tensor_delete(c)
+  call torch_tensor_delete(d)
   nullify(out_data)
 
   write(*,*) "Tensor manipulation example ran successfully"
