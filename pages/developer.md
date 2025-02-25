@@ -200,3 +200,6 @@ any further items are contained in `pages/` as markdown files.
 
 Documentation of the C functions in `ctorch.h` is provided
 by [Doxygen](https://www.doxygen.nl/index.html).
+
+Note that we need to define the macros for GPU devices that are passed to `ftorch.F90`
+via the C preprocessor in `FTorch.md` to match those in the CMakeLists.txt.
