@@ -105,7 +105,7 @@ contains
 
     ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the input
     ! array
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    call torch_tensor_to_array(tensor2, out_data, shape(in_data), tensor_layout)
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_assign")) then
       call clean_up()
       print *, "Error :: incorrect output from overloaded assignment operator"
@@ -174,7 +174,7 @@ contains
 
     ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the sum
     ! of the input arrays
-    call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
+    call torch_tensor_to_array(tensor3, out_data, shape(in_data1), tensor_layout)
     expected(:,:) = in_data1 + in_data2
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_add")) then
       call clean_up()
@@ -245,7 +245,7 @@ contains
 
     ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the
     ! difference of the input arrays
-    call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
+    call torch_tensor_to_array(tensor3, out_data, shape(in_data1), tensor_layout)
     expected(:,:) = in_data1 - in_data2
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract")) then
       call clean_up()
@@ -315,7 +315,7 @@ contains
 
     ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the
     ! negative of the input array
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    call torch_tensor_to_array(tensor2, out_data, shape(in_data), tensor_layout)
     expected(:,:) = -in_data
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_negative")) then
       call clean_up()
@@ -383,7 +383,7 @@ contains
 
     ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the
     ! product of the input arrays
-    call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
+    call torch_tensor_to_array(tensor3, out_data, shape(in_data1), tensor_layout)
     expected(:,:) = in_data1 * in_data2
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_multiply")) then
       call clean_up()
@@ -453,7 +453,7 @@ contains
 
     ! Extract Fortran arrays from the assigned tensors and compare the data in the tensors to the
     ! scaled input arrays
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    call torch_tensor_to_array(tensor2, out_data, shape(in_data), tensor_layout)
     expected(:,:) = scalar * in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply")
     if (.not. test_pass) then
@@ -524,7 +524,7 @@ contains
 
     ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the
     ! quotient of the input arrays
-    call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
+    call torch_tensor_to_array(tensor3, out_data, shape(in_data1), tensor_layout)
     expected(:,:) = in_data1 / in_data2
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_divide")) then
       call clean_up()
@@ -590,7 +590,7 @@ contains
 
     ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the
     ! scaled input array
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    call torch_tensor_to_array(tensor2, out_data, shape(in_data), tensor_layout)
     expected(:,:) = in_data / scalar
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide")
     if (.not. test_pass) then
@@ -658,7 +658,7 @@ contains
 
     ! Extract Fortran arrays from the assigned tensors and compare the data in the tensors to the
     ! squared input array
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    call torch_tensor_to_array(tensor2, out_data, shape(in_data), tensor_layout)
     expected(:,:) = in_data ** 2
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_square")) then
       call clean_up()
@@ -721,7 +721,7 @@ contains
 
     ! Extract Fortran arrays from the assigned tensors and compare the data in the tensors to the
     ! square root of the input array
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    call torch_tensor_to_array(tensor2, out_data, shape(in_data), tensor_layout)
     expected(:,:) = in_data ** 0.5
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")) then
       call clean_up()

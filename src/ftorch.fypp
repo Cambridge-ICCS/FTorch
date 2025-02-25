@@ -131,13 +131,16 @@ module ftorch
   end interface
 
   interface
-    function torch_to_blob_c(tensor, dtype) result(data) &
+    function torch_to_blob_c(tensor, ndims, tensor_shape, strides, dtype) result(data) &
         bind(c, name = 'torch_to_blob')
-      use, intrinsic :: iso_c_binding, only : c_int, c_ptr
+      use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
 
       implicit none
 
       type(c_ptr), value, intent(in)    :: tensor
+      integer(c_int), value, intent(in) :: ndims
+      integer(c_int64_t), intent(in)    :: tensor_shape(*)
+      integer(c_int64_t), intent(in)    :: strides(*)
       integer(c_int), value, intent(in) :: dtype
       type(c_ptr)                       :: data
     end function torch_to_blob_c
@@ -433,7 +436,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(${RANK}$)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
-    integer(c_int64_t)        :: strides(${RANK}$)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = ${RANK}$                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -451,19 +453,46 @@ contains
   ! --- Procedures for interrogating tensors
   ! ============================================================================
 
+  ! TODO: Docstring
+  subroutine torch_tensor_to_blob(tensor, data, ndims, tensor_shape, layout, dtype)
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
+    type(torch_tensor), intent(in)  :: tensor     !! Tensor to extract data from
+    type(c_ptr), intent(out)        :: data       !! Pointer to data
+    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(c_int64_t), intent(in)  :: tensor_shape(:)  !! Shape of the tensor
+    integer(c_int), intent(in)      :: layout(:)  !! Layout for strides for accessing data
+    integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
+
+    integer(c_int)                  :: i                    !! loop index
+    integer(c_int64_t)              :: strides(ndims)       !! Strides for accessing data
+
+    strides(:) = 0
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+      end if
+    end do
+
+    data = torch_to_blob_c(tensor%p, ndims, tensor_shape, strides, dtype)
+  end subroutine torch_tensor_to_blob
+
   #:for PREC in PRECISIONS
   #:for RANK in RANKS
   !> Return the array data associated with a Torch tensor of rank ${RANK}$ and data type `${PREC}$`
-  subroutine torch_tensor_to_array_${PREC}$_${RANK}$d(tensor, data_out, sizes)
+  subroutine torch_tensor_to_array_${PREC}$_${RANK}$d(tensor, data_out, sizes, layout)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$, int64
-    type(torch_tensor), intent(in) :: tensor  !! Returned tensor
+    type(torch_tensor), intent(in) :: tensor  !! Tensor the extract data from
     ${f_type(PREC)}$(kind=${PREC}$), pointer, intent(out) :: data_out${ranksuffix(RANK)}$  !! Pointer to tensor data
+    integer(ftorch_int), intent(in) :: layout(${RANK}$)  !! Control order of indices
     integer, optional, intent(in) :: sizes(${RANK}$)  !! Number of entries for each rank
     integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
 
     ! Local data
     integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
+    integer(c_int), parameter :: ndims = ${RANK}$                  !! Number of dimension of input data
     type(c_ptr) :: cptr
 
     my_shape = tensor%get_shape()
@@ -478,7 +507,7 @@ contains
     end if
 
     ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, dtype)
+    call torch_tensor_to_blob(tensor, cptr, ndims, my_shape, layout, dtype)
     call c_f_pointer(cptr, data_out, my_shape)
 
   end subroutine torch_tensor_to_array_${PREC}$_${RANK}$d

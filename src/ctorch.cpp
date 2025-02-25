@@ -246,7 +246,8 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
 // --- Functions for interrogating tensors
 // =====================================================================================
 
-void *torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype) {
+void *torch_to_blob(const torch_tensor_t tensor, int ndim, const int64_t *shape,
+                    const int64_t *strides, const torch_data_t dtype) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
   void *raw_ptr;
   switch (dtype) {

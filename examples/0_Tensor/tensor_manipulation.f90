@@ -63,7 +63,7 @@ program tensor_manipulation
   ! -----------------------------------------------
   ! Note that the torch_tensor_to_array subroutine will allocate the output array to the
   ! appropriate size if it hasn't already been allocated.
-  call torch_tensor_to_array(c, out_data, shape(in_data))
+  call torch_tensor_to_array(c, out_data, shape(in_data), tensor_layout)
   write(*,*) "Output:"
   write(*,*) out_data
 

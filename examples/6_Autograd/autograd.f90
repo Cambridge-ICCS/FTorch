@@ -45,7 +45,7 @@ program example
   Q = 3 * (a**3 - b * b / 3)
 
   ! Extract a Fortran array from a Torch tensor
-  call torch_tensor_to_array(Q, out_data, shape(in_data1))
+  call torch_tensor_to_array(Q, out_data, shape(in_data1), tensor_layout)
   write (*,*) "Q = 3 * (a ** 3 - b * b / 2) =", out_data(:,1)
 
   ! Check output tensor matches expected value

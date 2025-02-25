@@ -115,10 +115,15 @@ EXPORT_C torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *sha
  * Function to extract a C-array from a Torch Tensor's data.
  *
  * @param the Torch Tensor
+ * @param number of dimensions of the Tensor
+ * @param shape of the Tensor
+ * @param strides to take through data
  * @param data type of the elements of the Tensor
  * @return pointer to the Tensor in memory
  */
-EXPORT_C void *torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype);
+EXPORT_C void *torch_to_blob(const torch_tensor_t tensor, int ndim,
+                             const int64_t *shape, const int64_t *strides,
+                             const torch_data_t dtype);
 
 /**
  * Function to print out a Torch Tensor

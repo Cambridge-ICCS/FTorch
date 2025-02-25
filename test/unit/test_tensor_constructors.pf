@@ -109,6 +109,7 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
@@ -125,7 +126,7 @@ contains
     @assertTrue(c_associated(tensor%p))
 
     ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(expected))
+    call torch_tensor_to_array(tensor, out_data, shape(expected), tensor_layout)
 
     ! Check that the tensor values are all zero
     expected(:,:) = 0.0
@@ -163,6 +164,7 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
@@ -179,7 +181,7 @@ contains
     @assertTrue(c_associated(tensor%p))
 
     ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(expected))
+    call torch_tensor_to_array(tensor, out_data, shape(expected), tensor_layout)
 
     ! Check that the tensor values are all one
     expected(:,:) = 1.0
@@ -236,7 +238,7 @@ contains
     @assertTrue(c_associated(tensor%p))
 
     ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+    call torch_tensor_to_array(tensor, out_data, shape(in_data), tensor_layout)
 
     ! Compare the data in the tensor to the input data
     expected(:) = in_data
@@ -293,7 +295,7 @@ contains
     @assertTrue(c_associated(tensor%p))
 
     ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+    call torch_tensor_to_array(tensor, out_data, shape(in_data), tensor_layout)
 
     ! Compare the data in the tensor to the input data
     expected(:,:) = in_data
@@ -349,7 +351,7 @@ contains
     @assertTrue(c_associated(tensor%p))
 
     ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+    call torch_tensor_to_array(tensor, out_data, shape(in_data), tensor_layout)
 
     ! Compare the data in the tensor to the input data
     expected(:,:,:) = in_data
@@ -388,6 +390,7 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
+    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1]
     integer, parameter :: layout(ndims) = [1, 1]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data
@@ -409,7 +412,7 @@ contains
     @assertTrue(c_associated(tensor%p))
 
     ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+    call torch_tensor_to_array(tensor, out_data, shape(in_data), tensor_layout)
 
     ! Compare the data in the tensor to the input data 
     expected(:,:) = in_data
