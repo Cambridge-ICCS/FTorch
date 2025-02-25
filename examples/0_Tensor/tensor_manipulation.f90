@@ -74,4 +74,6 @@ program tensor_manipulation
   call torch_tensor_delete(c)
   nullify(out_data)
 
+  write(*,*) "Tensor manipulation example ran successfully"
+
 end program tensor_manipulation
