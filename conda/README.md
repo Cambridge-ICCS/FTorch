@@ -89,7 +89,7 @@ from this directory to create the environment and install dependencies.
 We install PyTorch using `pip` from within the conda environment which should include
 the MPS backend.
 
-FTorch can then be build with a CMake command similar to the following:
+FTorch can then be built with a CMake command similar to the following:
 ```sh
 cmake \
     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \

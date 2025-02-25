@@ -116,7 +116,7 @@ Note that LibTorch is not supported for the GNU Fortran compiler with MinGW.
 #### Apple Silicon Support
 
 At the time of writing [there are issues](https://github.com/pytorch/pytorch/issues/143571)
-building FTorch on apple silicon when linking to downloaded `LibTorch` binaries or
+building FTorch on Apple Silicon when linking to downloaded `LibTorch` binaries or
 pip-installed PyTorch.
 FTorch can successfully be built, including utilising the MPS backend, from inside a
 conda environment using the environment files and instructions in
