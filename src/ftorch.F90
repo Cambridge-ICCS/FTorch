@@ -2418,20 +2418,19 @@ contains
 
   !> Overloads assignment operator for tensors.
   subroutine torch_tensor_assign(output, input)
-    type(torch_tensor), intent(out) :: output
+    type(torch_tensor), intent(inout) :: output
     type(torch_tensor), intent(in) :: input
 
     interface
-      function torch_tensor_assign_c(input_c) result(output_c)                 &
-          bind(c, name = 'torch_tensor_assign')
+      subroutine torch_tensor_assign_c(output_c, input_c) bind(c, name = 'torch_tensor_assign')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
+        type(c_ptr), value, intent(in) :: output_c
         type(c_ptr), value, intent(in) :: input_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_assign_c
+      end subroutine torch_tensor_assign_c
     end interface
 
-    output%p = torch_tensor_assign_c(input%p)
+    call torch_tensor_assign_c(output%p, input%p)
   end subroutine torch_tensor_assign
 
   !> Overloads addition operator for two tensors.

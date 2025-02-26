@@ -181,10 +181,10 @@ EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
 
 /**
  * Overloads the assignment operator for Torch Tensor
+ * @param output Tensor
  * @param input Tensor
- * @return copy of input Tensor
  */
-EXPORT_C torch_tensor_t torch_tensor_assign(const torch_tensor_t input);
+EXPORT_C void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input);
 
 /**
  * Overloads the addition operator for two Torch Tensors

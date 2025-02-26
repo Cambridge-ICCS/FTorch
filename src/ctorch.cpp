@@ -334,13 +334,11 @@ void torch_tensor_delete(torch_tensor_t tensor) {
 // --- Operator overloads acting on tensors
 // =====================================================================================
 
-torch_tensor_t torch_tensor_assign(const torch_tensor_t input) {
+void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto in = reinterpret_cast<torch::Tensor *const>(input);
   torch::AutoGradMode enable_grad(in->requires_grad());
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = in->detach().clone();
-  return output;
+  *out = *in;
 }
 
 torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
