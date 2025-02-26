@@ -82,6 +82,7 @@ contains
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
+    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -95,7 +96,6 @@ contains
     ! Check input array is unchanged by the assignment
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_assign")) then
-      call clean_up()
       print *, "Error :: input array was changed during assignment"
       stop 999
     end if
@@ -103,22 +103,15 @@ contains
     ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the input
     ! array
     call torch_tensor_to_array(tensor2, out_data, shape(in_data))
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_assign")) then
-      call clean_up()
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_assign")
+
+    ! Nullifying pointers used in the unit test
+    nullify(out_data)
+
+    if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded assignment operator"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_assign
 
@@ -141,6 +134,7 @@ contains
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
+    logical :: test_pass
 
     ! Create two arbitrary input arrays
     in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -156,13 +150,11 @@ contains
     ! Check input arrays are unchanged by the addition
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     if (.not. assert_allclose(in_data1, expected, test_name="test_torch_tensor_add")) then
-      call clean_up()
       print *, "Error :: first input array was changed during addition"
       stop 999
     end if
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
     if (.not. assert_allclose(in_data2, expected, test_name="test_torch_tensor_add")) then
-      call clean_up()
       print *, "Error :: second input array was changed during addition"
       stop 999
     end if
@@ -171,23 +163,15 @@ contains
     ! of the input arrays
     call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
     expected(:,:) = in_data1 + in_data2
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_add")) then
-      call clean_up()
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_add")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
+    if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded addition operator"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-        call torch_tensor_delete(tensor3)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_add
 
@@ -210,6 +194,7 @@ contains
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
+    logical :: test_pass
 
     ! Create two arbitrary input arrays
     in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -226,13 +211,11 @@ contains
     ! Check input arrays are unchanged by the subtraction
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     if (.not. assert_allclose(in_data1, expected, test_name="test_torch_tensor_subtract")) then
-      call clean_up()
       print *, "Error :: first input array was changed during subtraction"
       stop 999
     end if
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
     if (.not. assert_allclose(in_data2, expected, test_name="test_torch_tensor_subtract")) then
-      call clean_up()
       print *, "Error :: second input array was changed during subtraction"
       stop 999
     end if
@@ -241,23 +224,15 @@ contains
     ! difference of the input arrays
     call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
     expected(:,:) = in_data1 - in_data2
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract")) then
-      call clean_up()
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
+    if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded subtraction operator"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-        call torch_tensor_delete(tensor3)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_subtract
 
@@ -300,7 +275,6 @@ contains
     ! Check input arrays are unchanged by the negation
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_negative")) then
-      call clean_up()
       print *, "Error :: first input array was changed during subtraction"
       stop 999
     end if
@@ -309,22 +283,15 @@ contains
     ! negative of the input array
     call torch_tensor_to_array(tensor2, out_data, shape(in_data))
     expected(:,:) = -in_data
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_negative")) then
-      call clean_up()
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_negative")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
+    if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded subtraction operator"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_negative
 
@@ -345,6 +312,7 @@ contains
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
+    logical :: test_pass
 
     ! Create two arbitrary input arrays
     in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -361,13 +329,11 @@ contains
     ! Check input arrays are unchanged by the multiplication
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     if (.not. assert_allclose(in_data1, expected, test_name="test_torch_tensor_multiply")) then
-      call clean_up()
       print *, "Error :: first input array was changed during multiplication"
       stop 999
     end if
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
     if (.not. assert_allclose(in_data2, expected, test_name="test_torch_tensor_multiply")) then
-      call clean_up()
       print *, "Error :: second input array was changed during multiplication"
       stop 999
     end if
@@ -376,23 +342,15 @@ contains
     ! product of the input arrays
     call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
     expected(:,:) = in_data1 * in_data2
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_multiply")) then
-      call clean_up()
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_multiply")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
+    if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded multiplication operator"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-        call torch_tensor_delete(tensor3)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_multiply
 
@@ -436,7 +394,6 @@ contains
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_scalar_multiply")
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: input array was changed during scalar multiplication"
       stop 999
     end if
@@ -446,22 +403,14 @@ contains
     call torch_tensor_to_array(tensor2, out_data, shape(in_data))
     expected(:,:) = scalar * in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: incorrect output from overloaded scalar multiplication operator"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_scalar_multiply
 
@@ -484,6 +433,7 @@ contains
     real(wp), dimension(2,3), target :: in_data1, in_data2
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
+    logical :: test_pass
 
     ! Create two arbitrary input arrays
     in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -499,13 +449,11 @@ contains
     ! Check input arrays are unchanged by the division
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     if (.not. assert_allclose(in_data1, expected, test_name="test_torch_tensor_divide")) then
-      call clean_up()
       print *, "Error :: first input array was changed during division"
       stop 999
     end if
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
     if (.not. assert_allclose(in_data2, expected, test_name="test_torch_tensor_divide")) then
-      call clean_up()
       print *, "Error :: second input array was changed during division"
       stop 999
     end if
@@ -514,23 +462,15 @@ contains
     ! quotient of the input arrays
     call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
     expected(:,:) = in_data1 / in_data2
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_divide")) then
-      call clean_up()
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_divide")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
+    if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded division operator"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-        call torch_tensor_delete(tensor3)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_divide
 
@@ -570,7 +510,6 @@ contains
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_scalar_divide")
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: input array was changed during scalar division"
       stop 999
     end if
@@ -580,22 +519,14 @@ contains
     call torch_tensor_to_array(tensor2, out_data, shape(in_data))
     expected(:,:) = in_data / scalar
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: incorrect output from overloaded scalar division operator"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_scalar_divide
 
@@ -618,6 +549,7 @@ contains
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
+    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -636,7 +568,6 @@ contains
     ! Check input array is unchanged by pre-multiplication
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_square")) then
-      call clean_up()
       print *, "Error :: input array was changed during exponentation (square)"
       stop 999
     end if
@@ -645,22 +576,15 @@ contains
     ! squared input array
     call torch_tensor_to_array(tensor2, out_data, shape(in_data))
     expected(:,:) = in_data ** 2
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_square")) then
-      call clean_up()
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_square")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
+    if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded exponentation operator (square)"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_square
 
@@ -684,6 +608,7 @@ contains
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(:,:), pointer :: out_data
     real(wp), dimension(2,3) :: expected
+    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -698,7 +623,6 @@ contains
     ! Check input array is unchanged by taking the square root
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_sqrt")) then
-      call clean_up()
       print *, "Error :: input array was changed during exponentation (square root)"
       stop 999
     end if
@@ -707,22 +631,15 @@ contains
     ! square root of the input array
     call torch_tensor_to_array(tensor2, out_data, shape(in_data))
     expected(:,:) = in_data ** 0.5
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")) then
-      call clean_up()
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
+    if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded exponentiation operator (square root)"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_sqrt
 
