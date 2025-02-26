@@ -66,7 +66,7 @@ contains
     string = str
   end function toString
 
-  ! Unit test for the torch_tensor_empty subroutine
+  ! Unit test for the torch_tensor_empty subroutine and for manually calling torch_tensor_delete
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_empty(this)
     use ftorch, only: torch_tensor_empty
@@ -82,14 +82,14 @@ contains
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor%p))
 
-    ! Create a tensor of zeros
+    ! Create a tensor without any data values assigned
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
                             this%param%requires_grad)
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor%p))
 
-    ! Cleanup
+    ! Call torch_tensor_delete manually
     call torch_tensor_delete(tensor)
 
     ! Check torch_tensor_delete does indeed free the memory
