@@ -188,12 +188,12 @@ EXPORT_C void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t in
 
 /**
  * Overloads the addition operator for two Torch Tensors
+ * @param sum of the Tensors
  * @param first Tensor to be added
  * @param second Tensor to be added
- * @return sum of the Tensors
  */
-EXPORT_C torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
-                                         const torch_tensor_t tensor2);
+EXPORT_C void torch_tensor_add(torch_tensor_t, const torch_tensor_t tensor1,
+                               const torch_tensor_t tensor2);
 
 /**
  * Overloads the minus operator for a single Torch Tensor

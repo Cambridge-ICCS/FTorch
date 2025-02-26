@@ -666,17 +666,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_add_c(tensor1_c, tensor2_c) result(output_c)       &
+      subroutine torch_tensor_add_c(output_c, tensor1_c, tensor2_c) &
           bind(c, name = 'torch_tensor_add')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: tensor1_c
         type(c_ptr), value, intent(in) :: tensor2_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_add_c
+        type(c_ptr), value, intent(in) :: output_c
+      end subroutine torch_tensor_add_c
     end interface
 
-    output%p = torch_tensor_add_c(tensor1%p, tensor2%p)
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), tensor1%get_dtype(), &
+                            tensor1%get_device_type(), tensor1%get_device_index())
+    call torch_tensor_add_c(output%p,tensor1%p, tensor2%p)
   end function torch_tensor_add
 
   !> Overloads negative operator for a single tensor.
