@@ -355,56 +355,46 @@ void torch_tensor_negative(torch_tensor_t output, const torch_tensor_t tensor) {
   *out = -*t;
 }
 
-torch_tensor_t torch_tensor_subtract(const torch_tensor_t tensor1,
-                                     const torch_tensor_t tensor2) {
+void torch_tensor_subtract(torch_tensor_t output, const torch_tensor_t tensor1,
+                           const torch_tensor_t tensor2) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
   auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = *t1 - *t2;
-  return output;
+  *out = *t1 - *t2;
 }
 
-torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
-                                     const torch_tensor_t tensor2) {
+void torch_tensor_multiply(torch_tensor_t output, const torch_tensor_t tensor1,
+                           const torch_tensor_t tensor2) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
   auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = *t1 * *t2;
-  return output;
+  *out = *t1 * *t2;
 }
 
-torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
-                                   const torch_tensor_t tensor2) {
+void torch_tensor_divide(torch_tensor_t output, const torch_tensor_t tensor1,
+                         const torch_tensor_t tensor2) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
   auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = *t1 / *t2;
-  return output;
+  *out = *t1 / *t2;
 }
 
-torch_tensor_t torch_tensor_power_int(const torch_tensor_t tensor,
-                                      const torch_int_t exponent) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+void torch_tensor_power_int(torch_tensor_t output, const torch_tensor_t tensor,
+                            const torch_int_t exponent) {
   // NOTE: The following cast will only work for integer exponents
+  auto out = reinterpret_cast<torch::Tensor *>(output);
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
   auto exp = reinterpret_cast<int *const>(exponent);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = pow(*t, *exp);
-  return output;
+  *out = pow(*t, *exp);
 }
 
-torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
-                                        const torch_float_t exponent) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+void torch_tensor_power_float(torch_tensor_t output, const torch_tensor_t tensor,
+                              const torch_float_t exponent) {
   // NOTE: The following cast will only work for floating point exponents
+  auto out = reinterpret_cast<torch::Tensor *>(output);
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
   auto exp = reinterpret_cast<float *const>(exponent);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = pow(*t, *exp);
-  return output;
+  *out = pow(*t, *exp);
 }
 
 // =============================================================================

@@ -208,14 +208,14 @@ module ftorch
   end interface
 
   interface
-    function torch_tensor_multiply_c(tensor1_c, tensor2_c) result(output_c)  &
+    subroutine torch_tensor_multiply_c(output_c, tensor1_c, tensor2_c) &
         bind(c, name = 'torch_tensor_multiply')
       use, intrinsic :: iso_c_binding, only : c_ptr
       implicit none
+      type(c_ptr), value, intent(in) :: output_c
       type(c_ptr), value, intent(in) :: tensor1_c
       type(c_ptr), value, intent(in) :: tensor2_c
-      type(c_ptr) :: output_c
-    end function torch_tensor_multiply_c
+    end subroutine torch_tensor_multiply_c
   end interface
 
   interface operator (/)
@@ -229,14 +229,14 @@ module ftorch
   end interface
 
   interface
-    function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c)  &
+    subroutine torch_tensor_divide_c(output_c, tensor1_c, tensor2_c) &
         bind(c, name = 'torch_tensor_divide')
       use, intrinsic :: iso_c_binding, only : c_ptr
       implicit none
+      type(c_ptr), value, intent(in) :: output_c
       type(c_ptr), value, intent(in) :: tensor1_c
       type(c_ptr), value, intent(in) :: tensor2_c
-      type(c_ptr) :: output_c
-    end function torch_tensor_divide_c
+    end subroutine torch_tensor_divide_c
   end interface
 
   interface operator (**)
@@ -2486,17 +2486,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_subtract_c(tensor1_c, tensor2_c) result(output_c)  &
+      subroutine torch_tensor_subtract_c(output_c, tensor1_c, tensor2_c) &
           bind(c, name = 'torch_tensor_subtract')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
+        type(c_ptr), value, intent(in) :: output_c
         type(c_ptr), value, intent(in) :: tensor1_c
         type(c_ptr), value, intent(in) :: tensor2_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_subtract_c
+      end subroutine torch_tensor_subtract_c
     end interface
 
-    output%p = torch_tensor_subtract_c(tensor1%p, tensor2%p)
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), tensor1%get_dtype(), &
+                            tensor1%get_device_type(), tensor1%get_device_index())
+    call torch_tensor_subtract_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_subtract
 
   !> Overloads multiplication operator for two tensors.
@@ -2505,7 +2508,10 @@ contains
     type(torch_tensor), intent(in) :: tensor2
     type(torch_tensor) :: output
 
-    output%p = torch_tensor_multiply_c(tensor1%p, tensor2%p)
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), tensor1%get_dtype(), &
+                            tensor1%get_device_type(), tensor1%get_device_index())
+    call torch_tensor_multiply_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_multiply
 
   !> Overloads multiplication operator for a scalar of type int8 and a tensor.
@@ -2517,9 +2523,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
+    call torch_tensor_multiply_c(output%p, wrk%p, tensor%p)
   end function torch_tensor_premultiply_int8
 
   !> Overloads multiplication operator for a scalar of type int16 and a tensor.
@@ -2531,9 +2540,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
+    call torch_tensor_multiply_c(output%p, wrk%p, tensor%p)
   end function torch_tensor_premultiply_int16
 
   !> Overloads multiplication operator for a scalar of type int32 and a tensor.
@@ -2545,9 +2557,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
+    call torch_tensor_multiply_c(output%p, wrk%p, tensor%p)
   end function torch_tensor_premultiply_int32
 
   !> Overloads multiplication operator for a scalar of type int64 and a tensor.
@@ -2559,9 +2574,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
+    call torch_tensor_multiply_c(output%p, wrk%p, tensor%p)
   end function torch_tensor_premultiply_int64
 
   !> Overloads multiplication operator for a scalar of type real32 and a tensor.
@@ -2573,9 +2591,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
+    call torch_tensor_multiply_c(output%p, wrk%p, tensor%p)
   end function torch_tensor_premultiply_real32
 
   !> Overloads multiplication operator for a scalar of type real64 and a tensor.
@@ -2587,9 +2608,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(wrk%p, tensor%p)
+    call torch_tensor_multiply_c(output%p, wrk%p, tensor%p)
   end function torch_tensor_premultiply_real64
 
 
@@ -2602,9 +2626,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
+    call torch_tensor_multiply_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int8
 
   !> Overloads multiplication operator for a tensor and a scalar of type int16.
@@ -2616,9 +2643,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
+    call torch_tensor_multiply_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int16
 
   !> Overloads multiplication operator for a tensor and a scalar of type int32.
@@ -2630,9 +2660,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
+    call torch_tensor_multiply_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int32
 
   !> Overloads multiplication operator for a tensor and a scalar of type int64.
@@ -2644,9 +2677,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
+    call torch_tensor_multiply_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postmultiply_int64
 
   !> Overloads multiplication operator for a tensor and a scalar of type real32.
@@ -2658,9 +2694,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
+    call torch_tensor_multiply_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postmultiply_real32
 
   !> Overloads multiplication operator for a tensor and a scalar of type real64.
@@ -2672,9 +2711,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-multiplier
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_multiply_c(tensor%p, wrk%p)
+    call torch_tensor_multiply_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postmultiply_real64
 
   !> Overloads division operator for two tensors.
@@ -2683,7 +2725,10 @@ contains
     type(torch_tensor), intent(in) :: tensor2
     type(torch_tensor) :: output
 
-    output%p = torch_tensor_divide_c(tensor1%p, tensor2%p)
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), tensor1%get_dtype(), &
+                            tensor1%get_device_type(), tensor1%get_device_index())
+    call torch_tensor_divide_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_divide
 
   !> Overloads division operator for a tensor and a scalar of type int8.
@@ -2695,9 +2740,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-divisor
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
+    call torch_tensor_divide_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postdivide_int8
 
   !> Overloads division operator for a tensor and a scalar of type int16.
@@ -2709,9 +2757,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-divisor
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
+    call torch_tensor_divide_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postdivide_int16
 
   !> Overloads division operator for a tensor and a scalar of type int32.
@@ -2723,9 +2774,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-divisor
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
+    call torch_tensor_divide_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postdivide_int32
 
   !> Overloads division operator for a tensor and a scalar of type int64.
@@ -2737,9 +2791,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-divisor
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
+    call torch_tensor_divide_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postdivide_int64
 
   !> Overloads division operator for a tensor and a scalar of type real32.
@@ -2751,9 +2808,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-divisor
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
+    call torch_tensor_divide_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postdivide_real32
 
   !> Overloads division operator for a tensor and a scalar of type real64.
@@ -2765,9 +2825,12 @@ contains
     type(torch_tensor) :: wrk, output
 
     ! Create a tensor with a single entry, the scalar post-divisor
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
-    output%p = torch_tensor_divide_c(tensor%p, wrk%p)
+    call torch_tensor_divide_c(output%p, tensor%p, wrk%p)
   end function torch_tensor_postdivide_real64
 
 
@@ -2780,17 +2843,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_int_c(tensor_c, power_c) result(output_c)        &
+      subroutine torch_tensor_power_int_c(output_c, tensor_c, power_c) &
           bind(c, name = 'torch_tensor_power_int')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int8_t
+        use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
+        type(c_ptr), value, intent(in) :: output_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_int_c
+      end subroutine torch_tensor_power_int_c
     end interface
 
-    output%p = torch_tensor_power_int_c(tensor%p, c_loc(power))
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
+    call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int8
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `int16`
@@ -2802,17 +2868,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_int_c(tensor_c, power_c) result(output_c)        &
+      subroutine torch_tensor_power_int_c(output_c, tensor_c, power_c) &
           bind(c, name = 'torch_tensor_power_int')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int16_t
+        use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
+        type(c_ptr), value, intent(in) :: output_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_int_c
+      end subroutine torch_tensor_power_int_c
     end interface
 
-    output%p = torch_tensor_power_int_c(tensor%p, c_loc(power))
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
+    call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int16
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `int32`
@@ -2824,17 +2893,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_int_c(tensor_c, power_c) result(output_c)        &
+      subroutine torch_tensor_power_int_c(output_c, tensor_c, power_c) &
           bind(c, name = 'torch_tensor_power_int')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int32_t
+        use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
+        type(c_ptr), value, intent(in) :: output_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_int_c
+      end subroutine torch_tensor_power_int_c
     end interface
 
-    output%p = torch_tensor_power_int_c(tensor%p, c_loc(power))
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
+    call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int32
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `int64`
@@ -2846,17 +2918,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_int_c(tensor_c, power_c) result(output_c)        &
+      subroutine torch_tensor_power_int_c(output_c, tensor_c, power_c) &
           bind(c, name = 'torch_tensor_power_int')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int64_t
+        use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
+        type(c_ptr), value, intent(in) :: output_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_int_c
+      end subroutine torch_tensor_power_int_c
     end interface
 
-    output%p = torch_tensor_power_int_c(tensor%p, c_loc(power))
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
+    call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int64
 
 
@@ -2869,17 +2944,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_float_c(tensor_c, power_c) result(output_c)        &
+      subroutine torch_tensor_power_float_c(output_c, tensor_c, power_c) &
           bind(c, name = 'torch_tensor_power_float')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_float
+        use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
+        type(c_ptr), value, intent(in) :: output_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_float_c
+      end subroutine torch_tensor_power_float_c
     end interface
 
-    output%p = torch_tensor_power_float_c(tensor%p, c_loc(power))
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
+    call torch_tensor_power_float_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_real32
 
   !> Overloads exponentiation operator for a tensor and a scalar of type `real64`
@@ -2891,17 +2969,20 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_power_float_c(tensor_c, power_c) result(output_c)        &
+      subroutine torch_tensor_power_float_c(output_c, tensor_c, power_c) &
           bind(c, name = 'torch_tensor_power_float')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_double
+        use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
+        type(c_ptr), value, intent(in) :: output_c
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: power_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_power_float_c
+      end subroutine torch_tensor_power_float_c
     end interface
 
-    output%p = torch_tensor_power_float_c(tensor%p, c_loc(power))
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
+    call torch_tensor_power_float_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_real64
 
 
