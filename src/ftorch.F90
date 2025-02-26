@@ -34,6 +34,7 @@ module ftorch
     procedure :: get_dtype => torch_tensor_get_dtype
     procedure :: get_device_type => torch_tensor_get_device_type
     procedure :: get_device_index => torch_tensor_get_device_index
+    final :: torch_tensor_delete
   end type torch_tensor
 
   !| Enumerator for Torch data types
@@ -2398,6 +2399,7 @@ contains
 
   !> Deallocates a tensor.
   subroutine torch_tensor_delete(tensor)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_null_ptr
     type(torch_tensor), intent(inout) :: tensor
 
     interface
@@ -2409,7 +2411,11 @@ contains
       end subroutine torch_tensor_delete_c
     end interface
 
-    call torch_tensor_delete_c(tensor%p)
+    ! Call the destructor, if it hasn't already been called
+    if (c_associated(tensor%p)) then
+      call torch_tensor_delete_c(tensor%p)
+      tensor%p = c_null_ptr
+    end if
   end subroutine torch_tensor_delete
 
   ! ============================================================================

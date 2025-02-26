@@ -92,6 +92,9 @@ contains
     ! Cleanup
     call torch_tensor_delete(tensor)
 
+    ! Check torch_tensor_delete does indeed free the memory
+    @assertFalse(c_associated(tensor%p))
+
   end subroutine test_torch_tensor_empty
 
   ! Unit test for the torch_tensor_zeros subroutine
