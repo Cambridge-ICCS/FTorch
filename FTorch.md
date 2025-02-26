@@ -15,7 +15,8 @@ extra_filetypes: c   //
                  h //
                  py  #
 preprocess: true
-macro: GPU_DEVICE_NONE=0
+macro: UNIX
+       GPU_DEVICE_NONE=0
        GPU_DEVICE_CUDA=1
        GPU_DEVICE_XPU=11
        GPU_DEVICE_MPS=12
