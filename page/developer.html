@@ -47,6 +47,9 @@
                 <li class="nav-item">
                   <a class="nav-link" href="../lists/procedures.html">Procedures</a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
                 <form action="../search.html" role="search" class="ms-auto">
@@ -282,6 +285,8 @@ but as a quick-start:</p>
 any further items are contained in <code>pages/</code> as markdown files.</p>
 <p>Documentation of the C functions in <code>ctorch.h</code> is provided
 by <a href="https://www.doxygen.nl/index.html">Doxygen</a>.</p>
+<p>Note that we need to define the macros for GPU devices that are passed to <code>ftorch.F90</code>
+via the C preprocessor in <code>FTorch.md</code> to match those in the CMakeLists.txt.</p>
     </div>
   </div>
       <hr>
