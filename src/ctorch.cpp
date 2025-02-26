@@ -349,12 +349,10 @@ void torch_tensor_add(torch_tensor_t output, const torch_tensor_t tensor1,
   *out = *t1 + *t2;
 }
 
-torch_tensor_t torch_tensor_negative(const torch_tensor_t tensor) {
+void torch_tensor_negative(torch_tensor_t output, const torch_tensor_t tensor) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = -*t;
-  return output;
+  *out = -*t;
 }
 
 torch_tensor_t torch_tensor_subtract(const torch_tensor_t tensor1,

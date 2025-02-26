@@ -2465,16 +2465,18 @@ contains
     type(torch_tensor) :: output
 
     interface
-      function torch_tensor_negative_c(tensor_c) result(output_c)  &
-          bind(c, name = 'torch_tensor_negative')
+      subroutine torch_tensor_negative_c(output_c, tensor_c) bind(c, name = 'torch_tensor_negative')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: output_c
-      end function torch_tensor_negative_c
+        type(c_ptr), value, intent(in) :: output_c
+      end subroutine torch_tensor_negative_c
     end interface
 
-    output%p = torch_tensor_negative_c(tensor%p)
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                            tensor%get_device_type(), tensor%get_device_index())
+    call torch_tensor_negative_c(output%p, tensor%p)
   end function torch_tensor_negative
 
   !> Overloads subtraction operator for two tensors.
