@@ -653,6 +653,9 @@ contains
       end subroutine torch_tensor_assign_c
     end interface
 
+    ! TODO: Pass requires_grad argument
+    call torch_tensor_empty(output, input%get_rank(), input%get_shape(), input%get_dtype(), &
+                            input%get_device_type(), input%get_device_index())
     call torch_tensor_assign_c(output%p, input%p)
   end subroutine torch_tensor_assign
 

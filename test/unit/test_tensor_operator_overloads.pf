@@ -7,8 +7,7 @@
 module test_tensor_operator_overloads
   use funit
   use ftorch, only: assignment(=), ftorch_int, torch_kCPU, torch_kFloat32, torch_tensor, &
-                    torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
-                    torch_tensor_to_array
+                    torch_tensor_delete, torch_tensor_from_array, torch_tensor_to_array
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
@@ -90,9 +89,7 @@ contains
     ! Create a tensor based off an input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
-    ! Create another empty tensor and assign it to the first using the overloaded assignment
-    ! operator
-    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
+    ! Create another tensor by copying the first using the overloaded assignment operator
     tensor2 = tensor1
 
     ! Check input array is unchanged by the assignment
@@ -153,9 +150,7 @@ contains
     call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
     call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
 
-    ! Create another empty tensor and assign it to the sum of the first two using the overloaded
-    ! addition operator
-    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
+    ! Create another tensor as the sum of the first two using the overloaded addition operator
     tensor3 = tensor1 + tensor2
 
     ! Check input arrays are unchanged by the addition
@@ -224,9 +219,8 @@ contains
     call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
     call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
 
-    ! Create another empty tensor and assign it to the difference of the first two using the
-    ! overloaded subtraction operator
-    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
+    ! Create another tensor as the difference of the first two using the overloaded subtraction
+    ! operator
     tensor3 = tensor1 - tensor2
 
     ! Check input arrays are unchanged by the subtraction
@@ -271,8 +265,8 @@ contains
   subroutine test_torch_tensor_negative(this)
     use FUnit
     use ftorch, only: assignment(=), operator(-), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_delete, torch_tensor_empty, &
-                      torch_tensor_from_array, torch_tensor_to_array
+                      torch_tensor, torch_tensor_delete, torch_tensor_from_array, &
+                      torch_tensor_to_array
     use ftorch_test_utils, only: assert_allclose
     use, intrinsic :: iso_fortran_env, only: sp => real32
     use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
@@ -300,9 +294,7 @@ contains
     ! Create tensors based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
-    ! Create another empty tensor and assign it to the negative of the first using the overloaded
-    ! negative operator
-    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
+    ! Create another tensor as the negative of the first using the overloaded negative operator
     tensor2 = -tensor1
 
     ! Check input arrays are unchanged by the negation
@@ -362,9 +354,8 @@ contains
     call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
     call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
 
-    ! Create another empty tensor and assign it to the product of the first two using the
-    ! overloaded multiplication operator
-    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
+    ! Create another tensor as the product of the first two using the overloaded multiplication
+    ! operator
     tensor3 = tensor1 * tensor2
 
     ! Check input arrays are unchanged by the multiplication
@@ -433,9 +424,8 @@ contains
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
-    ! Create another two empty tensors and assign them to the products of a scalar constant and the
-    ! first tensor using the overloaded multiplication operator (in each order)
-    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
+    ! Create another tensor as the product of a scalar constant and the first tensor using the
+    ! overloaded multiplication operator
     if (this%param%switch) then
       tensor2 = scalar * tensor1
     else
@@ -503,9 +493,7 @@ contains
     call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
     call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
 
-    ! Create another empty tensor and assign it to the quotient of the first two using the
-    ! overloaded division operator
-    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
+    ! Create another tensor as the quotient of the first two using the overloaded division operator
     tensor3 = tensor1 / tensor2
 
     ! Check input arrays are unchanged by the division
@@ -574,9 +562,8 @@ contains
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
-    ! Create another empty tensor and assign it to the quotient of the first tensor and a scalar
-    ! constant using the overloaded division operator
-    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
+    ! Create another tensor as the quotient of the first tensor and a scalar constant using the
+    ! overloaded division operator
     tensor2 = tensor1 / scalar
 
     ! Check input array is unchanged by post-division
@@ -638,10 +625,8 @@ contains
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
-    ! Create another two empty tensors and assign them to the first tensor to the power of an
-    ! integer exponent and float exponent, respectively, using the overloaded exponentiation
-    ! operator
-    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
+    ! Create another tensor as the first tensor to the power of an exponent using the
+    ! overloaded exponentiation operator
     if (this%param%switch) then
       tensor2 = tensor1 ** 2
     else
@@ -706,9 +691,8 @@ contains
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
-    ! Create another empty tensors and assign it to the tensor to the power of 0.5 using the
-    ! overloaded exponentiation operator
-    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
+    ! Create another tensors as the tensor to the power of 0.5 using the overloaded exponentiation
+    ! operator
     tensor2 = tensor1 ** 0.5
 
     ! Check input array is unchanged by taking the square root
