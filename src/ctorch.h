@@ -181,72 +181,73 @@ EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
 
 /**
  * Overloads the assignment operator for Torch Tensor
+ * @param output Tensor
  * @param input Tensor
- * @return copy of input Tensor
  */
-EXPORT_C torch_tensor_t torch_tensor_assign(const torch_tensor_t input);
+EXPORT_C void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input);
 
 /**
  * Overloads the addition operator for two Torch Tensors
+ * @param sum of the Tensors
  * @param first Tensor to be added
  * @param second Tensor to be added
- * @return sum of the Tensors
  */
-EXPORT_C torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
-                                         const torch_tensor_t tensor2);
+EXPORT_C void torch_tensor_add(torch_tensor_t, const torch_tensor_t tensor1,
+                               const torch_tensor_t tensor2);
 
 /**
  * Overloads the minus operator for a single Torch Tensor
+ * @param the negative Tensor
  * @param Tensor to take the negative of
- * @return the negative Tensor
  */
-EXPORT_C torch_tensor_t torch_tensor_negative(const torch_tensor_t tensor);
+EXPORT_C void torch_tensor_negative(torch_tensor_t output, const torch_tensor_t tensor);
 
 /**
  * Overloads the subtraction operator for two Torch Tensors
+ * @param output Tensor
  * @param first Tensor to be subtracted
  * @param second Tensor to be subtracted
- * @return difference of the Tensors
  */
-EXPORT_C torch_tensor_t torch_tensor_subtract(const torch_tensor_t tensor1,
-                                              const torch_tensor_t tensor2);
+EXPORT_C void torch_tensor_subtract(torch_tensor_t output, const torch_tensor_t tensor1,
+                                    const torch_tensor_t tensor2);
 
 /**
  * Overloads the multiplication operator for two Torch Tensors
+ * @param output Tensor
  * @param first Tensor to be multiplied
  * @param second Tensor to be multiplied
- * @return product of the Tensors
  */
-EXPORT_C torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
-                                              const torch_tensor_t tensor2);
+EXPORT_C void torch_tensor_multiply(torch_tensor_t output, const torch_tensor_t tensor1,
+                                    const torch_tensor_t tensor2);
 
 /**
  * Overloads the division operator for two Torch Tensors.
+ * @param output Tensor
  * @param first Tensor to be divided
  * @param second Tensor to be divided
- * @return quotient of the Tensors
  */
-EXPORT_C torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
-                                            const torch_tensor_t tensor2);
+EXPORT_C void torch_tensor_divide(torch_tensor_t output, const torch_tensor_t tensor1,
+                                  const torch_tensor_t tensor2);
 
 /**
  * Overloads the exponentiation operator for a Torch Tensor and an integer exponent
+ * @param output Tensor
  * @param Tensor to take the power of
  * @param integer exponent
- * @return power of the Tensor
  */
-EXPORT_C torch_tensor_t torch_tensor_power_int(const torch_tensor_t tensor,
-                                               const torch_int_t exponent);
+EXPORT_C void torch_tensor_power_int(torch_tensor_t output, const torch_tensor_t tensor,
+                                     const torch_int_t exponent);
 
 /**
  * Overloads the exponentiation operator for a Torch Tensor and a floating point
  * exponent
+ * @param output Tensor
  * @param Tensor to take the power of
  * @param floating point exponent
- * @return power of the Tensor
  */
-EXPORT_C torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
-                                                 const torch_float_t exponent);
+EXPORT_C void torch_tensor_power_float(torch_tensor_t output,
+                                       const torch_tensor_t tensor,
+                                       const torch_float_t exponent);
 
 // =============================================================================
 // --- Torch model API

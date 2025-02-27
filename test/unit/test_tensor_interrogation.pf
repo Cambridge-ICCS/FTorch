@@ -6,8 +6,7 @@
 !    file for details.
 module test_tensor_interrogation
   use funit
-  use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, &
-                    torch_tensor_empty
+  use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_empty
   use iso_c_binding, only: c_int64_t
 
   implicit none
@@ -33,12 +32,7 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (ndims /= tensor%get_rank()) then
-      call torch_tensor_delete(tensor)
-      print *, "Error :: tensor%get_rank() returned incorrect rank for 1D tensor"
-      stop 999
-    end if
-    call torch_tensor_delete(tensor)
+    @assertEqual(ndims, tensor%get_rank())
 
   end subroutine test_torch_tensor_get_rank_1D
 
@@ -56,12 +50,7 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (ndims /= tensor%get_rank()) then
-      call torch_tensor_delete(tensor)
-      print *, "Error :: tensor%get_rank() returned incorrect rank for 2D tensor"
-      stop 999
-    end if
-    call torch_tensor_delete(tensor)
+    @assertEqual(ndims, tensor%get_rank())
 
   end subroutine test_torch_tensor_get_rank_2D
 
@@ -79,12 +68,7 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (ndims /= tensor%get_rank()) then
-      call torch_tensor_delete(tensor)
-      print *, "Error :: tensor%get_rank() returned incorrect rank for 3D tensor"
-      stop 999
-    end if
-    call torch_tensor_delete(tensor)
+    @assertEqual(ndims, tensor%get_rank())
 
   end subroutine test_torch_tensor_get_rank_3D
 
@@ -102,12 +86,7 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (.not. all(tensor_shape == tensor%get_shape())) then
-      call torch_tensor_delete(tensor)
-      print *, "Error :: tensor%get_shape() returned incorrect shape for 1D tensor"
-      stop 999
-    end if
-    call torch_tensor_delete(tensor)
+    @assertTrue(all(tensor_shape == tensor%get_shape()))
 
   end subroutine test_torch_tensor_get_shape_1D
 
@@ -125,12 +104,7 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (.not. all(tensor_shape == tensor%get_shape())) then
-      call torch_tensor_delete(tensor)
-      print *, "Error :: tensor%get_shape() returned incorrect shape for 2D tensor"
-      stop 999
-    end if
-    call torch_tensor_delete(tensor)
+    @assertTrue(all(tensor_shape == tensor%get_shape()))
 
   end subroutine test_torch_tensor_get_shape_2D
 
@@ -148,12 +122,7 @@ contains
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    if (.not. all(tensor_shape == tensor%get_shape())) then
-      call torch_tensor_delete(tensor)
-      print *, "Error :: tensor%get_shape() returned incorrect shape for 3D tensor"
-      stop 999
-    end if
-    call torch_tensor_delete(tensor)
+    @assertTrue(all(tensor_shape == tensor%get_shape()))
 
   end subroutine test_torch_tensor_get_shape_3D
 
@@ -169,16 +138,10 @@ contains
     integer, parameter :: dtype = torch_kFloat32
     integer, parameter :: expected = torch_kFloat32
 
-    ! Create an empty tensor for 32-bit floats
+    ! Create an empty tensor for 32-bit floats and check that torch_tensor_get_dtype can get the
+    ! device type
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-
-    ! Check that torch_tensor_get_dtype can get the device type
-    if (expected /= tensor%get_dtype()) then
-      call torch_tensor_delete(tensor)
-      print *, "Error :: tensor%get_dtype() returned incorrect dtype"
-      stop 999
-    end if
-    call torch_tensor_delete(tensor)
+    @assertEqual(expected, tensor%get_dtype())
 
   end subroutine test_torch_tensor_get_dtype
 
@@ -194,16 +157,10 @@ contains
     integer, parameter :: dtype = torch_kFloat32
     integer, parameter :: expected = torch_kCPU
 
-    ! Create an empty tensor on the CPU with the default device type
+    ! Create an empty tensor on the CPU with the default device type and check that
+    ! torch_tensor_get_device_type can get the device type
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-
-    ! Check that torch_tensor_get_device_type can get the device type
-    if (expected /= tensor%get_device_type()) then
-      call torch_tensor_delete(tensor)
-      print *, "Error :: tensor%get_device_type() returned incorrect device type"
-      stop 999
-    end if
-    call torch_tensor_delete(tensor)
+    @assertEqual(expected, tensor%get_device_type())
 
   end subroutine test_torch_tensor_get_device_type
 
@@ -219,16 +176,10 @@ contains
     integer, parameter :: dtype = torch_kFloat32
     integer, parameter :: expected = -1
 
-    ! Create an empty tensor on the CPU with the default device index
+    ! Create an empty tensor on the CPU with the default device index and check that
+    ! torch_tensor_get_device_index can get the device index
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-
-    ! Check that torch_tensor_get_device_index can get the device index
-    if (expected /= tensor%get_device_index()) then
-      call torch_tensor_delete(tensor)
-      print *, "Error :: tensor%get_device_index() returned incorrect CPU device index"
-      stop 999
-    end if
-    call torch_tensor_delete(tensor)
+    @assertEqual(expected, tensor%get_device_index())
 
   end subroutine test_torch_tensor_get_device_index_default
 

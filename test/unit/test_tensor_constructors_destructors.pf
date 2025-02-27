@@ -1,10 +1,10 @@
-!| Unit tests for FTorch subroutines that construct tensors.
+!| Unit tests for FTorch subroutines that construct and destroy tensors.
 !
 !  * License
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module test_tensor_constructors
+module test_tensor_constructors_destructors
   use funit
   use ftorch, only: ftorch_int, torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, &
                     torch_tensor_to_array
@@ -23,6 +23,7 @@ module test_tensor_constructors
   @testParameter
   type, extends(AbstractTestParameter) :: TestParametersType
     logical :: requires_grad
+    logical :: auto_delete
   contains
     procedure :: toString
   end type TestParametersType
@@ -46,27 +47,39 @@ contains
   function get_parameters_full() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
-      TestParametersType(.false.), &
-      TestParametersType(.true.) &
+      TestParametersType(.false.,.false.), &
+      TestParametersType(.true.,.false.), &
+      TestParametersType(.false.,.true.), &
+      TestParametersType(.true.,.true.) &
     ]
   end function get_parameters_full
+
+  ! A fixture for checking requires_grad being true and false
+  function get_parameters_requires_grad() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,.false.), &
+      TestParametersType(.true.,.false.) &
+    ]
+  end function get_parameters_requires_grad
 
   ! A fixture comprised of a short list of parameter sets
   function get_parameters_short() result(params)
     type(TestParametersType), allocatable :: params(:)
-    params = [TestParametersType(.false.)]
+    params = [TestParametersType(.false.,.false.)]
   end function get_parameters_short
 
   ! Function for representing a parameter set as a string
   function toString(this) result(string)
     class(TestParametersType), intent(in) :: this
     character(:), allocatable :: string
-    character(len=1) :: str
-    write(str,'(l1)') this%requires_grad
+    character(len=3) :: str
+    write(str,"(l1,',',l1)") this%requires_grad, this%auto_delete
     string = str
   end function toString
 
-  ! Unit test for the torch_tensor_empty subroutine
+  ! Unit test for the torch_tensor_empty subroutine and for calling torch_tensor_delete manually or
+  ! automatically (via torch_tensor's destructor)
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_empty(this)
     use ftorch, only: torch_tensor_empty
@@ -82,20 +95,25 @@ contains
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor%p))
 
-    ! Create a tensor of zeros
+    ! Create a tensor without any data values assigned
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
                             this%param%requires_grad)
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor%p))
 
-    ! Cleanup
-    call torch_tensor_delete(tensor)
+    if (.not. this%param%auto_delete) then
+      ! Call torch_tensor_delete manually
+      call torch_tensor_delete(tensor)
+
+      ! Check torch_tensor_delete does indeed free the memory
+      @assertFalse(c_associated(tensor%p))
+    end if
 
   end subroutine test_torch_tensor_empty
 
   ! Unit test for the torch_tensor_zeros subroutine
-  @test(testParameters={get_parameters_full()})
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_zeros(this)
     use ftorch, only: torch_tensor_zeros
     use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -130,26 +148,19 @@ contains
     ! Check that the tensor values are all zero
     expected(:,:) = 0.0
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_zeros")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: incorrect output from torch_tensor_zeros subroutine"
       stop 999
     end if
 
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor)
-      end subroutine clean_up
-
   end subroutine test_torch_tensor_zeros
 
   ! Unit test for the torch_tensor_ones subroutine
-  @test(testParameters={get_parameters_full()})
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_ones(this)
     use ftorch, only: torch_tensor_ones
     use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -184,26 +195,19 @@ contains
     ! Check that the tensor values are all one
     expected(:,:) = 1.0
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: incorrect output from torch_tensor_ones subroutine"
       stop 999
     end if
 
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor)
-      end subroutine clean_up
-
   end subroutine test_torch_tensor_ones
 
   ! Unit test for the torch_tensor_from_array subroutine in the 1D case
-  @test(testParameters={get_parameters_full()})
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_array_1d(this)
     use ftorch, only: torch_tensor_from_array
     use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -241,21 +245,14 @@ contains
     ! Compare the data in the tensor to the input data
     expected(:) = in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor)
-      end subroutine clean_up
 
   end subroutine test_torch_from_array_1d
 
@@ -298,21 +295,14 @@ contains
     ! Compare the data in the tensor to the input data
     expected(:,:) = in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor)
-      end subroutine clean_up
 
   end subroutine test_torch_from_array_2d
 
@@ -354,26 +344,19 @@ contains
     ! Compare the data in the tensor to the input data
     expected(:,:,:) = in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
       stop 999
     end if
 
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor)
-      end subroutine clean_up
-
   end subroutine test_torch_from_array_3d
 
   ! Unit test for the torch_tensor_from_blob subroutine
-  @test(testParameters={get_parameters_full()})
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_blob(this)
     use ftorch, only: torch_tensor_from_blob
     use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -414,22 +397,15 @@ contains
     ! Compare the data in the tensor to the input data 
     expected(:,:) = in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_blob")
+
+    ! Nullify pointers used in the unit test
+    nullify(out_data)
+
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
       stop 999
     end if
 
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(tensor)
-      end subroutine clean_up
-
   end subroutine test_torch_from_blob
 
-end module test_tensor_constructors
+end module test_tensor_constructors_destructors
