@@ -23,6 +23,7 @@ module test_tensor_constructors
   @testParameter
   type, extends(AbstractTestParameter) :: TestParametersType
     logical :: requires_grad
+    logical :: auto_delete
   contains
     procedure :: toString
   end type TestParametersType
@@ -46,23 +47,34 @@ contains
   function get_parameters_full() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
-      TestParametersType(.false.), &
-      TestParametersType(.true.) &
+      TestParametersType(.false.,.false.), &
+      TestParametersType(.true.,.false.), &
+      TestParametersType(.false.,.true.), &
+      TestParametersType(.true.,.true.) &
     ]
   end function get_parameters_full
+
+  ! A fixture for checking requires_grad being true and false
+  function get_parameters_requires_grad() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,.false.), &
+      TestParametersType(.true.,.false.) &
+    ]
+  end function get_parameters_requires_grad
 
   ! A fixture comprised of a short list of parameter sets
   function get_parameters_short() result(params)
     type(TestParametersType), allocatable :: params(:)
-    params = [TestParametersType(.false.)]
+    params = [TestParametersType(.false.,.false.)]
   end function get_parameters_short
 
   ! Function for representing a parameter set as a string
   function toString(this) result(string)
     class(TestParametersType), intent(in) :: this
     character(:), allocatable :: string
-    character(len=1) :: str
-    write(str,'(l1)') this%requires_grad
+    character(len=3) :: str
+    write(str,"(l1,',',l1)") this%requires_grad, this%auto_delete
     string = str
   end function toString
 
@@ -89,16 +101,18 @@ contains
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor%p))
 
-    ! Call torch_tensor_delete manually
-    call torch_tensor_delete(tensor)
+    if (.not. this%param%auto_delete) then
+      ! Call torch_tensor_delete manually
+      call torch_tensor_delete(tensor)
 
-    ! Check torch_tensor_delete does indeed free the memory
-    @assertFalse(c_associated(tensor%p))
+      ! Check torch_tensor_delete does indeed free the memory
+      @assertFalse(c_associated(tensor%p))
+    end if
 
   end subroutine test_torch_tensor_empty
 
   ! Unit test for the torch_tensor_zeros subroutine
-  @test(testParameters={get_parameters_full()})
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_zeros(this)
     use ftorch, only: torch_tensor_zeros
     use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -145,7 +159,7 @@ contains
   end subroutine test_torch_tensor_zeros
 
   ! Unit test for the torch_tensor_ones subroutine
-  @test(testParameters={get_parameters_full()})
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_ones(this)
     use ftorch, only: torch_tensor_ones
     use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -192,7 +206,7 @@ contains
   end subroutine test_torch_tensor_ones
 
   ! Unit test for the torch_tensor_from_array subroutine in the 1D case
-  @test(testParameters={get_parameters_full()})
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_array_1d(this)
     use ftorch, only: torch_tensor_from_array
     use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -341,7 +355,7 @@ contains
   end subroutine test_torch_from_array_3d
 
   ! Unit test for the torch_tensor_from_blob subroutine
-  @test(testParameters={get_parameters_full()})
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_blob(this)
     use ftorch, only: torch_tensor_from_blob
     use, intrinsic :: iso_fortran_env, only: sp => real32
