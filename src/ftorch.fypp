@@ -647,6 +647,7 @@ contains
 
   !> Overloads assignment operator for tensors.
   subroutine torch_tensor_assign(output, input)
+    use, intrinsic :: iso_c_binding, only : c_associated
     type(torch_tensor), intent(inout) :: output
     type(torch_tensor), intent(in) :: input
 
@@ -659,14 +660,20 @@ contains
       end subroutine torch_tensor_assign_c
     end interface
 
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, input%get_rank(), input%get_shape(), input%get_dtype(), &
-                            input%get_device_type(), input%get_device_index())
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, input%get_rank(), input%get_shape(), input%get_dtype(), &
+                              input%get_device_type(), input%get_device_index())
+    else if (input%get_device_type() /= output%get_device_type()) then
+      write(*,*) "Error :: cannot assign tensors with different device types"
+      stop 1
+    end if
     call torch_tensor_assign_c(output%p, input%p)
   end subroutine torch_tensor_assign
 
   !> Overloads addition operator for two tensors.
   function torch_tensor_add(tensor1, tensor2) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated
     type(torch_tensor), intent(in) :: tensor1
     type(torch_tensor), intent(in) :: tensor2
     type(torch_tensor) :: output
@@ -682,14 +689,22 @@ contains
       end subroutine torch_tensor_add_c
     end interface
 
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), tensor1%get_dtype(), &
-                            tensor1%get_device_type(), tensor1%get_device_index())
+    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+      write(*,*) "Error :: cannot add tensors with different device types"
+      stop 1
+    end if
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
+                              tensor1%get_dtype(), tensor1%get_device_type(), &
+                              tensor1%get_device_index())
+    end if
     call torch_tensor_add_c(output%p,tensor1%p, tensor2%p)
   end function torch_tensor_add
 
   !> Overloads negative operator for a single tensor.
   function torch_tensor_negative(tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: output
 
@@ -702,14 +717,17 @@ contains
       end subroutine torch_tensor_negative_c
     end interface
 
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                            tensor%get_device_type(), tensor%get_device_index())
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                              tensor%get_device_type(), tensor%get_device_index())
+    end if
     call torch_tensor_negative_c(output%p, tensor%p)
   end function torch_tensor_negative
 
   !> Overloads subtraction operator for two tensors.
   function torch_tensor_subtract(tensor1, tensor2) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated
     type(torch_tensor), intent(in) :: tensor1
     type(torch_tensor), intent(in) :: tensor2
     type(torch_tensor) :: output
@@ -725,37 +743,57 @@ contains
       end subroutine torch_tensor_subtract_c
     end interface
 
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), tensor1%get_dtype(), &
-                            tensor1%get_device_type(), tensor1%get_device_index())
+    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+      write(*,*) "Error :: cannot subtract tensors with different device types"
+      stop 1
+    end if
+
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
+                              tensor1%get_dtype(), tensor1%get_device_type(), &
+                              tensor1%get_device_index())
+    end if
     call torch_tensor_subtract_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_subtract
 
   !> Overloads multiplication operator for two tensors.
   function torch_tensor_multiply(tensor1, tensor2) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated
     type(torch_tensor), intent(in) :: tensor1
     type(torch_tensor), intent(in) :: tensor2
     type(torch_tensor) :: output
 
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), tensor1%get_dtype(), &
-                            tensor1%get_device_type(), tensor1%get_device_index())
+    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+      write(*,*) "Error :: cannot multiply tensors with different device types"
+      stop 1
+    end if
+
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
+                              tensor1%get_dtype(), tensor1%get_device_type(), &
+                              tensor1%get_device_index())
+    end if
     call torch_tensor_multiply_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_multiply
 
   #:for PREC in PRECISIONS
   !> Overloads multiplication operator for a scalar of type ${PREC}$ and a tensor.
   function torch_tensor_premultiply_${PREC}$(scalar, tensor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
+    use, intrinsic :: iso_c_binding, only : c_associated, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     ${f_type(PREC)}$(${PREC}$), target, intent(in) :: scalar
     type(torch_tensor), intent(in) :: tensor
     type(torch_tensor) :: wrk, output
 
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                              tensor%get_device_type(), tensor%get_device_index())
+    end if
+
     ! Create a tensor with a single entry, the scalar pre-multiplier
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
     call torch_tensor_multiply_c(output%p, wrk%p, tensor%p)
@@ -766,16 +804,19 @@ contains
   #:for PREC in PRECISIONS
   !> Overloads multiplication operator for a tensor and a scalar of type ${PREC}$.
   function torch_tensor_postmultiply_${PREC}$(tensor, scalar) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
+    use, intrinsic :: iso_c_binding, only : c_associated, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
     type(torch_tensor) :: wrk, output
 
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                              tensor%get_device_type(), tensor%get_device_index())
+    end if
+
     ! Create a tensor with a single entry, the scalar post-multiplier
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
     call torch_tensor_multiply_c(output%p, tensor%p, wrk%p)
@@ -784,29 +825,41 @@ contains
   #:endfor
   !> Overloads division operator for two tensors.
   function torch_tensor_divide(tensor1, tensor2) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated
     type(torch_tensor), intent(in) :: tensor1
     type(torch_tensor), intent(in) :: tensor2
     type(torch_tensor) :: output
 
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), tensor1%get_dtype(), &
-                            tensor1%get_device_type(), tensor1%get_device_index())
+    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+      write(*,*) "Error :: cannot divide tensors with different device types"
+      stop 1
+    end if
+
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
+                              tensor1%get_dtype(), tensor1%get_device_type(), &
+                              tensor1%get_device_index())
+    end if
     call torch_tensor_divide_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_divide
 
   #:for PREC in PRECISIONS
   !> Overloads division operator for a tensor and a scalar of type ${PREC}$.
   function torch_tensor_postdivide_${PREC}$(tensor, divisor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
+    use, intrinsic :: iso_c_binding, only : c_associated, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(${PREC}$), intent(in) :: divisor
     type(torch_tensor) :: wrk, output
 
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                              tensor%get_device_type(), tensor%get_device_index())
+    end if
+
     ! Create a tensor with a single entry, the scalar post-divisor
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                            tensor%get_device_type(), tensor%get_device_index())
     call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
                                  tensor%get_device_index())
     call torch_tensor_divide_c(output%p, tensor%p, wrk%p)
@@ -817,7 +870,7 @@ contains
   #:for PREC in INT_PRECISIONS
   !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
   function torch_tensor_power_${PREC}$(tensor, power) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
+    use, intrinsic :: iso_c_binding, only : c_associated, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(${PREC}$), target, intent(in) :: power
@@ -834,9 +887,11 @@ contains
       end subroutine torch_tensor_power_int_c
     end interface
 
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                            tensor%get_device_type(), tensor%get_device_index())
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                              tensor%get_device_type(), tensor%get_device_index())
+    end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_${PREC}$
 
@@ -845,7 +900,7 @@ contains
   #:for PREC in FLOAT_PRECISIONS
   !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
   function torch_tensor_power_${PREC}$(tensor, power) result(output)
-    use, intrinsic :: iso_c_binding, only : c_loc
+    use, intrinsic :: iso_c_binding, only : c_associated, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
     type(torch_tensor), intent(in) :: tensor
     ${f_type(PREC)}$(kind=${PREC}$), target, intent(in) :: power
@@ -862,9 +917,11 @@ contains
       end subroutine torch_tensor_power_float_c
     end interface
 
-    ! TODO: Pass requires_grad argument
-    call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                            tensor%get_device_type(), tensor%get_device_index())
+    if (.not. c_associated(output%p)) then
+      ! TODO: Pass requires_grad argument
+      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                              tensor%get_device_type(), tensor%get_device_index())
+    end if
     call torch_tensor_power_float_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_${PREC}$
 
