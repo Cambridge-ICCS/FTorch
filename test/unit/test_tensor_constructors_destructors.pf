@@ -1,4 +1,4 @@
-!| Unit tests for FTorch subroutines that construct tensors.
+!| Unit tests for FTorch subroutines that construct and destroy tensors.
 !
 !  * License
 !    FTorch is released under an MIT license.
@@ -78,7 +78,8 @@ contains
     string = str
   end function toString
 
-  ! Unit test for the torch_tensor_empty subroutine and for manually calling torch_tensor_delete
+  ! Unit test for the torch_tensor_empty subroutine and for calling torch_tensor_delete manually or
+  ! automatically (via torch_tensor's destructor)
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_empty(this)
     use ftorch, only: torch_tensor_empty
