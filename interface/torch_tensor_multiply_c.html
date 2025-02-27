@@ -136,7 +136,7 @@
     
     <div class="col-md-9" id='text'>
       <h2>interface <br>
-      public  function torch_tensor_multiply_c(tensor1_c, tensor2_c) result(output_c) bind(c, name = 'torch_tensor_multiply')  
+      public  subroutine torch_tensor_multiply_c(output_c, tensor1_c, tensor2_c) bind(c, name = 'torch_tensor_multiply')  
 </h2>    
 
     
@@ -152,6 +152,21 @@
         <th scope="col"></th>
     </thead>
     <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-output_c"></span>
+              type(c_ptr),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>output_c</strong></td>
+            <td>
+                
+            </td>
+        </tr>
         <tr>
             <td>
               <span class="anchor" id="variable-tensor1_c"></span>
@@ -185,8 +200,6 @@
     </tbody>
   </table>
 
-      <h3>Return Value <span class="anchor" id="variable-output_c"></span><small>type(c_ptr)</small></h3>
-    
     <br>
 
  </div>

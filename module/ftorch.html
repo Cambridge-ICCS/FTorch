@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="87.6% of total for modules and submodules.">1975 statements</a>
+                 title="87.8% of total for modules and submodules.">2010 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -495,7 +495,7 @@ parameter
               <span class="anchor" id="variable-output"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
-<td>intent(out)</td>
+<td>intent(inout)</td>
               <td></td>            <td>
               
             </td>
@@ -2571,7 +2571,7 @@ parameter
     <ul class="list-group">
         <li class="list-group-item">
               <h3>
-    public  function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c) bind(c, name = 'torch_tensor_divide')  
+    public  subroutine torch_tensor_divide_c(output_c, tensor1_c, tensor2_c) bind(c, name = 'torch_tensor_divide')  
 
     </h3>
   
@@ -2587,6 +2587,21 @@ parameter
         <th scope="col"></th>
     </thead>
     <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-output_c~2"></span>
+              type(c_ptr),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>output_c</strong></td>
+            <td>
+                
+            </td>
+        </tr>
         <tr>
             <td>
               <span class="anchor" id="variable-tensor1_c~2"></span>
@@ -2620,11 +2635,6 @@ parameter
     </tbody>
   </table>
 
-    <h4>
-    Return Value
-    <small>type(c_ptr)</small>
-    </h4>
-    
 
         </li>
     </ul>
@@ -6072,7 +6082,7 @@ parameter
     <ul class="list-group">
         <li class="list-group-item">
               <h3>
-    public  function torch_tensor_multiply_c(tensor1_c, tensor2_c) result(output_c) bind(c, name = 'torch_tensor_multiply')  
+    public  subroutine torch_tensor_multiply_c(output_c, tensor1_c, tensor2_c) bind(c, name = 'torch_tensor_multiply')  
 
     </h3>
   
@@ -6088,6 +6098,21 @@ parameter
         <th scope="col"></th>
     </thead>
     <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-output_c"></span>
+              type(c_ptr),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>output_c</strong></td>
+            <td>
+                
+            </td>
+        </tr>
         <tr>
             <td>
               <span class="anchor" id="variable-tensor1_c"></span>
@@ -6121,11 +6146,6 @@ parameter
     </tbody>
   </table>
 
-    <h4>
-    Return Value
-    <small>type(c_ptr)</small>
-    </h4>
-    
 
         </li>
     </ul>
@@ -8382,6 +8402,15 @@ parameter
 
 
 
+        <h4>Finalizations Procedures</h4>
+        <table class="table table-striped varlist">
+          <tbody>
+              <tr>
+                <td>final :: <strong>torch_tensor_delete</strong></td>
+                <td></td>
+              </tr>
+          </tbody>
+        </table>
 
         <h4>Type-Bound Procedures</h4>
         <table class="table table-striped varlist">
@@ -10679,7 +10708,7 @@ parameter
               <span class="anchor" id="variable-output"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
-<td>intent(out)</td>
+<td>intent(inout)</td>
               <td></td>            <td>
               
             </td>

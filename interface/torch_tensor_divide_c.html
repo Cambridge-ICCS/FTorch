@@ -136,7 +136,7 @@
     
     <div class="col-md-9" id='text'>
       <h2>interface <br>
-      public  function torch_tensor_divide_c(tensor1_c, tensor2_c) result(output_c) bind(c, name = 'torch_tensor_divide')  
+      public  subroutine torch_tensor_divide_c(output_c, tensor1_c, tensor2_c) bind(c, name = 'torch_tensor_divide')  
 </h2>    
 
     
@@ -152,6 +152,21 @@
         <th scope="col"></th>
     </thead>
     <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-output_c~2"></span>
+              type(c_ptr),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              value
+            </td>
+            <td>::</td>
+            <td><strong>output_c</strong></td>
+            <td>
+                
+            </td>
+        </tr>
         <tr>
             <td>
               <span class="anchor" id="variable-tensor1_c~2"></span>
@@ -185,8 +200,6 @@
     </tbody>
   </table>
 
-      <h3>Return Value <span class="anchor" id="variable-output_c~2"></span><small>type(c_ptr)</small></h3>
-    
     <br>
 
  </div>
