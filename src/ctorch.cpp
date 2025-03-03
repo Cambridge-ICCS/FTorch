@@ -300,6 +300,10 @@ void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input) {
   auto out = reinterpret_cast<torch::Tensor *>(output);
   auto in = reinterpret_cast<torch::Tensor *const>(input);
   torch::AutoGradMode enable_grad(in->requires_grad());
+  // NOTE: The following line ensures that the output tensor continues to point to a
+  //       Fortran array if it was set up to do so using torch_tensor_from_array. If
+  //       it's removed then the Fortran array keeps its original value and is no
+  //       longer be pointed to.
   std::move(*out) = *in;
 }
 
