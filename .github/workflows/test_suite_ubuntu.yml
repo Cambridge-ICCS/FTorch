@@ -108,3 +108,17 @@ jobs:
         run: |
           . ftorch/bin/activate
           ./run_test_suite.sh --verbose --integration-only
+
+      - name: Standalone SimpleNet example build
+        run: |
+          . ftorch/bin/activate
+          export FTORCH_BUILD_DIR="$(pwd)/build"
+          cd examples/1_SimpleNet
+          export BUILD_DIR="$(pwd)/build"
+          mkdir "${BUILD_DIR}"
+          cd "${BUILD_DIR}"
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
+            -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}"
+          cmake --build .
