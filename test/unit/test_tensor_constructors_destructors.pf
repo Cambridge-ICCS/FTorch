@@ -6,8 +6,8 @@
 !    file for details.
 module test_tensor_constructors_destructors
   use funit
-  use ftorch, only: ftorch_int, torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_delete, &
-                    torch_tensor_to_array
+  use ftorch, only: assignment(=), torch_kFloat32, torch_kCPU, torch_tensor, &
+                    torch_tensor_delete, torch_tensor_from_array
   use ftorch_test_utils, only: assert_allclose
   use iso_c_binding, only: c_associated, c_int64_t
 
@@ -124,33 +124,35 @@ contains
     integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor
+    type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
     ! Check the tensor pointer is not associated
-    @assertFalse(c_associated(tensor%p))
+    @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor of zeros
-    call torch_tensor_zeros(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+    call torch_tensor_zeros(tensor1, ndims, tensor_shape, dtype, device_type, device_index, &
                             this%param%requires_grad)
 
     ! Check the tensor pointer is associated
-    @assertTrue(c_associated(tensor%p))
+    @assertTrue(c_associated(tensor1%p))
 
-    ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(expected))
+    ! Create a tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
 
     ! Check that the tensor values are all zero
     expected(:,:) = 0.0
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_zeros")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from torch_tensor_zeros subroutine"
@@ -171,33 +173,35 @@ contains
     integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor
+    type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
     ! Check the tensor pointer is not associated
-    @assertFalse(c_associated(tensor%p))
+    @assertFalse(c_associated(tensor1%p))
 
     ! Create tensor of ones
-    call torch_tensor_ones(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, device_index, &
                            this%param%requires_grad)
 
     ! Check the tensor pointer is associated
-    @assertTrue(c_associated(tensor%p))
+    @assertTrue(c_associated(tensor1%p))
 
-    ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(expected))
+    ! Create a tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
 
     ! Check that the tensor values are all one
     expected(:,:) = 1.0
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from torch_tensor_ones subroutine"
@@ -209,7 +213,6 @@ contains
   ! Unit test for the torch_tensor_from_array subroutine in the 1D case
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_array_1d(this)
-    use ftorch, only: torch_tensor_from_array
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
@@ -218,36 +221,35 @@ contains
     integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor
+    type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1]
+    integer, parameter :: tensor_layout(ndims) = [1]
     real(wp), dimension(6), target :: in_data
-    real(wp), dimension(:), pointer :: out_data
-    real(wp), dimension(6) :: expected
+    real(wp), dimension(6), target :: out_data
     logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:) = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
 
     ! Check the tensor pointer is not associated
-    @assertFalse(c_associated(tensor%p))
+    @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index, &
+    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
                                  this%param%requires_grad)
 
     ! Check the tensor pointer is associated
-    @assertTrue(c_associated(tensor%p))
+    @assertTrue(c_associated(tensor1%p))
 
-    ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+    ! Create a tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    expected(:) = in_data
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
+    test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
@@ -259,7 +261,6 @@ contains
   ! Unit test for the torch_tensor_from_array subroutine in the 2D case
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_from_array_2d(this)
-    use ftorch, only: torch_tensor_from_array
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
@@ -268,36 +269,35 @@ contains
     integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor
+    type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
-    real(wp), dimension(2,3) :: expected
+    real(wp), dimension(2,3), target :: out_data
     logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
 
     ! Check the tensor pointer is not associated
-    @assertFalse(c_associated(tensor%p))
+    @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index, &
+    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
                                  this%param%requires_grad)
 
     ! Check the tensor pointer is associated
-    @assertTrue(c_associated(tensor%p))
+    @assertTrue(c_associated(tensor1%p))
 
-    ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+    ! Create a tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    expected(:,:) = in_data
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
+    test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
@@ -309,7 +309,6 @@ contains
   ! Unit test for the torch_tensor_from_array subroutine in the 3D case
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_from_array_3d(this)
-    use ftorch, only: torch_tensor_from_array
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
@@ -318,35 +317,35 @@ contains
     integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor
+    type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 3
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 1, 1]
+    integer, parameter :: tensor_layout(ndims) = [1, 2, 3]
     real(wp), dimension(1,2,3), target :: in_data
-    real(wp), dimension(:,:,:), pointer :: out_data
-    real(wp), dimension(1,2,3) :: expected
+    real(wp), dimension(1,2,3), target :: out_data
     logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [1,2,3])
 
     ! Check the tensor pointer is not associated
-    @assertFalse(c_associated(tensor%p))
+    @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type, device_index)
+    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
+                                 this%param%requires_grad)
 
     ! Check the tensor pointer is associated
-    @assertTrue(c_associated(tensor%p))
+    @assertTrue(c_associated(tensor1%p))
 
-    ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+    ! Create a tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    expected(:,:,:) = in_data
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
+    test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
@@ -368,38 +367,37 @@ contains
     integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor
+    type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
-    integer, parameter :: layout(ndims) = [1, 1]
+    integer, parameter :: layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
-    real(wp), dimension(2,3) :: expected
+    real(wp), dimension(2,3), target :: out_data
     logical :: test_pass
 
     ! Create an arbitrary input array
     in_data = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
 
     ! Check the tensor pointer is not associated
-    @assertFalse(c_associated(tensor%p))
+    @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_blob(tensor, c_loc(in_data), ndims, tensor_shape, layout, dtype, &
+    call torch_tensor_from_blob(tensor1, c_loc(in_data), ndims, tensor_shape, layout, dtype, &
                                 device_type, device_index, this%param%requires_grad)
 
     ! Check the tensor pointer is associated
-    @assertTrue(c_associated(tensor%p))
+    @assertTrue(c_associated(tensor1%p))
 
-    ! Extract Fortran array from tensor
-    call torch_tensor_to_array(tensor, out_data, shape(in_data))
+    ! Create a tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, layout, device_type, device_index)
+
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data 
-    expected(:,:) = in_data
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_from_blob")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
+    test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_blob")
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
