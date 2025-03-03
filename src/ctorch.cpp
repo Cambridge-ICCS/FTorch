@@ -246,44 +246,6 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
 // --- Functions for interrogating tensors
 // =====================================================================================
 
-void *torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  void *raw_ptr;
-  switch (dtype) {
-  case torch_kUInt8:
-    std::cerr << "[WARNING]: uint8 not supported" << std::endl;
-    exit(EXIT_FAILURE);
-  case torch_kInt8:
-    raw_ptr = (void *)t->data_ptr<int8_t>();
-    break;
-  case torch_kInt16:
-    raw_ptr = (void *)t->data_ptr<int16_t>();
-    break;
-  case torch_kInt32:
-    raw_ptr = (void *)t->data_ptr<int32_t>();
-    break;
-  case torch_kInt64:
-    raw_ptr = (void *)t->data_ptr<int64_t>();
-    break;
-  case torch_kFloat16:
-    std::cerr << "[WARNING]: float16 not supported" << std::endl;
-    // NOTE: std::float16_t is available but only with C++23
-    exit(EXIT_FAILURE);
-  case torch_kFloat32:
-    raw_ptr = (void *)t->data_ptr<float>();
-    // NOTE: std::float32_t is available but only with C++23
-    break;
-  case torch_kFloat64:
-    raw_ptr = (void *)t->data_ptr<double>();
-    // NOTE: std::float64_t is available but only with C++23
-    break;
-  default:
-    std::cerr << "[WARNING]: unknown data type" << std::endl;
-    exit(EXIT_FAILURE);
-  }
-  return raw_ptr;
-}
-
 void torch_tensor_print(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   std::cout << *t << std::endl;
