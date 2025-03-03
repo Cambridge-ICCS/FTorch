@@ -6,8 +6,7 @@
 !    file for details.
 module test_tensor_operator_overloads
   use funit
-  use ftorch, only: assignment(=), ftorch_int, torch_kCPU, torch_kFloat32, torch_tensor, &
-                    torch_tensor_delete, torch_tensor_from_array, torch_tensor_to_array
+  use ftorch, only: assignment(=), torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_from_array
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
@@ -76,11 +75,10 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -89,6 +87,9 @@ contains
 
     ! Create a tensor based off an input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
 
     ! Create another tensor by copying the first using the overloaded assignment operator
     tensor2 = tensor1
@@ -100,13 +101,8 @@ contains
       stop 999
     end if
 
-    ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the input
-    ! array
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    ! Compare the data in the tensor to the input array
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_assign")
-
-    ! Nullifying pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded assignment operator"
@@ -128,11 +124,9 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data1, in_data2
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -143,6 +137,9 @@ contains
     ! Create tensors based off the two input arrays
     call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
     call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor3, out_data, tensor_layout, device_type)
 
     ! Create another tensor as the sum of the first two using the overloaded addition operator
     tensor3 = tensor1 + tensor2
@@ -159,14 +156,9 @@ contains
       stop 999
     end if
 
-    ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the sum
-    ! of the input arrays
-    call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
+    ! Compare the data in the tensor to the sum of the input arrays
     expected(:,:) = in_data1 + in_data2
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_add")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded addition operator"
@@ -188,11 +180,9 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data1, in_data2
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -203,6 +193,9 @@ contains
     ! Create tensors based off the two input arrays
     call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
     call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor3, out_data, tensor_layout, device_type)
 
     ! Create another tensor as the difference of the first two using the overloaded subtraction
     ! operator
@@ -220,14 +213,9 @@ contains
       stop 999
     end if
 
-    ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the
-    ! difference of the input arrays
-    call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
+    ! Compare the data in the tensor to the difference of the input arrays
     expected(:,:) = in_data1 - in_data2
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded subtraction operator"
@@ -240,8 +228,7 @@ contains
   subroutine test_torch_tensor_negative(this)
     use FUnit
     use ftorch, only: assignment(=), operator(-), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_delete, torch_tensor_from_array, &
-                      torch_tensor_to_array
+                      torch_tensor, torch_tensor_from_array
     use ftorch_test_utils, only: assert_allclose
     use, intrinsic :: iso_fortran_env, only: sp => real32
     use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
@@ -254,12 +241,10 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
     integer, parameter :: device_type = torch_kCPU
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -268,6 +253,9 @@ contains
 
     ! Create tensors based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
 
     ! Create another tensor as the negative of the first using the overloaded negative operator
     tensor2 = -tensor1
@@ -279,14 +267,9 @@ contains
       stop 999
     end if
 
-    ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the
-    ! negative of the input array
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    ! Compare the data in the tensor to the negative of the input array
     expected(:,:) = -in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_negative")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded subtraction operator"
@@ -306,11 +289,9 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data1, in_data2
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -321,6 +302,9 @@ contains
     ! Create tensors based off the two input arrays
     call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
     call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor3, out_data, tensor_layout, device_type)
 
     ! Create another tensor as the product of the first two using the overloaded multiplication
     ! operator
@@ -338,14 +322,9 @@ contains
       stop 999
     end if
 
-    ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the
-    ! product of the input arrays
-    call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
+    ! Compare the data in the tensor to the product of the input arrays
     expected(:,:) = in_data1 * in_data2
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_multiply")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded multiplication operator"
@@ -367,12 +346,10 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), parameter :: scalar = 3.14
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -381,6 +358,9 @@ contains
 
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
 
     ! Create another tensor as the product of a scalar constant and the first tensor using the
     ! overloaded multiplication operator
@@ -398,14 +378,9 @@ contains
       stop 999
     end if
 
-    ! Extract Fortran arrays from the assigned tensors and compare the data in the tensors to the
-    ! scaled input arrays
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    ! Compare the data in the tensors to the scaled input arrays
     expected(:,:) = scalar * in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded scalar multiplication operator"
@@ -427,11 +402,9 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data1, in_data2
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -442,6 +415,9 @@ contains
     ! Create tensors based off the two input arrays
     call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
     call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor3, out_data, tensor_layout, device_type)
 
     ! Create another tensor as the quotient of the first two using the overloaded division operator
     tensor3 = tensor1 / tensor2
@@ -458,14 +434,9 @@ contains
       stop 999
     end if
 
-    ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the
-    ! quotient of the input arrays
-    call torch_tensor_to_array(tensor3, out_data, shape(in_data1))
+    ! Compare the data in the tensor to the quotient of the input arrays
     expected(:,:) = in_data1 / in_data2
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_divide")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded division operator"
@@ -487,12 +458,10 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), parameter :: scalar = 3.14
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -501,6 +470,9 @@ contains
 
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
 
     ! Create another tensor as the quotient of the first tensor and a scalar constant using the
     ! overloaded division operator
@@ -514,14 +486,9 @@ contains
       stop 999
     end if
 
-    ! Extract Fortran array from the assigned tensor and compare the data in the tensor to the
-    ! scaled input array
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    ! Compare the data in the tensor to the scaled input array
     expected(:,:) = in_data / scalar
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded scalar division operator"
@@ -543,11 +510,9 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -556,6 +521,9 @@ contains
 
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
 
     ! Create another tensor as the first tensor to the power of an exponent using the
     ! overloaded exponentiation operator
@@ -572,14 +540,9 @@ contains
       stop 999
     end if
 
-    ! Extract Fortran arrays from the assigned tensors and compare the data in the tensors to the
-    ! squared input array
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    ! Compare the data in the tensors to the squared input array
     expected(:,:) = in_data ** 2
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_square")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded exponentation operator (square)"
@@ -602,11 +565,9 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -615,6 +576,9 @@ contains
 
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
 
     ! Create another tensors as the tensor to the power of 0.5 using the overloaded exponentiation
     ! operator
@@ -627,14 +591,9 @@ contains
       stop 999
     end if
 
-    ! Extract Fortran arrays from the assigned tensors and compare the data in the tensors to the
-    ! square root of the input array
-    call torch_tensor_to_array(tensor2, out_data, shape(in_data))
+    ! Compare the data in the tensors to the square root of the input array
     expected(:,:) = in_data ** 0.5
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")
-
-    ! Nullify pointers used in the unit test
-    nullify(out_data)
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded exponentiation operator (square root)"
