@@ -93,15 +93,6 @@ module ftorch
     #:endfor
   end interface
 
-  !> Interface for directing `torch_tensor_to_array` to possible input types and ranks
-  interface torch_tensor_to_array
-    #:for PREC in PRECISIONS
-    #:for RANK in RANKS
-    module procedure torch_tensor_to_array_${PREC}$_${RANK}$d
-    #:endfor
-    #:endfor
-  end interface
-
   !> Interface for deleting generic torch objects
   interface torch_delete
     module procedure torch_model_delete
@@ -129,19 +120,6 @@ module ftorch
       logical(c_bool), value, intent(in) :: requires_grad
       type(c_ptr)                       :: tensor_p
     end function torch_from_blob_c
-  end interface
-
-  interface
-    function torch_to_blob_c(tensor, dtype) result(data) &
-        bind(c, name = 'torch_to_blob')
-      use, intrinsic :: iso_c_binding, only : c_int, c_ptr
-
-      implicit none
-
-      type(c_ptr), value, intent(in)    :: tensor
-      integer(c_int), value, intent(in) :: dtype
-      type(c_ptr)                       :: data
-    end function torch_to_blob_c
   end interface
 
   ! ============================================================================
@@ -451,41 +429,6 @@ contains
   ! ============================================================================
   ! --- Procedures for interrogating tensors
   ! ============================================================================
-
-  #:for PREC in PRECISIONS
-  #:for RANK in RANKS
-  !> Return the array data associated with a Torch tensor of rank ${RANK}$ and data type `${PREC}$`
-  subroutine torch_tensor_to_array_${PREC}$_${RANK}$d(tensor, data_out, sizes)
-    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_loc
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$, int64
-    type(torch_tensor), intent(in) :: tensor  !! Returned tensor
-    ${f_type(PREC)}$(kind=${PREC}$), pointer, intent(out) :: data_out${ranksuffix(RANK)}$  !! Pointer to tensor data
-    integer, optional, intent(in) :: sizes(${RANK}$)  !! Number of entries for each rank
-    integer(kind=int64), allocatable :: my_shape(:)  !! Number of entries for each rank
-
-    ! Local data
-    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
-    type(c_ptr) :: cptr
-
-    my_shape = tensor%get_shape()
-
-    if (present(sizes)) then
-      if (.not. all(my_shape == sizes)) then
-        write(*,*) 'Error :: sizes argument does not match shape of tensor'
-        write(*,'(A, ${RANK}$(I0, " "), A)') 'sizes        :: [ ', sizes(:), ']'
-        write(*,'(A, ${RANK}$(I0, " "), A)') 'tensor shape :: [ ', my_shape(:), ']'
-        stop 1
-      end if
-    end if
-
-    ! Have the data_out array point to the Tensor data
-    cptr = torch_to_blob_c(tensor%p, dtype)
-    call c_f_pointer(cptr, data_out, my_shape)
-
-  end subroutine torch_tensor_to_array_${PREC}$_${RANK}$d
-
-  #:endfor
-  #:endfor
 
   !> Prints the contents of a tensor.
   subroutine torch_tensor_print(tensor)
