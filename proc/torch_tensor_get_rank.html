@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.6% of total for procedures.">13 statements</a>
+                 title=" 1.0% of total for procedures.">17 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -213,6 +213,10 @@
 <span class="w">      </span><span class="k">end function </span><span class="n">torch_tensor_get_rank_c</span>
 <span class="w">    </span><span class="k">end interface</span>
 
+<span class="k">    if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">c_associated</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: tensor has not been constructed so its rank is unset&quot;</span>
+<span class="w">      </span><span class="k">stop </span><span class="mi">1</span>
+<span class="w">    </span><span class="k">end if</span>
 <span class="k">    </span><span class="n">rank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor_get_rank_c</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">p</span><span class="p">)</span>
 <span class="w">  </span><span class="k">end function </span><span class="n">torch_tensor_get_rank</span>
 </pre></div>

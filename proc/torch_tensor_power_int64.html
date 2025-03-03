@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.8% of total for procedures.">18 statements</a>
+                 title=" 1.2% of total for procedures.">20 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -173,7 +173,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~103"></span>
+              <span class="anchor" id="variable-tensor~69"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -226,7 +226,7 @@
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">function </span><span class="n">torch_tensor_power_int64</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="n">power</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-<span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nb">c_loc</span>
+<span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nb">c_associated</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span>
 <span class="nb">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iso_fortran_env</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">int64</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">power</span>
@@ -243,10 +243,12 @@
 <span class="w">      </span><span class="k">end subroutine </span><span class="n">torch_tensor_power_int_c</span>
 <span class="w">    </span><span class="k">end interface</span>
 
-<span class="w">    </span><span class="c">! TODO: Pass requires_grad argument</span>
-<span class="w">    </span><span class="k">call </span><span class="n">torch_tensor_empty</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_rank</span><span class="p">(),</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_shape</span><span class="p">(),</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_dtype</span><span class="p">(),</span><span class="w"> </span><span class="p">&amp;</span>
-<span class="w">                            </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_device_type</span><span class="p">(),</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_device_index</span><span class="p">())</span>
-<span class="w">    </span><span class="k">call </span><span class="n">torch_tensor_power_int_c</span><span class="p">(</span><span class="n">output</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span><span class="p">(</span><span class="n">power</span><span class="p">))</span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">c_associated</span><span class="p">(</span><span class="n">output</span><span class="p">%</span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="w">      </span><span class="c">! TODO: Pass requires_grad argument</span>
+<span class="w">      </span><span class="k">call </span><span class="n">torch_tensor_empty</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_rank</span><span class="p">(),</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_shape</span><span class="p">(),</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_dtype</span><span class="p">(),</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                              </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_device_type</span><span class="p">(),</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_device_index</span><span class="p">())</span>
+<span class="w">    </span><span class="k">end if</span>
+<span class="k">    call </span><span class="n">torch_tensor_power_int_c</span><span class="p">(</span><span class="n">output</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span><span class="p">(</span><span class="n">power</span><span class="p">))</span>
 <span class="w">  </span><span class="k">end function </span><span class="n">torch_tensor_power_int64</span>
 </pre></div>
 
