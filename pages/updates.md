@@ -1,9 +1,22 @@
 title: Recent API Changes
 
+## March 2025
+
+If you use a version of FTorch before commit
+[9b90099](9b90099759a4cf0a1844c53327f15c318eba9b7c)
+(March 2025) you might notice the existence of a `torch_tensor_to_array`
+subroutine. It turned out to be unnecessary and so has been deleted. To achieve
+the same effect of extracting a Fortran array from a Torch Tensor, you simply
+need to ensure that it was constructed based off that Fortran array using
+`torch_tensor_from_array`. This is demonstrated in both the
+[SimpleNet example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/1_SimpleNet)
+and
+[autograd example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd).
+
 ## February 2025
 
 If you use a version of FTorch from before commit
-[f7fbebf](f7fbebfdad2a4801f57742a2bb12bc21e70881ff)
+[c85185e](c85185e6c261606c212dd11fee734663d610b695)
 (February 2025) you will notice that the main `CMakeLists.txt` file has moved
 from `src/` to the root level of the FTorch repository. This move was mainly to
 simplify the development experience, such that the examples could be built as
