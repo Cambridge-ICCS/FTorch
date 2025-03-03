@@ -300,7 +300,7 @@ void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input) {
   auto out = reinterpret_cast<torch::Tensor *>(output);
   auto in = reinterpret_cast<torch::Tensor *const>(input);
   torch::AutoGradMode enable_grad(in->requires_grad());
-  *out = *in;
+  std::move(*out) = *in;
 }
 
 void torch_tensor_add(torch_tensor_t output, const torch_tensor_t tensor1,
