@@ -3,7 +3,7 @@ program tensor_manipulation
   ! Import the FTorch procedures that are used in this worked example
   use ftorch, only: assignment(=), operator(+), torch_kCPU, torch_kFloat32, torch_tensor, &
                     torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
-                    torch_tensor_ones, torch_tensor_print, torch_tensor_to_array
+                    torch_tensor_ones, torch_tensor_print
 
   use, intrinsic :: iso_c_binding, only: c_int64_t
 
@@ -24,10 +24,7 @@ program tensor_manipulation
 
   ! Variables for constructing tensors with torch_tensor_from_array
   integer, parameter :: tensor_layout(ndims) = [1, 2]
-  real(wp), dimension(2,3), target :: in_data
-
-  ! Array for extracting an array from a tensor
-  real(wp), dimension(:,:), pointer :: out_data
+  real(wp), dimension(2,3), target :: in_data, out_data
 
   ! Create a tensor of ones
   ! -----------------------
@@ -37,6 +34,7 @@ program tensor_manipulation
 
   ! Print the contents of the tensor
   ! --------------------------------
+  ! This will show the tensor data as well as its device type, data type, and shape.
   write(*,*) "Contents of first input tensor:"
   call torch_tensor_print(a)
 
@@ -51,30 +49,29 @@ program tensor_manipulation
   write(*,*) "Contents of second input tensor:"
   write(*,*) in_data
 
-  ! Perform arithmetic on the tensors using the overloaded addition operator
-  ! ------------------------------------------------------------------------
-  ! It's important that the tensor used for the sum has been constructed. It's sufficient to use
-  ! torch_tensor_empty, which leaves its values unset. Note that it's required to import the
-  ! overloaded assignment and addition operators for this to work correctly.
-  call torch_tensor_empty(c, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
-  c = a + b
-
   ! Extract data from the tensor as a Fortran array
   ! -----------------------------------------------
-  ! Note that the torch_tensor_to_array subroutine will allocate the output array to the
-  ! appropriate size if it hasn't already been allocated.
-  call torch_tensor_to_array(c, out_data, shape(in_data))
+  ! This requires some setup in advance. Create a tensor based off the Fortran array that you want
+  ! to extract data into in the same way as above. There's no need to assign values to the array.
+  call torch_tensor_from_array(c, out_data, tensor_layout, torch_kCPU)
+
+  ! Perform arithmetic on the tensors using the overloaded addition operator
+  ! ------------------------------------------------------------------------
+  ! Note that if the output tensor hasn't been constructed as above then it will be automatically
+  ! constructed using `torch_tensor_empty` but it won't be possible to extract its data into an
+  ! array.
+  c = a + b
   write(*,*) "Output:"
   write(*,*) out_data
 
   ! Clean up
   ! --------
-  ! It's good practice to free the memory associated with the tensors after use. We should also
-  ! nullify any pointers, such as those required by torch_tensor_to_array.
+  ! It's good practice to free the memory associated with the tensors after use. However, with
+  ! recent versions of FTorch calling `torch_tensor_delete` is optional because it has been set up
+  ! to be called automatically when the tensor goes out of scope.
   call torch_tensor_delete(a)
   call torch_tensor_delete(b)
   call torch_tensor_delete(c)
-  nullify(out_data)
 
   write(*,*) "Tensor manipulation example ran successfully"
 
