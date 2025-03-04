@@ -29,7 +29,10 @@ include:
 * `torch_tensor_from_array`, which allows the user to create a `torch_tensor`
   with the same rank, shape, and data type as a given Fortran array. Note that
   the data is *not* copied - the tensor data points to the Fortran array,
-  meaning the array must have been declared with the `target` property.
+  meaning the array must have been declared with the `target` property. The
+  array will continue to be pointed to even when operations are applied to the
+  tensor, so this subroutine can be used 'in advance' to set up an array for
+  outputting data.
 
 It is *compulsory* to call one of the constructors before interacting with it in
 any of the ways described in the following. Each of the constructors sets the
@@ -53,22 +56,20 @@ include:
   the tensor resides on as an integer. For a CPU device, this index should be
   set to -1 (the default). For GPU devices, the index should be non-negative
   (defaulting to 0).
-* `torch_tensor_to_array`, which allows the user to extract the data held within
-  a `torch_tensor` object into a Fortran array. Note that the data is *not*
-  copied - the Fortran array points to the tensor data, meaning it must be
-  declared with the `pointer` property.
 
 Procedures for interrogation are implemented as methods as well as stand-alone
-procedures (with the exception of `torch_tensor_to_array`). For example,
-`tensor%get_rank` can be used in place of `torch_tensor_get_rank`, omitting the
-first argument (which would be the tensor itself). The naming pattern is
-similar for the other methods (simply drop the preceding `torch_tensor_`).
+procedures. For example, `tensor%get_rank` can be used in place of
+`torch_tensor_get_rank`, omitting the first argument (which would be the tensor
+itself). The naming pattern is similar for the other methods (simply drop the
+preceding `torch_tensor_`).
 
 ### Tensor deallocation
 
 We provide a subroutine for deallocating the memory associated with a
 `torch_tensor` object: `torch_tensor_delete`. An interface is provided such that
-this can also be applied to arrays of tensors.
+this can also be applied to arrays of tensors. Calling this subroutine manually
+is optional as it is called as a destructor when the `torch_tensor` goes out of
+scope anyway.
 
 ### Operator overloading
 
