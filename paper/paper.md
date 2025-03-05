@@ -60,7 +60,7 @@ coupling the two, allowing users to call PyTorch models from Fortran.
 `FTorch` is open-source, open-development, and well-documented with minimal dependencies.
 A central tenet of its design, in contrast to other approaches, is
 that FTorch removes dependence on the Python runtime (and virtual environments).
-By building on the `LibTorch` backend (written in C++ and accessible via an API) it
+By building on the `LibTorch` backend (written in C++ and accessible via an API), it
 allows users to run ML models on both
 CPU and GPU architectures without needing to port code to device-specific languages.
 
@@ -77,8 +77,8 @@ and the development of data-driven components.
 Such deployments of ML can achieve improved computational and/or predictive performance,
 compared to traditional numerical techniques.
 A common example from the geosciences is ML parameterisation
-of subgrid processes &mdash; a major source of uncertainty in many models
-[e.g. @bony2015clouds; @rasp2018deep].
+of subgrid processes&mdash;a major source of uncertainty in many models
+(e.g., @bony2015clouds, @rasp2018deep).
 
 Fortran is widely used for scientific codes due to its performance,
 stability, array-oriented design, and native support for shared and distributed memory,
@@ -91,7 +91,7 @@ Ideally, users would develop and validate ML models in the PyTorch environment
 before deploying them into a scientific model.
 This deployment should require minimal additional code, and guarantee
 identical results as obtained with the PyTorch
-interface &mdash; something not guaranteed if re-implementing by hand in Fortran.
+interface&mdash;something not guaranteed if re-implementing by hand in Fortran.
 Ideally one would call out, from Fortran, to an ML model
 saved from PyTorch, with the results returned directly to the scientific code.
 
@@ -112,7 +112,7 @@ Python environments can be challenging.
 # Software description
 
 `FTorch` is a Fortran wrapper to the `LibTorch` C++ framework using the `iso_c_binding`
-module, intrinsic to Fortran since the 2003 standard
+module, intrinsic to Fortran since the 2003 standard.
 This enables shared memory use (where possible) to
 maximise efficiency by reducing data-transfer during coupling^[i.e. the same
 data in memory is used by both `LibTorch` and Fortran without creating a copy.]
@@ -169,7 +169,7 @@ projects is available at
   runtime from Fortran.
 
 * **TorchFort** [@torchfort]\
-  Since we began `FTorch` NVIDIA has released `TorchFort`.
+  Since we began `FTorch`, NVIDIA has released `TorchFort`.
   This has a similar approach to `FTorch`, avoiding Python to link against
   the `LibTorch` backend. It has a focus on enabling GPU deployment on NVIDIA hardware.
 
@@ -183,7 +183,7 @@ projects is available at
 
 * **SmartSim** [@partee2022using]\
   SmartSim is a workflow library developed by HPE and built upon Redis API.
-  It provides a framework for launching ML and HPC workloads transferring data
+  It provides a framework for launching ML and HPC workloads, transferring data
   between the two via a database.
   This is a versatile approach that can work with a variety of languages and ML
   frameworks. However, it has a significant learning curve, incurs data-transfer
