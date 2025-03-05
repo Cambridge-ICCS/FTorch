@@ -4,6 +4,7 @@
 
 ![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/FTorch)
 ![Fortran](https://img.shields.io/badge/Fortran-2008-purple)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.07602/status.svg)](https://doi.org/10.21105/joss.07602)
 
 This repository contains code, utilities, and examples for directly calling PyTorch ML
 models from Fortran.
