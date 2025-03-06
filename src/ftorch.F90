@@ -13,6 +13,8 @@ module ftorch
 
   implicit none
 
+  public
+
   ! Set integer size for FTorch library
   integer, parameter :: ftorch_int = int32
 
