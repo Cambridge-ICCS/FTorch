@@ -293,7 +293,7 @@ people with respect and, more generally, to follow the guidelines articulated in
 To cite FTorch in research please refer to:
 
 Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
-Journal of Open Source Software, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
+_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
 
 See the `CITATION.cff` file or click 'Cite this repository' on the right.
 
