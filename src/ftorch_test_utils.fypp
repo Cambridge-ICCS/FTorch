@@ -19,6 +19,8 @@ module ftorch_test_utils
 
   implicit none
 
+  public
+
   interface assert_isclose
     #:for PREC in PRECISIONS
     module procedure assert_isclose_${PREC}$

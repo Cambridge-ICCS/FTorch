@@ -39,7 +39,7 @@ contains
   ! Constructor for the test case type
   function test_case_ctor(param)
     type(TestCaseType) :: test_case_ctor
-    type(TestParametersType) :: param
+    type(TestParametersType), intent(in) :: param
     test_case_ctor%param = param
   end function test_case_ctor
 
@@ -396,7 +396,7 @@ contains
     ! assignment operator
     tensor2 = tensor1
 
-    ! Compare the data in the tensor to the input data 
+    ! Compare the data in the tensor to the input data
     test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_blob")
 
     if (.not. test_pass) then
