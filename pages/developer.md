@@ -175,6 +175,23 @@ checks on all opened pull requests before they are merged.
 
 ## Documentation
 
+### Versioning and Changelog
+
+FTorch has follows [semantic versioning](https://semver.org/).
+
+- Major releases for API changes
+- Minor releases periodically for new features
+- Patches for bug fixes
+
+New minor releases are made when deemed appropriate by maintainers by adding a tag to
+the commit and greating a corresponding GitHub Release.
+
+A log of notable changes to the software is kept in `CHANGELOG.md`.
+This follows the conventions of [Keep a Changelog](https://keepachangelog.com/) and should
+be updated by contributors and maintainers as part of a pull request when appropriate.
+
+### API Documentation
+
 The API documentation for FTorch is generated using 
 [FORD](https://forddocs.readthedocs.io/en/latest/).
 For detailed information refer to the 
