@@ -22,8 +22,6 @@ contains
   @test
   subroutine test_torch_tensor_get_rank_1D()
 
-    implicit none
-
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [6]
@@ -39,8 +37,6 @@ contains
   ! Unit test for the torch_tensor_get_rank method of a 2D tensor
   @test
   subroutine test_torch_tensor_get_rank_2D()
-
-    implicit none
 
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
@@ -58,8 +54,6 @@ contains
   @test
   subroutine test_torch_tensor_get_rank_3D()
 
-    implicit none
-
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1,2,3]
@@ -75,8 +69,6 @@ contains
   ! Unit test for the torch_tensor_get_shape method of a 1D tensor
   @test
   subroutine test_torch_tensor_get_shape_1D()
-
-    implicit none
 
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -94,8 +86,6 @@ contains
   @test
   subroutine test_torch_tensor_get_shape_2D()
 
-    implicit none
-
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
@@ -112,8 +102,6 @@ contains
   @test
   subroutine test_torch_tensor_get_shape_3D()
 
-    implicit none
-
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1, 2, 3]
@@ -129,8 +117,6 @@ contains
   ! Unit test for the torch_tensor_get_dtype function
   @test
   subroutine test_torch_tensor_get_dtype()
-
-    implicit none
 
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -149,8 +135,6 @@ contains
   @test
   subroutine test_torch_tensor_get_device_type()
 
-    implicit none
-
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
@@ -167,8 +151,6 @@ contains
   ! Unit test for the torch_tensor_get_device_index function applied to a tensor on the CPU
   @test
   subroutine test_torch_tensor_get_device_index_default()
-
-    implicit none
 
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
