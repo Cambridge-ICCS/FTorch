@@ -1,0 +1,70 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Atkinson
+  given-names: Jack
+  orcid: "https://orcid.org/0000-0001-5001-4812"
+- family-names: Elafrou
+  given-names: Athena
+- family-names: Kasoar
+  given-names: Elliott
+  orcid: "https://orcid.org/0009-0005-2015-9478"
+- family-names: Wallwork
+  given-names: Joseph G.
+  orcid: "https://orcid.org/0000-0002-3646-091X"
+- family-names: Meltzer
+  given-names: Thomas
+  orcid: "https://orcid.org/0000-0003-1740-9550"
+- family-names: Clifford
+  given-names: Simon
+  orcid: "https://orcid.org/0000-0001-7754-504X"
+- family-names: Orchard
+  given-names: Dominic
+  orcid: "https://orcid.org/0000-0002-7058-7842"
+- family-names: Edsall
+  given-names: Chris
+  orcid: "https://orcid.org/0000-0001-6863-2184"
+contact:
+- family-names: Atkinson
+  given-names: Jack
+  orcid: "https://orcid.org/0000-0001-5001-4812"
+doi: 10.5281/zenodo.14968153
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Atkinson
+    given-names: Jack
+    orcid: "https://orcid.org/0000-0001-5001-4812"
+  - family-names: Elafrou
+    given-names: Athena
+  - family-names: Kasoar
+    given-names: Elliott
+    orcid: "https://orcid.org/0009-0005-2015-9478"
+  - family-names: Wallwork
+    given-names: Joseph G.
+    orcid: "https://orcid.org/0000-0002-3646-091X"
+  - family-names: Meltzer
+    given-names: Thomas
+    orcid: "https://orcid.org/0000-0003-1740-9550"
+  - family-names: Clifford
+    given-names: Simon
+    orcid: "https://orcid.org/0000-0001-7754-504X"
+  - family-names: Orchard
+    given-names: Dominic
+    orcid: "https://orcid.org/0000-0002-7058-7842"
+  - family-names: Edsall
+    given-names: Chris
+    orcid: "https://orcid.org/0000-0001-6863-2184"
+  date-published: 2025-03-05
+  doi: 10.21105/joss.07602
+  issn: 2475-9066
+  issue: 107
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 7602
+  title: "FTorch: a library for coupling PyTorch models to Fortran"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.07602"
+  volume: 10
+title: "FTorch: a library for coupling PyTorch models to Fortran"

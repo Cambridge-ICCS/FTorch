@@ -4,6 +4,7 @@
 
 ![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/FTorch)
 ![Fortran](https://img.shields.io/badge/Fortran-2008-purple)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.07602/status.svg)](https://doi.org/10.21105/joss.07602)
 
 This repository contains code, utilities, and examples for directly calling PyTorch ML
 models from Fortran.
@@ -289,17 +290,15 @@ people with respect and, more generally, to follow the guidelines articulated in
 
 *FTorch* is written and maintained by the [ICCS](https://github.com/Cambridge-ICCS)
 
-Notable contributors to this project are:
+To cite FTorch in research please refer to:
 
-* [**@athelaf**](https://github.com/athelaf)
-* [**@jatkinson1000**](https://github.com/jatkinson1000)
-* [**@SimonClifford**](https://github.com/SimonClifford)
-* [**@ElliottKasoar**](https://github.com/ElliottKasoar)
-* [**@TomMelt**](https://github.com/TomMelt)
-* [**@jwallwork23**](https://github.com/jwallwork23)
+Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
+_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
+
+See the `CITATION.cff` file or click 'Cite this repository' on the right.
 
 See [Contributors](https://github.com/Cambridge-ICCS/FTorch/graphs/contributors)
-for a full list.
+for a full list of contributors.
 
 
 ## Used by
