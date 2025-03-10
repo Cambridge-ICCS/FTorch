@@ -4,6 +4,7 @@
 
 ![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/FTorch)
 ![Fortran](https://img.shields.io/badge/Fortran-2008-purple)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.07602/status.svg)](https://doi.org/10.21105/joss.07602)
 
 This repository contains code, utilities, and examples for directly calling PyTorch ML
 models from Fortran.
@@ -289,27 +290,26 @@ people with respect and, more generally, to follow the guidelines articulated in
 
 *FTorch* is written and maintained by the [ICCS](https://github.com/Cambridge-ICCS)
 
-Notable contributors to this project are:
+To cite FTorch in research please refer to:
 
-* [**@athelaf**](https://github.com/athelaf)
-* [**@jatkinson1000**](https://github.com/jatkinson1000)
-* [**@SimonClifford**](https://github.com/SimonClifford)
-* [**@ElliottKasoar**](https://github.com/ElliottKasoar)
-* [**@TomMelt**](https://github.com/TomMelt)
-* [**@jwallwork23**](https://github.com/jwallwork23)
+Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
+_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
+
+See the `CITATION.cff` file or click 'Cite this repository' on the right.
 
 See [Contributors](https://github.com/Cambridge-ICCS/FTorch/graphs/contributors)
-for a full list.
+for a full list of contributors.
 
 
 ## Used by
 The following projects make use of this code or derivatives in some way:
 
-* [M2LInES CAM-ML](https://github.com/m2lines/CAM-ML)
 * [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/)
 * [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)\
   See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
 * [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization)\
-  See Heuer et al. (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
+  See Heuer et al. (2024) - [DOI: 10.1029/2024MS004398](https://doi.org/10.1029/2024MS004398)
+* To replace a BiCGStab bottleneck in the GloSea6 Seasonal Forecasting model\
+  See Park and Chung (2025) - [DOI: 10.3390/atmos16010060](https://doi.org/10.3390/atmos16010060)
 
 Are we missing anyone? Let us know.

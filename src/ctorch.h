@@ -112,15 +112,6 @@ EXPORT_C torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *sha
 // =============================================================================
 
 /**
- * Function to extract a C-array from a Torch Tensor's data.
- *
- * @param the Torch Tensor
- * @param data type of the elements of the Tensor
- * @return pointer to the Tensor in memory
- */
-EXPORT_C void *torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype);
-
-/**
  * Function to print out a Torch Tensor
  * @param Torch Tensor to print
  */
@@ -164,6 +155,13 @@ EXPORT_C torch_device_t torch_tensor_get_device_type(const torch_tensor_t tensor
  * @return device index of the Torch Tensor
  */
 EXPORT_C int torch_tensor_get_device_index(const torch_tensor_t tensor);
+
+/**
+ * Function to determine whether a Torch Tensor requires the autograd module
+ * @param Torch Tensor to interrogate
+ * @return whether the Torch Tensor requires autograd
+ */
+EXPORT_C bool torch_tensor_requires_grad(const torch_tensor_t tensor);
 
 // =============================================================================
 // --- Functions for deallocating tensors

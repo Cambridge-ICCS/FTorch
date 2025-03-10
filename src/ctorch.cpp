@@ -151,9 +151,12 @@ torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::empty(vshape, torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::empty(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -174,9 +177,12 @@ torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::zeros(vshape, torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::zeros(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -197,9 +203,12 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::ones(vshape, torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::ones(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
     delete tensor;
@@ -225,10 +234,12 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
     c10::IntArrayRef vstrides(strides, ndim);
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
     tensor = new torch::Tensor;
-    *tensor = torch::from_blob(data, vshape, vstrides,
-                               torch::dtype(get_libtorch_dtype(dtype)))
-                  .to(get_libtorch_device(device_type, device_index));
+    *tensor = torch::from_blob(data, vshape, vstrides, options);
 
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
@@ -245,44 +256,6 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
 // =====================================================================================
 // --- Functions for interrogating tensors
 // =====================================================================================
-
-void *torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  void *raw_ptr;
-  switch (dtype) {
-  case torch_kUInt8:
-    std::cerr << "[WARNING]: uint8 not supported" << std::endl;
-    exit(EXIT_FAILURE);
-  case torch_kInt8:
-    raw_ptr = (void *)t->data_ptr<int8_t>();
-    break;
-  case torch_kInt16:
-    raw_ptr = (void *)t->data_ptr<int16_t>();
-    break;
-  case torch_kInt32:
-    raw_ptr = (void *)t->data_ptr<int32_t>();
-    break;
-  case torch_kInt64:
-    raw_ptr = (void *)t->data_ptr<int64_t>();
-    break;
-  case torch_kFloat16:
-    std::cerr << "[WARNING]: float16 not supported" << std::endl;
-    // NOTE: std::float16_t is available but only with C++23
-    exit(EXIT_FAILURE);
-  case torch_kFloat32:
-    raw_ptr = (void *)t->data_ptr<float>();
-    // NOTE: std::float32_t is available but only with C++23
-    break;
-  case torch_kFloat64:
-    raw_ptr = (void *)t->data_ptr<double>();
-    // NOTE: std::float64_t is available but only with C++23
-    break;
-  default:
-    std::cerr << "[WARNING]: unknown data type" << std::endl;
-    exit(EXIT_FAILURE);
-  }
-  return raw_ptr;
-}
 
 void torch_tensor_print(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
@@ -321,6 +294,11 @@ int torch_tensor_get_device_index(const torch_tensor_t tensor) {
   return t->device().index();
 }
 
+bool torch_tensor_requires_grad(const torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  return t->requires_grad();
+}
+
 // =====================================================================================
 // --- Functions for deallocating tensors
 // =====================================================================================
@@ -338,7 +316,11 @@ void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input) {
   auto out = reinterpret_cast<torch::Tensor *>(output);
   auto in = reinterpret_cast<torch::Tensor *const>(input);
   torch::AutoGradMode enable_grad(in->requires_grad());
-  *out = *in;
+  // NOTE: The following line ensures that the output tensor continues to point to a
+  //       Fortran array if it was set up to do so using torch_tensor_from_array. If
+  //       it's removed then the Fortran array keeps its original value and is no
+  //       longer be pointed to.
+  std::move(*out) = *in;
 }
 
 void torch_tensor_add(torch_tensor_t output, const torch_tensor_t tensor1,
