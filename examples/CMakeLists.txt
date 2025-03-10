@@ -10,4 +10,8 @@ if(CMAKE_BUILD_TESTS)
   #       practice, as opposed to functionality.
   add_subdirectory(5_Looping)
   add_subdirectory(6_Autograd)
+  # NOTE: We do not currently support running with MPI on Windows
+  if(UNIX)
+    add_subdirectory(7_MPI)
+  endif()
 endif()

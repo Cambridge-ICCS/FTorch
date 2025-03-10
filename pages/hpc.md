@@ -159,3 +159,19 @@ or similar.
 This process should also add FTorch to the `LD_LIBRARY_PATH` and `CMAKE_PREFIX_PATH`
 rather than requiring the user to specify them manually as suggested elsewhere in this
 documentation.
+
+## Parallelism
+
+If you are investigating running FTorch on HPC then you are probably interested
+in improving computational efficiency via parallelism.
+
+#### MPI
+
+For a worked example of running with MPI, see the
+[associated example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_MPI).
+
+#### GPU
+
+For information on running on GPU architectures, see the
+[GPU user guide page](pages/gpu.html) and/or the
+[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU).
