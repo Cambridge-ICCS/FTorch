@@ -168,10 +168,10 @@ in improving computational efficiency via parallelism.
 #### MPI
 
 For a worked example of running with MPI, see the
-[associated example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_MPI).
+[associated example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MPI).
 
 #### GPU
 
 For information on running on GPU architectures, see the
 [GPU user guide page](pages/gpu.html) and/or the
-[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU).
+[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_MultiGPU).
