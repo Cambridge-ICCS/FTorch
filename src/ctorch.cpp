@@ -390,12 +390,10 @@ void torch_tensor_backward(const torch_tensor_t tensor,
   t->backward(*g);
 }
 
-EXPORT_C torch_tensor_t torch_tensor_get_gradient(const torch_tensor_t tensor) {
+void torch_tensor_get_gradient(torch_tensor_t gradient, const torch_tensor_t tensor) {
+  auto g = reinterpret_cast<torch::Tensor *>(gradient);
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = t->grad();
-  return output;
+  *g = t->grad();
 }
 
 // =============================================================================

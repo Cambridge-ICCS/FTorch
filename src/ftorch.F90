@@ -1848,22 +1848,27 @@ contains
     call torch_tensor_delete(external_gradient)
   end subroutine torch_tensor_backward
 
-  !> Retreives the gradient of a Torch Tensor.
+  !> Retrieves the gradient with respect to a Torch Tensor.
   function torch_tensor_get_gradient(tensor) result(gradient)
-    class(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: gradient
+    class(torch_tensor), intent(in) :: tensor  ! Tensor to compute the gradient with respect to
+    type(torch_tensor) :: gradient  ! Tensor holding the gradient
 
     interface
-      function torch_tensor_get_gradient_c(tensor_c) result(gradient_c) &
+      subroutine torch_tensor_get_gradient_c(gradient_c, tensor_c) &
           bind(c, name = 'torch_tensor_get_gradient')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
+        type(c_ptr), value, intent(in) :: gradient_c
         type(c_ptr), value, intent(in) :: tensor_c
-        type(c_ptr) :: gradient_c
-      end function torch_tensor_get_gradient_c
+      end subroutine torch_tensor_get_gradient_c
     end interface
 
-    gradient%p = torch_tensor_get_gradient_c(tensor%p)
+    if (.not. c_associated(gradient%p)) then
+      call torch_tensor_empty(gradient, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
+    end if
+    call torch_tensor_get_gradient_c(gradient%p, tensor%p)
   end function torch_tensor_get_gradient
 
   ! ============================================================================
