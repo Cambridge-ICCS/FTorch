@@ -156,6 +156,13 @@ EXPORT_C torch_device_t torch_tensor_get_device_type(const torch_tensor_t tensor
  */
 EXPORT_C int torch_tensor_get_device_index(const torch_tensor_t tensor);
 
+/**
+ * Function to determine whether a Torch Tensor requires the autograd module
+ * @param Torch Tensor to interrogate
+ * @return whether the Torch Tensor requires autograd
+ */
+EXPORT_C bool torch_tensor_requires_grad(const torch_tensor_t tensor);
+
 // =============================================================================
 // --- Functions for deallocating tensors
 // =============================================================================

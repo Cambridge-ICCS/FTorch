@@ -295,131 +295,138 @@
 <a id="ln-156" name="ln-156" href="#ln-156"></a><span class="cm"> */</span>
 <a id="ln-157" name="ln-157" href="#ln-157"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">torch_tensor_get_device_index</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
 <a id="ln-158" name="ln-158" href="#ln-158"></a>
-<a id="ln-159" name="ln-159" href="#ln-159"></a><span class="c1">// =============================================================================</span>
-<a id="ln-160" name="ln-160" href="#ln-160"></a><span class="c1">// --- Functions for deallocating tensors</span>
-<a id="ln-161" name="ln-161" href="#ln-161"></a><span class="c1">// =============================================================================</span>
-<a id="ln-162" name="ln-162" href="#ln-162"></a>
-<a id="ln-163" name="ln-163" href="#ln-163"></a><span class="cm">/**</span>
-<a id="ln-164" name="ln-164" href="#ln-164"></a><span class="cm"> * Function to delete a Torch Tensor to clean up</span>
-<a id="ln-165" name="ln-165" href="#ln-165"></a><span class="cm"> * @param Torch Tensor to delete</span>
-<a id="ln-166" name="ln-166" href="#ln-166"></a><span class="cm"> */</span>
-<a id="ln-167" name="ln-167" href="#ln-167"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
-<a id="ln-168" name="ln-168" href="#ln-168"></a>
-<a id="ln-169" name="ln-169" href="#ln-169"></a><span class="c1">// =============================================================================</span>
-<a id="ln-170" name="ln-170" href="#ln-170"></a><span class="c1">// --- Operator overloads acting on tensors</span>
-<a id="ln-171" name="ln-171" href="#ln-171"></a><span class="c1">// =============================================================================</span>
-<a id="ln-172" name="ln-172" href="#ln-172"></a>
-<a id="ln-173" name="ln-173" href="#ln-173"></a><span class="cm">/**</span>
-<a id="ln-174" name="ln-174" href="#ln-174"></a><span class="cm"> * Overloads the assignment operator for Torch Tensor</span>
-<a id="ln-175" name="ln-175" href="#ln-175"></a><span class="cm"> * @param output Tensor</span>
-<a id="ln-176" name="ln-176" href="#ln-176"></a><span class="cm"> * @param input Tensor</span>
-<a id="ln-177" name="ln-177" href="#ln-177"></a><span class="cm"> */</span>
-<a id="ln-178" name="ln-178" href="#ln-178"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_assign</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">input</span><span class="p">);</span>
+<a id="ln-159" name="ln-159" href="#ln-159"></a><span class="cm">/**</span>
+<a id="ln-160" name="ln-160" href="#ln-160"></a><span class="cm"> * Function to determine whether a Torch Tensor requires the autograd module</span>
+<a id="ln-161" name="ln-161" href="#ln-161"></a><span class="cm"> * @param Torch Tensor to interrogate</span>
+<a id="ln-162" name="ln-162" href="#ln-162"></a><span class="cm"> * @return whether the Torch Tensor requires autograd</span>
+<a id="ln-163" name="ln-163" href="#ln-163"></a><span class="cm"> */</span>
+<a id="ln-164" name="ln-164" href="#ln-164"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">torch_tensor_requires_grad</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
+<a id="ln-165" name="ln-165" href="#ln-165"></a>
+<a id="ln-166" name="ln-166" href="#ln-166"></a><span class="c1">// =============================================================================</span>
+<a id="ln-167" name="ln-167" href="#ln-167"></a><span class="c1">// --- Functions for deallocating tensors</span>
+<a id="ln-168" name="ln-168" href="#ln-168"></a><span class="c1">// =============================================================================</span>
+<a id="ln-169" name="ln-169" href="#ln-169"></a>
+<a id="ln-170" name="ln-170" href="#ln-170"></a><span class="cm">/**</span>
+<a id="ln-171" name="ln-171" href="#ln-171"></a><span class="cm"> * Function to delete a Torch Tensor to clean up</span>
+<a id="ln-172" name="ln-172" href="#ln-172"></a><span class="cm"> * @param Torch Tensor to delete</span>
+<a id="ln-173" name="ln-173" href="#ln-173"></a><span class="cm"> */</span>
+<a id="ln-174" name="ln-174" href="#ln-174"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
+<a id="ln-175" name="ln-175" href="#ln-175"></a>
+<a id="ln-176" name="ln-176" href="#ln-176"></a><span class="c1">// =============================================================================</span>
+<a id="ln-177" name="ln-177" href="#ln-177"></a><span class="c1">// --- Operator overloads acting on tensors</span>
+<a id="ln-178" name="ln-178" href="#ln-178"></a><span class="c1">// =============================================================================</span>
 <a id="ln-179" name="ln-179" href="#ln-179"></a>
 <a id="ln-180" name="ln-180" href="#ln-180"></a><span class="cm">/**</span>
-<a id="ln-181" name="ln-181" href="#ln-181"></a><span class="cm"> * Overloads the addition operator for two Torch Tensors</span>
-<a id="ln-182" name="ln-182" href="#ln-182"></a><span class="cm"> * @param sum of the Tensors</span>
-<a id="ln-183" name="ln-183" href="#ln-183"></a><span class="cm"> * @param first Tensor to be added</span>
-<a id="ln-184" name="ln-184" href="#ln-184"></a><span class="cm"> * @param second Tensor to be added</span>
-<a id="ln-185" name="ln-185" href="#ln-185"></a><span class="cm"> */</span>
-<a id="ln-186" name="ln-186" href="#ln-186"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_add</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor1</span><span class="p">,</span>
-<a id="ln-187" name="ln-187" href="#ln-187"></a><span class="w">                               </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor2</span><span class="p">);</span>
-<a id="ln-188" name="ln-188" href="#ln-188"></a>
-<a id="ln-189" name="ln-189" href="#ln-189"></a><span class="cm">/**</span>
-<a id="ln-190" name="ln-190" href="#ln-190"></a><span class="cm"> * Overloads the minus operator for a single Torch Tensor</span>
-<a id="ln-191" name="ln-191" href="#ln-191"></a><span class="cm"> * @param the negative Tensor</span>
-<a id="ln-192" name="ln-192" href="#ln-192"></a><span class="cm"> * @param Tensor to take the negative of</span>
-<a id="ln-193" name="ln-193" href="#ln-193"></a><span class="cm"> */</span>
-<a id="ln-194" name="ln-194" href="#ln-194"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_negative</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
+<a id="ln-181" name="ln-181" href="#ln-181"></a><span class="cm"> * Overloads the assignment operator for Torch Tensor</span>
+<a id="ln-182" name="ln-182" href="#ln-182"></a><span class="cm"> * @param output Tensor</span>
+<a id="ln-183" name="ln-183" href="#ln-183"></a><span class="cm"> * @param input Tensor</span>
+<a id="ln-184" name="ln-184" href="#ln-184"></a><span class="cm"> */</span>
+<a id="ln-185" name="ln-185" href="#ln-185"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_assign</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">input</span><span class="p">);</span>
+<a id="ln-186" name="ln-186" href="#ln-186"></a>
+<a id="ln-187" name="ln-187" href="#ln-187"></a><span class="cm">/**</span>
+<a id="ln-188" name="ln-188" href="#ln-188"></a><span class="cm"> * Overloads the addition operator for two Torch Tensors</span>
+<a id="ln-189" name="ln-189" href="#ln-189"></a><span class="cm"> * @param sum of the Tensors</span>
+<a id="ln-190" name="ln-190" href="#ln-190"></a><span class="cm"> * @param first Tensor to be added</span>
+<a id="ln-191" name="ln-191" href="#ln-191"></a><span class="cm"> * @param second Tensor to be added</span>
+<a id="ln-192" name="ln-192" href="#ln-192"></a><span class="cm"> */</span>
+<a id="ln-193" name="ln-193" href="#ln-193"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_add</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor1</span><span class="p">,</span>
+<a id="ln-194" name="ln-194" href="#ln-194"></a><span class="w">                               </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor2</span><span class="p">);</span>
 <a id="ln-195" name="ln-195" href="#ln-195"></a>
 <a id="ln-196" name="ln-196" href="#ln-196"></a><span class="cm">/**</span>
-<a id="ln-197" name="ln-197" href="#ln-197"></a><span class="cm"> * Overloads the subtraction operator for two Torch Tensors</span>
-<a id="ln-198" name="ln-198" href="#ln-198"></a><span class="cm"> * @param output Tensor</span>
-<a id="ln-199" name="ln-199" href="#ln-199"></a><span class="cm"> * @param first Tensor to be subtracted</span>
-<a id="ln-200" name="ln-200" href="#ln-200"></a><span class="cm"> * @param second Tensor to be subtracted</span>
-<a id="ln-201" name="ln-201" href="#ln-201"></a><span class="cm"> */</span>
-<a id="ln-202" name="ln-202" href="#ln-202"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_subtract</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor1</span><span class="p">,</span>
-<a id="ln-203" name="ln-203" href="#ln-203"></a><span class="w">                                    </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor2</span><span class="p">);</span>
-<a id="ln-204" name="ln-204" href="#ln-204"></a>
-<a id="ln-205" name="ln-205" href="#ln-205"></a><span class="cm">/**</span>
-<a id="ln-206" name="ln-206" href="#ln-206"></a><span class="cm"> * Overloads the multiplication operator for two Torch Tensors</span>
-<a id="ln-207" name="ln-207" href="#ln-207"></a><span class="cm"> * @param output Tensor</span>
-<a id="ln-208" name="ln-208" href="#ln-208"></a><span class="cm"> * @param first Tensor to be multiplied</span>
-<a id="ln-209" name="ln-209" href="#ln-209"></a><span class="cm"> * @param second Tensor to be multiplied</span>
-<a id="ln-210" name="ln-210" href="#ln-210"></a><span class="cm"> */</span>
-<a id="ln-211" name="ln-211" href="#ln-211"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_multiply</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor1</span><span class="p">,</span>
-<a id="ln-212" name="ln-212" href="#ln-212"></a><span class="w">                                    </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor2</span><span class="p">);</span>
-<a id="ln-213" name="ln-213" href="#ln-213"></a>
-<a id="ln-214" name="ln-214" href="#ln-214"></a><span class="cm">/**</span>
-<a id="ln-215" name="ln-215" href="#ln-215"></a><span class="cm"> * Overloads the division operator for two Torch Tensors.</span>
-<a id="ln-216" name="ln-216" href="#ln-216"></a><span class="cm"> * @param output Tensor</span>
-<a id="ln-217" name="ln-217" href="#ln-217"></a><span class="cm"> * @param first Tensor to be divided</span>
-<a id="ln-218" name="ln-218" href="#ln-218"></a><span class="cm"> * @param second Tensor to be divided</span>
-<a id="ln-219" name="ln-219" href="#ln-219"></a><span class="cm"> */</span>
-<a id="ln-220" name="ln-220" href="#ln-220"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_divide</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor1</span><span class="p">,</span>
-<a id="ln-221" name="ln-221" href="#ln-221"></a><span class="w">                                  </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor2</span><span class="p">);</span>
-<a id="ln-222" name="ln-222" href="#ln-222"></a>
-<a id="ln-223" name="ln-223" href="#ln-223"></a><span class="cm">/**</span>
-<a id="ln-224" name="ln-224" href="#ln-224"></a><span class="cm"> * Overloads the exponentiation operator for a Torch Tensor and an integer exponent</span>
-<a id="ln-225" name="ln-225" href="#ln-225"></a><span class="cm"> * @param output Tensor</span>
-<a id="ln-226" name="ln-226" href="#ln-226"></a><span class="cm"> * @param Tensor to take the power of</span>
-<a id="ln-227" name="ln-227" href="#ln-227"></a><span class="cm"> * @param integer exponent</span>
-<a id="ln-228" name="ln-228" href="#ln-228"></a><span class="cm"> */</span>
-<a id="ln-229" name="ln-229" href="#ln-229"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_power_int</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">,</span>
-<a id="ln-230" name="ln-230" href="#ln-230"></a><span class="w">                                     </span><span class="k">const</span><span class="w"> </span><span class="n">torch_int_t</span><span class="w"> </span><span class="n">exponent</span><span class="p">);</span>
-<a id="ln-231" name="ln-231" href="#ln-231"></a>
-<a id="ln-232" name="ln-232" href="#ln-232"></a><span class="cm">/**</span>
-<a id="ln-233" name="ln-233" href="#ln-233"></a><span class="cm"> * Overloads the exponentiation operator for a Torch Tensor and a floating point</span>
-<a id="ln-234" name="ln-234" href="#ln-234"></a><span class="cm"> * exponent</span>
-<a id="ln-235" name="ln-235" href="#ln-235"></a><span class="cm"> * @param output Tensor</span>
-<a id="ln-236" name="ln-236" href="#ln-236"></a><span class="cm"> * @param Tensor to take the power of</span>
-<a id="ln-237" name="ln-237" href="#ln-237"></a><span class="cm"> * @param floating point exponent</span>
-<a id="ln-238" name="ln-238" href="#ln-238"></a><span class="cm"> */</span>
-<a id="ln-239" name="ln-239" href="#ln-239"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_power_float</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span>
-<a id="ln-240" name="ln-240" href="#ln-240"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">,</span>
-<a id="ln-241" name="ln-241" href="#ln-241"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_float_t</span><span class="w"> </span><span class="n">exponent</span><span class="p">);</span>
-<a id="ln-242" name="ln-242" href="#ln-242"></a>
-<a id="ln-243" name="ln-243" href="#ln-243"></a><span class="c1">// =============================================================================</span>
-<a id="ln-244" name="ln-244" href="#ln-244"></a><span class="c1">// --- Torch model API</span>
-<a id="ln-245" name="ln-245" href="#ln-245"></a><span class="c1">// =============================================================================</span>
-<a id="ln-246" name="ln-246" href="#ln-246"></a>
-<a id="ln-247" name="ln-247" href="#ln-247"></a><span class="cm">/**</span>
-<a id="ln-248" name="ln-248" href="#ln-248"></a><span class="cm"> * Function to load in a Torch model from a TorchScript file and store in a</span>
-<a id="ln-249" name="ln-249" href="#ln-249"></a><span class="cm"> * Torch Module</span>
-<a id="ln-250" name="ln-250" href="#ln-250"></a><span class="cm"> * @param filename where TorchScript description of model is stored</span>
-<a id="ln-251" name="ln-251" href="#ln-251"></a><span class="cm"> * @param device type used (cpu, CUDA, etc.)</span>
-<a id="ln-252" name="ln-252" href="#ln-252"></a><span class="cm"> * @param device index for the CUDA case</span>
-<a id="ln-253" name="ln-253" href="#ln-253"></a><span class="cm"> * @param whether gradient is required</span>
-<a id="ln-254" name="ln-254" href="#ln-254"></a><span class="cm"> * @param whether model is being trained</span>
-<a id="ln-255" name="ln-255" href="#ln-255"></a><span class="cm"> * @return Torch Module loaded in from file</span>
-<a id="ln-256" name="ln-256" href="#ln-256"></a><span class="cm"> */</span>
-<a id="ln-257" name="ln-257" href="#ln-257"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">torch_jit_load</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">filename</span><span class="p">,</span>
-<a id="ln-258" name="ln-258" href="#ln-258"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="n">torch_device_t</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span>
-<a id="ln-259" name="ln-259" href="#ln-259"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span>
-<a id="ln-260" name="ln-260" href="#ln-260"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">,</span>
-<a id="ln-261" name="ln-261" href="#ln-261"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_training</span><span class="p">);</span>
-<a id="ln-262" name="ln-262" href="#ln-262"></a>
-<a id="ln-263" name="ln-263" href="#ln-263"></a><span class="cm">/**</span>
-<a id="ln-264" name="ln-264" href="#ln-264"></a><span class="cm"> * Function to run the `forward` method of a Torch Module</span>
-<a id="ln-265" name="ln-265" href="#ln-265"></a><span class="cm"> * @param Torch Module containing the model</span>
-<a id="ln-266" name="ln-266" href="#ln-266"></a><span class="cm"> * @param vector of Torch Tensors as inputs to the model</span>
-<a id="ln-267" name="ln-267" href="#ln-267"></a><span class="cm"> * @param number of input Tensors in the input vector</span>
-<a id="ln-268" name="ln-268" href="#ln-268"></a><span class="cm"> * @param vector of Torch Tensors as outputs from running the model</span>
-<a id="ln-269" name="ln-269" href="#ln-269"></a><span class="cm"> * @param number of output Tensors in the output vector</span>
-<a id="ln-270" name="ln-270" href="#ln-270"></a><span class="cm"> * @param whether gradient is required</span>
-<a id="ln-271" name="ln-271" href="#ln-271"></a><span class="cm"> */</span>
-<a id="ln-272" name="ln-272" href="#ln-272"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_forward</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">,</span>
-<a id="ln-273" name="ln-273" href="#ln-273"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nin</span><span class="p">,</span>
-<a id="ln-274" name="ln-274" href="#ln-274"></a><span class="w">                                       </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">outputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nout</span><span class="p">,</span>
-<a id="ln-275" name="ln-275" href="#ln-275"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">);</span>
-<a id="ln-276" name="ln-276" href="#ln-276"></a>
-<a id="ln-277" name="ln-277" href="#ln-277"></a><span class="cm">/**</span>
-<a id="ln-278" name="ln-278" href="#ln-278"></a><span class="cm"> * Function to delete a Torch Module to clean up</span>
-<a id="ln-279" name="ln-279" href="#ln-279"></a><span class="cm"> * @param Torch Module to delete</span>
-<a id="ln-280" name="ln-280" href="#ln-280"></a><span class="cm"> */</span>
-<a id="ln-281" name="ln-281" href="#ln-281"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_delete</span><span class="p">(</span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
-<a id="ln-282" name="ln-282" href="#ln-282"></a>
-<a id="ln-283" name="ln-283" href="#ln-283"></a><span class="cp">#endif </span><span class="cm">/* C_TORCH_H*/</span>
+<a id="ln-197" name="ln-197" href="#ln-197"></a><span class="cm"> * Overloads the minus operator for a single Torch Tensor</span>
+<a id="ln-198" name="ln-198" href="#ln-198"></a><span class="cm"> * @param the negative Tensor</span>
+<a id="ln-199" name="ln-199" href="#ln-199"></a><span class="cm"> * @param Tensor to take the negative of</span>
+<a id="ln-200" name="ln-200" href="#ln-200"></a><span class="cm"> */</span>
+<a id="ln-201" name="ln-201" href="#ln-201"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_negative</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
+<a id="ln-202" name="ln-202" href="#ln-202"></a>
+<a id="ln-203" name="ln-203" href="#ln-203"></a><span class="cm">/**</span>
+<a id="ln-204" name="ln-204" href="#ln-204"></a><span class="cm"> * Overloads the subtraction operator for two Torch Tensors</span>
+<a id="ln-205" name="ln-205" href="#ln-205"></a><span class="cm"> * @param output Tensor</span>
+<a id="ln-206" name="ln-206" href="#ln-206"></a><span class="cm"> * @param first Tensor to be subtracted</span>
+<a id="ln-207" name="ln-207" href="#ln-207"></a><span class="cm"> * @param second Tensor to be subtracted</span>
+<a id="ln-208" name="ln-208" href="#ln-208"></a><span class="cm"> */</span>
+<a id="ln-209" name="ln-209" href="#ln-209"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_subtract</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor1</span><span class="p">,</span>
+<a id="ln-210" name="ln-210" href="#ln-210"></a><span class="w">                                    </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor2</span><span class="p">);</span>
+<a id="ln-211" name="ln-211" href="#ln-211"></a>
+<a id="ln-212" name="ln-212" href="#ln-212"></a><span class="cm">/**</span>
+<a id="ln-213" name="ln-213" href="#ln-213"></a><span class="cm"> * Overloads the multiplication operator for two Torch Tensors</span>
+<a id="ln-214" name="ln-214" href="#ln-214"></a><span class="cm"> * @param output Tensor</span>
+<a id="ln-215" name="ln-215" href="#ln-215"></a><span class="cm"> * @param first Tensor to be multiplied</span>
+<a id="ln-216" name="ln-216" href="#ln-216"></a><span class="cm"> * @param second Tensor to be multiplied</span>
+<a id="ln-217" name="ln-217" href="#ln-217"></a><span class="cm"> */</span>
+<a id="ln-218" name="ln-218" href="#ln-218"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_multiply</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor1</span><span class="p">,</span>
+<a id="ln-219" name="ln-219" href="#ln-219"></a><span class="w">                                    </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor2</span><span class="p">);</span>
+<a id="ln-220" name="ln-220" href="#ln-220"></a>
+<a id="ln-221" name="ln-221" href="#ln-221"></a><span class="cm">/**</span>
+<a id="ln-222" name="ln-222" href="#ln-222"></a><span class="cm"> * Overloads the division operator for two Torch Tensors.</span>
+<a id="ln-223" name="ln-223" href="#ln-223"></a><span class="cm"> * @param output Tensor</span>
+<a id="ln-224" name="ln-224" href="#ln-224"></a><span class="cm"> * @param first Tensor to be divided</span>
+<a id="ln-225" name="ln-225" href="#ln-225"></a><span class="cm"> * @param second Tensor to be divided</span>
+<a id="ln-226" name="ln-226" href="#ln-226"></a><span class="cm"> */</span>
+<a id="ln-227" name="ln-227" href="#ln-227"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_divide</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor1</span><span class="p">,</span>
+<a id="ln-228" name="ln-228" href="#ln-228"></a><span class="w">                                  </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor2</span><span class="p">);</span>
+<a id="ln-229" name="ln-229" href="#ln-229"></a>
+<a id="ln-230" name="ln-230" href="#ln-230"></a><span class="cm">/**</span>
+<a id="ln-231" name="ln-231" href="#ln-231"></a><span class="cm"> * Overloads the exponentiation operator for a Torch Tensor and an integer exponent</span>
+<a id="ln-232" name="ln-232" href="#ln-232"></a><span class="cm"> * @param output Tensor</span>
+<a id="ln-233" name="ln-233" href="#ln-233"></a><span class="cm"> * @param Tensor to take the power of</span>
+<a id="ln-234" name="ln-234" href="#ln-234"></a><span class="cm"> * @param integer exponent</span>
+<a id="ln-235" name="ln-235" href="#ln-235"></a><span class="cm"> */</span>
+<a id="ln-236" name="ln-236" href="#ln-236"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_power_int</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">,</span>
+<a id="ln-237" name="ln-237" href="#ln-237"></a><span class="w">                                     </span><span class="k">const</span><span class="w"> </span><span class="n">torch_int_t</span><span class="w"> </span><span class="n">exponent</span><span class="p">);</span>
+<a id="ln-238" name="ln-238" href="#ln-238"></a>
+<a id="ln-239" name="ln-239" href="#ln-239"></a><span class="cm">/**</span>
+<a id="ln-240" name="ln-240" href="#ln-240"></a><span class="cm"> * Overloads the exponentiation operator for a Torch Tensor and a floating point</span>
+<a id="ln-241" name="ln-241" href="#ln-241"></a><span class="cm"> * exponent</span>
+<a id="ln-242" name="ln-242" href="#ln-242"></a><span class="cm"> * @param output Tensor</span>
+<a id="ln-243" name="ln-243" href="#ln-243"></a><span class="cm"> * @param Tensor to take the power of</span>
+<a id="ln-244" name="ln-244" href="#ln-244"></a><span class="cm"> * @param floating point exponent</span>
+<a id="ln-245" name="ln-245" href="#ln-245"></a><span class="cm"> */</span>
+<a id="ln-246" name="ln-246" href="#ln-246"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_power_float</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">output</span><span class="p">,</span>
+<a id="ln-247" name="ln-247" href="#ln-247"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">,</span>
+<a id="ln-248" name="ln-248" href="#ln-248"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_float_t</span><span class="w"> </span><span class="n">exponent</span><span class="p">);</span>
+<a id="ln-249" name="ln-249" href="#ln-249"></a>
+<a id="ln-250" name="ln-250" href="#ln-250"></a><span class="c1">// =============================================================================</span>
+<a id="ln-251" name="ln-251" href="#ln-251"></a><span class="c1">// --- Torch model API</span>
+<a id="ln-252" name="ln-252" href="#ln-252"></a><span class="c1">// =============================================================================</span>
+<a id="ln-253" name="ln-253" href="#ln-253"></a>
+<a id="ln-254" name="ln-254" href="#ln-254"></a><span class="cm">/**</span>
+<a id="ln-255" name="ln-255" href="#ln-255"></a><span class="cm"> * Function to load in a Torch model from a TorchScript file and store in a</span>
+<a id="ln-256" name="ln-256" href="#ln-256"></a><span class="cm"> * Torch Module</span>
+<a id="ln-257" name="ln-257" href="#ln-257"></a><span class="cm"> * @param filename where TorchScript description of model is stored</span>
+<a id="ln-258" name="ln-258" href="#ln-258"></a><span class="cm"> * @param device type used (cpu, CUDA, etc.)</span>
+<a id="ln-259" name="ln-259" href="#ln-259"></a><span class="cm"> * @param device index for the CUDA case</span>
+<a id="ln-260" name="ln-260" href="#ln-260"></a><span class="cm"> * @param whether gradient is required</span>
+<a id="ln-261" name="ln-261" href="#ln-261"></a><span class="cm"> * @param whether model is being trained</span>
+<a id="ln-262" name="ln-262" href="#ln-262"></a><span class="cm"> * @return Torch Module loaded in from file</span>
+<a id="ln-263" name="ln-263" href="#ln-263"></a><span class="cm"> */</span>
+<a id="ln-264" name="ln-264" href="#ln-264"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">torch_jit_load</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">filename</span><span class="p">,</span>
+<a id="ln-265" name="ln-265" href="#ln-265"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="n">torch_device_t</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span>
+<a id="ln-266" name="ln-266" href="#ln-266"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span>
+<a id="ln-267" name="ln-267" href="#ln-267"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">,</span>
+<a id="ln-268" name="ln-268" href="#ln-268"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_training</span><span class="p">);</span>
+<a id="ln-269" name="ln-269" href="#ln-269"></a>
+<a id="ln-270" name="ln-270" href="#ln-270"></a><span class="cm">/**</span>
+<a id="ln-271" name="ln-271" href="#ln-271"></a><span class="cm"> * Function to run the `forward` method of a Torch Module</span>
+<a id="ln-272" name="ln-272" href="#ln-272"></a><span class="cm"> * @param Torch Module containing the model</span>
+<a id="ln-273" name="ln-273" href="#ln-273"></a><span class="cm"> * @param vector of Torch Tensors as inputs to the model</span>
+<a id="ln-274" name="ln-274" href="#ln-274"></a><span class="cm"> * @param number of input Tensors in the input vector</span>
+<a id="ln-275" name="ln-275" href="#ln-275"></a><span class="cm"> * @param vector of Torch Tensors as outputs from running the model</span>
+<a id="ln-276" name="ln-276" href="#ln-276"></a><span class="cm"> * @param number of output Tensors in the output vector</span>
+<a id="ln-277" name="ln-277" href="#ln-277"></a><span class="cm"> * @param whether gradient is required</span>
+<a id="ln-278" name="ln-278" href="#ln-278"></a><span class="cm"> */</span>
+<a id="ln-279" name="ln-279" href="#ln-279"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_forward</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">,</span>
+<a id="ln-280" name="ln-280" href="#ln-280"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nin</span><span class="p">,</span>
+<a id="ln-281" name="ln-281" href="#ln-281"></a><span class="w">                                       </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">outputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nout</span><span class="p">,</span>
+<a id="ln-282" name="ln-282" href="#ln-282"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">);</span>
+<a id="ln-283" name="ln-283" href="#ln-283"></a>
+<a id="ln-284" name="ln-284" href="#ln-284"></a><span class="cm">/**</span>
+<a id="ln-285" name="ln-285" href="#ln-285"></a><span class="cm"> * Function to delete a Torch Module to clean up</span>
+<a id="ln-286" name="ln-286" href="#ln-286"></a><span class="cm"> * @param Torch Module to delete</span>
+<a id="ln-287" name="ln-287" href="#ln-287"></a><span class="cm"> */</span>
+<a id="ln-288" name="ln-288" href="#ln-288"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_delete</span><span class="p">(</span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
+<a id="ln-289" name="ln-289" href="#ln-289"></a>
+<a id="ln-290" name="ln-290" href="#ln-290"></a><span class="cp">#endif </span><span class="cm">/* C_TORCH_H*/</span>
 </pre></div>
 
       </section>

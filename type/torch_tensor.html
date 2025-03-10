@@ -75,7 +75,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p>76.9% of total for derived types.</p>Including implementation: 118 statements, 97.5% of total for derived types.">10 statements</a>
+                 title="<p>78.6% of total for derived types.</p>Including implementation: 132 statements, 97.8% of total for derived types.">11 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -158,6 +158,7 @@
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_dtype">get_dtype</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_rank">get_rank</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_shape">get_shape</a>
+            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-requires_grad">requires_grad</a>
         </div>
       </div>
     </div>
@@ -251,7 +252,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~45"></span>
+              <span class="anchor" id="variable-tensor~46"></span>
               type(<a href='torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(inout)</td>
@@ -572,6 +573,65 @@
   </div>
 
           </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-requires_grad"></span>
+      <h3>
+          procedure, public ::
+  <strong>requires_grad</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_requires_grad.html'>torch_tensor_requires_grad</a>
+        
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+                  <h3>
+    public  function <a href='../proc/torch_tensor_requires_grad.html'>torch_tensor_requires_grad</a>(self) result(requires_grad)  
+</h3>
+    
+
+  <p>Determines whether a tensor requires the autograd module.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+          </div>
       </section>
 
     <section>
@@ -584,6 +644,7 @@
 <span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_dtype</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_dtype</span>
 <span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_device_type</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_device_type</span>
 <span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_device_index</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_device_index</span>
+<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_requires_grad</span>
 <span class="w">    </span><span class="k">final</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">torch_tensor_delete</span>
 <span class="w">  </span><span class="k">end type </span><span class="n">torch_tensor</span>
 </pre></div>
