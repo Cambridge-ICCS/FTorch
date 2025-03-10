@@ -304,11 +304,12 @@ for a full list of contributors.
 ## Used by
 The following projects make use of this code or derivatives in some way:
 
-* [M2LInES CAM-ML](https://github.com/m2lines/CAM-ML)
 * [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/)
 * [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)\
   See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
 * [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization)\
-  See Heuer et al. (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
+  See Heuer et al. (2024) - [DOI: 10.1029/2024MS004398](https://doi.org/10.1029/2024MS004398)
+* To replace a BiCGStab bottleneck in the GloSea6 Seasonal Forecasting model\
+  See Park and Chung (2025) - [DOI: 10.3390/atmos16010060](https://doi.org/10.3390/atmos16010060)
 
 Are we missing anyone? Let us know.
