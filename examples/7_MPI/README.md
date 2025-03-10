@@ -21,7 +21,6 @@ To run this example requires:
 
 - CMake
 - An MPI installation.
-- mpif90
 - FTorch (installed as described in main package)
 - Python 3
 
