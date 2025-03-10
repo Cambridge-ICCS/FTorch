@@ -65,7 +65,7 @@ contains
 
   ! Unit test for the torch_tensor_get_rank method of a 1D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_tensor_get_rank_1D(this)
+  subroutine test_get_rank_1D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -77,11 +77,11 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertEqual(ndims, tensor%get_rank())
 
-  end subroutine test_torch_tensor_get_rank_1D
+  end subroutine test_get_rank_1D
 
   ! Unit test for the torch_tensor_get_rank method of a 2D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_tensor_get_rank_2D(this)
+  subroutine test_get_rank_2D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
@@ -93,11 +93,11 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertEqual(ndims, tensor%get_rank())
 
-  end subroutine test_torch_tensor_get_rank_2D
+  end subroutine test_get_rank_2D
 
   ! Unit test for the torch_tensor_get_rank method of a 3D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_tensor_get_rank_3D(this)
+  subroutine test_get_rank_3D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
@@ -109,11 +109,11 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertEqual(ndims, tensor%get_rank())
 
-  end subroutine test_torch_tensor_get_rank_3D
+  end subroutine test_get_rank_3D
 
   ! Unit test for the torch_tensor_get_shape method of a 1D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_tensor_get_shape_1D(this)
+  subroutine test_get_shape_1D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -125,11 +125,11 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertTrue(all(tensor_shape == tensor%get_shape()))
 
-  end subroutine test_torch_tensor_get_shape_1D
+  end subroutine test_get_shape_1D
 
   ! Unit test for the torch_tensor_get_shape method of a 2D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_tensor_get_shape_2D(this)
+  subroutine test_get_shape_2D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
@@ -141,11 +141,11 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertTrue(all(tensor_shape == tensor%get_shape()))
 
-  end subroutine test_torch_tensor_get_shape_2D
+  end subroutine test_get_shape_2D
 
   ! Unit test for the torch_tensor_get_shape method of a 3D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_tensor_get_shape_3D(this)
+  subroutine test_get_shape_3D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
@@ -157,11 +157,11 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertTrue(all(tensor_shape == tensor%get_shape()))
 
-  end subroutine test_torch_tensor_get_shape_3D
+  end subroutine test_get_shape_3D
 
   ! Unit test for the torch_tensor_get_dtype function
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_tensor_get_dtype(this)
+  subroutine test_get_dtype(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -174,11 +174,11 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertEqual(expected, tensor%get_dtype())
 
-  end subroutine test_torch_tensor_get_dtype
+  end subroutine test_get_dtype
 
   ! Unit test for the torch_tensor_get_device_type function applied to a tensor on the CPU
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_tensor_get_device_type(this)
+  subroutine test_get_device_type(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -191,11 +191,11 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertEqual(expected, tensor%get_device_type())
 
-  end subroutine test_torch_tensor_get_device_type
+  end subroutine test_get_device_type
 
   ! Unit test for the torch_tensor_get_device_index function applied to a tensor on the CPU
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_tensor_get_device_index_default(this)
+  subroutine test_get_device_index_default(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -208,11 +208,11 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertEqual(expected, tensor%get_device_index())
 
-  end subroutine test_torch_tensor_get_device_index_default
+  end subroutine test_get_device_index_default
 
   ! Unit test for the default value of the torch_tensor_requires_grad function
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_tensor_requires_grad_default(this)
+  subroutine test_requires_grad_default(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -230,11 +230,11 @@ contains
       stop 999
     end if
 
-  end subroutine test_torch_tensor_requires_grad_default
+  end subroutine test_requires_grad_default
 
   ! Unit test for the torch_tensor_requires_grad function
   @test(testparameters={get_parameters_full()})
-  subroutine test_torch_tensor_requires_grad(this)
+  subroutine test_requires_grad(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -253,6 +253,6 @@ contains
       stop 999
     end if
 
-  end subroutine test_torch_tensor_requires_grad
+  end subroutine test_requires_grad
 
 end module test_tensor_interrogation
