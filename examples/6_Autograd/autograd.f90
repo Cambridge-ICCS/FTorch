@@ -34,9 +34,8 @@ program example
   ! Initialise Torch Tensors from input arrays as in Python example
   in_data1(:,1) = [2.0_wp, 3.0_wp]
   in_data2(:,1) = [6.0_wp, 4.0_wp]
-  ! TODO: Implement requires_grad=.true.
-  call torch_tensor_from_array(a, in_data1, tensor_layout, torch_kCPU)
-  call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU)
+  call torch_tensor_from_array(a, in_data1, tensor_layout, torch_kCPU, requires_grad=.true.)
+  call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU, requires_grad=.true.)
 
   ! Initialise Torch Tensor from array used for output
   call torch_tensor_from_array(Q, out_data, tensor_layout, torch_kCPU)

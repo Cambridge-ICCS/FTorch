@@ -36,6 +36,7 @@ module ftorch
     procedure :: get_dtype => torch_tensor_get_dtype
     procedure :: get_device_type => torch_tensor_get_device_type
     procedure :: get_device_index => torch_tensor_get_device_index
+    procedure :: requires_grad => torch_tensor_requires_grad
     final :: torch_tensor_delete
   end type torch_tensor
 
@@ -1456,6 +1457,24 @@ contains
     device_index = torch_tensor_get_device_index_c(self%p)
   end function torch_tensor_get_device_index
 
+  !> Determines whether a tensor requires the autograd module.
+  function torch_tensor_requires_grad(self) result(requires_grad)
+    class(torch_tensor), intent(in) :: self
+    logical :: requires_grad
+
+    interface
+      function torch_tensor_requires_grad_c(tensor) result(requires_grad) &
+          bind(c, name = 'torch_tensor_requires_grad')
+        use, intrinsic :: iso_c_binding, only : c_bool, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+        logical(c_bool) :: requires_grad
+      end function torch_tensor_requires_grad_c
+    end interface
+
+    requires_grad = torch_tensor_requires_grad_c(self%p)
+  end function torch_tensor_requires_grad
+
   ! ============================================================================
   ! --- Procedures for deallocating tensors
   ! ============================================================================
@@ -1512,9 +1531,9 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, input%get_rank(), input%get_shape(), input%get_dtype(), &
-                              input%get_device_type(), input%get_device_index())
+                              input%get_device_type(), device_index=input%get_device_index(), &
+                              requires_grad=input%requires_grad())
     else if (input%get_device_type() /= output%get_device_type()) then
       write(*,*) "Error :: cannot assign tensors with different device types"
       stop 1
@@ -1545,10 +1564,10 @@ contains
       stop 1
     end if
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
                               tensor1%get_dtype(), tensor1%get_device_type(), &
-                              tensor1%get_device_index())
+                              device_index=tensor1%get_device_index(), &
+                              requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_add_c(output%p,tensor1%p, tensor2%p)
   end function torch_tensor_add
@@ -1569,9 +1588,9 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_negative_c(output%p, tensor%p)
   end function torch_tensor_negative
@@ -1600,10 +1619,10 @@ contains
     end if
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
                               tensor1%get_dtype(), tensor1%get_device_type(), &
-                              tensor1%get_device_index())
+                              device_index=tensor1%get_device_index(), &
+                              requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_subtract_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_subtract
@@ -1621,10 +1640,10 @@ contains
     end if
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
                               tensor1%get_dtype(), tensor1%get_device_type(), &
-                              tensor1%get_device_index())
+                              device_index=tensor1%get_device_index(), &
+                              requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_multiply_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_multiply
@@ -1638,9 +1657,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
@@ -1658,9 +1677,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
@@ -1678,9 +1697,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
@@ -1698,9 +1717,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
@@ -1718,9 +1737,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
@@ -1738,9 +1757,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar pre-multiplier
@@ -1759,9 +1778,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-multiplier
@@ -1779,9 +1798,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-multiplier
@@ -1799,9 +1818,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-multiplier
@@ -1819,9 +1838,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-multiplier
@@ -1839,9 +1858,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-multiplier
@@ -1859,9 +1878,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-multiplier
@@ -1883,10 +1902,10 @@ contains
     end if
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
                               tensor1%get_dtype(), tensor1%get_device_type(), &
-                              tensor1%get_device_index())
+                              device_index=tensor1%get_device_index(), &
+                              requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_divide_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_divide
@@ -1900,9 +1919,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-divisor
@@ -1920,9 +1939,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-divisor
@@ -1940,9 +1959,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-divisor
@@ -1960,9 +1979,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-divisor
@@ -1980,9 +1999,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-divisor
@@ -2000,9 +2019,9 @@ contains
     type(torch_tensor) :: wrk, output
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
 
     ! Create a tensor with a single entry, the scalar post-divisor
@@ -2032,9 +2051,9 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int8
@@ -2059,9 +2078,9 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int16
@@ -2086,9 +2105,9 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int32
@@ -2113,9 +2132,9 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int64
@@ -2141,9 +2160,9 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_float_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_real32
@@ -2168,9 +2187,9 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      ! TODO: Pass requires_grad argument
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_float_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_real64
