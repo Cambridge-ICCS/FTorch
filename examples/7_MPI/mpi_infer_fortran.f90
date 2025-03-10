@@ -1,7 +1,7 @@
 program inference
 
    ! Import precision info from iso
-   use, intrinsic :: iso_fortran_env, only : sp => real32
+   use, intrinsic :: iso_fortran_env, only : sp => real32, stdout => output_unit
 
    ! Import our library for interfacing with PyTorch
    use ftorch, only : torch_model, torch_tensor, torch_kCPU, torch_delete, &
@@ -66,8 +66,8 @@ program inference
 
    ! Initialise data and print the values used on each MPI rank
    in_data = [(rank + i, i = 0, 4)]
-   write(unit=6, fmt="('input on rank ',i1,': ')", advance="no") rank
-   write(unit=6, fmt=100) in_data(:)
+   write(unit=stdout, fmt="('input on rank ',i1,': ')", advance="no") rank
+   write(unit=stdout, fmt=100) in_data(:)
    100 format('[',4(f5.1,','),f5.1,']')
 
    ! Create Torch input/output tensors from the above arrays
@@ -81,8 +81,8 @@ program inference
    call torch_model_forward(model, in_tensors, out_tensors)
 
    ! Print the values computed on each MPI rank
-   write(unit=6, fmt="('output on rank ',i1,': ')", advance="no") rank
-   write(unit=6, fmt=100) out_data(:)
+   write(unit=stdout, fmt="('output on rank ',i1,': ')", advance="no") rank
+   write(unit=stdout, fmt=100) out_data(:)
 
    ! Gather the outputs onto rank 0
    allocate(recvbuf(5,size))
@@ -97,10 +97,10 @@ program inference
         result_chk(:) = recvbuf(:,rank_chk+1)
         test_pass = assert_allclose(result_chk, expected, test_name="MPI")
         if (.not. test_pass) then
-          write(unit=6, fmt="('rank ',i1,' result: ')") rank_chk
-          write(unit=6, fmt=100) result_chk(:)
-          write(unit=6, fmt="('does not match expected value')")
-          write(unit=6, fmt=100) expected(:)
+          write(unit=stdout, fmt="('rank ',i1,' result: ')") rank_chk
+          write(unit=stdout, fmt=100) result_chk(:)
+          write(unit=stdout, fmt="('does not match expected value')")
+          write(unit=stdout, fmt=100) expected(:)
           call clean_up()
           stop 999
         end if

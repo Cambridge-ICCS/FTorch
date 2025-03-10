@@ -1,7 +1,7 @@
 program inference
 
    ! Import precision info from iso
-   use, intrinsic :: iso_fortran_env, only : sp => real32
+   use, intrinsic :: iso_fortran_env, only : sp => real32, stdout => output_unit
 
    ! Import our library for interfacing with PyTorch
    use ftorch, only : torch_model, torch_tensor, &
@@ -61,7 +61,7 @@ program inference
 
       ! Initialise data and print the values used
       in_data = [(device_index + i, i = 0, 4)]
-      write (6, 100) device_index, in_data(:)
+      write(unit=stdout, fmt=100) device_index, in_data(:)
       100 format("input on device ", i1,": [", 4(f5.1,","), f5.1,"]")
 
       ! Create Torch input tensor from the above array and assign it to the first (and only)
@@ -83,7 +83,7 @@ program inference
       call torch_model_forward(model, in_tensors, out_tensors)
 
       ! Print the values computed on the current device.
-      write (6, 200) device_index, out_data(:)
+      write(unit=stdout, fmt=200) device_index, out_data(:)
       200 format("output on device ", i1,": [", 4(f5.1,","), f5.1,"]")
 
       ! Check output tensor matches expected value
