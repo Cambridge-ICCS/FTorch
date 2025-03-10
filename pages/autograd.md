@@ -31,7 +31,7 @@ use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
 
 For a concrete example of how to compute mathematical expressions involving
 Torch tensors, see the associated
-[worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd).
+[worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_Autograd).
 
 ### The `requires_grad` property
 

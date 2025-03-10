@@ -160,33 +160,33 @@ As the input to this model is four-dimensional (batch size, colour, x, y),
 care must be taken dealing with the data array in Python and Fortran.
 See [when to transpose arrays](transposing.html) for more details.
 
-#### 3) MultiGPU
+#### 3) MultiIO
 
-[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU)
-builds on the SimpleNet demo and shows how to account for the case of sending different
-data to multiple GPU devices.
-
-#### 4) MultiIO
-
-[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_MultiIO)
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiIO)
 considers a variant of the SimpleNet demo, which demonstrates how to account for
 multiple input tensors and multiple output tensors.
 
-#### 5) Looping
+#### 4) Looping
 
-[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_Looping)
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_Looping)
 demonstrates best practices for performing inference on the same network with
 different input multiple times in the same workflow.
 
-#### 6) Autograd
+#### 5) MultiGPU
 
-[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd)
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_MultiGPU)
+builds on the SimpleNet demo and shows how to account for the case of sending different
+data to multiple GPU devices.
+
+#### 6) MPI
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MPI)
+demonstrates how to run the SimpleNet example in the context of MPI parallelism,
+running the net with different input arrays on each MPI rank.
+
+#### 7) Autograd
+
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_Autograd)
 is currently under development. Eventually, it will demonstrate how to perform
 automatic differentiation in FTorch by leveraging PyTorch's Autograd module.
 Currently, it just demonstrates how to compute mathematical expressions
 involving Torch tensors.
-
-#### 7) MPI
-[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_MPI)
-demonstrates how to run the SimpleNet example in the context of MPI parallelism,
-running the net with different input arrays on each MPI rank.
