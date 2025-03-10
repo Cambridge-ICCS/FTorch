@@ -8,7 +8,7 @@ module test_tensor_operator_overloads_autograd
   use funit
   use ftorch, only: assignment(=), ftorch_int, torch_kCPU, torch_kFloat32, &
                     torch_tensor, torch_tensor_backward, torch_tensor_delete, torch_tensor_empty, &
-                    torch_tensor_from_array, torch_tensor_ones, torch_tensor_to_array
+                    torch_tensor_from_array, torch_tensor_ones
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
@@ -80,8 +80,7 @@ contains
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
     ! Create an arbitrary input array
@@ -97,29 +96,18 @@ contains
 
     ! Apply back-propagation
     call torch_tensor_backward(Q)
+
+    ! Create another tensor based off an output array for the gradient and then retrieve it
+    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
     dQda = a%grad()
 
-    ! Extract Fortran array from the computed gradient and its data with the expected value:
+    ! Check the computed gradient takes the expected value:
     !   Q(a) = a => dQ/da = 1
-    call torch_tensor_to_array(dQda, out_data, shape(in_data))
     expected(:,:) = 1.0
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_assign")) then
-      call clean_up()
       print *, "Error :: incorrect gradient for assignment"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(a)
-        call torch_tensor_delete(Q)
-        call torch_tensor_delete(dQda)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_assign
 
@@ -139,8 +127,7 @@ contains
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data1, in_data2
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
     ! Create an arbitrary input array
@@ -158,42 +145,28 @@ contains
 
     ! Apply back-propagation
     call torch_tensor_backward(Q)
+
+    ! Create tensors based off output arrays for the gradient and then retrieve them
+    call torch_tensor_from_array(dQda, out_data1, tensor_layout, device_type)
+    call torch_tensor_from_array(dQdb, out_data2, tensor_layout, device_type)
     dQda = a%grad()
     dQdb = b%grad()
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a + b => dQ/da = 1
-    call torch_tensor_to_array(dQda, out_data, shape(in_data1))
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_add1")) then
-      call clean_up()
+    if (.not. assert_allclose(out_data1, expected, test_name="test_torch_tensor_add1")) then
       print *, "Error :: incorrect gradient w.r.t. first input for addition"
       stop 999
     end if
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a + b => dQ/db = 1
-    call torch_tensor_to_array(dQdb, out_data, shape(in_data2))
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_add2")) then
-      call clean_up()
+    if (.not. assert_allclose(out_data2, expected, test_name="test_torch_tensor_add2")) then
       print *, "Error :: incorrect gradient w.r.t. second input for addition"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(a)
-        call torch_tensor_delete(b)
-        call torch_tensor_delete(Q)
-        call torch_tensor_delete(dQda)
-        call torch_tensor_delete(dQdb)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_add
 
@@ -213,8 +186,7 @@ contains
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
     ! Create an arbitrary input array
@@ -230,29 +202,18 @@ contains
 
     ! Apply back-propagation
     call torch_tensor_backward(Q)
+
+    ! Create another tensor based off an output array for the gradient and then retrieve it
+    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
     dQda = a%grad()
 
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a => dQ/da = -1
-    call torch_tensor_to_array(dQda, out_data, shape(in_data))
     expected(:,:) = -1.0
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_negative")) then
-      call clean_up()
       print *, "Error :: incorrect gradient for negation"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(a)
-        call torch_tensor_delete(Q)
-        call torch_tensor_delete(dQda)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_negative
 
@@ -272,8 +233,7 @@ contains
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data1, in_data2
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
     ! Create an arbitrary input array
@@ -291,42 +251,28 @@ contains
 
     ! Apply back-propagation
     call torch_tensor_backward(Q)
+
+    ! Create tensors based off output arrays for the gradient and then retrieve them
+    call torch_tensor_from_array(dQda, out_data1, tensor_layout, device_type)
+    call torch_tensor_from_array(dQdb, out_data2, tensor_layout, device_type)
     dQda = a%grad()
     dQdb = b%grad()
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a - b => dQ/da = 1
-    call torch_tensor_to_array(dQda, out_data, shape(in_data1))
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract1")) then
-      call clean_up()
+    if (.not. assert_allclose(out_data1, expected, test_name="test_torch_tensor_subtract1")) then
       print *, "Error :: incorrect gradient w.r.t. first input for subtraction"
       stop 999
     end if
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a - b => dQ/db = -1
-    call torch_tensor_to_array(dQdb, out_data, shape(in_data2))
     expected(:,:) = -1.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract2")) then
-      call clean_up()
+    if (.not. assert_allclose(out_data2, expected, test_name="test_torch_tensor_subtract2")) then
       print *, "Error :: incorrect gradient w.r.t. second input for subtraction"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(a)
-        call torch_tensor_delete(b)
-        call torch_tensor_delete(Q)
-        call torch_tensor_delete(dQda)
-        call torch_tensor_delete(dQdb)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_subtract
 
@@ -346,8 +292,7 @@ contains
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data1, in_data2
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
     ! Create an arbitrary input array
@@ -365,42 +310,28 @@ contains
 
     ! Apply back-propagation
     call torch_tensor_backward(Q)
+
+    ! Create tensors based off output arrays for the gradient and then retrieve them
+    call torch_tensor_from_array(dQda, out_data1, tensor_layout, device_type)
+    call torch_tensor_from_array(dQdb, out_data2, tensor_layout, device_type)
     dQda = a%grad()
     dQdb = b%grad()
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a * b => dQ/da = b
-    call torch_tensor_to_array(dQda, out_data, shape(in_data1))
     expected(:,:) = in_data2
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_multiply1")) then
-      call clean_up()
+    if (.not. assert_allclose(out_data1, expected, test_name="test_torch_tensor_multiply1")) then
       print *, "Error :: incorrect gradient w.r.t. first input for multiplication"
       stop 999
     end if
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a * b => dQ/db = a
-    call torch_tensor_to_array(dQdb, out_data, shape(in_data2))
     expected(:,:) = in_data1
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_multiply2")) then
-      call clean_up()
+    if (.not. assert_allclose(out_data2, expected, test_name="test_torch_tensor_multiply2")) then
       print *, "Error :: incorrect gradient w.r.t. second input for multiplication"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(a)
-        call torch_tensor_delete(b)
-        call torch_tensor_delete(Q)
-        call torch_tensor_delete(dQda)
-        call torch_tensor_delete(dQdb)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_multiply
 
@@ -421,8 +352,7 @@ contains
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), parameter :: scalar = 3.14
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -446,31 +376,19 @@ contains
 
     ! Apply back-propagation
     call torch_tensor_backward(Q)
+
+    ! Create another tensor based off an output array for the gradient and then retrieve it
+    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
     dQda = a%grad()
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = scalar * a => dQ/da = scalar
-    call torch_tensor_to_array(dQda, out_data, shape(in_data))
     expected(:,:) = scalar
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply")
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: incorrect gradient for scalar multiplication"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(a)
-        call torch_tensor_delete(Q)
-        call torch_tensor_delete(dQda)
-        call torch_tensor_delete(multiplier)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_scalar_multiply
 
@@ -490,8 +408,7 @@ contains
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data1, in_data2
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
     ! Create an arbitrary input array
@@ -509,42 +426,28 @@ contains
 
     ! Apply back-propagation
     call torch_tensor_backward(Q)
+
+    ! Create tensors based off output arrays for the gradient and then retrieve them
+    call torch_tensor_from_array(dQda, out_data1, tensor_layout, device_type)
+    call torch_tensor_from_array(dQdb, out_data2, tensor_layout, device_type)
     dQda = a%grad()
     dQdb = b%grad()
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a / b => dQ/da = 1 / b
-    call torch_tensor_to_array(dQda, out_data, shape(in_data1))
     expected(:,:) = 1.0 / in_data2
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_divide1")) then
-      call clean_up()
+    if (.not. assert_allclose(out_data1, expected, test_name="test_torch_tensor_divide1")) then
       print *, "Error :: incorrect gradient w.r.t. numerator for division"
       stop 999
     end if
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a / b => dQ/db = -a / b^2
-    call torch_tensor_to_array(dQdb, out_data, shape(in_data2))
     expected(:,:) = -in_data1 / in_data2 ** 2
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_divide2")) then
-      call clean_up()
+    if (.not. assert_allclose(out_data2, expected, test_name="test_torch_tensor_divide2")) then
       print *, "Error :: incorrect gradient w.r.t. denominator for division"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(a)
-        call torch_tensor_delete(b)
-        call torch_tensor_delete(Q)
-        call torch_tensor_delete(dQda)
-        call torch_tensor_delete(dQdb)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_divide
 
@@ -565,8 +468,7 @@ contains
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), parameter :: scalar = 3.14
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
 
@@ -586,31 +488,19 @@ contains
 
     ! Apply back-propagation
     call torch_tensor_backward(Q)
+
+    ! Create another tensor based off an output array for the gradient and then retrieve it
+    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
     dQda = a%grad()
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a / scalar => dQ/da = 1 / scalar
-    call torch_tensor_to_array(dQda, out_data, shape(in_data))
     expected(:,:) = 1.0 / scalar
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide")
     if (.not. test_pass) then
-      call clean_up()
       print *, "Error :: incorrect gradient for scalar division"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(a)
-        call torch_tensor_delete(Q)
-        call torch_tensor_delete(dQda)
-        call torch_tensor_delete(divisor)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_scalar_divide
 
@@ -630,8 +520,7 @@ contains
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
     ! Create an arbitrary input array
@@ -651,29 +540,18 @@ contains
 
     ! Apply back-propagation
     call torch_tensor_backward(Q)
+
+    ! Create another tensor based off an output array for the gradient and then retrieve it
+    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
     dQda = a%grad()
 
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a^2 => dQ/da = 2 * a
-    call torch_tensor_to_array(dQda, out_data, shape(in_data))
     expected(:,:) = 2.0 * in_data
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_square")) then
-      call clean_up()
       print *, "Error :: incorrect gradient for square"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(a)
-        call torch_tensor_delete(Q)
-        call torch_tensor_delete(dQda)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_square
 
@@ -693,8 +571,7 @@ contains
     integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
-    real(wp), dimension(2,3), target :: in_data
-    real(wp), dimension(:,:), pointer :: out_data
+    real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
     ! Create an arbitrary input array
@@ -710,29 +587,18 @@ contains
 
     ! Apply back-propagation
     call torch_tensor_backward(Q)
+
+    ! Create another tensor based off an output array for the gradient and then retrieve it
+    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
     dQda = a%grad()
 
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a^{1/2} => dQ/da = 0.5 * a^{-1/2})
-    call torch_tensor_to_array(dQda, out_data, shape(in_data))
     expected(:,:) = 0.5 / in_data ** 0.5
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")) then
-      call clean_up()
       print *, "Error :: incorrect gradient for square root"
       stop 999
     end if
-
-    call clean_up()
-
-    contains
-
-      ! Subroutine for freeing memory and nullifying pointers used in the unit test
-      subroutine clean_up()
-        nullify(out_data)
-        call torch_tensor_delete(a)
-        call torch_tensor_delete(Q)
-        call torch_tensor_delete(dQda)
-      end subroutine clean_up
 
   end subroutine test_torch_tensor_sqrt
 
