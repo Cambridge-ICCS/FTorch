@@ -1,12 +1,13 @@
 """Load a PyTorch model and convert it to TorchScript."""
 
 import os
+import sys
 from typing import Optional
 
 # FPTLIB-TODO
 # Add a module import with your model here:
 # This example assumes the model architecture is in an adjacent module `my_ml_model.py`
-import resnet18
+import simplenet
 import torch
 
 
@@ -24,7 +25,6 @@ def script_to_torchscript(
         name of file to save to
     """
     print("Saving model using scripting...", end="")
-    # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
     scripted_model = torch.jit.script(model)
     # print(scripted_model.code)
     scripted_model.save(filename)
@@ -49,9 +49,7 @@ def trace_to_torchscript(
         name of file to save to
     """
     print("Saving model using tracing...", end="")
-    # FIXME: torch.jit.optimize_for_inference() when PyTorch issue #81085 is resolved
     traced_model = torch.jit.trace(model, dummy_input)
-    # traced_model.save(filename)
     frozen_model = torch.jit.freeze(traced_model)
     ## print(frozen_model.graph)
     ## print(frozen_model.code)
@@ -100,14 +98,12 @@ if __name__ == "__main__":
     # Load model and prepare for saving
     # =====================================================
 
-    precision = torch.float32
-
     # FPTLIB-TODO
     # Load a pre-trained PyTorch model
     # Insert code here to load your model as `trained_model`.
     # This example assumes my_ml_model has a method `initialize` to load
     # architecture, weights, and place in inference mode
-    trained_model = resnet18.initialize(precision)
+    trained_model = simplenet.SimpleNet()
 
     # Switch off specific layers/parts of the model that behave
     # differently during training and inference.
@@ -120,9 +116,8 @@ if __name__ == "__main__":
 
     # FPTLIB-TODO
     # Generate a dummy input Tensor `dummy_input` to the model of appropriate size.
-    # This example assumes one input of size (1x3x244x244) -- one RGB (3) image
-    # of resolution 244x244 in a batch size of 1.
-    trained_model_dummy_input = torch.ones(1, 3, 224, 224)
+    # This example assumes one input of size (5)
+    trained_model_dummy_input = torch.ones(5)
 
     # Transfer the model and inputs to GPU device, if appropriate
     if device_type != "cpu":
@@ -144,7 +139,7 @@ if __name__ == "__main__":
 
     # FPTLIB-TODO
     # Set the name of the file you want to save the torchscript model to:
-    saved_ts_filename = f"saved_resnet18_model_{device_type}.pt"
+    saved_ts_filename = f"saved_simplenet_model_{device_type}.pt"
     # A filepath may also be provided. To do this, pass the filepath as an argument to
     # this script when it is run from the command line, i.e. `./pt2ts.py path/to/model`.
 

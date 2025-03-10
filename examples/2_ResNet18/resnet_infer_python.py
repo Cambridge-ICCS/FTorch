@@ -1,7 +1,6 @@
 """Load ResNet-18 saved to TorchScript and run inference with an example image."""
 
 import os
-import sys
 from math import isclose
 
 import numpy as np
@@ -78,11 +77,22 @@ def check_results(output: torch.Tensor) -> None:
 
 
 if __name__ == "__main__":
-    filepath = os.path.dirname(__file__) if len(sys.argv) == 1 else sys.argv[1]
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--filepath",
+        help="Path to the file containing the PyTorch model",
+        type=str,
+        default=os.path.dirname(__file__),
+    )
+    parsed_args = parser.parse_args()
+    filepath = parsed_args.filepath
     saved_model_file = os.path.join(filepath, "saved_resnet18_model_cpu.pt")
 
     device_to_run = "cpu"
-    # device_to_run = "cuda"
 
     batch_size_to_run = 1
 

@@ -14,6 +14,12 @@ extra_filetypes: c   //
                  cpp //
                  h //
                  py  #
+preprocess: true
+macro: UNIX
+       GPU_DEVICE_NONE=0
+       GPU_DEVICE_CUDA=1
+       GPU_DEVICE_XPU=11
+       GPU_DEVICE_MPS=12
 sort: alpha
 source: true
 graph: true
@@ -40,8 +46,13 @@ There are also installation instructions for the library and examples of perform
 
 We support running on both CPU and GPU, and have tested the library on UNIX and Windows based operating systems
 
-Presentations
--------------
+Publications and Presentations
+------------------------------
+
+FTorch is published in JOSS. To cite it in your work please refer to:
+
+Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
+_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
 
 The following presentations contain information about FTorch:
 
@@ -58,6 +69,7 @@ The following presentations contain information about FTorch:
   RSECon23, Swansea - September 2023<br>
   [Slides](https://jackatkinson.net/slides/RSECon23) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
 
+
 License
 -------
 
@@ -71,16 +83,17 @@ Projects using FTorch
 The following projects make use of FTorch.  
 If you use our library in your work please let us know.
 
-* [M2LInES CAM-ML](https://github.com/m2lines/CAM-ML) -
-  Using FTorch to couple a neural net parameterisation of convection to the CAM
-  atmospheric model in CESM.
 * [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/) -
   Using FTorch to couple neural net parameterisations of gravity waves to the CAM
   atmospheric model.
 * [MiMA Machine Learning](https://github.com/DataWaveProject/MiMA-machine-learning) -
-  Using FTorch to couple a neural net parameterisation of gravity waves to the MiMA
-  atmospheric model.
+  Implementing a neural net parameterisation of gravity waves in the MiMA atmospheric model.
+  Demonstrates that nets trained near-identically offline can display greatly varied behaviours when coupled online.
   See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
 * [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization) -
-  Implementing machine learnt convection parameterisations in the ICON atmospheric model.
-  See Heuer et al (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
+  Implementing machine-learnt convection parameterisations in the ICON atmospheric model
+  showing that best online performance occurs when causal relations are eliminated from the net.
+  See Heuer et al (2024) - [DOI: 10.1029/2024MS004398](https://doi.org/10.1029/2024MS004398)
+* In the [GloSea6 Seasonal Forecasting Model](https://www.metoffice.gov.uk/research/climate/seasonal-to-decadal/gpc-outlooks/user-guide/global-seasonal-forecasting-system-glosea6) -
+  Replacing a BiCGStab bottleneck in the code with a deep learning approach to speed up execution without compromising model accuracy.
+  See Park and Chung (2025) - [DOI: 10.3390/atmos16010060](https://doi.org/10.3390/atmos16010060)

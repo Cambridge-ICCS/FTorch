@@ -38,7 +38,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
     -DCMAKE_PREFIX_PATH=$(python -c 'import torch;print(torch.utils.cmake_prefix_path)') \
     -DCMAKE_BUILD_TYPE=Release \
-    -DENABLE_CUDA=FALSE \
+    -DGPU_DEVICE=NONE \
     ..
 cmake --build . --target install
 ```
@@ -65,7 +65,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
     -DCMAKE_PREFIX_PATH=$(python -c 'import torch;print(torch.utils.cmake_prefix_path)') \
     -DCMAKE_BUILD_TYPE=Release \
-    -DENABLE_CUDA=TRUE \
+    -DGPU_DEVICE=CUDA \
     -DCUDA_TOOLKIT_ROOT_DIR=$CONDA_PREFIX/targets/x86_64-linux \
     -Dnvtx3_dir=$CONDA_PREFIX/targets/x86_64-linux/include/nvtx3 \
     ..
@@ -74,6 +74,33 @@ cmake --build . --target install
 Note: There is the option of using `--parallel` to speed this up as described in
 the main documentation.
 
+### Mac and MPS
+
+At the time of writing [there are issues](https://github.com/pytorch/pytorch/issues/143571)
+building FTorch when linking to downloaded `LibTorch` binaries or pip-installed PyTorch.
+FTorch can successfully be built, including utilising the MPS backend, from inside a
+conda environment using the environment files provided here.
+
+From a conda base environment run:
+```sh
+conda env create -f environment_mac.yaml
+```
+from this directory to create the environment and install dependencies.
+We install PyTorch using `pip` from within the conda environment which should include
+the MPS backend.
+
+FTorch can then be built with a CMake command similar to the following:
+```sh
+cmake \
+    -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
+    -DCMAKE_PREFIX_PATH=$(python -c 'import torch;print(torch.utils.cmake_prefix_path)') \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DGPU_DEVICE=MPS \
+    ..
+cmake --build . --target install
+```
+Note: There is the option of using `--parallel` to speed this up as described in
+the main documentation.
 
 ### Other Backends
 

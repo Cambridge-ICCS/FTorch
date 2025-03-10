@@ -1,4 +1,5 @@
 [check]
 # Ignored Rules and justification:
-#   T041: assumed size - we require assumed size for library functionality when passing data to C/C++
-ignore = ["T041"]
+#   C003: 'implicit none' missing 'external' - this is a Fortran 2013 feature and we support older standards
+#   C071: assumed size - we require assumed size for library functionality when passing data to C/C++
+ignore = ["C003", "C071"]

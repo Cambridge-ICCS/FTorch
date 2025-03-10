@@ -3,7 +3,7 @@ title: Recent API Changes
 ## February 2025
 
 If you use a version of FTorch from before commit
-[f7fbebf](f7fbebfdad2a4801f57742a2bb12bc21e70881ff)
+[c85185e](c85185e6c261606c212dd11fee734663d610b695)
 (February 2025) you will notice that the main `CMakeLists.txt` file has moved
 from `src/` to the root level of the FTorch repository. This move was mainly to
 simplify the development experience, such that the examples could be built as

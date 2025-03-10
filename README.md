@@ -4,6 +4,7 @@
 
 ![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/FTorch)
 ![Fortran](https://img.shields.io/badge/Fortran-2008-purple)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.07602/status.svg)](https://doi.org/10.21105/joss.07602)
 
 This repository contains code, utilities, and examples for directly calling PyTorch ML
 models from Fortran.
@@ -115,9 +116,12 @@ Note that LibTorch is not supported for the GNU Fortran compiler with MinGW.
 
 #### Apple Silicon Support
 
-At the time of writing, LibTorch is only officially available for x86 architectures
-(according to https://pytorch.org/). However, the version of PyTorch provided by
-`pip install torch` uses an ARM binary for LibTorch which works on Apple Silicon.
+At the time of writing [there are issues](https://github.com/pytorch/pytorch/issues/143571)
+building FTorch on Apple Silicon when linking to downloaded `LibTorch` binaries or
+pip-installed PyTorch.
+FTorch can successfully be built, including utilising the MPS backend, from inside a
+conda environment using the environment files and instructions in
+[`conda/`](https://github.com/Cambridge-ICCS/FTorch/tree/main/conda).
 
 #### Conda Support
 
@@ -165,7 +169,7 @@ To build and install the library:
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
     | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`             | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build. |
-    | `ENABLE_CUDA`                                                                                     | `TRUE` / `FALSE`             | Specifies whether to check for and enable CUDA<sup>3</sup> |
+    | `GPU_DEVICE` | `NONE` / `CUDA` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>3</sup> |
 
     <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
 
@@ -176,11 +180,9 @@ To build and install the library:
           e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
 		  You can find the location of your torch install by importing torch from your Python environment (`import torch`) and running `print(torch.__file__)`_
 
-    <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU or GPU only version is installed, e.g.
-          `pip install torch --index-url https://download.pytorch.org/whl/cpu`
-          or
-          `pip install torch --index-url https://download.pytorch.org/whl/cu118`
-          (for CUDA 11.8). URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
+    <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
+          `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
+          URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
 
 4. Make and install the library to the desired location with either:
 	```
@@ -219,12 +221,16 @@ These steps are described in more detail in the
 
 ## GPU Support
 
-To run on GPU requires a CUDA-compatible installation of LibTorch and two main
-adaptations to the code:
+To run on GPU requires an installation of LibTorch compatible for the GPU device
+you wish to target and two main adaptations to the code:
 
-1. When saving a TorchScript model, ensure that it is on the GPU
+1. When saving a TorchScript model, ensure that it is on the appropriate GPU
+   device type. The `pt2ts.py` script has a command line argument
+   `--device_type`, which currently accepts four different device types: `cpu`
+   (default), `cuda`, `xpu`, or `mps`.
 2. When using FTorch in Fortran, set the device for the input
-   tensor(s) to `torch_kCUDA`, rather than `torch_kCPU`.
+   tensor(s) to the appropriate GPU device type, rather than `torch_kCPU`. There
+   are currently three options: `torch_kCUDA`, `torch_kXPU`, or `torch_kMPS`.
 
 For detailed guidance about running on GPU, including instructions for using multiple
 devices, please see the
@@ -284,27 +290,26 @@ people with respect and, more generally, to follow the guidelines articulated in
 
 *FTorch* is written and maintained by the [ICCS](https://github.com/Cambridge-ICCS)
 
-Notable contributors to this project are:
+To cite FTorch in research please refer to:
 
-* [**@athelaf**](https://github.com/athelaf)
-* [**@jatkinson1000**](https://github.com/jatkinson1000)
-* [**@SimonClifford**](https://github.com/SimonClifford)
-* [**@ElliottKasoar**](https://github.com/ElliottKasoar)
-* [**@TomMelt**](https://github.com/TomMelt)
-* [**@jwallwork23**](https://github.com/jwallwork23)
+Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
+_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
+
+See the `CITATION.cff` file or click 'Cite this repository' on the right.
 
 See [Contributors](https://github.com/Cambridge-ICCS/FTorch/graphs/contributors)
-for a full list.
+for a full list of contributors.
 
 
 ## Used by
 The following projects make use of this code or derivatives in some way:
 
-* [M2LInES CAM-ML](https://github.com/m2lines/CAM-ML)
 * [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/)
 * [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)\
   See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
 * [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization)\
-  See Heuer et al. (2023) - [DOI: 10.48550/arXiv.2311.03251](https://doi.org/10.48550/arXiv.2311.03251)
+  See Heuer et al. (2024) - [DOI: 10.1029/2024MS004398](https://doi.org/10.1029/2024MS004398)
+* To replace a BiCGStab bottleneck in the GloSea6 Seasonal Forecasting model\
+  See Park and Chung (2025) - [DOI: 10.3390/atmos16010060](https://doi.org/10.3390/atmos16010060)
 
 Are we missing anyone? Let us know.

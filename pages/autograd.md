@@ -24,18 +24,26 @@ use ftorch
 statement, the best practice is to import specifically the operators that you
 wish to use. Note that the assignment operator `=` has a slightly different
 notation:
-```
+```fortran
 use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
   operator(/), operator(**)
 ```
 
+If you would like to make use of scalar multiplication or scalar division, this
+can be achieved by setting the scalar as a rank-1 `torch_tensor` with a single
+entry. For example:
+```fortran
+call torch_tensor_from_array(multiplier, [3.0_wp], [1], torch_kCPU)
+```
+
 For a concrete example of how to compute mathematical expressions involving
-Torch tensors, see the associated
+Torch tensors and scalars, see the associated
 [worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd).
 
 ### The `requires_grad` property
 
-*Not yet implemented.*
+For Tensors that you would like to differentiate with respect to, be sure to
+set the `requires_grad` optional argument to `.true.` when you construct it.
 
 ### The `backward` operator
 

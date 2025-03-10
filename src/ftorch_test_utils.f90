@@ -11,6 +11,8 @@ module ftorch_test_utils
 
   implicit none
 
+  public
+
   interface assert_isclose
     module procedure assert_isclose_real32
     module procedure assert_isclose_real64

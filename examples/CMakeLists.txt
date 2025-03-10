@@ -1,7 +1,7 @@
 if(CMAKE_BUILD_TESTS)
   add_subdirectory(1_SimpleNet)
   add_subdirectory(2_ResNet18)
-  if(ENABLE_CUDA)
+  if(NOT "${GPU_DEVICE}" STREQUAL "NONE")
     add_subdirectory(3_MultiGPU)
   endif()
   add_subdirectory(4_MultiIO)
@@ -10,4 +10,8 @@ if(CMAKE_BUILD_TESTS)
   #       practice, as opposed to functionality.
   add_subdirectory(5_Looping)
   add_subdirectory(6_Autograd)
+  # NOTE: We do not currently support running with MPI on Windows
+  if(UNIX)
+    add_subdirectory(7_MPI)
+  endif()
 endif()

@@ -183,5 +183,10 @@ different input multiple times in the same workflow.
 [This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd)
 is currently under development. Eventually, it will demonstrate how to perform
 automatic differentiation in FTorch by leveraging PyTorch's Autograd module.
-Currently, it just demonstrates how to use `torch_tensor_to_array` and compute
-mathematical expressions involving Torch tensors.
+Currently, it just demonstrates how to compute mathematical expressions
+involving Torch tensors.
+
+#### 7) MPI
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_MPI)
+demonstrates how to run the SimpleNet example in the context of MPI parallelism,
+running the net with different input arrays on each MPI rank.

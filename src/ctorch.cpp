@@ -8,6 +8,10 @@
 
 #include "ctorch.h"
 
+#ifndef GPU_DEVICE
+#define GPU_DEVICE GPU_DEVICE_NONE
+#endif
+
 // =============================================================================
 // --- Constant expressions
 // =============================================================================
@@ -78,6 +82,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
       std::cerr << "[WARNING]: device index unused for CPU-only runs" << std::endl;
     }
     return torch::Device(torch::kCPU);
+#if GPU_DEVICE == GPU_DEVICE_CUDA
   case torch_kCUDA:
     if (device_index == -1) {
       std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;
@@ -90,6 +95,26 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
                 << " for device count " << torch::cuda::device_count() << std::endl;
       exit(EXIT_FAILURE);
     }
+#endif
+  case torch_kMPS:
+    if (device_index != -1 && device_index != 0) {
+      std::cerr << "[WARNING]: Only one device is available for MPS runs" << std::endl;
+    }
+    return torch::Device(torch::kMPS);
+#if GPU_DEVICE == GPU_DEVICE_XPU
+  case torch_kXPU:
+    if (device_index == -1) {
+      std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;
+      device_index = 0;
+    }
+    if (device_index >= 0 && device_index < torch::xpu::device_count()) {
+      return torch::Device(torch::kXPU, device_index);
+    } else {
+      std::cerr << "[ERROR]: invalid device index " << device_index
+                << " for XPU device count " << torch::xpu::device_count() << std::endl;
+      exit(EXIT_FAILURE);
+    }
+#endif
   default:
     std::cerr << "[WARNING]: unknown device type, setting to torch_kCPU" << std::endl;
     return torch::Device(torch::kCPU);
@@ -103,6 +128,10 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
     return torch_kCPU;
   case torch::kCUDA:
     return torch_kCUDA;
+  case torch::kXPU:
+    return torch_kXPU;
+  case torch::kMPS:
+    return torch_kMPS;
   default:
     std::cerr << "[ERROR]: device type " << device_type << " not implemented in FTorch"
               << std::endl;
@@ -228,44 +257,6 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
 // --- Functions for interrogating tensors
 // =====================================================================================
 
-void *torch_to_blob(const torch_tensor_t tensor, const torch_data_t dtype) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  void *raw_ptr;
-  switch (dtype) {
-  case torch_kUInt8:
-    std::cerr << "[WARNING]: uint8 not supported" << std::endl;
-    exit(EXIT_FAILURE);
-  case torch_kInt8:
-    raw_ptr = (void *)t->data_ptr<int8_t>();
-    break;
-  case torch_kInt16:
-    raw_ptr = (void *)t->data_ptr<int16_t>();
-    break;
-  case torch_kInt32:
-    raw_ptr = (void *)t->data_ptr<int32_t>();
-    break;
-  case torch_kInt64:
-    raw_ptr = (void *)t->data_ptr<int64_t>();
-    break;
-  case torch_kFloat16:
-    std::cerr << "[WARNING]: float16 not supported" << std::endl;
-    // NOTE: std::float16_t is available but only with C++23
-    exit(EXIT_FAILURE);
-  case torch_kFloat32:
-    raw_ptr = (void *)t->data_ptr<float>();
-    // NOTE: std::float32_t is available but only with C++23
-    break;
-  case torch_kFloat64:
-    raw_ptr = (void *)t->data_ptr<double>();
-    // NOTE: std::float64_t is available but only with C++23
-    break;
-  default:
-    std::cerr << "[WARNING]: unknown data type" << std::endl;
-    exit(EXIT_FAILURE);
-  }
-  return raw_ptr;
-}
-
 void torch_tensor_print(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   std::cout << *t << std::endl;
@@ -303,6 +294,11 @@ int torch_tensor_get_device_index(const torch_tensor_t tensor) {
   return t->device().index();
 }
 
+bool torch_tensor_requires_grad(const torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  return t->requires_grad();
+}
+
 // =====================================================================================
 // --- Functions for deallocating tensors
 // =====================================================================================
@@ -316,83 +312,71 @@ void torch_tensor_delete(torch_tensor_t tensor) {
 // --- Operator overloads acting on tensors
 // =====================================================================================
 
-torch_tensor_t torch_tensor_assign(const torch_tensor_t input) {
+void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto in = reinterpret_cast<torch::Tensor *const>(input);
   torch::AutoGradMode enable_grad(in->requires_grad());
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = *in;
-  return output;
+  // NOTE: The following line ensures that the output tensor continues to point to a
+  //       Fortran array if it was set up to do so using torch_tensor_from_array. If
+  //       it's removed then the Fortran array keeps its original value and is no
+  //       longer be pointed to.
+  std::move(*out) = *in;
 }
 
-torch_tensor_t torch_tensor_add(const torch_tensor_t tensor1,
-                                const torch_tensor_t tensor2) {
+void torch_tensor_add(torch_tensor_t output, const torch_tensor_t tensor1,
+                      const torch_tensor_t tensor2) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
   auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = *t1 + *t2;
-  return output;
+  *out = *t1 + *t2;
 }
 
-torch_tensor_t torch_tensor_negative(const torch_tensor_t tensor) {
+void torch_tensor_negative(torch_tensor_t output, const torch_tensor_t tensor) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = -*t;
-  return output;
+  *out = -*t;
 }
 
-torch_tensor_t torch_tensor_subtract(const torch_tensor_t tensor1,
-                                     const torch_tensor_t tensor2) {
+void torch_tensor_subtract(torch_tensor_t output, const torch_tensor_t tensor1,
+                           const torch_tensor_t tensor2) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
   auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = *t1 - *t2;
-  return output;
+  *out = *t1 - *t2;
 }
 
-torch_tensor_t torch_tensor_multiply(const torch_tensor_t tensor1,
-                                     const torch_tensor_t tensor2) {
+void torch_tensor_multiply(torch_tensor_t output, const torch_tensor_t tensor1,
+                           const torch_tensor_t tensor2) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
   auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = *t1 * *t2;
-  return output;
+  *out = *t1 * *t2;
 }
 
-torch_tensor_t torch_tensor_divide(const torch_tensor_t tensor1,
-                                   const torch_tensor_t tensor2) {
+void torch_tensor_divide(torch_tensor_t output, const torch_tensor_t tensor1,
+                         const torch_tensor_t tensor2) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
   auto t1 = reinterpret_cast<torch::Tensor *const>(tensor1);
   auto t2 = reinterpret_cast<torch::Tensor *const>(tensor2);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = *t1 / *t2;
-  return output;
+  *out = *t1 / *t2;
 }
 
-torch_tensor_t torch_tensor_power_int(const torch_tensor_t tensor,
-                                      const torch_int_t exponent) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+void torch_tensor_power_int(torch_tensor_t output, const torch_tensor_t tensor,
+                            const torch_int_t exponent) {
   // NOTE: The following cast will only work for integer exponents
+  auto out = reinterpret_cast<torch::Tensor *>(output);
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
   auto exp = reinterpret_cast<int *const>(exponent);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = pow(*t, *exp);
-  return output;
+  *out = pow(*t, *exp);
 }
 
-torch_tensor_t torch_tensor_power_float(const torch_tensor_t tensor,
-                                        const torch_float_t exponent) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+void torch_tensor_power_float(torch_tensor_t output, const torch_tensor_t tensor,
+                              const torch_float_t exponent) {
   // NOTE: The following cast will only work for floating point exponents
+  auto out = reinterpret_cast<torch::Tensor *>(output);
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
   auto exp = reinterpret_cast<float *const>(exponent);
-  torch::Tensor *output = nullptr;
-  output = new torch::Tensor;
-  *output = pow(*t, *exp);
-  return output;
+  *out = pow(*t, *exp);
 }
 
 // =============================================================================
