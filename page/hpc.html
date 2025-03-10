@@ -122,6 +122,11 @@
 </li>
 </ul>
 </li>
+<li><a href="#parallelism">Parallelism</a><ul>
+<li><a href="#mpi">MPI</a></li>
+<li><a href="#gpu">GPU</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <p>A common application of FTorch (indeed, the driving one for development) is the
@@ -248,6 +253,16 @@ installation.</p>
 <p>This process should also add FTorch to the <code>LD_LIBRARY_PATH</code> and <code>CMAKE_PREFIX_PATH</code>
 rather than requiring the user to specify them manually as suggested elsewhere in this
 documentation.</p>
+<h2 id="parallelism">Parallelism</h2>
+<p>If you are investigating running FTorch on HPC then you are probably interested
+in improving computational efficiency via parallelism.</p>
+<h4 id="mpi">MPI</h4>
+<p>For a worked example of running with MPI, see the
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_MPI">associated example</a>.</p>
+<h4 id="gpu">GPU</h4>
+<p>For information on running on GPU architectures, see the
+<a href="pages/gpu.html">GPU user guide page</a> and/or the
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiGPU">MultiGPU example</a>.</p>
     </div>
   </div>
       <hr>
