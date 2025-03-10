@@ -334,7 +334,7 @@ contains
     integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor1, tensor2
+    type(torch_tensor) :: tensor1, tensor2, multiplier
     integer, parameter :: ndims = 2
     integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
@@ -349,15 +349,15 @@ contains
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
+    ! Create a rank-1 tensor based off the scalar multiplier
+    call torch_tensor_from_array(multiplier, [scalar], [1], device_type)
+
     ! Create another tensor based off an output array
     call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
-
-    ! Create another tensor as the product of a scalar constant and the first tensor using the
-    ! overloaded multiplication operator
     if (this%param%switch) then
-      tensor2 = scalar * tensor1
+      tensor2 = multiplier * tensor1
     else
-      tensor2 = tensor1 * scalar
+      tensor2 = tensor1 * multiplier
     end if
 
     ! Check input array is unchanged by scalar multiplication
@@ -442,7 +442,7 @@ contains
     integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor1, tensor2
+    type(torch_tensor) :: tensor1, tensor2, divisor
     integer, parameter :: ndims = 2
     integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
@@ -457,12 +457,15 @@ contains
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
 
+    ! Create a rank-1 tensor based off the scalar divisor
+    call torch_tensor_from_array(divisor, [scalar], [1], device_type)
+
     ! Create another tensor based off an output array
     call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
 
     ! Create another tensor as the quotient of the first tensor and a scalar constant using the
     ! overloaded division operator
-    tensor2 = tensor1 / scalar
+    tensor2 = tensor1 / divisor
 
     ! Check input array is unchanged by post-division
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])

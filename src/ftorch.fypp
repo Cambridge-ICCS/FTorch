@@ -144,10 +144,6 @@ module ftorch
 
   interface operator (*)
     module procedure torch_tensor_multiply
-    #:for PREC in PRECISIONS
-    module procedure torch_tensor_premultiply_${PREC}$
-    module procedure torch_tensor_postmultiply_${PREC}$
-    #:endfor
   end interface
 
   interface
@@ -163,9 +159,6 @@ module ftorch
 
   interface operator (/)
     module procedure torch_tensor_divide
-    #:for PREC in PRECISIONS
-    module procedure torch_tensor_postdivide_${PREC}$
-    #:endfor
   end interface
 
   interface
@@ -762,51 +755,6 @@ contains
     call torch_tensor_multiply_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_multiply
 
-  #:for PREC in PRECISIONS
-  !> Overloads multiplication operator for a scalar of type ${PREC}$ and a tensor.
-  function torch_tensor_premultiply_${PREC}$(scalar, tensor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_associated, c_loc
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
-    ${f_type(PREC)}$(${PREC}$), target, intent(in) :: scalar
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: wrk, output
-
-    if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
-                              requires_grad=tensor%requires_grad())
-    end if
-
-    ! Create a tensor with a single entry, the scalar pre-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    call torch_tensor_multiply_c(output%p, wrk%p, tensor%p)
-  end function torch_tensor_premultiply_${PREC}$
-
-  #:endfor
-
-  #:for PREC in PRECISIONS
-  !> Overloads multiplication operator for a tensor and a scalar of type ${PREC}$.
-  function torch_tensor_postmultiply_${PREC}$(tensor, scalar) result(output)
-    use, intrinsic :: iso_c_binding, only : c_associated, c_loc
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
-    type(torch_tensor), intent(in) :: tensor
-    ${f_type(PREC)}$(${PREC}$), intent(in) :: scalar
-    type(torch_tensor) :: wrk, output
-
-    if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
-                              requires_grad=tensor%requires_grad())
-    end if
-
-    ! Create a tensor with a single entry, the scalar post-multiplier
-    call torch_tensor_from_array(wrk, [scalar], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    call torch_tensor_multiply_c(output%p, tensor%p, wrk%p)
-  end function torch_tensor_postmultiply_${PREC}$
-
-  #:endfor
   !> Overloads division operator for two tensors.
   function torch_tensor_divide(tensor1, tensor2) result(output)
     use, intrinsic :: iso_c_binding, only : c_associated
@@ -827,29 +775,6 @@ contains
     end if
     call torch_tensor_divide_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_divide
-
-  #:for PREC in PRECISIONS
-  !> Overloads division operator for a tensor and a scalar of type ${PREC}$.
-  function torch_tensor_postdivide_${PREC}$(tensor, divisor) result(output)
-    use, intrinsic :: iso_c_binding, only : c_associated, c_loc
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
-    type(torch_tensor), intent(in) :: tensor
-    ${f_type(PREC)}$(${PREC}$), intent(in) :: divisor
-    type(torch_tensor) :: wrk, output
-
-    if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
-                              requires_grad=tensor%requires_grad())
-    end if
-
-    ! Create a tensor with a single entry, the scalar post-divisor
-    call torch_tensor_from_array(wrk, [divisor], [1], tensor%get_device_type(), &
-                                 tensor%get_device_index())
-    call torch_tensor_divide_c(output%p, tensor%p, wrk%p)
-  end function torch_tensor_postdivide_${PREC}$
-
-  #:endfor
 
   #:for PREC in INT_PRECISIONS
   !> Overloads exponentiation operator for a tensor and a scalar of type `${PREC}$`
