@@ -11,7 +11,7 @@ This directory contains a number of examples of how to use the library:
     - Convert a pre-trained model to TorchScript and call from Fortran.
 
 3. MultiGPU
-	- Revisits the SimpleNet example but considering multiple GPUs.
+	  - Revisits the SimpleNet example but considering multiple GPUs.
 
 4. MultiIO
     - Considers a variant of the SimpleNet example which has multiple input
@@ -25,8 +25,11 @@ This directory contains a number of examples of how to use the library:
 
 6. Autograd
     - **This example is currently under development.** Eventually, it will
-      demonstrate automatic differentation in FTorch by leveraging PyTorch's
+      demonstrate automatic differentiation in FTorch by leveraging PyTorch's
       Autograd module.
+
+7. MPI
+   - Demonstrates how to use FTorch in the context of an MPI program.
 
 To run select examples as integration tests, use the CMake argument
 ```
