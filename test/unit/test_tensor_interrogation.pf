@@ -16,12 +16,57 @@ module test_tensor_interrogation
   ! Parameters common across all test cases
   integer, parameter :: device_type = torch_kCPU
 
+  ! Typedef holding a set of parameter values
+  @testParameter
+  type, extends(AbstractTestParameter) :: TestParametersType
+    logical :: requires_grad
+  contains
+    procedure :: toString
+  end type TestParametersType
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_ctor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(TestParametersType) :: param
+  end type TestCaseType
+
 contains
 
-  ! Unit test for the torch_tensor_get_rank method of a 1D tensor
-  @test
-  subroutine test_torch_tensor_get_rank_1D()
+  ! Constructor for the test case type
+  function test_case_ctor(param)
+    type(TestCaseType) :: test_case_ctor
+    type(TestParametersType), intent(in) :: param
+    test_case_ctor%param = param
+  end function test_case_ctor
 
+  ! A fixture comprised of a full list of parameter sets
+  function get_parameters_full() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.), &
+      TestParametersType(.true.) &
+    ]
+  end function get_parameters_full
+
+  ! A fixture comprised of a short list of parameter sets
+  function get_parameters_short() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [TestParametersType(.false.)]
+  end function get_parameters_short
+
+  ! Function for representing a parameter set as a string
+  function toString(this) result(string)
+    class(TestParametersType), intent(in) :: this
+    character(:), allocatable :: string
+    character(len=3) :: str
+    write(str,"(l1)") this%requires_grad
+    string = str
+  end function toString
+
+  ! Unit test for the torch_tensor_get_rank method of a 1D tensor
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_tensor_get_rank_1D(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [6]
@@ -35,9 +80,9 @@ contains
   end subroutine test_torch_tensor_get_rank_1D
 
   ! Unit test for the torch_tensor_get_rank method of a 2D tensor
-  @test
-  subroutine test_torch_tensor_get_rank_2D()
-
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_tensor_get_rank_2D(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
@@ -51,9 +96,9 @@ contains
   end subroutine test_torch_tensor_get_rank_2D
 
   ! Unit test for the torch_tensor_get_rank method of a 3D tensor
-  @test
-  subroutine test_torch_tensor_get_rank_3D()
-
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_tensor_get_rank_3D(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1,2,3]
@@ -67,9 +112,9 @@ contains
   end subroutine test_torch_tensor_get_rank_3D
 
   ! Unit test for the torch_tensor_get_shape method of a 1D tensor
-  @test
-  subroutine test_torch_tensor_get_shape_1D()
-
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_tensor_get_shape_1D(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [6]
@@ -83,9 +128,9 @@ contains
   end subroutine test_torch_tensor_get_shape_1D
 
   ! Unit test for the torch_tensor_get_shape method of a 2D tensor
-  @test
-  subroutine test_torch_tensor_get_shape_2D()
-
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_tensor_get_shape_2D(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
@@ -99,9 +144,9 @@ contains
   end subroutine test_torch_tensor_get_shape_2D
 
   ! Unit test for the torch_tensor_get_shape method of a 3D tensor
-  @test
-  subroutine test_torch_tensor_get_shape_3D()
-
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_tensor_get_shape_3D(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1, 2, 3]
@@ -115,9 +160,9 @@ contains
   end subroutine test_torch_tensor_get_shape_3D
 
   ! Unit test for the torch_tensor_get_dtype function
-  @test
-  subroutine test_torch_tensor_get_dtype()
-
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_tensor_get_dtype(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
@@ -132,9 +177,9 @@ contains
   end subroutine test_torch_tensor_get_dtype
 
   ! Unit test for the torch_tensor_get_device_type function applied to a tensor on the CPU
-  @test
-  subroutine test_torch_tensor_get_device_type()
-
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_tensor_get_device_type(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
@@ -149,9 +194,9 @@ contains
   end subroutine test_torch_tensor_get_device_type
 
   ! Unit test for the torch_tensor_get_device_index function applied to a tensor on the CPU
-  @test
-  subroutine test_torch_tensor_get_device_index_default()
-
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_tensor_get_device_index_default(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
@@ -165,12 +210,10 @@ contains
 
   end subroutine test_torch_tensor_get_device_index_default
 
-  ! Unit test for the torch_tensor_requires_grad function
-  @test
-  subroutine test_torch_tensor_requires_grad()
-
-    implicit none
-
+  ! Unit test for the default value of the torch_tensor_requires_grad function
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_tensor_requires_grad_default(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
@@ -183,11 +226,32 @@ contains
 
     ! Check that torch_tensor_get_device_type can get the device type
     if (expected .neqv. tensor%requires_grad()) then
-      call torch_tensor_delete(tensor)
       print *, "Error :: tensor%requires_grad() returned incorrect value"
       stop 999
     end if
-    call torch_tensor_delete(tensor)
+
+  end subroutine test_torch_tensor_requires_grad_default
+
+  ! Unit test for the torch_tensor_requires_grad function
+  @test(testparameters={get_parameters_full()})
+  subroutine test_torch_tensor_requires_grad(this)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer, parameter :: dtype = torch_kFloat32
+    logical :: expected
+
+    ! Create an empty tensor on the CPU with the default device type
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, &
+                            requires_grad=this%param%requires_grad)
+
+    ! Check that torch_tensor_get_device_type can get the device type
+    expected = this%param%requires_grad
+    if (expected .neqv. tensor%requires_grad()) then
+      print *, "Error :: tensor%requires_grad() returned incorrect value"
+      stop 999
+    end if
 
   end subroutine test_torch_tensor_requires_grad
 

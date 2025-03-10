@@ -80,7 +80,7 @@ contains
 
   ! Unit test for the torch_tensor_empty subroutine and for calling torch_tensor_delete manually or
   ! automatically (via torch_tensor's destructor)
-  @test(testParameters={get_parameters_full()})
+  @test(testparameters={get_parameters_full()})
   subroutine test_torch_tensor_empty(this)
     use ftorch, only: torch_tensor_empty
 
