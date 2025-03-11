@@ -46,6 +46,21 @@ There are also installation instructions for the library and examples of perform
 
 We support running on both CPU and GPU, and have tested the library on UNIX and Windows based operating systems
 
+
+News
+----
+
+Some recent updates about FTorch:
+
+* FTorch developers Jack Atkinson and Joe Wallwork
+  [were recently awarded funding from C2D3-Accelerate](https://science.ai.cam.ac.uk/news/2024-12-09-exploring-novel-applications-of-ai-for-research-and-innovation-%E2%80%93-announcing-our-2024-funded-projects.html)
+  for a project entitled *Online training of large-scale Fortran-based hybrid
+  computational science models, with applications in climate science*. This
+  grant will support development for online training functionality for FTorch,
+  as well as research visits, FTorch training tutorials, and organisation of a
+  [workshop on hybrid modelling](https://cambridge-iccs.github.io/ml-coupling-workshop).
+
+
 Publications and Presentations
 ------------------------------
 
