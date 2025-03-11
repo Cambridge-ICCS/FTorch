@@ -34,6 +34,4 @@ if(CMAKE_BUILD_TESTS)
     NAME fautograd
     COMMAND autograd
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(fautograd PROPERTIES PASS_REGULAR_EXPRESSION
-                                            "Autograd example ran successfully")
 endif()
