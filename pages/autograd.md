@@ -15,23 +15,12 @@ below will be updated upon completion.
 ### Operator overloading
 
 Mathematical operators involving Tensors are overloaded, so that we can compute
-expressions involving outputs from one or more ML models.
-
-Whilst it's possible to import such functionality with a bare
-```fortran
-use ftorch
-```
-statement, the best practice is to import specifically the operators that you
-wish to use. Note that the assignment operator `=` has a slightly different
-notation:
-```
-use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
-  operator(/), operator(**)
-```
+expressions involving outputs from one or more ML models. For more information
+on this, see the [tensor API][pages/tensor.html] documentation page.
 
 For a concrete example of how to compute mathematical expressions involving
-Torch tensors, see the associated
-[worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_Autograd).
+Torch tensors, see the
+[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_Autograd).
 
 ### The `requires_grad` property
 
