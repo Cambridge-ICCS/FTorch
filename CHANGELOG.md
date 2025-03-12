@@ -11,13 +11,19 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- `requires_grad` property hooked up to `torch_tensor` in [#288](https://github.com/Cambridge-ICCS/FTorch/pull/288)
+- MPI example added in [#270](https://github.com/Cambridge-ICCS/FTorch/pull/270)
+- Changelog file and guidance for versioning added in [#313](https://github.com/Cambridge-ICCS/FTorch/pull/313)
 
 ### Changed
 
 - fortitude dependency version increased to 0.7.0
+- Examples reordered to be more logical in [#317](https://github.com/Cambridge-ICCS/FTorch/pull/317)
+- scalar multiplication/division of tensors reworked to require the scalar to first be mapped to a `torch_tensor` in [#289](https://github.com/Cambridge-ICCS/FTorch/pull/289)
 
 ### Removed
 
+- Windows CI disabled until GitHub runner issues resolved in [50ea6d7](https://github.com/Cambridge-ICCS/FTorch/commit/50ea6d78d79ebe638ebe597e745c015549f12a61)
 
 ### Patch Releases
 
