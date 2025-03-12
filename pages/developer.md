@@ -198,11 +198,11 @@ or correction of other minor infelicities that do not impact the user or develop
 New minor releases are made when deemed appropriate by maintainers by adding a tag to
 the commit and creating a corresponding GitHub Release.
 The minor number of the version should be incremented, the entry for the version
-finalised in the changelog, and a clean log for 'Unreleased' changed created.
+finalised in the changelog, and a clean log for 'Unreleased' changes created.
 
 New patch releases are made whenever a bugfix is merged.
-The patch number of the version should be incremented, and a note made under the current
-'Unreleased' header in the changelog.
+The patch number of the version should be incremented, a tag attached to the commit,
+and a note made under the current 'Unreleased' patches header in the changelog.
 
 ### API Documentation
 
