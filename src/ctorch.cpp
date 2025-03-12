@@ -380,6 +380,23 @@ void torch_tensor_power_float(torch_tensor_t output, const torch_tensor_t tensor
 }
 
 // =============================================================================
+// --- Functions related to automatic differentiation functionality for tensors
+// =============================================================================
+
+void torch_tensor_backward(const torch_tensor_t tensor,
+                           const torch_tensor_t external_gradient) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  auto g = reinterpret_cast<torch::Tensor *const>(external_gradient);
+  t->backward(*g);
+}
+
+void torch_tensor_get_gradient(torch_tensor_t gradient, const torch_tensor_t tensor) {
+  auto g = reinterpret_cast<torch::Tensor *>(gradient);
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  *g = t->grad();
+}
+
+// =============================================================================
 // --- Torch model API
 // =============================================================================
 

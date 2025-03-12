@@ -45,6 +45,45 @@ Torch tensors, see the associated
 For Tensors that you would like to differentiate with respect to, be sure to
 set the `requires_grad` optional argument to `.true.` when you construct it.
 
-### The `backward` operator
+### Back-propagation
+
+Having defined some tensors with the `requires_grad` property set to `.true.`
+and computed another tensor in terms of an expression involving these, we can
+compute gradients of that tensor with respect to those that it depends on. This
+is achieved using the `torch_tensor_backward` subroutine. For example, for
+input tensors `a` and `b` and an output tensor `Q`:
+
+```fortran
+call torch_tensor_from_array(a, in_data1, tensor_layout, torch_kCPU, &
+                             requires_grad=.true.)
+call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU, &
+                             requires_grad=.true.)
+call torch_tensor_from_array(Q, out_data1, tensor_layout, torch_kCPU)
+
+Q = a * b
+
+call torch_tensor_backward(Q)
+```
+
+In the example code above, we can extract gradients of `Q` with respect to `a`
+and/or `b`. To do this, we can use either the `torch_tensor_get_gradient`
+subroutine or its alias - the `grad` method of the `torch_tensor` class. That
+is, for tensors `dQda` and `dQdb`:
+
+```fortran
+! Function approach
+call torch_tensor_from_array(dQda, out_data2, tensor_layout, torch_kCPU)
+dQda = torch_tensor_get_gradient(a)
+
+! Method approach
+call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
+dQdb = b%grad()
+```
+
+### Optimisation
+
+*Not yet implemented.*
+
+### Loss functions
 
 *Not yet implemented.*

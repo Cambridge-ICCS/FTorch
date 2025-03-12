@@ -36,6 +36,7 @@ module ftorch
     procedure :: get_dtype => torch_tensor_get_dtype
     procedure :: get_device_type => torch_tensor_get_device_type
     procedure :: get_device_index => torch_tensor_get_device_index
+    procedure :: grad => torch_tensor_get_gradient
     procedure :: requires_grad => torch_tensor_requires_grad
     final :: torch_tensor_delete
   end type torch_tensor
@@ -1814,6 +1815,61 @@ contains
     call torch_tensor_power_float_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_real64
 
+
+  ! ============================================================================
+  ! --- Procedures related to automatic differentation functionality for tensors
+  ! ============================================================================
+
+  !> Performs back-propagation on a Torch Tensor, given some external gradient.
+  subroutine torch_tensor_backward(tensor)
+    type(torch_tensor), intent(in) :: tensor
+    type(torch_tensor) :: external_gradient
+
+    interface
+      subroutine torch_tensor_backward_c(tensor_c, external_gradient_c) &
+          bind(c, name = 'torch_tensor_backward')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr), value, intent(in) :: external_gradient_c
+      end subroutine torch_tensor_backward_c
+    end interface
+
+    ! External gradient to provide to the back-propagation consisting of a tensor of ones
+    ! TODO: Accept other external gradients as an optional argument
+    call torch_tensor_ones(external_gradient, tensor%get_rank(), tensor%get_shape(), &
+                           tensor%get_dtype(), tensor%get_device_type(), &
+                           device_index=tensor%get_device_index())
+
+    ! Call back-propagation with the provided external gradient
+    call torch_tensor_backward_c(tensor%p, external_gradient%p)
+
+    ! Delete the external gradient tensor
+    call torch_tensor_delete(external_gradient)
+  end subroutine torch_tensor_backward
+
+  !> Retrieves the gradient with respect to a Torch Tensor.
+  function torch_tensor_get_gradient(tensor) result(gradient)
+    class(torch_tensor), intent(in) :: tensor  ! Tensor to compute the gradient with respect to
+    type(torch_tensor) :: gradient  ! Tensor holding the gradient
+
+    interface
+      subroutine torch_tensor_get_gradient_c(gradient_c, tensor_c) &
+          bind(c, name = 'torch_tensor_get_gradient')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: gradient_c
+        type(c_ptr), value, intent(in) :: tensor_c
+      end subroutine torch_tensor_get_gradient_c
+    end interface
+
+    if (.not. c_associated(gradient%p)) then
+      call torch_tensor_empty(gradient, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
+    end if
+    call torch_tensor_get_gradient_c(gradient%p, tensor%p)
+  end function torch_tensor_get_gradient
 
   ! ============================================================================
   ! --- Torch Model API
