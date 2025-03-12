@@ -45,8 +45,9 @@ program example
   write (*,*) "Q = 3 * (a^3 - b*b/3) = 3*a^3 - b^2 = ", out_data1(:)
 
   ! Check output tensor matches expected value
-  if (.not. assert_allclose(out_data1, [-12.0_wp, 65.0_wp], test_name="autograd_Q")) then
-    print *, "Error :: value of Q does not match expected value"
+  expected(:) = [-12.0_wp, 65.0_wp]
+  if (.not. assert_allclose(out_data1, expected, test_name="autograd_Q")) then
+    write(*,*) "Error :: value of Q does not match expected value"
     stop 999
   end if
 
@@ -60,14 +61,16 @@ program example
   dQdb = b%grad()
 
   ! Check the gradients take expected values
-  print *, "dQda = 9*a^2 = ", out_data2
-  if (.not. assert_allclose(out_data2, [36.0_wp, 81.0_wp], test_name="autograd_dQdb")) then
-    print *, "Error :: value of dQdb does not match expected value"
+  write(*,*) "dQda = 9*a^2 = ", out_data2
+  expected(:) = [36.0_wp, 81.0_wp]
+  if (.not. assert_allclose(out_data2, expected, test_name="autograd_dQdb")) then
+    write(*,*) "Error :: value of dQdb does not match expected value"
     stop 999
   end if
-  print *, "dQdb = - 2*b = ", out_data3
-  if (.not. assert_allclose(out_data3, [-12.0_wp, -8.0_wp], test_name="autograd_dQdb")) then
-    print *, "Error :: value of dQdb does not match expected value"
+  write(*,*) "dQdb = - 2*b = ", out_data3
+  expected(:) = [-12.0_wp, -8.0_wp]
+  if (.not. assert_allclose(out_data3, expected, test_name="autograd_dQdb")) then
+    write(*,*) "Error :: value of dQdb does not match expected value"
     stop 999
   end if
 
