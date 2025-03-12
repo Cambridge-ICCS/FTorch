@@ -1,11 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All [notable](https://cambridge-iccs.github.io/FTorch/page/developer.html#versioning-and-changelog)
+changes to the project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+For specific details see the [FTorch online documentation](https://cambridge-iccs.github.io/FTorch/page/developer.html#versioning-and-changelog).
 
-## [Unreleased]
+## [Unreleased](https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...HEAD)
 
 ### Added
 
@@ -17,7 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 
-## [1.0.0] - 2025-03-05
+### Patch Releases
+
+
+## [1.0.0](https://github.com/Cambridge-ICCS/FTorch/releases/tag/v1.0.0) - 2025-03-05
 
 ### Added
 
@@ -35,6 +40,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation:
   - README.md and associated files in repository
   - Online API and comprehensive docs build using [FORD](https://forddocs.readthedocs.io/)
-
-[unreleased]: https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/Cambridge-ICCS/FTorch/releases/tag/v1.0.0

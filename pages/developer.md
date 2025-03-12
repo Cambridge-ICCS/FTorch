@@ -183,12 +183,26 @@ FTorch has follows [semantic versioning](https://semver.org/).
 - Minor releases periodically for new features
 - Patches for bug fixes
 
-New minor releases are made when deemed appropriate by maintainers by adding a tag to
-the commit and greating a corresponding GitHub Release.
+The project version should be updated accordingly through the `PACKAGE_VERSION` in
+CMakeLists.txt for each new release.
 
 A log of notable changes to the software is kept in `CHANGELOG.md`.
 This follows the conventions of [Keep a Changelog](https://keepachangelog.com/) and should
 be updated by contributors and maintainers as part of a pull request when appropriate.
+<br>
+"Notable" includes new features, bugfixes, dependency updates etc.
+<br>
+"Notable" does not cover typo corrections documentation rephrasing and restyling,
+or correction of other minor infelicities that do not impact the user or developer
+
+New minor releases are made when deemed appropriate by maintainers by adding a tag to
+the commit and creating a corresponding GitHub Release.
+The minor number of the version should be incremented, the entry for the version
+finalised in the changelog, and a clean log for 'Unreleased' changed created.
+
+New patch releases are made whenever a bugfix is merged.
+The patch number of the version should be incremented, and a note made under the current
+'Unreleased' header in the changelog.
 
 ### API Documentation
 
