@@ -135,8 +135,14 @@ expressions involving outputs from one or more ML models.</p>
 <p>statement, the best practice is to import specifically the operators that you
 wish to use. Note that the assignment operator <code>=</code> has a slightly different
 notation:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">use</span><span class="w"> </span><span class="n">ftorch</span><span class="p">,</span><span class="w"> </span><span class="nl">only:</span><span class="w"> </span><span class="n">assignment</span><span class="p">(</span><span class="o">=</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">+</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">-</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span>
+<div class="codehilite"><pre><span></span><code><span class="k">use </span><span class="n">ftorch</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">assignment</span><span class="p">(</span><span class="o">=</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">+</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">-</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">  </span><span class="n">operator</span><span class="p">(</span><span class="o">/</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">**</span><span class="p">)</span>
+</code></pre></div>
+
+<p>If you would like to make use of scalar multiplication or scalar division, this
+can be achieved by setting the scalar as a rank-1 <code>torch_tensor</code> with a single
+entry. For example:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">multiplier</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">3.0_wp</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 </code></pre></div>
 
 <p>For a concrete example of how to compute mathematical expressions involving
