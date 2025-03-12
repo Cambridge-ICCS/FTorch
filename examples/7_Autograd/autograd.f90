@@ -45,7 +45,8 @@ program example
   write (*,*) "Q = 3 * (a^3 - b*b/3) = 3*a^3 - b^2 = ", out_data(:)
 
   ! Check output tensor matches expected value
-  if (.not. assert_allclose(out_data, [-12.0_wp, 65.0_wp], test_name="autograd_Q")) then
+  expected(:) = [-12.0_wp, 65.0_wp]
+  if (.not. assert_allclose(out_data, expected, test_name="autograd_Q")) then
     print *, "Error :: value of Q does not match expected value"
     stop 999
   end if
