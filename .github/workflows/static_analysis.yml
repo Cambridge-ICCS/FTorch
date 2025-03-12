@@ -101,6 +101,7 @@ jobs:
           cd ${{ github.workspace }}
           . ../ftorch_venv/bin/activate
           fortitude check src/ftorch.F90
+          fortitude check src/ftorch_optim.F90
           fortitude check src/ftorch_test_utils.f90
 
       # Apply C++ and C linter and formatter, clang
