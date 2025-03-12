@@ -54,3 +54,22 @@ Epoch: 0
                 tensor([1.0000, 1.5000, 2.0000, 2.5000], requires_grad=True)
 ...
 ```
+
+To run the Fortran version of the demo we need to compile with (for example)
+```
+mkdir build
+cd build
+cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> -DCMAKE_BUILD_TYPE=Release
+cmake --build .
+```
+
+(Note that the Fortran compiler can be chosen explicitly with the `-DCMAKE_Fortran_COMPILER` flag,
+and should match the compiler that was used to locally build FTorch.)
+
+To run the compiled code, simply use
+```
+./optimisers
+```
+Currently, the example constructs Torch Tensors and iterates over a training loop,
+computing a loss with each iteration.
+It does not yet implement an optimiser or step to update the scaling tensor.
