@@ -26,7 +26,7 @@ program example
   logical :: test_pass
 
   ! Set up Torch data structures
-  type(torch_tensor) :: a, b, Q, dQda, dQdb, multiplier, divisor
+  type(torch_tensor) :: a, b, Q, multiplier, divisor, dQda, dQdb
 
   ! Initialise Torch Tensors from input arrays as in Python example
   call torch_tensor_from_array(a, [2.0_wp, 3.0_wp], tensor_layout, torch_kCPU, requires_grad=.true.)
