@@ -21,7 +21,7 @@ This directory contains a number of examples of how to use the library:
       in of a net from the call to the forward pass.
 
 5. MultiGPU
-	  - Revisits the SimpleNet example but considering multiple GPUs.
+    - Revisits the SimpleNet example but considering multiple GPUs.
 
 6. MPI
    - Demonstrates how to use FTorch in the context of an MPI program.
