@@ -192,8 +192,8 @@ be updated by contributors and maintainers as part of a pull request when approp
 <br>
 "Notable" includes new features, bugfixes, dependency updates etc.
 <br>
-"Notable" does not cover typo corrections documentation rephrasing and restyling,
-or correction of other minor infelicities that do not impact the user or developer
+"Notable" does not cover typo corrections, documentation rephrasing and restyling,
+or correction of other minor infelicities that do not impact the user or developer.
 
 New minor releases are made when deemed appropriate by maintainers by adding a tag to
 the commit and creating a corresponding GitHub Release.
