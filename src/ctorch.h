@@ -19,6 +19,9 @@ typedef void *torch_jit_script_module_t;
 // Opaque pointer type alias for at::Tensor
 typedef void *torch_tensor_t;
 
+// Opaque pointer type aliases for optimizers
+typedef void *torch_optim_SGD_t;
+
 // Opaque pointer type alias for integer scalars
 typedef void *torch_int_t;
 
@@ -319,6 +322,20 @@ EXPORT_C void torch_tensor_get_gradient(const torch_tensor_t tensor,
 // --- Torch optimisers API
 // =============================================================================
 
+/**
+ * Function to create an SGD optimizer over a set of parameters
+ * @param parameters to run the optimizer over
+ * @param number of parameter Tensors in the parameters vector
+ * @param learning rate for the optimizer
+ */
+EXPORT_C torch_optim_SGD_t torch_optim_SGD(const torch_tensor_t *parameters,
+                                           const int nin, const double learning_rate);
+
+/**
+ * Function to delete a Torch SGC optimizer to clean up
+ * @param Torch Optimizer to delete
+ */
+EXPORT_C void torch_optim_SGD_delete(torch_optim_SGD_t optim);
 
 // =============================================================================
 // --- Torch model API
