@@ -3,7 +3,7 @@ title: Recent API Changes
 ## February 2025
 
 If you use a version of FTorch from before commit
-[c85185e](c85185e6c261606c212dd11fee734663d610b695)
+[c85185e](https://github.com/Cambridge-ICCS/FTorch/commit/c85185e6c261606c212dd11fee734663d610b695)
 (February 2025) you will notice that the main `CMakeLists.txt` file has moved
 from `src/` to the root level of the FTorch repository. This move was mainly to
 simplify the development experience, such that the examples could be built as
@@ -26,7 +26,7 @@ cmake .. <CMAKE_ARGUMENTS>
 ## January 2025
 
 If you use a version of FTorch from before commit
-[c488f20](c488f20d8d49a15f98176c39a6c8e8db8e708f51)
+[c488f20](https://github.com/Cambridge-ICCS/FTorch/commit/c488f20d8d49a15f98176c39a6c8e8db8e708f51)
 (January 2025) you may notice that the `device_type` argument for
 `torch_model_load` changed from being optional to being compulsory. This is
 because the optional argument defaulted to `torch_kCPU`, which is not suitable
