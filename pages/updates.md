@@ -1,5 +1,16 @@
 title: Recent API Changes
 
+In the build-up to the release of version 1.0.0 of FTorch the library API went through
+a number of iterations, some of which were breaking.
+The changes required to migrate from these older versions to version 1.0.0 are detailed
+on this page.
+
+For more recent updates after the release of version 1.0.0 please refer to the ongoing
+changelog, either on [GitHub](https://github.com/Cambridge-ICCS/FTorch/blob/main/CHANGELOG.md)
+on [this website](page/changelog.html).
+
+[TOC]
+
 ## February 2025
 
 If you use a version of FTorch from before commit
@@ -47,10 +58,6 @@ This is because a number of breaking changes were made to the FTorch API in prep
 for implementing new functionalities.
 
 This page describes how to migrate from code (pre-e92ad9e) to the most recent version.
-
-If you are already using a more recent version there is no need to read this page.
-
-[TOC]
 
 ### Why?
 
