@@ -103,44 +103,6 @@ contains
 
   end subroutine test_torch_tensor_empty
 
-  ! Unit test for destroying tensors, both manually with torch_tensor_delete and automatically (via
-  ! torch_tensor's destructor)
-  @test(testparameters={get_parameters_destruction()})
-  subroutine test_torch_tensor_destruction(this)
-    use ftorch, only: torch_tensor_empty
-
-    implicit none
-
-    class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor
-    integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
-    integer :: i
-
-    do i = 1, this%param%iterations
-
-      ! Check the tensor pointer is not associated
-      @assertFalse(c_associated(tensor%p))
-
-      ! Create a tensor without any data values assigned
-      call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index)
-
-      ! Check the tensor pointer is associated
-      @assertTrue(c_associated(tensor%p))
-
-      if (i < this%param%iterations .or. .not. this%param%auto_delete) then
-        ! Call torch_tensor_delete manually
-        call torch_tensor_delete(tensor)
-
-        ! Check torch_tensor_delete does indeed free the memory
-        @assertFalse(c_associated(tensor%p))
-      end if
-
-    end do
-
-  end subroutine test_torch_tensor_destruction
-
   ! Unit test for the torch_tensor_zeros subroutine
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_zeros(this)
@@ -416,5 +378,43 @@ contains
     end if
 
   end subroutine test_torch_from_blob
+
+  ! Unit test for destroying tensors, both manually with torch_tensor_delete and automatically (via
+  ! torch_tensor's destructor)
+  @test(testparameters={get_parameters_destruction()})
+  subroutine test_torch_tensor_destruction(this)
+    use ftorch, only: torch_tensor_empty
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer, parameter :: dtype = torch_kFloat32
+    integer :: i
+
+    do i = 1, this%param%iterations
+
+      ! Check the tensor pointer is not associated
+      @assertFalse(c_associated(tensor%p))
+
+      ! Create a tensor without any data values assigned
+      call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index)
+
+      ! Check the tensor pointer is associated
+      @assertTrue(c_associated(tensor%p))
+
+      if (i < this%param%iterations .or. .not. this%param%auto_delete) then
+        ! Call torch_tensor_delete manually
+        call torch_tensor_delete(tensor)
+
+        ! Check torch_tensor_delete does indeed free the memory
+        @assertFalse(c_associated(tensor%p))
+      end if
+
+    end do
+
+  end subroutine test_torch_tensor_destruction
 
 end module test_tensor_constructors_destructors
