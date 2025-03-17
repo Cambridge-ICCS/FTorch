@@ -1864,9 +1864,8 @@ contains
     end interface
 
     if (.not. c_associated(gradient%p)) then
-      call torch_tensor_empty(gradient, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
-                              requires_grad=tensor%requires_grad())
+      write(*,*) "Error :: tensors for holding gradients must be constructed before retrieving values"
+      stop 1
     end if
     call torch_tensor_get_gradient_c(gradient%p, tensor%p)
   end function torch_tensor_get_gradient
