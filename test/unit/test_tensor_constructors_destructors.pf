@@ -45,20 +45,23 @@ contains
     test_case_ctor%param = param
   end function test_case_ctor
 
-  ! A fixture comprised of a full list of parameter sets
-  function get_parameters_full() result(params)
+  ! A fixture comprised of parameter sets for destructor tests
+  function get_parameters_destruction() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
       TestParametersType(.false.,.false.,1), &
       TestParametersType(.false.,.false.,2), &
       TestParametersType(.false.,.true.,1), &
-      TestParametersType(.false.,.true.,2), &
-      TestParametersType(.true.,.false.,1), &
-      TestParametersType(.true.,.false.,2), &
-      TestParametersType(.true.,.true.,1), &
-      TestParametersType(.true.,.true.,2) &
+      TestParametersType(.false.,.true.,2) &
     ]
-  end function get_parameters_full
+  end function get_parameters_destruction
+
+  ! A fixture comprised of a short list of parameter sets
+  function get_parameters_requires_grad() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [TestParametersType(.false.,.false.,1)]
+    params = [TestParametersType(.true.,.false.,1)]
+  end function get_parameters_requires_grad
 
   ! A fixture comprised of a short list of parameter sets
   function get_parameters_short() result(params)
@@ -75,10 +78,35 @@ contains
     string = str
   end function toString
 
-  ! Unit test for the torch_tensor_empty subroutine and for calling torch_tensor_delete manually or
-  ! automatically (via torch_tensor's destructor)
-  @test(testparameters={get_parameters_full()})
+  ! Unit test for the torch_tensor_empty subroutine
+  @test(testparameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_empty(this)
+    use ftorch, only: torch_tensor_empty
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer, parameter :: dtype = torch_kFloat32
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor%p))
+
+    ! Create a tensor without any data values assigned
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+                            this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor%p))
+
+  end subroutine test_torch_tensor_empty
+
+  ! Unit test for destroying tensors, both manually with torch_tensor_delete and automatically (via
+  ! torch_tensor's destructor)
+  @test(testparameters={get_parameters_destruction()})
+  subroutine test_torch_tensor_destruction(this)
     use ftorch, only: torch_tensor_empty
 
     implicit none
@@ -96,8 +124,7 @@ contains
       @assertFalse(c_associated(tensor%p))
 
       ! Create a tensor without any data values assigned
-      call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index, &
-                              this%param%requires_grad)
+      call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index)
 
       ! Check the tensor pointer is associated
       @assertTrue(c_associated(tensor%p))
@@ -112,11 +139,10 @@ contains
 
     end do
 
-  end subroutine test_torch_tensor_empty
+  end subroutine test_torch_tensor_destruction
 
-  ! Unit test for the torch_tensor_zeros subroutine and for calling torch_tensor_delete manually or
-  ! automatically (via torch_tensor's destructor)
-  @test(testParameters={get_parameters_full()})
+  ! Unit test for the torch_tensor_zeros subroutine
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_zeros(this)
     use ftorch, only: torch_tensor_zeros
     use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -135,53 +161,37 @@ contains
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
-    integer :: i
 
-    do i = 1, this%param%iterations
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor1%p))
 
-      ! Check the tensor pointer is not associated
-      @assertFalse(c_associated(tensor1%p))
+    ! Create a tensor of zeros
+    call torch_tensor_zeros(tensor1, ndims, tensor_shape, dtype, device_type, device_index, &
+                            this%param%requires_grad)
 
-      ! Create a tensor of zeros
-      call torch_tensor_zeros(tensor1, ndims, tensor_shape, dtype, device_type, device_index, &
-                              this%param%requires_grad)
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor1%p))
 
-      ! Check the tensor pointer is associated
-      @assertTrue(c_associated(tensor1%p))
+    ! Create a tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
 
-      ! Create a tensor based off an output array
-      call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
 
-      ! Set the values of the second tensor to match those of the first using the overloaded
-      ! assignment operator
-      tensor2 = tensor1
+    ! Check that the tensor values are all zero
+    expected(:,:) = 0.0
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_zeros")
 
-      ! Check that the tensor values are all zero
-      expected(:,:) = 0.0
-      test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_zeros")
-
-      if (.not. test_pass) then
-        print *, "Error :: incorrect output from torch_tensor_zeros subroutine"
-        stop 999
-      end if
-
-      if (i < this%param%iterations .or. .not. this%param%auto_delete) then
-        ! Call torch_tensor_delete manually
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-
-        ! Check torch_tensor_delete does indeed free the memory
-        @assertFalse(c_associated(tensor1%p))
-        @assertFalse(c_associated(tensor2%p))
-      end if
-
-    end do
+    if (.not. test_pass) then
+      print *, "Error :: incorrect output from torch_tensor_zeros subroutine"
+      stop 999
+    end if
 
   end subroutine test_torch_tensor_zeros
 
-  ! Unit test for the torch_tensor_ones subroutine and for calling torch_tensor_delete manually or
-  ! automatically (via torch_tensor's destructor)
-  @test(testParameters={get_parameters_full()})
+  ! Unit test for the torch_tensor_ones subroutine
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_ones(this)
     use ftorch, only: torch_tensor_ones
     use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -200,53 +210,37 @@ contains
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
-    integer :: i
 
-    do i = 1, this%param%iterations
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor1%p))
 
-      ! Check the tensor pointer is not associated
-      @assertFalse(c_associated(tensor1%p))
+    ! Create tensor of ones
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, device_index, &
+                          this%param%requires_grad)
 
-      ! Create tensor of ones
-      call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, device_index, &
-                            this%param%requires_grad)
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor1%p))
 
-      ! Check the tensor pointer is associated
-      @assertTrue(c_associated(tensor1%p))
+    ! Create a tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
 
-      ! Create a tensor based off an output array
-      call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
 
-      ! Set the values of the second tensor to match those of the first using the overloaded
-      ! assignment operator
-      tensor2 = tensor1
+    ! Check that the tensor values are all one
+    expected(:,:) = 1.0
+    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")
 
-      ! Check that the tensor values are all one
-      expected(:,:) = 1.0
-      test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")
-
-      if (.not. test_pass) then
-        print *, "Error :: incorrect output from torch_tensor_ones subroutine"
-        stop 999
-      end if
-
-      if (i < this%param%iterations .or. .not. this%param%auto_delete) then
-        ! Call torch_tensor_delete manually
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-
-        ! Check torch_tensor_delete does indeed free the memory
-        @assertFalse(c_associated(tensor1%p))
-        @assertFalse(c_associated(tensor2%p))
-      end if
-
-    end do
+    if (.not. test_pass) then
+      print *, "Error :: incorrect output from torch_tensor_ones subroutine"
+      stop 999
+    end if
 
   end subroutine test_torch_tensor_ones
 
-  ! Unit test for the torch_tensor_from_array subroutine in the 1D case and for calling
-  ! torch_tensor_delete manually or automatically (via torch_tensor's destructor)
-  @test(testParameters={get_parameters_full()})
+  ! Unit test for the torch_tensor_from_array subroutine in the 1D case
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_array_1d(this)
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
@@ -262,49 +256,34 @@ contains
     real(wp), dimension(6), target :: in_data
     real(wp), dimension(6), target :: out_data
     logical :: test_pass
-    integer :: i
 
-    do i = 1, this%param%iterations
+    ! Create an arbitrary input array
+    in_data(:) = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
 
-      ! Create an arbitrary input array
-      in_data(:) = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor1%p))
 
-      ! Check the tensor pointer is not associated
-      @assertFalse(c_associated(tensor1%p))
+    ! Create a tensor based off an input array
+    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
+                                this%param%requires_grad)
 
-      ! Create a tensor based off an input array
-      call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
-                                  this%param%requires_grad)
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor1%p))
 
-      ! Check the tensor pointer is associated
-      @assertTrue(c_associated(tensor1%p))
+    ! Create a tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
 
-      ! Create a tensor based off an output array
-      call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
 
-      ! Set the values of the second tensor to match those of the first using the overloaded
-      ! assignment operator
-      tensor2 = tensor1
+    ! Compare the data in the tensor to the input data
+    test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")
 
-      ! Compare the data in the tensor to the input data
-      test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")
-
-      if (.not. test_pass) then
-        print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
-        stop 999
-      end if
-
-      if (i < this%param%iterations .or. .not. this%param%auto_delete) then
-        ! Call torch_tensor_delete manually
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-
-        ! Check torch_tensor_delete does indeed free the memory
-        @assertFalse(c_associated(tensor1%p))
-        @assertFalse(c_associated(tensor2%p))
-      end if
-
-    end do
+    if (.not. test_pass) then
+      print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
+      stop 999
+    end if
 
   end subroutine test_torch_from_array_1d
 
@@ -404,9 +383,8 @@ contains
 
   end subroutine test_torch_from_array_3d
 
-  ! Unit test for the torch_tensor_from_blob subroutine and for calling torch_tensor_delete
-  ! manually or automatically (via torch_tensor's destructor)
-  @test(testParameters={get_parameters_full()})
+  ! Unit test for the torch_tensor_from_blob subroutine
+  @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_blob(this)
     use ftorch, only: torch_tensor_from_blob
     use, intrinsic :: iso_fortran_env, only: sp => real32
@@ -426,49 +404,34 @@ contains
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
     logical :: test_pass
-    integer :: i
 
-    do i = 1, this%param%iterations
+    ! Create an arbitrary input array
+    in_data = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
 
-      ! Create an arbitrary input array
-      in_data = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor1%p))
 
-      ! Check the tensor pointer is not associated
-      @assertFalse(c_associated(tensor1%p))
+    ! Create a tensor based off an input array
+    call torch_tensor_from_blob(tensor1, c_loc(in_data), ndims, tensor_shape, layout, dtype, &
+                                device_type, device_index, this%param%requires_grad)
 
-      ! Create a tensor based off an input array
-      call torch_tensor_from_blob(tensor1, c_loc(in_data), ndims, tensor_shape, layout, dtype, &
-                                  device_type, device_index, this%param%requires_grad)
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor1%p))
 
-      ! Check the tensor pointer is associated
-      @assertTrue(c_associated(tensor1%p))
+    ! Create a tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, layout, device_type, device_index)
 
-      ! Create a tensor based off an output array
-      call torch_tensor_from_array(tensor2, out_data, layout, device_type, device_index)
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
 
-      ! Set the values of the second tensor to match those of the first using the overloaded
-      ! assignment operator
-      tensor2 = tensor1
+    ! Compare the data in the tensor to the input data
+    test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_blob")
 
-      ! Compare the data in the tensor to the input data
-      test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_blob")
-
-      if (.not. test_pass) then
-        print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
-        stop 999
-      end if
-
-      if (i < this%param%iterations .or. .not. this%param%auto_delete) then
-        ! Call torch_tensor_delete manually
-        call torch_tensor_delete(tensor1)
-        call torch_tensor_delete(tensor2)
-
-        ! Check torch_tensor_delete does indeed free the memory
-        @assertFalse(c_associated(tensor1%p))
-        @assertFalse(c_associated(tensor2%p))
-      end if
-
-    end do
+    if (.not. test_pass) then
+      print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
+      stop 999
+    end if
 
   end subroutine test_torch_from_blob
 
