@@ -45,7 +45,7 @@ Torch tensors, see the associated
 For Tensors that you would like to differentiate with respect to, be sure to
 set the `requires_grad` optional argument to `.true.` when you construct it.
 
-### Back-propagation
+### Backpropagation
 
 Having defined some tensors with the `requires_grad` property set to `.true.`
 and computed another tensor in terms of an expression involving these, we can
