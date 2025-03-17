@@ -843,8 +843,8 @@ contains
 
   !> Performs back-propagation on a Torch Tensor, given some external gradient.
   subroutine torch_tensor_backward(tensor)
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: external_gradient
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to compute gradients of
+    type(torch_tensor) :: external_gradient   !! External tensor used as an initial scaling of the gradient calculation
 
     interface
       subroutine torch_tensor_backward_c(tensor_c, external_gradient_c) &
@@ -871,8 +871,8 @@ contains
 
   !> Retrieves the gradient with respect to a Torch Tensor.
   function torch_tensor_get_gradient(tensor) result(gradient)
-    class(torch_tensor), intent(in) :: tensor  ! Tensor to compute the gradient with respect to
-    type(torch_tensor) :: gradient  ! Tensor holding the gradient
+    class(torch_tensor), intent(in) :: tensor  !! Tensor to compute the gradient with respect to
+    type(torch_tensor) :: gradient             !! Tensor holding the gradient
 
     interface
       subroutine torch_tensor_get_gradient_c(gradient_c, tensor_c) &
