@@ -94,6 +94,7 @@
           <nav class="nav nav-pills flex-column">
               <a class="nav-link" href="LICENSE.html">FTorch License</a>
               <a class="nav-link" href="autograd.html">Online training</a>
+              <a class="nav-link" href="changelog.html">FTorch Changelog</a>
               <a class="nav-link" href="cmake.html">Installation and Build Process</a>
               <a class="nav-link active disabled" href="developer.html">Developer Guide</a>
               <a class="nav-link" href="examples.html">Examples</a>
@@ -125,7 +126,11 @@ level, please see below for guidance.</p>
 <li><a href="#general-guidelines">General guidelines</a></li>
 </ul>
 </li>
-<li><a href="#documentation">Documentation</a></li>
+<li><a href="#documentation">Documentation</a><ul>
+<li><a href="#versioning-and-changelog">Versioning and Changelog</a></li>
+<li><a href="#api-documentation">API Documentation</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <h2 id="getting-involved">Getting involved</h2>
@@ -262,6 +267,31 @@ checks on all opened pull requests before they are merged.</p>
   printing to screen before exiting cleanly.</li>
 </ul>
 <h2 id="documentation">Documentation</h2>
+<h3 id="versioning-and-changelog">Versioning and Changelog</h3>
+<p>FTorch has follows <a href="https://semver.org/">semantic versioning</a>.</p>
+<ul>
+<li>Major releases for API changes</li>
+<li>Minor releases periodically for new features</li>
+<li>Patches for bug fixes</li>
+</ul>
+<p>The project version should be updated accordingly through the <code>PACKAGE_VERSION</code> in
+CMakeLists.txt for each new release.</p>
+<p>A log of notable changes to the software is kept in <code>CHANGELOG.md</code>.
+This follows the conventions of <a href="https://keepachangelog.com/">Keep a Changelog</a> and should
+be updated by contributors and maintainers as part of a pull request when appropriate.
+<br>
+"Notable" includes new features, bugfixes, dependency updates etc.
+<br>
+"Notable" does not cover typo corrections, documentation rephrasing and restyling,
+or correction of other minor infelicities that do not impact the user or developer.</p>
+<p>New minor releases are made when deemed appropriate by maintainers by adding a tag to
+the commit and creating a corresponding GitHub Release.
+The minor number of the version should be incremented, the entry for the version
+finalised in the changelog, and a clean log for 'Unreleased' changes created.</p>
+<p>New patch releases are made whenever a bugfix is merged.
+The patch number of the version should be incremented, a tag attached to the commit,
+and a note made under the current 'Unreleased' patches header in the changelog.</p>
+<h3 id="api-documentation">API Documentation</h3>
 <p>The API documentation for FTorch is generated using 
 <a href="https://forddocs.readthedocs.io/en/latest/">FORD</a>.
 For detailed information refer to the 

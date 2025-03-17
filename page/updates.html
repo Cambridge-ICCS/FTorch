@@ -94,6 +94,7 @@
           <nav class="nav nav-pills flex-column">
               <a class="nav-link" href="LICENSE.html">FTorch License</a>
               <a class="nav-link" href="autograd.html">Online training</a>
+              <a class="nav-link" href="changelog.html">FTorch Changelog</a>
               <a class="nav-link" href="cmake.html">Installation and Build Process</a>
               <a class="nav-link" href="developer.html">Developer Guide</a>
               <a class="nav-link" href="examples.html">Examples</a>
@@ -108,7 +109,31 @@
       </div>
 
     <div class="col-9" id='text'>
-      <h2 id="february-2025">February 2025</h2>
+      <p>In the build-up to the release of version 1.0.0 of FTorch the library API went through
+a number of iterations, some of which were breaking.
+The changes required to migrate from these older versions to version 1.0.0 are detailed
+on this page.</p>
+<p>For more recent updates after the release of version 1.0.0 please refer to the ongoing
+changelog, either on <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/CHANGELOG.md">GitHub</a>
+on <a href="page/changelog.html">this website</a>.</p>
+<div class="toc">
+<ul>
+<li><a href="#february-2025">February 2025</a></li>
+<li><a href="#january-2025">January 2025</a></li>
+<li><a href="#june-2024">June 2024</a><ul>
+<li><a href="#why">Why?</a></li>
+<li><a href="#changes-and-how-to-update-your-code">Changes and how to update your code</a><ul>
+<li><a href="#torch_tensors-are-created-using-a-subroutine-call-not-a-function">torch_tensors are created using a subroutine call, not a function</a></li>
+<li><a href="#module-becomes-model-and-loading-becomes-a-subroutine-call-not-a-function">module becomes model and loading becomes a subroutine call, not a function</a></li>
+<li><a href="#n_inputs-is-no-longer-required">n_inputs is no longer required</a></li>
+<li><a href="#outputs-now-need-to-be-an-array-of-torch_tensors">Outputs now need to be an array of torch_tensors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="february-2025">February 2025</h2>
 <p>If you use a version of FTorch from before commit
 <a href="https://github.com/Cambridge-ICCS/FTorch/commit/c85185e6c261606c212dd11fee734663d610b695">c85185e</a>
 (February 2025) you will notice that the main <code>CMakeLists.txt</code> file has moved
@@ -148,24 +173,6 @@ type as the third argument. For example:</p>
 This is because a number of breaking changes were made to the FTorch API in preparation
 for implementing new functionalities.</p>
 <p>This page describes how to migrate from code (pre-e92ad9e) to the most recent version.</p>
-<p>If you are already using a more recent version there is no need to read this page.</p>
-<div class="toc">
-<ul>
-<li><a href="#february-2025">February 2025</a></li>
-<li><a href="#january-2025">January 2025</a></li>
-<li><a href="#june-2024">June 2024</a><ul>
-<li><a href="#why">Why?</a></li>
-<li><a href="#changes-and-how-to-update-your-code">Changes and how to update your code</a><ul>
-<li><a href="#torch_tensors-are-created-using-a-subroutine-call-not-a-function">torch_tensors are created using a subroutine call, not a function</a></li>
-<li><a href="#module-becomes-model-and-loading-becomes-a-subroutine-call-not-a-function">module becomes model and loading becomes a subroutine call, not a function</a></li>
-<li><a href="#n_inputs-is-no-longer-required">n_inputs is no longer required</a></li>
-<li><a href="#outputs-now-need-to-be-an-array-of-torch_tensors">Outputs now need to be an array of torch_tensors</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
 <h3 id="why">Why?</h3>
 <p>We realise that this forms an inconvenience to those of you who are actively
 using FTorch and is not something we did lightly.
