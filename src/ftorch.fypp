@@ -870,9 +870,9 @@ contains
   end subroutine torch_tensor_backward
 
   !> Retrieves the gradient with respect to a Torch Tensor.
-  function torch_tensor_get_gradient(tensor) result(gradient)
-    class(torch_tensor), intent(in) :: tensor  !! Tensor to compute the gradient with respect to
-    type(torch_tensor) :: gradient             !! Tensor holding the gradient
+  subroutine torch_tensor_get_gradient(tensor, gradient)
+    class(torch_tensor), intent(in) :: tensor      !! Tensor to compute the gradient with respect to
+    type(torch_tensor), intent(inout) :: gradient  !! Tensor holding the gradient
 
     interface
       subroutine torch_tensor_get_gradient_c(tensor_c, gradient_c) &
@@ -884,13 +884,12 @@ contains
       end subroutine torch_tensor_get_gradient_c
     end interface
 
-    print *, "associated?", c_associated(gradient%p)
     if (.not. c_associated(gradient%p)) then
       write(*,*) "Error :: tensors for holding gradients must be constructed before retrieving values"
       stop 1
     end if
     call torch_tensor_get_gradient_c(tensor%p, gradient%p)
-  end function torch_tensor_get_gradient
+  end subroutine torch_tensor_get_gradient
 
   ! ============================================================================
   ! --- Torch Model API

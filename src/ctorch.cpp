@@ -393,7 +393,7 @@ void torch_tensor_backward(const torch_tensor_t tensor,
 void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradient) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
   auto g = reinterpret_cast<torch::Tensor *>(gradient);
-  *g = t->grad();
+  std::move(*g) = t->grad();
 }
 
 // =============================================================================
