@@ -92,7 +92,7 @@ use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
 
 For a concrete example of how to construct, interrogate, manipulate, and delete
 Torch tensors, see the
-[tensor manipulation worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/0_Tensor).
+[tensor manipulation worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/1_Tensor).
 
 For an example of how to compute mathematical expressions involving Torch
 tensors, see the

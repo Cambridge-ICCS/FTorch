@@ -39,7 +39,7 @@ call torch_tensor_from_array(multiplier, [3.0_wp], [1], torch_kCPU)
 
 For a concrete example of how to compute mathematical expressions involving
 Torch tensors, see the
-[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_Autograd).
+[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd).
 
 ### The `requires_grad` property
 
