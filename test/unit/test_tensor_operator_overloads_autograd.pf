@@ -99,6 +99,7 @@ contains
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+    print *, "associated?", c_associated(dQda%p)
     dQda = a%grad()
 
     ! Check the computed gradient takes the expected value:

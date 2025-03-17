@@ -1863,6 +1863,7 @@ contains
       end subroutine torch_tensor_get_gradient_c
     end interface
 
+    print *, "associated?", c_associated(gradient%p)
     if (.not. c_associated(gradient%p)) then
       write(*,*) "Error :: tensors for holding gradients must be constructed before retrieving values"
       stop 1
