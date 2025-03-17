@@ -1882,7 +1882,7 @@ contains
     integer(c_int), intent(in) :: device_type  !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
     integer(c_int), optional, intent(in) :: device_index  !! device index to use for `torch_kCUDA` case
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-    logical, optional, intent(in) :: is_training    !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: is_training    !! Whether the model is being trained, rather than evaluated
     integer(c_int) :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
     logical :: is_training_value  !! Whether the model is being trained, rather than evaluated
