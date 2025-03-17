@@ -52,6 +52,7 @@ program example
   end if
 
   ! Run the back-propagation operator
+  ! This will perform backpropogation on the tensors involved in generating Q (a and b), setting the `grad` property for both of them.
   call torch_tensor_backward(Q)
 
   ! Create tensors based off output arrays for the gradients and then retrieve them

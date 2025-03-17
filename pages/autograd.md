@@ -65,7 +65,7 @@ Q = a * b
 call torch_tensor_backward(Q)
 ```
 
-In the example code above, we can extract gradients of `Q` with respect to `a`
+Following the example code above, we can extract gradients of `Q` with respect to `a`
 and/or `b`. To do this, we can use either the `torch_tensor_get_gradient`
 subroutine or its alias - the `grad` method of the `torch_tensor` class. That
 is, for tensors `dQda` and `dQdb`:
