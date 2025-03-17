@@ -55,7 +55,6 @@ module ftorch
     procedure :: get_dtype => torch_tensor_get_dtype
     procedure :: get_device_type => torch_tensor_get_device_type
     procedure :: get_device_index => torch_tensor_get_device_index
-    procedure :: grad => torch_tensor_get_gradient
     procedure :: requires_grad => torch_tensor_requires_grad
     final :: torch_tensor_delete
   end type torch_tensor

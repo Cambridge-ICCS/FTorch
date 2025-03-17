@@ -6,7 +6,7 @@ program example
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only: assignment(=), operator(+), operator(-), operator(*), operator(/), &
                     operator(**), torch_kCPU, torch_tensor, torch_tensor_backward, &
-                    torch_tensor_from_array
+                    torch_tensor_from_array, torch_tensor_get_gradient
 
   ! Import our tools module for testing utils
   use ftorch_test_utils, only : assert_allclose
@@ -58,8 +58,8 @@ program example
   ! Create tensors based off output arrays for the gradients and then retrieve them
   call torch_tensor_from_array(dQda, out_data2, tensor_layout, torch_kCPU)
   call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
-  call a%grad(dQda)
-  call b%grad(dQdb)
+  call torch_tensor_get_gradient(a, dQda)
+  call torch_tensor_get_gradient(b, dQdb)
 
   ! Check the gradients take expected values
   write(*,*) "dQda = 9*a^2 = ", out_data2
