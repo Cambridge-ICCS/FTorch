@@ -22,8 +22,10 @@ module test_tensor_constructors_destructors
   ! Typedef holding a set of parameter values
   @testParameter
   type, extends(AbstractTestParameter) :: TestParametersType
-    logical :: requires_grad
-    logical :: auto_delete
+    logical :: requires_grad  ! Value used for the requires_grad argument
+    logical :: auto_delete    ! torch_tensor_delete is called when .false., otherwise the finalizer
+                              !   will call it when a tensor goes out of scope
+    integer :: iterations     ! Number of times to construct/destruct a tensor
   contains
     procedure :: toString
   end type TestParametersType
@@ -43,44 +45,41 @@ contains
     test_case_ctor%param = param
   end function test_case_ctor
 
-  ! A fixture comprised of a full list of parameter sets
-  function get_parameters_full() result(params)
+  ! A fixture comprised of parameter sets for destructor tests
+  function get_parameters_destruction() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
-      TestParametersType(.false.,.false.), &
-      TestParametersType(.true.,.false.), &
-      TestParametersType(.false.,.true.), &
-      TestParametersType(.true.,.true.) &
+      TestParametersType(.false.,.false.,1), &
+      TestParametersType(.false.,.false.,2), &
+      TestParametersType(.false.,.true.,1), &
+      TestParametersType(.false.,.true.,2) &
     ]
-  end function get_parameters_full
+  end function get_parameters_destruction
 
-  ! A fixture for checking requires_grad being true and false
+  ! A fixture comprised of a short list of parameter sets
   function get_parameters_requires_grad() result(params)
     type(TestParametersType), allocatable :: params(:)
-    params = [ &
-      TestParametersType(.false.,.false.), &
-      TestParametersType(.true.,.false.) &
-    ]
+    params = [TestParametersType(.false.,.false.,1)]
+    params = [TestParametersType(.true.,.false.,1)]
   end function get_parameters_requires_grad
 
   ! A fixture comprised of a short list of parameter sets
   function get_parameters_short() result(params)
     type(TestParametersType), allocatable :: params(:)
-    params = [TestParametersType(.false.,.false.)]
+    params = [TestParametersType(.false.,.false.,1)]
   end function get_parameters_short
 
   ! Function for representing a parameter set as a string
   function toString(this) result(string)
     class(TestParametersType), intent(in) :: this
     character(:), allocatable :: string
-    character(len=3) :: str
-    write(str,"(l1,',',l1)") this%requires_grad, this%auto_delete
+    character(len=5) :: str
+    write(str,"(l1,',',l1,',',i1)") this%requires_grad, this%auto_delete, this%iterations
     string = str
   end function toString
 
-  ! Unit test for the torch_tensor_empty subroutine and for calling torch_tensor_delete manually or
-  ! automatically (via torch_tensor's destructor)
-  @test(testparameters={get_parameters_full()})
+  ! Unit test for the torch_tensor_empty subroutine
+  @test(testparameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_empty(this)
     use ftorch, only: torch_tensor_empty
 
@@ -101,14 +100,6 @@ contains
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor%p))
-
-    if (.not. this%param%auto_delete) then
-      ! Call torch_tensor_delete manually
-      call torch_tensor_delete(tensor)
-
-      ! Check torch_tensor_delete does indeed free the memory
-      @assertFalse(c_associated(tensor%p))
-    end if
 
   end subroutine test_torch_tensor_empty
 
@@ -131,7 +122,6 @@ contains
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor1%p))
@@ -152,9 +142,7 @@ contains
 
     ! Check that the tensor values are all zero
     expected(:,:) = 0.0
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_zeros")
-
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_zeros")) then
       print *, "Error :: incorrect output from torch_tensor_zeros subroutine"
       stop 999
     end if
@@ -180,7 +168,6 @@ contains
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor1%p))
@@ -201,9 +188,7 @@ contains
 
     ! Check that the tensor values are all one
     expected(:,:) = 1.0
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")
-
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")) then
       print *, "Error :: incorrect output from torch_tensor_ones subroutine"
       stop 999
     end if
@@ -226,7 +211,6 @@ contains
     integer, parameter :: tensor_layout(ndims) = [1]
     real(wp), dimension(6), target :: in_data
     real(wp), dimension(6), target :: out_data
-    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:) = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
@@ -249,9 +233,7 @@ contains
     tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")
-
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")) then
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
       stop 999
     end if
@@ -274,7 +256,6 @@ contains
     integer, parameter :: tensor_layout(ndims) = [1, 2]
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
-    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
@@ -297,9 +278,7 @@ contains
     tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")
-
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")) then
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
       stop 999
     end if
@@ -322,7 +301,6 @@ contains
     integer, parameter :: tensor_layout(ndims) = [1, 2, 3]
     real(wp), dimension(1,2,3), target :: in_data
     real(wp), dimension(1,2,3), target :: out_data
-    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [1,2,3])
@@ -345,9 +323,7 @@ contains
     tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")
-
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")) then
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
       stop 999
     end if
@@ -374,7 +350,6 @@ contains
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
-    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
@@ -397,13 +372,49 @@ contains
     tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    test_pass = assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_blob")
-
-    if (.not. test_pass) then
+    if (.not. assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_blob")) then
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
       stop 999
     end if
 
   end subroutine test_torch_from_blob
+
+  ! Unit test for destroying tensors, both manually with torch_tensor_delete and automatically (via
+  ! torch_tensor's destructor)
+  @test(testparameters={get_parameters_destruction()})
+  subroutine test_torch_tensor_destruction(this)
+    use ftorch, only: torch_tensor_empty
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer, parameter :: dtype = torch_kFloat32
+    integer :: i
+
+    do i = 1, this%param%iterations
+
+      ! Check the tensor pointer is not associated
+      @assertFalse(c_associated(tensor%p))
+
+      ! Create a tensor without any data values assigned
+      call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index)
+
+      ! Check the tensor pointer is associated
+      @assertTrue(c_associated(tensor%p))
+
+      if (i < this%param%iterations .or. .not. this%param%auto_delete) then
+        ! Call torch_tensor_delete manually
+        call torch_tensor_delete(tensor)
+
+        ! Check torch_tensor_delete does indeed free the memory
+        @assertFalse(c_associated(tensor%p))
+      end if
+
+    end do
+
+  end subroutine test_torch_tensor_destruction
 
 end module test_tensor_constructors_destructors
