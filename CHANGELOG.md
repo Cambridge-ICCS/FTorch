@@ -16,6 +16,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 - Changelog file and guidance for versioning added in [#313](https://github.com/Cambridge-ICCS/FTorch/pull/313)
 - The unit tests for constructing and destroying tensors were separated out in
   [#319](https://github.com/Cambridge-ICCS/FTorch/pull/319)
+- Backpropagation implemented with `torch_tensor_backward` and
+  `torch_tensor_get_gradient` in [#286](https://github.com/Cambridge-ICCS/FTorch/pull/286)
 
 ### Changed
 
