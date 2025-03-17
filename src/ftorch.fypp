@@ -875,12 +875,12 @@ contains
     type(torch_tensor) :: gradient             !! Tensor holding the gradient
 
     interface
-      subroutine torch_tensor_get_gradient_c(gradient_c, tensor_c) &
+      subroutine torch_tensor_get_gradient_c(tensor_c, gradient_c) &
           bind(c, name = 'torch_tensor_get_gradient')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: gradient_c
         type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr), value, intent(in) :: gradient_c
       end subroutine torch_tensor_get_gradient_c
     end interface
 
@@ -888,7 +888,7 @@ contains
       write(*,*) "Error :: tensors for holding gradients must be constructed before retrieving values"
       stop 1
     end if
-    call torch_tensor_get_gradient_c(gradient%p, tensor%p)
+    call torch_tensor_get_gradient_c(tensor%p, gradient%p)
   end function torch_tensor_get_gradient
 
   ! ============================================================================
