@@ -18,6 +18,25 @@ Mathematical operators involving Tensors are overloaded, so that we can compute
 expressions involving outputs from one or more ML models. For more information
 on this, see the [tensor API][pages/tensor.html] documentation page.
 
+Whilst it's possible to import such functionality with a bare
+```fortran
+use ftorch
+```
+statement, the best practice is to import specifically the operators that you
+wish to use. Note that the assignment operator `=` has a slightly different
+notation:
+```fortran
+use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
+  operator(/), operator(**)
+```
+
+If you would like to make use of scalar multiplication or scalar division, this
+can be achieved by setting the scalar as a rank-1 `torch_tensor` with a single
+entry. For example:
+```fortran
+call torch_tensor_from_array(multiplier, [3.0_wp], [1], torch_kCPU)
+```
+
 For a concrete example of how to compute mathematical expressions involving
 Torch tensors, see the
 [autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_Autograd).

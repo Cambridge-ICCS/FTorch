@@ -43,7 +43,7 @@ cmake --install .
 ```
 
 > Note: _if you are building on Windows please refer to the
-> [Windows install guidance](page/troubleshooting.html#windows) as the process will
+> [Windows install guidance](troubleshooting.html#windows) as the process will
 > likely differ from the UNIX-based stsyems covered here._
 
 ## CMake build options
@@ -132,7 +132,7 @@ To build a project with `make` you need to include the FTorch library when compi
 and link the executable against it.
 
 For full details of the flags to set and the linking process see the
-[HPC build pages](page/hpc.html).
+[HPC build pages](hpc.html).
 
 
 ## Conda Support
