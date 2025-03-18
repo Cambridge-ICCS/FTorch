@@ -11,8 +11,9 @@ program example
                     torch_kCPU, torch_kFloat32, &
                     torch_tensor, torch_tensor_from_array, &
                     torch_tensor_ones, torch_tensor_empty, &
-                    torch_tensor_print, torch_delete
-  use ftorch_optim, only: torch_optim, torch_optim_SGD, torch_optim_step
+                    torch_tensor_print, torch_delete, &
+                    torch_tensor_backward, torch_tensor_get_gradient
+  use ftorch_optim, only: torch_optim, torch_optim_SGD, torch_optim_step, torch_optim_zero_grad
 
   implicit none
 
@@ -27,7 +28,8 @@ program example
 
   ! Set up Torch data structures
   integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
-  type(torch_tensor) :: input_vec, output_vec, target_vec, scaling_tensor, loss, torch_4p0
+  type(torch_tensor) :: input_vec, output_vec, target_vec, &
+                        scaling_tensor, scaling_grad, loss, torch_4p0
   type(torch_optim) :: optimizer
 
   ! Set up training parameters
@@ -55,7 +57,7 @@ program example
   ! Conduct training loop
   do i = 1, n_train+1
     ! Zero any previously stored gradients ready for a new iteration
-    ! TODO: implement equivalent to optimizer.zero_grad()
+    call torch_optim_zero_grad(optimizer)
 
     ! Forward pass: multiply the input of ones by the tensor (elementwise)
     call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
@@ -68,8 +70,11 @@ program example
     ! gradient of ones to start the process:
     call torch_tensor_empty(loss, ndims, tensor_shape, &
                            torch_kFloat32, torch_kCPU)
+    call torch_tensor_empty(scaling_grad, ndims, tensor_shape, &
+                           torch_kFloat32, torch_kCPU)
     loss = ((output_vec - target_vec) ** 2) / torch_4p0
-    ! TODO: add in backpropogation functionality for loss.backward(gradient=torch.ones(4))
+    call torch_tensor_backward(loss)
+    call torch_tensor_get_gradient(scaling_tensor, scaling_grad)
     !
     ! However, we can avoid explicitly passing an initial gradient and instead do this
     ! implicitly by aggregating the loss vector into a scalar value:
@@ -89,7 +94,8 @@ program example
         write(*,*) "loss:"
         call torch_tensor_print(loss)
         write(*,*)
-        write(*,*) "tensor gradient: TODO: scaling_tensor.grad"
+        write(*,*) "tensor gradient:"
+        call torch_tensor_print(scaling_grad)
         write(*,*)
         write(*,*) "scaling_tensor:"
         call torch_tensor_print(scaling_tensor)
