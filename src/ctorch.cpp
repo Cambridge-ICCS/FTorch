@@ -385,7 +385,7 @@ void torch_tensor_power_float(torch_tensor_t output, const torch_tensor_t tensor
 
 // Function to create an SGD optimizer and return a pointer to it
 torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
-                                  const double learning_rate) {
+                              const double learning_rate) {
   // Cast the parameters pointer into Tensor objects
   auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
   // Generate a vector of Tensors populated from parameters
