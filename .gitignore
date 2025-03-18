@@ -194,3 +194,6 @@ cython_debug/
 
 # TorchScript model
 *.pt
+
+# Apple Desktop Services Store
+*.DS_Store
