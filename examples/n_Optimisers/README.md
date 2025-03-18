@@ -1,17 +1,17 @@
-# Example n - Optimisers
+# Example n - Optimizers
 
 **This example is currently under development.** Eventually, it will demonstrate
-the use of optimisers in FTorch by leveraging PyTorch's optim module.
+the use of optimizers in FTorch by leveraging PyTorch's optim module.
 
-By exposing optimisers in Fortran, FTorch will be able to compute optimisation
+By exposing optimizers in Fortran, FTorch will be able to compute optimisation
 steps to update models as part of a training process.
 
 ## Description
 
-A Python demo is copied from the PyTorch documentation as `optimisers.py`, which
+A Python demo is copied from the PyTorch documentation as `optimizers.py`, which
 shows how to use an optimiser in PyTorch.
 
-The demo will be replicated in Fortran as `optimisers.f90`, to show how to do the
+The demo will be replicated in Fortran as `optimizers.f90`, to show how to do the
 same thing using FTorch.
 
 ## Dependencies
@@ -36,7 +36,7 @@ pip install -r requirements.txt
 
 Run the Python version of the demo with
 ```
-python3 optimisers.py
+python3 optimizers.py
 ```
 This trains a tensor to scale, elementwise, a vector of ones to the vector `[1, 2, 3, 4]`.
 It uses the torch SGD optimiser to adjust the values of the scaling tensor at each step,
@@ -68,7 +68,7 @@ and should match the compiler that was used to locally build FTorch.)
 
 To run the compiled code, simply use
 ```
-./optimisers
+./optimizers
 ```
 Currently, the example constructs Torch Tensors and iterates over a training loop,
 computing a loss with each iteration.
