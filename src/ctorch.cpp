@@ -544,7 +544,7 @@ void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradi
 // =============================================================================
 
 // Function to create an SGD optimizer and return a pointer to it
-torch_optim_SGD_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
+torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
                                   const double learning_rate) {
   // Cast the parameters pointer into Tensor objects
   auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
@@ -554,15 +554,21 @@ torch_optim_SGD_t torch_optim_SGD(const torch_tensor_t *parameters, const int np
     parameters_vec.push_back(*(params[i]));
   }
 
-  // Create the optimizer
+  // Create the optimizer and cast to our optimizer type to return
   auto optim_SGD =
       new torch::optim::SGD(parameters_vec, torch::optim::SGDOptions(learning_rate));
-  return static_cast<torch_optim_SGD_t>(optim_SGD);
+  return static_cast<torch_optim_t>(optim_SGD);
 }
 
-// Function to delete an SGD optimizer
-void torch_optim_SGD_delete(torch_optim_SGD_t optim) {
-  auto m = reinterpret_cast<torch::optim::SGD *>(optim);
+// Function to step an optimizer
+void torch_optim_step(torch_optim_t optim) {
+  auto optimizer = static_cast<torch::optim::Optimizer *>(optim);
+  optimizer->step();
+}
+
+// Function to delete an optimizer
+void torch_optim_delete(torch_optim_t optim) {
+  auto m = static_cast<torch::optim::Optimizer *>(optim);
   delete m;
 }
 
