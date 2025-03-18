@@ -12,6 +12,7 @@ program example
                     torch_tensor, torch_tensor_from_array, &
                     torch_tensor_ones, torch_tensor_empty, &
                     torch_tensor_print, torch_delete
+  use ftorch_optim, only: torch_optim, torch_optim_SGD, torch_optim_step
 
   implicit none
 
@@ -27,6 +28,7 @@ program example
   ! Set up Torch data structures
   integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
   type(torch_tensor) :: input_vec, output_vec, target_vec, scaling_tensor, loss, torch_4p0
+  type(torch_optim) :: optimizer
 
   ! Set up training parameters
   integer :: i
@@ -47,7 +49,8 @@ program example
   call torch_tensor_from_array(torch_4p0, [4.0_wp], tensor_layout, torch_kCPU, requires_grad=.true.)
 
   ! Initialise an optimiser and apply it to scaling_tensor
-  ! TODO
+  ! TODO optimizer expects an array of tensors, should be a cleaner consistent way to formalise this.
+  call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1D0)
 
   ! Conduct training loop
   do i = 1, n_train+1
@@ -75,7 +78,7 @@ program example
     ! loss.backward()
 
     ! Step the optimiser to update the values in `tensor`
-    ! TODO Add step functionality to optimisers for optimizer.step()
+    call torch_optim_step(optimizer)
 
     if (modulo(i,n_print) == 0) then
         write(*,*) "================================================"
