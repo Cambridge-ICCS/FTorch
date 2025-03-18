@@ -1,4 +1,4 @@
-"""Optimisers demo."""
+"""Optimizers demo."""
 
 import torch
 
@@ -7,12 +7,12 @@ import torch
 #  - the target as a vector where each element is the index value,
 #  - a tensor to transform from input to target by elementwise multiplication
 #    initialised as a vector of ones
-# This is a contrived example, but provides a simple demo of optimiser functionality
+# This is a contrived example, but provides a simple demo of optimizer functionality
 input_vec = torch.ones(4)
 target_vec = torch.tensor([1.0, 2.0, 3.0, 4.0])
 scaling_tensor = torch.ones(4, requires_grad=True)
 
-# Set the optimiser as torch's stochastic gradient descent (SGD)
+# Set the optimizer as torch's stochastic gradient descent (SGD)
 # The parameters to tune will be the values of `tensor`, and we also set a learning rate
 # Since this is a simple elemetwise example we can get away with a large learning rate
 optimizer = torch.optim.SGD([scaling_tensor], lr=1.0)
@@ -41,7 +41,7 @@ for epoch in range(n_iter + 1):
     loss = ((output - target_vec) ** 2).mean()
     loss.backward()
 
-    # Step the optimiser to update the values in `tensor`
+    # Step the optimizer to update the values in `tensor`
     optimizer.step()
 
     if (epoch) % n_print == 0:
