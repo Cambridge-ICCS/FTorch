@@ -554,7 +554,7 @@ torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
     parameters_vec.push_back(*(params[i]));
   }
 
-  // Create the optimizer and cast to our optimizer type to return
+  // Create the optimizer and cast to torch_optim_t to return
   auto optim_SGD =
       new torch::optim::SGD(parameters_vec, torch::optim::SGDOptions(learning_rate));
   return static_cast<torch_optim_t>(optim_SGD);
