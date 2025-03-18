@@ -111,7 +111,7 @@ output on rank 1: [  2.0,  4.0,  6.0,  8.0, 10.0]
 Alternatively, we can use `make`, instead of CMake, copying the Makefile over from the
 first example:
 ```
-cp ../1_SimpleNet/Makefile .
+cp ../2_SimpleNet/Makefile .
 ```
 See the instructions in that example directory for further details.
 
@@ -120,5 +120,5 @@ See the instructions in that example directory for further details.
 You might wish to explore using different MPI ranks to call different GPU
 devices via the GPU `device_index` argument passed to constructors for FTorch
 tensors and models. See the
-[Multi-GPU](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_MultiGPU)
+[Multi-GPU](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MultiGPU)
 example for more details on how to do this.

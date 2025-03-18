@@ -70,5 +70,5 @@ Similarly for the XPU device type.
 > default device index should always be used.
 
 See the
-[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_MultiGPU)
+[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MultiGPU)
 for a worked example of running with multiple GPUs.
