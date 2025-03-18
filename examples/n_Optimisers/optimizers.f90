@@ -48,7 +48,7 @@ program example
   ! Initialise scaling factor of 4.0 for use in tensor operations
   call torch_tensor_from_array(torch_4p0, [4.0_wp], tensor_layout, torch_kCPU, requires_grad=.true.)
 
-  ! Initialise an optimiser and apply it to scaling_tensor
+  ! Initialise an optimizer and apply it to scaling_tensor
   ! TODO optimizer expects an array of tensors, should be a cleaner consistent way to formalise this.
   call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1D0)
 
@@ -77,7 +77,7 @@ program example
     ! loss = ((output - target_vec) ** 2).mean()
     ! loss.backward()
 
-    ! Step the optimiser to update the values in `tensor`
+    ! Step the optimizer to update the values in `tensor`
     call torch_optim_step(optimizer)
 
     if (modulo(i,n_print) == 0) then
@@ -104,6 +104,6 @@ program example
 
   write(*,*) "Training complete."
 
-  write (*,*) "Optimisers example ran successfully"
+  write (*,*) "Optimizers example ran successfully"
 
 end program example
