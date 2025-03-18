@@ -72,6 +72,22 @@ contains
     optim%p = torch_optim_SGD_c(c_loc(parameter_ptrs), n_params, learning_rate)
   end subroutine torch_optim_SGD
 
+  !> Zero Gradients on tensors associated with a Torch optimizer
+  subroutine torch_optim_zero_grad(optim)
+    type(torch_optim), intent(in) :: optim  !! Optimizer to zero gradients for
+
+    interface
+      subroutine torch_optim_zero_grad_c(optim_c) &
+          bind(c, name = 'torch_optim_zero_grad')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: optim_c
+      end subroutine torch_optim_zero_grad_c
+    end interface
+
+    call torch_optim_zero_grad_c(optim%p)
+  end subroutine torch_optim_zero_grad
+
   !> Step a Torch optimizer
   subroutine torch_optim_step(optim)
     type(torch_optim), intent(in) :: optim  !! Optimizer to step
