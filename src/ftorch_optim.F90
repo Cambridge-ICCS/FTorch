@@ -31,11 +31,11 @@ contains
   ! --- FTorch Optimizers API
   ! ============================================================================
 
-  !> Performs a forward pass of the model with the input tensors
+  !> Create an SGD optimizer
   subroutine torch_optim_SGD(optim, parameters, learning_rate)
     use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
-    type(torch_optim), intent(out) :: optim
+    type(torch_optim), intent(out) :: optim  !! Optimizer we are creating
     type(torch_tensor), intent(in), dimension(:) :: parameters  !! Array of parameter tensors
     real(kind=real64), optional, intent(in) :: learning_rate  !! learning rate for the optimization algorithm
     real(kind=real64) :: learning_rate_value  !! learning rate for the optimization algorithm
@@ -45,14 +45,14 @@ contains
     type(c_ptr), dimension(size(parameters)), target  :: parameter_ptrs
 
     interface
-      function torch_optim_SGD_c(parameters, n_params, learning_rate) result(optim)  &
+      function torch_optim_SGD_c(parameters_c, n_params_c, learning_rate_c) result(optim_c)  &
           bind(c, name = 'torch_optim_SGD')
         use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double
         implicit none
-        type(c_ptr), value, intent(in) :: parameters
-        integer(c_int), value, intent(in) :: n_params
-        real(c_double), value, intent(in) :: learning_rate
-        type(c_ptr) :: optim
+        type(c_ptr), value, intent(in) :: parameters_c
+        integer(c_int), value, intent(in) :: n_params_c
+        real(c_double), value, intent(in) :: learning_rate_c
+        type(c_ptr) :: optim_c
       end function torch_optim_SGD_c
     end interface
 
@@ -72,20 +72,36 @@ contains
     optim%p = torch_optim_SGD_c(c_loc(parameter_ptrs), n_params, learning_rate)
   end subroutine torch_optim_SGD
 
-  !> Deallocates a TorchScript optimizer
-  subroutine torch_optim_SGD_delete(optim)
+  !> Step a Torch optimizer
+  subroutine torch_optim_step(optim)
+    type(torch_optim), intent(in) :: optim  !! Optimizer to step
+
+    interface
+      subroutine torch_optim_step_c(optim_c) &
+          bind(c, name = 'torch_optim_step')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: optim_c
+      end subroutine torch_optim_step_c
+    end interface
+
+    call torch_optim_step_c(optim%p)
+  end subroutine torch_optim_step
+
+  !> Deallocates a Torch optimizer
+  subroutine torch_optim_delete(optim)
     type(torch_optim), intent(in) :: optim  !! Optimizer to deallocate
 
     interface
-      subroutine torch_optim_SGD_delete_c(optim) &
-          bind(c, name = 'torch_optim_SGD_delete')
+      subroutine torch_optim_delete_c(optim_c) &
+          bind(c, name = 'torch_optim_delete')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: optim
-      end subroutine torch_optim_SGD_delete_c
+        type(c_ptr), value, intent(in) :: optim_c
+      end subroutine torch_optim_delete_c
     end interface
 
-    call torch_optim_SGD_delete_c(optim%p)
-  end subroutine torch_optim_SGD_delete
+    call torch_optim_delete_c(optim%p)
+  end subroutine torch_optim_delete
 
 end module ftorch_optim
