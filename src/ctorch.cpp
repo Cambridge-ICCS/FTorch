@@ -560,6 +560,12 @@ torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
   return static_cast<torch_optim_t>(optim_SGD);
 }
 
+// Function to zero gradients for an optimizer
+void torch_optim_zero_grad(torch_optim_t optim) {
+  auto optimizer = static_cast<torch::optim::Optimizer *>(optim);
+  optimizer->zero_grad();
+}
+
 // Function to step an optimizer
 void torch_optim_step(torch_optim_t optim) {
   auto optimizer = static_cast<torch::optim::Optimizer *>(optim);
