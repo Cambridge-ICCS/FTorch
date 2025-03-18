@@ -100,6 +100,7 @@
               <a class="nav-link active disabled" href="examples.html">Examples</a>
               <a class="nav-link" href="gpu.html">GPU Support</a>
               <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
+              <a class="nav-link" href="tensor.html">Tensor API</a>
               <a class="nav-link" href="testing.html">FTorch test suite</a>
               <a class="nav-link" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
@@ -126,13 +127,14 @@
 </ul>
 </li>
 <li><a href="#worked-examples">Worked examples</a><ul>
-<li><a href="#1-simplenet">1) SimpleNet</a></li>
-<li><a href="#2-resnet">2) Resnet</a></li>
-<li><a href="#3-multiio">3) MultiIO</a></li>
-<li><a href="#4-looping">4) Looping</a></li>
-<li><a href="#5-multigpu">5) MultiGPU</a></li>
-<li><a href="#6-mpi">6) MPI</a></li>
-<li><a href="#7-autograd">7) Autograd</a></li>
+<li><a href="#1-tensor">1) Tensor</a></li>
+<li><a href="#2-simplenet">2) SimpleNet</a></li>
+<li><a href="#3-resnet">3) Resnet</a></li>
+<li><a href="#4-multiio">4) MultiIO</a></li>
+<li><a href="#5-looping">5) Looping</a></li>
+<li><a href="#6-multigpu">6) MultiGPU</a></li>
+<li><a href="#7-mpi">7) MPI</a></li>
+<li><a href="#8-autograd">8) Autograd</a></li>
 </ul>
 </li>
 </ul>
@@ -256,38 +258,45 @@ executable against it when compiling.</p>
 <p>These are designed to introduce users to FTorch and how to use the various features.</p>
 <p>A subset of the examples are included as integration tests as part of FTorch's
 <a href="testing.html">test suite</a>.</p>
-<h4 id="1-simplenet">1) SimpleNet</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/1_SimpleNet">This worked example</a>
+<h4 id="1-tensor">1) Tensor</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/1_Tensor">This worked example</a>
+provides a simple demonstration of how to create, manipulate,
+interrogate, and destroy instances of the <code>torch_tensor</code> derived type. This is
+one of the core derived types in the FTorch library, providing an interface to
+the <code>torch::Tensor</code> C++ class. Like <code>torch::Tensor</code>, the <code>torch_tensor</code> derived
+type is designed to have a similar API to PyTorch's <code>torch.Tensor</code> class.</p>
+<h4 id="2-simplenet">2) SimpleNet</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/2_SimpleNet">This worked example</a>
 provides a simple but complete demonstration of how to use the library.
 It uses simple PyTorch 'net' that takes an input vector of length 5 and applies a single
 Linear layer to multiply it by 2.
 The aim is to demonstrate the most basic features of coupling before worrying about
 more complex issues that are covered in later examples.</p>
-<h4 id="2-resnet">2) Resnet</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/2_ResNet18">This worked example</a>
+<h4 id="3-resnet">3) Resnet</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_ResNet">This worked example</a>
 provides a more realistic demonstration of how to use the library,
 using ResNet-18 to classify an image.
 As the input to this model is four-dimensional (batch size, colour, x, y),
 care must be taken dealing with the data array in Python and Fortran.
 See <a href="transposing.html">when to transpose arrays</a> for more details.</p>
-<h4 id="3-multiio">3) MultiIO</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_MultiIO">This worked example</a>
+<h4 id="4-multiio">4) MultiIO</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_MultiIO">This worked example</a>
 considers a variant of the SimpleNet demo, which demonstrates how to account for
 multiple input tensors and multiple output tensors.</p>
-<h4 id="4-looping">4) Looping</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_Looping">This worked example</a>
+<h4 id="5-looping">5) Looping</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_Looping">This worked example</a>
 demonstrates best practices for performing inference on the same network with
 different input multiple times in the same workflow.</p>
-<h4 id="5-multigpu">5) MultiGPU</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_MultiGPU">This worked example</a>
+<h4 id="6-multigpu">6) MultiGPU</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MultiGPU">This worked example</a>
 builds on the SimpleNet demo and shows how to account for the case of sending different
 data to multiple GPU devices.</p>
-<h4 id="6-mpi">6) MPI</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MPI">This worked example</a>
+<h4 id="7-mpi">7) MPI</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_MPI">This worked example</a>
 demonstrates how to run the SimpleNet example in the context of MPI parallelism,
 running the net with different input arrays on each MPI rank.</p>
-<h4 id="7-autograd">7) Autograd</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_Autograd">This worked example</a>
+<h4 id="8-autograd">8) Autograd</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd">This worked example</a>
 is currently under development. Eventually, it will demonstrate how to perform
 automatic differentiation in FTorch by leveraging PyTorch's Autograd module.
 Currently, it just demonstrates how to compute mathematical expressions

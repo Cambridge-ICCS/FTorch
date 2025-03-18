@@ -10,7 +10,7 @@
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
-    <title>Online training &ndash; FTorch</title>
+    <title>Tensor API &ndash; FTorch</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -63,7 +63,7 @@
 
     <div class="container">
   <div class="row">
-    <h1>Online training</h1>
+    <h1>Tensor API</h1>
     <div class="container p-2 mb-4 bg-light border rounded-3">
       <div class="row align-items-center justify-content-between">
         <div class="col">
@@ -74,7 +74,7 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
                 <li class="breadcrumb-item"><a href='index.html'>User Guide</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Online training</li>
+              <li class="breadcrumb-item active" aria-current="page">Tensor API</li>
             </ol>
           </nav>
         </div>
@@ -93,14 +93,14 @@
           <hr>
           <nav class="nav nav-pills flex-column">
               <a class="nav-link" href="LICENSE.html">FTorch License</a>
-              <a class="nav-link active disabled" href="autograd.html">Online training</a>
+              <a class="nav-link" href="autograd.html">Online training</a>
               <a class="nav-link" href="changelog.html">FTorch Changelog</a>
               <a class="nav-link" href="cmake.html">Installation and Build Process</a>
               <a class="nav-link" href="developer.html">Developer Guide</a>
               <a class="nav-link" href="examples.html">Examples</a>
               <a class="nav-link" href="gpu.html">GPU Support</a>
               <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
-              <a class="nav-link" href="tensor.html">Tensor API</a>
+              <a class="nav-link active disabled" href="tensor.html">Tensor API</a>
               <a class="nav-link" href="testing.html">FTorch test suite</a>
               <a class="nav-link" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
@@ -112,25 +112,77 @@
     <div class="col-9" id='text'>
       <div class="toc">
 <ul>
-<li><a href="#current-state">Current state</a><ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#procedures">Procedures</a><ul>
+<li><a href="#constructors">Constructors</a></li>
+<li><a href="#tensor-interrogation">Tensor interrogation</a></li>
+<li><a href="#tensor-deallocation">Tensor deallocation</a></li>
 <li><a href="#operator-overloading">Operator overloading</a></li>
-<li><a href="#the-requires_grad-property">The requires_grad property</a></li>
-<li><a href="#the-backward-operator">The backward operator</a></li>
 </ul>
 </li>
+<li><a href="#examples">Examples</a></li>
 </ul>
 </div>
-<h2 id="current-state">Current state</h2>
-<p>FTorch has supported offline training of ML models for some time. We are
-currently working on extending its functionality to support online training,
-too. This will involve exposing the automatic differentiation and
-back-propagation functionality in PyTorch/LibTorch.</p>
-<p>In the following, we document a workplan of the related functionality. Each step
-below will be updated upon completion.</p>
+<h2 id="overview">Overview</h2>
+<p>FTorch provides a <code>torch_tensor</code> derived type, which exposes the functionality
+of the <code>torch::Tensor</code> C++ class. The interface is designed to be familiar to
+Fortran programmers, whilst retaining strong similarity with <code>torch::Tensor</code> and
+the <code>torch.Tensor</code> Python class.</p>
+<p>Under the hood, the <code>torch_tensor</code> type holds a pointer to a <code>torch::Tensor</code>
+object in C++ (implemented using <code>c_ptr</code> from the <code>iso_c_binding</code> intrinsic
+module). This allows us to avoid unnecessary data copies between C++ and
+Fortran.</p>
+<h2 id="procedures">Procedures</h2>
+<h3 id="constructors">Constructors</h3>
+<p>We provide several subroutines for constructing <code>torch_tensor</code> objects. These
+include:
+* <code>torch_tensor_empty</code>, which allocates memory for the <code>torch_tensor</code>, but does
+  not set any values.
+* <code>torch_tensor_zeros</code>, which creates a <code>torch_tensor</code> whose values are
+  uniformly zero.
+* <code>torch_tensor_ones</code>, which creates a <code>torch_tensor</code> whose values are
+  uniformly one.
+* <code>torch_tensor_from_array</code>, which allows the user to create a <code>torch_tensor</code>
+  with the same rank, shape, and data type as a given Fortran array. Note that
+  the data is <em>not</em> copied - the tensor data points to the Fortran array,
+  meaning the array must have been declared with the <code>target</code> property. The
+  array will continue to be pointed to even when operations are applied to the
+  tensor, so this subroutine can be used 'in advance' to set up an array for
+  outputting data.</p>
+<p>It is <em>compulsory</em> to call one of the constructors before interacting with it in
+any of the ways described in the following. Each of the constructors sets the
+pointer attribute of the <code>torch_tensor</code>; without this being set, most of the
+other operations are meaningless.</p>
+<h3 id="tensor-interrogation">Tensor interrogation</h3>
+<p>We provide several subroutines for interrogating <code>torch_tensor</code> objects. These
+include:
+* <code>torch_tensor_get_rank</code>, which determines the rank (i.e., dimensionality) of
+  the tensor.
+* <code>torch_tensor_get_shape</code>, which determines the shape (i.e., extent in each
+  dimension) of the tensor.
+* <code>torch_tensor_get_dtype</code>, which determines the data type of the tensor in
+  terms of the enums <code>torch_kInt8</code>, <code>torch_kFloat32</code>, etc.
+* <code>torch_tensor_get_device_type</code>, which determines the device type that the
+  tensor resides on in terms of the enums <code>torch_kCPU</code>, <code>torch_kCUDA</code>,
+  <code>torch_kXPU</code>, etc.
+* <code>torch_tensor_get_device_index</code>, which determines the index of the device that
+  the tensor resides on as an integer. For a CPU device, this index should be
+  set to -1 (the default). For GPU devices, the index should be non-negative
+  (defaulting to 0).</p>
+<p>Procedures for interrogation are implemented as methods as well as stand-alone
+procedures. For example, <code>tensor%get_rank</code> can be used in place of
+<code>torch_tensor_get_rank</code>, omitting the first argument (which would be the tensor
+itself). The naming pattern is similar for the other methods (simply drop the
+preceding <code>torch_tensor_</code>).</p>
+<h3 id="tensor-deallocation">Tensor deallocation</h3>
+<p>We provide a subroutine for deallocating the memory associated with a
+<code>torch_tensor</code> object: <code>torch_tensor_delete</code>. An interface is provided such that
+this can also be applied to arrays of tensors. Calling this subroutine manually
+is optional as it is called as a destructor when the <code>torch_tensor</code> goes out of
+scope anyway.</p>
 <h3 id="operator-overloading">Operator overloading</h3>
 <p>Mathematical operators involving Tensors are overloaded, so that we can compute
-expressions involving outputs from one or more ML models. For more information
-on this, see the [tensor API][pages/tensor.html] documentation page.</p>
+expressions involving outputs from one or more ML models.</p>
 <p>Whilst it's possible to import such functionality with a bare</p>
 <div class="codehilite"><pre><span></span><code><span class="k">use </span><span class="n">ftorch</span>
 </code></pre></div>
@@ -138,24 +190,17 @@ on this, see the [tensor API][pages/tensor.html] documentation page.</p>
 <p>statement, the best practice is to import specifically the operators that you
 wish to use. Note that the assignment operator <code>=</code> has a slightly different
 notation:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">use </span><span class="n">ftorch</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">assignment</span><span class="p">(</span><span class="o">=</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">+</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">-</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="p">&amp;</span>
+<div class="codehilite"><pre><span></span><code><span class="n">use</span><span class="w"> </span><span class="n">ftorch</span><span class="p">,</span><span class="w"> </span><span class="nl">only:</span><span class="w"> </span><span class="n">assignment</span><span class="p">(</span><span class="o">=</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">+</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">-</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span>
 <span class="w">  </span><span class="n">operator</span><span class="p">(</span><span class="o">/</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">**</span><span class="p">)</span>
 </code></pre></div>
 
-<p>If you would like to make use of scalar multiplication or scalar division, this
-can be achieved by setting the scalar as a rank-1 <code>torch_tensor</code> with a single
-entry. For example:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">multiplier</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">3.0_wp</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
-</code></pre></div>
-
-<p>For a concrete example of how to compute mathematical expressions involving
+<h2 id="examples">Examples</h2>
+<p>For a concrete example of how to construct, interrogate, manipulate, and delete
 Torch tensors, see the
-<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd">autograd worked example</a>.</p>
-<h3 id="the-requires_grad-property">The <code>requires_grad</code> property</h3>
-<p>For Tensors that you would like to differentiate with respect to, be sure to
-set the <code>requires_grad</code> optional argument to <code>.true.</code> when you construct it.</p>
-<h3 id="the-backward-operator">The <code>backward</code> operator</h3>
-<p><em>Not yet implemented.</em></p>
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/1_Tensor">tensor manipulation worked example</a>.</p>
+<p>For an example of how to compute mathematical expressions involving Torch
+tensors, see the
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd">autograd worked example</a>.</p>
     </div>
   </div>
       <hr>
