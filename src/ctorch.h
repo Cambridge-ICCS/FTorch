@@ -328,8 +328,8 @@ EXPORT_C void torch_tensor_get_gradient(const torch_tensor_t tensor,
  * @param number of parameter Tensors in the parameters vector
  * @param learning rate for the optimizer
  */
-EXPORT_C torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters,
-                                           const int nin, const double learning_rate);
+EXPORT_C torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int nin,
+                                       const double learning_rate);
 
 /**
  * Function to zero the gradients on tensors associated with a torch optimizer
