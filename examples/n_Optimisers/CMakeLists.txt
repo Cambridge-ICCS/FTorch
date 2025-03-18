@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15...3.31)
 # target_sources is run
 cmake_policy(SET CMP0076 NEW)
 
-set(PROJECT_NAME OptimisersExample)
+set(PROJECT_NAME OptimizersExample)
 
 project(${PROJECT_NAME} LANGUAGES Fortran)
 
@@ -18,22 +18,22 @@ find_package(FTorch)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Fortran example
-add_executable(optimisers optimisers.f90)
-target_link_libraries(optimisers PRIVATE FTorch::ftorch)
+add_executable(optimizers optimizers.f90)
+target_link_libraries(optimizers PRIVATE FTorch::ftorch)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
-  # 1. Check the Python Optimisers script runs successfully
+  # 1. Check the Python Optimizers script runs successfully
   add_test(NAME pyoptim COMMAND ${Python_EXECUTABLE}
-                                   ${PROJECT_SOURCE_DIR}/optimisers.py)
+                                   ${PROJECT_SOURCE_DIR}/optimizers.py)
 
-  # 2. Check the Fortran Optimisers script runs successfully
+  # 2. Check the Fortran Optimizers script runs successfully
   add_test(
     NAME foptim
-    COMMAND optimisers
+    COMMAND optimizers
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(foptim PROPERTIES PASS_REGULAR_EXPRESSION
-                                         "Optimisers example ran successfully")
+                                         "Optimizers example ran successfully")
 endif()
