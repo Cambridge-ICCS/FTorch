@@ -111,6 +111,6 @@ Again, note that MPS will only use device 0.
 Alternatively, we can use `make`, instead of CMake, copying the Makefile over from the
 first example:
 ```
-cp ../1_SimpleNet/Makefile .
+cp ../2_SimpleNet/Makefile .
 ```
 See the instructions in that example directory for further details.

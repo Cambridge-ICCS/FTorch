@@ -15,7 +15,8 @@ below will be updated upon completion.
 ### Operator overloading
 
 Mathematical operators involving Tensors are overloaded, so that we can compute
-expressions involving outputs from one or more ML models.
+expressions involving outputs from one or more ML models. For more information
+on this, see the [tensor API][pages/tensor.html] documentation page.
 
 Whilst it's possible to import such functionality with a bare
 ```fortran
@@ -37,8 +38,8 @@ call torch_tensor_from_array(multiplier, [3.0_wp], [1], torch_kCPU)
 ```
 
 For a concrete example of how to compute mathematical expressions involving
-Torch tensors, see the associated
-[worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_Autograd).
+Torch tensors, see the
+[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd).
 
 ### The `requires_grad` property
 

@@ -16,6 +16,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 - Changelog file and guidance for versioning added in [#313](https://github.com/Cambridge-ICCS/FTorch/pull/313)
 - The unit tests for constructing and destroying tensors were separated out in
   [#319](https://github.com/Cambridge-ICCS/FTorch/pull/319)
+- A new tensor manipulation demo was introduced in [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291).
+  This became demo 1 and the other demo numbers were bumped to account for this.
 
 ### Changed
 
