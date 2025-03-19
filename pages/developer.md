@@ -131,7 +131,7 @@ Use of the hook is not automatic and needs to be enabled by the developer
 Hooks can be enabled by placing them in the `.git` directory with the following commands:
 ```
 cp .githooks/pre-commit .git/hooks/
-chmod +x .git/pre-commit
+chmod +x .git/hooks/pre-commit
 ```
 
 
