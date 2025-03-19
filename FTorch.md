@@ -59,6 +59,10 @@ Some recent updates about FTorch:
   grant will support development for online training functionality for FTorch,
   as well as research visits, FTorch training tutorials, and organisation of a
   [workshop on hybrid modelling](https://cambridge-iccs.github.io/ml-coupling-workshop).
+* FTorch developer Joe Wallwork will be giving a talk at the 2025
+  [EuroAD workshop](https://scicomp.rptu.de/27th-euroad-workshop/) on 3rd-4th
+  April 2025 entitled *Facilitating online training in Fortran-based climate
+  models*.
 * FTorch developers Joe Wallwork and Tom Meltzer will be giving an FTorch
   tutorial at
   [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/)
