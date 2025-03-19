@@ -59,6 +59,10 @@ Some recent updates about FTorch:
   grant will support development for online training functionality for FTorch,
   as well as research visits, FTorch training tutorials, and organisation of a
   [workshop on hybrid modelling](https://cambridge-iccs.github.io/ml-coupling-workshop).
+* FTorch developers Joe Wallwork and Tom Meltzer will be giving an FTorch
+  tutorial at
+  [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/)
+  on 2nd June 2025.
 
 
 Publications and Presentations
