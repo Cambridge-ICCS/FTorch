@@ -18,16 +18,17 @@ add_pfunit_ctest(test_tensor_interrogation
   TEST_SOURCES test_tensor_interrogation.pf LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(test_tensor_manipulation
   TEST_SOURCES test_tensor_manipulation.pf LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(
-  test_operator_overloads TEST_SOURCES test_tensor_operator_overloads.pf
-  LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(test_operators
   TEST_SOURCES test_tensor_operators.pf  LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(test_operator_overloads
+  TEST_SOURCES test_tensor_operator_overloads.pf LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(
   test_operator_overloads_autograd TEST_SOURCES
   test_tensor_operator_overloads_autograd.pf LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(test_tensor_autograd
   TEST_SOURCES test_tensor_autograd.pf LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(test_optim
+  TEST_SOURCES test_optim.pf LINK_LIBRARIES FTorch::ftorch)
 
 if("${GPU_DEVICE}" STREQUAL "CUDA")
   check_language(CUDA)

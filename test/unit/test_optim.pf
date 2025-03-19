@@ -1,0 +1,55 @@
+!| Unit tests for FTorch optimizer functionalities.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module test_optim
+  use funit
+  use ftorch, only: assignment(=), torch_kFloat32, torch_kCPU, torch_tensor, &
+                    torch_tensor_delete, torch_tensor_from_array
+  use ftorch_optim, only: torch_optim, torch_optim_zero_grad, torch_optim_step, &
+                          torch_optim_delete, torch_optim_SGD
+  use ftorch_test_utils, only: assert_allclose
+  use, intrinsic :: iso_c_binding, only: c_associated, c_int64_t
+
+  implicit none
+
+  public
+
+contains
+
+  ! Unit test for deleting an optimizer by calling torch_optim_delete manually
+  @test()
+  subroutine test_torch_optim_delete()
+    use ftorch, only: torch_tensor_ones
+
+    implicit none
+
+    type(torch_optim) :: optimizer
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer, parameter :: dtype = torch_kFloat32
+
+    ! Check the optimizer pointer is not associated
+    @assertFalse(c_associated(optimizer%p))
+    ! Create a tensor to apply an optimizer to
+    call torch_tensor_ones(tensor, ndims, tensor_shape, torch_kFloat32, torch_kCPU, &
+                            requires_grad=.true.)
+    ! Create an optimizer (we will use SGD in this example)
+    call torch_optim_SGD(optimizer, [tensor], learning_rate=1D0)
+
+    ! Check the optimizer pointer is now associated
+    @assertTrue(c_associated(optimizer%p))
+
+    ! Call torch_optim_delete manually
+    call torch_optim_delete(optimizer)
+
+    ! Check torch_optim_delete does indeed free the memory
+    @assertFalse(c_associated(optimizer%p))
+
+  end subroutine test_torch_optim_delete
+
+
+end module test_optim
