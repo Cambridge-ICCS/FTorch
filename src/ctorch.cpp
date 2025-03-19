@@ -555,9 +555,9 @@ torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
   }
 
   // Create the optimizer and cast to torch_optim_t to return
-  auto optim_SGD =
+  auto optimizer_SGD =
       new torch::optim::SGD(parameters_vec, torch::optim::SGDOptions(learning_rate));
-  return static_cast<torch_optim_t>(optim_SGD);
+  return static_cast<torch_optim_t>(optimizer_SGD);
 }
 
 // Function to zero gradients for an optimizer
@@ -574,8 +574,8 @@ void torch_optim_step(torch_optim_t optim) {
 
 // Function to delete an optimizer
 void torch_optim_delete(torch_optim_t optim) {
-  auto m = static_cast<torch::optim::Optimizer *>(optim);
-  delete m;
+  auto opt = reinterpret_cast<torch::optim::Optimizer *>(optim);
+  delete opt;
 }
 
 // =============================================================================

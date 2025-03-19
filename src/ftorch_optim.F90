@@ -23,12 +23,70 @@ module ftorch_optim
   !> Type for holding a torch optimizer.
   type torch_optim
     type(c_ptr) :: p = c_null_ptr  !! pointer to the optimizer in memory
+  contains
+    final :: torch_optim_delete
   end type torch_optim
 
 contains
 
   ! ============================================================================
-  ! --- FTorch Optimizers API
+  ! --- Procedures for using Optimizers
+  ! ============================================================================
+
+  !> Zero Gradients on tensors associated with a Torch optimizer
+  subroutine torch_optim_zero_grad(optim)
+    type(torch_optim), intent(in) :: optim  !! Optimizer to zero gradients for
+
+    interface
+      subroutine torch_optim_zero_grad_c(optim_c) &
+          bind(c, name = 'torch_optim_zero_grad')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: optim_c
+      end subroutine torch_optim_zero_grad_c
+    end interface
+
+    call torch_optim_zero_grad_c(optim%p)
+  end subroutine torch_optim_zero_grad
+
+  !> Step a Torch optimizer
+  subroutine torch_optim_step(optim)
+    type(torch_optim), intent(in) :: optim  !! Optimizer to step
+
+    interface
+      subroutine torch_optim_step_c(optim_c) &
+          bind(c, name = 'torch_optim_step')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: optim_c
+      end subroutine torch_optim_step_c
+    end interface
+
+    call torch_optim_step_c(optim%p)
+  end subroutine torch_optim_step
+
+  !> Deallocate a Torch optimizer
+  subroutine torch_optim_delete(optim)
+    type(torch_optim), intent(inout) :: optim  !! Optimizer to deallocate
+
+    interface
+      subroutine torch_optim_delete_c(optim_c) &
+          bind(c, name = 'torch_optim_delete')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: optim_c
+      end subroutine torch_optim_delete_c
+    end interface
+
+    ! Call the destructor, if it hasn't already been called
+    if (c_associated(optim%p)) then
+      call torch_optim_delete_c(optim%p)
+      optim%p = c_null_ptr
+    end if
+  end subroutine torch_optim_delete
+
+  ! ============================================================================
+  ! --- Procedures for creating specific Optimizers
   ! ============================================================================
 
   !> Create an SGD optimizer
@@ -71,53 +129,5 @@ contains
 
     optim%p = torch_optim_SGD_c(c_loc(parameter_ptrs), n_params, learning_rate)
   end subroutine torch_optim_SGD
-
-  !> Zero Gradients on tensors associated with a Torch optimizer
-  subroutine torch_optim_zero_grad(optim)
-    type(torch_optim), intent(in) :: optim  !! Optimizer to zero gradients for
-
-    interface
-      subroutine torch_optim_zero_grad_c(optim_c) &
-          bind(c, name = 'torch_optim_zero_grad')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: optim_c
-      end subroutine torch_optim_zero_grad_c
-    end interface
-
-    call torch_optim_zero_grad_c(optim%p)
-  end subroutine torch_optim_zero_grad
-
-  !> Step a Torch optimizer
-  subroutine torch_optim_step(optim)
-    type(torch_optim), intent(in) :: optim  !! Optimizer to step
-
-    interface
-      subroutine torch_optim_step_c(optim_c) &
-          bind(c, name = 'torch_optim_step')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: optim_c
-      end subroutine torch_optim_step_c
-    end interface
-
-    call torch_optim_step_c(optim%p)
-  end subroutine torch_optim_step
-
-  !> Deallocates a Torch optimizer
-  subroutine torch_optim_delete(optim)
-    type(torch_optim), intent(in) :: optim  !! Optimizer to deallocate
-
-    interface
-      subroutine torch_optim_delete_c(optim_c) &
-          bind(c, name = 'torch_optim_delete')
-        use, intrinsic :: iso_c_binding, only : c_ptr
-        implicit none
-        type(c_ptr), value, intent(in) :: optim_c
-      end subroutine torch_optim_delete_c
-    end interface
-
-    call torch_optim_delete_c(optim%p)
-  end subroutine torch_optim_delete
 
 end module ftorch_optim
