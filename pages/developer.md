@@ -61,10 +61,11 @@ The nature of Fortran means that this requires a lot of repeated combinations of
 array shapes and data types under interface structures.
 By using Fypp we can generate these programatically.
 
-Fypp can be installed via pip:
+Fypp is a pip-installable package that comes bundled with developer [requirements](https://github.com/Cambridge-ICCS/FTorch/blob/main/requirements-dev.txt), so by running
 ```
-pip install fypp
+pip install -r requirements-dev.txt
 ```
+inside a Python virtual environment from the base FTorch directory one can install Fypp along with [code styling](#code-style) tools.
 
 To generate the Fortran code run:
 ```
@@ -151,11 +152,13 @@ The tools we use are as follows on a language-by-language basis:
 * GitHub Actions workflows: [zizmor](https://woodruffw.github.io/zizmor)
 
 Instructions on installing these tools can be found in their respective documentations.
-Note that all but ShellCheck may be installed with pip. A shortcut for doing
-this is to run the following from the base FTorch directory:
+Note that all but ShellCheck may be installed with pip.  As described in the Fypp [section](#fortran-source-and-fypp) a shortcut is to run
+
 ```
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
+from the base FTorch directory.
+
 
 Contributors should run them over their code and ensure that it conforms before submitting
 a pull request. If there is a good reason to ignore a particular rule this should be
