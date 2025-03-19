@@ -196,4 +196,4 @@ cython_debug/
 *.pt
 
 # Apple Desktop Services Store
-*.DS_Store
+**.DS_Store
