@@ -22,6 +22,10 @@ add_pfunit_ctest(
 add_pfunit_ctest(
   test_operator_overloads_autograd TEST_SOURCES
   test_tensor_operator_overloads_autograd.pf LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(test_operator_overloads
+  TEST_SOURCES test_tensor_operator_overloads.pf LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(test_optim
+  TEST_SOURCES test_optim.pf LINK_LIBRARIES FTorch::ftorch)
 
 if("${GPU_DEVICE}" STREQUAL "CUDA")
   check_language(CUDA)
