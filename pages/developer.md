@@ -49,6 +49,14 @@ but if you are unfamiliar with this you can [email ICCS](mailto:jwa34@cam.ac.uk)
 asking for the FTorch developers._
 
 
+### Installing developer requirements
+
+Most of the development tools ([pre-processing](#fortran-source-and-fypp),[code styling](#code-style)) happen to be pip-installable [packages](https://github.com/Cambridge-ICCS/FTorch/blob/main/requirements-dev.txt). You can install them by running
+```
+pip install -r requirements-dev.txt
+```
+inside a Python virtual environment from the base FTorch directory.
+
 ### Fortran source and Fypp
 
 The Fortran source code for FTorch is contained in `src/ftorch.f90`.
@@ -61,11 +69,7 @@ The nature of Fortran means that this requires a lot of repeated combinations of
 array shapes and data types under interface structures.
 By using Fypp we can generate these programatically.
 
-Fypp is a pip-installable package that comes bundled with developer [requirements](https://github.com/Cambridge-ICCS/FTorch/blob/main/requirements-dev.txt), so by running
-```
-pip install -r requirements-dev.txt
-```
-inside a Python virtual environment from the base FTorch directory one can install Fypp along with [code styling](#code-style) tools.
+Fypp is a pip-installable package that comes bundled with developer [requirements](#installing-developer-requirements).
 
 To generate the Fortran code run:
 ```
@@ -152,12 +156,8 @@ The tools we use are as follows on a language-by-language basis:
 * GitHub Actions workflows: [zizmor](https://woodruffw.github.io/zizmor)
 
 Instructions on installing these tools can be found in their respective documentations.
-Note that all but ShellCheck may be installed with pip.  As described in the Fypp [section](#fortran-source-and-fypp) a shortcut is to run
 
-```
-pip install -r requirements-dev.txt
-```
-from the base FTorch directory.
+Note that all but ShellCheck may be installed with pip. Check out the dev tools installation [section](#installing-developer-requirements) for instructions on how to do so.
 
 
 Contributors should run them over their code and ensure that it conforms before submitting
