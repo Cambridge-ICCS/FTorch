@@ -49,6 +49,14 @@ but if you are unfamiliar with this you can [email ICCS](mailto:jwa34@cam.ac.uk)
 asking for the FTorch developers._
 
 
+### Installing developer requirements
+
+Most of the development tools ([pre-processing](#fortran-source-and-fypp),[code styling](#code-style)) happen to be pip-installable [packages](https://github.com/Cambridge-ICCS/FTorch/blob/main/requirements-dev.txt). You can install them by running
+```
+pip install -r requirements-dev.txt
+```
+inside a Python virtual environment from the base FTorch directory.
+
 ### Fortran source and Fypp
 
 The Fortran source code for FTorch is contained in `src/ftorch.f90`.
@@ -61,10 +69,7 @@ The nature of Fortran means that this requires a lot of repeated combinations of
 array shapes and data types under interface structures.
 By using Fypp we can generate these programatically.
 
-Fypp can be installed via pip:
-```
-pip install fypp
-```
+Fypp is a pip-installable package that comes bundled with the [developer requirements](#installing-developer-requirements).
 
 To generate the Fortran code run:
 ```
@@ -151,11 +156,9 @@ The tools we use are as follows on a language-by-language basis:
 * GitHub Actions workflows: [zizmor](https://woodruffw.github.io/zizmor)
 
 Instructions on installing these tools can be found in their respective documentations.
-Note that all but ShellCheck may be installed with pip. A shortcut for doing
-this is to run the following from the base FTorch directory:
-```
-pip install -r requirements.txt
-```
+
+Note that all but ShellCheck may be installed with pip. Check out the [dev tools installation section](#installing-developer-requirements) for instructions on how to do so.
+
 
 Contributors should run them over their code and ensure that it conforms before submitting
 a pull request. If there is a good reason to ignore a particular rule this should be
