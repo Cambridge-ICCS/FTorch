@@ -69,7 +69,7 @@ The nature of Fortran means that this requires a lot of repeated combinations of
 array shapes and data types under interface structures.
 By using Fypp we can generate these programatically.
 
-Fypp is a pip-installable package that comes bundled with developer [requirements](#installing-developer-requirements).
+Fypp is a pip-installable package that comes bundled with the [developer requirements](#installing-developer-requirements).
 
 To generate the Fortran code run:
 ```
@@ -157,7 +157,7 @@ The tools we use are as follows on a language-by-language basis:
 
 Instructions on installing these tools can be found in their respective documentations.
 
-Note that all but ShellCheck may be installed with pip. Check out the dev tools installation [section](#installing-developer-requirements) for instructions on how to do so.
+Note that all but ShellCheck may be installed with pip. Check out the [dev tools installation section](#installing-developer-requirements) for instructions on how to do so.
 
 
 Contributors should run them over their code and ensure that it conforms before submitting
