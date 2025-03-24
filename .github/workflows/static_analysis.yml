@@ -20,6 +20,7 @@ on:
       - '**.py'
       - '**.sh'
       - '**CMakeLists.txt'
+      - 'requirements-dev.txt'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -52,7 +53,7 @@ jobs:
           python -m venv ftorch_venv
           . ftorch_venv/bin/activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
       # Run CMake build to get compile commands for clang
       - name: FTorch CMake
