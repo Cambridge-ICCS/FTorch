@@ -380,6 +380,45 @@ void torch_tensor_power_float(torch_tensor_t output, const torch_tensor_t tensor
 }
 
 // =============================================================================
+// --- Torch optimisers API
+// =============================================================================
+
+// Function to create an SGD optimizer and return a pointer to it
+torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
+                              const double learning_rate) {
+  // Cast the parameters pointer into Tensor objects
+  auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
+  // Generate a vector of Tensors populated from parameters
+  std::vector<torch::Tensor> parameters_vec;
+  for (int i = 0; i < npar; ++i) {
+    parameters_vec.push_back(*(params[i]));
+  }
+
+  // Create the optimizer and cast to torch_optim_t to return
+  auto optimizer_SGD =
+      new torch::optim::SGD(parameters_vec, torch::optim::SGDOptions(learning_rate));
+  return static_cast<torch_optim_t>(optimizer_SGD);
+}
+
+// Function to zero gradients for an optimizer
+void torch_optim_zero_grad(torch_optim_t optim) {
+  auto optimizer = static_cast<torch::optim::Optimizer *>(optim);
+  optimizer->zero_grad();
+}
+
+// Function to step an optimizer
+void torch_optim_step(torch_optim_t optim) {
+  auto optimizer = static_cast<torch::optim::Optimizer *>(optim);
+  optimizer->step();
+}
+
+// Function to delete an optimizer
+void torch_optim_delete(torch_optim_t optim) {
+  auto opt = reinterpret_cast<torch::optim::Optimizer *>(optim);
+  delete opt;
+}
+
+// =============================================================================
 // --- Torch model API
 // =============================================================================
 
