@@ -9,11 +9,15 @@ module test_tensor_constructors_destructors
   use ftorch, only: assignment(=), torch_kFloat32, torch_kCPU, torch_tensor, &
                     torch_tensor_delete, torch_tensor_from_array
   use ftorch_test_utils, only: assert_allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
   use iso_c_binding, only: c_associated, c_int64_t
 
   implicit none
 
   public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
 
   ! Parameters common across all test cases
   integer, parameter :: device_type = torch_kCPU
@@ -107,12 +111,8 @@ contains
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_zeros(this)
     use ftorch, only: torch_tensor_zeros
-    use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
@@ -153,12 +153,8 @@ contains
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_ones(this)
     use ftorch, only: torch_tensor_ones
-    use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
@@ -198,12 +194,8 @@ contains
   ! Unit test for the torch_tensor_from_array subroutine in the 1D case
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_array_1d(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
@@ -243,12 +235,8 @@ contains
   ! Unit test for the torch_tensor_from_array subroutine in the 2D case
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_from_array_2d(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
@@ -288,12 +276,8 @@ contains
   ! Unit test for the torch_tensor_from_array subroutine in the 3D case
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_from_array_3d(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
@@ -334,13 +318,9 @@ contains
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_blob(this)
     use ftorch, only: torch_tensor_from_blob
-    use, intrinsic :: iso_fortran_env, only: sp => real32
     use, intrinsic :: iso_c_binding, only : c_loc
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2

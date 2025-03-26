@@ -11,11 +11,15 @@ module test_tensor_operator_overloads_autograd
                     torch_tensor_from_array, torch_tensor_ones, torch_tensor_get_gradient, &
                     torch_tensor_print
   use ftorch_test_utils, only: assert_allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
   use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
   implicit none
 
   public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
 
   integer, parameter :: device_type = torch_kCPU
 
@@ -68,12 +72,8 @@ contains
 
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_assign(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda
@@ -114,13 +114,9 @@ contains
 
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_add(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
     use ftorch, only: operator(+)
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, b, dQda, dQdb
@@ -173,13 +169,9 @@ contains
 
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_negative(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
     use ftorch, only: operator(-)
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda
@@ -220,13 +212,9 @@ contains
 
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_subtract(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
     use ftorch, only: operator(-)
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, b, dQda, dQdb
@@ -279,13 +267,9 @@ contains
 
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_multiply(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
     use ftorch, only: operator(*)
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, b, dQda, dQdb
@@ -338,13 +322,9 @@ contains
 
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_scalar_multiply(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
     use ftorch, only: operator(*)
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda, multiplier
@@ -395,13 +375,9 @@ contains
 
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_divide(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
     use ftorch, only: operator(/)
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, b, dQda, dQdb
@@ -454,13 +430,9 @@ contains
 
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_scalar_divide(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
     use ftorch, only: operator(/)
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda, divisor
@@ -507,13 +479,9 @@ contains
 
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_square(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
     use ftorch, only: operator(**)
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda
@@ -558,13 +526,9 @@ contains
 
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_sqrt(this)
-    use, intrinsic :: iso_fortran_env, only: sp => real32
     use ftorch, only: operator(**)
 
     implicit none
-
-    ! Set working precision for reals
-    integer, parameter :: wp = sp
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda
