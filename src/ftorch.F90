@@ -37,7 +37,7 @@ module ftorch
     procedure :: get_device_type => torch_tensor_get_device_type
     procedure :: get_device_index => torch_tensor_get_device_index
     procedure :: requires_grad => torch_tensor_requires_grad
-    procedure :: zero_ => torch_tensor_zero_
+    procedure :: zero => torch_tensor_zero
     final :: torch_tensor_delete
   end type torch_tensor
 
@@ -1499,24 +1499,24 @@ contains
   ! ============================================================================
 
   !> Fills a tensor with the scalar value 0.
-  subroutine torch_tensor_zero_(tensor)
+  subroutine torch_tensor_zero(tensor)
     use, intrinsic :: iso_c_binding, only : c_associated
-    class(torch_tensor), intent(inout) :: tensor
+    class(torch_tensor), intent(inout) :: tensor !! Tensor whose values are to be zeroed
 
     interface
-      subroutine torch_tensor_zero__c(tensor) bind(c, name = 'torch_tensor_zero_')
+      subroutine torch_tensor_zero_c(tensor) bind(c, name = 'torch_tensor_zero')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: tensor
-      end subroutine torch_tensor_zero__c
+      end subroutine torch_tensor_zero_c
     end interface
 
     if (.not. c_associated(tensor%p)) then
       write(*,*) "Error :: tensor must be constructed before zeroing values"
       stop 1
     end if
-    call torch_tensor_zero__c(tensor%p)
-  end subroutine torch_tensor_zero_
+    call torch_tensor_zero_c(tensor%p)
+  end subroutine torch_tensor_zero
 
   ! ============================================================================
   ! --- Overloaded operators acting on tensors

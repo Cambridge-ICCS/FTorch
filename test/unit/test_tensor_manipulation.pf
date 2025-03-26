@@ -19,7 +19,7 @@ module test_tensor_manipulation
 contains
 
   @test
-  subroutine test_torch_tensor_zero_()
+  subroutine test_torch_tensor_zero()
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
     ! Set working precision for reals
@@ -39,18 +39,18 @@ contains
     ! Create a tensor based off an input array
     call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type)
 
-    ! Call the torch_tensor_zero_ subroutine using its class method alias
-    call tensor%zero_()
+    ! Call the torch_tensor_zero subroutine using its class method alias
+    call tensor%zero()
 
     ! Compare the data in the tensor to the input array
     expected(:,:) = 0.0
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_zero_")
+    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_zero")
 
     if (.not. test_pass) then
-      print *, "Error :: incorrect output from torch_tensor_zero_"
+      print *, "Error :: incorrect output from torch_tensor_zero"
       stop 999
     end if
 
-  end subroutine test_torch_tensor_zero_
+  end subroutine test_torch_tensor_zero
 
 end module test_tensor_manipulation
