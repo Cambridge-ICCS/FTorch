@@ -12,14 +12,29 @@
 
     <title>Online training &ndash; FTorch</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -115,7 +130,9 @@
 <li><a href="#current-state">Current state</a><ul>
 <li><a href="#operator-overloading">Operator overloading</a></li>
 <li><a href="#the-requires_grad-property">The requires_grad property</a></li>
-<li><a href="#the-backward-operator">The backward operator</a></li>
+<li><a href="#backpropagation">Backpropagation</a></li>
+<li><a href="#optimisation">Optimisation</a></li>
+<li><a href="#loss-functions">Loss functions</a></li>
 </ul>
 </li>
 </ul>
@@ -154,7 +171,38 @@ Torch tensors, see the
 <h3 id="the-requires_grad-property">The <code>requires_grad</code> property</h3>
 <p>For Tensors that you would like to differentiate with respect to, be sure to
 set the <code>requires_grad</code> optional argument to <code>.true.</code> when you construct it.</p>
-<h3 id="the-backward-operator">The <code>backward</code> operator</h3>
+<h3 id="backpropagation">Backpropagation</h3>
+<p>Having defined some tensors with the <code>requires_grad</code> property set to <code>.true.</code>
+and computed another tensor in terms of an expression involving these, we can
+compute gradients of that tensor with respect to those that it depends on. This
+is achieved using the <code>torch_tensor_backward</code> subroutine. For example, for
+input tensors <code>a</code> and <code>b</code> and an output tensor <code>Q</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">in_data1</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                             </span><span class="n">requires_grad</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">in_data2</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                             </span><span class="n">requires_grad</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="w"> </span><span class="n">out_data1</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+
+<span class="n">Q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span>
+
+<span class="k">call </span><span class="n">torch_tensor_backward</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Following the example code above, we can extract gradients of <code>Q</code> with respect
+to <code>a</code> and/or <code>b</code>. To do this, we can use the <code>torch_tensor_get_gradient</code>
+subroutine. That is, for tensors <code>dQda</code> and <code>dQdb</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c">! Function approach</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">dQda</span><span class="p">,</span><span class="w"> </span><span class="n">out_data2</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">dQda</span><span class="p">)</span>
+
+<span class="c">! Method approach</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">dQdb</span><span class="p">,</span><span class="w"> </span><span class="n">out_data3</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">dQdb</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="optimisation">Optimisation</h3>
+<p><em>Not yet implemented.</em></p>
+<h3 id="loss-functions">Loss functions</h3>
 <p><em>Not yet implemented.</em></p>
     </div>
   </div>
@@ -179,27 +227,5 @@ set the <code>requires_grad</code> optional argument to <code>.true.</code> when
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="../tipuesearch/tipuesearch_content.js"></script>
-          <script src="../tipuesearch/tipuesearch_set.js"></script>
-          <script src="../tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>
