@@ -71,13 +71,36 @@ to `a` and/or `b`. To do this, we can use the `torch_tensor_get_gradient`
 subroutine. That is, for tensors `dQda` and `dQdb`:
 
 ```fortran
-! Function approach
 call torch_tensor_from_array(dQda, out_data2, tensor_layout, torch_kCPU)
 call torch_tensor_get_gradient(a, dQda)
 
-! Method approach
 call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
 call torch_tensor_get_gradient(b, dQdb)
+```
+#### Zeroing gradients
+
+Having computed gradients of one tensor with respect to its dependencies,
+suppose you wish to compute gradients of another tensor. Since the gradient
+values associated with each dependency are accumulated, you should zero the
+gradients before computing the next gradient. This can be achieved using the
+`torch_tensor_zero_grad` subroutine.
+
+Following the example code above:
+
+```fortran
+Q = a * b
+P = a + b
+
+call torch_tensor_backward(Q)
+
+! ...
+
+call torch_tensor_zero_grad(a)
+call torch_tensor_zero_grad(b)
+
+call torch_tensor_backward(P)
+
+! ...
 ```
 
 ### Optimisation
