@@ -71,11 +71,9 @@ to `a` and/or `b`. To do this, we can use the `torch_tensor_get_gradient`
 subroutine. That is, for tensors `dQda` and `dQdb`:
 
 ```fortran
-! Function approach
 call torch_tensor_from_array(dQda, out_data2, tensor_layout, torch_kCPU)
 call torch_tensor_get_gradient(a, dQda)
 
-! Method approach
 call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
 call torch_tensor_get_gradient(b, dQdb)
 ```
