@@ -71,6 +71,12 @@ this can also be applied to arrays of tensors. Calling this subroutine manually
 is optional as it is called as a destructor when the `torch_tensor` goes out of
 scope anyway.
 
+### Tensor manipulation
+
+We provide a subroutine for manipulating the data values associated with a
+`torch_tensor` object: `torch_tensor_zero_`. It has an alias as a class method:
+`torch_tensor%zero_`.
+
 ### Operator overloading
 
 Mathematical operators involving Tensors are overloaded, so that we can compute
