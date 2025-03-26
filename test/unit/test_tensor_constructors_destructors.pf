@@ -19,7 +19,7 @@ module test_tensor_constructors_destructors
   ! Set working precision for reals
   integer, parameter :: wp = sp
 
-  ! Parameters common across all test cases
+  ! All unit tests in this module run on CPU
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
 
