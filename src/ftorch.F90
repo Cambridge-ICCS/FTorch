@@ -37,6 +37,7 @@ module ftorch
     procedure :: get_device_type => torch_tensor_get_device_type
     procedure :: get_device_index => torch_tensor_get_device_index
     procedure :: requires_grad => torch_tensor_requires_grad
+    procedure :: zero_grad => torch_tensor_zero_grad
     final :: torch_tensor_delete
   end type torch_tensor
 
@@ -1818,6 +1819,23 @@ contains
   ! ============================================================================
   ! --- Procedures related to automatic differentation functionality for tensors
   ! ============================================================================
+
+  !> Resets a tensor's gradient to zero.
+  subroutine torch_tensor_zero_grad(tensor)
+    use, intrinsic :: iso_c_binding, only : c_associated
+    class(torch_tensor), intent(inout) :: tensor
+
+    interface
+      subroutine torch_tensor_zero_grad_c(tensor) bind(c, name = 'torch_tensor_zero_grad')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor
+      end subroutine torch_tensor_zero_grad_c
+    end interface
+
+    ! TODO: Call torch_tensor_get_gradient to check it exists?
+    call torch_tensor_zero_grad_c(tensor%p)
+  end subroutine torch_tensor_zero_grad
 
   !> Performs back-propagation on a Torch Tensor, given some external gradient.
   subroutine torch_tensor_backward(tensor)
