@@ -405,6 +405,23 @@ void torch_tensor_sum(torch_tensor_t output, const torch_tensor_t tensor) {
   std::move(*out) = t->sum();
 }
 
+void torch_tensor_mean(torch_tensor_t output, const torch_tensor_t tensor) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+
+  if (torch_tensor_get_rank(output) != 1) {
+    std::cerr << "[ERROR]: invalid rank of output tensor for mean\nrank="
+              << torch_tensor_get_rank(output) << " != 1" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  if (torch_tensor_get_sizes(output)[0] != 1) {
+    std::cerr << "[ERROR]: invalid shape of output tensor for mean\nshape=["
+              << torch_tensor_get_sizes(output)[0] << "] != [1]" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  std::move(*out) = t->mean();
+}
+
 // =============================================================================
 // --- Functions related to automatic differentiation functionality for tensors
 // =============================================================================
