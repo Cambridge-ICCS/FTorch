@@ -22,6 +22,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   `torch_tensor_get_gradient` in [#286](https://github.com/Cambridge-ICCS/FTorch/pull/286)
 - Zeroing of gradients associated with a tensor implemented in
   [#341](https://github.com/Cambridge-ICCS/FTorch/pull/341).
+- Exposed `retain_graph` argument for `torch_tensor_backward` in
+  [#342](https://github.com/Cambridge-ICCS/FTorch/pull/342).
 
 ### Changed
 

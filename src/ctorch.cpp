@@ -389,10 +389,11 @@ void torch_tensor_zero_grad(torch_tensor_t tensor) {
 }
 
 void torch_tensor_backward(const torch_tensor_t tensor,
-                           const torch_tensor_t external_gradient) {
+                           const torch_tensor_t external_gradient,
+                           const bool retain_graph) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   auto g = reinterpret_cast<torch::Tensor *const>(external_gradient);
-  t->backward(*g);
+  t->backward(*g, retain_graph);
 }
 
 void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradient) {
