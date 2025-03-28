@@ -232,7 +232,7 @@ contains
     ! Check input arrays are unchanged by the negation
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_negative")) then
-      print *, "Error :: first input array was changed during subtraction"
+      print *, "Error :: first input array was changed during negative"
       stop 999
     end if
 
@@ -240,7 +240,7 @@ contains
     expected(:,:) = -in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_negative")
     if (.not. test_pass) then
-      print *, "Error :: incorrect output from overloaded subtraction operator"
+      print *, "Error :: incorrect output from overloaded negative operator"
       stop 999
     end if
 
