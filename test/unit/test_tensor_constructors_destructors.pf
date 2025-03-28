@@ -23,6 +23,9 @@ module test_tensor_constructors_destructors
   integer, parameter :: device_type = torch_kCPU
   integer, parameter :: device_index = -1
 
+  ! All unit tests in this module use float32 precision
+  integer, parameter :: dtype = torch_kFloat32
+
   ! Typedef holding a set of parameter values
   @testParameter
   type, extends(AbstractTestParameter) :: TestParametersType
@@ -93,7 +96,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
 
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor%p))
@@ -119,7 +121,6 @@ contains
     integer, parameter :: ndims = 2
     integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
     integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
 
@@ -161,7 +162,6 @@ contains
     integer, parameter :: ndims = 2
     integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
     integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
 
@@ -327,7 +327,6 @@ contains
     integer, parameter :: ndims = 2
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
     integer, parameter :: layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
 
@@ -371,7 +370,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     integer :: i
 
     do i = 1, this%param%iterations

@@ -21,6 +21,11 @@ module test_tensor_operator_overloads
   ! All unit tests in this module run on CPU
   integer, parameter :: device_type = torch_kCPU
 
+  ! All unit tests in this module use 2D arrays with the default layout and float32 precision
+  integer, parameter :: ndims = 2
+  integer, parameter :: tensor_layout(ndims) = [1, 2]
+  integer, parameter :: dtype = torch_kFloat32
+
   ! Typedef holding a set of parameter values
   @testParameter
   type, extends(AbstractTestParameter) :: TestParametersType
@@ -73,9 +78,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
-    integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
@@ -102,7 +104,6 @@ contains
 
     ! Compare the data in the tensor to the input array
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_assign")
-
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded assignment operator"
       stop 999
@@ -116,9 +117,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
-    integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
@@ -152,7 +150,6 @@ contains
     ! Compare the data in the tensor to the sum of the input arrays
     expected(:,:) = in_data1 + in_data2
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_add")
-
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded addition operator"
       stop 999
@@ -166,9 +163,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
-    integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
@@ -203,7 +197,6 @@ contains
     ! Compare the data in the tensor to the difference of the input arrays
     expected(:,:) = in_data1 - in_data2
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract")
-
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded subtraction operator"
       stop 999
@@ -220,10 +213,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
-    integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
-    integer, parameter :: device_type = torch_kCPU
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
@@ -250,7 +239,6 @@ contains
     ! Compare the data in the tensor to the negative of the input array
     expected(:,:) = -in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_negative")
-
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded subtraction operator"
       stop 999
@@ -264,9 +252,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
-    integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
@@ -301,7 +286,6 @@ contains
     ! Compare the data in the tensor to the product of the input arrays
     expected(:,:) = in_data1 * in_data2
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_multiply")
-
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded multiplication operator"
       stop 999
@@ -315,9 +299,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, multiplier
-    integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
@@ -351,7 +332,6 @@ contains
     ! Compare the data in the tensors to the scaled input arrays
     expected(:,:) = scalar * in_data
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply")
-
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded scalar multiplication operator"
       stop 999
@@ -365,9 +345,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
-    integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
@@ -401,7 +378,6 @@ contains
     ! Compare the data in the tensor to the quotient of the input arrays
     expected(:,:) = in_data1 / in_data2
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_divide")
-
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded division operator"
       stop 999
@@ -415,9 +391,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, divisor
-    integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
@@ -453,7 +426,6 @@ contains
     ! Compare the data in the tensor to the scaled input array
     expected(:,:) = in_data / scalar
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide")
-
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded scalar division operator"
       stop 999
@@ -467,9 +439,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
-    integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
@@ -501,7 +470,6 @@ contains
     ! Compare the data in the tensors to the squared input array
     expected(:,:) = in_data ** 2
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_square")
-
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded exponentation operator (square)"
       stop 999
@@ -515,9 +483,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
-    integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
     logical :: test_pass
@@ -545,7 +510,6 @@ contains
     ! Compare the data in the tensors to the square root of the input array
     expected(:,:) = in_data ** 0.5
     test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")
-
     if (.not. test_pass) then
       print *, "Error :: incorrect output from overloaded exponentiation operator (square root)"
       stop 999

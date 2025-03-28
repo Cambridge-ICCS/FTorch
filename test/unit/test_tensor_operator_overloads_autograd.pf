@@ -24,6 +24,12 @@ module test_tensor_operator_overloads_autograd
   ! All unit tests in this module run on CPU
   integer, parameter :: device_type = torch_kCPU
 
+  ! All unit tests in this module use 2x3 arrays with the default layout and float32 precision
+  integer, parameter :: ndims = 2
+  integer, parameter :: tensor_layout(ndims) = [1, 2]
+  integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+  integer, parameter :: dtype = torch_kFloat32
+
   ! Typedef holding a set of parameter values
   @testParameter
   type, extends(AbstractTestParameter) :: TestParametersType
@@ -78,10 +84,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda
-    integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
@@ -121,10 +123,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, b, dQda, dQdb
-    integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
@@ -176,10 +174,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda
-    integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
@@ -219,10 +213,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, b, dQda, dQdb
-    integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
@@ -274,10 +264,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, b, dQda, dQdb
-    integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
@@ -329,10 +315,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda, multiplier
-    integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
@@ -382,10 +364,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, b, dQda, dQdb
-    integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
@@ -437,10 +415,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda, divisor
-    integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
@@ -486,10 +460,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda
-    integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
@@ -533,10 +503,6 @@ contains
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda
-    integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
