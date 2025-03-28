@@ -909,6 +909,29 @@ contains
 
   #:endfor
 
+  !> Overloads summation operator over the values in a tensor.
+  subroutine torch_tensor_sum(tensor, output)
+    use, intrinsic :: iso_c_binding, only : c_associated
+    type(torch_tensor), intent(in)    :: tensor  !! Tensor to sum the values of
+    type(torch_tensor), intent(inout) :: output  !! Tensor holding the summed values
+
+    interface
+      subroutine torch_tensor_sum_c(output_c, tensor_c) &
+          bind(c, name = 'torch_tensor_sum')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: output_c
+        type(c_ptr), value, intent(in) :: tensor_c
+      end subroutine torch_tensor_sum_c
+    end interface
+
+    if (.not. c_associated(output%p)) then
+      write(*,*) "Error :: output tensor has not been constructed"
+      stop 1
+    end if
+    call torch_tensor_sum_c(output%p, tensor%p)
+  end subroutine torch_tensor_sum
+
   ! ============================================================================
   ! --- Procedures related to automatic differentation functionality for tensors
   ! ============================================================================
@@ -973,7 +996,7 @@ contains
 
   !> Retrieves the gradient with respect to a Torch Tensor.
   subroutine torch_tensor_get_gradient(tensor, gradient)
-    class(torch_tensor), intent(in) :: tensor      !! Tensor to compute the gradient with respect to
+    type(torch_tensor), intent(in) :: tensor       !! Tensor to compute the gradient with respect to
     type(torch_tensor), intent(inout) :: gradient  !! Tensor holding the gradient
 
     interface

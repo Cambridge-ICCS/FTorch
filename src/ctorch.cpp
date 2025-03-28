@@ -388,6 +388,13 @@ void torch_tensor_power_float(torch_tensor_t output, const torch_tensor_t tensor
   *out = pow(*t, *exp);
 }
 
+void torch_tensor_sum(torch_tensor_t output, const torch_tensor_t tensor) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+  // TODO: Assert that the output tensor corresponds to a single scalar value
+  std::move(*out) = t->sum();
+}
+
 // =============================================================================
 // --- Functions related to automatic differentiation functionality for tensors
 // =============================================================================

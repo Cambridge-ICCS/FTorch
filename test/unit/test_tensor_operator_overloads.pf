@@ -513,4 +513,46 @@ contains
 
   end subroutine test_torch_tensor_sqrt
 
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_sum(this)
+    use ftorch, only: torch_tensor_sum
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    real(wp), dimension(2,3), target :: in_data
+    real(wp), dimension(1), target :: out_data
+    real(wp), dimension(2,3) :: expected2d
+    real(wp), dimension(1) :: expected1d
+    logical :: test_pass
+
+    ! Create two arbitrary input arrays
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create tensors based off the input array
+    call torch_tensor_from_array(tensor1, in_data, device_type)
+
+    ! Create a tensor based off an output array containing a single scalar value
+    call torch_tensor_from_array(tensor2, out_data, device_type)
+
+    ! Compute the sum over the entries in the first tensor and assign it to the single value in the
+    ! second
+    call torch_tensor_sum(tensor1, tensor2)
+
+    ! Check input arrays are unchanged by the summation
+    expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    if (.not. assert_allclose(in_data, expected2d, test_name="test_torch_tensor_sum")) then
+      print *, "Error :: first input array was changed during summation"
+      stop 999
+    end if
+
+    ! Compare the data in the tensor to the negative of the input array
+    expected1d(:) = 21.0
+    test_pass = assert_allclose(out_data, expected1d, test_name="test_torch_tensor_sum")
+    if (.not. test_pass) then
+      print *, "Error :: incorrect output from overloaded summation operator"
+      stop 999
+    end if
+
+  end subroutine test_torch_tensor_sum
+
 end module test_tensor_operator_overloads
