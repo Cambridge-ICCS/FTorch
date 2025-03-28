@@ -75,4 +75,50 @@ contains
     end if
 
   end subroutine test_torch_tensor_zero_grad
+
+  @test
+  subroutine test_torch_tensor_retain_graph()
+
+    implicit none
+
+    type(torch_tensor) :: Q, a, dQda
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create an arbitrary input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create a tensor based off an input array
+    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+
+    ! Create another empty tensor and assign it to the first using the overloaded assignment
+    ! operator
+    call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
+    Q = a
+
+    ! Create another tensor based off an output array for the gradient
+    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+
+    ! Apply back-propagation and retrieve the gradient and check it takes the expected value:
+    !   Q(a) = a => dQ/da = 1
+    call torch_tensor_backward(Q)
+    call torch_tensor_get_gradient(a, dQda)
+    expected(:,:) = 1.0
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_retain_graph1")) then
+      print *, "Error :: incorrect value for first gradient computation"
+      stop 999
+    end if
+
+    ! Zero the gradient and then call back-propagation again and check the computed gradient still
+    ! takes the expected value
+    call a%zero_grad()
+    call torch_tensor_backward(Q, retain_graph=.true.)
+    call torch_tensor_get_gradient(a, dQda)
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_retain_graph3")) then
+      print *, "Error :: incorrect value for second gradient computation"
+      stop 999
+    end if
+
+  end subroutine test_torch_tensor_retain_graph
+
 end module test_tensor_autograd
