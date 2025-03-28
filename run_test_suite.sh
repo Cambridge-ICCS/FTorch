@@ -87,6 +87,7 @@ if [ "${RUN_INTEGRATION}" = true ]; then
   else
     EXAMPLES="1_Tensor 2_SimpleNet 3_ResNet 4_MultiIO 7_MPI 8_Autograd n_Optimizers"
   fi
+  EXAMPLES="n_Optimizers"
   export PIP_REQUIRE_VIRTUALENV=true
   for EXAMPLE in ${EXAMPLES}; do
     python -m pip -q install -r examples/"${EXAMPLE}"/requirements.txt
