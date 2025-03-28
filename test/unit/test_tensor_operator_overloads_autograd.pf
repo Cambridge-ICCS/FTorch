@@ -534,4 +534,41 @@ contains
 
   end subroutine test_torch_tensor_sqrt
 
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_sum(this)
+    use ftorch, only: torch_tensor_sum
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: a, Q, dQda
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+    logical :: test_pass
+
+    ! Create two arbitrary input arrays
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create tensors based off the input array
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
+
+    ! Create another empty tensor and assign it to the sum of the first one
+    call torch_tensor_empty(Q, 1, scalar_shape, dtype, device_type)
+    call torch_tensor_sum(a, Q)
+
+    ! Apply back-propagation
+    call torch_tensor_backward(Q)
+
+    ! Create another tensor based off an output array for the gradient and then retrieve it
+    call torch_tensor_from_array(dQda, out_data, device_type)
+    call torch_tensor_get_gradient(a, dQda)
+
+    ! Extract Fortran array from the computed gradient and its data with the expected value:
+    !   Q(a) = \sigma_{i,j} a_{i,j} => dQda = [array of ones]
+    expected(:,:) = 1.0
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_sum")) then
+      print *, "Error :: incorrect gradient for summation"
+      stop 999
+    end if
+
+  end subroutine test_torch_tensor_sum
+
 end module test_tensor_operator_overloads_autograd
