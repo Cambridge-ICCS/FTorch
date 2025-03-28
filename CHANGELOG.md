@@ -20,6 +20,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   This became demo 1 and the other demo numbers were bumped to account for this.
 - Backpropagation implemented with `torch_tensor_backward` and
   `torch_tensor_get_gradient` in [#286](https://github.com/Cambridge-ICCS/FTorch/pull/286)
+- Overload taking sum and mean of tensors in
+  [#344](https://github.com/Cambridge-ICCS/FTorch/pull/344).
 
 ### Changed
 
