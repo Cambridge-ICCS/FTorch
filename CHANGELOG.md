@@ -25,6 +25,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#338](https://github.com/Cambridge-ICCS/FTorch/pull/338).
 - Provided interface for `torch_tensor_from_array` with default layout in
   [#348](https://github.com/Cambridge-ICCS/FTorch/pull/348).
+- Overload taking sum and mean of tensors in
+  [#344](https://github.com/Cambridge-ICCS/FTorch/pull/344).
 
 ### Changed
 
