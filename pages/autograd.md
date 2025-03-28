@@ -78,6 +78,38 @@ call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
 call torch_tensor_get_gradient(b, dQdb)
 ```
 
+#### Zeroing gradients
+
+Having computed gradients of one tensor with respect to its dependencies,
+suppose you wish to compute gradients of another tensor. Since the gradient
+values associated with each dependency are accumulated, you should zero the
+gradients before computing the next gradient. This can be achieved using the
+`torch_tensor_zero_grad` subroutine.
+
+Following the example code above:
+
+```fortran
+Q = a * b
+P = a + b
+
+call torch_tensor_backward(Q)
+
+! ...
+
+call torch_tensor_zero_grad(a)
+call torch_tensor_zero_grad(b)
+
+call torch_tensor_backward(P)
+
+! ...
+```
+
+#### Extracting gradients
+
+Note that `torch_tensor_get_gradient` must be called after every call to
+`torch_tensor_backward` or `torch_tensor_zero_grad`, even if the gradient for
+the same tensor is being extracted into the same array.
+
 ### Optimisation
 
 *Not yet implemented.*
