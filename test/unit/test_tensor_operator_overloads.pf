@@ -206,10 +206,7 @@ contains
 
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_negative(this)
-    use FUnit
-    use ftorch, only: assignment(=), operator(-), ftorch_int, torch_kCPU, torch_kFloat32, &
-                      torch_tensor, torch_tensor_from_array
-    use ftorch_test_utils, only: assert_allclose
+    use ftorch, only: operator(-)
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
