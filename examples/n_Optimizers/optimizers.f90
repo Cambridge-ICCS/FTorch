@@ -54,6 +54,10 @@ program example
   ! TODO optimizer expects an array of tensors, should be a cleaner consistent way to formalise this.
   call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1D0)
 
+  ! Create empty tensors for the loss function tensor and scaling gradient
+  call torch_tensor_empty(loss, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
+  call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
+
   ! Conduct training loop
   do i = 1, n_train+1
     ! Zero any previously stored gradients ready for a new iteration
@@ -63,15 +67,11 @@ program example
     call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
     output_vec = input_vec * scaling_tensor
 
-    ! Create an empty loss tensor and populate with mean square error (MSE) between target and input
+    ! Compute loss function as mean square error (MSE) between target and input
     ! Then perform backward step on loss to propogate gradients using autograd
     !
     ! We could use the following lines to do this by explicitly specifying a
     ! gradient of ones to start the process:
-    call torch_tensor_empty(loss, ndims, tensor_shape, &
-                           torch_kFloat32, torch_kCPU)
-    call torch_tensor_empty(scaling_grad, ndims, tensor_shape, &
-                           torch_kFloat32, torch_kCPU)
     loss = ((output_vec - target_vec) ** 2) / torch_4p0
     call torch_tensor_backward(loss)
     call torch_tensor_get_gradient(scaling_tensor, scaling_grad)
@@ -101,10 +101,6 @@ program example
         call torch_tensor_print(scaling_tensor)
         write(*,*)
     end if
-
-    ! Clean up created tensors
-    call torch_delete(output_vec)
-    call torch_delete(loss)
 
   end do
 
