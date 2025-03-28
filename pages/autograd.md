@@ -78,6 +78,13 @@ call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
 call torch_tensor_get_gradient(b, dQdb)
 ```
 
+#### `retain_graph` argument
+
+If you wish to call the backpropagation operator multiple times then it's likely
+you will need to make use of the `retain_graph` argument for
+`torch_tensor_backward`. This argument accepts logical values and defaults to
+`.false.`, for consistency with PyTorch and LibTorch.
+
 #### Zeroing gradients
 
 Having computed gradients of one tensor with respect to its dependencies,
@@ -99,7 +106,7 @@ call torch_tensor_backward(Q)
 call torch_tensor_zero_grad(a)
 call torch_tensor_zero_grad(b)
 
-call torch_tensor_backward(P)
+call torch_tensor_backward(P, retain_graph=.true.)
 
 ! ...
 ```
