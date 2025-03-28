@@ -77,6 +77,7 @@ call torch_tensor_get_gradient(a, dQda)
 call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
 call torch_tensor_get_gradient(b, dQdb)
 ```
+
 #### Zeroing gradients
 
 Having computed gradients of one tensor with respect to its dependencies,
@@ -102,6 +103,12 @@ call torch_tensor_backward(P)
 
 ! ...
 ```
+
+#### Extracting gradients
+
+Note that `torch_tensor_get_gradient` must be called after every call to
+`torch_tensor_backward` or `torch_tensor_zero_grad`, even if the gradient for
+the same tensor is being extracted into the same array.
 
 ### Optimisation
 
