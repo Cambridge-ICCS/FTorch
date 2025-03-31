@@ -406,9 +406,38 @@ void torch_tensor_backward(const torch_tensor_t tensor,
 }
 
 void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradient) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  auto g = reinterpret_cast<torch::Tensor *>(gradient);
-  std::move(*g) = t->grad();
+  try {
+    // Cast the input pointers to torch::Tensor
+    auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+    auto g = reinterpret_cast<torch::Tensor *>(gradient);
+
+    // Check if the tensor is valid and defined
+    if (!t || !t->defined()) {
+      throw std::invalid_argument("Input tensor is null or undefined.");
+    }
+
+    // Check if the output gradient pointer is valid
+    if (!g) {
+      throw std::invalid_argument("Output gradient pointer is null.");
+    }
+
+    // Check if the tensor requires gradients
+    if (!t->requires_grad()) {
+      throw std::runtime_error("Input tensor does not have requires_grad set.");
+    }
+
+    // Check if the gradient is defined
+    if (!t->grad().defined()) {
+      throw std::runtime_error("Gradient is undefined for the input tensor.");
+    }
+
+    // Assign the gradient to the output tensor
+    std::move(*g) = t->grad();
+  } catch (const std::exception &e) {
+    // Print the error message for debugging
+    std::cerr << "Error in torch_tensor_get_gradient: " << e.what() << std::endl;
+    std::terminate(); // Terminate here to avoid undefined behavior
+  }
 }
 
 // =============================================================================
