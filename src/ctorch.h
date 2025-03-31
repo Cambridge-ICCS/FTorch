@@ -179,7 +179,7 @@ EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
 
 /**
  * Function to reset the values of a Torch Tensor to zero
- * @param Torch Tensor to zero
+ * @param Torch Tensor to zero the values of
  */
 EXPORT_C void torch_tensor_zero(torch_tensor_t tensor);
 
