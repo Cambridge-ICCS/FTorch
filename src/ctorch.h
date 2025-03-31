@@ -173,6 +173,16 @@ EXPORT_C bool torch_tensor_requires_grad(const torch_tensor_t tensor);
  */
 EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
 
+// =====================================================================================
+// --- Functions for manipulating tensors
+// =====================================================================================
+
+/**
+ * Function to reset the values of a Torch Tensor to zero
+ * @param Torch Tensor to zero the values of
+ */
+EXPORT_C void torch_tensor_zero(torch_tensor_t tensor);
+
 // =============================================================================
 // --- Operator overloads acting on tensors
 // =============================================================================
