@@ -20,6 +20,10 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   This became demo 1 and the other demo numbers were bumped to account for this.
 - Backpropagation implemented with `torch_tensor_backward` and
   `torch_tensor_get_gradient` in [#286](https://github.com/Cambridge-ICCS/FTorch/pull/286)
+- Zeroing of gradients associated with a tensor implemented in
+  [#341](https://github.com/Cambridge-ICCS/FTorch/pull/341).
+- Exposed `retain_graph` argument for `torch_tensor_backward` in
+  [#342](https://github.com/Cambridge-ICCS/FTorch/pull/342).
 
 ### Changed
 
