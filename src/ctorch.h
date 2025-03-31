@@ -253,7 +253,7 @@ EXPORT_C void torch_tensor_power_float(torch_tensor_t output,
 
 /**
  * Function to reset the gradient values of a Torch Tensor to zero
- * @param Torch Tensor to zero the graident values of
+ * @param Torch Tensor to zero the gradient values of
  */
 EXPORT_C void torch_tensor_zero_grad(torch_tensor_t tensor);
 
