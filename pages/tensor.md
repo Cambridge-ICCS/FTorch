@@ -73,9 +73,11 @@ scope anyway.
 
 ### Tensor manipulation
 
-We provide a subroutine for manipulating the data values associated with a
-`torch_tensor` object: `torch_tensor_zero`. It has an alias as a class method:
-`torch_tensor%zero`.
+We provide the following subroutines for manipulating the data values associated
+with a `torch_tensor` object:
+
+* `torch_tensor_zero` (aliased as class method `torch_tensor%zero`), which
+  sets all the data entries associated with a tensor to zero.
 
 ### Operator overloading
 
