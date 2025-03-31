@@ -257,6 +257,10 @@ EXPORT_C void torch_tensor_power_float(torch_tensor_t output,
                                        const torch_tensor_t tensor,
                                        const torch_float_t exponent);
 
+// ============================================================================
+// --- Other operators for computations involving tensors
+// ============================================================================
+
 /**
  * Overloads the summation operator for a Torch Tensor
  * @param output Tensor
