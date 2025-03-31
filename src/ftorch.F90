@@ -1823,7 +1823,7 @@ contains
   !> Resets a tensor's gradient to zero.
   subroutine torch_tensor_zero_grad(tensor)
     use, intrinsic :: iso_c_binding, only : c_associated
-    class(torch_tensor), intent(inout) :: tensor
+    class(torch_tensor), intent(inout) :: tensor  !! Tensor to zero the gradient of
 
     interface
       subroutine torch_tensor_zero_grad_c(tensor) bind(c, name = 'torch_tensor_zero_grad')
