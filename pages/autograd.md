@@ -80,10 +80,13 @@ call torch_tensor_get_gradient(b, dQdb)
 
 #### `retain_graph` argument
 
-If you wish to call the backpropagation operator multiple times then it's likely
-you will need to make use of the `retain_graph` argument for
-`torch_tensor_backward`. This argument accepts logical values and defaults to
-`.false.`, for consistency with PyTorch and LibTorch.
+If you wish to call the backpropagation operator multiple times then you may
+need to make use of the `retain_graph` argument for `torch_tensor_backward`.
+This argument accepts logical values and defaults to `.false.`, for consistency
+with PyTorch and LibTorch. According to the
+[PyTorch docs](https://pytorch.org/docs/stable/generated/torch.Tensor.backward.html),
+`retain_graph=.true.` will not be needed in most cases, but it's useful to have
+for the cases where it is.
 
 #### Zeroing gradients
 
