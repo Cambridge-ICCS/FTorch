@@ -173,6 +173,16 @@ EXPORT_C bool torch_tensor_requires_grad(const torch_tensor_t tensor);
  */
 EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
 
+// =====================================================================================
+// --- Functions for manipulating tensors
+// =====================================================================================
+
+/**
+ * Function to reset the values of a Torch Tensor to zero
+ * @param Torch Tensor to zero the values of
+ */
+EXPORT_C void torch_tensor_zero(torch_tensor_t tensor);
+
 // =============================================================================
 // --- Operator overloads acting on tensors
 // =============================================================================
@@ -266,13 +276,21 @@ EXPORT_C void torch_tensor_mean(torch_tensor_t output, const torch_tensor_t tens
 // =============================================================================
 
 /**
+ * Function to reset the gradient values of a Torch Tensor to zero
+ * @param Torch Tensor to zero the gradient values of
+ */
+EXPORT_C void torch_tensor_zero_grad(torch_tensor_t tensor);
+
+/**
  * Function to perform back-propagation on a Torch Tensor.
  * Note that the Tensor must have the requires_grad attribute set to true.
  * @param Tensor to perform back-propagation on
  * @param Tensor with an external gradient to supply for the back-propagation
+ * @param whether the computational graph should be retained
  */
 EXPORT_C void torch_tensor_backward(const torch_tensor_t tensor,
-                                    const torch_tensor_t external_gradient);
+                                    const torch_tensor_t external_gradient,
+                                    const bool retain_graph);
 
 /**
  * Function to return the grad attribute of a Torch Tensor.

@@ -78,6 +78,49 @@ call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
 call torch_tensor_get_gradient(b, dQdb)
 ```
 
+#### `retain_graph` argument
+
+If you wish to call the backpropagation operator multiple times then you may
+need to make use of the `retain_graph` argument for `torch_tensor_backward`.
+This argument accepts logical values and defaults to `.false.`, for consistency
+with PyTorch and LibTorch. According to the
+[PyTorch docs](https://pytorch.org/docs/stable/generated/torch.Tensor.backward.html),
+`retain_graph=.true.` will not be needed in most cases, but it's useful to have
+for the cases where it is.
+
+#### Zeroing gradients
+
+Having computed gradients of one tensor with respect to its dependencies,
+suppose you wish to compute gradients of another tensor. Since the gradient
+values associated with each dependency are accumulated, you should zero the
+gradients before computing the next gradient. This can be achieved using the
+`torch_tensor_zero_grad` subroutine.
+
+Following the example code above:
+
+```fortran
+Q = a * b
+P = a + b
+
+call torch_tensor_backward(Q)
+
+! ...
+
+call torch_tensor_zero_grad(a)
+call torch_tensor_zero_grad(b)
+
+call torch_tensor_backward(P, retain_graph=.true.)
+
+! ...
+```
+
+#### Extracting gradients
+
+Note that `torch_tensor_get_gradient` must be called after every call to
+`torch_tensor_backward` or `torch_tensor_zero_grad`, even if the gradient for
+the same tensor is being extracted into the same array. This is due to the way
+that pointers are handled on the C++ side.
+
 ### Optimisation
 
 *Not yet implemented.*
