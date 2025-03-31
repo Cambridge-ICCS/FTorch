@@ -118,7 +118,8 @@ call torch_tensor_backward(P, retain_graph=.true.)
 
 Note that `torch_tensor_get_gradient` must be called after every call to
 `torch_tensor_backward` or `torch_tensor_zero_grad`, even if the gradient for
-the same tensor is being extracted into the same array.
+the same tensor is being extracted into the same array. This is due to the way
+that pointers are handled on the C++ side.
 
 ### Optimisation
 
