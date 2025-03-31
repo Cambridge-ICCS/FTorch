@@ -2779,6 +2779,10 @@ contains
   end function torch_tensor_power_real64
 
 
+  ! ============================================================================
+  ! --- Other operators for computations involving tensors
+  ! ============================================================================
+
   !> Overloads summation operator over the values in a tensor.
   subroutine torch_tensor_sum(tensor, output)
     use, intrinsic :: iso_c_binding, only : c_associated
