@@ -90,7 +90,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.0% of total for procedures.">15 statements</a>
+                 title=" 1.6% of total for procedures.">24 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -157,9 +157,21 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public  subroutine torch_tensor_backward(tensor)  
+    <h2>public  subroutine torch_tensor_backward(tensor, retain_graph)  
 </h2>
-    
+        <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
+              </ul>
+            </li>
+        </ul>
+      </div>
+    </div>
+
 
     <p>Performs back-propagation on a Torch Tensor, given some external gradient.</p>
 
@@ -177,7 +189,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~55"></span>
+              <span class="anchor" id="variable-tensor~57"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -188,6 +200,21 @@
             <td><strong>tensor</strong></td>
             <td>
                 <p>Tensor to compute gradients of</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-retain_graph"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>retain_graph</strong></td>
+            <td>
+                <p>Should the computational graph be retained?</p>
             </td>
         </tr>
     </tbody>
@@ -207,17 +234,23 @@
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_backward</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
-<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w">  </span><span class="c">!! Tensor to compute gradients of</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_backward</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="n">retain_graph</span><span class="p">)</span>
+<span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_bool</span>
+<span class="kt">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w">       </span><span class="c">!! Tensor to compute gradients of</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">retain_graph</span><span class="w"> </span><span class="c">!! Should the computational graph be retained?</span>
+
+<span class="w">    </span><span class="c">! Local arguments</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">external_gradient</span><span class="w">   </span><span class="c">!! External tensor used as an initial scaling of the gradient calculation</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">(</span><span class="kt">c_bool</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">retain_graph_value</span>
 
 <span class="w">    </span><span class="k">interface</span>
-<span class="k">      subroutine </span><span class="n">torch_tensor_backward_c</span><span class="p">(</span><span class="n">tensor_c</span><span class="p">,</span><span class="w"> </span><span class="n">external_gradient_c</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="k">      subroutine </span><span class="n">torch_tensor_backward_c</span><span class="p">(</span><span class="n">tensor_c</span><span class="p">,</span><span class="w"> </span><span class="n">external_gradient_c</span><span class="p">,</span><span class="w"> </span><span class="n">retain_graph_c</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">          </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;torch_tensor_backward&#39;</span><span class="p">)</span>
-<span class="w">        </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_ptr</span>
+<span class="w">        </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">,</span><span class="w"> </span><span class="kt">c_ptr</span>
 <span class="kt">        </span><span class="k">implicit none</span>
 <span class="k">        type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_c</span>
 <span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">external_gradient_c</span>
+<span class="w">        </span><span class="kt">logical</span><span class="p">(</span><span class="kt">c_bool</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">retain_graph_c</span>
 <span class="w">      </span><span class="k">end subroutine </span><span class="n">torch_tensor_backward_c</span>
 <span class="w">    </span><span class="k">end interface</span>
 
@@ -227,8 +260,15 @@
 <span class="w">                           </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_dtype</span><span class="p">(),</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_device_type</span><span class="p">(),</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">                           </span><span class="n">device_index</span><span class="o">=</span><span class="n">tensor</span><span class="p">%</span><span class="n">get_device_index</span><span class="p">())</span>
 
+<span class="w">    </span><span class="c">! Do not retain the graph by default</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">retain_graph</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      </span><span class="n">retain_graph_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">retain_graph</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">      </span><span class="n">retain_graph_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">    </span><span class="k">end if</span>
+
 <span class="w">    </span><span class="c">! Call back-propagation with the provided external gradient</span>
-<span class="w">    </span><span class="k">call </span><span class="n">torch_tensor_backward_c</span><span class="p">(</span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">external_gradient</span><span class="p">%</span><span class="n">p</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">torch_tensor_backward_c</span><span class="p">(</span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">external_gradient</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">retain_graph_value</span><span class="p">)</span>
 
 <span class="w">    </span><span class="c">! Delete the external gradient tensor</span>
 <span class="w">    </span><span class="k">call </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">external_gradient</span><span class="p">)</span>

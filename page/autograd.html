@@ -130,7 +130,12 @@
 <li><a href="#current-state">Current state</a><ul>
 <li><a href="#operator-overloading">Operator overloading</a></li>
 <li><a href="#the-requires_grad-property">The requires_grad property</a></li>
-<li><a href="#backpropagation">Backpropagation</a></li>
+<li><a href="#backpropagation">Backpropagation</a><ul>
+<li><a href="#retain_graph-argument">retain_graph argument</a></li>
+<li><a href="#zeroing-gradients">Zeroing gradients</a></li>
+<li><a href="#extracting-gradients">Extracting gradients</a></li>
+</ul>
+</li>
 <li><a href="#optimisation">Optimisation</a></li>
 <li><a href="#loss-functions">Loss functions</a></li>
 </ul>
@@ -198,6 +203,41 @@ subroutine. That is, for tensors <code>dQda</code> and <code>dQdb</code>:</p>
 <span class="k">call </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">dQdb</span><span class="p">)</span>
 </code></pre></div>
 
+<h4 id="retain_graph-argument"><code>retain_graph</code> argument</h4>
+<p>If you wish to call the backpropagation operator multiple times then you may
+need to make use of the <code>retain_graph</code> argument for <code>torch_tensor_backward</code>.
+This argument accepts logical values and defaults to <code>.false.</code>, for consistency
+with PyTorch and LibTorch. According to the
+<a href="https://pytorch.org/docs/stable/generated/torch.Tensor.backward.html">PyTorch docs</a>,
+<code>retain_graph=.true.</code> will not be needed in most cases, but it's useful to have
+for the cases where it is.</p>
+<h4 id="zeroing-gradients">Zeroing gradients</h4>
+<p>Having computed gradients of one tensor with respect to its dependencies,
+suppose you wish to compute gradients of another tensor. Since the gradient
+values associated with each dependency are accumulated, you should zero the
+gradients before computing the next gradient. This can be achieved using the
+<code>torch_tensor_zero_grad</code> subroutine.</p>
+<p>Following the example code above:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span>
+<span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+
+<span class="k">call </span><span class="n">torch_tensor_backward</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+
+<span class="c">! ...</span>
+
+<span class="k">call </span><span class="n">torch_tensor_zero_grad</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_zero_grad</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+<span class="k">call </span><span class="n">torch_tensor_backward</span><span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="w"> </span><span class="n">retain_graph</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
+
+<span class="c">! ...</span>
+</code></pre></div>
+
+<h4 id="extracting-gradients">Extracting gradients</h4>
+<p>Note that <code>torch_tensor_get_gradient</code> must be called after every call to
+<code>torch_tensor_backward</code> or <code>torch_tensor_zero_grad</code>, even if the gradient for
+the same tensor is being extracted into the same array. This is due to the way
+that pointers are handled on the C++ side.</p>
 <h3 id="optimisation">Optimisation</h3>
 <p><em>Not yet implemented.</em></p>
 <h3 id="loss-functions">Loss functions</h3>

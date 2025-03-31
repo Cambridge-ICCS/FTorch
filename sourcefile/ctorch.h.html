@@ -408,63 +408,71 @@
 <a id="ln-252" name="ln-252" href="#ln-252"></a><span class="c1">// =============================================================================</span>
 <a id="ln-253" name="ln-253" href="#ln-253"></a>
 <a id="ln-254" name="ln-254" href="#ln-254"></a><span class="cm">/**</span>
-<a id="ln-255" name="ln-255" href="#ln-255"></a><span class="cm"> * Function to perform back-propagation on a Torch Tensor.</span>
-<a id="ln-256" name="ln-256" href="#ln-256"></a><span class="cm"> * Note that the Tensor must have the requires_grad attribute set to true.</span>
-<a id="ln-257" name="ln-257" href="#ln-257"></a><span class="cm"> * @param Tensor to perform back-propagation on</span>
-<a id="ln-258" name="ln-258" href="#ln-258"></a><span class="cm"> * @param Tensor with an external gradient to supply for the back-propagation</span>
-<a id="ln-259" name="ln-259" href="#ln-259"></a><span class="cm"> */</span>
-<a id="ln-260" name="ln-260" href="#ln-260"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_backward</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">,</span>
-<a id="ln-261" name="ln-261" href="#ln-261"></a><span class="w">                                    </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">external_gradient</span><span class="p">);</span>
-<a id="ln-262" name="ln-262" href="#ln-262"></a>
-<a id="ln-263" name="ln-263" href="#ln-263"></a><span class="cm">/**</span>
-<a id="ln-264" name="ln-264" href="#ln-264"></a><span class="cm"> * Function to return the grad attribute of a Torch Tensor.</span>
-<a id="ln-265" name="ln-265" href="#ln-265"></a><span class="cm"> * @param Tensor to get the gradient of</span>
-<a id="ln-266" name="ln-266" href="#ln-266"></a><span class="cm"> * @param Tensor for the gradient</span>
-<a id="ln-267" name="ln-267" href="#ln-267"></a><span class="cm"> */</span>
-<a id="ln-268" name="ln-268" href="#ln-268"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">,</span>
-<a id="ln-269" name="ln-269" href="#ln-269"></a><span class="w">                                        </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">gradient</span><span class="p">);</span>
+<a id="ln-255" name="ln-255" href="#ln-255"></a><span class="cm"> * Function to reset the gradient values of a Torch Tensor to zero</span>
+<a id="ln-256" name="ln-256" href="#ln-256"></a><span class="cm"> * @param Torch Tensor to zero the gradient values of</span>
+<a id="ln-257" name="ln-257" href="#ln-257"></a><span class="cm"> */</span>
+<a id="ln-258" name="ln-258" href="#ln-258"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_zero_grad</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
+<a id="ln-259" name="ln-259" href="#ln-259"></a>
+<a id="ln-260" name="ln-260" href="#ln-260"></a><span class="cm">/**</span>
+<a id="ln-261" name="ln-261" href="#ln-261"></a><span class="cm"> * Function to perform back-propagation on a Torch Tensor.</span>
+<a id="ln-262" name="ln-262" href="#ln-262"></a><span class="cm"> * Note that the Tensor must have the requires_grad attribute set to true.</span>
+<a id="ln-263" name="ln-263" href="#ln-263"></a><span class="cm"> * @param Tensor to perform back-propagation on</span>
+<a id="ln-264" name="ln-264" href="#ln-264"></a><span class="cm"> * @param Tensor with an external gradient to supply for the back-propagation</span>
+<a id="ln-265" name="ln-265" href="#ln-265"></a><span class="cm"> * @param whether the computational graph should be retained</span>
+<a id="ln-266" name="ln-266" href="#ln-266"></a><span class="cm"> */</span>
+<a id="ln-267" name="ln-267" href="#ln-267"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_backward</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">,</span>
+<a id="ln-268" name="ln-268" href="#ln-268"></a><span class="w">                                    </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">external_gradient</span><span class="p">,</span>
+<a id="ln-269" name="ln-269" href="#ln-269"></a><span class="w">                                    </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">retain_graph</span><span class="p">);</span>
 <a id="ln-270" name="ln-270" href="#ln-270"></a>
-<a id="ln-271" name="ln-271" href="#ln-271"></a><span class="c1">// =============================================================================</span>
-<a id="ln-272" name="ln-272" href="#ln-272"></a><span class="c1">// --- Torch model API</span>
-<a id="ln-273" name="ln-273" href="#ln-273"></a><span class="c1">// =============================================================================</span>
-<a id="ln-274" name="ln-274" href="#ln-274"></a>
-<a id="ln-275" name="ln-275" href="#ln-275"></a><span class="cm">/**</span>
-<a id="ln-276" name="ln-276" href="#ln-276"></a><span class="cm"> * Function to load in a Torch model from a TorchScript file and store in a</span>
-<a id="ln-277" name="ln-277" href="#ln-277"></a><span class="cm"> * Torch Module</span>
-<a id="ln-278" name="ln-278" href="#ln-278"></a><span class="cm"> * @param filename where TorchScript description of model is stored</span>
-<a id="ln-279" name="ln-279" href="#ln-279"></a><span class="cm"> * @param device type used (cpu, CUDA, etc.)</span>
-<a id="ln-280" name="ln-280" href="#ln-280"></a><span class="cm"> * @param device index for the CUDA case</span>
-<a id="ln-281" name="ln-281" href="#ln-281"></a><span class="cm"> * @param whether gradient is required</span>
-<a id="ln-282" name="ln-282" href="#ln-282"></a><span class="cm"> * @param whether model is being trained</span>
-<a id="ln-283" name="ln-283" href="#ln-283"></a><span class="cm"> * @return Torch Module loaded in from file</span>
-<a id="ln-284" name="ln-284" href="#ln-284"></a><span class="cm"> */</span>
-<a id="ln-285" name="ln-285" href="#ln-285"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">torch_jit_load</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">filename</span><span class="p">,</span>
-<a id="ln-286" name="ln-286" href="#ln-286"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="n">torch_device_t</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span>
-<a id="ln-287" name="ln-287" href="#ln-287"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span>
-<a id="ln-288" name="ln-288" href="#ln-288"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">,</span>
-<a id="ln-289" name="ln-289" href="#ln-289"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_training</span><span class="p">);</span>
-<a id="ln-290" name="ln-290" href="#ln-290"></a>
-<a id="ln-291" name="ln-291" href="#ln-291"></a><span class="cm">/**</span>
-<a id="ln-292" name="ln-292" href="#ln-292"></a><span class="cm"> * Function to run the `forward` method of a Torch Module</span>
-<a id="ln-293" name="ln-293" href="#ln-293"></a><span class="cm"> * @param Torch Module containing the model</span>
-<a id="ln-294" name="ln-294" href="#ln-294"></a><span class="cm"> * @param vector of Torch Tensors as inputs to the model</span>
-<a id="ln-295" name="ln-295" href="#ln-295"></a><span class="cm"> * @param number of input Tensors in the input vector</span>
-<a id="ln-296" name="ln-296" href="#ln-296"></a><span class="cm"> * @param vector of Torch Tensors as outputs from running the model</span>
-<a id="ln-297" name="ln-297" href="#ln-297"></a><span class="cm"> * @param number of output Tensors in the output vector</span>
-<a id="ln-298" name="ln-298" href="#ln-298"></a><span class="cm"> * @param whether gradient is required</span>
-<a id="ln-299" name="ln-299" href="#ln-299"></a><span class="cm"> */</span>
-<a id="ln-300" name="ln-300" href="#ln-300"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_forward</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">,</span>
-<a id="ln-301" name="ln-301" href="#ln-301"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nin</span><span class="p">,</span>
-<a id="ln-302" name="ln-302" href="#ln-302"></a><span class="w">                                       </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">outputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nout</span><span class="p">,</span>
-<a id="ln-303" name="ln-303" href="#ln-303"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">);</span>
-<a id="ln-304" name="ln-304" href="#ln-304"></a>
-<a id="ln-305" name="ln-305" href="#ln-305"></a><span class="cm">/**</span>
-<a id="ln-306" name="ln-306" href="#ln-306"></a><span class="cm"> * Function to delete a Torch Module to clean up</span>
-<a id="ln-307" name="ln-307" href="#ln-307"></a><span class="cm"> * @param Torch Module to delete</span>
-<a id="ln-308" name="ln-308" href="#ln-308"></a><span class="cm"> */</span>
-<a id="ln-309" name="ln-309" href="#ln-309"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_delete</span><span class="p">(</span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
-<a id="ln-310" name="ln-310" href="#ln-310"></a>
-<a id="ln-311" name="ln-311" href="#ln-311"></a><span class="cp">#endif </span><span class="cm">/* C_TORCH_H*/</span>
+<a id="ln-271" name="ln-271" href="#ln-271"></a><span class="cm">/**</span>
+<a id="ln-272" name="ln-272" href="#ln-272"></a><span class="cm"> * Function to return the grad attribute of a Torch Tensor.</span>
+<a id="ln-273" name="ln-273" href="#ln-273"></a><span class="cm"> * @param Tensor to get the gradient of</span>
+<a id="ln-274" name="ln-274" href="#ln-274"></a><span class="cm"> * @param Tensor for the gradient</span>
+<a id="ln-275" name="ln-275" href="#ln-275"></a><span class="cm"> */</span>
+<a id="ln-276" name="ln-276" href="#ln-276"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">tensor</span><span class="p">,</span>
+<a id="ln-277" name="ln-277" href="#ln-277"></a><span class="w">                                        </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">gradient</span><span class="p">);</span>
+<a id="ln-278" name="ln-278" href="#ln-278"></a>
+<a id="ln-279" name="ln-279" href="#ln-279"></a><span class="c1">// =============================================================================</span>
+<a id="ln-280" name="ln-280" href="#ln-280"></a><span class="c1">// --- Torch model API</span>
+<a id="ln-281" name="ln-281" href="#ln-281"></a><span class="c1">// =============================================================================</span>
+<a id="ln-282" name="ln-282" href="#ln-282"></a>
+<a id="ln-283" name="ln-283" href="#ln-283"></a><span class="cm">/**</span>
+<a id="ln-284" name="ln-284" href="#ln-284"></a><span class="cm"> * Function to load in a Torch model from a TorchScript file and store in a</span>
+<a id="ln-285" name="ln-285" href="#ln-285"></a><span class="cm"> * Torch Module</span>
+<a id="ln-286" name="ln-286" href="#ln-286"></a><span class="cm"> * @param filename where TorchScript description of model is stored</span>
+<a id="ln-287" name="ln-287" href="#ln-287"></a><span class="cm"> * @param device type used (cpu, CUDA, etc.)</span>
+<a id="ln-288" name="ln-288" href="#ln-288"></a><span class="cm"> * @param device index for the CUDA case</span>
+<a id="ln-289" name="ln-289" href="#ln-289"></a><span class="cm"> * @param whether gradient is required</span>
+<a id="ln-290" name="ln-290" href="#ln-290"></a><span class="cm"> * @param whether model is being trained</span>
+<a id="ln-291" name="ln-291" href="#ln-291"></a><span class="cm"> * @return Torch Module loaded in from file</span>
+<a id="ln-292" name="ln-292" href="#ln-292"></a><span class="cm"> */</span>
+<a id="ln-293" name="ln-293" href="#ln-293"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">torch_jit_load</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">filename</span><span class="p">,</span>
+<a id="ln-294" name="ln-294" href="#ln-294"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="n">torch_device_t</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span>
+<a id="ln-295" name="ln-295" href="#ln-295"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span>
+<a id="ln-296" name="ln-296" href="#ln-296"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">,</span>
+<a id="ln-297" name="ln-297" href="#ln-297"></a><span class="w">                                                  </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_training</span><span class="p">);</span>
+<a id="ln-298" name="ln-298" href="#ln-298"></a>
+<a id="ln-299" name="ln-299" href="#ln-299"></a><span class="cm">/**</span>
+<a id="ln-300" name="ln-300" href="#ln-300"></a><span class="cm"> * Function to run the `forward` method of a Torch Module</span>
+<a id="ln-301" name="ln-301" href="#ln-301"></a><span class="cm"> * @param Torch Module containing the model</span>
+<a id="ln-302" name="ln-302" href="#ln-302"></a><span class="cm"> * @param vector of Torch Tensors as inputs to the model</span>
+<a id="ln-303" name="ln-303" href="#ln-303"></a><span class="cm"> * @param number of input Tensors in the input vector</span>
+<a id="ln-304" name="ln-304" href="#ln-304"></a><span class="cm"> * @param vector of Torch Tensors as outputs from running the model</span>
+<a id="ln-305" name="ln-305" href="#ln-305"></a><span class="cm"> * @param number of output Tensors in the output vector</span>
+<a id="ln-306" name="ln-306" href="#ln-306"></a><span class="cm"> * @param whether gradient is required</span>
+<a id="ln-307" name="ln-307" href="#ln-307"></a><span class="cm"> */</span>
+<a id="ln-308" name="ln-308" href="#ln-308"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_forward</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">,</span>
+<a id="ln-309" name="ln-309" href="#ln-309"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nin</span><span class="p">,</span>
+<a id="ln-310" name="ln-310" href="#ln-310"></a><span class="w">                                       </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">outputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nout</span><span class="p">,</span>
+<a id="ln-311" name="ln-311" href="#ln-311"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">);</span>
+<a id="ln-312" name="ln-312" href="#ln-312"></a>
+<a id="ln-313" name="ln-313" href="#ln-313"></a><span class="cm">/**</span>
+<a id="ln-314" name="ln-314" href="#ln-314"></a><span class="cm"> * Function to delete a Torch Module to clean up</span>
+<a id="ln-315" name="ln-315" href="#ln-315"></a><span class="cm"> * @param Torch Module to delete</span>
+<a id="ln-316" name="ln-316" href="#ln-316"></a><span class="cm"> */</span>
+<a id="ln-317" name="ln-317" href="#ln-317"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_delete</span><span class="p">(</span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
+<a id="ln-318" name="ln-318" href="#ln-318"></a>
+<a id="ln-319" name="ln-319" href="#ln-319"></a><span class="cp">#endif </span><span class="cm">/* C_TORCH_H*/</span>
 </pre></div>
 
       </section>

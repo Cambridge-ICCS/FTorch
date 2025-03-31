@@ -90,7 +90,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="81.8% of total for modules and submodules.">1257 statements</a>
+                 title="82.0% of total for modules and submodules.">1279 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -267,6 +267,7 @@
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_get_gradient">torch_tensor_get_gradient</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_ones">torch_tensor_ones</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_print">torch_tensor_print</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_zero_grad">torch_tensor_zero_grad</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_zeros">torch_tensor_zeros</a>
         </div>
       </div>
@@ -5202,6 +5203,11 @@ parameter
   <strong><a href='../type/torch_tensor.html#boundprocedure-requires_grad'>requires_grad</a></strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_requires_grad.html'>torch_tensor_requires_grad</a></td>
                   <td></td>
               </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/torch_tensor.html#boundprocedure-zero_grad'>zero_grad</a></strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_zero_grad.html'>torch_tensor_zero_grad</a></td>
+                  <td></td>
+              </tr>
           </tbody>
         </table>
     </div>
@@ -6468,7 +6474,7 @@ parameter
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_backward"></span> <h3>public  subroutine <a href='../proc/torch_tensor_backward.html'>torch_tensor_backward</a>(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_backward"></span> <h3>public  subroutine <a href='../proc/torch_tensor_backward.html'>torch_tensor_backward</a>(tensor, retain_graph)  
 </h3></div>
     <div class="card-body">
           
@@ -6487,7 +6493,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~55"></span>
+              <span class="anchor" id="variable-tensor~57"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -6498,6 +6504,21 @@ parameter
             <td><strong>tensor</strong></td>
             <td>
 <p>Tensor to compute gradients of</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-retain_graph"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>retain_graph</strong></td>
+            <td>
+<p>Should the computational graph be retained?</p>
             </td>
         </tr>
     </tbody>
@@ -10308,7 +10329,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~56"></span>
+              <span class="anchor" id="variable-tensor~58"></span>
               class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -10504,6 +10525,46 @@ parameter
             <td><strong>tensor</strong></td>
             <td>
 <p>Input tensor</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_zero_grad"></span> <h3>public  subroutine <a href='../proc/torch_tensor_zero_grad.html'>torch_tensor_zero_grad</a>(tensor)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resets a tensor's gradient to zero.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~55"></span>
+              class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Tensor to zero the gradient of</p>
             </td>
         </tr>
     </tbody>
