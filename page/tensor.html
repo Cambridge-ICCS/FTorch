@@ -132,6 +132,7 @@
 <li><a href="#constructors">Constructors</a></li>
 <li><a href="#tensor-interrogation">Tensor interrogation</a></li>
 <li><a href="#tensor-deallocation">Tensor deallocation</a></li>
+<li><a href="#tensor-manipulation">Tensor manipulation</a></li>
 <li><a href="#operator-overloading">Operator overloading</a></li>
 </ul>
 </li>
@@ -195,6 +196,13 @@ preceding <code>torch_tensor_</code>).</p>
 this can also be applied to arrays of tensors. Calling this subroutine manually
 is optional as it is called as a destructor when the <code>torch_tensor</code> goes out of
 scope anyway.</p>
+<h3 id="tensor-manipulation">Tensor manipulation</h3>
+<p>We provide the following subroutines for manipulating the data values associated
+with a <code>torch_tensor</code> object:</p>
+<ul>
+<li><code>torch_tensor_zero</code> (aliased as class method <code>torch_tensor%zero</code>), which
+  sets all the data entries associated with a tensor to zero.</li>
+</ul>
 <h3 id="operator-overloading">Operator overloading</h3>
 <p>Mathematical operators involving Tensors are overloaded, so that we can compute
 expressions involving outputs from one or more ML models.</p>

@@ -309,6 +309,15 @@ void torch_tensor_delete(torch_tensor_t tensor) {
 }
 
 // =====================================================================================
+// --- Functions for manipulating tensors
+// =====================================================================================
+
+void torch_tensor_zero(torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  t->zero_();
+}
+
+// =====================================================================================
 // --- Operator overloads acting on tensors
 // =====================================================================================
 

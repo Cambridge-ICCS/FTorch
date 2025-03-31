@@ -10,7 +10,7 @@
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
-    <title>torch_tensor_power_int8 &ndash; FTorch</title>
+    <title>torch_tensor_zero &ndash; FTorch</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -78,8 +78,8 @@
 
     <div class="container">
   <div class="row">
-    <h1>torch_tensor_power_int8
-      <small>Function</small>
+    <h1>torch_tensor_zero
+      <small>Subroutine</small>
       
     </h1>
       <div class="container p-2 mb-4 bg-light border rounded-3">
@@ -90,7 +90,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.3% of total for procedures.">20 statements</a>
+                 title=" 1.0% of total for procedures.">16 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -104,7 +104,7 @@
           <ol class="breadcrumb justify-content-end mb-0">
                 <li class="breadcrumb-item"><a href='../sourcefile/ftorch.f90.html'>ftorch.F90</a></li>
                 <li class="breadcrumb-item"><a href='../module/ftorch.html'>ftorch</a></li>
-            <li class="breadcrumb-item active" aria-current="page">torch_tensor_power_int8</li>
+            <li class="breadcrumb-item active" aria-current="page">torch_tensor_zero</li>
           </ol>
         </nav>
       </div>
@@ -147,7 +147,7 @@
     <div class="card card-primary">
       <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
-        <a class="list-group-item" href="../proc/torch_tensor_power_int8.html#src">torch_tensor_power_int8</a>
+        <a class="list-group-item" href="../proc/torch_tensor_zero.html#src">torch_tensor_zero</a>
       </div>
     </div>
 
@@ -157,7 +157,7 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public  function torch_tensor_power_int8(tensor, power) result(output)  
+    <h2>public  subroutine torch_tensor_zero(tensor)  
 </h2>
         <div class="card mb-4">
       <h3 class="card-header card-title bg-light">Uses</h3>
@@ -165,7 +165,6 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
               </ul>
             </li>
@@ -174,8 +173,10 @@
     </div>
 
 
-    <p>Overloads exponentiation operator for a tensor and a scalar of type <code>int8</code></p>
+    <p>Fills a tensor with the scalar value 0.</p>
 
+    <h3>Type Bound</h3>
+    <p><a href='../type/torch_tensor.html'>torch_tensor</a></p>
 
     <h3>Arguments</h3>
         <table class="table table-striped varlist">
@@ -190,44 +191,22 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~51"></span>
-              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+              <span class="anchor" id="variable-tensor~48"></span>
+              class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
-<td>intent(in)</td>
+<td>intent(inout)</td>
               <td></td>            <td>
               
             </td>
             <td>::</td>
             <td><strong>tensor</strong></td>
             <td>
-                
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-power"></span>
-              integer(kind=int8),
-            </td>
-<td>intent(in),</td>
-              <td></td>            <td>
-              target
-            </td>
-            <td>::</td>
-            <td><strong>power</strong></td>
-            <td>
-                
+                <p>Tensor whose values are to be zeroed</p>
             </td>
         </tr>
     </tbody>
   </table>
 
-      <h3>Return Value
-        <small>
-          <span class="anchor" id="variable-output~7"></span>
-          type(<a href='../type/torch_tensor.html'>torch_tensor</a>)
-        </small>
-      </h3>
-      
     <br>
 
 
@@ -242,31 +221,24 @@
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">function </span><span class="n">torch_tensor_power_int8</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="n">power</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-<span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nb">c_associated</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span>
-<span class="nb">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iso_fortran_env</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">int8</span>
-<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int8</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">power</span>
-<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">output</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_zero</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
+<span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nb">c_associated</span>
+<span class="nb">    </span><span class="k">class</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w"> </span><span class="c">!! Tensor whose values are to be zeroed</span>
 
 <span class="w">    </span><span class="k">interface</span>
-<span class="k">      subroutine </span><span class="n">torch_tensor_power_int_c</span><span class="p">(</span><span class="n">output_c</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_c</span><span class="p">,</span><span class="w"> </span><span class="n">power_c</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
-<span class="w">          </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;torch_tensor_power_int&#39;</span><span class="p">)</span>
+<span class="k">      subroutine </span><span class="n">torch_tensor_zero_c</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span><span class="w"> </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;torch_tensor_zero&#39;</span><span class="p">)</span>
 <span class="w">        </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_ptr</span>
 <span class="kt">        </span><span class="k">implicit none</span>
-<span class="k">        type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">output_c</span>
-<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_c</span>
-<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">power_c</span>
-<span class="w">      </span><span class="k">end subroutine </span><span class="n">torch_tensor_power_int_c</span>
+<span class="k">        type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span>
+<span class="w">      </span><span class="k">end subroutine </span><span class="n">torch_tensor_zero_c</span>
 <span class="w">    </span><span class="k">end interface</span>
 
-<span class="k">    if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">c_associated</span><span class="p">(</span><span class="n">output</span><span class="p">%</span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
-<span class="k">      call </span><span class="n">torch_tensor_empty</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_rank</span><span class="p">(),</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_shape</span><span class="p">(),</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_dtype</span><span class="p">(),</span><span class="w"> </span><span class="p">&amp;</span>
-<span class="w">                              </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_device_type</span><span class="p">(),</span><span class="w"> </span><span class="n">device_index</span><span class="o">=</span><span class="n">tensor</span><span class="p">%</span><span class="n">get_device_index</span><span class="p">(),</span><span class="w"> </span><span class="p">&amp;</span>
-<span class="w">                              </span><span class="n">requires_grad</span><span class="o">=</span><span class="n">tensor</span><span class="p">%</span><span class="n">requires_grad</span><span class="p">())</span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">c_associated</span><span class="p">(</span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: tensor must be constructed before zeroing values&quot;</span>
+<span class="w">      </span><span class="k">stop </span><span class="mi">1</span>
 <span class="w">    </span><span class="k">end if</span>
-<span class="k">    call </span><span class="n">torch_tensor_power_int_c</span><span class="p">(</span><span class="n">output</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span><span class="p">(</span><span class="n">power</span><span class="p">))</span>
-<span class="w">  </span><span class="k">end function </span><span class="n">torch_tensor_power_int8</span>
+<span class="k">    call </span><span class="n">torch_tensor_zero_c</span><span class="p">(</span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_tensor_zero</span>
 </pre></div>
 
     </section>
