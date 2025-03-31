@@ -13,8 +13,11 @@ module test_tensor_interrogation
 
   public
 
-  ! Parameters common across all test cases
+  ! All unit tests in this module run on CPU
   integer, parameter :: device_type = torch_kCPU
+
+  ! All unit tests in this module use float32 precision
+  integer, parameter :: dtype = torch_kFloat32
 
   ! Typedef holding a set of parameter values
   @testParameter
@@ -70,7 +73,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [6]
-    integer, parameter :: dtype = torch_kFloat32
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
@@ -86,7 +88,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
-    integer, parameter :: dtype = torch_kFloat32
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
@@ -102,7 +103,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1,2,3]
-    integer, parameter :: dtype = torch_kFloat32
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
@@ -118,7 +118,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [6]
-    integer, parameter :: dtype = torch_kFloat32
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
@@ -134,7 +133,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
-    integer, parameter :: dtype = torch_kFloat32
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
@@ -150,7 +148,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1, 2, 3]
-    integer, parameter :: dtype = torch_kFloat32
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
@@ -166,7 +163,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    integer, parameter :: dtype = torch_kFloat32
     integer, parameter :: expected = torch_kFloat32
 
     ! Create an empty tensor for 32-bit floats and check that torch_tensor_get_dtype can get the
@@ -183,7 +179,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    integer, parameter :: dtype = torch_kFloat32
     integer, parameter :: expected = torch_kCPU
 
     ! Create an empty tensor on the CPU with the default device type and check that
@@ -200,7 +195,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    integer, parameter :: dtype = torch_kFloat32
     integer, parameter :: expected = -1
 
     ! Create an empty tensor on the CPU with the default device index and check that
@@ -217,7 +211,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    integer, parameter :: dtype = torch_kFloat32
     logical, parameter :: expected = .true.
 
     ! Create an empty tensor on the CPU with the default device type
@@ -239,7 +232,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    integer, parameter :: dtype = torch_kFloat32
     logical :: expected
 
     ! Create an empty tensor on the CPU with the default device type
