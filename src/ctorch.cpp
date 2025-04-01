@@ -434,7 +434,20 @@ void torch_tensor_backward(const torch_tensor_t tensor,
                            const bool retain_graph) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   auto g = reinterpret_cast<torch::Tensor *const>(external_gradient);
-  t->backward(*g, retain_graph);
+
+  try {
+    // Check if the tensors are valid and defined
+    validate_tensor_not_null(t, "Input tensor");
+    validate_tensor_defined(t, "Input tensor");
+    validate_tensor_not_null(g, "External gradient");
+    validate_tensor_defined(g, "External gradient");
+
+    // Perform backwards step
+    t->backward(*g, retain_graph);
+  } catch (const std::exception &e) {
+    std::cerr << "Error in torch_tensor_backward: " << e.what() << std::endl;
+    std::terminate();
+  }
 }
 
 void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradient) {
