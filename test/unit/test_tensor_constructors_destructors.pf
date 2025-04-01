@@ -82,12 +82,6 @@ contains
     ]
   end function get_parameters_reordered
 
-  ! A fixture comprised of a short list of parameter sets
-  function get_parameters_short() result(params)
-    type(TestParametersType), allocatable :: params(:)
-    params = [TestParametersType(.false.,.false.,.false.,1)]
-  end function get_parameters_short
-
   ! Function for representing a parameter set as a string
   function toString(this) result(string)
     class(TestParametersType), intent(in) :: this
