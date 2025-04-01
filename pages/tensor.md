@@ -32,7 +32,10 @@ include:
   meaning the array must have been declared with the `target` property. The
   array will continue to be pointed to even when operations are applied to the
   tensor, so this subroutine can be used 'in advance' to set up an array for
-  outputting data.
+  outputting data. `torch_tensor_from_array` may be called with or without the
+  `layout` argument - an array which specifies the order in which indices should
+  be looped over. The default `layout` is `[1,2,...,n]`, i.e., the natural
+  ordering in Fortran.
 
 It is *compulsory* to call one of the constructors before interacting with it in
 any of the ways described in the following. Each of the constructors sets the
