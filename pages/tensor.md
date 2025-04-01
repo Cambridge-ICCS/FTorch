@@ -34,8 +34,9 @@ include:
   tensor, so this subroutine can be used 'in advance' to set up an array for
   outputting data. `torch_tensor_from_array` may be called with or without the
   `layout` argument - an array which specifies the order in which indices should
-  be looped over. The default `layout` is `[1,2,...,n]`, i.e., the natural
-  ordering in Fortran.
+  be looped over. The default `layout` is `[1,2,...,n]` implies that data will
+  be read into the correct indices by Torch. (See the
+  [transposing user guide page](pages/transposing.html) for more details.
 
 It is *compulsory* to call one of the constructors before interacting with it in
 any of the ways described in the following. Each of the constructors sets the
