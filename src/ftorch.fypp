@@ -428,6 +428,9 @@ contains
 
   #:endfor
   #:endfor
+  ! TODO: Avoid the following variant of torch_tensor_from_array by making the `layout` argument
+  !       optional. The reason this has not been done already is that it would require either making
+  !       the `device_type` argument optional (which we do not want to do) or break the API.
 
   #:for PREC in PRECISIONS
   #:for RANK in RANKS

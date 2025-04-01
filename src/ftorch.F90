@@ -1328,6 +1328,9 @@ contains
 
   end subroutine torch_tensor_from_array_real64_5d
 
+  ! TODO: Avoid the following variant of torch_tensor_from_array by making the `layout` argument
+  !       optional. The reason this has not been done already is that it would require either making
+  !       the `device_type` argument optional (which we do not want to do) or break the API.
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8` with default layout [1, 2, ..., n].
   subroutine torch_tensor_from_array_int8_1d_default_layout(tensor, data_in, &
