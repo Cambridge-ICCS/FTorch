@@ -14,10 +14,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 - `requires_grad` property hooked up to `torch_tensor` in [#288](https://github.com/Cambridge-ICCS/FTorch/pull/288)
 - MPI example added in [#270](https://github.com/Cambridge-ICCS/FTorch/pull/270)
 - Changelog file and guidance for versioning added in [#313](https://github.com/Cambridge-ICCS/FTorch/pull/313)
-- The unit tests for constructing and destroying tensors were separated out in
-  [#319](https://github.com/Cambridge-ICCS/FTorch/pull/319)
 - A new tensor manipulation demo was introduced in [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291).
-  This became demo 1 and the other demo numbers were bumped to account for this.
 - Backpropagation implemented with `torch_tensor_backward` and
   `torch_tensor_get_gradient` in [#286](https://github.com/Cambridge-ICCS/FTorch/pull/286)
 - Zeroing of gradients associated with a tensor implemented in
@@ -26,12 +23,20 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#342](https://github.com/Cambridge-ICCS/FTorch/pull/342).
 - Implemented `torch_tensor_zero` and class method alias in
   [#338](https://github.com/Cambridge-ICCS/FTorch/pull/338).
+- Provided interface for `torch_tensor_from_array` with default layout in
+  [#348](https://github.com/Cambridge-ICCS/FTorch/pull/348).
 
 ### Changed
 
 - fortitude dependency version increased to 0.7.0
 - Examples reordered to be more logical in [#317](https://github.com/Cambridge-ICCS/FTorch/pull/317)
 - scalar multiplication/division of tensors reworked to require the scalar to first be mapped to a `torch_tensor` in [#289](https://github.com/Cambridge-ICCS/FTorch/pull/289)
+- The unit tests for constructing and destroying tensors were separated out in
+  [#319](https://github.com/Cambridge-ICCS/FTorch/pull/319)
+- Demo numbers were bumped to account for new demo in
+  [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291).
+- Use interface for `torch_tensor_from_array` with default layout in tests and
+  examples in [#348](https://github.com/Cambridge-ICCS/FTorch/pull/348).
 
 ### Removed
 
