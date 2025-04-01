@@ -140,6 +140,31 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
 }
 
 // =============================================================================
+// --- Functions for validating tensors
+// =============================================================================
+
+// Check if a tensor is valid and defined
+void validate_tensor(const torch::Tensor *t, const std::string &name) {
+  if (!t || !t->defined()) {
+    throw std::invalid_argument(name + " is null or undefined.");
+  }
+}
+
+// Check if a tensor has requires_grad set
+void validate_requires_grad(const torch::Tensor *t, const std::string &name) {
+  if (!t->requires_grad()) {
+    throw std::runtime_error(name + " does not have requires_grad set.");
+  }
+}
+
+void validate_gradient_defined(const torch::Tensor *t, const std::string &name) {
+  if (!t->grad().defined()) {
+    throw std::runtime_error(
+        name + " has an undefined gradient.\nPerhaps you forgot to call backward.");
+  }
+}
+
+// =============================================================================
 // --- Functions for constructing tensors
 // =============================================================================
 
@@ -411,25 +436,12 @@ void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradi
     auto t = reinterpret_cast<torch::Tensor *const>(tensor);
     auto g = reinterpret_cast<torch::Tensor *>(gradient);
 
-    // Check if the tensor is valid and defined
-    if (!t || !t->defined()) {
-      throw std::invalid_argument("Input tensor is null or undefined.");
-    }
-
-    // Check if the output gradient pointer is valid
-    if (!g) {
-      throw std::invalid_argument("Output gradient pointer is null.");
-    }
-
-    // Check if the tensor requires gradients
-    if (!t->requires_grad()) {
-      throw std::runtime_error("Input tensor does not have requires_grad set.");
-    }
-
-    // Check if the gradient is defined
-    if (!t->grad().defined()) {
-      throw std::runtime_error("Gradient is undefined for the input tensor.");
-    }
+    // Check if the tensors are valid and defined
+    validate_tensor(t, "Input tensor");
+    validate_tensor(g, "Output gradient");
+    // Check input has requires_grad set and can generate a valid gradient tensor
+    validate_requires_grad(t, "Input tensor");
+    validate_gradient_defined(t, "Input tensor");
 
     // Assign the gradient to the output tensor
     std::move(*g) = t->grad();
