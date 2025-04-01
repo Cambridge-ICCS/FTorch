@@ -143,10 +143,17 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
 // --- Functions for validating tensors
 // =============================================================================
 
-// Check if a tensor is valid and defined
-void validate_tensor(const torch::Tensor *t, const std::string &name) {
-  if (!t || !t->defined()) {
-    throw std::invalid_argument(name + " is null or undefined.");
+// Check if a tensor is valid
+void validate_tensor_not_null(const torch::Tensor *t, const std::string &name) {
+  if (!t) {
+    throw std::invalid_argument(name + " is null.");
+  }
+}
+
+// Check if a tensor is defined
+void validate_tensor_defined(const torch::Tensor *t, const std::string &name) {
+  if (!t->defined()) {
+    throw std::invalid_argument(name + " is undefined.");
   }
 }
 
@@ -437,8 +444,9 @@ void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradi
     auto g = reinterpret_cast<torch::Tensor *>(gradient);
 
     // Check if the tensors are valid and defined
-    validate_tensor(t, "Input tensor");
-    validate_tensor(g, "Output gradient");
+    validate_tensor_not_null(t, "Input tensor");
+    validate_tensor_defined(t, "Input tensor");
+    validate_tensor_not_null(g, "Output gradient");
     // Check input has requires_grad set and can generate a valid gradient tensor
     validate_requires_grad(t, "Input tensor");
     validate_gradient_defined(t, "Input tensor");
