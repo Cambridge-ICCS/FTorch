@@ -32,6 +32,7 @@ module test_tensor_constructors_destructors
     logical :: requires_grad  ! Value used for the requires_grad argument
     logical :: auto_delete    ! torch_tensor_delete is called when .false., otherwise the finalizer
                               !   will call it when a tensor goes out of scope
+    logical :: reordered      ! If .true., a reversed tensor layout is used
     integer :: iterations     ! Number of times to construct/destruct a tensor
   contains
     procedure :: toString
@@ -56,32 +57,44 @@ contains
   function get_parameters_destruction() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
-      TestParametersType(.false.,.false.,1), &
-      TestParametersType(.false.,.false.,2), &
-      TestParametersType(.false.,.true.,1), &
-      TestParametersType(.false.,.true.,2) &
+      TestParametersType(.false.,.false.,.false.,1), &
+      TestParametersType(.false.,.false.,.false.,2), &
+      TestParametersType(.false.,.true.,.false.,1), &
+      TestParametersType(.false.,.true.,.false.,2) &
     ]
   end function get_parameters_destruction
 
-  ! A fixture comprised of a short list of parameter sets
+  ! A fixture comprised of parameter sets for varying the requires_grad argument
   function get_parameters_requires_grad() result(params)
     type(TestParametersType), allocatable :: params(:)
-    params = [TestParametersType(.false.,.false.,1)]
-    params = [TestParametersType(.true.,.false.,1)]
+    params = [ &
+      TestParametersType(.false.,.false.,.false.,1), &
+      TestParametersType(.true.,.false.,.false.,1) &
+    ]
   end function get_parameters_requires_grad
+
+  ! A fixture comprised of parameter sets for varying the tensor layout
+  function get_parameters_reordered() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,.false.,.false.,1), &
+      TestParametersType(.false.,.false.,.true.,1) &
+    ]
+  end function get_parameters_reordered
 
   ! A fixture comprised of a short list of parameter sets
   function get_parameters_short() result(params)
     type(TestParametersType), allocatable :: params(:)
-    params = [TestParametersType(.false.,.false.,1)]
+    params = [TestParametersType(.false.,.false.,.false.,1)]
   end function get_parameters_short
 
   ! Function for representing a parameter set as a string
   function toString(this) result(string)
     class(TestParametersType), intent(in) :: this
     character(:), allocatable :: string
-    character(len=5) :: str
-    write(str,"(l1,',',l1,',',i1)") this%requires_grad, this%auto_delete, this%iterations
+    character(len=7) :: str
+    write(str,"(l1,',',l1,',',l1,',',i1)") this%requires_grad, this%auto_delete, this%reordered, &
+                                           this%iterations
     string = str
   end function toString
 
@@ -230,7 +243,7 @@ contains
   end subroutine test_torch_from_array_1d
 
   ! Unit test for the torch_tensor_from_array subroutine in the 2D case
-  @test(testParameters={get_parameters_short()})
+  @test(testParameters={get_parameters_reordered()})
   subroutine test_torch_from_array_2d(this)
 
     implicit none
@@ -238,8 +251,10 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
+    integer :: tensor_layout(ndims)
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
+    real(wp), dimension(2,3) :: expected
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
@@ -248,7 +263,12 @@ contains
     @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(tensor1, in_data, device_type, device_index, &
+    if (this%param%reordered) then
+      tensor_layout(:) = [2, 1]
+    else
+      tensor_layout(:) = [1, 2]
+    end if
+    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
                                  this%param%requires_grad)
 
     ! Check the tensor pointer is associated
@@ -261,8 +281,9 @@ contains
     ! assignment operator
     tensor2 = tensor1
 
-    ! Compare the data in the tensor to the input data
-    if (.not. assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")) then
+    ! Compare the data in the tensor to the (reordered) input data
+    expected(:,:) = reshape(in_data, [2,3], order=tensor_layout)
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")) then
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
       stop 999
     end if
@@ -270,7 +291,7 @@ contains
   end subroutine test_torch_from_array_2d
 
   ! Unit test for the torch_tensor_from_array subroutine in the 3D case
-  @test(testParameters={get_parameters_short()})
+  @test(testParameters={get_parameters_reordered()})
   subroutine test_torch_from_array_3d(this)
 
     implicit none
@@ -278,8 +299,10 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 3
+    integer :: tensor_layout(ndims)
     real(wp), dimension(1,2,3), target :: in_data
     real(wp), dimension(1,2,3), target :: out_data
+    real(wp), dimension(1,2,3) :: expected
 
     ! Create an arbitrary input array
     in_data(:,:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [1,2,3])
@@ -288,7 +311,12 @@ contains
     @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(tensor1, in_data, device_type, device_index, &
+    if (this%param%reordered) then
+      tensor_layout(:) = [3, 2, 1]
+    else
+      tensor_layout(:) = [1, 2, 3]
+    end if
+    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
                                  this%param%requires_grad)
 
     ! Check the tensor pointer is associated
@@ -301,8 +329,9 @@ contains
     ! assignment operator
     tensor2 = tensor1
 
-    ! Compare the data in the tensor to the input data
-    if (.not. assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")) then
+    ! Compare the data in the tensor to the (reordered) input data
+    expected(:,:,:) = reshape(in_data, [1,2,3], order=tensor_layout)
+    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")) then
       print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
       stop 999
     end if
@@ -389,7 +418,5 @@ contains
     end do
 
   end subroutine test_torch_tensor_destruction
-
-  ! TODO: Test non-default tensor layout
 
 end module test_tensor_constructors_destructors
