@@ -25,7 +25,6 @@ module test_tensor_autograd
 
   ! All unit tests in this module use 2D arrays with the default layout and float32 precision
   integer, parameter :: ndims = 2
-  integer(ftorch_int), parameter :: tensor_layout(ndims) = [1, 2]
   integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
   integer, parameter :: dtype = torch_kFloat32
 
@@ -44,7 +43,7 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the first using the overloaded assignment
     ! operator
@@ -52,7 +51,7 @@ contains
     Q = a
 
     ! Create another tensor based off an output array for the gradient
-    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data, device_type)
 
     ! Apply back-propagation and retrieve the gradient and check it takes the expected value:
     !   Q(a) = a => dQ/da = 1
@@ -89,7 +88,7 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the first using the overloaded assignment
     ! operator
@@ -97,7 +96,7 @@ contains
     Q = a
 
     ! Create another tensor based off an output array for the gradient
-    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data, device_type)
 
     ! Apply back-propagation and retrieve the gradient and check it takes the expected value:
     !   Q(a) = a => dQ/da = 1

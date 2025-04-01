@@ -120,7 +120,6 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
 
@@ -135,7 +134,7 @@ contains
     @assertTrue(c_associated(tensor1%p))
 
     ! Create a tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+    call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
 
     ! Set the values of the second tensor to match those of the first using the overloaded
     ! assignment operator
@@ -161,7 +160,6 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
 
@@ -176,7 +174,7 @@ contains
     @assertTrue(c_associated(tensor1%p))
 
     ! Create a tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+    call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
 
     ! Set the values of the second tensor to match those of the first using the overloaded
     ! assignment operator
@@ -200,7 +198,6 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1
-    integer, parameter :: tensor_layout(ndims) = [1]
     real(wp), dimension(6), target :: in_data
     real(wp), dimension(6), target :: out_data
 
@@ -211,14 +208,14 @@ contains
     @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
+    call torch_tensor_from_array(tensor1, in_data, device_type, device_index, &
                                  this%param%requires_grad)
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
 
     ! Create a tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+    call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
 
     ! Set the values of the second tensor to match those of the first using the overloaded
     ! assignment operator
@@ -241,7 +238,6 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
 
@@ -252,14 +248,14 @@ contains
     @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
+    call torch_tensor_from_array(tensor1, in_data, device_type, device_index, &
                                  this%param%requires_grad)
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
 
     ! Create a tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+    call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
 
     ! Set the values of the second tensor to match those of the first using the overloaded
     ! assignment operator
@@ -282,7 +278,6 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 3
-    integer, parameter :: tensor_layout(ndims) = [1, 2, 3]
     real(wp), dimension(1,2,3), target :: in_data
     real(wp), dimension(1,2,3), target :: out_data
 
@@ -293,14 +288,14 @@ contains
     @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
+    call torch_tensor_from_array(tensor1, in_data, device_type, device_index, &
                                  this%param%requires_grad)
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
 
     ! Create a tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type, device_index)
+    call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
 
     ! Set the values of the second tensor to match those of the first using the overloaded
     ! assignment operator
@@ -394,5 +389,7 @@ contains
     end do
 
   end subroutine test_torch_tensor_destruction
+
+  ! TODO: Test non-default tensor layout
 
 end module test_tensor_constructors_destructors

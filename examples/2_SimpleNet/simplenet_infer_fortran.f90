@@ -22,7 +22,6 @@ program inference
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
    real(wp), dimension(5), target :: expected
-   integer, parameter :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
    ! The net, a vector of input tensors (in this case we only have one), and the output tensor
@@ -44,8 +43,8 @@ program inference
    in_data = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
 
    ! Create Torch input/output tensors from the above arrays
-   call torch_tensor_from_array(in_tensors(1), in_data, tensor_layout, torch_kCPU)
-   call torch_tensor_from_array(out_tensors(1), out_data, tensor_layout, torch_kCPU)
+   call torch_tensor_from_array(in_tensors(1), in_data, torch_kCPU)
+   call torch_tensor_from_array(out_tensors(1), out_data, torch_kCPU)
 
    ! Load ML model
    call torch_model_load(model, args(1), torch_kCPU)

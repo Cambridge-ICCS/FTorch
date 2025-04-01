@@ -24,7 +24,6 @@ program inference
    real(wp), dimension(5), target :: in_data
    real(wp), dimension(5), target :: out_data
    real(wp), dimension(5) :: expected
-   integer, parameter :: tensor_layout(1) = [1]
 
    ! Set up Torch data structures
    type(torch_model) :: model
@@ -67,13 +66,12 @@ program inference
       ! Create Torch input tensor from the above array and assign it to the first (and only)
       ! element in the array of input tensors.
       ! We use the specified GPU device type with the given device index
-      call torch_tensor_from_array(in_tensors(1), in_data, tensor_layout, device_type, &
-                                   device_index=device_index)
+      call torch_tensor_from_array(in_tensors(1), in_data, device_type, device_index=device_index)
 
       ! Create Torch output tensor from the above array.
       ! Here we use the torch_kCPU device type since the tensor is for output only
       ! i.e. to be subsequently used by Fortran on CPU.
-      call torch_tensor_from_array(out_tensors(1), out_data, tensor_layout, torch_kCPU)
+      call torch_tensor_from_array(out_tensors(1), out_data, torch_kCPU)
 
       ! Load ML model. Ensure that the same device type and device index are used
       ! as for the input data.

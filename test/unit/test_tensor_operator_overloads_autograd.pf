@@ -24,9 +24,9 @@ module test_tensor_operator_overloads_autograd
   ! All unit tests in this module run on CPU
   integer, parameter :: device_type = torch_kCPU
 
-  ! All unit tests in this module use 2x3 arrays with the default layout and float32 precision
+  ! All unit tests in this module use 2x3 arrays with float32 precision
   integer, parameter :: ndims = 2
-  integer, parameter :: tensor_layout(ndims) = [1, 2]
+  integer(c_int64_t), parameter, dimension(1) :: scalar_shape = [1]
   integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
   integer, parameter :: dtype = torch_kFloat32
 
@@ -91,7 +91,7 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the first using the overloaded assignment
     ! operator
@@ -102,7 +102,7 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
-    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data, device_type)
     call torch_tensor_get_gradient(a, dQda)
 
     ! Check the computed gradient takes the expected value:
@@ -131,8 +131,8 @@ contains
     in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
 
     ! Create tensor based off input arrays
-    call torch_tensor_from_array(a, in_data1, tensor_layout, device_type, requires_grad=.true.)
-    call torch_tensor_from_array(b, in_data2, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data1, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(b, in_data2, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the sum of the first two using the overloaded
     ! addition operator
@@ -143,8 +143,8 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create tensors based off output arrays for the gradient and then retrieve them
-    call torch_tensor_from_array(dQda, out_data1, tensor_layout, device_type)
-    call torch_tensor_from_array(dQdb, out_data2, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data1, device_type)
+    call torch_tensor_from_array(dQdb, out_data2, device_type)
     call torch_tensor_get_gradient(a, dQda)
     call torch_tensor_get_gradient(b, dQdb)
 
@@ -181,7 +181,7 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off the input array
-    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the negative of the first one using the
     ! overloaded negation operator
@@ -192,7 +192,7 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
-    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data, device_type)
     call torch_tensor_get_gradient(a, dQda)
 
     ! Extract Fortran array from the computed gradient and its data with the expected value:
@@ -221,8 +221,8 @@ contains
     in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
 
     ! Create tensor based off input arrays
-    call torch_tensor_from_array(a, in_data1, tensor_layout, device_type, requires_grad=.true.)
-    call torch_tensor_from_array(b, in_data2, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data1, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(b, in_data2, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the difference of the first two using the
     ! overloaded subtraction operator
@@ -233,8 +233,8 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create tensors based off output arrays for the gradient and then retrieve them
-    call torch_tensor_from_array(dQda, out_data1, tensor_layout, device_type)
-    call torch_tensor_from_array(dQdb, out_data2, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data1, device_type)
+    call torch_tensor_from_array(dQdb, out_data2, device_type)
     call torch_tensor_get_gradient(a, dQda)
     call torch_tensor_get_gradient(b, dQdb)
 
@@ -272,8 +272,8 @@ contains
     in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
 
     ! Create tensor based off input arrays
-    call torch_tensor_from_array(a, in_data1, tensor_layout, device_type, requires_grad=.true.)
-    call torch_tensor_from_array(b, in_data2, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data1, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(b, in_data2, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the product of the first two using the
     ! overloaded multiplication operator
@@ -284,8 +284,8 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create tensors based off output arrays for the gradient and then retrieve them
-    call torch_tensor_from_array(dQda, out_data1, tensor_layout, device_type)
-    call torch_tensor_from_array(dQdb, out_data2, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data1, device_type)
+    call torch_tensor_from_array(dQdb, out_data2, device_type)
     call torch_tensor_get_gradient(a, dQda)
     call torch_tensor_get_gradient(b, dQdb)
 
@@ -324,10 +324,10 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create tensor based off input array
-    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create rank-1 tensor based off scalar
-    call torch_tensor_from_array(multiplier, [scalar], tensor_layout, device_type)
+    call torch_tensor_from_array(multiplier, [scalar], device_type)
 
     ! Create another empty tensors and assign it to the product of a scalar constant and the first
     ! tensor using the overloaded multiplication operator
@@ -342,7 +342,7 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
-    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data, device_type)
     call torch_tensor_get_gradient(a, dQda)
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
@@ -372,8 +372,8 @@ contains
     in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
 
     ! Create tensor based off input arrays
-    call torch_tensor_from_array(a, in_data1, tensor_layout, device_type, requires_grad=.true.)
-    call torch_tensor_from_array(b, in_data2, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data1, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(b, in_data2, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the quotient of the first two using the
     ! overloaded division operator
@@ -384,8 +384,8 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create tensors based off output arrays for the gradient and then retrieve them
-    call torch_tensor_from_array(dQda, out_data1, tensor_layout, device_type)
-    call torch_tensor_from_array(dQdb, out_data2, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data1, device_type)
+    call torch_tensor_from_array(dQdb, out_data2, device_type)
     call torch_tensor_get_gradient(a, dQda)
     call torch_tensor_get_gradient(b, dQdb)
 
@@ -424,10 +424,10 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create tensor based off input array
-    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create rank-1 tensor based off scalar
-    call torch_tensor_from_array(divisor, [scalar], tensor_layout, device_type)
+    call torch_tensor_from_array(divisor, [scalar], device_type)
 
     ! Create another empty tensors and assign it to the product of a scalar constant and the first
     ! tensor using the overloaded multiplication operator
@@ -438,7 +438,7 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
-    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data, device_type)
     call torch_tensor_get_gradient(a, dQda)
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
@@ -467,7 +467,7 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off the input array
-    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the square of the first one using the
     ! overloaded power operator
@@ -482,7 +482,7 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
-    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data, device_type)
     call torch_tensor_get_gradient(a, dQda)
 
     ! Extract Fortran array from the computed gradient and its data with the expected value:
@@ -510,7 +510,7 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off the input array
-    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the square root of the first one using the
     ! overloaded power operator
@@ -521,7 +521,7 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
-    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data, device_type)
     call torch_tensor_get_gradient(a, dQda)
 
     ! Extract Fortran array from the computed gradient and its data with the expected value:
