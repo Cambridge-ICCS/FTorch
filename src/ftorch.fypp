@@ -96,6 +96,11 @@ module ftorch
     module procedure torch_tensor_from_array_${PREC}$_${RANK}$d
     #:endfor
     #:endfor
+    #:for PREC in PRECISIONS
+    #:for RANK in RANKS
+    module procedure torch_tensor_from_array_${PREC}$_${RANK}$d_default_layout
+    #:endfor
+    #:endfor
   end interface
 
   !> Interface for deleting generic torch objects
@@ -420,6 +425,41 @@ contains
                                 requires_grad)
 
   end subroutine torch_tensor_from_array_${PREC}$_${RANK}$d
+
+  #:endfor
+  #:endfor
+
+  #:for PREC in PRECISIONS
+  #:for RANK in RANKS
+  !> Return a Torch tensor pointing to data_in array of rank ${RANK}$ containing data of type `${PREC}$` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_${PREC}$_${RANK}$d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in), target :: data_in${ranksuffix(RANK)}$  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(${RANK}$)  !! Order of indices
+    integer(c_int), parameter :: ndims = ${RANK}$  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_${PREC}$_${RANK}$d_default_layout
 
   #:endfor
   #:endfor
