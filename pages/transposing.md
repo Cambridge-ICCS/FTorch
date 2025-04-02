@@ -142,7 +142,8 @@ It takes the form of an array specifying which order to read the indices in.
 i.e. `[1, 2]` will read `i` then `j`.
 By passing `layout = [1, 2]` the data will be read into the correct indices by
 Torch. The natural ordering `[1, 2, ..., n]` (where `n` is the dimension of the
-array) is the default used by `torch_tensor_from_array`. In most cases, it
+array) is the default used by `torch_tensor_from_array`.
+In cases where your tensors are indexed the same way in both Fortran and Torch, it
 should be sufficient to just use the default value, in which case you don't need
 to pass a `layout` argument at all.
 
