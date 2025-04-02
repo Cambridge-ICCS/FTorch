@@ -23,7 +23,6 @@ program tensor_manipulation
   integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
 
   ! Variables for constructing tensors with torch_tensor_from_array
-  integer, parameter :: tensor_layout(ndims) = [1, 2]
   real(wp), dimension(2,3), target :: in_data, out_data
 
   ! Create a tensor of ones
@@ -41,10 +40,10 @@ program tensor_manipulation
   ! Create a tensor based off an array
   ! ----------------------------------
   ! Note that the API is slightly different for this subroutine. In particular, the dimension,
-  ! shape and data type of the tensor are automatically inherited from the input array. Further,
-  ! the tensor layout should be specified, which determines the indexing order.
+  ! shape and data type of the tensor are automatically inherited from the input array so do not
+  ! need to be specified.
   in_data(:,:) = reshape([1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp], [2,3])
-  call torch_tensor_from_array(b, in_data, tensor_layout, torch_kCPU)
+  call torch_tensor_from_array(b, in_data, torch_kCPU)
   ! Another way of viewing the contents of a tensor is to print the array used as its input.
   write(*,*) "Contents of second input tensor:"
   write(*,*) in_data
@@ -53,7 +52,7 @@ program tensor_manipulation
   ! -----------------------------------------------
   ! This requires some setup in advance. Create a tensor based off the Fortran array that you want
   ! to extract data into in the same way as above. There's no need to assign values to the array.
-  call torch_tensor_from_array(c, out_data, tensor_layout, torch_kCPU)
+  call torch_tensor_from_array(c, out_data, torch_kCPU)
 
   ! Perform arithmetic on the tensors using the overloaded addition operator
   ! ------------------------------------------------------------------------

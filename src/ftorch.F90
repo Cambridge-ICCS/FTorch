@@ -102,6 +102,36 @@ module ftorch
     module procedure torch_tensor_from_array_real64_3d
     module procedure torch_tensor_from_array_real64_4d
     module procedure torch_tensor_from_array_real64_5d
+    module procedure torch_tensor_from_array_int8_1d_default_layout
+    module procedure torch_tensor_from_array_int8_2d_default_layout
+    module procedure torch_tensor_from_array_int8_3d_default_layout
+    module procedure torch_tensor_from_array_int8_4d_default_layout
+    module procedure torch_tensor_from_array_int8_5d_default_layout
+    module procedure torch_tensor_from_array_int16_1d_default_layout
+    module procedure torch_tensor_from_array_int16_2d_default_layout
+    module procedure torch_tensor_from_array_int16_3d_default_layout
+    module procedure torch_tensor_from_array_int16_4d_default_layout
+    module procedure torch_tensor_from_array_int16_5d_default_layout
+    module procedure torch_tensor_from_array_int32_1d_default_layout
+    module procedure torch_tensor_from_array_int32_2d_default_layout
+    module procedure torch_tensor_from_array_int32_3d_default_layout
+    module procedure torch_tensor_from_array_int32_4d_default_layout
+    module procedure torch_tensor_from_array_int32_5d_default_layout
+    module procedure torch_tensor_from_array_int64_1d_default_layout
+    module procedure torch_tensor_from_array_int64_2d_default_layout
+    module procedure torch_tensor_from_array_int64_3d_default_layout
+    module procedure torch_tensor_from_array_int64_4d_default_layout
+    module procedure torch_tensor_from_array_int64_5d_default_layout
+    module procedure torch_tensor_from_array_real32_1d_default_layout
+    module procedure torch_tensor_from_array_real32_2d_default_layout
+    module procedure torch_tensor_from_array_real32_3d_default_layout
+    module procedure torch_tensor_from_array_real32_4d_default_layout
+    module procedure torch_tensor_from_array_real32_5d_default_layout
+    module procedure torch_tensor_from_array_real64_1d_default_layout
+    module procedure torch_tensor_from_array_real64_2d_default_layout
+    module procedure torch_tensor_from_array_real64_3d_default_layout
+    module procedure torch_tensor_from_array_real64_4d_default_layout
+    module procedure torch_tensor_from_array_real64_5d_default_layout
   end interface
 
   !> Interface for deleting generic torch objects
@@ -1297,6 +1327,910 @@ contains
                                 requires_grad)
 
   end subroutine torch_tensor_from_array_real64_5d
+
+  ! TODO: Avoid the following variant of torch_tensor_from_array by making the `layout` argument
+  !       optional. The reason this has not been done already is that it would require either making
+  !       the `device_type` argument optional (which we do not want to do) or break the API.
+
+  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int8_1d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int8
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int8), intent(in), target :: data_in(:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int8_1d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int8` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int8_2d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int8
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int8), intent(in), target :: data_in(:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int8_2d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int8` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int8_3d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int8
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int8), intent(in), target :: data_in(:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int8_3d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int8` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int8_4d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int8
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int8), intent(in), target :: data_in(:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int8_4d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int8` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int8_5d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int8
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int8), intent(in), target :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int8_5d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int16` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int16_1d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int16
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int16), intent(in), target :: data_in(:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int16_1d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int16` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int16_2d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int16
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int16), intent(in), target :: data_in(:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int16_2d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int16` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int16_3d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int16
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int16), intent(in), target :: data_in(:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int16_3d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int16` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int16_4d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int16
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int16), intent(in), target :: data_in(:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int16_4d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int16` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int16_5d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int16
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int16), intent(in), target :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int16_5d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int32` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int32_1d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int32), intent(in), target :: data_in(:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int32_1d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int32` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int32_2d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int32), intent(in), target :: data_in(:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int32_2d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int32` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int32_3d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int32), intent(in), target :: data_in(:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int32_3d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int32` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int32_4d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int32), intent(in), target :: data_in(:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int32_4d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int32` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int32_5d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int32), intent(in), target :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int32_5d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int64` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int64_1d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int64), intent(in), target :: data_in(:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int64_1d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int64` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int64_2d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int64), intent(in), target :: data_in(:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int64_2d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int64` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int64_3d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int64), intent(in), target :: data_in(:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int64_3d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int64` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int64_4d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int64), intent(in), target :: data_in(:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int64_4d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int64` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_int64_5d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : int64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    integer(kind=int64), intent(in), target :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_int64_5d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real32` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_real32_1d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    real(kind=real32), intent(in), target :: data_in(:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_real32_1d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real32` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_real32_2d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    real(kind=real32), intent(in), target :: data_in(:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_real32_2d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real32` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_real32_3d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    real(kind=real32), intent(in), target :: data_in(:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_real32_3d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real32` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_real32_4d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    real(kind=real32), intent(in), target :: data_in(:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_real32_4d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `real32` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_real32_5d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real32
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    real(kind=real32), intent(in), target :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_real32_5d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real64` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_real64_1d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    real(kind=real64), intent(in), target :: data_in(:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_real64_1d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real64` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_real64_2d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    real(kind=real64), intent(in), target :: data_in(:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_real64_2d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real64` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_real64_3d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    real(kind=real64), intent(in), target :: data_in(:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_real64_3d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real64` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_real64_4d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    real(kind=real64), intent(in), target :: data_in(:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_real64_4d_default_layout
+
+  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `real64` with default layout [1, 2, ..., n].
+  subroutine torch_tensor_from_array_real64_5d_default_layout(tensor, data_in, &
+                                                                       device_type, device_index, &
+                                                                       requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+
+    ! output tensor
+    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
+
+    ! inputs
+    real(kind=real64), intent(in), target :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
+    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or `torch_kCUDA`)
+    integer, optional, intent(in) :: device_index   !! Device index to use for `torch_kCUDA` case
+    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+
+  end subroutine torch_tensor_from_array_real64_5d_default_layout
 
 
   ! ============================================================================

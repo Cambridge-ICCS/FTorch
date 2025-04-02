@@ -32,10 +32,8 @@ contains
 
       integer, parameter :: in_dims = 4
       integer, parameter :: in_shape(in_dims) = [1, 3, 224, 224]
-      integer, parameter :: in_layout(in_dims) = [1, 2, 3, 4]
       integer, parameter :: out_dims = 2
       integer, parameter :: out_shape(out_dims) = [1, 1000]
-      integer, parameter :: out_layout(out_dims) = [1, 2]
 
       ! Path to input data
       character(len=128) :: data_dir
@@ -82,9 +80,9 @@ contains
       call load_data(filename, tensor_length, in_data)
 
       ! Create input/output tensors from the above arrays
-      call torch_tensor_from_array(in_tensors(1), in_data, in_layout, torch_kCPU)
+      call torch_tensor_from_array(in_tensors(1), in_data, torch_kCPU)
 
-      call torch_tensor_from_array(out_tensors(1), out_data, out_layout, torch_kCPU)
+      call torch_tensor_from_array(out_tensors(1), out_data, torch_kCPU)
 
       ! Load ML model (edit this line to use different models)
       call torch_model_load(model, args(1), torch_kCPU)

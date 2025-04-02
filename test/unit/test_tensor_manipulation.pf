@@ -27,7 +27,6 @@ contains
 
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer, parameter :: tensor_layout(ndims) = [1, 2]
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3) :: expected
@@ -37,7 +36,7 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(tensor, in_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor, in_data, device_type)
 
     ! Call the torch_tensor_zero subroutine using its class method alias
     call tensor%zero()

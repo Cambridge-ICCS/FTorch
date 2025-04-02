@@ -21,9 +21,8 @@ module test_tensor_operator_overloads
   ! All unit tests in this module run on CPU
   integer, parameter :: device_type = torch_kCPU
 
-  ! All unit tests in this module use 2D arrays with the default layout and float32 precision
+  ! All unit tests in this module use 2D arrays with float32 precision
   integer, parameter :: ndims = 2
-  integer, parameter :: tensor_layout(ndims) = [1, 2]
   integer, parameter :: dtype = torch_kFloat32
 
   ! Typedef holding a set of parameter values
@@ -87,10 +86,10 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor1, in_data, device_type)
 
     ! Create another tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor2, out_data, device_type)
 
     ! Create another tensor by copying the first using the overloaded assignment operator
     tensor2 = tensor1
@@ -126,11 +125,11 @@ contains
     in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
 
     ! Create tensors based off the two input arrays
-    call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
-    call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor1, in_data1, device_type)
+    call torch_tensor_from_array(tensor2, in_data2, device_type)
 
     ! Create another tensor based off an output array
-    call torch_tensor_from_array(tensor3, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor3, out_data, device_type)
 
     ! Create another tensor as the sum of the first two using the overloaded addition operator
     tensor3 = tensor1 + tensor2
@@ -172,11 +171,11 @@ contains
     in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
 
     ! Create tensors based off the two input arrays
-    call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
-    call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor1, in_data1, device_type)
+    call torch_tensor_from_array(tensor2, in_data2, device_type)
 
     ! Create another tensor based off an output array
-    call torch_tensor_from_array(tensor3, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor3, out_data, device_type)
 
     ! Create another tensor as the difference of the first two using the overloaded subtraction
     ! operator
@@ -218,10 +217,10 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create tensors based off the input array
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor1, in_data, device_type)
 
     ! Create another tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor2, out_data, device_type)
 
     ! Create another tensor as the negative of the first using the overloaded negative operator
     tensor2 = -tensor1
@@ -258,11 +257,11 @@ contains
     in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
 
     ! Create tensors based off the two input arrays
-    call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
-    call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor1, in_data1, device_type)
+    call torch_tensor_from_array(tensor2, in_data2, device_type)
 
     ! Create another tensor based off an output array
-    call torch_tensor_from_array(tensor3, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor3, out_data, device_type)
 
     ! Create another tensor as the product of the first two using the overloaded multiplication
     ! operator
@@ -305,13 +304,13 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off the input array
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor1, in_data, device_type)
 
     ! Create a rank-1 tensor based off the scalar multiplier
     call torch_tensor_from_array(multiplier, [scalar], [1], device_type)
 
     ! Create another tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor2, out_data, device_type)
     if (this%param%switch) then
       tensor2 = multiplier * tensor1
     else
@@ -351,11 +350,11 @@ contains
     in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
 
     ! Create tensors based off the two input arrays
-    call torch_tensor_from_array(tensor1, in_data1, tensor_layout, device_type)
-    call torch_tensor_from_array(tensor2, in_data2, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor1, in_data1, device_type)
+    call torch_tensor_from_array(tensor2, in_data2, device_type)
 
     ! Create another tensor based off an output array
-    call torch_tensor_from_array(tensor3, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor3, out_data, device_type)
 
     ! Create another tensor as the quotient of the first two using the overloaded division operator
     tensor3 = tensor1 / tensor2
@@ -400,13 +399,13 @@ contains
     call torch_tensor_from_array(divisor, [scalar], [1], device_type)
 
     ! Create a tensor based off the input array
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor1, in_data, device_type)
 
     ! Create a rank-1 tensor based off the scalar divisor
     call torch_tensor_from_array(divisor, [scalar], [1], device_type)
 
     ! Create another tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor2, out_data, device_type)
 
     ! Create another tensor as the quotient of the first tensor and a scalar constant using the
     ! overloaded division operator
@@ -444,10 +443,10 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off the input array
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor1, in_data, device_type)
 
     ! Create another tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor2, out_data, device_type)
 
     ! Create another tensor as the first tensor to the power of an exponent using the
     ! overloaded exponentiation operator
@@ -488,10 +487,10 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a tensor based off the input array
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor1, in_data, device_type)
 
     ! Create another tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(tensor2, out_data, device_type)
 
     ! Create another tensors as the tensor to the power of 0.5 using the overloaded exponentiation
     ! operator

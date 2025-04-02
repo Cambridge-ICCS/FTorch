@@ -20,7 +20,6 @@ program example
   integer, parameter :: n = 2
   real(wp), dimension(n), target :: out_data1, out_data2, out_data3
   real(wp), dimension(n) :: expected
-  integer :: tensor_layout(ndims) = [1]
 
   ! Flag for testing
   logical :: test_pass
@@ -29,16 +28,16 @@ program example
   type(torch_tensor) :: a, b, Q, multiplier, divisor, dQda, dQdb
 
   ! Initialise Torch Tensors from input arrays as in Python example
-  call torch_tensor_from_array(a, [2.0_wp, 3.0_wp], tensor_layout, torch_kCPU, requires_grad=.true.)
-  call torch_tensor_from_array(b, [6.0_wp, 4.0_wp], tensor_layout, torch_kCPU, requires_grad=.true.)
+  call torch_tensor_from_array(a, [2.0_wp, 3.0_wp], torch_kCPU, requires_grad=.true.)
+  call torch_tensor_from_array(b, [6.0_wp, 4.0_wp], torch_kCPU, requires_grad=.true.)
 
   ! Initialise Torch Tensor from array used for output
-  call torch_tensor_from_array(Q, out_data1, tensor_layout, torch_kCPU)
+  call torch_tensor_from_array(Q, out_data1, torch_kCPU)
 
   ! Scalar multiplication and division are not currently implemented in FTorch. However, you can
   ! achieve the same thing by defining a rank-1 tensor with a single entry, as follows:
-  call torch_tensor_from_array(multiplier, [3.0_wp], tensor_layout, torch_kCPU)
-  call torch_tensor_from_array(divisor, [3.0_wp], tensor_layout, torch_kCPU)
+  call torch_tensor_from_array(multiplier, [3.0_wp], torch_kCPU)
+  call torch_tensor_from_array(divisor, [3.0_wp], torch_kCPU)
 
   ! Compute the same mathematical expression as in the Python example
   Q = multiplier * (a**3 - b * b / divisor)
@@ -56,8 +55,8 @@ program example
   call torch_tensor_backward(Q)
 
   ! Create tensors based off output arrays for the gradients and then retrieve them
-  call torch_tensor_from_array(dQda, out_data2, tensor_layout, torch_kCPU)
-  call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
+  call torch_tensor_from_array(dQda, out_data2, torch_kCPU)
+  call torch_tensor_from_array(dQdb, out_data3, torch_kCPU)
   call torch_tensor_get_gradient(a, dQda)
   call torch_tensor_get_gradient(b, dQdb)
 
