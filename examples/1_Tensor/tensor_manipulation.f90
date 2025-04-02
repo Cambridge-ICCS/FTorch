@@ -3,7 +3,7 @@ program tensor_manipulation
   ! Import the FTorch procedures that are used in this worked example
   use ftorch, only: assignment(=), operator(+), torch_kCPU, torch_kFloat32, torch_tensor, &
                     torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
-                    torch_tensor_ones, torch_tensor_print
+                    torch_tensor_mean, torch_tensor_ones, torch_tensor_print
 
   use, intrinsic :: iso_c_binding, only: c_int64_t
 
@@ -16,7 +16,7 @@ program tensor_manipulation
   integer, parameter :: wp = sp
 
   ! Define some tensors
-  type(torch_tensor) :: a, b, c
+  type(torch_tensor) :: a, b, c, mean
 
   ! Variables for constructing tensors with torch_tensor_ones
   integer, parameter :: ndims = 2
@@ -24,6 +24,10 @@ program tensor_manipulation
 
   ! Variables for constructing tensors with torch_tensor_from_array
   real(wp), dimension(2,3), target :: in_data, out_data
+
+  ! Variables for constructing tensors containing a single scalar value
+  integer, parameter :: scalar_layout(1) = [1]
+  real(wp), dimension(1), target :: scalar_data
 
   ! Create a tensor of ones
   ! -----------------------
@@ -60,8 +64,20 @@ program tensor_manipulation
   ! constructed using `torch_tensor_empty` but it won't be possible to extract its data into an
   ! array.
   c = a + b
-  write(*,*) "Output:"
+  write(*,*) "Sum of input tensors:"
   write(*,*) out_data
+
+  ! Summing the contents of a tensor
+  ! ---------------------------------
+  ! In addition to the overloaded mathematical operators, FTorch provides other operators for
+  ! computations involving tensors. One such operator is the mean over the values in the tensor.
+  ! While the mean over a tensor is a scalar value, we compute it as a single value in a tensor of
+  ! dimension 1. First construct the 'tensor' with `torch_tensor_from_array` and then compute the
+  ! mean as follows.
+  call torch_tensor_from_array(mean, scalar_data, scalar_layout, torch_kCPU)
+  call torch_tensor_mean(c, mean)
+  write(*,*) "Mean value:"
+  write(*,*) scalar_data
 
   ! Clean up
   ! --------
