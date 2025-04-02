@@ -585,7 +585,7 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create tensors based off the input array
-    call torch_tensor_from_array(a, in_data, tensor_layout, device_type, requires_grad=.true.)
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create another empty tensor and assign it to the mean of the first one
     call torch_tensor_empty(Q, 1, scalar_shape, dtype, device_type)
@@ -595,7 +595,7 @@ contains
     call torch_tensor_backward(Q)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
-    call torch_tensor_from_array(dQda, out_data, tensor_layout, device_type)
+    call torch_tensor_from_array(dQda, out_data, device_type)
     call torch_tensor_get_gradient(a, dQda)
 
     ! Extract Fortran array from the computed gradient and its data with the expected value:
