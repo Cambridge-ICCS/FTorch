@@ -73,10 +73,10 @@ jobs:
           export FC=/usr/bin/gfortran
           export MPIF90=/usr/bin/mpif90
           # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.10.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          git clone -b update_cmake_minimum https://github.com/jatkinson1000/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake .. -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          cmake ..
           make -j 4 install
 
       - name: Build FTorch
@@ -86,7 +86,7 @@ jobs:
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/build
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.10
+          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.11
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
           cmake .. \
