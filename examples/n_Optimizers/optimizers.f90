@@ -12,7 +12,7 @@ program example
                     torch_tensor, torch_tensor_from_array, &
                     torch_tensor_ones, torch_tensor_empty, &
                     torch_tensor_print, torch_delete, &
-                    torch_tensor_backward, torch_tensor_get_gradient
+                    torch_tensor_backward, torch_tensor_get_gradient, torch_tensor_mean
   use ftorch_optim, only: torch_optim, torch_optim_SGD, torch_optim_step, torch_optim_zero_grad
 
   implicit none
@@ -28,6 +28,7 @@ program example
 
   ! Set up Torch data structures
   integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
+  integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
   type(torch_tensor) :: input_vec, output_vec, target_vec, &
                         scaling_tensor, scaling_grad, loss, torch_4p0
   type(torch_optim) :: optimizer
@@ -55,7 +56,7 @@ program example
   call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1D0)
 
   ! Create empty tensors for the loss function tensor and scaling gradient
-  call torch_tensor_empty(loss, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
+  call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
   call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
 
   ! Conduct training loop
@@ -72,15 +73,9 @@ program example
     !
     ! We could use the following lines to do this by explicitly specifying a
     ! gradient of ones to start the process:
-    loss = ((output_vec - target_vec) ** 2) / torch_4p0
+    call torch_tensor_mean((output_vec - target_vec) ** 2, loss)
     call torch_tensor_backward(loss, retain_graph=.true.)
     call torch_tensor_get_gradient(scaling_tensor, scaling_grad)
-    !
-    ! However, we can avoid explicitly passing an initial gradient and instead do this
-    ! implicitly by aggregating the loss vector into a scalar value:
-    ! TODO: Requires addition of `.mean()` to the FTorch tensor API
-    ! loss = ((output - target_vec) ** 2).mean()
-    ! loss.backward()
 
     ! Step the optimizer to update the values in `tensor`
     call torch_optim_step(optimizer)
