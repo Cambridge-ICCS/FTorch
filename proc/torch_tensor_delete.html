@@ -199,7 +199,7 @@
             <td>::</td>
             <td><strong>tensor</strong></td>
             <td>
-                
+                <p>Tensor to deallocate</p>
             </td>
         </tr>
     </tbody>
@@ -221,7 +221,7 @@
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_delete</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
 <span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nb">c_associated</span><span class="p">,</span><span class="w"> </span><span class="nb">c_null_ptr</span>
-<span class="nb">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span>
+<span class="nb">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w">  </span><span class="c">!! Tensor to deallocate</span>
 
 <span class="w">    </span><span class="k">interface</span>
 <span class="k">      subroutine </span><span class="n">torch_tensor_delete_c</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>

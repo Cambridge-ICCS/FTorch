@@ -187,7 +187,7 @@
             <td>::</td>
             <td><strong>tensor_array</strong></td>
             <td>
-                
+                <p>Array of tensors to deallocate</p>
             </td>
         </tr>
     </tbody>
@@ -208,7 +208,9 @@
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_array_delete</span><span class="p">(</span><span class="n">tensor_array</span><span class="p">)</span>
-<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(:),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_array</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(:),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_array</span><span class="w">  </span><span class="c">!! Array of tensors to deallocate</span>
+
+<span class="w">    </span><span class="c">! Local data</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ftorch_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
 
 <span class="w">    </span><span class="c">! use bounds rather than (1, N) because it&#39;s safer</span>

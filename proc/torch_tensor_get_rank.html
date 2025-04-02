@@ -189,7 +189,7 @@
             <td>::</td>
             <td><strong>self</strong></td>
             <td>
-                
+                <p>Tensor to get the rank of</p>
             </td>
         </tr>
     </tbody>
@@ -201,7 +201,7 @@
           integer(kind=int32)
         </small>
       </h3>
-      <p>rank of tensor</p>
+      <p>Rank of tensor</p>
     <br>
 
 
@@ -217,8 +217,8 @@
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">function </span><span class="n">torch_tensor_get_rank</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">rank</span><span class="p">)</span>
-<span class="w">    </span><span class="k">class</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">self</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="n">int32</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rank</span><span class="w">  </span><span class="c">!! rank of tensor</span>
+<span class="w">    </span><span class="k">class</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">self</span><span class="w">  </span><span class="c">!! Tensor to get the rank of</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="n">int32</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rank</span><span class="w">              </span><span class="c">!! Rank of tensor</span>
 
 <span class="w">    </span><span class="k">interface</span>
 <span class="k">      function </span><span class="n">torch_tensor_get_rank_c</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">rank</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>

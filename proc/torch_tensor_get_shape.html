@@ -201,7 +201,7 @@
             <td>::</td>
             <td><strong>self</strong></td>
             <td>
-                
+                <p>Tensor to get the shape of</p>
             </td>
         </tr>
     </tbody>
@@ -230,12 +230,14 @@
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">function </span><span class="n">torch_tensor_get_shape</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span>
 <span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nb">c_f_pointer</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="kt">c_long</span><span class="p">,</span><span class="w"> </span><span class="kt">c_long_long</span><span class="p">,</span><span class="w"> </span><span class="kt">c_ptr</span>
-<span class="kt">    </span><span class="k">class</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">self</span>
+<span class="kt">    </span><span class="k">class</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">self</span><span class="w">         </span><span class="c">!! Tensor to get the shape of</span>
 <span class="cp">#ifdef UNIX</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="kt">c_long</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sizes</span><span class="p">(:)</span><span class="w">  </span><span class="c">!! Pointer to tensor data</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="kt">c_long</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sizes</span><span class="p">(:)</span><span class="w">       </span><span class="c">!! Pointer to tensor data</span>
 <span class="cp">#else</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="kt">c_long_long</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sizes</span><span class="p">(:)</span><span class="w">  </span><span class="c">!! Pointer to tensor data</span>
 <span class="cp">#endif</span>
+
+<span class="w">    </span><span class="c">! Local data</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="nb">kind</span><span class="o">=</span><span class="n">int32</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ndims</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">cptr</span>
 
