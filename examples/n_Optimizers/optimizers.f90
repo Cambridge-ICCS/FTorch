@@ -73,7 +73,7 @@ program example
     ! We could use the following lines to do this by explicitly specifying a
     ! gradient of ones to start the process:
     loss = ((output_vec - target_vec) ** 2) / torch_4p0
-    call torch_tensor_backward(loss)
+    call torch_tensor_backward(loss, retain_graph=.true.)
     call torch_tensor_get_gradient(scaling_tensor, scaling_grad)
     !
     ! However, we can avoid explicitly passing an initial gradient and instead do this
