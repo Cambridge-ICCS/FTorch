@@ -21,6 +21,7 @@ optimizer = torch.optim.SGD([scaling_tensor], lr=1.0)
 # Run n_iter times printing every n_print steps
 n_iter = 15
 n_print = 1
+loss_progress = []
 for epoch in range(n_iter + 1):
     # Zero any previously stored gradients ready for a new iteration
     optimizer.zero_grad()
@@ -40,6 +41,7 @@ for epoch in range(n_iter + 1):
     # implicitly by aggregating the loss vector into a scalar value:
     loss = ((output - target_vec) ** 2).mean()
     loss.backward()
+    loss_progress.append(float(loss))
 
     # Step the optimizer to update the values in `tensor`
     optimizer.step()
@@ -51,5 +53,10 @@ for epoch in range(n_iter + 1):
         print(f"\tloss:\n\t\t{loss}")
         print(f"\ttensor gradient:\n\t\t{scaling_tensor.grad}")
         print(f"\tscaling_tensor:\n\t\t{scaling_tensor}")
+
+# Write loss progress to file
+with open("losses_pytorch.dat", "w+") as floss:
+    for loss_val in loss_progress:
+        floss.write(f"{loss_val:9.4e}\n")
 
 print("Training complete.")

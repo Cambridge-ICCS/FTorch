@@ -22,11 +22,12 @@ program example
   integer, parameter :: ndims = 1
   integer, parameter :: n=4
   real(wp), dimension(n), target :: input_data, output_data, target_data
+  real(wp), dimension(1), target :: loss_data
   integer :: tensor_layout(ndims) = [1]
+  integer :: scalar_layout(ndims) = [1]
 
   ! Set up Torch data structures
   integer(c_int64_t), dimension(1), parameter :: tensor_shape = [n]
-  integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
   type(torch_tensor) :: input_vec, output_vec, target_vec, scaling_tensor, scaling_grad, loss
   type(torch_optim) :: optimizer
 
@@ -50,10 +51,11 @@ program example
   call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1D0)
 
   ! Create empty tensors for the loss function tensor and scaling gradient
-  call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
+  call torch_tensor_from_array(loss, loss_data, scalar_layout, torch_kCPU)
   call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
 
   ! Conduct training loop
+  open(unit=10, file="losses_ftorch.dat")
   do i = 1, n_train+1
     ! Zero any previously stored gradients ready for a new iteration
     call torch_optim_zero_grad(optimizer)
@@ -90,8 +92,10 @@ program example
         call torch_tensor_print(scaling_tensor)
         write(*,*)
     end if
+    write(unit=10, fmt="(e9.4)") loss_data(1)
 
   end do
+  close(unit=10)
 
   write(*,*) "Training complete."
 

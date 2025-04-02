@@ -26,14 +26,15 @@ if(CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the Python Optimizers script runs successfully
-  add_test(NAME pyoptim COMMAND ${Python_EXECUTABLE}
-                                   ${PROJECT_SOURCE_DIR}/optimizers.py)
+  add_test(NAME pyoptim
+           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/optimizers.py
+           WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
   # 2. Check the Fortran Optimizers script runs successfully
   add_test(
     NAME foptim
     COMMAND optimizers
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
   set_tests_properties(foptim PROPERTIES PASS_REGULAR_EXPRESSION
                                          "Optimizers example ran successfully")
 endif()
