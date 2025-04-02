@@ -137,10 +137,7 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 <li><code>requires_grad</code> property hooked up to <code>torch_tensor</code> in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/288">#288</a></li>
 <li>MPI example added in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/270">#270</a></li>
 <li>Changelog file and guidance for versioning added in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/313">#313</a></li>
-<li>The unit tests for constructing and destroying tensors were separated out in
-  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/319">#319</a></li>
-<li>A new tensor manipulation demo was introduced in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/291">#291</a>.
-  This became demo 1 and the other demo numbers were bumped to account for this.</li>
+<li>A new tensor manipulation demo was introduced in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/291">#291</a>.</li>
 <li>Backpropagation implemented with <code>torch_tensor_backward</code> and
   <code>torch_tensor_get_gradient</code> in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/286">#286</a></li>
 <li>Zeroing of gradients associated with a tensor implemented in
@@ -149,12 +146,20 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/342">#342</a>.</li>
 <li>Implemented <code>torch_tensor_zero</code> and class method alias in
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/338">#338</a>.</li>
+<li>Provided interface for <code>torch_tensor_from_array</code> with default layout in
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/348">#348</a>.</li>
 </ul>
 <h3 id="changed">Changed</h3>
 <ul>
 <li>fortitude dependency version increased to 0.7.0</li>
 <li>Examples reordered to be more logical in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/317">#317</a></li>
 <li>scalar multiplication/division of tensors reworked to require the scalar to first be mapped to a <code>torch_tensor</code> in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/289">#289</a></li>
+<li>The unit tests for constructing and destroying tensors were separated out in
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/319">#319</a></li>
+<li>Demo numbers were bumped to account for new demo in
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/291">#291</a>.</li>
+<li>Use interface for <code>torch_tensor_from_array</code> with default layout in tests and
+  examples in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/348">#348</a>.</li>
 </ul>
 <h3 id="removed">Removed</h3>
 <ul>

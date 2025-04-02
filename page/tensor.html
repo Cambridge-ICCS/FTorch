@@ -164,7 +164,11 @@ include:
   meaning the array must have been declared with the <code>target</code> property. The
   array will continue to be pointed to even when operations are applied to the
   tensor, so this subroutine can be used 'in advance' to set up an array for
-  outputting data.</p>
+  outputting data. <code>torch_tensor_from_array</code> may be called with or without the
+  <code>layout</code> argument - an array which specifies the order in which indices should
+  be looped over. The default <code>layout</code> is <code>[1,2,...,n]</code> implies that data will
+  be read into the same indices by Torch. (See the
+  <a href="pages/transposing.html">transposing user guide page</a> for more details.</p>
 <p>It is <em>compulsory</em> to call one of the constructors before interacting with it in
 any of the ways described in the following. Each of the constructors sets the
 pointer attribute of the <code>torch_tensor</code>; without this being set, most of the
