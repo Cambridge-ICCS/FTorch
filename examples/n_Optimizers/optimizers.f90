@@ -7,11 +7,9 @@ program example
   use, intrinsic :: iso_c_binding, only: c_int64_t
 
   ! Import our library for interfacing with PyTorch's Autograd module
-  use ftorch, only: assignment(=), operator(-), operator(*), operator(/), operator(**), &
-                    torch_kCPU, torch_kFloat32, &
-                    torch_tensor, torch_tensor_from_array, &
-                    torch_tensor_ones, torch_tensor_empty, &
-                    torch_tensor_print, torch_delete, &
+  use ftorch, only: assignment(=), operator(-), operator(*), operator(**), torch_kCPU, &
+                    torch_kFloat32, torch_tensor, torch_tensor_from_array, torch_tensor_ones, &
+                    torch_tensor_empty, torch_tensor_print, &
                     torch_tensor_backward, torch_tensor_get_gradient, torch_tensor_mean
   use ftorch_optim, only: torch_optim, torch_optim_SGD, torch_optim_step, torch_optim_zero_grad
 
@@ -27,10 +25,9 @@ program example
   integer :: tensor_layout(ndims) = [1]
 
   ! Set up Torch data structures
-  integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
+  integer(c_int64_t), dimension(1), parameter :: tensor_shape = [n]
   integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
-  type(torch_tensor) :: input_vec, output_vec, target_vec, &
-                        scaling_tensor, scaling_grad, loss, torch_4p0
+  type(torch_tensor) :: input_vec, output_vec, target_vec, scaling_tensor, scaling_grad, loss
   type(torch_optim) :: optimizer
 
   ! Set up training parameters
@@ -47,9 +44,6 @@ program example
   ! Initialise Scaling tensor as ones as in Python example
   call torch_tensor_ones(scaling_tensor, ndims, tensor_shape, &
                          torch_kFloat32, torch_kCPU, requires_grad=.true.)
-
-  ! Initialise scaling factor of 4.0 for use in tensor operations
-  call torch_tensor_from_array(torch_4p0, [4.0_wp], tensor_layout, torch_kCPU, requires_grad=.true.)
 
   ! Initialise an optimizer and apply it to scaling_tensor
   ! TODO optimizer expects an array of tensors, should be a cleaner consistent way to formalise this.
