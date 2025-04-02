@@ -430,7 +430,7 @@ contains
 
   !> Prints the contents of a tensor.
   subroutine torch_tensor_print(tensor)
-    type(torch_tensor), intent(in) :: tensor  !! Input tensor
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to print the contents of
 
     interface
       subroutine torch_tensor_print_c(tensor) &
@@ -446,8 +446,8 @@ contains
 
   !> Determines the rank of a tensor.
   function torch_tensor_get_rank(self) result(rank)
-    class(torch_tensor), intent(in) :: self
-    integer(kind=int32) :: rank  !! rank of tensor
+    class(torch_tensor), intent(in) :: self  !! Tensor to get the rank of
+    integer(kind=int32) :: rank              !! Rank of tensor
 
     interface
       function torch_tensor_get_rank_c(tensor) result(rank) &
@@ -469,12 +469,14 @@ contains
   !> Determines the shape of a tensor.
   function torch_tensor_get_shape(self) result(sizes)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_long, c_long_long, c_ptr
-    class(torch_tensor), intent(in) :: self
+    class(torch_tensor), intent(in) :: self         !! Tensor to get the shape of
 #ifdef UNIX
-    integer(kind=c_long), pointer :: sizes(:)  !! Pointer to tensor data
+    integer(kind=c_long), pointer :: sizes(:)       !! Pointer to tensor data
 #else
     integer(kind=c_long_long), pointer :: sizes(:)  !! Pointer to tensor data
 #endif
+
+    ! Local data
     integer(kind=int32) :: ndims(1)
     type(c_ptr) :: cptr
 
@@ -500,7 +502,7 @@ contains
   !> Returns the data type of a tensor.
   function torch_tensor_get_dtype(self) result(dtype)
     use, intrinsic :: iso_c_binding, only : c_int
-    class(torch_tensor), intent(in) :: self  !! Input tensor
+    class(torch_tensor), intent(in) :: self  !! Tensor to get the data type of
     integer(c_int) :: dtype                  !! Data type of tensor
 
     interface
@@ -523,7 +525,7 @@ contains
   !> Returns the device type of a tensor.
   function torch_tensor_get_device_type(self) result(device_type)
     use, intrinsic :: iso_c_binding, only : c_int
-    class(torch_tensor), intent(in) :: self  !! Input tensor
+    class(torch_tensor), intent(in) :: self  !! Tensor to get the device type of
     integer(c_int) :: device_type            !! Device type of tensor
 
     interface
@@ -546,7 +548,7 @@ contains
   !> Determines the device index of a tensor.
   function torch_tensor_get_device_index(self) result(device_index)
     use, intrinsic :: iso_c_binding, only : c_int
-    class(torch_tensor), intent(in) :: self  !! Input tensor
+    class(torch_tensor), intent(in) :: self  !! Tensor to get the device index of
     integer(c_int) :: device_index           !! Device index of tensor
 
     interface
@@ -568,8 +570,8 @@ contains
 
   !> Determines whether a tensor requires the autograd module.
   function torch_tensor_requires_grad(self) result(requires_grad)
-    class(torch_tensor), intent(in) :: self
-    logical :: requires_grad
+    class(torch_tensor), intent(in) :: self  !! Tensor to query
+    logical :: requires_grad                 !! Whether the tensor requires autograd
 
     interface
       function torch_tensor_requires_grad_c(tensor) result(requires_grad) &
@@ -590,7 +592,9 @@ contains
 
   !> Deallocates an array of tensors.
   subroutine torch_tensor_array_delete(tensor_array)
-    type(torch_tensor), dimension(:), intent(inout) :: tensor_array
+    type(torch_tensor), dimension(:), intent(inout) :: tensor_array  !! Array of tensors to deallocate
+
+    ! Local data
     integer(ftorch_int) :: i
 
     ! use bounds rather than (1, N) because it's safer
@@ -602,7 +606,7 @@ contains
   !> Deallocates a tensor.
   subroutine torch_tensor_delete(tensor)
     use, intrinsic :: iso_c_binding, only : c_associated, c_null_ptr
-    type(torch_tensor), intent(inout) :: tensor
+    type(torch_tensor), intent(inout) :: tensor  !! Tensor to deallocate
 
     interface
       subroutine torch_tensor_delete_c(tensor) &
@@ -651,8 +655,8 @@ contains
   !> Overloads assignment operator for tensors.
   subroutine torch_tensor_assign(output, input)
     use, intrinsic :: iso_c_binding, only : c_associated
-    type(torch_tensor), intent(inout) :: output
-    type(torch_tensor), intent(in) :: input
+    type(torch_tensor), intent(in) :: input      !! Tensor whose values are to be used
+    type(torch_tensor), intent(inout) :: output  !! Tensor to assign values to
 
     interface
       subroutine torch_tensor_assign_c(output_c, input_c) bind(c, name = 'torch_tensor_assign')
@@ -677,9 +681,9 @@ contains
   !> Overloads addition operator for two tensors.
   function torch_tensor_add(tensor1, tensor2) result(output)
     use, intrinsic :: iso_c_binding, only : c_associated
-    type(torch_tensor), intent(in) :: tensor1
-    type(torch_tensor), intent(in) :: tensor2
-    type(torch_tensor) :: output
+    type(torch_tensor), intent(in) :: tensor1  !! First tensor to be added
+    type(torch_tensor), intent(in) :: tensor2  !! Second tensor to be added
+    type(torch_tensor) :: output               !! Tensor to hold the sum
 
     interface
       subroutine torch_tensor_add_c(output_c, tensor1_c, tensor2_c) &
@@ -708,8 +712,8 @@ contains
   !> Overloads negative operator for a single tensor.
   function torch_tensor_negative(tensor) result(output)
     use, intrinsic :: iso_c_binding, only : c_associated
-    type(torch_tensor), intent(in) :: tensor
-    type(torch_tensor) :: output
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to take the negative of
+    type(torch_tensor) :: output              !! Tensor to hold the negative values
 
     interface
       subroutine torch_tensor_negative_c(output_c, tensor_c) bind(c, name = 'torch_tensor_negative')
@@ -731,9 +735,9 @@ contains
   !> Overloads subtraction operator for two tensors.
   function torch_tensor_subtract(tensor1, tensor2) result(output)
     use, intrinsic :: iso_c_binding, only : c_associated
-    type(torch_tensor), intent(in) :: tensor1
-    type(torch_tensor), intent(in) :: tensor2
-    type(torch_tensor) :: output
+    type(torch_tensor), intent(in) :: tensor1  !! First tensor for the subtraction
+    type(torch_tensor), intent(in) :: tensor2  !! Second tensor for the subtraction
+    type(torch_tensor) :: output               !! Tensor to hold the difference
 
     interface
       subroutine torch_tensor_subtract_c(output_c, tensor1_c, tensor2_c) &
@@ -763,9 +767,9 @@ contains
   !> Overloads multiplication operator for two tensors.
   function torch_tensor_multiply(tensor1, tensor2) result(output)
     use, intrinsic :: iso_c_binding, only : c_associated
-    type(torch_tensor), intent(in) :: tensor1
-    type(torch_tensor), intent(in) :: tensor2
-    type(torch_tensor) :: output
+    type(torch_tensor), intent(in) :: tensor1  !! First tensor to be multiplied
+    type(torch_tensor), intent(in) :: tensor2  !! Second tensor to be multiplied
+    type(torch_tensor) :: output               !! Tensor to hold the product
 
     if (tensor1%get_device_type() /= tensor2%get_device_type()) then
       write(*,*) "Error :: cannot multiply tensors with different device types"
@@ -784,9 +788,9 @@ contains
   !> Overloads division operator for two tensors.
   function torch_tensor_divide(tensor1, tensor2) result(output)
     use, intrinsic :: iso_c_binding, only : c_associated
-    type(torch_tensor), intent(in) :: tensor1
-    type(torch_tensor), intent(in) :: tensor2
-    type(torch_tensor) :: output
+    type(torch_tensor), intent(in) :: tensor1  !! First tensor for the division
+    type(torch_tensor), intent(in) :: tensor2  !! Second tensor for the division
+    type(torch_tensor) :: output               !! Tensor to hold the quotient
 
     if (tensor1%get_device_type() /= tensor2%get_device_type()) then
       write(*,*) "Error :: cannot divide tensors with different device types"
@@ -807,9 +811,9 @@ contains
   function torch_tensor_power_${PREC}$(tensor, power) result(output)
     use, intrinsic :: iso_c_binding, only : c_associated, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
-    type(torch_tensor), intent(in) :: tensor
-    ${f_type(PREC)}$(${PREC}$), target, intent(in) :: power
-    type(torch_tensor) :: output
+    type(torch_tensor), intent(in) :: tensor                  !! Tensor to take the power of
+    ${f_type(PREC)}$(${PREC}$), target, intent(in) :: power   !! Integer exponent
+    type(torch_tensor) :: output                              !! Tensor to hold the exponentiation
 
     interface
       subroutine torch_tensor_power_int_c(output_c, tensor_c, power_c) &
@@ -837,9 +841,9 @@ contains
   function torch_tensor_power_${PREC}$(tensor, power) result(output)
     use, intrinsic :: iso_c_binding, only : c_associated, c_loc
     use, intrinsic :: iso_fortran_env, only : ${PREC}$
-    type(torch_tensor), intent(in) :: tensor
-    ${f_type(PREC)}$(kind=${PREC}$), target, intent(in) :: power
-    type(torch_tensor) :: output
+    type(torch_tensor), intent(in) :: tensor                      !! Tensor to take the power of
+    ${f_type(PREC)}$(kind=${PREC}$), target, intent(in) :: power  !! Floating point exponent
+    type(torch_tensor) :: output                                  !! Tensor to hold the exponentiation
 
     interface
       subroutine torch_tensor_power_float_c(output_c, tensor_c, power_c) &
