@@ -73,6 +73,7 @@ jobs:
           export FC=/usr/bin/gfortran
           export MPIF90=/usr/bin/mpif90
           # TODO: Avoid version pinning (needed because version appears in install path)
+          # TODO: Revert back to clone from Goddard pFUnit once PR to resolve CMake issues is resolved See #352
           git clone -b update_cmake_minimum https://github.com/jatkinson1000/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
