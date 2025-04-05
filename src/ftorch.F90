@@ -39,6 +39,7 @@ module ftorch
     procedure :: requires_grad => torch_tensor_requires_grad
     procedure :: zero => torch_tensor_zero
     procedure :: zero_grad => torch_tensor_zero_grad
+    procedure :: to => torch_tensor_to
     final :: torch_tensor_delete
   end type torch_tensor
 
@@ -161,6 +162,22 @@ module ftorch
       logical(c_bool), value, intent(in) :: requires_grad
       type(c_ptr)                       :: tensor_p
     end function torch_from_blob_c
+  end interface
+
+  interface
+    function torch_tensor_to_c(tensor, dtype, device_type, device_index, &
+                               non_blocking, copy) result(output_tensor) &
+        bind(c, name = 'torch_tensor_to')
+      use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_ptr
+      implicit none
+      type(c_ptr), value, intent(in) :: tensor
+      integer(c_int), value, intent(in) :: dtype
+      integer(c_int), value, intent(in) :: device_type
+      integer(c_int), value, intent(in) :: device_index
+      logical(c_bool), value, intent(in) :: non_blocking
+      logical(c_bool), value, intent(in) :: copy
+      type(c_ptr) :: output_tensor
+    end function torch_tensor_to_c
   end interface
 
   ! ============================================================================
@@ -2457,6 +2474,37 @@ contains
     call torch_tensor_zero_c(tensor%p)
   end subroutine torch_tensor_zero
 
+  !> Method to move a tensor to a specified device with specified dtype
+  function torch_tensor_to(self, dtype, device_type, device_index, &
+                                 non_blocking, copy) result(output_tensor)
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int
+    class(torch_tensor), intent(in) :: self         !! Tensor to be moved
+    integer(c_int), intent(in) :: dtype             !! Data type to convert to
+    integer(c_int), intent(in) :: device_type       !! Device type to move to
+    integer, intent(in) :: device_index             !! Device index
+    logical, intent(in), optional :: non_blocking   !! Whether to perform asynchronous copy
+    logical, intent(in), optional :: copy           !! Whether to force a copy
+    type(torch_tensor) :: output_tensor             !! Resulting tensor
+
+    logical(c_bool) :: non_blocking_value, copy_value
+
+    ! Process optional arguments
+    if (present(non_blocking)) then
+      non_blocking_value = non_blocking
+    else
+      non_blocking_value = .false.
+    end if
+
+    if (present(copy)) then
+      copy_value = copy
+    else
+      copy_value = .false.
+    end if
+
+    output_tensor%p = torch_tensor_to_c(self%p, dtype, device_type, &
+                                    device_index, non_blocking_value, &
+                                    copy_value)
+  end function torch_tensor_to
   ! ============================================================================
   ! --- Overloaded operators acting on tensors
   ! ============================================================================

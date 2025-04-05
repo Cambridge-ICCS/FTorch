@@ -317,6 +317,73 @@ void torch_tensor_zero(torch_tensor_t tensor) {
   t->zero_();
 }
 
+torch_tensor_t torch_tensor_to(const torch_tensor_t tensor, torch_data_t dtype,
+                               torch_device_t device_type, int device_index,
+                               bool non_blocking, bool copy) {
+  try {
+    auto t = static_cast<torch::Tensor *>(tensor);
+
+    torch::Device device(torch::kCPU);
+
+    switch (device_type) {
+    case GPU_DEVICE_NONE:
+      // Keep as CPU
+      break;
+
+    case GPU_DEVICE_CUDA:
+#if GPU_DEVICE == GPU_DEVICE_CUDA
+      device = torch::Device(torch::kCUDA, device_index);
+#else
+      std::cerr << "[ERROR]: CUDA device requested but not supported "
+                   "in this build"
+                << std::endl;
+      std::exit(EXIT_FAILURE);
+#endif
+      break;
+
+    case GPU_DEVICE_XPU:
+#if GPU_DEVICE == GPU_DEVICE_XPU
+      device = torch::Device(torch::kXPU, device_index);
+#else
+      std::cerr << "[ERROR]: XPU device requested but not supported "
+                   "in this build"
+                << std::endl;
+      std::exit(EXIT_FAILURE);
+#endif
+      break;
+
+    case GPU_DEVICE_MPS:
+#if GPU_DEVICE == GPU_DEVICE_MPS
+      device = torch::Device(torch::kMPS, device_index);
+#else
+      std::cerr << "[ERROR]: MPS device requested but not supported "
+                   "in this build"
+                << std::endl;
+      std::exit(EXIT_FAILURE);
+#endif
+      break;
+
+    default:
+      std::cerr << "[ERROR]: Unsupported device type" << std::endl;
+      std::exit(EXIT_FAILURE);
+    }
+
+    at::ScalarType scalar_type = static_cast<at::ScalarType>(dtype);
+
+    // TODO: Consider adding optional memory_format
+    // https://github.com/pytorch/pytorch/blob/1eba9b3aa3c43f86f4a2c807ac8e12c4a7767340/c10/core/MemoryFormat.h#L29
+    torch::Tensor result = t->to(device, scalar_type, non_blocking, copy);
+    return new torch::Tensor(result);
+  } catch (const torch::Error &e) {
+    std::cerr << "[ERROR]: " << e.what() << std::endl;
+    std::exit(EXIT_FAILURE);
+  } catch (const std::exception &e) {
+    std::cerr << "[ERROR]: " << e.what() << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+  return nullptr;
+}
+
 // =====================================================================================
 // --- Operator overloads acting on tensors
 // =====================================================================================

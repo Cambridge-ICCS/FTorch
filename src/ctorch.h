@@ -183,6 +183,21 @@ EXPORT_C void torch_tensor_delete(torch_tensor_t tensor);
  */
 EXPORT_C void torch_tensor_zero(torch_tensor_t tensor);
 
+/**
+ * Function to move a tensor to a specified device with the specified dtype
+ * @param source Tensor to be moved from one device to the other
+ * @param data type of the Tensor elements to convert to
+ * @param device type on which to move the tensor to
+ * @param device index (-1 for CPU, >=0 for GPU devices)
+ * @param if True and this copy is between CPU and GPU, the copy may occur
+ * asynchronously
+ * @param if True, a new Tensor is created even when the Tensor already matches the
+ * desired conversion
+ */
+EXPORT_C torch_tensor_t torch_tensor_to(const torch_tensor_t tensor, torch_data_t dtype,
+                                        torch_device_t device_type, int device_index,
+                                        bool non_blocking, bool copy);
+
 // =============================================================================
 // --- Operator overloads acting on tensors
 // =============================================================================
