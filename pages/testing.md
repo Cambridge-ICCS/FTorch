@@ -55,9 +55,7 @@ If you are running with a Unix operating system, unit tests may be
 executed in the following ways:
 
 1. Run as a suite by specifying the `--unit-only` command line argument:
-   ```sh
-   ./run_test_suite.sh --unit-only
-   ```
+   `./run_test_suite.sh --unit-only`.
 2. Navigate to the build directory and call `ctest -R unittest` to run all unit
    tests. (This will run all tests whose names start with 'unittest'.)
 3. Navigate to the build directory and call
@@ -73,9 +71,7 @@ If you are running with a Unix operating system, integration tests may be
 executed in the following ways:
 
 1. Run as a suite by specifying the `--integration-only` command line argument:
-   ```sh
-   ./run_test_suite.sh --integration-only
-   ```
+   `./run_test_suite.sh --integration-only`.
 2. Navigate to the build directory and call `ctest -R example` to run all
    integration tests. (This will run all tests whose names start with
    'example').
@@ -97,10 +93,7 @@ As mentioned above, if you are running with a Windows operating system then
 only the integration tests are included in the `run_test_suite.bat` script.
 They may be executed in the following ways:
 
-1. Run as a suite by executing the `.bat` script:
-   ```sh
-   ./run_test_suite.bat
-   ```
+1. Run as a suite by executing the `.bat` script: `./run_test_suite.bat`.
 2. Navigate to the build directory and call `ctest -R example` to run all
    integration tests. (This will run all tests whose names start with
    'example').
