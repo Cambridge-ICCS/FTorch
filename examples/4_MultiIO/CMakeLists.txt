@@ -25,6 +25,10 @@ target_link_libraries(multiionet_infer_fortran PRIVATE FTorch::ftorch)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
+  add_test(NAME example4_requirements
+           COMMAND ${Python_EXECUTABLE} -m pip install -q -r
+                   ${PROJECT_SOURCE_DIR}/requirements.txt)
+
   # 1. Check the PyTorch model runs and its outputs meet expectations
   add_test(NAME example4_multiionet
            COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/multiionet.py)
