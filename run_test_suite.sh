@@ -73,11 +73,11 @@ else
   CTEST_ARGS=""
 fi
 
+cd "${BUILD_DIR}"
+
 # Run unit tests
 if [ "${RUN_UNIT}" = true ]; then
-  cd "${BUILD_DIR}/test/unit"
-  ctest "${CTEST_ARGS}"
-  cd -
+  ctest -R unittest ${CTEST_ARGS}
 fi
 
 # Run integration tests
