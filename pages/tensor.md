@@ -108,4 +108,4 @@ Torch tensors, see the
 
 For an example of how to compute mathematical expressions involving Torch
 tensors, see the
-[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd).
+[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd).
