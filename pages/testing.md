@@ -35,6 +35,11 @@ to use either:
 This will automatically install any additional Python dependencies for the
 examples.
 
+It is also possible to run `ctest` directly from the build directory. An
+advantage of doing this is that you can pass
+[arguments](https://cmake.org/cmake/help/latest/manual/ctest.1.html) to `ctest`
+for greater control over the testing configuration.
+
 See the subsections below for instructions on how to run subsets of the full
 test suite.
 
@@ -47,41 +52,66 @@ Python environment and will check that a virtual environment is in use._
 #### Running unit tests on Unix
 
 If you are running with a Unix operating system, unit tests may be
-executed either as a suite by specifying the `--unit-only` command line
-argument:
-```sh
-./run_test_suite.sh --unit-only
-```
-or individually by navigating to `${BUILD_DIR}/test/unit` (where `${BUILD_DIR}`
-is the build directory for FTorch) and calling `ctest` with
-[appropriate arguments](https://cmake.org/cmake/help/latest/manual/ctest.1.html).
-This will produce a report on which tests passed and which failed for your
-build.
+executed in the following ways:
+
+1. Run as a suite by specifying the `--unit-only` command line argument:
+   ```sh
+   ./run_test_suite.sh --unit-only
+   ```
+2. Navigate to the build directory and call `ctest -R unittest` to run all unit
+   tests. (This will run all tests whose names start with 'unittest'.)
+3. Navigate to the build directory and call
+   `ctest -R unittest_tensor_constructors_destructors` (for example) to run a
+   specific unit test.
+
+Any of the above will produce a report on which of the requested tests passed
+and which failed for your build.
 
 #### Running integration tests on Unix
 
 If you are running with a Unix operating system, integration tests may be
-executed either as a suite by specifying the `--integration-only` command line
-argument:
-```sh
-./run_test_suite.sh --integration-only
-```
-or individually by navigating to the corresponding subdirectory of
-`${BUILD_DIR}/examples` (where `${BUILD_DIR}` is the build directory for
-FTorch) and calling `ctest`. This will produce a report on which tests passed
-and which failed for your build. Note that some of the examples have additional
-dependencies, which may need installing into your virtual environment.
+executed in the following ways:
+
+1. Run as a suite by specifying the `--integration-only` command line argument:
+   ```sh
+   ./run_test_suite.sh --integration-only
+   ```
+2. Navigate to the build directory and call `ctest -R example` to run all
+   integration tests. (This will run all tests whose names start with
+   'example').
+3. Run the tests associated with a specific example by navigating to the build
+   directory and calling `ctest -R example2`, for example.
+4. Run the tests associated with a specific example by navigating to the
+   corresponding subdirectory of `${BUILD_DIR}/examples` (where `${BUILD_DIR}`
+   is the build directory for FTorch) and calling `ctest`.
+
+Any of the above will produce a report on which of the requested tests passed
+and which failed for your build.
+
+Note that some of the examples have additional dependencies and these will be
+installed into your virtual environment as an initial test within that example.
 
 #### Running integration tests on Windows
 
 As mentioned above, if you are running with a Windows operating system then
-only the integration tests are currently set up. They may be executed either as
-a suite with the command
-```sh
-./run_test_suite.bat
-```
-or individually by navigating to the corresponding subdirectory of
-`${BUILD_DIR}/examples` (where `${BUILD_DIR}` is the build directory for
-FTorch) and calling `ctest`. This will produce a report on which tests passed
-and which failed for your build. Note that some of the examples have additional
-dependencies, which may need installing into your virtual environment.
+only the integration tests are included in the `run_test_suite.bat` script.
+They may be executed in the following ways:
+
+1. Run as a suite by executing the `.bat` script:
+   ```sh
+   ./run_test_suite.bat
+   ```
+2. Navigate to the build directory and call `ctest -R example` to run all
+   integration tests. (This will run all tests whose names start with
+   'example').
+3. Run the tests associated with a specific example by navigating to the build
+   directory and calling `ctest -R example2`, for example.
+4. Run the tests associated with a specific example by navigating to the
+   corresponding subdirectory of `${BUILD_DIR}/examples` (where `${BUILD_DIR}`
+   is the build directory for FTorch) and calling `ctest`.
+
+Any of the above will produce a report on which of the requested tests passed
+and which failed for your build.
+
+Note that some of the examples have additional dependencies and these will be
+installed into your virtual environment as an initial test within that example.
