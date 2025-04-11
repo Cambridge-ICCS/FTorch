@@ -30,6 +30,7 @@ if(CMAKE_BUILD_TESTS)
     NAME example1_tensor_manipulation
     COMMAND tensor_manipulation
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example1_tensor_manipulation PROPERTIES PASS_REGULAR_EXPRESSION
+  set_tests_properties(example1_tensor_manipulation
+                       PROPERTIES PASS_REGULAR_EXPRESSION
                        "Tensor manipulation example ran successfully")
 endif()
