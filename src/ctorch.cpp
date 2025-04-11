@@ -140,6 +140,38 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
 }
 
 // =============================================================================
+// --- Functions for validating tensors
+// =============================================================================
+
+// Check if a tensor is valid
+void validate_tensor_not_null(const torch::Tensor *t, const std::string &name) {
+  if (!t) {
+    throw std::invalid_argument(name + " is null.");
+  }
+}
+
+// Check if a tensor is defined
+void validate_tensor_defined(const torch::Tensor *t, const std::string &name) {
+  if (!t->defined()) {
+    throw std::invalid_argument(name + " is undefined.");
+  }
+}
+
+// Check if a tensor has requires_grad set
+void validate_requires_grad(const torch::Tensor *t, const std::string &name) {
+  if (!t->requires_grad()) {
+    throw std::runtime_error(name + " does not have requires_grad set.");
+  }
+}
+
+void validate_gradient_defined(const torch::Tensor *t, const std::string &name) {
+  if (!t->grad().defined()) {
+    throw std::runtime_error(
+        name + " has an undefined gradient.\nPerhaps you forgot to call backward.");
+  }
+}
+
+// =============================================================================
 // --- Functions for constructing tensors
 // =============================================================================
 
@@ -147,7 +179,7 @@ torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
                            torch_device_t device_type, int device_index = -1,
                            const bool requires_grad = false) {
   torch::AutoGradMode enable_grad(requires_grad);
-  torch::Tensor *tensor = nullptr;
+  auto tensor = new torch::Tensor;
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
@@ -155,7 +187,6 @@ torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
                        .dtype(get_libtorch_dtype(dtype))
                        .device(get_libtorch_device(device_type, device_index))
                        .requires_grad(requires_grad);
-    tensor = new torch::Tensor;
     *tensor = torch::empty(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
@@ -173,7 +204,7 @@ torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
                            torch_device_t device_type, int device_index = -1,
                            const bool requires_grad = false) {
   torch::AutoGradMode enable_grad(requires_grad);
-  torch::Tensor *tensor = nullptr;
+  auto tensor = new torch::Tensor;
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
@@ -181,7 +212,6 @@ torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
                        .dtype(get_libtorch_dtype(dtype))
                        .device(get_libtorch_device(device_type, device_index))
                        .requires_grad(requires_grad);
-    tensor = new torch::Tensor;
     *tensor = torch::zeros(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
@@ -199,7 +229,7 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
                           torch_device_t device_type, int device_index = -1,
                           const bool requires_grad = false) {
   torch::AutoGradMode enable_grad(requires_grad);
-  torch::Tensor *tensor = nullptr;
+  auto tensor = new torch::Tensor;
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
@@ -207,7 +237,6 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
                        .dtype(get_libtorch_dtype(dtype))
                        .device(get_libtorch_device(device_type, device_index))
                        .requires_grad(requires_grad);
-    tensor = new torch::Tensor;
     *tensor = torch::ones(vshape, options);
   } catch (const torch::Error &e) {
     std::cerr << "[ERROR]: " << e.msg() << std::endl;
@@ -228,7 +257,7 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
                                torch_device_t device_type, int device_index = -1,
                                const bool requires_grad = false) {
   torch::AutoGradMode enable_grad(requires_grad);
-  torch::Tensor *tensor = nullptr;
+  auto tensor = new torch::Tensor;
 
   try {
     // This doesn't throw if shape and dimensions are incompatible
@@ -238,7 +267,6 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
                        .dtype(get_libtorch_dtype(dtype))
                        .device(get_libtorch_device(device_type, device_index))
                        .requires_grad(requires_grad);
-    tensor = new torch::Tensor;
     *tensor = torch::from_blob(data, vshape, vstrides, options);
 
   } catch (const torch::Error &e) {
@@ -402,13 +430,43 @@ void torch_tensor_backward(const torch_tensor_t tensor,
                            const bool retain_graph) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   auto g = reinterpret_cast<torch::Tensor *const>(external_gradient);
-  t->backward(*g, retain_graph);
+
+  try {
+    // Check if the tensors are valid and defined
+    validate_tensor_not_null(t, "Input tensor");
+    validate_tensor_defined(t, "Input tensor");
+    validate_tensor_not_null(g, "External gradient");
+    validate_tensor_defined(g, "External gradient");
+
+    // Perform backwards step
+    t->backward(*g, retain_graph);
+  } catch (const std::exception &e) {
+    std::cerr << "Error in torch_tensor_backward: " << e.what() << std::endl;
+    std::terminate();
+  }
 }
 
 void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradient) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  auto g = reinterpret_cast<torch::Tensor *>(gradient);
-  std::move(*g) = t->grad();
+  try {
+    // Cast the input pointers to torch::Tensor
+    auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+    auto g = reinterpret_cast<torch::Tensor *>(gradient);
+
+    // Check if the tensors are valid and defined
+    validate_tensor_not_null(t, "Input tensor");
+    validate_tensor_defined(t, "Input tensor");
+    validate_tensor_not_null(g, "Output gradient");
+    // Check input has requires_grad set and can generate a valid gradient tensor
+    validate_requires_grad(t, "Input tensor");
+    validate_gradient_defined(t, "Input tensor");
+
+    // Assign the gradient to the output tensor
+    std::move(*g) = t->grad();
+  } catch (const std::exception &e) {
+    // Print the error message for debugging
+    std::cerr << "Error in torch_tensor_get_gradient: " << e.what() << std::endl;
+    std::terminate(); // Terminate here to avoid undefined behavior
+  }
 }
 
 // =============================================================================
