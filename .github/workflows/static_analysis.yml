@@ -50,15 +50,15 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m venv ftorch_venv
-          . ftorch_venv/bin/activate
+          python -m venv ../ftorch_venv
+          . ../ftorch_venv/bin/activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
           pip install -r requirements-dev.txt
 
       # Run CMake build to get compile commands for clang
       - name: FTorch CMake
         run: |
-          . ftorch_venv/bin/activate
+          . ../ftorch_venv/bin/activate
           export FT_DIR=$(pwd)
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
@@ -72,7 +72,7 @@ jobs:
         if: always()
         run: |
           cd ${{ github.workspace }}
-          . ftorch_venv/bin/activate
+          . ../ftorch_venv/bin/activate
           cmake-lint $(find . -name CMakeLists.txt)
 
       # Apply Shell linter, shellcheck
@@ -82,7 +82,7 @@ jobs:
           cd ${{ github.workspace }}
           sudo apt install shellcheck
           for FILE in $(find . -name "*.sh"); do
-            shellcheck ${FILE}
+            shellcheck -x ${FILE}
           done
 
       # Apply GitHub Actions linter, zizmor
@@ -90,7 +90,7 @@ jobs:
         if: always()
         run: |
           cd ${{ github.workspace }}
-          . ftorch_venv/bin/activate
+          . ../ftorch_venv/bin/activate
           zizmor .github/workflows/*.yml
 
       # Apply Fortran linter, fortitude
@@ -99,7 +99,7 @@ jobs:
         if: always()
         run: |
           cd ${{ github.workspace }}
-          . ftorch_venv/bin/activate
+          . ../ftorch_venv/bin/activate
           fortitude check src/ftorch.F90
           fortitude check src/ftorch_test_utils.f90
 
@@ -127,7 +127,7 @@ jobs:
         if: always()
         run: |
           cd ${{ github.workspace }}
-          . ftorch_venv/bin/activate
+          . ../ftorch_venv/bin/activate
           fortitude check examples
 
       # Apply Python linter, ruff
@@ -135,6 +135,6 @@ jobs:
         if: always()
         run: |
           cd ${{ github.workspace }}
-          . ftorch_venv/bin/activate
+          . ../ftorch_venv/bin/activate
           ruff format --diff ./
           ruff check --diff ./
