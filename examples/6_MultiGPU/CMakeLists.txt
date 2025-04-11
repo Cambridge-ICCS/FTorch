@@ -35,6 +35,10 @@ target_link_libraries(multigpu_infer_fortran PRIVATE FTorch::ftorch)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
+  add_test(NAME example6_requirements
+           COMMAND ${Python_EXECUTABLE} -m pip install -q -r
+                   ${PROJECT_SOURCE_DIR}/requirements.txt)
+
   if("${GPU_DEVICE}" STREQUAL "CUDA")
     # 1a. Check the PyTorch model runs on a CUDA device and its outputs meet
     # expectations

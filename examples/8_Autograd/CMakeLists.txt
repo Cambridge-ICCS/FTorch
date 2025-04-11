@@ -25,6 +25,10 @@ target_link_libraries(autograd PRIVATE FTorch::ftorch)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
+  add_test(NAME example8_requirements
+           COMMAND ${Python_EXECUTABLE} -m pip install -q -r
+                   ${PROJECT_SOURCE_DIR}/requirements.txt)
+
   # 1. Check the Python Autograd script runs successfully
   add_test(NAME example8_pyautograd COMMAND ${Python_EXECUTABLE}
                                             ${PROJECT_SOURCE_DIR}/autograd.py)

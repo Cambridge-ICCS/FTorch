@@ -25,9 +25,13 @@ target_link_libraries(simplenet_infer_fortran PRIVATE FTorch::ftorch)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
+  add_test(NAME example2_requirements
+           COMMAND ${Python_EXECUTABLE} -m pip install -q -r
+                   ${PROJECT_SOURCE_DIR}/requirements.txt)
+
   # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME example2_simplenet COMMAND ${Python_EXECUTABLE}
-                                  ${PROJECT_SOURCE_DIR}/simplenet.py)
+  add_test(NAME example2_simplenet
+           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py)
 
   # 2. Check the model is saved to file in the expected location with the
   #   pt2ts.py script

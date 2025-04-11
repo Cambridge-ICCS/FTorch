@@ -82,16 +82,5 @@ fi
 
 # Run integration tests
 if [ "${RUN_INTEGRATION}" = true ]; then
-  if [ -e "${BUILD_DIR}/examples/6_MultiGPU" ]; then
-    EXAMPLES="1_Tensor 2_SimpleNet 3_ResNet 4_MultiIO 6_MultiGPU 7_MPI 8_Autograd"
-  else
-    EXAMPLES="1_Tensor 2_SimpleNet 3_ResNet 4_MultiIO 7_MPI 8_Autograd"
-  fi
-  export PIP_REQUIRE_VIRTUALENV=true
-  for EXAMPLE in ${EXAMPLES}; do
-    python -m pip -q install -r examples/"${EXAMPLE}"/requirements.txt
-    cd "${BUILD_DIR}"/examples/"${EXAMPLE}"
-    ctest "${CTEST_ARGS}"
-    cd -
-  done
+  ctest -R example ${CTEST_ARGS}
 fi

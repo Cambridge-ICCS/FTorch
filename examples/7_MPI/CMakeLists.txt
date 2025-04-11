@@ -27,6 +27,10 @@ target_link_libraries(mpi_infer_fortran PRIVATE MPI::MPI_Fortran)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
+  add_test(NAME example7_requirements
+           COMMAND ${Python_EXECUTABLE} -m pip install -q -r
+                   ${PROJECT_SOURCE_DIR}/requirements.txt)
+
   # 1. Check the PyTorch model runs and its outputs meet expectations
   add_test(NAME example7_simplenet COMMAND ${Python_EXECUTABLE}
                                            ${PROJECT_SOURCE_DIR}/simplenet.py)
