@@ -48,15 +48,10 @@ jobs:
           pip install ford
 
       - name: Check broken URLs
-        uses: RazcoDev/broken-urls-in-code@v1.0.1
-        with:
-          directory: 'pages/'
-          # The files glob to check the URLs inside
-          files-glob: '**/*.md'
-          # The URLs regex to check
-          # Key is the final negative lookbehind `(?<![).,-])` which describes what should be dropped from the end of a url.
-          # Not infallibe, but should catch most expected cases.
-          url-regex: 'https?:\/\/(?:[^\s()]+|\([^\s()]*\))+'
+        run: |
+          cd pages/
+          chmod +x checklinks.sh
+          ./checklinks.sh "*.md"
 
       - name: Build docs with FORD
         run: ford FTorch.md
