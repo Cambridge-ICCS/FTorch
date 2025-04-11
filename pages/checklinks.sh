@@ -24,11 +24,16 @@ URL_REGEX='s/.*(\(http.*\)).*/\1/p'
 check_url() {
   local url=$1
   echo "Checking URL: $url"
-  if status_code=$(curl --head --silent --fail --max-time 10 -o /dev/null -w "%{http_code}" "$url"); then
-    echo "✅ $url is reachable (HTTP $status_code)."
-  else
+  status_code=$(curl --head --silent --fail --max-time 10 -L -o /dev/null -w "%{http_code}" "$url")
+  if [[ "$status_code" -eq 000 ]]; then
+    echo "⚠️ Warning: $url returned HTTP $status_code (possibly blocked or inaccessible)."
+  elif [[ "$status_code" -ge 400 ]]; then
     echo "❌ $url is not reachable (HTTP $status_code)."
     return 1
+  elif [[ "$status_code" -ge 300 ]]; then
+    echo "⚠️ Warning: $url returned HTTP $status_code (redirect followed)."
+  else
+    echo "✅ $url is reachable (HTTP $status_code)."
   fi
   return 0
 }
