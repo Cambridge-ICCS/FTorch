@@ -56,7 +56,7 @@ jobs:
           # The URLs regex to check
           # Key is the final negative lookbehind `(?<![).,-])` which describes what should be dropped from the end of a url.
           # Not infallibe, but should catch most expected cases.
-          url-regex: 'http[s]?:\/\/(?:[a-zA-Z0-9$-_@.&+!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+(?<![).,])'
+          url-regex: 'https?:\/\/(?:[^\s()]+|\([^\s()]*\))+'
 
       - name: Build docs with FORD
         run: ford FTorch.md
