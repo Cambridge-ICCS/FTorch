@@ -18,11 +18,17 @@ find_package(FTorch)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Fortran example - bad
-add_executable(example5_simplenet_infer_fortran_bad bad/simplenet_infer_fortran.f90)
-target_link_libraries(example5_simplenet_infer_fortran_bad PRIVATE FTorch::ftorch)
-target_sources(example5_simplenet_infer_fortran_bad PRIVATE bad/fortran_ml_mod.f90)
+add_executable(example5_simplenet_infer_fortran_bad
+               bad/simplenet_infer_fortran.f90)
+target_link_libraries(example5_simplenet_infer_fortran_bad
+                      PRIVATE FTorch::ftorch)
+target_sources(example5_simplenet_infer_fortran_bad
+               PRIVATE bad/fortran_ml_mod.f90)
 
 # Fortran example - good
-add_executable(example5_simplenet_infer_fortran_good good/simplenet_infer_fortran.f90)
-target_link_libraries(example5_simplenet_infer_fortran_good PRIVATE FTorch::ftorch)
-target_sources(example5_simplenet_infer_fortran_good PRIVATE good/fortran_ml_mod.f90)
+add_executable(example5_simplenet_infer_fortran_good
+               good/simplenet_infer_fortran.f90)
+target_link_libraries(example5_simplenet_infer_fortran_good
+                      PRIVATE FTorch::ftorch)
+target_sources(example5_simplenet_infer_fortran_good
+               PRIVATE good/fortran_ml_mod.f90)
