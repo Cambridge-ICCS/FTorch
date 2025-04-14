@@ -40,10 +40,9 @@ virtual environment) then you will need to
 the purposes of integration testing as this script will install packages into your
 Python environment and will check that a virtual environment is in use._
 
-#### Running unit tests on Unix
+#### Running unit tests
 
-If you are running with a Unix operating system, unit tests may be
-executed in the following ways:
+Unit tests may be executed in the following ways:
 
 1. Navigate to the build directory and call `ctest -R unittest` to run all unit
    tests. (This will run all tests whose names start with 'unittest'.)
@@ -51,13 +50,12 @@ executed in the following ways:
    `ctest -R unittest_tensor_constructors_destructors` (for example) to run a
    specific unit test.
 
-Any of the above will produce a report on which of the requested tests passed
+Either approach will produce a report on which of the requested tests passed
 and which failed for your build.
 
-#### Running integration tests on Unix
+#### Running integration tests
 
-If you are running with a Unix operating system, integration tests may be
-executed in the following ways:
+Integration tests may be executed in the following ways:
 
 1. Navigate to the build directory and call `ctest -R example` to run all
    integration tests. (This will run all tests whose names start with
@@ -71,27 +69,6 @@ executed in the following ways:
 Any of the above will produce a report on which of the requested tests passed
 and which failed for your build.
 
-Note that some of the examples have additional dependencies and these will be
-installed into your virtual environment as an initial test within that example.
-
-#### Running integration tests on Windows
-
-As mentioned above, if you are running with a Windows operating system then
-only the integration tests are included in the `run_test_suite.bat` script.
-They may be executed in the following ways:
-
-1. Run as a suite by executing the `.bat` script: `./run_test_suite.bat`.
-2. Navigate to the build directory and call `ctest -R example` to run all
-   integration tests. (This will run all tests whose names start with
-   'example').
-3. Run the tests associated with a specific example by navigating to the build
-   directory and calling `ctest -R example2`, for example.
-4. Run the tests associated with a specific example by navigating to the
-   corresponding subdirectory of `${BUILD_DIR}/examples` (where `${BUILD_DIR}`
-   is the build directory for FTorch) and calling `ctest`.
-
-Any of the above will produce a report on which of the requested tests passed
-and which failed for your build.
-
-Note that some of the examples have additional dependencies and these will be
-installed into your virtual environment as an initial test within that example.
+Note that some of the examples have additional dependencies. While these will be
+installed into your virtual environment as part of the CMake build, you should
+ensure that the same virtual environment is active when you run the tests.
