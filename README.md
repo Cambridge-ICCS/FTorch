@@ -99,8 +99,7 @@ FTorch's test suite has some additional dependencies.
   installed, as opposed to LibTorch. We recommend installing `torchvision` in
   the same command (e.g., `pip install torch torchvision`)<sup>*</sup>. Doing so
   ensures that `torch` and `torchvision` are configured in the same way.
-* Other Python modules are installed automatically by the `ctest` command
-  (or `run_test_suite.bat` on Windows).
+* Other Python modules are installed automatically upon building the tests.
 
 
 <sup>*</sup> _For more details, see [here](https://pytorch.org/get-started/locally/)._

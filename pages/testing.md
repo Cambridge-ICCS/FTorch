@@ -16,6 +16,9 @@ to run the unit tests, you will also need to install
 [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit) and pass its
 install directory to the `CMAKE_PREFIX_PATH` when building FTorch.
 
+The CMake build will automatically install any additional Python dependencies
+for the examples.
+
 Note that, whilst example `5_Looping` is built if `CMAKE_BUILD_TESTS=TRUE` is
 specified, it is not run as part of the integration test suite because it
 demonstrates 'good' versus 'bad' practice, as opposed to functionality.
@@ -27,9 +30,6 @@ for FTorch<sup>1</sup> and simply call `ctest` from the build directory. Doing
 this, you can pass
 [arguments](https://cmake.org/cmake/help/latest/manual/ctest.1.html) to `ctest`
 for greater control over the testing configuration.
-
-The `ctest` call will automatically install any additional Python dependencies
-for the examples.
 
 See the subsections below for instructions on how to run subsets of the full
 test suite.
