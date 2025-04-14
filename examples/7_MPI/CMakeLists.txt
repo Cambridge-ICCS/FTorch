@@ -18,6 +18,13 @@ find_package(FTorch)
 find_package(MPI REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
+# Install Python dependencies
+find_package(Python COMPONENTS Interpreter REQUIRED)
+if(NOT DEFINED ENV{VIRTUAL_ENV} OR DEFINED ENV{CONDA_PREFIX})
+  message(FATAL_ERROR "Please activate your virtualenv or conda environment")
+endif()
+execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${PROJECT_SOURCE_DIR}/requirements.txt)
+
 # Fortran example
 add_executable(mpi_infer_fortran mpi_infer_fortran.f90)
 target_link_libraries(mpi_infer_fortran PRIVATE FTorch::ftorch)
@@ -26,10 +33,6 @@ target_link_libraries(mpi_infer_fortran PRIVATE MPI::MPI_Fortran)
 # Integration testing
 if(CMAKE_BUILD_TESTS)
   include(CTest)
-
-  add_test(NAME example7_requirements
-           COMMAND ${Python_EXECUTABLE} -m pip install -q -r
-                   ${PROJECT_SOURCE_DIR}/requirements.txt)
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
   add_test(NAME example7_simplenet COMMAND ${Python_EXECUTABLE}

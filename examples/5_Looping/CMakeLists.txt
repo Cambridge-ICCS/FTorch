@@ -17,6 +17,13 @@ endif()
 find_package(FTorch)
 message(STATUS "Building with Fortran PyTorch coupling")
 
+# Install Python dependencies
+find_package(Python COMPONENTS Interpreter REQUIRED)
+if(NOT DEFINED ENV{VIRTUAL_ENV} OR DEFINED ENV{CONDA_PREFIX})
+  message(FATAL_ERROR "Please activate your virtualenv or conda environment")
+endif()
+execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${PROJECT_SOURCE_DIR}/requirements.txt)
+
 # Fortran example - bad
 add_executable(example5_simplenet_infer_fortran_bad
                bad/simplenet_infer_fortran.f90)
