@@ -30,17 +30,6 @@ when building FTorch.
 ## Running
 
 Having built the unit and integration tests, ensure the Python virtual
-environment is active and run them by going to `build/test/unit` or the
-corresponding subdirectory of `build/test/examples` and calling `ctest`.
-This will produce a report on which tests passed and which failed for your
-build. Note that the examples have additional dependencies, which may need
-installing into your virtual environment.
-
-Alternatively, run the helper script in the root FTorch directory. Depending on
-which operating system you are running, you will need:
-
-- `./run_test_suite.sh` for unix (Mac and Linux)
-- `run_test_suite.bat` for Windows (note this will only run the integration tests, not unit tests).
-
-This will automatically install any additional Python dependencies for the
-examples and run the tests.
+environment is active and run them by navigating to the build directory and
+calling `ctest`. For finer-grained control over which tests to run, see the
+[testing user guide page](https://cambridge-iccs.github.io/FTorch/page/testing.html).

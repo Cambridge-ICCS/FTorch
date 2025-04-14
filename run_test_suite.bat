@@ -8,8 +8,8 @@ rem
 rem See `test/README.md` for more details on integration testing.
 rem ---
 
-rem NOTE: This version of run_test_suite only runs the integration tests, not
-rem       the unit tests. These are not currently supported on Windows.
+rem NOTE: This script only runs the integration tests, not the unit tests. These
+rem       are not currently supported on Windows.
 
 for /d %%i in (1_Tensor 2_SimpleNet 3_ResNet 4_MultiIO 8_Autograd) do (
 pushd build\examples\%%i
