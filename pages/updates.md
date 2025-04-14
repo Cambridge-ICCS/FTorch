@@ -20,8 +20,7 @@ from `src/` to the root level of the FTorch repository. This move was mainly to
 simplify the development experience, such that the examples could be built as
 integration tests as part of FTorch, without needing to copy the examples into
 a subdirectory of `src/` (as was done previously). For consistency, the other
-tests have also been moved from `src/tests/` to `tests/`, with the
-`run_test_suite` scripts updated appropriately.
+tests have also been moved from `src/tests/` to `tests/`.
 
 The only difference most users should need to take account of is that the build
 directory should no longer be within `src/`. Instead, simply create the build
