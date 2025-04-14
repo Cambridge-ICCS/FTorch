@@ -90,7 +90,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.0% of total for procedures.">20 statements</a>
+                 title=" 1.2% of total for procedures.">24 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -254,6 +254,10 @@
 <span class="w">                              </span><span class="n">requires_grad</span><span class="o">=</span><span class="n">input</span><span class="p">%</span><span class="n">requires_grad</span><span class="p">())</span>
 <span class="w">    </span><span class="k">else if</span><span class="w"> </span><span class="p">(</span><span class="n">input</span><span class="p">%</span><span class="n">get_device_type</span><span class="p">()</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">output</span><span class="p">%</span><span class="n">get_device_type</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
 <span class="k">      write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: cannot assign tensors with different device types&quot;</span>
+<span class="w">      </span><span class="k">stop </span><span class="mi">1</span>
+<span class="w">    </span><span class="k">end if</span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">output</span><span class="p">%</span><span class="n">requires_grad</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: cannot assign values of a tensor with requires_grad=.true.&quot;</span>
 <span class="w">      </span><span class="k">stop </span><span class="mi">1</span>
 <span class="w">    </span><span class="k">end if</span>
 <span class="k">    call </span><span class="n">torch_tensor_assign_c</span><span class="p">(</span><span class="n">output</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">input</span><span class="p">%</span><span class="n">p</span><span class="p">)</span>
