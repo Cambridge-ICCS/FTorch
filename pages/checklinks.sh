@@ -1,19 +1,20 @@
 #!/bin/bash
 # Usage: ./checklinks.sh [FILES]
-# Scans markdown files for broken links. Defaults to "*.md" if no FILES are provided.
+# Scans markdown files for broken links. Defaults to recursively finding "*.md" files if no FILES are provided.
 # Only works for markdown links, and only absolute (http/https) links
 
 # Exit on non-zero exit code for any calls.
 set -e
 
-# Directory or files to scan (can be passed as a command-line argument, defaults to "*.md")
+# Directory or file pattern to scan (can be passed as a command-line argument).
+# Defaults to all "*.md" under current directoru using `find`.
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
   echo "Usage: $0 [FILES]"
   echo "Scans markdown files for broken links."
-  echo "  FILES: Optional. Specify files or patterns to scan. Defaults to \"*.md\"."
+  echo "  FILES: Optional. Specify files or glob patterns to scan. Defaults to recursively finding all "*.md" files under the current directory."
   exit 0
 fi
-FILES=${1:-"*.md"}
+FILES=${1:-$(find . -type f -name "*.md")}
 
 # grep -E regex to extract markdown links from markdown files - [text](link)
 LINK_REGEX='\[[^]]+\]\((https?:\/\/[^[:space:]()]+(\([^[:space:]()]*\))?[^[:space:]()]*)\)'
