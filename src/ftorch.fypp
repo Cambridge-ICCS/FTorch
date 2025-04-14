@@ -718,6 +718,10 @@ contains
       write(*,*) "Error :: cannot assign tensors with different device types"
       stop 1
     end if
+    if (output%requires_grad()) then
+      write(*,*) "Error :: cannot assign values of a tensor with requires_grad=.true."
+      stop 1
+    end if
     call torch_tensor_assign_c(output%p, input%p)
   end subroutine torch_tensor_assign
 
