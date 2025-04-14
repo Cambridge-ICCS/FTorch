@@ -21,7 +21,7 @@ For use on a HPC system we advise linking to an installation of LibTorch rather 
 installing full PyTorch.
 This will reduce the dependencies and remove any requirement of Python.
 LibTorch can be obtained from the
-[PyTorch website](https://pytorch.org/get-started/locally/).
+[PyTorch website](https://pytorch.org/get-started/locally).
 The assumption here is that any Python/PyTorch development is done elsewhere with a
 model being saved to TorchScript for subsequent use by FTorch.
 
