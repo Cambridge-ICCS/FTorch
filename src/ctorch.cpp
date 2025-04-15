@@ -351,6 +351,17 @@ void torch_tensor_zero(torch_tensor_t tensor) {
   t->zero_();
 }
 
+void torch_tensor_to(const torch_tensor_t source_tensor, torch_tensor_t dest_tensor,
+                     bool non_blocking, bool copy) {
+  auto source_t = reinterpret_cast<torch::Tensor *>(source_tensor);
+  auto dest_t = reinterpret_cast<torch::Tensor *>(dest_tensor);
+
+  torch::Device device_type = dest_t->device();
+  at::ScalarType dtype = dest_t->scalar_type();
+
+  std::move(*dest_t) = source_t->to(device_type, dtype, non_blocking, copy);
+}
+
 // =====================================================================================
 // --- Operator overloads acting on tensors
 // =====================================================================================
