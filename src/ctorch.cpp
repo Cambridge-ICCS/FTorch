@@ -13,6 +13,25 @@
 #endif
 
 // =============================================================================
+// --- Functions to aid in consistent error handling
+// =============================================================================
+
+// Accept a string message and handle as error or warning if specified.
+// Can also accept a cleanup function if required.
+void ctorch_error(const std::string &message, bool is_warning = false,
+                  const std::function<void()> &cleanup = nullptr) {
+  if (is_warning) {
+    std::cerr << "[WARNING]: " << message << std::endl;
+  } else {
+    std::cerr << "[ERROR]: " << message << std::endl;
+    if (cleanup) {
+      cleanup(); // Perform cleanup actions
+    }
+    exit(EXIT_FAILURE);
+  }
+}
+
+// =============================================================================
 // --- Constant expressions
 // =============================================================================
 
@@ -20,9 +39,8 @@
 constexpr auto get_libtorch_dtype(torch_data_t dtype) {
   switch (dtype) {
   case torch_kUInt8:
-    std::cerr << "[WARNING]: uint8 not supported in Fortran" << std::endl;
+    ctorch_error("uint8 not supported in Fortran");
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
-    exit(EXIT_FAILURE);
   case torch_kInt8:
     return torch::kInt8;
   case torch_kInt16:
@@ -32,15 +50,14 @@ constexpr auto get_libtorch_dtype(torch_data_t dtype) {
   case torch_kInt64:
     return torch::kInt64;
   case torch_kFloat16:
-    std::cerr << "[WARNING]: float16 not supported in Fortran" << std::endl;
+    ctorch_error("float16 not supported in Fortran");
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
-    exit(EXIT_FAILURE);
   case torch_kFloat32:
     return torch::kFloat32;
   case torch_kFloat64:
     return torch::kFloat64;
   default:
-    std::cerr << "[WARNING]: unknown data type, setting to torch_kFloat32" << std::endl;
+    ctorch_error("unknown data type, setting to torch_kFloat32", true);
     return torch::kFloat32;
   }
 }
@@ -48,9 +65,8 @@ constexpr auto get_libtorch_dtype(torch_data_t dtype) {
 // Mapping from libtorch Dtype to FTorch device_data_t
 torch_data_t get_ftorch_dtype(caffe2::TypeMeta dtype) {
   if (dtype == torch::kUInt8) {
-    std::cerr << "[WARNING]: uint8 not supported in Fortran" << std::endl;
+    ctorch_error("uint8 not supported in Fortran");
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
-    exit(EXIT_FAILURE);
   } else if (dtype == torch::kInt8) {
     return torch_kInt8;
   } else if (dtype == torch::kInt16) {
@@ -60,9 +76,8 @@ torch_data_t get_ftorch_dtype(caffe2::TypeMeta dtype) {
   } else if (dtype == torch::kInt64) {
     return torch_kInt64;
   } else if (dtype == torch::kFloat16) {
-    std::cerr << "[WARNING]: float16 not supported in Fortran" << std::endl;
+    ctorch_error("float16 not supported in Fortran");
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
-    exit(EXIT_FAILURE);
   } else if (dtype == torch::kFloat32) {
     return torch_kFloat32;
   } else if (dtype == torch::kFloat64) {
@@ -72,6 +87,7 @@ torch_data_t get_ftorch_dtype(caffe2::TypeMeta dtype) {
               << std::endl;
     exit(EXIT_FAILURE);
   }
+  return torch_kFloat32; // Dummy return to satisfy the compiler
 }
 
 // Mapping from FTorch device_type_t to libtorch DeviceType
@@ -79,13 +95,13 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
   switch (device_type) {
   case torch_kCPU:
     if (device_index != -1) {
-      std::cerr << "[WARNING]: device index unused for CPU-only runs" << std::endl;
+      ctorch_error("device index unused for CPU-only runs", true);
     }
     return torch::Device(torch::kCPU);
 #if GPU_DEVICE == GPU_DEVICE_CUDA
   case torch_kCUDA:
     if (device_index == -1) {
-      std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;
+      ctorch_error("device index unset, defaulting to 0", true);
       device_index = 0;
     }
     if (device_index >= 0 && device_index < torch::cuda::device_count()) {
@@ -98,13 +114,13 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
 #endif
   case torch_kMPS:
     if (device_index != -1 && device_index != 0) {
-      std::cerr << "[WARNING]: Only one device is available for MPS runs" << std::endl;
+      ctorch_error("Only one device is available for MPS runs", true);
     }
     return torch::Device(torch::kMPS);
 #if GPU_DEVICE == GPU_DEVICE_XPU
   case torch_kXPU:
     if (device_index == -1) {
-      std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;
+      ctorch_error("device index unset, defaulting to 0", true);
       device_index = 0;
     }
     if (device_index >= 0 && device_index < torch::xpu::device_count()) {
@@ -116,7 +132,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
     }
 #endif
   default:
-    std::cerr << "[WARNING]: unknown device type, setting to torch_kCPU" << std::endl;
+    ctorch_error("unknown device type, setting to torch_kCPU", true);
     return torch::Device(torch::kCPU);
   }
 }
@@ -157,6 +173,11 @@ void validate_tensor_defined(const torch::Tensor *t, const std::string &name) {
   }
 }
 
+void validate_tensor(const torch::Tensor *t, const std::string &name) {
+  validate_tensor_not_null(t, name);
+  validate_tensor_defined(t, name);
+}
+
 // Check if a tensor has requires_grad set
 void validate_requires_grad(const torch::Tensor *t, const std::string &name) {
   if (!t->requires_grad()) {
@@ -189,13 +210,9 @@ torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
                        .requires_grad(requires_grad);
     *tensor = torch::empty(vshape, options);
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg(), false, [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what(), false, [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -214,13 +231,9 @@ torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
                        .requires_grad(requires_grad);
     *tensor = torch::zeros(vshape, options);
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg(), false, [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what(), false, [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -239,13 +252,9 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
                        .requires_grad(requires_grad);
     *tensor = torch::ones(vshape, options);
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg(), false, [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what(), false, [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -270,13 +279,9 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
     *tensor = torch::from_blob(data, vshape, vstrides, options);
 
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg(), false, [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what(), false, [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -441,8 +446,7 @@ void torch_tensor_backward(const torch_tensor_t tensor,
     // Perform backwards step
     t->backward(*g, retain_graph);
   } catch (const std::exception &e) {
-    std::cerr << "Error in torch_tensor_backward: " << e.what() << std::endl;
-    std::terminate();
+    ctorch_error(std::string(e.what()) + " in torch_tensor_backward");
   }
 }
 
@@ -463,9 +467,7 @@ void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradi
     // Assign the gradient to the output tensor
     std::move(*g) = t->grad();
   } catch (const std::exception &e) {
-    // Print the error message for debugging
-    std::cerr << "Error in torch_tensor_get_gradient: " << e.what() << std::endl;
-    std::terminate(); // Terminate here to avoid undefined behavior
+    ctorch_error(std::string(e.what()) + " in torch_tensor_get_gradient");
   }
 }
 
@@ -494,13 +496,9 @@ torch_jit_script_module_t torch_jit_load(const char *filename,
     *module =
         torch::jit::load(filename, get_libtorch_device(device_type, device_index));
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete module;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg(), false, [&]() { delete module; });
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete module;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what(), false, [&]() { delete module; });
   }
   set_is_training(module, is_training);
 
@@ -527,10 +525,7 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     if (LocalTensor.isTensor()) {
       inputs_vec.push_back(LocalTensor);
     } else {
-      std::cerr << "[ERROR]: One of the inputs to torch_jit_module_forward is "
-                   "not a Tensor."
-                << std::endl;
-      exit(EXIT_FAILURE);
+      ctorch_error("One of the inputs to torch_jit_module_forward is not a Tensor");
     }
   }
   try {
@@ -546,14 +541,12 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     } else {
       // If for some reason the forward method does not return a Tensor it
       // should raise an error when trying to cast to a Tensor type
-      std::cerr << "[ERROR]: Model Output is neither Tensor nor Tuple." << std::endl;
+      ctorch_error("Model Output is neither Tensor nor Tuple");
     }
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg());
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what());
   }
 }
 
