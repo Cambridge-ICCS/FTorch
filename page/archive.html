@@ -10,7 +10,7 @@
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
-    <title>FTorch test suite &ndash; FTorch</title>
+    <title>News archive &ndash; FTorch</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -78,7 +78,7 @@
 
     <div class="container">
   <div class="row">
-    <h1>FTorch test suite</h1>
+    <h1>News archive</h1>
     <div class="container p-2 mb-4 bg-light border rounded-3">
       <div class="row align-items-center justify-content-between">
         <div class="col">
@@ -89,7 +89,7 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
                 <li class="breadcrumb-item"><a href='index.html'>User Guide</a></li>
-              <li class="breadcrumb-item active" aria-current="page">FTorch test suite</li>
+              <li class="breadcrumb-item active" aria-current="page">News archive</li>
             </ol>
           </nav>
         </div>
@@ -108,7 +108,7 @@
           <hr>
           <nav class="nav nav-pills flex-column">
               <a class="nav-link" href="LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="archive.html">News archive</a>
+              <a class="nav-link active disabled" href="archive.html">News archive</a>
               <a class="nav-link" href="autograd.html">Online training</a>
               <a class="nav-link" href="changelog.html">FTorch Changelog</a>
               <a class="nav-link" href="cmake.html">Installation and Build Process</a>
@@ -117,7 +117,7 @@
               <a class="nav-link" href="gpu.html">GPU Support</a>
               <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
               <a class="nav-link" href="tensor.html">Tensor API</a>
-              <a class="nav-link active disabled" href="testing.html">FTorch test suite</a>
+              <a class="nav-link" href="testing.html">FTorch test suite</a>
               <a class="nav-link" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
               <a class="nav-link" href="updates.html">Recent API Changes</a>
@@ -128,89 +128,15 @@
     <div class="col-9" id='text'>
       <div class="toc">
 <ul>
-<li><a href="#testing">Testing</a><ul>
-<li><a href="#building">Building</a></li>
-<li><a href="#running">Running</a><ul>
-<li><a href="#running-unit-tests-on-unix">Running unit tests on Unix</a></li>
-<li><a href="#running-integration-tests-on-unix">Running integration tests on Unix</a></li>
-<li><a href="#running-integration-tests-on-windows">Running integration tests on Windows</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a href="#past-news">Past news</a></li>
 </ul>
 </div>
-<h2 id="testing">Testing</h2>
-<p>FTorch's test suite is currently comprised of unit tests, as well as integration
-tests based on a subset of the <a href="examples.html">examples</a>. These tests are built
-and run and their outputs are analysed.</p>
-<h3 id="building">Building</h3>
-<p>To enable FTorch's test suite, ensure that the <code>CMAKE_BUILD_TESTS</code> option
-is set to <code>TRUE</code> for the build,  i.e., <code>-DCMAKE_BUILD_TESTS=True</code>. If you want
-to run the unit tests, you will also need to install
-<a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a> and pass its
-install directory to the <code>CMAKE_PREFIX_PATH</code> when building FTorch.</p>
-<p>Note that, whilst example <code>5_Looping</code> is built if <code>CMAKE_BUILD_TESTS=TRUE</code> is
-specified, it is not run as part of the integration test suite because it
-demonstrates 'good' versus 'bad' practice, as opposed to functionality.</p>
-<h3 id="running">Running</h3>
-<p>Once the build is complete, activate the Python virtual environment you created
-for FTorch<sup>1</sup> and simply run the
-<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/run_test_suite.sh">helper script</a>
-in the root FTorch directory. Depending on the OS you are running you will need
-to use either:</p>
+<h2 id="past-news">Past news</h2>
 <ul>
-<li><code>./run_test_suite.sh</code> for Unix operating systems (Mac and Linux).</li>
-<li><code>run_test_suite.bat</code> for Windows operating systems (note this will only run
-  the integration tests, not unit tests).</li>
+<li><a href="https://medium.com/@twins.corgi.0a/hybrid-ai-hpc-workflows-integrating-pytorch-with-cesm-on-nvidia-gh200-94a0bc34ffd9">Medium article</a>
+  on integrating PyTorch with the Community Earth System Model (CESM) on Nvidia
+  Grace-Hopper 200 using FTorch.</li>
 </ul>
-<p>This will automatically install any additional Python dependencies for the
-examples.</p>
-<p>See the subsections below for instructions on how to run subsets of the full
-test suite.</p>
-<blockquote>
-<p><sup>1</sup> <em>If you built FTorch against LibTorch (rather than creating a
-virtual environment) then you will need to
-<a href="https://docs.python.org/3/library/venv.html">create a virtual environment</a> for
-the purposes of integration testing as this script will install packages into your
-Python environment and will check that a virtual environment is in use.</em></p>
-</blockquote>
-<h4 id="running-unit-tests-on-unix">Running unit tests on Unix</h4>
-<p>If you are running with a Unix operating system, unit tests may be
-executed either as a suite by specifying the <code>--unit-only</code> command line
-argument:</p>
-<div class="codehilite"><pre><span></span><code>./run_test_suite.sh<span class="w"> </span>--unit-only
-</code></pre></div>
-
-<p>or individually by navigating to <code>${BUILD_DIR}/test/unit</code> (where <code>${BUILD_DIR}</code>
-is the build directory for FTorch) and calling <code>ctest</code> with
-<a href="https://cmake.org/cmake/help/latest/manual/ctest.1.html">appropriate arguments</a>.
-This will produce a report on which tests passed and which failed for your
-build.</p>
-<h4 id="running-integration-tests-on-unix">Running integration tests on Unix</h4>
-<p>If you are running with a Unix operating system, integration tests may be
-executed either as a suite by specifying the <code>--integration-only</code> command line
-argument:</p>
-<div class="codehilite"><pre><span></span><code>./run_test_suite.sh<span class="w"> </span>--integration-only
-</code></pre></div>
-
-<p>or individually by navigating to the corresponding subdirectory of
-<code>${BUILD_DIR}/examples</code> (where <code>${BUILD_DIR}</code> is the build directory for
-FTorch) and calling <code>ctest</code>. This will produce a report on which tests passed
-and which failed for your build. Note that some of the examples have additional
-dependencies, which may need installing into your virtual environment.</p>
-<h4 id="running-integration-tests-on-windows">Running integration tests on Windows</h4>
-<p>As mentioned above, if you are running with a Windows operating system then
-only the integration tests are currently set up. They may be executed either as
-a suite with the command</p>
-<div class="codehilite"><pre><span></span><code>./run_test_suite.bat
-</code></pre></div>
-
-<p>or individually by navigating to the corresponding subdirectory of
-<code>${BUILD_DIR}/examples</code> (where <code>${BUILD_DIR}</code> is the build directory for
-FTorch) and calling <code>ctest</code>. This will produce a report on which tests passed
-and which failed for your build. Note that some of the examples have additional
-dependencies, which may need installing into your virtual environment.</p>
     </div>
   </div>
       <hr>
