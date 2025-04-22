@@ -67,7 +67,7 @@ program tensor_manipulation
   write(*,*) "Sum of input tensors:"
   write(*,*) out_data
 
-  ! Summing the contents of a tensor
+  ! Taking the mean of the contents of a tensor
   ! ---------------------------------
   ! In addition to the overloaded mathematical operators, FTorch provides other operators for
   ! computations involving tensors. One such operator is the mean over the values in the tensor.
