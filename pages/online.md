@@ -6,7 +6,7 @@ title: Online training
 
 
 FTorch has supported offline training of ML models for some time (see the
-[offline training user guide page](pages/offline.html) for details). We are
+[offline training user guide page](offline.html) for details). We are
 currently working on extending its functionality to support online training,
 too. This will involve exposing the backpropagation and optimization
 functionalities of PyTorch/LibTorch.
