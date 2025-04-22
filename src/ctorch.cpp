@@ -16,19 +16,19 @@
 // --- Functions to aid in consistent error handling
 // =============================================================================
 
-// Accept a string message and handle as error or warning if specified.
-// Can also accept a cleanup function if required.
-void ctorch_error(const std::string &message, bool is_warning = false,
+// Accept a string message and handle as error. Accepts a cleanup function if desired.
+void ctorch_error(const std::string &message,
                   const std::function<void()> &cleanup = nullptr) {
-  if (is_warning) {
-    std::cerr << "[WARNING]: " << message << std::endl;
-  } else {
-    std::cerr << "[ERROR]: " << message << std::endl;
-    if (cleanup) {
-      cleanup(); // Perform cleanup actions
-    }
-    exit(EXIT_FAILURE);
+  std::cerr << "[ERROR]: " << message << std::endl;
+  if (cleanup) {
+    cleanup(); // Perform cleanup actions
   }
+  exit(EXIT_FAILURE);
+}
+
+// Accept a string message and handle as a warning.
+void ctorch_warn(const std::string &message) {
+  std::cerr << "[WARNING]: " << message << std::endl;
 }
 
 // =============================================================================
@@ -57,7 +57,7 @@ constexpr auto get_libtorch_dtype(torch_data_t dtype) {
   case torch_kFloat64:
     return torch::kFloat64;
   default:
-    ctorch_error("unknown data type, setting to torch_kFloat32", true);
+    ctorch_warn("unknown data type, setting to torch_kFloat32");
     return torch::kFloat32;
   }
 }
@@ -95,13 +95,13 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
   switch (device_type) {
   case torch_kCPU:
     if (device_index != -1) {
-      ctorch_error("device index unused for CPU-only runs", true);
+      ctorch_warn("device index unused for CPU-only runs");
     }
     return torch::Device(torch::kCPU);
 #if GPU_DEVICE == GPU_DEVICE_CUDA
   case torch_kCUDA:
     if (device_index == -1) {
-      ctorch_error("device index unset, defaulting to 0", true);
+      ctorch_warn("device index unset, defaulting to 0");
       device_index = 0;
     }
     if (device_index >= 0 && device_index < torch::cuda::device_count()) {
@@ -114,13 +114,13 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
 #endif
   case torch_kMPS:
     if (device_index != -1 && device_index != 0) {
-      ctorch_error("Only one device is available for MPS runs", true);
+      ctorch_warn("Only one device is available for MPS runs");
     }
     return torch::Device(torch::kMPS);
 #if GPU_DEVICE == GPU_DEVICE_XPU
   case torch_kXPU:
     if (device_index == -1) {
-      ctorch_error("device index unset, defaulting to 0", true);
+      ctorch_warn("device index unset, defaulting to 0");
       device_index = 0;
     }
     if (device_index >= 0 && device_index < torch::xpu::device_count()) {
@@ -132,7 +132,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
     }
 #endif
   default:
-    ctorch_error("unknown device type, setting to torch_kCPU", true);
+    ctorch_warn("unknown device type, setting to torch_kCPU");
     return torch::Device(torch::kCPU);
   }
 }
@@ -210,9 +210,9 @@ torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
                        .requires_grad(requires_grad);
     *tensor = torch::empty(vshape, options);
   } catch (const torch::Error &e) {
-    ctorch_error(e.msg(), false, [&]() { delete tensor; });
+    ctorch_error(e.msg(), [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    ctorch_error(e.what(), false, [&]() { delete tensor; });
+    ctorch_error(e.what(), [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -231,9 +231,9 @@ torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
                        .requires_grad(requires_grad);
     *tensor = torch::zeros(vshape, options);
   } catch (const torch::Error &e) {
-    ctorch_error(e.msg(), false, [&]() { delete tensor; });
+    ctorch_error(e.msg(), [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    ctorch_error(e.what(), false, [&]() { delete tensor; });
+    ctorch_error(e.what(), [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -252,9 +252,9 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
                        .requires_grad(requires_grad);
     *tensor = torch::ones(vshape, options);
   } catch (const torch::Error &e) {
-    ctorch_error(e.msg(), false, [&]() { delete tensor; });
+    ctorch_error(e.msg(), [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    ctorch_error(e.what(), false, [&]() { delete tensor; });
+    ctorch_error(e.what(), [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -279,9 +279,9 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
     *tensor = torch::from_blob(data, vshape, vstrides, options);
 
   } catch (const torch::Error &e) {
-    ctorch_error(e.msg(), false, [&]() { delete tensor; });
+    ctorch_error(e.msg(), [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    ctorch_error(e.what(), false, [&]() { delete tensor; });
+    ctorch_error(e.what(), [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -430,6 +430,7 @@ void torch_tensor_power_float(torch_tensor_t output, const torch_tensor_t tensor
 
 void torch_tensor_zero_grad(torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  validate_tensor(t, "Gradient to zero");
   t->mutable_grad().zero_();
 }
 
@@ -496,9 +497,9 @@ torch_jit_script_module_t torch_jit_load(const char *filename,
     *module =
         torch::jit::load(filename, get_libtorch_device(device_type, device_index));
   } catch (const torch::Error &e) {
-    ctorch_error(e.msg(), false, [&]() { delete module; });
+    ctorch_error(e.msg(), [&]() { delete module; });
   } catch (const std::exception &e) {
-    ctorch_error(e.what(), false, [&]() { delete module; });
+    ctorch_error(e.what(), [&]() { delete module; });
   }
   set_is_training(module, is_training);
 
