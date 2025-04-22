@@ -347,6 +347,7 @@ void torch_tensor_delete(torch_tensor_t tensor) {
 
 void torch_tensor_zero(torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  validate_tensor(t, "Input tensor");
   t->zero_();
 }
 
@@ -357,6 +358,8 @@ void torch_tensor_zero(torch_tensor_t tensor) {
 void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input) {
   auto out = reinterpret_cast<torch::Tensor *>(output);
   auto in = reinterpret_cast<torch::Tensor *const>(input);
+  validate_tensor(out, "Output tensor");
+  validate_tensor(in, "Input tensor");
   torch::AutoGradMode enable_grad(in->requires_grad());
   // NOTE: The following line ensures that the output tensor continues to point to a
   //       Fortran array if it was set up to do so using torch_tensor_from_array. If
@@ -438,10 +441,8 @@ void torch_tensor_backward(const torch_tensor_t tensor,
 
   try {
     // Check if the tensors are valid and defined
-    validate_tensor_not_null(t, "Input tensor");
-    validate_tensor_defined(t, "Input tensor");
-    validate_tensor_not_null(g, "External gradient");
-    validate_tensor_defined(g, "External gradient");
+    validate_tensor(t, "Input tensor");
+    validate_tensor(g, "External gradient");
 
     // Perform backwards step
     t->backward(*g, retain_graph);
@@ -457,8 +458,7 @@ void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradi
     auto g = reinterpret_cast<torch::Tensor *>(gradient);
 
     // Check if the tensors are valid and defined
-    validate_tensor_not_null(t, "Input tensor");
-    validate_tensor_defined(t, "Input tensor");
+    validate_tensor(t, "Input tensor");
     validate_tensor_not_null(g, "Output gradient");
     // Check input has requires_grad set and can generate a valid gradient tensor
     validate_requires_grad(t, "Input tensor");
