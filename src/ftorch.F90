@@ -2784,6 +2784,56 @@ contains
 
 
   ! ============================================================================
+  ! --- Other operators for computations involving tensors
+  ! ============================================================================
+
+  !> Overloads summation operator over the values in a tensor.
+  subroutine torch_tensor_sum(output, tensor)
+    use, intrinsic :: iso_c_binding, only : c_associated
+    type(torch_tensor), intent(inout) :: output  !! Tensor holding the summed values
+    type(torch_tensor), intent(in)    :: tensor  !! Tensor to sum the values of
+
+    interface
+      subroutine torch_tensor_sum_c(output_c, tensor_c) &
+          bind(c, name = 'torch_tensor_sum')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: output_c
+        type(c_ptr), value, intent(in) :: tensor_c
+      end subroutine torch_tensor_sum_c
+    end interface
+
+    if (.not. c_associated(output%p)) then
+      write(*,*) "Error :: output tensor has not been constructed"
+      stop 1
+    end if
+    call torch_tensor_sum_c(output%p, tensor%p)
+  end subroutine torch_tensor_sum
+
+  !> Overloads mean operator over the values in a tensor.
+  subroutine torch_tensor_mean(output, tensor)
+    use, intrinsic :: iso_c_binding, only : c_associated
+    type(torch_tensor), intent(inout) :: output  !! Tensor holding the averaged values
+    type(torch_tensor), intent(in)    :: tensor  !! Tensor to average the values of
+
+    interface
+      subroutine torch_tensor_mean_c(output_c, tensor_c) &
+          bind(c, name = 'torch_tensor_mean')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: output_c
+        type(c_ptr), value, intent(in) :: tensor_c
+      end subroutine torch_tensor_mean_c
+    end interface
+
+    if (.not. c_associated(output%p)) then
+      write(*,*) "Error :: output tensor has not been constructed"
+      stop 1
+    end if
+    call torch_tensor_mean_c(output%p, tensor%p)
+  end subroutine torch_tensor_mean
+
+  ! ============================================================================
   ! --- Procedures related to automatic differentation functionality for tensors
   ! ============================================================================
 
@@ -2846,9 +2896,9 @@ contains
   end subroutine torch_tensor_backward
 
   !> Retrieves the gradient with respect to a Torch Tensor.
-  subroutine torch_tensor_get_gradient(tensor, gradient)
-    class(torch_tensor), intent(in) :: tensor      !! Tensor to compute the gradient with respect to
+  subroutine torch_tensor_get_gradient(gradient, tensor)
     type(torch_tensor), intent(inout) :: gradient  !! Tensor holding the gradient
+    type(torch_tensor), intent(in) :: tensor       !! Tensor to compute the gradient with respect to
 
     interface
       subroutine torch_tensor_get_gradient_c(tensor_c, gradient_c) &

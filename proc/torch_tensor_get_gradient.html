@@ -157,7 +157,7 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public  subroutine torch_tensor_get_gradient(tensor, gradient)  
+    <h2>public  subroutine torch_tensor_get_gradient(gradient, tensor)  
 </h2>
     
 
@@ -177,21 +177,6 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~90"></span>
-              class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>tensor</strong></td>
-            <td>
-                <p>Tensor to compute the gradient with respect to</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
               <span class="anchor" id="variable-gradient"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
@@ -203,6 +188,21 @@
             <td><strong>gradient</strong></td>
             <td>
                 <p>Tensor holding the gradient</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~92"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+                <p>Tensor to compute the gradient with respect to</p>
             </td>
         </tr>
     </tbody>
@@ -222,9 +222,9 @@
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="n">gradient</span><span class="p">)</span>
-<span class="w">    </span><span class="k">class</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w">      </span><span class="c">!! Tensor to compute the gradient with respect to</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span><span class="w"> </span><span class="n">tensor</span><span class="p">)</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">gradient</span><span class="w">  </span><span class="c">!! Tensor holding the gradient</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w">       </span><span class="c">!! Tensor to compute the gradient with respect to</span>
 
 <span class="w">    </span><span class="k">interface</span>
 <span class="k">      subroutine </span><span class="n">torch_tensor_get_gradient_c</span><span class="p">(</span><span class="n">tensor_c</span><span class="p">,</span><span class="w"> </span><span class="n">gradient_c</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>

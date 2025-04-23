@@ -135,6 +135,7 @@
 <li><a href="#tensor-deallocation">Tensor deallocation</a></li>
 <li><a href="#tensor-manipulation">Tensor manipulation</a></li>
 <li><a href="#operator-overloading">Operator overloading</a></li>
+<li><a href="#other-operators-acting-on-tensors">Other operators acting on tensors</a></li>
 </ul>
 </li>
 <li><a href="#examples">Examples</a></li>
@@ -222,6 +223,10 @@ notation:</p>
 <span class="w">  </span><span class="n">operator</span><span class="p">(</span><span class="o">/</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">**</span><span class="p">)</span>
 </code></pre></div>
 
+<h3 id="other-operators-acting-on-tensors">Other operators acting on tensors</h3>
+<p>We have also exposed the operators for taking the sum or mean over the entries
+in a tensor, which can be achieved with the subroutines <code>torch_tensor_sum</code> and
+in <code>torch_tensor_mean</code>, respectively.</p>
 <h2 id="examples">Examples</h2>
 <p>For a concrete example of how to construct, interrogate, manipulate, and delete
 Torch tensors, see the

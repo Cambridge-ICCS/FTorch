@@ -198,10 +198,10 @@ input tensors <code>a</code> and <code>b</code> and an output tensor <code>Q</co
 to <code>a</code> and/or <code>b</code>. To do this, we can use the <code>torch_tensor_get_gradient</code>
 subroutine. That is, for tensors <code>dQda</code> and <code>dQdb</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">dQda</span><span class="p">,</span><span class="w"> </span><span class="n">out_data2</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
-<span class="k">call </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">dQda</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="n">dQda</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
 
 <span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">dQdb</span><span class="p">,</span><span class="w"> </span><span class="n">out_data3</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
-<span class="k">call </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">dQdb</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="n">dQdb</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
 </code></pre></div>
 
 <h4 id="retain_graph-argument"><code>retain_graph</code> argument</h4>

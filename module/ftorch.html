@@ -90,7 +90,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="86.6% of total for modules and submodules.">1810 statements</a>
+                 title="86.8% of total for modules and submodules.">1846 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -295,8 +295,10 @@
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_from_array_real64_5d_default_layout">torch_tensor_from_array_real64_5d_default_layout</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_from_blob">torch_tensor_from_blob</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_get_gradient">torch_tensor_get_gradient</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_mean">torch_tensor_mean</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_ones">torch_tensor_ones</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_print">torch_tensor_print</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_sum">torch_tensor_sum</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_zero">torch_tensor_zero</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_zero_grad">torch_tensor_zero_grad</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_zeros">torch_tensor_zeros</a>
@@ -9499,7 +9501,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~89"></span>
+              <span class="anchor" id="variable-tensor~91"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -16316,7 +16318,7 @@ parameter
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_get_gradient"></span> <h3>public  subroutine <a href='../proc/torch_tensor_get_gradient.html'>torch_tensor_get_gradient</a>(tensor, gradient)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_get_gradient"></span> <h3>public  subroutine <a href='../proc/torch_tensor_get_gradient.html'>torch_tensor_get_gradient</a>(gradient, tensor)  
 </h3></div>
     <div class="card-body">
           
@@ -16335,21 +16337,6 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~90"></span>
-              class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>tensor</strong></td>
-            <td>
-<p>Tensor to compute the gradient with respect to</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
               <span class="anchor" id="variable-gradient"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
@@ -16361,6 +16348,76 @@ parameter
             <td><strong>gradient</strong></td>
             <td>
 <p>Tensor holding the gradient</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~92"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Tensor to compute the gradient with respect to</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_mean"></span> <h3>public  subroutine <a href='../proc/torch_tensor_mean.html'>torch_tensor_mean</a>(output, tensor)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Overloads mean operator over the values in a tensor.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-output~14"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>output</strong></td>
+            <td>
+<p>Tensor holding the averaged values</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~88"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Tensor to average the values of</p>
             </td>
         </tr>
     </tbody>
@@ -16541,6 +16598,61 @@ parameter
   </div>
 
               <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_sum"></span> <h3>public  subroutine <a href='../proc/torch_tensor_sum.html'>torch_tensor_sum</a>(output, tensor)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Overloads summation operator over the values in a tensor.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-output~13"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>output</strong></td>
+            <td>
+<p>Tensor holding the summed values</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tensor~87"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tensor</strong></td>
+            <td>
+<p>Tensor to sum the values of</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_zero"></span> <h3>public  subroutine <a href='../proc/torch_tensor_zero.html'>torch_tensor_zero</a>(tensor)  
 </h3></div>
     <div class="card-body">
@@ -16600,7 +16712,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~87"></span>
+              <span class="anchor" id="variable-tensor~89"></span>
               class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(inout)</td>
