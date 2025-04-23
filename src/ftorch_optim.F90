@@ -8,7 +8,6 @@
 module ftorch_optim
 
   use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
-  use, intrinsic :: iso_fortran_env, only: int32
 
   use ftorch, only: torch_tensor, ftorch_int
 
@@ -120,14 +119,14 @@ contains
     n_params = size(parameters)
 
     if (.not. present(learning_rate)) then
-      learning_rate_value = learning_rate
-    else
       learning_rate_value = 0.001_real64
+    else
+      learning_rate_value = learning_rate
     end if
     if (.not. present(momentum)) then
-      momentum_value = momentum
-    else
       momentum_value = 0.0_real64
+    else
+      momentum_value = momentum
     end if
 
     ! Assign array of pointers to the parameters
@@ -167,9 +166,9 @@ contains
     n_params = size(parameters)
 
     if (.not. present(learning_rate)) then
-      learning_rate_value = learning_rate
-    else
       learning_rate_value = 0.001_real64
+    else
+      learning_rate_value = learning_rate
     end if
 
     ! Assign array of pointers to the parameters
