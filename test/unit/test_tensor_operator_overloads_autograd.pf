@@ -103,7 +103,7 @@ contains
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
-    call torch_tensor_get_gradient(a, dQda)
+    call torch_tensor_get_gradient(dQda, a)
 
     ! Check the computed gradient takes the expected value:
     !   Q(a) = a => dQ/da = 1
@@ -145,8 +145,8 @@ contains
     ! Create tensors based off output arrays for the gradient and then retrieve them
     call torch_tensor_from_array(dQda, out_data1, device_type)
     call torch_tensor_from_array(dQdb, out_data2, device_type)
-    call torch_tensor_get_gradient(a, dQda)
-    call torch_tensor_get_gradient(b, dQdb)
+    call torch_tensor_get_gradient(dQda, a)
+    call torch_tensor_get_gradient(dQdb, b)
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a + b => dQ/da = 1
@@ -193,7 +193,7 @@ contains
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
-    call torch_tensor_get_gradient(a, dQda)
+    call torch_tensor_get_gradient(dQda, a)
 
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a => dQ/da = -1
@@ -235,8 +235,8 @@ contains
     ! Create tensors based off output arrays for the gradient and then retrieve them
     call torch_tensor_from_array(dQda, out_data1, device_type)
     call torch_tensor_from_array(dQdb, out_data2, device_type)
-    call torch_tensor_get_gradient(a, dQda)
-    call torch_tensor_get_gradient(b, dQdb)
+    call torch_tensor_get_gradient(dQda, a)
+    call torch_tensor_get_gradient(dQdb, b)
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a - b => dQ/da = 1
@@ -286,8 +286,8 @@ contains
     ! Create tensors based off output arrays for the gradient and then retrieve them
     call torch_tensor_from_array(dQda, out_data1, device_type)
     call torch_tensor_from_array(dQdb, out_data2, device_type)
-    call torch_tensor_get_gradient(a, dQda)
-    call torch_tensor_get_gradient(b, dQdb)
+    call torch_tensor_get_gradient(dQda, a)
+    call torch_tensor_get_gradient(dQdb, b)
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a * b => dQ/da = b
@@ -343,7 +343,7 @@ contains
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
-    call torch_tensor_get_gradient(a, dQda)
+    call torch_tensor_get_gradient(dQda, a)
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = scalar * a => dQ/da = scalar
@@ -386,8 +386,8 @@ contains
     ! Create tensors based off output arrays for the gradient and then retrieve them
     call torch_tensor_from_array(dQda, out_data1, device_type)
     call torch_tensor_from_array(dQdb, out_data2, device_type)
-    call torch_tensor_get_gradient(a, dQda)
-    call torch_tensor_get_gradient(b, dQdb)
+    call torch_tensor_get_gradient(dQda, a)
+    call torch_tensor_get_gradient(dQdb, b)
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a / b => dQ/da = 1 / b
@@ -439,7 +439,7 @@ contains
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
-    call torch_tensor_get_gradient(a, dQda)
+    call torch_tensor_get_gradient(dQda, a)
 
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a / scalar => dQ/da = 1 / scalar
@@ -483,7 +483,7 @@ contains
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
-    call torch_tensor_get_gradient(a, dQda)
+    call torch_tensor_get_gradient(dQda, a)
 
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a^2 => dQ/da = 2 * a
@@ -522,7 +522,7 @@ contains
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
-    call torch_tensor_get_gradient(a, dQda)
+    call torch_tensor_get_gradient(dQda, a)
 
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a^{1/2} => dQ/da = 0.5 * a^{-1/2})
