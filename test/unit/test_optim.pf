@@ -6,12 +6,14 @@
 !    file for details.
 module test_optim
   use funit
-  use ftorch, only: assignment(=), torch_kFloat32, torch_kCPU, torch_tensor, &
-                    torch_tensor_delete, torch_tensor_from_array
+  use ftorch, only: assignment(=), operator(-), operator(*), operator(**), &
+                    torch_kFloat32, torch_kCPU, torch_tensor, &
+                    torch_delete, torch_tensor_from_array, torch_tensor_empty, &
+                    torch_tensor_backward
   use ftorch_optim, only: torch_optim, torch_optim_zero_grad, torch_optim_step, &
                           torch_optim_delete, torch_optim_SGD
-  use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_c_binding, only: c_associated, c_int64_t
+  use, intrinsic :: iso_fortran_env, only : sp => real32
 
   implicit none
 
@@ -51,5 +53,48 @@ contains
 
   end subroutine test_torch_optim_delete
 
+  ! Unit test for stepping an optimizer
+  ! Uses an optimizer with a learning rate of 1.0 such that a single step with gradients
+  ! taken from a MSE loss should take us directly to the target
+  @test()
+  subroutine test_torch_optim_step()
+    use ftorch, only: torch_tensor_ones
+    implicit none
+
+    type(torch_optim) :: optimizer
+    type(torch_tensor) :: tensor, target_tensor, loss, grad, torch_0p5
+    integer, parameter :: ndims = 1
+    integer, parameter :: tensor_layout(ndims) = [1]
+    integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
+    real(sp), dimension(4) :: target_data = [1.0, 2.0, 3.0, 4.0]
+    real(sp), dimension(4) :: tensor_data = [1.0, 1.0, 1.0, 1.0]
+    integer, parameter :: dtype = torch_kFloat32
+
+    ! Create a tensor with requires_grad set to true
+    call torch_tensor_from_array(target_tensor, target_data, tensor_layout, torch_kCPU)
+    call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
+                            requires_grad=.true.)
+    call torch_tensor_from_array(torch_0p5, [0.5_sp], tensor_layout, torch_kCPU)
+
+    ! Create an optimizer (SGD with learning rate 1.0)
+    call torch_optim_SGD(optimizer, [tensor], learning_rate=1D0)
+
+    ! Calculate MSE loss between tensor and target and perform a backwards step
+    call torch_tensor_empty(loss, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
+    loss = torch_0p5 * (tensor - target_tensor)**2
+    call torch_tensor_backward(loss)
+
+    ! Perform an optimizer step
+    call torch_optim_step(optimizer)
+
+    ! Check if the tensor values are updated correctly
+    @assertEqual(tensor_data, target_data)
+
+    ! Clean up
+    call torch_delete(tensor)
+    call torch_delete(target_tensor)
+    call torch_delete(loss)
+    call torch_optim_delete(optimizer)
+  end subroutine test_torch_optim_step
 
 end module test_optim
