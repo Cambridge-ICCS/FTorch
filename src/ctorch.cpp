@@ -551,9 +551,9 @@ void validate_optimizer(const torch_optim_t optim, const std::string &name) {
 }
 
 // Function to create an SGD optimizer and return a pointer to it
-// TODO: Wrap additional Options beyond learning rate
+// TODO: Wrap additional Options beyond learning rate and momentum
 torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
-                              const double learning_rate) {
+                              const double learning_rate, const double momentum = 0.0) {
   try {
     // Cast the parameters pointer into Tensor objects
     auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
@@ -566,9 +566,11 @@ torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
       parameters_vec.push_back(*(params[i]));
     }
 
+    // Set up options
+    auto options = torch::optim::SGDOptions(learning_rate).momentum(momentum);
+
     // Create the optimizer and cast to torch_optim_t to return
-    auto optimizer_SGD =
-        new torch::optim::SGD(parameters_vec, torch::optim::SGDOptions(learning_rate));
+    auto optimizer_SGD = new torch::optim::SGD(parameters_vec, options);
     return static_cast<torch_optim_t>(optimizer_SGD);
   } catch (const std::exception &e) {
     ctorch_error(std::string(e.what()) + " in torch_optim_SGD");
@@ -592,9 +594,11 @@ torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
       parameters_vec.push_back(*(params[i]));
     }
 
+    // Set up options
+    auto options = torch::optim::AdamOptions(learning_rate);
+
     // Create the optimizer and cast to torch_optim_t to return
-    auto optimizer_Adam = new torch::optim::Adam(
-        parameters_vec, torch::optim::AdamOptions(learning_rate));
+    auto optimizer_Adam = new torch::optim::Adam(parameters_vec, options);
     return static_cast<torch_optim_t>(optimizer_Adam);
   } catch (const std::exception &e) {
     ctorch_error(std::string(e.what()) + " in torch_optim_Adam");
