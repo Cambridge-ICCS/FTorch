@@ -240,20 +240,20 @@ contains
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     interface
-      function torch_empty_c(ndims, tensor_shape, dtype, device_type, &
-          device_index, requires_grad) result(tensor) &
+      function torch_empty_c(ndims_c, tensor_shape_c, dtype_c, device_type_c, &
+          device_index_c, requires_grad_c) result(tensor_c) &
           bind(c, name = 'torch_empty')
         use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
 
         implicit none
 
-        integer(c_int), value, intent(in) :: ndims
-        integer(c_int64_t), intent(in)    :: tensor_shape(*)
-        integer(c_int), value, intent(in) :: dtype
-        integer(c_int), value, intent(in) :: device_type
-        integer(c_int), value, intent(in) :: device_index
-        logical(c_bool), value, intent(in) :: requires_grad
-        type(c_ptr)                       :: tensor
+        integer(c_int), value, intent(in) :: ndims_c
+        integer(c_int64_t), intent(in)    :: tensor_shape_c(*)
+        integer(c_int), value, intent(in) :: dtype_c
+        integer(c_int), value, intent(in) :: device_type_c
+        integer(c_int), value, intent(in) :: device_index_c
+        logical(c_bool), value, intent(in) :: requires_grad_c
+        type(c_ptr)                       :: tensor_c
       end function torch_empty_c
     end interface
 
@@ -291,20 +291,20 @@ contains
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     interface
-      function torch_zeros_c(ndims, tensor_shape, dtype, &
-                             device_type, device_index, requires_grad) result(tensor) &
+      function torch_zeros_c(ndims_c, tensor_shape_c, dtype_c, &
+                             device_type_c, device_index_c, requires_grad_c) result(tensor_c) &
           bind(c, name = 'torch_zeros')
         use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
 
         implicit none
 
-        integer(c_int), value, intent(in) :: ndims
-        integer(c_int64_t), intent(in)    :: tensor_shape(*)
-        integer(c_int), value, intent(in) :: dtype
-        integer(c_int), value, intent(in) :: device_type
-        integer(c_int), value, intent(in) :: device_index
-        logical(c_bool), value, intent(in) :: requires_grad
-        type(c_ptr)                       :: tensor
+        integer(c_int), value, intent(in) :: ndims_c
+        integer(c_int64_t), intent(in)    :: tensor_shape_c(*)
+        integer(c_int), value, intent(in) :: dtype_c
+        integer(c_int), value, intent(in) :: device_type_c
+        integer(c_int), value, intent(in) :: device_index_c
+        logical(c_bool), value, intent(in) :: requires_grad_c
+        type(c_ptr)                       :: tensor_c
       end function torch_zeros_c
     end interface
 
@@ -342,20 +342,20 @@ contains
     logical(c_bool)                 :: requires_grad_value   !! Whether gradients need to be computed for the created tensor
 
     interface
-      function torch_ones_c(ndims, tensor_shape, dtype, &
-                            device_type, device_index, requires_grad) result(tensor) &
+      function torch_ones_c(ndims_c, tensor_shape_c, dtype_c, &
+                            device_type_c, device_index_c, requires_grad_c) result(tensor_c) &
           bind(c, name = 'torch_ones')
         use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
 
         implicit none
 
-        integer(c_int), value, intent(in) :: ndims
-        integer(c_int64_t), intent(in)    :: tensor_shape(*)
-        integer(c_int), value, intent(in) :: dtype
-        integer(c_int), value, intent(in) :: device_type
-        integer(c_int), value, intent(in) :: device_index
-        logical(c_bool), value, intent(in) :: requires_grad
-        type(c_ptr)                       :: tensor
+        integer(c_int), value, intent(in) :: ndims_c
+        integer(c_int64_t), intent(in)    :: tensor_shape_c(*)
+        integer(c_int), value, intent(in) :: dtype_c
+        integer(c_int), value, intent(in) :: device_type_c
+        integer(c_int), value, intent(in) :: device_index_c
+        logical(c_bool), value, intent(in) :: requires_grad_c
+        type(c_ptr)                       :: tensor_c
       end function torch_ones_c
     end interface
 
@@ -2242,11 +2242,11 @@ contains
     type(torch_tensor), intent(in) :: tensor  !! Tensor to print the contents of
 
     interface
-      subroutine torch_tensor_print_c(tensor) &
+      subroutine torch_tensor_print_c(tensor_c) &
           bind(c, name = 'torch_tensor_print')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor
+        type(c_ptr), value, intent(in) :: tensor_c
       end subroutine torch_tensor_print_c
     end interface
 
@@ -2259,12 +2259,12 @@ contains
     integer(kind=int32) :: rank              !! Rank of tensor
 
     interface
-      function torch_tensor_get_rank_c(tensor) result(rank) &
+      function torch_tensor_get_rank_c(tensor_c) result(rank_c) &
           bind(c, name = 'torch_tensor_get_rank')
         use, intrinsic :: iso_c_binding, only : c_int, c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor
-        integer(c_int) :: rank
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(c_int) :: rank_c
       end function torch_tensor_get_rank_c
     end interface
 
@@ -2290,12 +2290,12 @@ contains
     type(c_ptr) :: cptr
 
     interface
-      function torch_tensor_get_sizes_c(tensor) result(sizes) &
+      function torch_tensor_get_sizes_c(tensor_c) result(sizes_c) &
           bind(c, name = 'torch_tensor_get_sizes')
         use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor
-        type(c_ptr) :: sizes
+        type(c_ptr), value, intent(in) :: tensor_c
+        type(c_ptr) :: sizes_c
       end function torch_tensor_get_sizes_c
     end interface
 
@@ -2315,12 +2315,12 @@ contains
     integer(c_int) :: dtype                  !! Data type of tensor
 
     interface
-      function torch_tensor_get_dtype_c(tensor) result(dtype) &
+      function torch_tensor_get_dtype_c(tensor_c) result(dtype_c) &
           bind(c, name = 'torch_tensor_get_dtype')
         use, intrinsic :: iso_c_binding, only : c_int, c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor
-        integer(c_int) :: dtype
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(c_int) :: dtype_c
       end function torch_tensor_get_dtype_c
     end interface
 
@@ -2338,12 +2338,12 @@ contains
     integer(c_int) :: device_type            !! Device type of tensor
 
     interface
-      function torch_tensor_get_device_type_c(tensor) result(device_type) &
+      function torch_tensor_get_device_type_c(tensor_c) result(device_type_c) &
           bind(c, name = 'torch_tensor_get_device_type')
         use, intrinsic :: iso_c_binding, only : c_int, c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor
-        integer(c_int) :: device_type
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(c_int) :: device_type_c
       end function torch_tensor_get_device_type_c
     end interface
 
@@ -2361,12 +2361,12 @@ contains
     integer(c_int) :: device_index           !! Device index of tensor
 
     interface
-      function torch_tensor_get_device_index_c(tensor) result(device_index) &
+      function torch_tensor_get_device_index_c(tensor_c) result(device_index_c) &
           bind(c, name = 'torch_tensor_get_device_index')
         use, intrinsic :: iso_c_binding, only : c_int, c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor
-        integer(c_int) :: device_index
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(c_int) :: device_index_c
       end function torch_tensor_get_device_index_c
     end interface
 
@@ -2383,12 +2383,12 @@ contains
     logical :: requires_grad                 !! Whether the tensor requires autograd
 
     interface
-      function torch_tensor_requires_grad_c(tensor) result(requires_grad) &
+      function torch_tensor_requires_grad_c(tensor_c) result(requires_grad_c) &
           bind(c, name = 'torch_tensor_requires_grad')
         use, intrinsic :: iso_c_binding, only : c_bool, c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor
-        logical(c_bool) :: requires_grad
+        type(c_ptr), value, intent(in) :: tensor_c
+        logical(c_bool) :: requires_grad_c
       end function torch_tensor_requires_grad_c
     end interface
 
@@ -2418,11 +2418,11 @@ contains
     type(torch_tensor), intent(inout) :: tensor  !! Tensor to deallocate
 
     interface
-      subroutine torch_tensor_delete_c(tensor) &
+      subroutine torch_tensor_delete_c(tensor_c) &
           bind(c, name = 'torch_tensor_delete')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor
+        type(c_ptr), value, intent(in) :: tensor_c
       end subroutine torch_tensor_delete_c
     end interface
 
@@ -2443,10 +2443,10 @@ contains
     class(torch_tensor), intent(inout) :: tensor !! Tensor whose values are to be zeroed
 
     interface
-      subroutine torch_tensor_zero_c(tensor) bind(c, name = 'torch_tensor_zero')
+      subroutine torch_tensor_zero_c(tensor_c) bind(c, name = 'torch_tensor_zero')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor
+        type(c_ptr), value, intent(in) :: tensor_c
       end subroutine torch_tensor_zero_c
     end interface
 
@@ -2793,10 +2793,10 @@ contains
     class(torch_tensor), intent(inout) :: tensor  !! Tensor to zero the gradient of
 
     interface
-      subroutine torch_tensor_zero_grad_c(tensor) bind(c, name = 'torch_tensor_zero_grad')
+      subroutine torch_tensor_zero_grad_c(tensor_c) bind(c, name = 'torch_tensor_zero_grad')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: tensor
+        type(c_ptr), value, intent(in) :: tensor_c
       end subroutine torch_tensor_zero_grad_c
     end interface
 
@@ -2886,17 +2886,17 @@ contains
     logical :: is_training_value  !! Whether the model is being trained, rather than evaluated
 
     interface
-      function torch_jit_load_c(filename, device_type, device_index, &
-                                requires_grad, is_training) result(model) &
+      function torch_jit_load_c(filename_c, device_type_c, device_index_c, &
+                                requires_grad_c, is_training_c) result(model_c) &
           bind(c, name = 'torch_jit_load')
         use, intrinsic :: iso_c_binding, only : c_bool, c_char, c_int, c_ptr
         implicit none
-        character(c_char), intent(in) :: filename(*)
-        integer(c_int), value, intent(in)    :: device_type
-        integer(c_int), value, intent(in)    :: device_index
-        logical(c_bool), value, intent(in) :: requires_grad
-        logical(c_bool), value, intent(in) :: is_training
-        type(c_ptr)                   :: model
+        character(c_char), intent(in) :: filename_c(*)
+        integer(c_int), value, intent(in)    :: device_type_c
+        integer(c_int), value, intent(in)    :: device_index_c
+        logical(c_bool), value, intent(in) :: requires_grad_c
+        logical(c_bool), value, intent(in) :: is_training_c
+        type(c_ptr)                   :: model_c
       end function torch_jit_load_c
     end interface
 
@@ -2943,17 +2943,17 @@ contains
     type(c_ptr), dimension(size(output_tensors)), target  :: output_ptrs
 
     interface
-      subroutine torch_jit_model_forward_c(model, input_tensors, n_inputs, &
-                                           output_tensors, n_outputs, requires_grad) &
+      subroutine torch_jit_model_forward_c(model_c, input_tensors_c, n_inputs_c, &
+                                           output_tensors_c, n_outputs_c, requires_grad_c) &
           bind(c, name = 'torch_jit_module_forward')
         use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int
         implicit none
-        type(c_ptr), value, intent(in) :: model
-        type(c_ptr), value, intent(in) :: input_tensors
-        integer(c_int), value, intent(in) :: n_inputs
-        type(c_ptr), value, intent(in) :: output_tensors
-        integer(c_int), value, intent(in) :: n_outputs
-        logical(c_bool), value, intent(in) :: requires_grad
+        type(c_ptr), value, intent(in) :: model_c
+        type(c_ptr), value, intent(in) :: input_tensors_c
+        integer(c_int), value, intent(in) :: n_inputs_c
+        type(c_ptr), value, intent(in) :: output_tensors_c
+        integer(c_int), value, intent(in) :: n_outputs_c
+        logical(c_bool), value, intent(in) :: requires_grad_c
       end subroutine torch_jit_model_forward_c
     end interface
 
@@ -2986,11 +2986,11 @@ contains
     type(torch_model), intent(in) :: model  !! Torch Model to deallocate
 
     interface
-      subroutine torch_jit_model_delete_c(model) &
+      subroutine torch_jit_model_delete_c(model_c) &
           bind(c, name = 'torch_jit_module_delete')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: model
+        type(c_ptr), value, intent(in) :: model_c
       end subroutine torch_jit_model_delete_c
     end interface
 
