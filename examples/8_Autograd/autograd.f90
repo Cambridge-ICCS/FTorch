@@ -57,8 +57,8 @@ program example
   ! Create tensors based off output arrays for the gradients and then retrieve them
   call torch_tensor_from_array(dQda, out_data2, torch_kCPU)
   call torch_tensor_from_array(dQdb, out_data3, torch_kCPU)
-  call torch_tensor_get_gradient(a, dQda)
-  call torch_tensor_get_gradient(b, dQdb)
+  call torch_tensor_get_gradient(dQda, a)
+  call torch_tensor_get_gradient(dQdb, b)
 
   ! Check the gradients take expected values
   write(*,*) "dQda = 9*a^2 = ", out_data2
