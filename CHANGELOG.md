@@ -41,6 +41,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   examples in [#348](https://github.com/Cambridge-ICCS/FTorch/pull/348).
 - Changed the order of arguments to `torch_tensor_get_gradient` in
   [#344](https://github.com/Cambridge-ICCS/FTorch/pull/344).
+- Error handling in `ctorch.cpp` improved in [#347](https://github.com/Cambridge-ICCS/FTorch/pull/347).
 
 ### Removed
 

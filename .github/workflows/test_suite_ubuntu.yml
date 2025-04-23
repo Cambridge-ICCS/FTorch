@@ -73,8 +73,7 @@ jobs:
           export FC=/usr/bin/gfortran
           export MPIF90=/usr/bin/mpif90
           # TODO: Avoid version pinning (needed because version appears in install path)
-          # TODO: Revert back to clone from Goddard pFUnit once PR to resolve CMake issues is resolved See #352
-          git clone -b update_cmake_minimum https://github.com/jatkinson1000/pFUnit.git
+          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
           cmake ..
@@ -87,7 +86,7 @@ jobs:
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/build
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.11
+          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
           cmake .. \
