@@ -1022,9 +1022,9 @@ contains
   end subroutine torch_tensor_backward
 
   !> Retrieves the gradient with respect to a Torch Tensor.
-  subroutine torch_tensor_get_gradient(tensor, gradient)
-    type(torch_tensor), intent(in) :: tensor       !! Tensor to compute the gradient with respect to
+  subroutine torch_tensor_get_gradient(gradient, tensor)
     type(torch_tensor), intent(inout) :: gradient  !! Tensor holding the gradient
+    type(torch_tensor), intent(in) :: tensor       !! Tensor to compute the gradient with respect to
 
     interface
       subroutine torch_tensor_get_gradient_c(tensor_c, gradient_c) &

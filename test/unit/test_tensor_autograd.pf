@@ -56,7 +56,7 @@ contains
     ! Apply back-propagation and retrieve the gradient and check it takes the expected value:
     !   Q(a) = a => dQ/da = 1
     call torch_tensor_backward(Q)
-    call torch_tensor_get_gradient(a, dQda)
+    call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 1.0
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_zero_grad1")) then
       print *, "Error :: incorrect value for first gradient computation"
@@ -66,7 +66,7 @@ contains
     ! Call torch_tensor_zero_grad and check the gradient is indeed reset to zero. Note that we need
     ! to call torch_tensor_get_gradient again after zeroing out these values.
     call a%zero_grad()
-    call torch_tensor_get_gradient(a, dQda)
+    call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 0.0
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_zero_grad2")) then
       print *, "Error :: incorrectly zeroed gradient"
@@ -101,7 +101,7 @@ contains
     ! Apply back-propagation and retrieve the gradient and check it takes the expected value:
     !   Q(a) = a => dQ/da = 1
     call torch_tensor_backward(Q)
-    call torch_tensor_get_gradient(a, dQda)
+    call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 1.0
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_retain_graph1")) then
       print *, "Error :: incorrect value for first gradient computation"
@@ -112,7 +112,7 @@ contains
     ! takes the expected value
     call a%zero_grad()
     call torch_tensor_backward(Q, retain_graph=.true.)
-    call torch_tensor_get_gradient(a, dQda)
+    call torch_tensor_get_gradient(dQda, a)
     if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_retain_graph3")) then
       print *, "Error :: incorrect value for second gradient computation"
       stop 999
