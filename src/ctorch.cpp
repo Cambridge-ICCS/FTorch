@@ -433,14 +433,16 @@ void torch_tensor_sum(torch_tensor_t output, const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
 
   if (torch_tensor_get_rank(output) != 1) {
-    std::cerr << "[ERROR]: invalid rank of output tensor for sum\nrank="
-              << torch_tensor_get_rank(output) << " != 1" << std::endl;
-    exit(EXIT_FAILURE);
+    std::stringstream errmsg;
+    errmsg << "Invalid rank of output tensor for sum\nrank="
+           << torch_tensor_get_rank(output) << " != 1";
+    ctorch_error(errmsg.str());
   }
   if (torch_tensor_get_sizes(output)[0] != 1) {
-    std::cerr << "[ERROR]: invalid shape of output tensor for sum\nshape=["
-              << torch_tensor_get_sizes(output)[0] << "] != [1]" << std::endl;
-    exit(EXIT_FAILURE);
+    std::stringstream errmsg;
+    errmsg << "Invalid shape of output tensor for sum\nshape=["
+           << torch_tensor_get_sizes(output)[0] << "] != [1]";
+    ctorch_error(errmsg.str());
   }
   std::move(*out) = t->sum();
 }
@@ -450,14 +452,16 @@ void torch_tensor_mean(torch_tensor_t output, const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *const>(tensor);
 
   if (torch_tensor_get_rank(output) != 1) {
-    std::cerr << "[ERROR]: invalid rank of output tensor for mean\nrank="
-              << torch_tensor_get_rank(output) << " != 1" << std::endl;
-    exit(EXIT_FAILURE);
+    std::stringstream errmsg;
+    std::cerr << "Invalid rank of output tensor for mean\nrank="
+              << torch_tensor_get_rank(output) << " != 1";
+    ctorch_error(errmsg.str());
   }
   if (torch_tensor_get_sizes(output)[0] != 1) {
-    std::cerr << "[ERROR]: invalid shape of output tensor for mean\nshape=["
-              << torch_tensor_get_sizes(output)[0] << "] != [1]" << std::endl;
-    exit(EXIT_FAILURE);
+    std::stringstream errmsg;
+    errmsg << "Invalid shape of output tensor for mean\nshape=["
+           << torch_tensor_get_sizes(output)[0] << "] != [1]";
+    ctorch_error(errmsg.str());
   }
   std::move(*out) = t->mean();
 }
