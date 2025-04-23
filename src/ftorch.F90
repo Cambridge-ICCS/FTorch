@@ -2784,10 +2784,10 @@ contains
   ! ============================================================================
 
   !> Overloads summation operator over the values in a tensor.
-  subroutine torch_tensor_sum(tensor, output)
+  subroutine torch_tensor_sum(output, tensor)
     use, intrinsic :: iso_c_binding, only : c_associated
-    type(torch_tensor), intent(in)    :: tensor  !! Tensor to sum the values of
     type(torch_tensor), intent(inout) :: output  !! Tensor holding the summed values
+    type(torch_tensor), intent(in)    :: tensor  !! Tensor to sum the values of
 
     interface
       subroutine torch_tensor_sum_c(output_c, tensor_c) &
@@ -2807,10 +2807,10 @@ contains
   end subroutine torch_tensor_sum
 
   !> Overloads mean operator over the values in a tensor.
-  subroutine torch_tensor_mean(tensor, output)
+  subroutine torch_tensor_mean(output, tensor)
     use, intrinsic :: iso_c_binding, only : c_associated
-    type(torch_tensor), intent(in)    :: tensor  !! Tensor to average the values of
     type(torch_tensor), intent(inout) :: output  !! Tensor holding the averaged values
+    type(torch_tensor), intent(in)    :: tensor  !! Tensor to average the values of
 
     interface
       subroutine torch_tensor_mean_c(output_c, tensor_c) &

@@ -31,7 +31,7 @@ contains
   subroutine test_torch_tensor_sum()
     use ftorch, only: torch_tensor_sum
 
-    type(torch_tensor) :: tensor1, tensor2
+    type(torch_tensor) :: in_tensor, out_tensor
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(1), target :: out_data
     real(wp), dimension(2,3) :: expected2d
@@ -42,14 +42,14 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create tensors based off the input array
-    call torch_tensor_from_array(tensor1, in_data, device_type)
+    call torch_tensor_from_array(in_tensor, in_data, device_type)
 
     ! Create a tensor based off an output array containing a single scalar value
-    call torch_tensor_from_array(tensor2, out_data, device_type)
+    call torch_tensor_from_array(out_tensor, out_data, device_type)
 
     ! Compute the sum over the entries in the first tensor and assign it to the single value in the
     ! second
-    call torch_tensor_sum(tensor1, tensor2)
+    call torch_tensor_sum(out_tensor, in_tensor)
 
     ! Check input arrays are unchanged by the summation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -72,7 +72,7 @@ contains
   subroutine test_torch_tensor_mean()
     use ftorch, only: torch_tensor_mean
 
-    type(torch_tensor) :: tensor1, tensor2
+    type(torch_tensor) :: in_tensor, out_tensor
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(1), target :: out_data
     real(wp), dimension(2,3) :: expected2d
@@ -83,14 +83,14 @@ contains
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create tensors based off the input array
-    call torch_tensor_from_array(tensor1, in_data, device_type)
+    call torch_tensor_from_array(in_tensor, in_data, device_type)
 
     ! Create a tensor based off an output array containing a single scalar value
-    call torch_tensor_from_array(tensor2, out_data, device_type)
+    call torch_tensor_from_array(out_tensor, out_data, device_type)
 
     ! Compute the mean over the entries in the first tensor and assign it to the single value in the
     ! second
-    call torch_tensor_mean(tensor1, tensor2)
+    call torch_tensor_mean(out_tensor, in_tensor)
 
     ! Check input arrays are unchanged by the summation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])

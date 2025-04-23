@@ -75,7 +75,7 @@ program tensor_manipulation
   ! dimension 1. First construct the 'tensor' with `torch_tensor_from_array` and then compute the
   ! mean as follows.
   call torch_tensor_from_array(mean, scalar_data, scalar_layout, torch_kCPU)
-  call torch_tensor_mean(c, mean)
+  call torch_tensor_mean(mean, c)
   write(*,*) "Mean value:"
   write(*,*) scalar_data
 
