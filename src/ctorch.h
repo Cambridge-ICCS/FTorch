@@ -327,9 +327,11 @@ EXPORT_C void torch_tensor_get_gradient(const torch_tensor_t tensor,
  * @param parameters to run the optimizer over
  * @param number of parameter Tensors in the parameters vector
  * @param learning rate for the optimizer
+ * @param momentum for the optimizer
  */
 EXPORT_C torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int nin,
-                                       const double learning_rate);
+                                       const double learning_rate,
+                                       const double momentum);
 
 /**
  * Function to create an Adam optimizer over a set of parameters
