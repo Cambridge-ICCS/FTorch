@@ -38,7 +38,7 @@ contains
     call torch_tensor_ones(tensor, ndims, tensor_shape, torch_kFloat32, torch_kCPU, &
                             requires_grad=.true.)
     ! Create an optimizer (we will use SGD in this example)
-    call torch_optim_SGD(optimizer, [tensor], learning_rate=1D0)
+    call torch_optim_SGD(optimizer, [tensor])
 
     ! Check the optimizer pointer is now associated
     @assertTrue(c_associated(optimizer%p))
