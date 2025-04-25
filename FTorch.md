@@ -68,7 +68,10 @@ Some recent updates about FTorch:
 * FTorch developers Joe Wallwork and Tom Meltzer will be giving an FTorch
   tutorial at
   [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/)
-  on 2nd June 2025.
+  on 2nd June 2025. Joe will also be giving a talk on *Accelerating UKCA by
+  predicting timesteps with FTorch* in the
+  [HPC in Weather & Climate Research](https://durham.readthedocs.io/en/latest/hpcdays/workshops.html#Weather)
+  session.
 * FTorch developers Jack Atkinson and Joe Wallwork will be giving an FTorch
   tutorial in the
   [Department of Atmospheric, Oceanic, and Planetary Physics](https://www.physics.ox.ac.uk/research/subdepartment/atmospheric-oceanic-and-planetary-physics)
