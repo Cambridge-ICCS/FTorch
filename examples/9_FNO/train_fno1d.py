@@ -17,7 +17,6 @@ from fno1d import FNO1d
 #     return input_tensor, target_tensor
 
 
-
 # def generate_random_sine_data(batch_size=16, size_x=32):
 #     batch_inputs = []
 #     batch_targets = []
@@ -26,7 +25,7 @@ from fno1d import FNO1d
 #         gridx = np.expand_dims(x, axis=(0, 2))  # shape (1, size_x, 1)
 
 #         dummy_u = np.zeros_like(gridx)  # Still dummy zeros
-        
+
 #         input_tensor = torch.tensor(dummy_u, dtype=torch.float32)  # (1, size_x, 1)
 #         target_tensor = torch.tensor(np.sin(2 * np.pi * x), dtype=torch.float32).unsqueeze(0).unsqueeze(-1)  # (1, size_x, 1)
 
@@ -39,6 +38,7 @@ from fno1d import FNO1d
 
 #     return inputs, targets
 
+
 def generate_sine_data(batch_size=16, size_x=32):
     x = np.linspace(0, 1, size_x)
     gridx = np.expand_dims(x, axis=(0, 2))  # shape (1, size_x, 1)
@@ -48,9 +48,12 @@ def generate_sine_data(batch_size=16, size_x=32):
 
     input_tensor = torch.tensor(dummy_u, dtype=torch.float32)  # shape (batch, x, 1)
     grid_tensor = torch.tensor(gridx, dtype=torch.float32)
-    target_tensor = torch.tensor(np.sin(2 * np.pi * gridx), dtype=torch.float32)  # shape (batch, x, 1)
+    target_tensor = torch.tensor(
+        np.sin(2 * np.pi * gridx), dtype=torch.float32
+    )  # shape (batch, x, 1)
 
     return input_tensor, grid_tensor, target_tensor
+
 
 model = FNO1d()
 model = model.float()
@@ -90,10 +93,10 @@ import torch.nn.functional as F
 loaded_model = torch.jit.load("fno1d_sine.pt")
 loaded_model.eval()
 
-# Generate fresh test data 
+# Generate fresh test data
 test_input, grid, test_target = generate_sine_data(batch_size=1, size_x=32)
 
-# Forward pass 
+# Forward pass
 with torch.no_grad():
     input_batch = torch.cat((test_input, grid), dim=-1)
     test_pred = loaded_model(input_batch)
@@ -113,7 +116,7 @@ with torch.no_grad():
     # --- Plot to visualize ---
     x = np.linspace(0, 1, 32)
     plt.plot(x, test_target.squeeze().numpy(), label="True sin(2πx)")
-    plt.plot(x, test_pred.squeeze().numpy(), '--', label="Predicted")
+    plt.plot(x, test_pred.squeeze().numpy(), "--", label="Predicted")
     plt.legend()
     plt.title("Sine Wave Prediction")
     plt.savefig("train_fno1d.png")
