@@ -9,6 +9,37 @@ from typing import Tuple, Any, List
 # 1d Fourier Integral Operator
 ################################################################
 
+# Initialize everything
+def initialize(precision: torch.dtype) -> torch.nn.Module:
+    """
+    Download trained FNO-1D model and prepare for inference.
+
+    Parameters
+    ----------
+    precision: torch.dtype
+        Sets the working precision of the model.
+
+    Returns
+    -------
+    model: torch.nn.Module
+        Pretrained FNO-1D model
+    """
+    # Set working precision
+    torch.set_default_dtype(precision)
+
+    # Load a pre-trained PyTorch model
+    print("Loading pre-trained ResNet-18 model...", end="")
+    model = FNO1d()
+    model = model.float()
+    # load model from file:
+    model.load_state_dict(torch.load("fno1d_sine.pt"))
+
+    # Switch-off some specific layers/parts of the model that behave
+    # differently during training and inference
+    model.eval()
+
+    return model
+
 
 class SpectralConv1d(nn.Module):
     def __init__(self, in_channels: int, out_channels: int, modes: int):
@@ -116,6 +147,7 @@ class FNO1d(nn.Module):
         # grid = self.get_grid(u.shape, u.device)
         # x = torch.cat((u, grid), dim=-1)  # Add grid as extra channel
         x = u
+        print("Shape before fc0:", x.shape)
         x = self.fc0(x)
         x = x.permute(0, 2, 1)  # (batch, width, x)
 

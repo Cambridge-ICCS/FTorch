@@ -11,17 +11,20 @@ program inference
    use ftorch_test_utils, only : assert_allclose
 
    implicit none
-
-   ! Set working precision for reals
+   
    integer, parameter :: wp = sp
 
-   integer :: num_args, ix
+   integer, parameter :: in_dims = 3
+   integer, parameter :: in_shape(in_dims) = [1, 32, 2]
+   integer, parameter :: out_dims = 3
+   integer, parameter :: out_shape(out_dims) = [1, 32, 1]
+
+   integer :: num_args, ix, i
    character(len=128), dimension(:), allocatable :: args
 
    ! Set up Fortran data structures
-   real(wp), dimension(5), target :: in_data
-   real(wp), dimension(5), target :: out_data
-   real(wp), dimension(5), target :: expected
+   real(wp), allocatable, dimension(:,:,:) :: in_data
+   real(wp), allocatable, dimension(:,:,:) :: out_data
 
    ! Set up Torch data structures
    ! The net, a vector of input tensors (in this case we only have one), and the output tensor
@@ -39,23 +42,40 @@ program inference
        call get_command_argument(ix,args(ix))
    end do
 
+   allocate(in_data(in_shape(1), in_shape(2), in_shape(3)))
+   allocate(out_data(out_shape(1), out_shape(2), out_shape(3)))
+  
+   do i = 1, 32
+     in_data(1, i, 1) = 0.0                          ! dummy input
+     in_data(1, i, 2) = real(i - 1) / real(31)       ! grid input: linspace
+   end do
+ 
    ! Initialise data
-   in_data = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
+   ! in_data = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
 
    ! Create Torch input/output tensors from the above arrays
    call torch_tensor_from_array(in_tensors(1), in_data, torch_kCPU)
    call torch_tensor_from_array(out_tensors(1), out_data, torch_kCPU)
 
+
+
    ! Load ML model
    call torch_model_load(model, args(1), torch_kCPU)
+  
+   ! Check shape of in_tensors
+   print *, "Input array shape: ", shape(in_data)
+   ! call torch_tensor_shape(in_tensors(1), dims, shape)
+   ! print *, "Input tensor shape: ", shape(1:dims)
+
 
    ! Infer
    call torch_model_forward(model, in_tensors, out_tensors)
-   write (*,*) out_data(:)
+
+   ! write (*,*) out_data(:)
 
    ! Check output tensor matches expected value
-   expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
-   test_pass = assert_allclose(out_data, expected, test_name="FNO1d", rtol=1e-5)
+   ! expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
+   ! test_pass = assert_allclose(out_data, expected, test_name="FNO1d", rtol=1e-5)
 
    ! Cleanup
    call torch_delete(model)

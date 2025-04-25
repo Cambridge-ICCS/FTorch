@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15...3.31)
 # target_sources is run
 cmake_policy(SET CMP0076 NEW)
 
-set(PROJECT_NAME FNO1dExample)
+set(PROJECT_NAME FNO1DExample)
 
 project(${PROJECT_NAME} LANGUAGES Fortran)
 
@@ -18,8 +18,8 @@ find_package(FTorch)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Fortran example
-add_executable(FNO1d_infer_fortran FNO1d_infer_fortran.f90)
-target_link_libraries(FNO_infer_fortran PRIVATE FTorch::ftorch)
+add_executable(FNO1D_infer_fortran FNO1D_infer_fortran.f90)
+target_link_libraries(FNO1D_infer_fortran PRIVATE FTorch::ftorch)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
@@ -50,7 +50,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME fno1d_infer_fortran
     COMMAND
-      fno1d_infer_fortran ${PROJECT_BINARY_DIR}/saved_fno1d_model_cpu.pt
+      fno1d_infer_fortran ${PROJECT_BINARY_DIR}/fno1d_sine.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(

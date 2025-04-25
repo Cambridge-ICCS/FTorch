@@ -4,6 +4,20 @@ import torch.nn as nn
 import torch.optim as optim
 from fno1d import FNO1d
 
+# def generate_sine_data(batch_size=16, size_x=32):
+#     x = np.linspace(0, 1, size_x)
+#     gridx = np.expand_dims(x, axis=(0, 2))  # shape (1, size_x, 1)
+#     gridx = np.repeat(gridx, batch_size, axis=0)  # (batch, size_x, 1)
+
+#     dummy_u = np.zeros_like(gridx)  # dummy values, not used really
+
+#     input_tensor = torch.tensor(dummy_u, dtype=torch.float32)  # shape (batch, x, 1)
+#     target_tensor = torch.tensor(np.sin(2 * np.pi * gridx), dtype=torch.float32)  # shape (batch, x, 1)
+
+#     return input_tensor, target_tensor
+
+
+
 # def generate_random_sine_data(batch_size=16, size_x=32):
 #     batch_inputs = []
 #     batch_targets = []
@@ -38,20 +52,6 @@ def generate_sine_data(batch_size=16, size_x=32):
 
     return input_tensor, grid_tensor, target_tensor
 
-
-# def generate_sine_data(batch_size=16, size_x=32):
-#     x = np.linspace(0, 1, size_x)
-#     gridx = np.expand_dims(x, axis=(0, 2))  # shape (1, size_x, 1)
-#     gridx = np.repeat(gridx, batch_size, axis=0)  # (batch, size_x, 1)
-
-#     dummy_u = np.zeros_like(gridx)  # dummy values, not used really
-
-#     input_tensor = torch.tensor(dummy_u, dtype=torch.float32)  # shape (batch, x, 1)
-#     target_tensor = torch.tensor(np.sin(2 * np.pi * gridx), dtype=torch.float32)  # shape (batch, x, 1)
-
-#     return input_tensor, target_tensor
-
-
 model = FNO1d()
 model = model.float()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
@@ -77,11 +77,12 @@ for epoch in range(100):
 
 # Save trained model (TorchScript)
 model.eval()
-traced_model = torch.jit.script(model)
-traced_model.save("fno1d_sine.pt")
+scripted_model = torch.jit.script(model)
+scripted_model.save("fno1d_sine.pt")
 print("Saved trained model to fno1d_sine.pt")
 
 
+# Plotting
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 
