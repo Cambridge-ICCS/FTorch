@@ -1,9 +1,17 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
+"""Fourier Neural Operator for 1D problems using spectral convolution.
+
+This module defines:
+- SpectralConv1d: A 1D spectral convolution layer using Fourier transforms.
+- FNO1d: A Fourier Neural Operator model built with multiple spectral
+convolution blocks.
+"""
+
+from typing import Any, List, Tuple
+
 import numpy as np
-from torch import tensor
-from typing import Tuple, Any, List
+import torch
+import torch.nn.functional as F
+from torch import nn, tensor
 
 ################################################################
 # 1d Fourier Integral Operator
@@ -43,9 +51,11 @@ def initialize(precision: torch.dtype) -> torch.nn.Module:
 
 
 class SpectralConv1d(nn.Module):
+    """1D spectral convolution using Fourier transforms."""
+
     def __init__(self, in_channels: int, out_channels: int, modes: int):
         """
-        1D Fourier layer: FFT -> linear transform -> inverse FFT
+        1D Fourier layer: FFT -> linear transform -> inverse FFT.
 
         Args:
             in_channels (int): input channels
@@ -62,19 +72,22 @@ class SpectralConv1d(nn.Module):
             * torch.rand(in_channels, out_channels, self.modes, dtype=torch.cfloat)
         )
 
-    def compl_mul1d(self, input, weights):
+    def compl_mul1d(self, _input, weights):
         """
         Complex multiplication of Fourier modes.
 
         Args:
-            input: [batch, in_channels, x]
+            _input: [batch, in_channels, x]
             weights: [in_channels, out_channels, x]
-        Returns:
+
+        Returns
+        -------
             output: [batch, out_channels, x]
         """
-        return torch.einsum("bix,iox->box", input, weights)
+        return torch.einsum("bix,iox->box", _input, weights)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Compute the forward pass of the spectral convolution."""
         batchsize = x.shape[0]
         x_ft = torch.fft.rfft(x)
 
@@ -99,6 +112,8 @@ class SpectralConv1d(nn.Module):
 
 
 class FNO1d(nn.Module):
+    """Fourier Neural Operator for 1D column input."""
+
     def __init__(
         self,
         modes: int = 9,
@@ -142,7 +157,9 @@ class FNO1d(nn.Module):
 
         Args:
             u (torch.Tensor): (batch, x, channels=time_history)
-        Returns:
+
+        Returns
+        -------
             torch.Tensor: (batch, x, channels=time_future)
         """
         # grid = self.get_grid(u.shape, u.device)
@@ -182,7 +199,9 @@ class FNO1d(nn.Module):
         Args:
             shape (tuple): (batch, x, channels)
             device ()
-        Returns:
+
+        Returns
+        -------
             torch.Tensor: grid tensor of shape (batch, x, 1)
         """
         batchsize, size_x = shape[0], shape[1]
