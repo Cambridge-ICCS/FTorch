@@ -177,7 +177,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-model~5"></span>
+              <span class="anchor" id="variable-model~3"></span>
               type(<a href='../type/torch_model.html'>torch_model</a>),
             </td>
 <td>intent(in)</td>
@@ -211,11 +211,11 @@
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_model</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span><span class="w">  </span><span class="c">!! Torch Model to deallocate</span>
 
 <span class="w">    </span><span class="k">interface</span>
-<span class="k">      subroutine </span><span class="n">torch_jit_model_delete_c</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="k">      subroutine </span><span class="n">torch_jit_model_delete_c</span><span class="p">(</span><span class="n">model_c</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">          </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;torch_jit_module_delete&#39;</span><span class="p">)</span>
 <span class="w">        </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_ptr</span>
 <span class="kt">        </span><span class="k">implicit none</span>
-<span class="k">        type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model</span>
+<span class="k">        type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model_c</span>
 <span class="w">      </span><span class="k">end subroutine </span><span class="n">torch_jit_model_delete_c</span>
 <span class="w">    </span><span class="k">end interface</span>
 
