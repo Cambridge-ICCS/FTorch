@@ -79,6 +79,8 @@ Some recent updates about FTorch:
 * The FTorch developers will be giving an FTorch tutorial at the
   [ICCS Summer School](https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2025)
   on 11th July 2025.
+  * FTorch developer Jack Atkinson will be presenting FTorch in a SciML seminar at
+  [CEMAC](https://www.cemac.leeds.ac.uk/) in Leeds on 18th July 2025.
 
 
 Publications and Presentations
