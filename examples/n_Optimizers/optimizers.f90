@@ -12,7 +12,8 @@ program example
                     torch_tensor, torch_tensor_from_array, &
                     torch_tensor_ones, torch_tensor_empty, &
                     torch_tensor_print, torch_delete, &
-                    torch_tensor_backward, torch_tensor_get_gradient
+                    torch_tensor_backward, torch_tensor_get_gradient, &
+                    torch_tensor_mean
   use ftorch_optim, only: torch_optim, torch_optim_SGD, torch_optim_step, torch_optim_zero_grad
 
   implicit none
@@ -29,6 +30,7 @@ program example
 
   ! Set up Torch data structures
   integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
+  integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
   type(torch_tensor) :: input_vec, output_vec, target_vec, &
                         scaling_tensor, scaling_grad, loss, torch_4p0
   type(torch_optim) :: optimizer
@@ -57,7 +59,9 @@ program example
 
   ! Create an empty loss tensor
   call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
-  call torch_tensor_empty(loss, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
+  ! call torch_tensor_empty(loss, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
+  call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
+
   ! Conduct training loop
   do i = 1, n_train+1
     write(*,*) "zero_grad"
@@ -68,21 +72,24 @@ program example
     write(*,*) "Forward Pass"
     call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
     output_vec = input_vec * scaling_tensor
+    grad_reqd = loss%requires_grad()
+    write(*,*) "loss%requires_grad = ", grad_reqd
 
     ! Populate loss with mean square error (MSE) between target and input
     ! Then perform backward step on loss to propogate gradients using autograd
     write(*,*) "Set Loss"
+    ! loss = ((output_vec - target_vec) ** 2) / torch_4p0
+    call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
     grad_reqd = loss%requires_grad()
     write(*,*) "loss%requires_grad = ", grad_reqd
-    loss = ((output_vec - target_vec) ** 2) / torch_4p0
-    grad_reqd = loss%requires_grad()
-    write(*,*) "loss%requires_grad = ", grad_reqd
+
     write(*,*) "Backwards Step"
     call torch_tensor_backward(loss, retain_graph=.true.)
     grad_reqd = loss%requires_grad()
     write(*,*) "loss%requires_grad = ", grad_reqd
+
     write(*,*) "Get Gradient"
-    call torch_tensor_get_gradient(scaling_tensor, scaling_grad)
+    call torch_tensor_get_gradient(scaling_grad, scaling_tensor)
     grad_reqd = loss%requires_grad()
     write(*,*) "loss%requires_grad = ", grad_reqd
     ! However, we can avoid explicitly passing an initial gradient and instead do this
