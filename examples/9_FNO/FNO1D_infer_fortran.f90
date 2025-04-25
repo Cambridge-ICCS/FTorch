@@ -11,7 +11,7 @@ program inference
    use ftorch_test_utils, only : assert_allclose
 
    implicit none
-   
+
    integer, parameter :: wp = sp
 
    integer, parameter :: in_dims = 3
@@ -46,12 +46,12 @@ program inference
 
    allocate(in_data(in_shape(1), in_shape(2), in_shape(3)))
    allocate(out_data(out_shape(1), out_shape(2), out_shape(3)))
-  
+
    do i = 1, 32
      in_data(1, i, 1) = 0.0                          ! dummy input
      in_data(1, i, 2) = real(i - 1) / real(31)       ! grid input: linspace
    end do
- 
+
    ! Initialise data
    ! in_data = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
 
@@ -63,7 +63,7 @@ program inference
 
    ! Load ML model
    call torch_model_load(model, args(1), torch_kCPU)
-  
+
    ! Check shape of in_tensors
    print *, "Input array shape: ", shape(in_data)
    ! call torch_tensor_shape(in_tensors(1), dims, shape)
@@ -74,7 +74,7 @@ program inference
    call torch_model_forward(model, in_tensors, out_tensors)
 
    ! write (*,*) out_data(:)
-  
+
    ! Check output tensor matches expected value
    test_pass = .true.
    do i = 1, 32
@@ -85,15 +85,18 @@ program inference
      error = abs(prediction - true_sine)
 
      if (error > tol) then
-       print *, "FAILED at x=", x_real, ": prediction=", prediction, " true=", true_sine, " error=", error
+       print *, "FAILED at x=", x_real, &
+         ": prediction=", prediction, &
+         " true=", true_sine, &
+         " error=", error
        test_pass = .false.
      end if
    end do
 
    if (test_pass) then
-     print *, "✅ All predictions within tolerance."
+     print *, "All predictions within tolerance."
    else
-     print *, "❌ Some predictions exceeded tolerance."
+     print *, "Some predictions exceeded tolerance."
    end if
 
 
