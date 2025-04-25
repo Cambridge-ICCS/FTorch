@@ -9,6 +9,7 @@ from typing import Tuple, Any, List
 # 1d Fourier Integral Operator
 ################################################################
 
+
 # Initialize everything
 def initialize(precision: torch.dtype) -> torch.nn.Module:
     """
