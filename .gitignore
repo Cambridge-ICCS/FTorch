@@ -197,6 +197,3 @@ cython_debug/
 
 # Apple Desktop Services Store
 **.DS_Store
-
-# fortls LSP config file
-.fortls
