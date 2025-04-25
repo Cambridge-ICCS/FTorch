@@ -59,8 +59,8 @@ program example
 
   ! Create an empty loss tensor
   call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
-  ! call torch_tensor_empty(loss, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
-  call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
+  call torch_tensor_empty(loss, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
+  ! call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
 
   ! Conduct training loop
   do i = 1, n_train+1
@@ -78,8 +78,8 @@ program example
     ! Populate loss with mean square error (MSE) between target and input
     ! Then perform backward step on loss to propogate gradients using autograd
     write(*,*) "Set Loss"
-    ! loss = ((output_vec - target_vec) ** 2) / torch_4p0
-    call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
+    loss = ((output_vec - target_vec) ** 2) / torch_4p0
+    ! call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
     grad_reqd = loss%requires_grad()
     write(*,*) "loss%requires_grad = ", grad_reqd
 
