@@ -97,12 +97,14 @@ if __name__ == "__main__":
     # Load model and prepare for saving
     # =====================================================
 
+    precision = torch.float32
+
     # FPTLIB-TODO
     # Load a pre-trained PyTorch model
     # Insert code here to load your model as `trained_model`.
     # This example assumes my_ml_model has a method `initialize` to load
     # architecture, weights, and place in inference mode
-    trained_model = fno1d.FNO1d()
+    trained_model = fno1d.initialize(precision)
 
     # Switch off specific layers/parts of the model that behave
     # differently during training and inference.
@@ -115,8 +117,8 @@ if __name__ == "__main__":
 
     # FPTLIB-TODO
     # Generate a dummy input Tensor `dummy_input` to the model of appropriate size.
-    # This example assumes one input of size (5)
-    trained_model_dummy_input = torch.rand(1, 64, 1)
+    # This example assumes one input of size (1)
+    trained_model_dummy_input = torch.rand(1, 32, 1)
 
     # Transfer the model and inputs to GPU device, if appropriate
     if device_type != "cpu":

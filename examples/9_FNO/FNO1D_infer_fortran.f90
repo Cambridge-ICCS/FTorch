@@ -18,6 +18,8 @@ program inference
    integer, parameter :: in_shape(in_dims) = [1, 32, 2]
    integer, parameter :: out_dims = 3
    integer, parameter :: out_shape(out_dims) = [1, 32, 1]
+   real(wp) :: x_real, true_sine, prediction, error
+   real(wp), parameter :: tol = 0.05  ! <-- Set your acceptable error tolerance
 
    integer :: num_args, ix, i
    character(len=128), dimension(:), allocatable :: args
@@ -72,8 +74,29 @@ program inference
    call torch_model_forward(model, in_tensors, out_tensors)
 
    ! write (*,*) out_data(:)
-
+  
    ! Check output tensor matches expected value
+   test_pass = .true.
+   do i = 1, 32
+     x_real = real(i-1) / real(31)
+     true_sine = sin(2.0 * 3.14159265 * x_real)
+     prediction = out_data(1, i, 1)
+
+     error = abs(prediction - true_sine)
+
+     if (error > tol) then
+       print *, "FAILED at x=", x_real, ": prediction=", prediction, " true=", true_sine, " error=", error
+       test_pass = .false.
+     end if
+   end do
+
+   if (test_pass) then
+     print *, "✅ All predictions within tolerance."
+   else
+     print *, "❌ Some predictions exceeded tolerance."
+   end if
+
+
    ! expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
    ! test_pass = assert_allclose(out_data, expected, test_name="FNO1d", rtol=1e-5)
 
