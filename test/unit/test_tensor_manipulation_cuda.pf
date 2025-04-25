@@ -25,7 +25,7 @@ contains
 
     type(torch_tensor) :: cpu_tensor, gpu_tensor, test_tensor
     real(dp), dimension(2,3,4) :: dp_data
-    real(sp), dimension(2,3,4) :: sp_data, test_array
+    real(sp), dimension(2,3,4) :: sp_data_expected, temp_array
     integer, parameter :: device_type_src = torch_kCPU
     integer, parameter :: device_type_tar = torch_kCUDA
     integer, parameter :: dtype_src = torch_kFloat64
@@ -41,14 +41,10 @@ contains
        end do
     end do
 
-    sp_data = real(dp_data, sp) ! source data cast to single-precision real for testing
-    test_array = 0.0_sp         ! Fortran array to extract target tensor data from
-    test_pass = .false.
-
     call torch_tensor_from_array(cpu_tensor, dp_data, device_type_src)
 
-    call torch_tensor_empty(gpu_tensor,cpu_tensor%get_rank(),cpu_tensor%get_shape(), &
-                           dtype_tar,device_type_tar)
+    call torch_tensor_empty(gpu_tensor, cpu_tensor%get_rank(), cpu_tensor%get_shape(), &
+                           dtype_tar, device_type_tar)
 
     ! Move to target device and dtype
     call torch_tensor_to(cpu_tensor, gpu_tensor)
@@ -57,13 +53,16 @@ contains
     @assertTrue(gpu_tensor%get_shape() == cpu_tensor%get_shape())
     @assertTrue(gpu_tensor%get_rank() == cpu_tensor%get_rank())
 
-    ! Temporary torch_tensor for testing
-    call torch_tensor_from_array(test_tensor, test_array,device_type_src)
+    ! Temporary torch_tensor for testing created from array to extract underlying values
+    call torch_tensor_from_array(test_tensor, temp_array, device_type_src)
 
     ! Move back to CPU for comparison
     call torch_tensor_to(gpu_tensor, test_tensor)
 
-    test_pass = assert_allclose(test_array, sp_data, "test_torch_tensor_to")
+    ! Cast the data cpu_tensor is holding in double precision to single precision to
+    ! do the comparison with the data held by gpu_tensor (via temp_array)
+    sp_data_expected = real(dp_data, sp) 
+    test_pass = assert_allclose(temp_array, sp_data_expected, "test_torch_tensor_to")
 
     if (.not. test_pass) then
       print *, "Error :: incorrect output from torch_tensor_to"
@@ -71,17 +70,8 @@ contains
       call torch_tensor_print(cpu_tensor)
       print *, "Target Tensor:"
       call torch_tensor_print(gpu_tensor)
-
-      call torch_tensor_delete(cpu_tensor)
-      call torch_tensor_delete(gpu_tensor)
-      call torch_tensor_delete(test_tensor)
-
       stop 999
     end if
-
-    call torch_tensor_delete(cpu_tensor)
-    call torch_tensor_delete(gpu_tensor)
-    call torch_tensor_delete(test_tensor)
 
   end subroutine test_torch_tensor_to
 

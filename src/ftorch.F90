@@ -2458,26 +2458,23 @@ contains
   end subroutine torch_tensor_zero
 
   !> Moves a source_tensor tensor to a target tensor's device and dtype
-  subroutine torch_tensor_to(source_tensor, target_tensor, non_blocking, copy)
+  subroutine torch_tensor_to(source_tensor, target_tensor, non_blocking)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(in) :: source_tensor      !! Source tensor to be moved
     type(torch_tensor), intent(inout) :: target_tensor   !! Target tensor with the desired device and dtype
     logical, optional, intent(in) :: non_blocking        !! Whether to perform asynchronous copy
-    logical, optional, intent(in) :: copy                !! Whether to force a copy if source_tensor already
-                                                         !! matches the desired conversion
-    logical(c_bool) :: non_blocking_value, copy_value
+    logical(c_bool) :: non_blocking_value
     integer(c_int) :: source_rank, target_rank, i
     integer(c_int64_t), pointer :: source_shape(:), target_shape(:)
 
     interface
-      subroutine torch_tensor_to_c(src_tensor, targ_tensor, non_blocking, copy) &
+      subroutine torch_tensor_to_c(source_tensor_c, target_tensor_c, non_blocking_c) &
           bind(c, name = 'torch_tensor_to')
         use, intrinsic :: iso_c_binding, only : c_bool, c_ptr
         implicit none
-        type(c_ptr), value, intent(in) :: src_tensor
-        type(c_ptr), value, intent(in) :: targ_tensor
-        logical(c_bool), value, intent(in) :: non_blocking
-        logical(c_bool), value, intent(in) :: copy
+        type(c_ptr), value, intent(in) :: source_tensor_c
+        type(c_ptr), value, intent(in) :: target_tensor_c
+        logical(c_bool), value, intent(in) :: non_blocking_c
       end subroutine torch_tensor_to_c
     end interface
 
@@ -2510,13 +2507,7 @@ contains
       non_blocking_value = .false.
     end if
 
-    if (present(copy)) then
-      copy_value = copy
-    else
-      copy_value = .false.
-    end if
-
-    call torch_tensor_to_c(source_tensor%p, target_tensor%p, non_blocking_value, copy_value)
+    call torch_tensor_to_c(source_tensor%p, target_tensor%p, non_blocking_value)
 
   end subroutine torch_tensor_to
 
