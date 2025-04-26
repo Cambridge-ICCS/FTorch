@@ -26,10 +26,10 @@ contains
     type(torch_tensor) :: cpu_tensor, gpu_tensor, test_tensor
     real(dp), dimension(2,3,4) :: dp_data
     real(sp), dimension(2,3,4) :: sp_data_expected, temp_array
-    integer, parameter :: device_type_src = torch_kCPU
-    integer, parameter :: device_type_tar = torch_kCUDA
-    integer, parameter :: dtype_src = torch_kFloat64
-    integer, parameter :: dtype_tar = torch_kFloat32
+    integer, parameter :: device_type_source = torch_kCPU
+    integer, parameter :: device_type_target = torch_kCUDA
+    integer, parameter :: dtype_source = torch_kFloat64
+    integer, parameter :: dtype_target = torch_kFloat32
     integer :: i, j, k
     logical :: test_pass
 
@@ -41,20 +41,20 @@ contains
        end do
     end do
 
-    call torch_tensor_from_array(cpu_tensor, dp_data, device_type_src)
+    call torch_tensor_from_array(cpu_tensor, dp_data, device_type_source)
 
     call torch_tensor_empty(gpu_tensor, cpu_tensor%get_rank(), cpu_tensor%get_shape(), &
-                           dtype_tar, device_type_tar)
+                           dtype_target, device_type_target)
 
     ! Move to target device and dtype
     call torch_tensor_to(cpu_tensor, gpu_tensor)
 
-    @assertTrue(gpu_tensor%get_device_type() == device_type_tar)
+    @assertTrue(gpu_tensor%get_device_type() == device_type_target)
     @assertTrue(gpu_tensor%get_shape() == cpu_tensor%get_shape())
     @assertTrue(gpu_tensor%get_rank() == cpu_tensor%get_rank())
 
     ! Temporary torch_tensor for testing created from array to extract underlying values
-    call torch_tensor_from_array(test_tensor, temp_array, device_type_src)
+    call torch_tensor_from_array(test_tensor, temp_array, device_type_source)
 
     ! Move back to CPU for comparison
     call torch_tensor_to(gpu_tensor, test_tensor)
