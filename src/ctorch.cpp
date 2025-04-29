@@ -351,6 +351,21 @@ void torch_tensor_zero(torch_tensor_t tensor) {
   t->zero_();
 }
 
+void torch_tensor_to(const torch_tensor_t source_tensor, torch_tensor_t target_tensor,
+                     bool non_blocking) {
+  auto source_tens = reinterpret_cast<torch::Tensor *>(source_tensor);
+  auto target_tens = reinterpret_cast<torch::Tensor *>(target_tensor);
+  validate_tensor(source_tens, "Source tensor");
+  validate_tensor(target_tens, "Target tensor");
+
+  torch::Device device_type = target_tens->device();
+  at::ScalarType dtype = target_tens->scalar_type();
+
+  // For non-blocking usage see:
+  // https://pytorch.org/tutorials/intermediate/pinmem_nonblock.html
+  std::move(*target_tens) = source_tens->to(device_type, dtype, non_blocking);
+}
+
 // =====================================================================================
 // --- Operator overloads acting on tensors
 // =====================================================================================
