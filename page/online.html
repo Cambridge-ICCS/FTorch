@@ -109,13 +109,14 @@
           <nav class="nav nav-pills flex-column">
               <a class="nav-link" href="LICENSE.html">FTorch License</a>
               <a class="nav-link" href="archive.html">News archive</a>
-              <a class="nav-link active disabled" href="autograd.html">Online training</a>
               <a class="nav-link" href="changelog.html">FTorch Changelog</a>
               <a class="nav-link" href="cmake.html">Installation and Build Process</a>
               <a class="nav-link" href="developer.html">Developer Guide</a>
               <a class="nav-link" href="examples.html">Examples</a>
               <a class="nav-link" href="gpu.html">GPU Support</a>
               <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
+              <a class="nav-link" href="offline.html">Offline training</a>
+              <a class="nav-link active disabled" href="online.html">Online training</a>
               <a class="nav-link" href="tensor.html">Tensor API</a>
               <a class="nav-link" href="testing.html">FTorch test suite</a>
               <a class="nav-link" href="transposing.html">When to transpose data</a>
@@ -144,10 +145,11 @@
 </ul>
 </div>
 <h2 id="current-state">Current state</h2>
-<p>FTorch has supported offline training of ML models for some time. We are
+<p>FTorch has supported offline training of ML models for some time (see the
+<a href="offline.html">offline training user guide page</a> for details). We are
 currently working on extending its functionality to support online training,
-too. This will involve exposing the automatic differentiation and
-back-propagation functionality in PyTorch/LibTorch.</p>
+too. This will involve exposing the backpropagation and optimization
+functionalities of PyTorch/LibTorch.</p>
 <p>In the following, we document a workplan of the related functionality. Each step
 below will be updated upon completion.</p>
 <h3 id="operator-overloading">Operator overloading</h3>
