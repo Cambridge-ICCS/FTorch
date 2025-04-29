@@ -100,6 +100,12 @@ use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
   operator(/), operator(**)
 ```
 
+### Other operators acting on tensors
+
+We have also exposed the operators for taking the sum or mean over the entries
+in a tensor, which can be achieved with the subroutines `torch_tensor_sum` and
+in `torch_tensor_mean`, respectively.
+
 ## Examples
 
 For a concrete example of how to construct, interrogate, manipulate, and delete

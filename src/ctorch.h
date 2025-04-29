@@ -257,6 +257,24 @@ EXPORT_C void torch_tensor_power_float(torch_tensor_t output,
                                        const torch_tensor_t tensor,
                                        const torch_float_t exponent);
 
+// ============================================================================
+// --- Other operators for computations involving tensors
+// ============================================================================
+
+/**
+ * Overloads the summation operator for a Torch Tensor
+ * @param output Tensor
+ * @param Tensor to sum the values of
+ */
+EXPORT_C void torch_tensor_sum(torch_tensor_t output, const torch_tensor_t tensor);
+
+/**
+ * Overloads the mean operator for a Torch Tensor
+ * @param output Tensor
+ * @param Tensor to take the mean over the values of
+ */
+EXPORT_C void torch_tensor_mean(torch_tensor_t output, const torch_tensor_t tensor);
+
 // =============================================================================
 // --- Functions related to automatic differentiation functionality for tensors
 // =============================================================================

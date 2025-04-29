@@ -74,10 +74,10 @@ subroutine. That is, for tensors `dQda` and `dQdb`:
 
 ```fortran
 call torch_tensor_from_array(dQda, out_data2, tensor_layout, torch_kCPU)
-call torch_tensor_get_gradient(a, dQda)
+call torch_tensor_get_gradient(dQda, a)
 
 call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
-call torch_tensor_get_gradient(b, dQdb)
+call torch_tensor_get_gradient(dQdb, b)
 ```
 
 #### `retain_graph` argument
