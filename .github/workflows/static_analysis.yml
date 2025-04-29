@@ -82,7 +82,7 @@ jobs:
           cd ${{ github.workspace }}
           sudo apt install shellcheck
           for FILE in $(find . -name "*.sh"); do
-            shellcheck -x ${FILE}
+            shellcheck --external-sources ${FILE}
           done
 
       # Apply GitHub Actions linter, zizmor

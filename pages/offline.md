@@ -37,7 +37,7 @@ extension. For more information on how to do this, see the
 
 #### 4. pt2ts
 
-Having written a trained model to a file with `.pt` extension, run the
+Having written a trained model to a file with `.pt` extension, use the
 `pt2ts.py` utility Python script to convert it to TorchScript format. A template
 `pt2ts.py` script can be found in the
 [`utils`](https://github.com/Cambridge-ICCS/FTorch/tree/main/utils)
