@@ -83,9 +83,9 @@ fi
 # Run integration tests
 if [ "${RUN_INTEGRATION}" = true ]; then
   if [ -e "${BUILD_DIR}/examples/6_MultiGPU" ]; then
-    EXAMPLES="1_Tensor 2_SimpleNet 3_ResNet 4_MultiIO 6_MultiGPU 7_MPI 8_Autograd"
+    EXAMPLES="1_Tensor 2_SimpleNet 3_ResNet 4_MultiIO 6_MultiGPU 7_MPI 8_Autograd req_grad_bug"
   else
-    EXAMPLES="1_Tensor 2_SimpleNet 3_ResNet 4_MultiIO 7_MPI 8_Autograd"
+    EXAMPLES="1_Tensor 2_SimpleNet 3_ResNet 4_MultiIO 7_MPI 8_Autograd req_grad_bug"
   fi
   export PIP_REQUIRE_VIRTUALENV=true
   for EXAMPLE in ${EXAMPLES}; do
