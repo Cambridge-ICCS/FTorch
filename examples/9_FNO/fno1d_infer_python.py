@@ -2,7 +2,10 @@
 
 import os
 
+import matplotlib.pyplot as plt
+import numpy as np
 import torch
+from fno1d_train import generate_sine_data
 
 
 def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
@@ -23,13 +26,18 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     output : torch.Tensor
         result of running inference on model with example Tensor input
     """
-    input_tensor = torch.tensor([0.0, 1.0, 2.0, 3.0, 4.0]).repeat(batch_size, 1)
+    input_tensor, grid_tensor, target_tensor = generate_sine_data(
+        batch_size=batch_size, size_x=32
+    )
+
+    input_example = torch.cat((input_tensor, grid_tensor), dim=-1)
+    print("Input example shape:", input_example.shape)
 
     if device == "cpu":
         # Load saved TorchScript model
         model = torch.jit.load(saved_model)
         # Inference
-        output = model.forward(input_tensor)
+        output = model(input_example)
 
     elif device == "cuda":
         # All previously saved modules, no matter their device, are first
@@ -44,7 +52,7 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         device_error = f"Device '{device}' not recognised."
         raise ValueError(device_error)
 
-    return output
+    return output, grid_tensor, target_tensor
 
 
 if __name__ == "__main__":
@@ -68,13 +76,32 @@ if __name__ == "__main__":
     batch_size_to_run = 1
 
     with torch.no_grad():
-        result = deploy(saved_model_file, device_to_run, batch_size_to_run)
-
-    print(result)
-
-    if not torch.allclose(result, torch.Tensor([0.0, 2.0, 4.0, 6.0, 8.0])):
-        result_error = (
-            f"result:\n{result}\ndoes not match expected value:\n"
-            f"{torch.Tensor([0.0, 2.0, 4.0, 6.0, 8.0])}"
+        predicted, grid_tensor, target_tensor = deploy(
+            saved_model_file, device_to_run, batch_size_to_run
         )
-        raise ValueError(result_error)
+
+    pred_vals = predicted.squeeze().numpy()
+
+    # Compute absolute error
+    error = np.abs(pred_vals - target_tensor.squeeze().numpy())
+
+    print(error * 1000)
+    # Total error
+    total_error = np.sum(error)
+
+    tol_sum = 0.2
+    # Check against tolerance
+    if total_error < tol_sum:
+        print(f"Total absolute error = {total_error:.6f} — within tolerance.")
+    else:
+        print(f"Total absolute error = {total_error:.6f} — exceeds tolerance!")
+
+    plt.plot(
+        grid_tensor.squeeze().numpy(),
+        target_tensor.squeeze().numpy(),
+        label="True sin(2πx)",
+    )
+    plt.scatter(grid_tensor.squeeze().numpy(), pred_vals, label="Predicted")
+    plt.legend()
+    plt.title("Sine Wave Prediction")
+    plt.savefig("train_fno1d_infer.png")

@@ -46,13 +46,13 @@ def generate_sine_data(
     gridx = np.expand_dims(x, axis=(0, 2))  # shape (1, size_x, 1)
     gridx = np.repeat(gridx, batch_size, axis=0)  # (batch, size_x, 1)
 
-    dummy_u = np.zeros_like(gridx)  # dummy values, not used really
+    dummy_u = np.zeros_like(gridx)  # dummy values
 
     input_tensor = torch.tensor(dummy_u, dtype=torch.float32)  # shape (batch, x, 1)
     grid_tensor = torch.tensor(gridx, dtype=torch.float32)
     target_tensor = torch.tensor(
         np.sin(2 * np.pi * gridx), dtype=torch.float32
-    )  # shape (batch, x, 1)
+    )
 
     return input_tensor, grid_tensor, target_tensor
 
@@ -187,7 +187,7 @@ def validate() -> None:
     loaded_model.eval()
 
     # Generate fresh test data
-    test_input, grid, test_target = generate_sine_data_test(batch_size=1, size_x=32)
+    test_input, grid, test_target = generate_sine_data(batch_size=1, size_x=32)
 
     # Forward pass
     with torch.no_grad():
@@ -207,12 +207,6 @@ def validate() -> None:
         plt.scatter(
             grid.squeeze().numpy(), test_pred.squeeze().numpy(), label="Predicted"
         )
-        # plt.plot(
-        #     grid.squeeze().numpy(),
-        #     test_pred.squeeze().numpy(),
-        #     label="Predicted",
-        #     color="red",
-        # )
         plt.legend()
         plt.title("Sine Wave Prediction")
         plt.savefig("train_fno1d.png")
@@ -239,13 +233,20 @@ def main() -> None:
     loss_fn = nn.MSELoss()
 
     model = train(model, optimizer, loss_fn)
+    model.eval()
 
-    # Save trained model (TorchScript)
+    # Either save the model as a TorchScript or state_dict.
+
+    # # Save trained model (TorchScript)
     model.eval()
     scripted_model = torch.jit.script(model)
-    model_path = "fno1d_sine.pt"
+    model_path = "saved_fno1d_model_cpu.pt"
     scripted_model.save(model_path)
-    print(f"Saved trained model to {model_path}")
+
+    # Save trained model (state_dict)
+    # model_path = "fno1d_sine_state_dict.pt"
+    # torch.save(model.state_dict(), model_path)
+    # print(f"Saved trained model to {model_path}")
 
     # Evaluate the model
     validate()

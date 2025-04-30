@@ -18,8 +18,8 @@ program inference
    integer, parameter :: in_shape(in_dims) = [1, 32, 2]
    integer, parameter :: out_dims = 3
    integer, parameter :: out_shape(out_dims) = [1, 32, 1]
-   real(wp) :: x_real, true_sine, prediction, error
-   real(wp), parameter :: tol = 0.05  ! <-- Set your acceptable error tolerance
+   ! real(wp) :: x_real, true_sine, prediction, error
+   real(wp), parameter :: tol = 0.05 
 
    integer :: num_args, ix, i
    character(len=128), dimension(:), allocatable :: args
@@ -27,6 +27,9 @@ program inference
    ! Set up Fortran data structures
    real(wp), allocatable, dimension(:,:,:) :: in_data
    real(wp), allocatable, dimension(:,:,:) :: out_data
+   real(wp), allocatable :: x_vals(:), true_sine(:), error(:)
+   real(wp), parameter :: tol_sum = 0.2
+   real(wp) :: total_error
 
    ! Set up Torch data structures
    ! The net, a vector of input tensors (in this case we only have one), and the output tensor
@@ -52,56 +55,50 @@ program inference
      in_data(1, i, 2) = real(i - 1) / real(31)       ! grid input: linspace
    end do
 
-   ! Initialise data
-   ! in_data = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
-
    ! Create Torch input/output tensors from the above arrays
    call torch_tensor_from_array(in_tensors(1), in_data, torch_kCPU)
    call torch_tensor_from_array(out_tensors(1), out_data, torch_kCPU)
-
-
 
    ! Load ML model
    call torch_model_load(model, args(1), torch_kCPU)
 
    ! Check shape of in_tensors
    print *, "Input array shape: ", shape(in_data)
-   ! call torch_tensor_shape(in_tensors(1), dims, shape)
-   ! print *, "Input tensor shape: ", shape(1:dims)
-
 
    ! Infer
    call torch_model_forward(model, in_tensors, out_tensors)
 
    ! write (*,*) out_data(:)
 
-   ! Check output tensor matches expected value
-   test_pass = .true.
-   do i = 1, 32
-     x_real = real(i-1) / real(31)
-     true_sine = sin(2.0 * 3.14159265 * x_real)
-     prediction = out_data(1, i, 1)
+   allocate(x_vals(32), true_sine(32), error(32))
 
-     error = abs(prediction - true_sine)
+   ! Create grid
+   x_vals = [(real(i-1)/31.0, i=1,32)]
 
-     if (error > tol) then
-       print *, "FAILED at x=", x_real, &
-         ": prediction=", prediction, &
-         " true=", true_sine, &
-         " error=", error
+   ! Compute true sine values
+   true_sine = sin(2.0 * 3.14159265 * x_vals)
+
+   ! Compute absolute error
+   error = abs(out_data(1, :, 1) - true_sine)
+
+   ! Sum of errors
+   total_error = sum(error)
+
+   ! Check against tolerance
+   if (total_error < tol_sum) then
+       print *, "Total error = ", total_error, " — within tolerance."
+       test_pass = .true.
+   else
+       print *, "Total error = ", total_error, " — exceeds tolerance!"
        test_pass = .false.
-     end if
-   end do
+   end if
+
 
    if (test_pass) then
      print *, "All predictions within tolerance."
    else
      print *, "Some predictions exceeded tolerance."
    end if
-
-
-   ! expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
-   ! test_pass = assert_allclose(out_data, expected, test_name="FNO1d", rtol=1e-5)
 
    ! Cleanup
    call torch_delete(model)

@@ -41,7 +41,7 @@ def initialize(precision: torch.dtype) -> torch.nn.Module:
     model = FNO1d()
     model = model.float()
     # load model from file:
-    model.load_state_dict(torch.load("fno1d_sine.pt"))
+    model.load_state_dict(torch.load("fno1d_sine_state_dict.pt"))
 
     # Switch-off some specific layers/parts of the model that behave
     # differently during training and inference

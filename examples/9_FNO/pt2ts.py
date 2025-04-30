@@ -118,7 +118,7 @@ if __name__ == "__main__":
     # FPTLIB-TODO
     # Generate a dummy input Tensor `dummy_input` to the model of appropriate size.
     # This example assumes one input of size (1)
-    trained_model_dummy_input = torch.rand(1, 32, 1)
+    trained_model_dummy_input = torch.rand(1, 32, 2)
 
     # Transfer the model and inputs to GPU device, if appropriate
     if device_type != "cpu":
