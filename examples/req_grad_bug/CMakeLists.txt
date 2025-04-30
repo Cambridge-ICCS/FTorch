@@ -30,6 +30,6 @@ if(CMAKE_BUILD_TESTS)
     NAME rgmwe
     COMMAND rgmwe
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(foptim PROPERTIES PASS_REGULAR_EXPRESSION
+  set_tests_properties(rgmwe PROPERTIES PASS_REGULAR_EXPRESSION
                                          "rgmwe example ran successfully")
 endif()
