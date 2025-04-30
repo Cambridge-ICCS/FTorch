@@ -4,6 +4,8 @@ Train and test a Fourier Neural Operator (FNO) on a sine wave dataset.
 It includes data generation, model training, evaluation, and visualization.
 """
 
+from typing import Optional, Tuple
+
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -12,9 +14,17 @@ from fno1d import FNO1d
 from torch import nn, optim
 
 
-def generate_sine_data(batch_size=16, size_x=32):
+def generate_sine_data(
+    batch_size: int = 16, size_x: int = 32
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """
-    Generate sine wave data for training.
+    Generate sine wave data.
+
+    Creates data of size <batch_size> for training and testing the FNO1d model.
+    The data consists of a grid of points and their corresponding sine values.
+    Copied for stability purposes. The task is trivial, but aim is not to solve a
+    challenging FNO problem, but to test the FTorch pipeline.
+
 
     Parameters
     ----------
@@ -47,7 +57,78 @@ def generate_sine_data(batch_size=16, size_x=32):
     return input_tensor, grid_tensor, target_tensor
 
 
-def train(model, optimizer, loss_fn):
+def generate_parametric_sine_data(
+    batch_size: int = 32,
+    size_x: int = 32,
+    random_x: bool = False,
+    seed: Optional[int] = None,
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    """
+    Generate a batch of sine waves with varying amplitude, frequency, and phase.
+
+    The data consists of a grid of points and their corresponding sine values.
+    The aim is train the network on a variety of sine waves with different parameters.
+    The x-values can be either random or evenly spaced. Evenly spaced x-values are
+    recommended.
+
+    Parameters
+    ----------
+    batch_size : int
+        Number of sine functions to generate.
+    size_x : int
+        Number of spatial points per sample.
+    random_x : bool
+        If True, use random (sorted) x-points per sample. Otherwise use linspace.
+    seed : int or None
+        Random seed for reproducibility.
+
+    Returns
+    -------
+    dummy : torch.Tensor
+        Dummy input of shape (batch_size, size_x, 1)
+    grid : torch.Tensor
+        x-values of shape (batch_size, size_x, 1)
+    target : torch.Tensor
+        Target u(x) = A * sin(2π * f * x + φ), shape (batch_size, size_x, 1)
+    """
+    rng = np.random.default_rng(seed)
+
+    dummy_batch = []
+    grid_batch = []
+    target_batch = []
+
+    for _ in range(batch_size):
+        # Generate grid
+        if random_x:
+            x = np.sort(rng.uniform(0, 1, size_x))
+        else:
+            x = np.linspace(0, 1, size_x)
+
+        # Generate sine parameters
+        A = rng.uniform(0.5, 1.5)
+        f = rng.uniform(1.0, 3.0)
+        phi = rng.uniform(0, 2 * np.pi)
+
+        y = A * np.sin(2 * np.pi * f * x + phi)
+
+        x_tensor = torch.tensor(x, dtype=torch.float32).view(1, size_x, 1)
+        y_tensor = torch.tensor(y, dtype=torch.float32).view(1, size_x, 1)
+        dummy_tensor = torch.zeros_like(x_tensor)
+
+        grid_batch.append(x_tensor)
+        target_batch.append(y_tensor)
+        dummy_batch.append(dummy_tensor)
+
+    dummy = torch.cat(dummy_batch, dim=0)  # (batch_size, size_x, 1)
+    grid = torch.cat(grid_batch, dim=0)
+    target = torch.cat(target_batch, dim=0)
+
+    return dummy, grid, target
+
+
+def train(
+    model: nn.Module, optimizer: optim.Optimizer, loss_fn: nn.Module
+) -> nn.Module:
     """
     Train the FNO1d model on sine wave data.
 
@@ -90,7 +171,7 @@ def train(model, optimizer, loss_fn):
     return model
 
 
-def validate():
+def validate() -> None:
     """
     Validate the FNO1d model by loading it and performing a forward pass.
 
@@ -106,7 +187,7 @@ def validate():
     loaded_model.eval()
 
     # Generate fresh test data
-    test_input, grid, test_target = generate_sine_data(batch_size=1, size_x=32)
+    test_input, grid, test_target = generate_sine_data_test(batch_size=1, size_x=32)
 
     # Forward pass
     with torch.no_grad():
@@ -118,7 +199,25 @@ def validate():
         test_loss = mse_loss(test_pred, test_target)
 
         print(f"Test MSE Loss: {test_loss.item():.6f}")
+        # Plot to visualize
+        x = np.linspace(0, 1, 32)
+        plt.plot(
+            grid.squeeze().numpy(), test_target.squeeze().numpy(), label="True sin(2πx)"
+        )
+        plt.scatter(
+            grid.squeeze().numpy(), test_pred.squeeze().numpy(), label="Predicted"
+        )
+        # plt.plot(
+        #     grid.squeeze().numpy(),
+        #     test_pred.squeeze().numpy(),
+        #     label="Predicted",
+        #     color="red",
+        # )
+        plt.legend()
+        plt.title("Sine Wave Prediction")
+        plt.savefig("train_fno1d.png")
 
+        plt.show()
         # Check if prediction is accurate
         threshold = 1e-3
         if test_loss.item() >= threshold:
@@ -126,18 +225,8 @@ def validate():
         else:
             print("Test passed: Predicted sine wave accurately!")
 
-        # Plot to visualize
-        x = np.linspace(0, 1, 32)
-        plt.plot(x, test_target.squeeze().numpy(), label="True sin(2πx)")
-        plt.plot(x, test_pred.squeeze().numpy(), "--", label="Predicted")
-        plt.legend()
-        plt.title("Sine Wave Prediction")
-        plt.savefig("train_fno1d.png")
 
-        plt.show()
-
-
-def main():
+def main() -> None:
     """
     Train and evaluate the FNO1d model.
 
@@ -146,8 +235,8 @@ def main():
     """
     model = FNO1d()
     model = model.float()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-    loss_fn = torch.nn.MSELoss()
+    optimizer = optim.Adam(model.parameters(), lr=1e-3)
+    loss_fn = nn.MSELoss()
 
     model = train(model, optimizer, loss_fn)
 
