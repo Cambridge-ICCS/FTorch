@@ -122,7 +122,7 @@ def validate():
         # Check if prediction is accurate
         threshold = 1e-3
         if test_loss.item() >= threshold:
-            raise ValueError("Test failed: Prediction not accurate.") # noqa: EM101
+            raise ValueError("Test failed: Prediction not accurate.")  # noqa: EM101
         else:
             print("Test passed: Predicted sine wave accurately!")
 
@@ -135,6 +135,7 @@ def validate():
         plt.savefig("train_fno1d.png")
 
         plt.show()
+
 
 def main():
     """
