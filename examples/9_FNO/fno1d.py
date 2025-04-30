@@ -57,10 +57,14 @@ class SpectralConv1d(nn.Module):
         """
         1D Fourier layer: FFT -> linear transform -> inverse FFT.
 
-        Args:
-            in_channels (int): input channels
-            out_channels (int): output channels
-            modes (int): number of Fourier modes to multiply (<= floor(N/2)+1)
+        Parameters
+        ----------
+        in_channels  : int
+            Input channels
+        out_channels : int
+            Output channels
+        modes        : int
+            Number of Fourier modes to multiply (<= floor(N / 2) + 1)
         """
         super().__init__()
         self.in_channels = in_channels
@@ -76,18 +80,35 @@ class SpectralConv1d(nn.Module):
         """
         Complex multiplication of Fourier modes.
 
-        Args:
-            _input: [batch, in_channels, x]
-            weights: [in_channels, out_channels, x]
+        Parameters
+        ----------
+        _input  : torch.Tensor
+            [batch, in_channels, x]
+        weights : torch.Tensor
+            [in_channels, out_channels, x]
 
         Returns
         -------
-            output: [batch, out_channels, x]
+        output  : torch.Tensor
+            [batch, out_channels, x]
         """
         return torch.einsum("bix,iox->box", _input, weights)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """Compute the forward pass of the spectral convolution."""
+        """
+        Compute the forward pass of the spectral convolution.
+
+        Parameters
+        ----------
+        x : torch.Tensor
+            Input tensor of shape (batch, in_channels, x)
+            where x is the number of spatial points.
+
+        Returns
+        -------
+        torch.Tensor
+            Output tensor of shape (batch, out_channels, x)
+        """
         batchsize = x.shape[0]
         x_ft = torch.fft.rfft(x)
 
@@ -124,11 +145,16 @@ class FNO1d(nn.Module):
         """
         1D Fourier Neural Operator model.
 
-        Args:
-            modes (int): number of Fourier modes
-            width (int): feature width
-            time_future (int): number of future steps to predict
-            time_history (int): number of past time steps used
+        Parameters
+        ----------
+        modes        : int
+            Number of Fourier modes
+        width        : int
+            Feature width
+        time_future  : int
+            Number of future steps to predict
+        time_history : int
+            Number of past time steps used
         """
         super().__init__()
         self.modes = modes
@@ -155,12 +181,15 @@ class FNO1d(nn.Module):
         """
         Forward pass.
 
-        Args:
-            u (torch.Tensor): (batch, x, channels=time_history)
+        Parameters
+        ----------
+        u : torch.Tensor
+            (batch, x, channels=time_history)
 
         Returns
         -------
-            torch.Tensor: (batch, x, channels=time_future)
+        torch.Tensor
+            (batch, x, channels=time_future)
         """
         # grid = self.get_grid(u.shape, u.device)
         # x = torch.cat((u, grid), dim=-1)  # Add grid as extra channel
@@ -192,17 +221,23 @@ class FNO1d(nn.Module):
 
         return x
 
+    # UNUSED
     def get_grid(self, shape: List[int], device: torch.device):
         """
         Generate normalized grid for input.
 
-        Args:
-            shape (tuple): (batch, x, channels)
-            device ()
+        Parameters
+        ----------
+        shape  : List[int]
+            Shape of the input tensor
+            (batch, x, channels)
+        device  : torch.device
+            Device to create the grid on
 
         Returns
         -------
-            torch.Tensor: grid tensor of shape (batch, x, 1)
+        torch.Tensor
+            grid tensor of shape (batch, x, 1)
         """
         batchsize, size_x = shape[0], shape[1]
         gridx = torch.linspace(tensor(0), tensor(1), steps=size_x, device=device)
