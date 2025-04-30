@@ -237,12 +237,17 @@ def main() -> None:
 
     # Either save the model as a TorchScript or state_dict.
 
-    # # Save trained model (TorchScript)
+    # We can go from TorchScript directly to fno1d_infer_python.py
+    # Save trained model (TorchScript)
     model.eval()
     scripted_model = torch.jit.script(model)
     model_path = "saved_fno1d_model_cpu.pt"
     scripted_model.save(model_path)
 
+    # We can go from TorchScript to state_dict for compatibility with pt2ts.py
+    # and then to fno1d_infer_python.py
+
+    # uncomment the following if using pt2ts.py
     # Save trained model (state_dict)
     # model_path = "fno1d_sine_state_dict.pt"
     # torch.save(model.state_dict(), model_path)
