@@ -93,6 +93,9 @@ _Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss
 
 The following presentations contain information about FTorch:
 
+* FTorch: A library to couple PyTorch ML models with Fortran climate models<br>
+  AI for Climate and Nature Community Day - May 2025<br>
+  [Slides](https://niccolozanotti.github.io/ftorch-flash)
 * Facilitating online training in Fortran-based climate models<br>
   EuroAD, Kaiserslautern - April 2025<br>
   [Slides](https://hackmd.io/@jwallwork/euroad-2025?type=slide)
