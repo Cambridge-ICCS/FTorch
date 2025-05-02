@@ -2538,8 +2538,7 @@ contains
       stop 1
     end if
     if (output%requires_grad()) then
-      write(*,*) "Error :: cannot assign values of a tensor with requires_grad=.true."
-      stop 1
+      write(*,*) "Warning :: assigning values of a tensor with requires_grad=.true."
     end if
     call torch_tensor_assign_c(output%p, input%p)
   end subroutine torch_tensor_assign
