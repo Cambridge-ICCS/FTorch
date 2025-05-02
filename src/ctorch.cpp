@@ -381,6 +381,10 @@ void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input) {
   //       it's removed then the Fortran array keeps its original value and is no
   //       longer be pointed to.
   std::move(*out) = *in;
+  // NOTE: The following line ensures that we always overwrite the requires_grad
+  // property. See the Python examples on
+  // https://github.com/Cambridge-ICCS/FTorch/pull/373.
+  out->requires_grad_(in->requires_grad());
 }
 
 void torch_tensor_add(torch_tensor_t output, const torch_tensor_t tensor1,

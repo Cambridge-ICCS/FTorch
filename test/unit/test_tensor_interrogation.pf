@@ -261,8 +261,8 @@ contains
                            requires_grad=this%param%requires_grad)
 
     ! Create another empty tensor with the same arguments except the opposite requires_grad value
-    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
-    ! FIXME:                        requires_grad=.not. this%param%requires_grad)
+    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type, &
+                            requires_grad=.not. this%param%requires_grad)
 
     tensor2 = tensor1
 
@@ -289,8 +289,8 @@ contains
                            requires_grad=this%param%requires_grad)
 
     ! Create another empty tensor with the same arguments except the opposite requires_grad value
-    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type)
-    ! FIXME:                        requires_grad=.not. this%param%requires_grad)
+    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type, &
+                            requires_grad=.not. this%param%requires_grad)
 
     tensor2 = -tensor1
 
