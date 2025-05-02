@@ -1,7 +1,7 @@
 program tensor_manipulation
 
   ! Import the FTorch procedures that are used in this worked example
-  use ftorch, only: assignment(=), operator(+), torch_kCPU, torch_kFloat32, torch_tensor, &
+  use ftorch, only: operator(+), torch_kCPU, torch_kFloat32, torch_tensor, &
                     torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
                     torch_tensor_mean, torch_tensor_ones, torch_tensor_print
 
