@@ -232,6 +232,7 @@ def main() -> None:
 
     model = train(model, optimizer, loss_fn)
     model.eval()
+    validate()
 
     # Either save the model as a TorchScript or state_dict.
 
