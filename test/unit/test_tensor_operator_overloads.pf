@@ -30,6 +30,7 @@ module test_tensor_operator_overloads
   @testParameter
   type, extends(AbstractTestParameter) :: TestParametersType
     logical :: switch
+    integer :: op
   contains
     procedure :: toString
   end type TestParametersType
@@ -46,15 +47,30 @@ contains
   function get_parameters_full() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
-      TestParametersType(.false.), &
-      TestParametersType(.true.) &
+      TestParametersType(.false.,1), &
+      TestParametersType(.true.,1), &
+      TestParametersType(.false.,2), &
+      TestParametersType(.true.,2), &
+      TestParametersType(.false.,3), &
+      TestParametersType(.true.,3), &
+      TestParametersType(.false.,4), &
+      TestParametersType(.true.,4) &
     ]
   end function get_parameters_full
+
+  ! A logical switch fixture
+  function get_parameters_switch() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,0), &
+      TestParametersType(.true.,0) &
+    ]
+  end function get_parameters_switch
 
   ! A fixture comprised of a short list of parameter sets
   function get_parameters_short() result(params)
     type(TestParametersType), allocatable :: params(:)
-    params = [TestParametersType(.false.)]
+    params = [TestParametersType(.false.,0)]
   end function get_parameters_short
 
   ! Constructor for the test case type
@@ -68,9 +84,22 @@ contains
   function toString(this) result(string)
     class(TestParametersType), intent(in) :: this
     character(:), allocatable :: string
-    character(len=1) :: str
-    write(str,'(l1)') this%switch
-    string = str
+    character(len=10) :: str
+    if (this%op == 0) then
+      write(str,"(l1)") this%switch
+    else if (this%op == 1) then
+      write(str,"(l1,',add')") this%switch
+    else if (this%op == 2) then
+      write(str,"(l1,',subtract')") this%switch
+    else if (this%op == 3) then
+      write(str,"(l1,',multiply')") this%switch
+    else if (this%op == 4) then
+      write(str,"(l1,',divide')") this%switch
+    else
+      write(*,*) "Error :: invalid operator code"
+      stop 999
+    end if
+    string = trim(str)
   end function toString
 
   @test(testParameters={get_parameters_short()})
@@ -290,7 +319,7 @@ contains
 
   end subroutine test_torch_tensor_multiply
 
-  @test(testParameters={get_parameters_full()})
+  @test(testParameters={get_parameters_switch()})
   subroutine test_torch_tensor_scalar_multiply(this)
     use ftorch, only: operator(*)
 
@@ -430,7 +459,7 @@ contains
 
   end subroutine test_torch_tensor_scalar_divide
 
-  @test(testParameters={get_parameters_full()})
+  @test(testParameters={get_parameters_switch()})
   subroutine test_torch_tensor_square(this)
     use ftorch, only: operator(**)
 
@@ -519,7 +548,7 @@ contains
   ! ============================================================================
 
   ! Unit test checking the requires_grad property is carried over during assignment
-  @test(testparameters={get_parameters_full()})
+  @test(testparameters={get_parameters_switch()})
   subroutine test_requires_grad_assign(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
@@ -547,10 +576,10 @@ contains
   end subroutine test_requires_grad_assign
 
   ! Unit test checking the requires_grad property is carried over during a combination of an
-  ! assignment and an addition applied to tensors with the same requires_grad value
+  ! assignment and a binary operator applied to tensors with the same requires_grad value
   @test(testparameters={get_parameters_full()})
-  subroutine test_requires_grad_add_same(this)
-    use ftorch, only: operator(+)
+  subroutine test_requires_grad_binary_same(this)
+    use ftorch, only: operator(+), operator(-), operator(*), operator(/)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 1
@@ -567,7 +596,18 @@ contains
     call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type, &
                             requires_grad=.not. this%param%switch)
 
-    tensor3 = tensor1 + tensor2
+    ! Compute the appropriate binary operator
+    if (this%param%op == 1) then
+      tensor3 = tensor1 + tensor2
+    else if (this%param%op == 2) then
+      tensor3 = tensor1 - tensor2
+    else if (this%param%op == 3) then
+      tensor3 = tensor1 * tensor2
+    else if (this%param%op == 4) then
+      tensor3 = tensor1 / tensor2
+    else
+      write(*,*) "Error :: invalid operator code"
+    end if
 
     ! Check that requires_grad is updated correctly
     expected = this%param%switch
@@ -576,13 +616,13 @@ contains
       stop 999
     end if
 
-  end subroutine test_requires_grad_add_same
+  end subroutine test_requires_grad_binary_same
 
   ! Unit test checking the requires_grad property is carried over during a combination of an
-  ! assignment and an addition applied to tensors with different requires_grad values
+  ! assignment and a binary operator applied to tensors with different requires_grad values
   @test(testparameters={get_parameters_full()})
-  subroutine test_requires_grad_add_different(this)
-    use ftorch, only: operator(+)
+  subroutine test_requires_grad_binary_different(this)
+    use ftorch, only: operator(+), operator(-), operator(*), operator(/)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 1
@@ -600,7 +640,18 @@ contains
     ! NOTE: It's not valid for tensor3 to have requires_grad=.true. as that would give the error
     !    "a leaf Variable that requires grad is being used in an in-place operation".
 
-    tensor3 = tensor1 + tensor2
+    ! Compute the appropriate binary operator
+    if (this%param%op == 1) then
+      tensor3 = tensor1 + tensor2
+    else if (this%param%op == 2) then
+      tensor3 = tensor1 - tensor2
+    else if (this%param%op == 3) then
+      tensor3 = tensor1 * tensor2
+    else if (this%param%op == 4) then
+      tensor3 = tensor1 / tensor2
+    else
+      write(*,*) "Error :: invalid operator code"
+    end if
 
     ! Check that requires_grad is updated correctly
     expected = .true.
@@ -609,11 +660,11 @@ contains
       stop 999
     end if
 
-  end subroutine test_requires_grad_add_different
+  end subroutine test_requires_grad_binary_different
 
   ! Unit test checking the requires_grad property is carried over during a combination of an
   ! assignment and a negation
-  @test(testparameters={get_parameters_full()})
+  @test(testparameters={get_parameters_switch()})
   subroutine test_requires_grad_negative(this)
     use ftorch, only: operator(-)
     class(TestCaseType), intent(inout) :: this
@@ -640,70 +691,5 @@ contains
     end if
 
   end subroutine test_requires_grad_negative
-
-  ! Unit test checking the requires_grad property is carried over during a combination of an
-  ! assignment and a subtraction with the same requires_grad properties
-  @test(testparameters={get_parameters_full()})
-  subroutine test_requires_grad_subtract_same(this)
-    use ftorch, only: operator(-)
-    class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor1, tensor2, tensor3
-    integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    logical :: expected
-
-    ! Create two tensors of ones with the provided requires_grad value
-    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
-                           requires_grad=this%param%switch)
-    call torch_tensor_ones(tensor2, ndims, tensor_shape, dtype, device_type, &
-                           requires_grad=this%param%switch)
-
-    ! Create an empty tensor with the same arguments except the opposite requires_grad value
-    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type, &
-                            requires_grad=.not. this%param%switch)
-
-    tensor3 = tensor1 - tensor2
-
-    ! Check that requires_grad is updated correctly
-    expected = this%param%switch
-    if (expected .neqv. tensor3%requires_grad()) then
-      print *, "Error :: tensor%requires_grad() returned incorrect value"
-      stop 999
-    end if
-
-  end subroutine test_requires_grad_subtract_same
-
-  ! Unit test checking the requires_grad property is carried over during a combination of an
-  ! assignment and a subtraction applied to tensors with different requires_grad values
-  @test(testparameters={get_parameters_full()})
-  subroutine test_requires_grad_subtract_different(this)
-    use ftorch, only: operator(-)
-    class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: tensor1, tensor2, tensor3
-    integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    logical :: expected
-
-    ! Create two tensors of ones with the provided requires_grad value
-    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
-                           requires_grad=this%param%switch)
-    call torch_tensor_ones(tensor2, ndims, tensor_shape, dtype, device_type, &
-                           requires_grad=.not. this%param%switch)
-
-    ! Create an empty tensor with the same arguments except the opposite requires_grad value
-    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
-    ! NOTE: It's not valid for tensor3 to have requires_grad=.true. as that would give the error
-    !    "a leaf Variable that requires grad is being used in an in-place operation".
-
-    tensor3 = tensor1 - tensor2
-
-    ! Check that requires_grad is updated correctly
-    expected = .true.
-    if (expected .neqv. tensor3%requires_grad()) then
-      print *, "Error :: tensor%requires_grad() returned incorrect value"
-      stop 999
-    end if
-
-  end subroutine test_requires_grad_subtract_different
 
 end module test_tensor_operator_overloads
