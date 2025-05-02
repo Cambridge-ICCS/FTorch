@@ -43,8 +43,8 @@ module test_tensor_operator_overloads
 
 contains
 
-  ! A fixture comprised of a full list of parameter sets
-  function get_parameters_full() result(params)
+  ! A fixture for varying the requires_grad property and binary operator
+  function get_parameters_binary() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
       TestParametersType(.false.,1), &
@@ -56,7 +56,22 @@ contains
       TestParametersType(.false.,4), &
       TestParametersType(.true.,4) &
     ]
-  end function get_parameters_full
+  end function get_parameters_binary
+
+  ! A fixture for varying the requires_grad property and unary operator
+  function get_parameters_unary() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,5), &
+      TestParametersType(.true.,5), &
+      TestParametersType(.false.,6), &
+      TestParametersType(.true.,6), &
+      TestParametersType(.false.,7), &
+      TestParametersType(.true.,7), &
+      TestParametersType(.false.,8), &
+      TestParametersType(.true.,8) &
+    ]
+  end function get_parameters_unary
 
   ! A logical switch fixture
   function get_parameters_switch() result(params)
@@ -95,6 +110,14 @@ contains
       write(str,"(l1,',multiply')") this%switch
     else if (this%op == 4) then
       write(str,"(l1,',divide')") this%switch
+    else if (this%op == 5) then
+      write(str,"(l1,',negative')") this%switch
+    else if (this%op == 6) then
+      write(str,"(l1,',isquare')") this%switch
+    else if (this%op == 7) then
+      write(str,"(l1,',fsquare')") this%switch
+    else if (this%op == 8) then
+      write(str,"(l1,',sqrt')") this%switch
     else
       write(*,*) "Error :: invalid operator code"
       stop 999
@@ -577,7 +600,7 @@ contains
 
   ! Unit test checking the requires_grad property is carried over during a combination of an
   ! assignment and a binary operator applied to tensors with the same requires_grad value
-  @test(testparameters={get_parameters_full()})
+  @test(testparameters={get_parameters_binary()})
   subroutine test_requires_grad_binary_same(this)
     use ftorch, only: operator(+), operator(-), operator(*), operator(/)
     class(TestCaseType), intent(inout) :: this
@@ -620,7 +643,7 @@ contains
 
   ! Unit test checking the requires_grad property is carried over during a combination of an
   ! assignment and a binary operator applied to tensors with different requires_grad values
-  @test(testparameters={get_parameters_full()})
+  @test(testparameters={get_parameters_binary()})
   subroutine test_requires_grad_binary_different(this)
     use ftorch, only: operator(+), operator(-), operator(*), operator(/)
     class(TestCaseType), intent(inout) :: this
@@ -650,7 +673,7 @@ contains
     else if (this%param%op == 4) then
       tensor3 = tensor1 / tensor2
     else
-      write(*,*) "Error :: invalid operator code"
+      write(*,*) "Error :: invalid binary operator code"
     end if
 
     ! Check that requires_grad is updated correctly
@@ -663,10 +686,10 @@ contains
   end subroutine test_requires_grad_binary_different
 
   ! Unit test checking the requires_grad property is carried over during a combination of an
-  ! assignment and a negation
-  @test(testparameters={get_parameters_switch()})
-  subroutine test_requires_grad_negative(this)
-    use ftorch, only: operator(-)
+  ! assignment and a unary operator
+  @test(testparameters={get_parameters_unary()})
+  subroutine test_requires_grad_unary(this)
+    use ftorch, only: operator(-), operator(**)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1
@@ -681,7 +704,17 @@ contains
     call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type, &
                             requires_grad=.not. this%param%switch)
 
-    tensor2 = -tensor1
+    if (this%param%op == 5) then
+      tensor2 = -tensor1
+    else if (this%param%op == 6) then
+      tensor2 = tensor1 ** 2
+    else if (this%param%op == 7) then
+      tensor2 = tensor1 ** 2.0
+    else if (this%param%op == 8) then
+      tensor2 = tensor1 ** 0.5
+    else
+      write(*,*) "Error :: invalid unary operator code"
+    end if
 
     ! Check that requires_grad is updated correctly
     expected = this%param%switch
@@ -690,6 +723,6 @@ contains
       stop 999
     end if
 
-  end subroutine test_requires_grad_negative
+  end subroutine test_requires_grad_unary
 
 end module test_tensor_operator_overloads
