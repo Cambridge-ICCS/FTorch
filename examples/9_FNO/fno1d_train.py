@@ -50,9 +50,7 @@ def generate_sine_data(
 
     input_tensor = torch.tensor(dummy_u, dtype=torch.float32)  # shape (batch, x, 1)
     grid_tensor = torch.tensor(gridx, dtype=torch.float32)
-    target_tensor = torch.tensor(
-        np.sin(2 * np.pi * gridx), dtype=torch.float32
-    )
+    target_tensor = torch.tensor(np.sin(2 * np.pi * gridx), dtype=torch.float32)
 
     return input_tensor, grid_tensor, target_tensor
 
