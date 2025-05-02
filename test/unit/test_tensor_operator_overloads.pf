@@ -514,6 +514,10 @@ contains
 
   end subroutine test_torch_tensor_sqrt
 
+  ! ============================================================================
+  ! --- Unit tests for the requires_grad property
+  ! ============================================================================
+
   ! Unit test checking the requires_grad property is carried over during assignment
   @test(testparameters={get_parameters_full()})
   subroutine test_requires_grad_assign(this)
@@ -521,24 +525,91 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    logical :: expected
 
     ! Create a tensor of ones with the provided requires_grad value
     call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
                            requires_grad=this%param%switch)
 
-    ! Create another empty tensor with the same arguments except the opposite requires_grad value
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
     call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type, &
                             requires_grad=.not. this%param%switch)
 
     tensor2 = tensor1
 
     ! Check that requires_grad is updated correctly
-    if (tensor1%requires_grad() .neqv. tensor2%requires_grad()) then
+    expected = this%param%switch
+    if (expected .neqv. tensor2%requires_grad()) then
       print *, "Error :: tensor%requires_grad() returned incorrect value"
       stop 999
     end if
 
   end subroutine test_requires_grad_assign
+
+  ! Unit test checking the requires_grad property is carried over during a combination of an
+  ! assignment and an addition applied to tensors with the same requires_grad value
+  @test(testparameters={get_parameters_full()})
+  subroutine test_requires_grad_add_same(this)
+    use ftorch, only: operator(+)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, tensor3
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    logical :: expected
+
+    ! Create two tensors of ones with the provided requires_grad value
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+    call torch_tensor_ones(tensor2, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
+    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type, &
+                            requires_grad=.not. this%param%switch)
+
+    tensor3 = tensor1 + tensor2
+
+    ! Check that requires_grad is updated correctly
+    expected = this%param%switch
+    if (expected .neqv. tensor3%requires_grad()) then
+      print *, "Error :: tensor%requires_grad() returned incorrect value"
+      stop 999
+    end if
+
+  end subroutine test_requires_grad_add_same
+
+  ! Unit test checking the requires_grad property is carried over during a combination of an
+  ! assignment and an addition applied to tensors with different requires_grad values
+  @test(testparameters={get_parameters_full()})
+  subroutine test_requires_grad_add_different(this)
+    use ftorch, only: operator(+)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, tensor3
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    logical :: expected
+
+    ! Create two tensors of ones with the provided requires_grad value
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+    call torch_tensor_ones(tensor2, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=.not. this%param%switch)
+
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
+    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
+    ! NOTE: It's not valid for tensor3 to have requires_grad=.true. as that would give the error
+    !    "a leaf Variable that requires grad is being used in an in-place operation".
+
+    tensor3 = tensor1 + tensor2
+
+    ! Check that requires_grad is updated correctly
+    expected = .true.
+    if (expected .neqv. tensor3%requires_grad()) then
+      print *, "Error :: tensor%requires_grad() returned incorrect value"
+      stop 999
+    end if
+
+  end subroutine test_requires_grad_add_different
 
   ! Unit test checking the requires_grad property is carried over during a combination of an
   ! assignment and a negation
@@ -549,23 +620,90 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    logical :: expected
 
     ! Create a tensor of ones with the provided requires_grad value
     call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
                            requires_grad=this%param%switch)
 
-    ! Create another empty tensor with the same arguments except the opposite requires_grad value
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
     call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type, &
                             requires_grad=.not. this%param%switch)
 
     tensor2 = -tensor1
 
     ! Check that requires_grad is updated correctly
-    if (tensor1%requires_grad() .neqv. tensor2%requires_grad()) then
+    expected = this%param%switch
+    if (expected .neqv. tensor2%requires_grad()) then
       print *, "Error :: tensor%requires_grad() returned incorrect value"
       stop 999
     end if
 
   end subroutine test_requires_grad_negative
+
+  ! Unit test checking the requires_grad property is carried over during a combination of an
+  ! assignment and a subtraction with the same requires_grad properties
+  @test(testparameters={get_parameters_full()})
+  subroutine test_requires_grad_subtract_same(this)
+    use ftorch, only: operator(-)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, tensor3
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    logical :: expected
+
+    ! Create two tensors of ones with the provided requires_grad value
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+    call torch_tensor_ones(tensor2, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
+    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type, &
+                            requires_grad=.not. this%param%switch)
+
+    tensor3 = tensor1 - tensor2
+
+    ! Check that requires_grad is updated correctly
+    expected = this%param%switch
+    if (expected .neqv. tensor3%requires_grad()) then
+      print *, "Error :: tensor%requires_grad() returned incorrect value"
+      stop 999
+    end if
+
+  end subroutine test_requires_grad_subtract_same
+
+  ! Unit test checking the requires_grad property is carried over during a combination of an
+  ! assignment and a subtraction applied to tensors with different requires_grad values
+  @test(testparameters={get_parameters_full()})
+  subroutine test_requires_grad_subtract_different(this)
+    use ftorch, only: operator(-)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, tensor3
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    logical :: expected
+
+    ! Create two tensors of ones with the provided requires_grad value
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+    call torch_tensor_ones(tensor2, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=.not. this%param%switch)
+
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
+    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
+    ! NOTE: It's not valid for tensor3 to have requires_grad=.true. as that would give the error
+    !    "a leaf Variable that requires grad is being used in an in-place operation".
+
+    tensor3 = tensor1 - tensor2
+
+    ! Check that requires_grad is updated correctly
+    expected = .true.
+    if (expected .neqv. tensor3%requires_grad()) then
+      print *, "Error :: tensor%requires_grad() returned incorrect value"
+      stop 999
+    end if
+
+  end subroutine test_requires_grad_subtract_different
 
 end module test_tensor_operator_overloads
