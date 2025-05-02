@@ -100,6 +100,45 @@ use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
   operator(/), operator(**)
 ```
 
+
+#### Overloaded assignment operator
+
+Particular care should be taken with the overloaded assignment operator.
+Whenever you execute code involving `torch_tensor`s on each side of an equals
+sign, the overloaded assignment operator should be triggered. As such, if you
+aren't using the bare `use ftorch` import then you should ensure you specify
+`use ftorch, only: assignment(=)` (as well as any other module members you
+require).
+
+For a straightforward assignment of two `torch_tensor`s `a` and `b`,
+```fortran
+b = a
+```
+the overloaded assignment operator is called once.
+
+For overloaded operators the situation is more complex. Consider the overloaded
+addition operator (the same applies for the rest). When we execute the line
+```fortran
+c = a + b
+```
+the addition is evaluated first. It is implemented as a Fortran function and its
+return value is an *intermediate* tensor. The setup is such that this is created
+using `torch_tensor_empty` under the hood (inheriting all the properties of the
+tensors being added*). Following this, the intermediate tensor is assigned
+to `c`. Finally, the finalizer for `torch_tensor` is called for the intermediate
+tensor because it goes out of scope.
+
+Similarly as above, in the case where you have some function `func` that returns
+a `torch_tensor`, an intermediate `torch_tensor` will be created, assigned, and
+destroyed because the call will have the form
+```fortran
+a = func()
+```
+
+*Note: In most cases, these should be the same, so that the operator makes
+sense. In the case of the `requires_grad` property, the values might differ, and
+the result should be the logical `.and.` of the two values.
+
 ### Other operators acting on tensors
 
 We have also exposed the operators for taking the sum or mean over the entries
