@@ -2532,7 +2532,8 @@ contains
 
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, input%get_rank(), input%get_shape(), input%get_dtype(), &
-                              input%get_device_type(), device_index=input%get_device_index())
+                              input%get_device_type(), device_index=input%get_device_index(), &
+                              requires_grad=input%requires_grad())
     else if (input%get_device_type() /= output%get_device_type()) then
       write(*,*) "Error :: cannot assign tensors with different device types"
       stop 1
@@ -2569,7 +2570,8 @@ contains
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
                               tensor1%get_dtype(), tensor1%get_device_type(), &
-                              device_index=tensor1%get_device_index())
+                              device_index=tensor1%get_device_index(), &
+                              requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_add_c(output%p,tensor1%p, tensor2%p)
   end function torch_tensor_add
@@ -2591,7 +2593,8 @@ contains
 
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_negative_c(output%p, tensor%p)
   end function torch_tensor_negative
@@ -2622,7 +2625,8 @@ contains
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
                               tensor1%get_dtype(), tensor1%get_device_type(), &
-                              device_index=tensor1%get_device_index())
+                              device_index=tensor1%get_device_index(), &
+                              requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_subtract_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_subtract
@@ -2642,7 +2646,8 @@ contains
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
                               tensor1%get_dtype(), tensor1%get_device_type(), &
-                              device_index=tensor1%get_device_index())
+                              device_index=tensor1%get_device_index(), &
+                              requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_multiply_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_multiply
@@ -2662,7 +2667,8 @@ contains
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
                               tensor1%get_dtype(), tensor1%get_device_type(), &
-                              device_index=tensor1%get_device_index())
+                              device_index=tensor1%get_device_index(), &
+                              requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_divide_c(output%p, tensor1%p, tensor2%p)
   end function torch_tensor_divide
@@ -2688,7 +2694,8 @@ contains
 
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int8
@@ -2714,7 +2721,8 @@ contains
 
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int16
@@ -2740,7 +2748,8 @@ contains
 
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int32
@@ -2766,7 +2775,8 @@ contains
 
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_int64
@@ -2793,7 +2803,8 @@ contains
 
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_float_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_real32
@@ -2819,7 +2830,8 @@ contains
 
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index())
+                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+                              requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_float_c(output%p, tensor%p, c_loc(power))
   end function torch_tensor_power_real64
