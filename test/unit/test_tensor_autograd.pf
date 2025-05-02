@@ -28,6 +28,9 @@ module test_tensor_autograd
   integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
   integer, parameter :: dtype = torch_kFloat32
 
+  ! Scalar shape for reduction operators
+  integer(c_int64_t), parameter, dimension(1) :: scalar_shape = [1]
+
   @testParameter
   type, extends(AbstractTestParameter) :: TestParametersType
     logical :: switch
@@ -391,5 +394,42 @@ contains
     end if
 
   end subroutine test_requires_grad_unary
+
+  ! Unit test checking the requires_grad property is carried over during a combination of an
+  ! assignment and a unary reduction operator
+  @test(testparameters={get_parameters_reduction()})
+  subroutine test_requires_grad_reduction(this)
+    use ftorch, only: torch_tensor_mean, torch_tensor_sum
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    logical :: expected
+
+    ! Create a tensor of ones with the provided requires_grad value
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
+    call torch_tensor_empty(tensor2, 1, scalar_shape, dtype, device_type)
+    ! NOTE: It's not valid for tensor2 to have requires_grad=.true. as that would give the error
+    !    "a leaf Variable that requires grad is being used in an in-place operation".
+
+    if (this%param%op == 9) then
+      call torch_tensor_sum(tensor2, tensor1)
+    else if (this%param%op == 10) then
+      call torch_tensor_mean(tensor2, tensor1)
+    else
+      write(*,*) "Error :: invalid unary reduction operator code"
+    end if
+
+    ! Check that requires_grad is updated correctly
+    expected = this%param%switch
+    if (expected .neqv. tensor2%requires_grad()) then
+      print *, "Error :: tensor%requires_grad() returned incorrect value"
+      stop 999
+    end if
+
+  end subroutine test_requires_grad_reduction
 
 end module test_tensor_autograd
