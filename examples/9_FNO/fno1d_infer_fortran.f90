@@ -19,7 +19,7 @@ program inference
    integer, parameter :: out_dims = 3
    integer, parameter :: out_shape(out_dims) = [1, 32, 1]
    ! real(wp) :: x_real, true_sine, prediction, error
-   real(wp), parameter :: tol = 0.05 
+   real(wp), parameter :: tol = 0.05
 
    integer :: num_args, ix, i
    character(len=128), dimension(:), allocatable :: args
