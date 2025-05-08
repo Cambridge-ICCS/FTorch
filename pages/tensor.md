@@ -153,6 +153,6 @@ For an example of how to compute mathematical expressions involving Torch
 tensors, see the
 [autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd).
 
-[^1]Note: In most cases, these should be the same, so that the operator makes
+[^1]: Note: In most cases, these should be the same, so that the operator makes
 sense. In the case of the `requires_grad` property, the values might differ, and
 the result should be the logical `.and.` of the two values.
