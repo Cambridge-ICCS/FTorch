@@ -20,6 +20,7 @@ Fortran.
 
 We provide several subroutines for constructing `torch_tensor` objects. These
 include:
+
 * `torch_tensor_empty`, which allocates memory for the `torch_tensor`, but does
   not set any values.
 * `torch_tensor_zeros`, which creates a `torch_tensor` whose values are
@@ -47,6 +48,7 @@ other operations are meaningless.
 
 We provide several subroutines for interrogating `torch_tensor` objects. These
 include:
+
 * `torch_tensor_get_rank`, which determines the rank (i.e., dimensionality) of
   the tensor.
 * `torch_tensor_get_shape`, which determines the shape (i.e., extent in each
@@ -124,7 +126,7 @@ c = a + b
 the addition is evaluated first. It is implemented as a Fortran function and its
 return value is an *intermediate* tensor. The setup is such that this is created
 using `torch_tensor_empty` under the hood (inheriting all the properties of the
-tensors being added*). Following this, the intermediate tensor is assigned
+tensors being added[^1]). Following this, the intermediate tensor is assigned
 to `c`. Finally, the finalizer for `torch_tensor` is called for the intermediate
 tensor because it goes out of scope.
 
@@ -134,10 +136,6 @@ destroyed because the call will have the form
 ```fortran
 a = func()
 ```
-
-*Note: In most cases, these should be the same, so that the operator makes
-sense. In the case of the `requires_grad` property, the values might differ, and
-the result should be the logical `.and.` of the two values.
 
 ### Other operators acting on tensors
 
@@ -154,3 +152,7 @@ Torch tensors, see the
 For an example of how to compute mathematical expressions involving Torch
 tensors, see the
 [autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd).
+
+[^1]Note: In most cases, these should be the same, so that the operator makes
+sense. In the case of the `requires_grad` property, the values might differ, and
+the result should be the logical `.and.` of the two values.
