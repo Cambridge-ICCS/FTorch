@@ -135,7 +135,10 @@
 <li><a href="#tensor-interrogation">Tensor interrogation</a></li>
 <li><a href="#tensor-deallocation">Tensor deallocation</a></li>
 <li><a href="#tensor-manipulation">Tensor manipulation</a></li>
-<li><a href="#operator-overloading">Operator overloading</a></li>
+<li><a href="#operator-overloading">Operator overloading</a><ul>
+<li><a href="#overloaded-assignment-operator">Overloaded assignment operator</a></li>
+</ul>
+</li>
 <li><a href="#other-operators-acting-on-tensors">Other operators acting on tensors</a></li>
 </ul>
 </li>
@@ -154,14 +157,15 @@ Fortran.</p>
 <h2 id="procedures">Procedures</h2>
 <h3 id="constructors">Constructors</h3>
 <p>We provide several subroutines for constructing <code>torch_tensor</code> objects. These
-include:
-* <code>torch_tensor_empty</code>, which allocates memory for the <code>torch_tensor</code>, but does
-  not set any values.
-* <code>torch_tensor_zeros</code>, which creates a <code>torch_tensor</code> whose values are
-  uniformly zero.
-* <code>torch_tensor_ones</code>, which creates a <code>torch_tensor</code> whose values are
-  uniformly one.
-* <code>torch_tensor_from_array</code>, which allows the user to create a <code>torch_tensor</code>
+include:</p>
+<ul>
+<li><code>torch_tensor_empty</code>, which allocates memory for the <code>torch_tensor</code>, but does
+  not set any values.</li>
+<li><code>torch_tensor_zeros</code>, which creates a <code>torch_tensor</code> whose values are
+  uniformly zero.</li>
+<li><code>torch_tensor_ones</code>, which creates a <code>torch_tensor</code> whose values are
+  uniformly one.</li>
+<li><code>torch_tensor_from_array</code>, which allows the user to create a <code>torch_tensor</code>
   with the same rank, shape, and data type as a given Fortran array. Note that
   the data is <em>not</em> copied - the tensor data points to the Fortran array,
   meaning the array must have been declared with the <code>target</code> property. The
@@ -171,27 +175,30 @@ include:
   <code>layout</code> argument - an array which specifies the order in which indices should
   be looped over. The default <code>layout</code> is <code>[1,2,...,n]</code> implies that data will
   be read into the same indices by Torch. (See the
-  <a href="pages/transposing.html">transposing user guide page</a> for more details.</p>
+  <a href="pages/transposing.html">transposing user guide page</a> for more details.</li>
+</ul>
 <p>It is <em>compulsory</em> to call one of the constructors before interacting with it in
 any of the ways described in the following. Each of the constructors sets the
 pointer attribute of the <code>torch_tensor</code>; without this being set, most of the
 other operations are meaningless.</p>
 <h3 id="tensor-interrogation">Tensor interrogation</h3>
 <p>We provide several subroutines for interrogating <code>torch_tensor</code> objects. These
-include:
-* <code>torch_tensor_get_rank</code>, which determines the rank (i.e., dimensionality) of
-  the tensor.
-* <code>torch_tensor_get_shape</code>, which determines the shape (i.e., extent in each
-  dimension) of the tensor.
-* <code>torch_tensor_get_dtype</code>, which determines the data type of the tensor in
-  terms of the enums <code>torch_kInt8</code>, <code>torch_kFloat32</code>, etc.
-* <code>torch_tensor_get_device_type</code>, which determines the device type that the
+include:</p>
+<ul>
+<li><code>torch_tensor_get_rank</code>, which determines the rank (i.e., dimensionality) of
+  the tensor.</li>
+<li><code>torch_tensor_get_shape</code>, which determines the shape (i.e., extent in each
+  dimension) of the tensor.</li>
+<li><code>torch_tensor_get_dtype</code>, which determines the data type of the tensor in
+  terms of the enums <code>torch_kInt8</code>, <code>torch_kFloat32</code>, etc.</li>
+<li><code>torch_tensor_get_device_type</code>, which determines the device type that the
   tensor resides on in terms of the enums <code>torch_kCPU</code>, <code>torch_kCUDA</code>,
-  <code>torch_kXPU</code>, etc.
-* <code>torch_tensor_get_device_index</code>, which determines the index of the device that
+  <code>torch_kXPU</code>, etc.</li>
+<li><code>torch_tensor_get_device_index</code>, which determines the index of the device that
   the tensor resides on as an integer. For a CPU device, this index should be
   set to -1 (the default). For GPU devices, the index should be non-negative
-  (defaulting to 0).</p>
+  (defaulting to 0).</li>
+</ul>
 <p>Procedures for interrogation are implemented as methods as well as stand-alone
 procedures. For example, <code>tensor%get_rank</code> can be used in place of
 <code>torch_tensor_get_rank</code>, omitting the first argument (which would be the tensor
@@ -224,6 +231,35 @@ notation:</p>
 <span class="w">  </span><span class="n">operator</span><span class="p">(</span><span class="o">/</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">**</span><span class="p">)</span>
 </code></pre></div>
 
+<h4 id="overloaded-assignment-operator">Overloaded assignment operator</h4>
+<p>Particular care should be taken with the overloaded assignment operator.
+Whenever you execute code involving <code>torch_tensor</code>s on each side of an equals
+sign, the overloaded assignment operator should be triggered. As such, if you
+aren't using the bare <code>use ftorch</code> import then you should ensure you specify
+<code>use ftorch, only: assignment(=)</code> (as well as any other module members you
+require).</p>
+<p>For a straightforward assignment of two <code>torch_tensor</code>s <code>a</code> and <code>b</code>,</p>
+<div class="codehilite"><pre><span></span><code><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span>
+</code></pre></div>
+
+<p>the overloaded assignment operator is called once.</p>
+<p>For overloaded operators the situation is more complex. Consider the overloaded
+addition operator (the same applies for the rest). When we execute the line</p>
+<div class="codehilite"><pre><span></span><code><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+</code></pre></div>
+
+<p>the addition is evaluated first. It is implemented as a Fortran function and its
+return value is an <em>intermediate</em> tensor. The setup is such that this is created
+using <code>torch_tensor_empty</code> under the hood (inheriting all the properties of the
+tensors being added<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>). Following this, the intermediate tensor is assigned
+to <code>c</code>. Finally, the finalizer for <code>torch_tensor</code> is called for the intermediate
+tensor because it goes out of scope.</p>
+<p>Similarly as above, in the case where you have some function <code>func</code> that returns
+a <code>torch_tensor</code>, an intermediate <code>torch_tensor</code> will be created, assigned, and
+destroyed because the call will have the form</p>
+<div class="codehilite"><pre><span></span><code><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">func</span><span class="p">()</span>
+</code></pre></div>
+
 <h3 id="other-operators-acting-on-tensors">Other operators acting on tensors</h3>
 <p>We have also exposed the operators for taking the sum or mean over the entries
 in a tensor, which can be achieved with the subroutines <code>torch_tensor_sum</code> and
@@ -235,6 +271,16 @@ Torch tensors, see the
 <p>For an example of how to compute mathematical expressions involving Torch
 tensors, see the
 <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd">autograd worked example</a>.</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Note: In most cases, these should be the same, so that the operator makes
+sense. In the case of the <code>requires_grad</code> property, the values might differ, and
+the result should be the logical <code>.and.</code> of the two values.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
     </div>
   </div>
       <hr>

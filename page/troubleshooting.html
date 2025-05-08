@@ -138,6 +138,10 @@
 <li><a href="#apple-silicon">Apple Silicon</a></li>
 <li><a href="#faq">FAQ</a><ul>
 <li><a href="#why-are-inputsoutputs-tofrom-torch-models-arrays">Why are inputs/outputs to/from torch models arrays?</a></li>
+<li><a href="#common-sources-of-segmentation-faults">Common sources of segmentation faults</a><ul>
+<li><a href="#1-missing-import-for-overloaded-assignment-operator">1. Missing import for overloaded assignment operator</a></li>
+</ul>
+</li>
 <li><a href="#do-i-need-to-set-torchno_grad-or-torcheval-somewhere-like-in-pytorch">Do I need to set torch.no_grad() or torch.eval() somewhere like in PyTorch?</a></li>
 <li><a href="#how-do-i-compile-an-int64-version-of-ftorch-for-large-tensors">How do I compile an int64 version of ftorch for large tensors?</a></li>
 </ul>
@@ -259,6 +263,13 @@ array of output tensors is used.</p>
 <p>Note that this does not refer to batching data.
 This should be done in the same way as in Torch; by extending the dimensionality of
 the input tensors.</p>
+<h3 id="common-sources-of-segmentation-faults">Common sources of segmentation faults</h3>
+<h4 id="1-missing-import-for-overloaded-assignment-operator">1. Missing import for overloaded assignment operator</h4>
+<p>Whenever you execute code involving <code>torch_tensor</code>s on each side of an equals
+sign, the overloaded assignment operator should be triggered. As such, if you
+aren't using the bare <code>use ftorch</code> import then you should ensure you specify
+<code>use ftorch, only: assignment(=)</code> (as well as any other module members you
+require). See the <a href="tensor.html">tensor documentation</a> for more details.</p>
 <h3 id="do-i-need-to-set-torchno_grad-or-torcheval-somewhere-like-in-pytorch">Do I need to set torch.no_grad() or torch.eval() somewhere like in PyTorch?</h3>
 <p>By default we disable gradient calculations for tensors and models and place models in
 evaluation mode for efficiency.
