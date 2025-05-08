@@ -28,7 +28,7 @@ module test_tensor_interrogation
   end type TestParametersType
 
   ! Typedef for a test case with a particular set of parameters
-  @testCase(constructor=test_case_ctor)
+  @testCase(constructor=test_case_constructor)
   type, extends (ParameterizedTestCase) :: TestCaseType
     type(TestParametersType) :: param
   end type TestCaseType
@@ -36,11 +36,11 @@ module test_tensor_interrogation
 contains
 
   ! Constructor for the test case type
-  function test_case_ctor(param)
-    type(TestCaseType) :: test_case_ctor
+  function test_case_constructor(param)
+    type(TestCaseType) :: test_case_constructor
     type(TestParametersType), intent(in) :: param
-    test_case_ctor%param = param
-  end function test_case_ctor
+    test_case_constructor%param = param
+  end function test_case_constructor
 
   ! A fixture comprised of a full list of parameter sets
   function get_parameters_full() result(params)
