@@ -39,7 +39,7 @@ module test_tensor_operator_overloads_autograd
   end type TestParametersType
 
   ! Typedef for a test case with a particular set of parameters
-  @testCase(constructor=test_case_ctor)
+  @testCase(constructor=test_case_constructor)
   type, extends (ParameterizedTestCase) :: TestCaseType
     type(TestParametersType) :: param
   end type TestCaseType
@@ -62,11 +62,11 @@ contains
   end function get_parameters_short
 
   ! Constructor for the test case type
-  function test_case_ctor(param)
-    type(TestCaseType) :: test_case_ctor
+  function test_case_constructor(param)
+    type(TestCaseType) :: test_case_constructor
     type(TestParametersType) :: param
-    test_case_ctor%param = param
-  end function test_case_ctor
+    test_case_constructor%param = param
+  end function test_case_constructor
 
   ! Function for representing a parameter set as a string
   function toString(this) result(string)
