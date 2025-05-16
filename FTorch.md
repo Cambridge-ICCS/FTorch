@@ -94,7 +94,8 @@ The following presentations contain information about FTorch:
   May 2025<br>
   [Slides](https://hackmd.io/@jwallwork/darc-seminar-2025?type=slide)
 * FTorch: Enabling Online Training for Large-Scale Fortran Models<br>
-  [CCfCS Polar Symposium 2025](https://polarnetwork.org/events/ccfcs-polar-symposium-2025/), British Antarctic Survey, Cambridge - May 2025<br>
+  [CCfCS Polar Symposium 2025](https://polarnetwork.org/events/ccfcs-polar-symposium-2025/),
+  British Antarctic Survey, Cambridge - May 2025<br>
   [Poster](https://niccolozanotti.com/CCfCS-PolarSymposium25/poster.pdf)<br>
 * Coupling Machine Learning to Numerical (Climate) Models<br>
   Platform for Advanced Scientific Computing, Zurich - June 2024<br>

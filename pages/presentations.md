@@ -10,6 +10,10 @@ The following presentations contain information about FTorch:
   and [ECMWF, Reading](https://www.ecmwf.int/en/about/location/ecmwf-reading) -
   May 2025<br>
   [Slides](https://hackmd.io/@jwallwork/darc-seminar-2025?type=slide)
+* FTorch: Enabling Online Training for Large-Scale Fortran Models<br>
+  [CCfCS Polar Symposium 2025](https://polarnetwork.org/events/ccfcs-polar-symposium-2025/),
+  British Antarctic Survey, Cambridge - May 2025<br>
+  [Poster](https://niccolozanotti.com/CCfCS-PolarSymposium25/poster.pdf)<br>
 * FTorch: A library to couple PyTorch ML models with Fortran climate models<br>
   AI for Climate and Nature Community Day, Cambridge - May 2025<br>
   [Slides](https://niccolozanotti.github.io/ftorch-flash)
