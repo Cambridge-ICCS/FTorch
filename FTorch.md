@@ -59,12 +59,6 @@ Some recent updates about FTorch:
   grant will support development for online training functionality for FTorch,
   as well as research visits, FTorch training tutorials, and organisation of a
   [workshop on hybrid modelling](https://cambridge-iccs.github.io/ml-coupling-workshop).
-* FTorch developer Joe Wallwork will be presenting on FTorch in the
-  [DARC seminar series](https://research.reading.ac.uk/met-darc/news-and-events/darc-seminar-series/)
-  at the University of Reading on 15th May 2025.
-* FTorch developer Joe Wallwork will be presenting on FTorch in a seminar at
-  [ECMWF, Reading](https://www.ecmwf.int/en/about/location/ecmwf-reading) on
-  15th May 2025.
 * FTorch developers Joe Wallwork and Tom Meltzer will be giving an FTorch
   tutorial at
   [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/)
@@ -93,8 +87,14 @@ _Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss
 
 The following presentations contain information about FTorch:
 
+* Facilitating machine learning in Fortran using FTorch<br>
+  Seminars at the University of Reading
+  [Data Assimilation Research Centre](https://research.reading.ac.uk/met-darc/news-and-events/darc-seminar-series/)
+  and [ECMWF, Reading](https://www.ecmwf.int/en/about/location/ecmwf-reading)
+  - May 2025<br>
+  [Slides](https://hackmd.io/@jwallwork/darc-seminar-2025?type=slide)
 * FTorch: A library to couple PyTorch ML models with Fortran climate models<br>
-  AI for Climate and Nature Community Day - May 2025<br>
+  AI for Climate and Nature Community Day, Cambridge - May 2025<br>
   [Slides](https://niccolozanotti.github.io/ftorch-flash)
 * Facilitating online training in Fortran-based climate models<br>
   EuroAD, Kaiserslautern - April 2025<br>
