@@ -59,12 +59,6 @@ Some recent updates about FTorch:
   grant will support development for online training functionality for FTorch,
   as well as research visits, FTorch training tutorials, and organisation of a
   [workshop on hybrid modelling](https://cambridge-iccs.github.io/ml-coupling-workshop).
-* FTorch developer Joe Wallwork will be presenting on FTorch in the
-  [DARC seminar series](https://research.reading.ac.uk/met-darc/news-and-events/darc-seminar-series/)
-  at the University of Reading on 15th May 2025.
-* FTorch developer Joe Wallwork will be presenting on FTorch in a seminar at
-  [ECMWF, Reading](https://www.ecmwf.int/en/about/location/ecmwf-reading) on
-  15th May 2025.
 * FTorch developers Joe Wallwork and Tom Meltzer will be giving an FTorch
   tutorial at
   [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/)
@@ -83,8 +77,8 @@ Some recent updates about FTorch:
   [CEMAC](https://www.cemac.leeds.ac.uk/) in Leeds on 18th July 2025.
 
 
-Publications and Presentations
-------------------------------
+Publications and Select Presentations
+-------------------------------------
 
 FTorch is published in JOSS. To cite it in your work please refer to:
 
@@ -93,12 +87,16 @@ _Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss
 
 The following presentations contain information about FTorch:
 
-* FTorch: A library to couple PyTorch ML models with Fortran climate models<br>
-  AI for Climate and Nature Community Day - May 2025<br>
-  [Slides](https://niccolozanotti.github.io/ftorch-flash)
-* Facilitating online training in Fortran-based climate models<br>
-  EuroAD, Kaiserslautern - April 2025<br>
-  [Slides](https://hackmd.io/@jwallwork/euroad-2025?type=slide)
+* Facilitating machine learning in Fortran using FTorch<br>
+  Seminars at the University of Reading
+  [Data Assimilation Research Centre](https://research.reading.ac.uk/met-darc/news-and-events/darc-seminar-series/)
+  and [ECMWF, Reading](https://www.ecmwf.int/en/about/location/ecmwf-reading) -
+  May 2025<br>
+  [Slides](https://hackmd.io/@jwallwork/darc-seminar-2025?type=slide)
+* FTorch: Enabling Online Training for Large-Scale Fortran Models<br>
+  [CCfCS Polar Symposium 2025](https://polarnetwork.org/events/ccfcs-polar-symposium-2025/),
+  British Antarctic Survey, Cambridge - May 2025<br>
+  [Poster](https://niccolozanotti.com/CCfCS-PolarSymposium25/poster.pdf)<br>
 * Coupling Machine Learning to Numerical (Climate) Models<br>
   Platform for Advanced Scientific Computing, Zurich - June 2024<br>
   [Slides](https://jackatkinson.net/slides/PASC24)
@@ -108,10 +106,9 @@ The following presentations contain information about FTorch:
 * Reducing the overheads for coupling PyTorch machine learning models to Fortran<br>
   ML & DL Seminars, LSCE, IPSL, Paris - November 2023<br>
   [Slides](https://jackatkinson.net/slides/IPSL_FTorch) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
-* Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran<br>
-  RSECon23, Swansea - September 2023<br>
-  [Slides](https://jackatkinson.net/slides/RSECon23) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
 
+See the [presentations](pages/presentations.html) page for a full list of
+presentations on FTorch.
 
 License
 -------
