@@ -10,7 +10,7 @@
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
-    <title>Offline training &ndash; FTorch</title>
+    <title>Presentations &ndash; FTorch</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -78,7 +78,7 @@
 
     <div class="container">
   <div class="row">
-    <h1>Offline training</h1>
+    <h1>Presentations</h1>
     <div class="container p-2 mb-4 bg-light border rounded-3">
       <div class="row align-items-center justify-content-between">
         <div class="col">
@@ -89,7 +89,7 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
                 <li class="breadcrumb-item"><a href='index.html'>User Guide</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Offline training</li>
+              <li class="breadcrumb-item active" aria-current="page">Presentations</li>
             </ol>
           </nav>
         </div>
@@ -115,9 +115,9 @@
               <a class="nav-link" href="examples.html">Examples</a>
               <a class="nav-link" href="gpu.html">GPU Support</a>
               <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
-              <a class="nav-link active disabled" href="offline.html">Offline training</a>
+              <a class="nav-link" href="offline.html">Offline training</a>
               <a class="nav-link" href="online.html">Online training</a>
-              <a class="nav-link" href="presentations.html">Presentations</a>
+              <a class="nav-link active disabled" href="presentations.html">Presentations</a>
               <a class="nav-link" href="tensor.html">Tensor API</a>
               <a class="nav-link" href="testing.html">FTorch test suite</a>
               <a class="nav-link" href="transposing.html">When to transpose data</a>
@@ -129,54 +129,39 @@
 
     <div class="col-9" id='text'>
       <div class="toc">
-<ul>
-<li><a href="#workflow">Workflow</a><ul>
-<li><a href="#1-design-the-ml-model-in-pytorch">1. Design the ML model in PyTorch</a></li>
-<li><a href="#2-data-generation">2. Data generation</a></li>
-<li><a href="#3-training">3. Training</a></li>
-<li><a href="#4-pt2ts">4. pt2ts</a></li>
-<li><a href="#5-hybrid-model">5. Hybrid model</a></li>
-</ul>
-</li>
-</ul>
+<ul></ul>
 </div>
-<p>The established approach for designing and training a model for running
-inference in FTorch is the so-called 'offline' approach, which is described in
-the following. We are currently working on implementing an alternative online
-training approach - see the
-<a href="online.html">online training user guide page</a> for details.</p>
-<h2 id="workflow">Workflow</h2>
-<p>Below we provide a schematic of the offline training workflow, which is broken
-down into separate tasks below.</p>
-<p><img alt="schematic" src="offline.png" title="Offline training schematic"></p>
-<h4 id="1-design-the-ml-model-in-pytorch">1. Design the ML model in PyTorch</h4>
-<p>This task is done purely in Python and is not described here. See the
-<a href="https://pytorch.org/tutorials/beginner/introyt/modelsyt_tutorial.html">PyTorch documentation</a> for information on how to do this.</p>
-<h4 id="2-data-generation">2. Data generation</h4>
-<p>This task is done purely in Fortran. Run the Fortran model to generate training
-data. Depending on how you write the Fortran model output to disk, there may be
-some work required to get this training data in an appropriate format for later
-reading into Python.</p>
-<h4 id="3-training">3. Training</h4>
-<p>This tasks is done purely in Python. Create a Python script that loads the
-training data that was saved to disk, splits it into training and validation
-sets, runs an optimizer, and then writes the trained model to a file with <code>.pt</code>
-extension. For more information on how to do this, see the
-<a href="https://pytorch.org/tutorials/beginner/introyt/trainingyt.html">PyTorch documentation</a>.</p>
-<h4 id="4-pt2ts">4. pt2ts</h4>
-<p>Having written a trained model to a file with <code>.pt</code> extension, use the
-<code>pt2ts.py</code> utility Python script to convert it to TorchScript format. A template
-<code>pt2ts.py</code> script can be found in the
-<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/utils"><code>utils</code></a>
-subdirectory. See the
-<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/README.md">README</a>
-there for more details on how to use the script.</p>
-<h4 id="5-hybrid-model">5. Hybrid model</h4>
-<p>In order to run inference with the trained ML model, you will need to modify
-your Fortran model so that it uses FTorch syntax to set up appropriate
-<code>torch_tensor</code> and <code>torch_model</code> objects and call the <code>torch_tensor_forward</code>
-subroutine to run the inference. For examples of how to do this, see the
-<a href="examples.html">examples user guide page</a>.</p>
+<p>The following presentations contain information about FTorch:</p>
+<ul>
+<li>Facilitating machine learning in Fortran using FTorch<br>
+  Seminars at the University of Reading
+  <a href="https://research.reading.ac.uk/met-darc/news-and-events/darc-seminar-series/">Data Assimilation Research Centre</a>
+  and <a href="https://www.ecmwf.int/en/about/location/ecmwf-reading">ECMWF, Reading</a> -
+  May 2025<br>
+  <a href="https://hackmd.io/@jwallwork/darc-seminar-2025?type=slide">Slides</a></li>
+<li>FTorch: Enabling Online Training for Large-Scale Fortran Models<br>
+  <a href="https://polarnetwork.org/events/ccfcs-polar-symposium-2025/">CCfCS Polar Symposium 2025</a>,
+  British Antarctic Survey, Cambridge - May 2025<br>
+  <a href="https://niccolozanotti.com/CCfCS-PolarSymposium25/poster.pdf">Poster</a><br></li>
+<li>FTorch: A library to couple PyTorch ML models with Fortran climate models<br>
+  AI for Climate and Nature Community Day, Cambridge - May 2025<br>
+  <a href="https://niccolozanotti.github.io/ftorch-flash">Slides</a></li>
+<li>Facilitating online training in Fortran-based climate models<br>
+  EuroAD, Kaiserslautern - April 2025<br>
+  <a href="https://hackmd.io/@jwallwork/euroad-2025?type=slide">Slides</a></li>
+<li>Coupling Machine Learning to Numerical (Climate) Models<br>
+  Platform for Advanced Scientific Computing, Zurich - June 2024<br>
+  <a href="https://jackatkinson.net/slides/PASC24">Slides</a></li>
+<li>Blending Machine Learning and Numerical Simulation, with Applications to Climate Modelling<br>
+  Durham HPC days, Durham - May 2024<br>
+  <a href="https://jackatkinson.net/slides/HPC_Durham_2024">Slides</a></li>
+<li>Reducing the overheads for coupling PyTorch machine learning models to Fortran<br>
+  ML &amp; DL Seminars, LSCE, IPSL, Paris - November 2023<br>
+  <a href="https://jackatkinson.net/slides/IPSL_FTorch">Slides</a> - <a href="https://www.youtube.com/watch?v=-NJGuV6Rz6U">Recording</a></li>
+<li>Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran<br>
+  RSECon23, Swansea - September 2023<br>
+  <a href="https://jackatkinson.net/slides/RSECon23">Slides</a> - <a href="https://www.youtube.com/watch?v=Ei6H_BoQ7g4&amp;list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&amp;index=33">Recording</a></li>
+</ul>
     </div>
   </div>
       <hr>
