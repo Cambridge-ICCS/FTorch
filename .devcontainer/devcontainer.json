@@ -14,7 +14,18 @@
 	// "postCreateCommand": [],
 
 	// Configure tool-specific properties.
-	// "customizations": {}
+  "customizations": {
+      // Configure properties specific to VS Code see https://containers.dev/supporting.html
+      "vscode": {
+        // Set *default* container specific settings.json values on container create.
+        "settings": {},
+        "extensions": [
+          "fortran-lang.linter-gfortran",
+          "ms-vscode.cpptools-extension-pack",
+          "charliermarsh.ruff"
+        ],
+      }
+  }
 
 	// Uncomment to connect as root instead. https://containers.dev/implementors/json_reference/#remoteUser.
 	// "remoteUser": "root"
