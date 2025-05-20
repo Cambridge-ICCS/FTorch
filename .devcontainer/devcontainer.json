@@ -24,6 +24,12 @@
           "ms-vscode.cpptools-extension-pack",
           "charliermarsh.ruff"
         ],
+      },
+      // Define the landing page in the codespace to be the codespace README
+      "codespaces": {
+        "openFiles": [
+          "codespace/README.md",
+        ]
       }
   }
 
