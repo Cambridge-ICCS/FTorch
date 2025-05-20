@@ -6,11 +6,12 @@
 
 # Create a build directory to build FTorch in using CMake
 mkdir build
-cd build
+cd build || exit
 
 # Set up a virtual environment an install neccessary Python dependencies
 #   We will specify the cpu-only version of PyTorch to match the codespace hardware
 python3 -m venv venv
+# shellcheck source=/dev/null
 source venv/bin/activate
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 
@@ -23,7 +24,7 @@ PYTHON_PATH=$(python -c "import sysconfig; print(sysconfig.get_path('purelib'))"
 #   environment, and installing the final library into FTorch/bin/
 cmake .. \
   -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_PREFIX_PATH=$PYTHON_PATH/torch \
+  -DCMAKE_PREFIX_PATH="$PYTHON_PATH"/torch \
   -DCMAKE_INSTALL_PREFIX=/workspaces/FTorch/bin
 cmake --build . --target install
 
