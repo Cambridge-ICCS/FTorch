@@ -1,5 +1,8 @@
-# Navigate to the root directory of FTorch
-cd ../
+#!/bin/bash
+# ---
+# Script to build and install FTorch into a codespace environment
+# It should be run from the top of the repository i.e. `FTorch/`
+# ---
 
 # Create a build directory to build FTorch in using CMake
 mkdir build
@@ -26,3 +29,6 @@ cmake --build . --target install
 
 # Add LibTorch libraries to the paths to be searched for dynamic linking at runtime
 export LD_LIBRARY_PATH=$LIBTORCH_PATH/torch/lib
+
+# return user to the root of the project
+cd ../

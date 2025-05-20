@@ -1,6 +1,6 @@
 # Codespace for FTorch
 
-If you want to try out FTorch from your browaser in an configured environment
+If you want to try out FTorch from your browser in a configured environment
 you can use a [GitHub Codespace](https://github.com/features/codespaces).
 This allows you to work in a VSCode Web session running code on from a container in
 the cloud.
@@ -27,10 +27,11 @@ dependencies installed and a copy of the FTorch repository cloned.
 
 ## Installing FTorch
 
-To install FTorch you can run the script in this directory:
+To install FTorch you can execute the script in the `codespace/` directory from the
+terminal:
 
 ```sh
-source build_FTorch.sh
+source codespace/build_FTorch.sh
 ```
 
 > [!NOTE]  
