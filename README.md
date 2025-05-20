@@ -133,7 +133,7 @@ tests and examples.
 
 #### GitHub Codespace
 
-It is possible to try FTorch through an interactive browser sesison using GitHub
+It is possible to try FTorch through an interactive browser session using GitHub
 Codespace. Full instructions are in the
 [`codespace/`](https://github.com/Cambridge-ICCS/FTorch/tree/main/codespace) directory.
 

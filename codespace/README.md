@@ -8,7 +8,7 @@ the cloud.
 
 ## Getting Started
 
-All GitHub users have a certain number of hours of credit for using Codespaces.
+All GitHub users have a certain number of hours of credit for using codespaces.
 This can be extended if you have GitHub Education.
 
 To launch a codespace for FTorch navigate to the
@@ -47,10 +47,10 @@ respective `README`s.
 
 Note:
 
-- You do not need to create a new venv for each exercise, instead use the one that is
-  active following installation above.
+- You do not need to create a new virtual environment for each exercise, instead use
+  the one that is active following installation above.
 - You should link to the FTorch installation at `/workspaces/FTorch/bin/` when
-  specifiying a `CMAKE_PREFIX_PATH`.
+  specifying a `CMAKE_PREFIX_PATH`.
 
 
 ## Setup
