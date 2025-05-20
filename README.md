@@ -131,6 +131,12 @@ an environment to build FTorch in we provide guidance and environment files in
 are not minimal and will install Python, PyTorch, and modules required for running the
 tests and examples.
 
+#### GitHub Codespace
+
+It is possible to try FTorch through an interactive browser sesison using GitHub
+Codespace. Full instructions are in the
+[`codespace/`](https://github.com/Cambridge-ICCS/FTorch/tree/main/codespace) directory.
+
 ### Library installation
 
 For detailed installation instructions please see the
