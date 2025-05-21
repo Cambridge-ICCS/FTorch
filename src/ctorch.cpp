@@ -274,9 +274,9 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
     c10::IntArrayRef vstrides(strides, ndim);
     auto options = torch::TensorOptions()
                        .dtype(get_libtorch_dtype(dtype))
-                       .device(get_libtorch_device(device_type, device_index))
                        .requires_grad(requires_grad);
-    *tensor = torch::from_blob(data, vshape, vstrides, options);
+    *tensor = torch::from_blob(data, vshape, vstrides, options)
+                  .to(get_libtorch_device(device_type, device_index));
 
   } catch (const torch::Error &e) {
     ctorch_error(e.msg(), [&]() { delete tensor; });
