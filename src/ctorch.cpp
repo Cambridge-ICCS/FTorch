@@ -272,6 +272,9 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
     c10::IntArrayRef vstrides(strides, ndim);
+    // NOTE: Do not pass device TensorOptions since this would cause torch::from_blob
+    //       to expect data to reside on the host device_type, which is not case if
+    //       device_type is a GPU device (see #365)
     auto options = torch::TensorOptions()
                        .dtype(get_libtorch_dtype(dtype))
                        .requires_grad(requires_grad);
