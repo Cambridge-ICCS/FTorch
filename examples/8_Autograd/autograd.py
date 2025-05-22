@@ -1,4 +1,4 @@
-"""Autograd demo taken from https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html."""
+"""Autograd demo based on https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html."""
 
 import torch
 
