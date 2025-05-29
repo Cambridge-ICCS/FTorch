@@ -10,7 +10,7 @@ expressions involving `torch_tensor`s.
 
 A modified version of the Python demo found in the PyTorch documentation as
 `autograd.py`, which shows how to compute the gradient of a mathematical
-combination of Torch Tensors.
+expression involving Torch Tensors.
 
 The demo is replicated in Fortran as `autograd.f90`, to show how to do the same
 thing using FTorch.
