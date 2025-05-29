@@ -83,7 +83,7 @@ jobs:
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
-          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages"
+          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
           export BUILD_DIR="$(pwd)/build"
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-4.12"
@@ -115,6 +115,8 @@ jobs:
           export FTORCH_BUILD_DIR="$(pwd)/build"
           cd examples/1_SimpleNet
           export BUILD_DIR="$(pwd)/build"
+          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
+          export LD_LIBRARY_PATH="${Torch_DIR}/lib"
           mkdir "${BUILD_DIR}"
           cd "${BUILD_DIR}"
           cmake .. \
