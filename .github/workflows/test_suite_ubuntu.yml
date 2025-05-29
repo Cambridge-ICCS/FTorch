@@ -95,7 +95,11 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="${FTORCH_BUILD_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}"
+            -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}" \
+            -DCMAKE_BUILD_RPATH="${FTORCH_BUILD_DIR}/lib;${Torch_DIR}" \
+            -DCMAKE_SKIP_BUILD_RPATH=FALSE \
+            -DCMAKE_BUILD_WITH_INSTALL_RPATH=FALSE \
+            -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE
           cmake --build .
           cmake --install .
 
@@ -115,7 +119,6 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
           export FTORCH_BUILD_DIR="$(pwd)/build"
-          export LD_LIBRARY_PATH="${Torch_DIR}/lib:${LD_LIBRARY_PATH}"
           cd examples/2_SimpleNet
           export BUILD_DIR="$(pwd)/build"
           mkdir "${BUILD_DIR}"
