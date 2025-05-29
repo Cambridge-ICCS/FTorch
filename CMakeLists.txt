@@ -66,6 +66,7 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 # (they are expected to be at the same location on all machines the project will
 # be deployed to
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+set(CMAKE_INSTALL_RPATH "${CMAKE_PREFIX_PATH}")
 
 # Follow GNU conventions for installing directories
 include(GNUInstallDirs)
