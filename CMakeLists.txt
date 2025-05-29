@@ -59,14 +59,13 @@ endif()
 
 # Set RPATH behaviour
 set(CMAKE_SKIP_RPATH FALSE)
-set(CMAKE_BUILD_RPATH "${CMAKE_PREFIX_PATH}")
+set(CMAKE_BUILD_RPATH "${CMAKE_INSTALL_PREFIX}")
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 # Embed absolute paths to external libraries that are not part of the project,
 # (they are expected to be at the same location on all machines the project will
 # be deployed to
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-set(CMAKE_INSTALL_RPATH "${CMAKE_PREFIX_PATH}")
 
 # Follow GNU conventions for installing directories
 include(GNUInstallDirs)
