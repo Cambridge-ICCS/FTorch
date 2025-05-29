@@ -1,20 +1,19 @@
 # Example 6 - Autograd
 
-**This example is currently under development.** Eventually, it will demonstrate
-automatic differentation in FTorch by leveraging PyTorch's Autograd module.
+This example demonstrates automatic differentation in FTorch by leveraging
+PyTorch's Autograd module.
 
-By exposing Autograd in Fortran, FTorch will be able to compute derivatives of
+By exposing Autograd in Fortran, FTorch is able to compute derivatives of
 expressions involving `torch_tensor`s.
 
 ## Description
 
-A Python demo is copied from the PyTorch documentation as `autograd.py`, which
-shows how to compute the gradient of an arithmetic combination of Torch Tensors.
+A modified version of the Python demo found in the PyTorch documentation as
+`autograd.py`, which shows how to compute the gradient of a mathematical
+expression involving Torch Tensors.
 
-The demo will be replicated in Fortran as `autograd.f90`, to show how to do the
-same thing using FTorch. This demo is currently unfinished and simply
-demonstrates how to use the `torch_tensor_to_array` subroutine to extract a
-Fortran array from a `torch_tensor`.
+The demo is replicated in Fortran as `autograd.f90`, to show how to do the same
+thing using FTorch.
 
 ## Dependencies
 
@@ -62,10 +61,4 @@ and should match the compiler that was used to locally build FTorch.)
 To run the compiled code, simply use
 ```
 ./autograd
-```
-Currently, the example simply constructs a Torch Tensor from the array and then
-extracts it again. As such, running the above should print the same values as
-the input:
-```
-   2.00000000       3.00000000
 ```

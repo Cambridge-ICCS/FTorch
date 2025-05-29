@@ -1,4 +1,4 @@
-program example
+program autograd
 
   ! Import precision info from iso
   use, intrinsic :: iso_fortran_env, only : sp => real32
@@ -50,8 +50,9 @@ program example
     stop 999
   end if
 
-  ! Run the back-propagation operator
-  ! This will perform backpropogation on the tensors involved in generating Q (a and b), setting the `grad` property for both of them.
+  ! Run the backpropagation operator
+  ! This will perform backpropogation on the tensors involved in generating Q (a and b), setting the
+  ! `grad` property for both of them.
   call torch_tensor_backward(Q)
 
   ! Create tensors based off output arrays for the gradients and then retrieve them
@@ -76,4 +77,4 @@ program example
 
   write (*,*) "Autograd example ran successfully"
 
-end program example
+end program autograd
