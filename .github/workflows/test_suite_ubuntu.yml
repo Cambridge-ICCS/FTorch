@@ -113,7 +113,7 @@ jobs:
         run: |
           . ftorch/bin/activate
           export FTORCH_BUILD_DIR="$(pwd)/build"
-          cd examples/1_SimpleNet
+          cd examples/2_SimpleNet
           export BUILD_DIR="$(pwd)/build"
           export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
           export LD_LIBRARY_PATH="${Torch_DIR}/lib"
