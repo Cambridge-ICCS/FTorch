@@ -175,7 +175,7 @@ To build and install the library:
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
     | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`             | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build. |
-    | `GPU_DEVICE` | `NONE` / `CUDA` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>3</sup> |
+    | `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>3</sup> |
 
     <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
 
@@ -228,7 +228,8 @@ These steps are described in more detail in the
 ## GPU Support
 
 To run on GPU requires an installation of LibTorch compatible for the GPU device
-you wish to target and two main adaptations to the code:
+you wish to target (using the `GPU_DEVICE` CMake option as detailed in the
+[table above](#library-installation)) and two main adaptations to the code:
 
 1. When saving a TorchScript model, ensure that it is on the appropriate GPU
    device type. The `pt2ts.py` script has a command line argument
