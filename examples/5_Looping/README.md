@@ -16,8 +16,8 @@ approaches to observe the significant performance difference.
 
 ## Description
 
-We revisit SimpleNet from the first example that takes an input tensor of length 5
-and multiplies it by two.
+We revisit SimpleNet from the earlier example that takes an input tensor of
+length 5 and multiplies it by two.
 This time we start by passing it the tensor `[1.0, 2.0, 3.0, 4.0]`, but then iterate
 10,000 times, each time incrementing each element by 1.0.
 We sum the results of each forward pass and print the final result.
@@ -32,7 +32,7 @@ the FTorch code to load the TorchScript model, run it in inference mode, and cle
 ### Bad
 
 We start with the 'bad' approach which takes the obvious approach, enclosing the code
-from example 1 in a loop.
+from the SimpleNet example in a loop.
 
 Examine the code in `bad/fortran_ml_mod.f90` to see how the subroutine `ml_routine()`
 creates a `torch_model` and `torch_tensor`s and reads in the net on every call before

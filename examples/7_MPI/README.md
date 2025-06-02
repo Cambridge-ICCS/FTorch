@@ -1,7 +1,7 @@
 # Example 7 - MPI
 
-This example revisits the SimpleNet example and demonstrates how to run it using
-MPI parallelism.
+This example revisits the SimpleNet example (again) and demonstrates how to run
+it using MPI parallelism.
 
 
 ## Description

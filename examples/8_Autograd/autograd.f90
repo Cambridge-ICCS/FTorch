@@ -4,7 +4,7 @@ program autograd
   use, intrinsic :: iso_fortran_env, only : sp => real32
 
   ! Import our library for interfacing with PyTorch's Autograd module
-  use ftorch, only: assignment(=), operator(+), operator(-), operator(*), operator(/), &
+  use ftorch, only: assignment(=), operator(-), operator(*), operator(/), &
                     operator(**), torch_kCPU, torch_tensor, torch_tensor_backward, &
                     torch_tensor_from_array, torch_tensor_get_gradient
 
