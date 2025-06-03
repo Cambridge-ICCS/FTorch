@@ -32,7 +32,7 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         # Inference
         return model.forward(input_tensor)
 
-    if device.startswith("cuda"):
+    if device.startswith("cuda") or device.startswith("hip"):
         pass
     elif device.startswith("xpu"):
         # XPU devices need to be initialised before use
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         "--device_type",
         help="Device type to run the inference on",
         type=str,
-        choices=["cpu", "cuda", "xpu", "mps"],
+        choices=["cpu", "cuda", "hip", "xpu", "mps"],
         default="cuda",
     )
     parsed_args = parser.parse_args()

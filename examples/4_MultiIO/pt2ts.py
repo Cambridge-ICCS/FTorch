@@ -80,7 +80,7 @@ if __name__ == "__main__":
         "--device_type",
         help="Device type to run the inference on",
         type=str,
-        choices=["cpu", "cuda", "xpu", "mps"],
+        choices=["cpu", "cuda", "hip", "xpu", "mps"],
         default="cpu",
     )
     parser.add_argument(
@@ -120,7 +120,10 @@ if __name__ == "__main__":
 
     # Transfer the model and inputs to GPU device, if appropriate
     if device_type != "cpu":
-        device = torch.device(device_type)
+        if device_type == "hip":
+            device = torch.device("cuda")  # NOTE: HIP is treated as CUDA in FTorch
+        else:
+            device = torch.device(device_type)
         trained_model = trained_model.to(device)
         trained_model.eval()
         trained_model_dummy_inputs = trained_model_dummy_inputs.to(device)
