@@ -175,7 +175,7 @@ To build and install the library:
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
     | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`             | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build. |
-    | `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>3</sup> |
+    | `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU backend architecture (if any) <sup>3</sup> |
 
     <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
 
@@ -234,10 +234,10 @@ you wish to target (using the `GPU_DEVICE` CMake option as detailed in the
 1. When saving a TorchScript model, ensure that it is on the appropriate GPU
    device type. The `pt2ts.py` script has a command line argument
    `--device_type`, which currently accepts four different device types: `cpu`
-   (default), `cuda`, `xpu`, or `mps`.
+   (default), `cuda`, `hip`, `xpu`, or `mps`.
 2. When using FTorch in Fortran, set the device for the input
    tensor(s) to the appropriate GPU device type, rather than `torch_kCPU`. There
-   are currently three options: `torch_kCUDA`, `torch_kXPU`, or `torch_kMPS`.
+   are currently three options: `torch_kCUDA`, `torch_kHIP`, `torch_kXPU`, or `torch_kMPS`.
 
 For detailed guidance about running on GPU, including instructions for using multiple
 devices, please see the
