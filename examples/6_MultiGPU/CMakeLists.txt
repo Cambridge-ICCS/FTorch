@@ -26,6 +26,14 @@ if("${GPU_DEVICE}" STREQUAL "CUDA")
     message(ERROR "No CUDA support")
   endif()
 endif()
+if("${GPU_DEVICE}" STREQUAL "HIP")
+  check_language(HIP)
+  if(CMAKE_HIP_COMPILER)
+    enable_language(HIP)
+  else()
+    message(WARNING "No HIP support")
+  endif()
+endif()
 
 # Fortran example
 add_executable(multigpu_infer_fortran multigpu_infer_fortran.f90)
@@ -65,6 +73,43 @@ if(CMAKE_BUILD_TESTS)
       NAME multigpu_infer_fortran
       COMMAND multigpu_infer_fortran cuda
               ${PROJECT_BINARY_DIR}/saved_multigpu_model_cuda.pt
+      # Command line arguments for device type and model file
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    set_tests_properties(
+      multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+                                        "MultiGPU example ran successfully")
+  endif()
+
+  if("${GPU_DEVICE}" STREQUAL "HIP")
+    # 1b. Check the PyTorch model runs on a HIP device and its outputs meet
+    # expectations
+    add_test(NAME simplenet
+             COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
+                     --device_type hip)
+
+    # 2b. Check the model is saved to file in the expected location with the
+    # pt2ts.py script
+    add_test(
+      NAME pt2ts
+      COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --device_type
+              hip --filepath ${PROJECT_BINARY_DIR}
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+    # 3b. Check the model can be loaded from file and run on two HIP devices in
+    # Python and that its outputs meet expectations
+    add_test(
+      NAME multigpu_infer_python
+      COMMAND ${Python_EXECUTABLE}
+              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type hip
+              --filepath ${PROJECT_BINARY_DIR}
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+    # 4b. Check the model can be loaded from file and run on two HIP devices in
+    # Fortran and that its outputs meet expectations
+    add_test(
+      NAME multigpu_infer_fortran
+      COMMAND multigpu_infer_fortran hip
+              ${PROJECT_BINARY_DIR}/saved_multigpu_model_hip.pt
       # Command line arguments for device type and model file
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
     set_tests_properties(

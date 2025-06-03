@@ -31,12 +31,22 @@ add_pfunit_ctest(
 add_pfunit_ctest(test_tensor_autograd
   TEST_SOURCES test_tensor_autograd.pf LINK_LIBRARIES FTorch::ftorch)
 
-if("${GPU_DEVICE}" STREQUAL "CUDA")
-  check_language(CUDA)
-  if(CMAKE_CUDA_COMPILER)
-    enable_language(CUDA)
-  else()
-    message(ERROR "No CUDA support")
+if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
+  if("${GPU_DEVICE}" STREQUAL "CUDA")
+    check_language(CUDA)
+    if(CMAKE_CUDA_COMPILER)
+      enable_language(CUDA)
+    else()
+      message(ERROR "No CUDA support")
+    endif()
+  endif()
+  if("${GPU_DEVICE}" STREQUAL "HIP")
+    check_language(HIP)
+    if(CMAKE_HIP_COMPILER)
+      enable_language(HIP)
+    else()
+      message(WARNING "No HIP support")
+    endif()
   endif()
   add_pfunit_ctest(
     test_tensor_interrogation_cuda TEST_SOURCES
