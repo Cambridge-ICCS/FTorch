@@ -11,6 +11,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Support for AMD GPU backends (HIP) provided in
+  [#385](https://github.com/Cambridge-ICCS/FTorch/pull/385) and
+  [#388](https://github.com/Cambridge-ICCS/FTorch/pull/388).
 - `requires_grad` property hooked up to `torch_tensor` in [#288](https://github.com/Cambridge-ICCS/FTorch/pull/288)
 - MPI example added in [#270](https://github.com/Cambridge-ICCS/FTorch/pull/270)
 - Changelog file and guidance for versioning added in [#313](https://github.com/Cambridge-ICCS/FTorch/pull/313)
