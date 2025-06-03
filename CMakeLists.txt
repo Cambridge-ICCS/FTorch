@@ -41,7 +41,8 @@ if("${GPU_DEVICE}" STREQUAL "NONE")
 elseif("${GPU_DEVICE}" STREQUAL "CUDA")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_CUDA})
 elseif("${GPU_DEVICE}" STREQUAL "HIP")
-  # As stated in the PyTorch documentation (https://docs.pytorch.org/docs/stable/notes/hip.html)
+  # As stated in the PyTorch documentation
+  # (https://docs.pytorch.org/docs/stable/notes/hip.html)
   # > "PyTorch for HIP intentionally reuses the existing torch.cuda interfaces.
   # > This helps to accelerate the porting of existing PyTorch code and models
   # > because very few code changes are necessary, if any."
@@ -69,9 +70,9 @@ endif()
 if("${GPU_DEVICE}" STREQUAL "HIP")
   check_language(HIP)
   if(CMAKE_HIP_COMPILER)
-   enable_language(HIP)
+    enable_language(HIP)
   else()
-   message(WARNING "No HIP support")
+    message(WARNING "No HIP support")
   endif()
 endif()
 
