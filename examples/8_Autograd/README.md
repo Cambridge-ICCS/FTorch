@@ -1,6 +1,6 @@
 # Example 6 - Autograd
 
-This example demonstrates automatic differentation in FTorch by leveraging
+This example demonstrates automatic differentiation in FTorch by leveraging
 PyTorch's Autograd module.
 
 By exposing Autograd in Fortran, FTorch is able to compute derivatives of

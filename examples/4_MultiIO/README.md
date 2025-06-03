@@ -1,6 +1,6 @@
 # Example 4 - Multiple inputs and multiple outputs
 
-This example revisits the SimpleNet example (again) and demonstrates how to run
+This example revisits the SimpleNet example and demonstrates how to run
 a variant of it -- MultiIONet -- for which the 'net' has multiple input tensors
 and multiple output tensors.
 
