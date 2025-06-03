@@ -81,13 +81,13 @@ if(CMAKE_BUILD_TESTS)
   endif()
 
   if("${GPU_DEVICE}" STREQUAL "HIP")
-    # 1a. Check the PyTorch model runs on a HIP device and its outputs meet
+    # 1b. Check the PyTorch model runs on a HIP device and its outputs meet
     # expectations
     add_test(NAME simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
                      --device_type hip)
 
-    # 2a. Check the model is saved to file in the expected location with the
+    # 2b. Check the model is saved to file in the expected location with the
     # pt2ts.py script
     add_test(
       NAME pt2ts
@@ -95,7 +95,7 @@ if(CMAKE_BUILD_TESTS)
               hip --filepath ${PROJECT_BINARY_DIR}
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 3a. Check the model can be loaded from file and run on two HIP devices in
+    # 3b. Check the model can be loaded from file and run on two HIP devices in
     # Python and that its outputs meet expectations
     add_test(
       NAME multigpu_infer_python
@@ -104,7 +104,7 @@ if(CMAKE_BUILD_TESTS)
               --filepath ${PROJECT_BINARY_DIR}
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 4a. Check the model can be loaded from file and run on two HIP devices in
+    # 4b. Check the model can be loaded from file and run on two HIP devices in
     # Fortran and that its outputs meet expectations
     add_test(
       NAME multigpu_infer_fortran

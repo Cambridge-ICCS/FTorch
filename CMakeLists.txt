@@ -28,7 +28,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # throughout source files.
 set(GPU_DEVICE_NONE 0)
 set(GPU_DEVICE_CUDA 1)
-set(GPU_DEVICE_HIP  1)  # NOTE: HIP is treated as CUDA in this project
+set(GPU_DEVICE_HIP  1)  # NOTE: HIP is treated as CUDA in FTorch
 set(GPU_DEVICE_XPU 12)
 set(GPU_DEVICE_MPS 13)
 option(GPU_DEVICE
