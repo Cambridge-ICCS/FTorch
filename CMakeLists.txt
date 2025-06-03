@@ -28,9 +28,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # throughout source files.
 set(GPU_DEVICE_NONE 0)
 set(GPU_DEVICE_CUDA 1)
+set(GPU_DEVICE_HIP 6)
 set(GPU_DEVICE_XPU 12)
 set(GPU_DEVICE_MPS 13)
-option(GPU_DEVICE "Set the GPU device (NONE [default], CUDA, XPU, or MPS)" NONE)
+option(GPU_DEVICE "Set the GPU device (NONE [default], HIP, CUDA, XPU, or MPS)" NONE)
 if("${GPU_DEVICE}" STREQUAL "OFF")
   set(GPU_DEVICE NONE)
 endif()
@@ -38,6 +39,8 @@ if("${GPU_DEVICE}" STREQUAL "NONE")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_NONE})
 elseif("${GPU_DEVICE}" STREQUAL "CUDA")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_CUDA})
+elseif("${GPU_DEVICE}" STREQUAL "HIP")
+  set(GPU_DEVICE_CODE ${GPU_DEVICE_HIP})
 elseif("${GPU_DEVICE}" STREQUAL "XPU")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_XPU})
 elseif("${GPU_DEVICE}" STREQUAL "MPS")
@@ -54,6 +57,14 @@ if("${GPU_DEVICE}" STREQUAL "CUDA")
     enable_language(CUDA)
   else()
     message(WARNING "No CUDA support")
+  endif()
+endif()
+if("${GPU_DEVICE}" STREQUAL "HIP")
+  check_language(HIP)
+  if(CMAKE_HIP_COMPILER)
+   enable_language(HIP)
+  else()
+   message(WARNING "No HIP support")
   endif()
 endif()
 
@@ -91,7 +102,7 @@ endif()
 target_compile_definitions(
   ${LIB_NAME}
   PRIVATE ${COMPILE_DEFS} GPU_DEVICE=${GPU_DEVICE_CODE}
-          GPU_DEVICE_NONE=${GPU_DEVICE_NONE} GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA}
+          GPU_DEVICE_NONE=${GPU_DEVICE_NONE} GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA} GPU_DEVICE_HIP=${GPU_DEVICE_HIP}
           GPU_DEVICE_XPU=${GPU_DEVICE_XPU} GPU_DEVICE_MPS=${GPU_DEVICE_MPS})
 
 # Add an alias FTorch::ftorch for the library
