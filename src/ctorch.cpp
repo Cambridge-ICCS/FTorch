@@ -98,7 +98,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
       ctorch_warn("device index unused for CPU-only runs");
     }
     return torch::Device(torch::kCPU);
-#if GPU_DEVICE == GPU_DEVICE_CUDA
+#if (GPU_DEVICE == GPU_DEVICE_CUDA)
   case torch_kCUDA:
     if (device_index == -1) {
       ctorch_warn("device index unset, defaulting to 0");
@@ -106,6 +106,21 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
     }
     if (device_index >= 0 && device_index < torch::cuda::device_count()) {
       return torch::Device(torch::kCUDA, device_index);
+    } else {
+      std::cerr << "[ERROR]: invalid device index " << device_index
+                << " for device count " << torch::cuda::device_count() << std::endl;
+      exit(EXIT_FAILURE);
+    }
+#endif
+#if (GPU_DEVICE == GPU_DEVICE_HIP)
+  // NOTE: HIP is treated as CUDA in this project
+  case torch_kHIP:
+    if (device_index == -1) {
+      ctorch_warn("device index unset, defaulting to 0");
+      device_index = 0;
+    }
+    if (device_index >= 0 && device_index < torch::cuda::device_count()) {
+      return torch::Device(torch::kHIP, device_index);
     } else {
       std::cerr << "[ERROR]: invalid device index " << device_index
                 << " for device count " << torch::cuda::device_count() << std::endl;
@@ -144,6 +159,8 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
     return torch_kCPU;
   case torch::kCUDA:
     return torch_kCUDA;
+  case torch::kHIP:
+    return torch_kHIP;
   case torch::kXPU:
     return torch_kXPU;
   case torch::kMPS:

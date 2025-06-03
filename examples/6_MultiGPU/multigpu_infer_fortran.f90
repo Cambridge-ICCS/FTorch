@@ -5,7 +5,7 @@ program inference
 
    ! Import our library for interfacing with PyTorch
    use ftorch, only : torch_model, torch_tensor, &
-                      torch_kCPU, torch_kCUDA, torch_kXPU, torch_kMPS, &
+                      torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS, &
                       torch_tensor_from_array, torch_model_load, torch_model_forward, &
                       torch_delete
 
@@ -46,6 +46,8 @@ program inference
    end do
    if (trim(args(1)) == "cuda") then
       device_type = torch_kCUDA
+    else if (trim(args(1)) == "hip") then
+      device_type = torch_kHIP
    else if (trim(args(1)) == "xpu") then
       device_type = torch_kXPU
    else if (trim(args(1)) == "mps") then

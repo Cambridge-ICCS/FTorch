@@ -42,6 +42,7 @@ typedef enum {
 typedef enum {
   torch_kCPU = GPU_DEVICE_NONE,
   torch_kCUDA = GPU_DEVICE_CUDA,
+  torch_kHIP = GPU_DEVICE_HIP,
   torch_kXPU = GPU_DEVICE_XPU,
   torch_kMPS = GPU_DEVICE_MPS,
 } torch_device_t;
