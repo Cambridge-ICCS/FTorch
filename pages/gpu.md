@@ -15,7 +15,9 @@ Currently supported are:
 
 > Note: _The HIP/ROCm backend uses the same API as the CUDA backend, so FTorch treats
 > HIP as CUDA in places when calling LibTorch or PyTorch.
-> This should not concern end-users as the FTorch and pt2ts.py APIs handle this._
+> This should not concern end-users as the FTorch and pt2ts.py APIs handle this.
+> For further information see the
+> [PyTorch HIP documentation](https://docs.pytorch.org/docs/stable/notes/hip.html)_
 
 
 ## Obtaining appropriate versions of PyTorch/LibTorch
