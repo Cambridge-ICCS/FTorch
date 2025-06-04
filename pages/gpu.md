@@ -9,7 +9,7 @@ In order to run a model on GPU, three main changes are required:
 1) When building FTorch, specify the target GPU architecture using the
 `GPU_DEVICE` argument. That is, set
 ```sh
-cmake .. -DGPU_DEVICE=<CUDA/XPU/MPS>
+cmake .. -DGPU_DEVICE=<CUDA/HIP/XPU/MPS>
 ```
 as appropriate. The default setting is equivalent to
 ```sh
@@ -38,7 +38,7 @@ if device_type != "cpu":
 
 3) When calling `torch_tensor_from_array` in Fortran, the device type for the
    input tensor(s) should be set to the relevant device type (`torch_kCUDA`,
-   `torch_kXPU`, or `torch_kMPS`) rather than `torch_kCPU`.
+   `torch_kHIP`, `torch_kXPU`, or `torch_kMPS`) rather than `torch_kCPU`.
    This ensures that the inputs are on the same device type as the model.
 
 > Note: _You do **not** need to change the device type for the output tensors as we
