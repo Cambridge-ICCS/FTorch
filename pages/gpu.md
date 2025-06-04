@@ -4,6 +4,48 @@ title: GPU Support
 
 ## GPU Support
 
+FTorch supports running on a number of GPU hardwares by utilising the PyTorch/LibTorch
+backends.
+Currently supported are:
+
+* CUDA (NVIDIA)
+* HIP (AMD/Rocm)
+* MPS (Apple Silicon)
+* XPU (Intel)
+
+> Note: _The HIP/Rocm backend uses the same API as the CUDA backend, so FTorch treats
+> HIP as CUDA in places when calling LibTorch or PyTorch.
+> This should not concern end-users as the FTorch and pt2ts.py handle this._
+
+
+## Obtaining appropriate versions of PyTorch/LibTorch
+
+To run FTorch on different hardwares requires downloading the appropriate version of
+PyTorch/LibTorch.
+
+This can be done for all hardwares by using a pip-installed version, and for CUDA and
+HIP with a LibTorch binary.
+
+### Using pip
+
+If installing using pip the appropriate version for the hardware can be specified by
+using the `--index-url` option during `pip install`.
+
+Instructions for CPU, CUDA, and HIP/Rocm can be found in the installation matrix on
+[pytorch.org](https://pytorch.org/).
+
+For XPU use `--index-url https://download.pytorch.org/whl/test/xpu`, whilst for MPS
+pip should automatically detect the hardware and install the appropriate version.
+
+### LibTorch binary
+
+For pure LibTorch binaries see the installation matrix on
+[pytorch.org](https://pytorch.org/).
+Currently standalone LibTorch binaries are only provided for CPU, CUDA, and HIP/Rocm.
+
+
+## Changes required to run on GPU
+
 In order to run a model on GPU, three main changes are required:
 
 1) When building FTorch, specify the target GPU architecture using the
