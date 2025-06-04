@@ -9,13 +9,13 @@ backends.
 Currently supported are:
 
 * CUDA (NVIDIA)
-* HIP (AMD/Rocm)
-* MPS (Apple Silicon)
+* HIP (AMD/ROCm)
+* MPS (Apple silicon)
 * XPU (Intel)
 
-> Note: _The HIP/Rocm backend uses the same API as the CUDA backend, so FTorch treats
+> Note: _The HIP/ROCm backend uses the same API as the CUDA backend, so FTorch treats
 > HIP as CUDA in places when calling LibTorch or PyTorch.
-> This should not concern end-users as the FTorch and pt2ts.py handle this._
+> This should not concern end-users as the FTorch and pt2ts.py APIs handle this._
 
 
 ## Obtaining appropriate versions of PyTorch/LibTorch
@@ -31,7 +31,7 @@ HIP with a LibTorch binary.
 If installing using pip the appropriate version for the hardware can be specified by
 using the `--index-url` option during `pip install`.
 
-Instructions for CPU, CUDA, and HIP/Rocm can be found in the installation matrix on
+Instructions for CPU, CUDA, and HIP/ROCm can be found in the installation matrix on
 [pytorch.org](https://pytorch.org/).
 
 For XPU use `--index-url https://download.pytorch.org/whl/test/xpu`, whilst for MPS
@@ -41,7 +41,7 @@ pip should automatically detect the hardware and install the appropriate version
 
 For pure LibTorch binaries see the installation matrix on
 [pytorch.org](https://pytorch.org/).
-Currently standalone LibTorch binaries are only provided for CPU, CUDA, and HIP/Rocm.
+Currently standalone LibTorch binaries are only provided for CPU, CUDA, and HIP/ROCm.
 
 
 ## Changes required to run on GPU
