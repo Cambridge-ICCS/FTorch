@@ -233,7 +233,7 @@ you wish to target (using the `GPU_DEVICE` CMake option as detailed in the
 
 1. When saving a TorchScript model, ensure that it is on the appropriate GPU
    device type. The `pt2ts.py` script has a command line argument
-   `--device_type`, which currently accepts four different device types: `cpu`
+   `--device_type`, which currently accepts 5 different device types: `cpu`
    (default), `cuda`, `hip`, `xpu`, or `mps`.
 2. When using FTorch in Fortran, set the device for the input
    tensor(s) to the appropriate GPU device type, rather than `torch_kCPU`. There
