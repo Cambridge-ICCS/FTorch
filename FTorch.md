@@ -59,13 +59,18 @@ Some recent updates about FTorch:
   grant will support development for online training functionality for FTorch,
   as well as research visits, FTorch training tutorials, and organisation of a
   [workshop on hybrid modelling](https://cambridge-iccs.github.io/ml-coupling-workshop).
-* FTorch developers Joe Wallwork and Tom Meltzer will be giving an FTorch
-  tutorial at
-  [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/)
-  on 2nd June 2025. Joe will also be giving a talk on *Accelerating UKCA by
-  predicting timesteps with FTorch* in the
-  [HPC in Weather & Climate Research](https://durham.readthedocs.io/en/latest/hpcdays/workshops.html#Weather)
-  session.
+* FTorch developer Jack Atkinson will be presenting FTorch in a SciML seminar at
+  [CEMAC](https://www.cemac.leeds.ac.uk/) in Leeds on 18th July 2025.
+
+FTorch training
+---------------
+
+We offer training on FTorch in the form of tutorials and workshops. The
+companion repository
+[https://github.com/Cambridge-ICCS/FTorch-workshop](https://github.com/Cambridge-ICCS/FTorch-workshop)
+provides a set of exercises and solutions to help users get started with FTorch.
+Details of upcoming in-person training events are as follows:
+
 * FTorch developers Jack Atkinson and Joe Wallwork will be giving an FTorch
   tutorial in the
   [Department of Atmospheric, Oceanic, and Planetary Physics](https://www.physics.ox.ac.uk/research/subdepartment/atmospheric-oceanic-and-planetary-physics)
@@ -73,9 +78,6 @@ Some recent updates about FTorch:
 * The FTorch developers will be giving an FTorch tutorial at the
   [ICCS Summer School](https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2025)
   on 11th July 2025.
-  * FTorch developer Jack Atkinson will be presenting FTorch in a SciML seminar at
-  [CEMAC](https://www.cemac.leeds.ac.uk/) in Leeds on 18th July 2025.
-
 
 Publications and Select Presentations
 -------------------------------------

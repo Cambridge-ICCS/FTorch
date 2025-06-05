@@ -2,8 +2,17 @@ title: Presentations
 
 [TOC]
 
-The following presentations contain information about FTorch:
+## Talks and posters
 
+The following presentations contain information about FTorch and its
+applications:
+
+* Accelerating UKCA by predicting timesteps with FTorch<br>
+  [HPC in Weather & Climate Research](https://durham.readthedocs.io/en/latest/hpcdays/workshops.html#Weather)
+  session at
+  [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/)
+  University of Durham - June 2025<br>
+  [Slides](https://hackmd.io/@jwallwork/2025-durham-hpc-days?type=slide)
 * Facilitating machine learning in Fortran using FTorch<br>
   Seminars at the University of Reading
   [Data Assimilation Research Centre](https://research.reading.ac.uk/met-darc/news-and-events/darc-seminar-series/)
@@ -32,3 +41,15 @@ The following presentations contain information about FTorch:
 * Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran<br>
   RSECon23, Swansea - September 2023<br>
   [Slides](https://jackatkinson.net/slides/RSECon23) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
+
+## Past FTorch tutorials:
+
+We have given in-person training on FTorch in the form of tutorials and
+workshops based on the companion repository
+[https://github.com/Cambridge-ICCS/FTorch-workshop](https://github.com/Cambridge-ICCS/FTorch-workshop)
+on the following occasions:
+
+* [ICCS Summer School](https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2024),
+  July 2024.
+* [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/),
+  June 2025.
