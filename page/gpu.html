@@ -127,17 +127,56 @@
     <div class="col-9" id='text'>
       <div class="toc">
 <ul>
-<li><a href="#gpu-support">GPU Support</a><ul>
+<li><a href="#gpu-support">GPU Support</a></li>
+<li><a href="#obtaining-appropriate-versions-of-pytorchlibtorch">Obtaining appropriate versions of PyTorch/LibTorch</a><ul>
+<li><a href="#using-pip">Using pip</a></li>
+<li><a href="#libtorch-binary">LibTorch binary</a></li>
+</ul>
+</li>
+<li><a href="#changes-required-to-run-on-gpu">Changes required to run on GPU</a><ul>
 <li><a href="#multi-gpu-runs">Multi-GPU runs</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <h2 id="gpu-support">GPU Support</h2>
+<p>FTorch supports running on a number of GPU hardwares by utilising the PyTorch/LibTorch
+backends.
+Currently supported are:</p>
+<ul>
+<li>CUDA (NVIDIA)</li>
+<li>HIP (AMD/ROCm)</li>
+<li>MPS (Apple silicon)</li>
+<li>XPU (Intel)</li>
+</ul>
+<blockquote>
+<p>Note: <em>The HIP/ROCm backend uses the same API as the CUDA backend, so FTorch treats
+HIP as CUDA in places when calling LibTorch or PyTorch.
+This should not concern end-users as the FTorch and pt2ts.py APIs handle this.
+For further information see the
+<a href="https://docs.pytorch.org/docs/stable/notes/hip.html">PyTorch HIP documentation</a></em></p>
+</blockquote>
+<h2 id="obtaining-appropriate-versions-of-pytorchlibtorch">Obtaining appropriate versions of PyTorch/LibTorch</h2>
+<p>To run FTorch on different hardwares requires downloading the appropriate version of
+PyTorch/LibTorch.</p>
+<p>This can be done for all hardwares by using a pip-installed version, and for CUDA and
+HIP with a LibTorch binary.</p>
+<h3 id="using-pip">Using pip</h3>
+<p>If installing using pip the appropriate version for the hardware can be specified by
+using the <code>--index-url</code> option during <code>pip install</code>.</p>
+<p>Instructions for CPU, CUDA, and HIP/ROCm can be found in the installation matrix on
+<a href="https://pytorch.org/">pytorch.org</a>.</p>
+<p>For XPU use <code>--index-url https://download.pytorch.org/whl/test/xpu</code>, whilst for MPS
+pip should automatically detect the hardware and install the appropriate version.</p>
+<h3 id="libtorch-binary">LibTorch binary</h3>
+<p>For pure LibTorch binaries see the installation matrix on
+<a href="https://pytorch.org/">pytorch.org</a>.
+Currently standalone LibTorch binaries are only provided for CPU, CUDA, and HIP/ROCm.</p>
+<h2 id="changes-required-to-run-on-gpu">Changes required to run on GPU</h2>
 <p>In order to run a model on GPU, three main changes are required:</p>
 <p>1) When building FTorch, specify the target GPU architecture using the
 <code>GPU_DEVICE</code> argument. That is, set</p>
-<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span>-DGPU_DEVICE<span class="o">=</span>&lt;CUDA/XPU/MPS&gt;
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span>-DGPU_DEVICE<span class="o">=</span>&lt;CUDA/HIP/XPU/MPS&gt;
 </code></pre></div>
 
 <p>as appropriate. The default setting is equivalent to</p>
@@ -148,7 +187,7 @@
 <p>2) When saving your TorchScript model, ensure that it is on the GPU.
 For example, when using
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py"><code>pt2ts.py</code></a>,
-this can be done by passing the <code>--device_type &lt;cuda/xpu/mps&gt;</code> argument. This
+this can be done by passing the <code>--device_type &lt;cuda/hip/xpu/mps&gt;</code> argument. This
 sets the <code>device_type</code> variable, which has the effect of transferring the model
 and any input arrays to the specified GPU device in the following lines:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">if</span> <span class="n">device_type</span> <span class="o">!=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">:</span>
@@ -166,7 +205,7 @@ the same GPU device to test that the models runs.</em></p>
 </blockquote>
 <p>3) When calling <code>torch_tensor_from_array</code> in Fortran, the device type for the
    input tensor(s) should be set to the relevant device type (<code>torch_kCUDA</code>,
-   <code>torch_kXPU</code>, or <code>torch_kMPS</code>) rather than <code>torch_kCPU</code>.
+   <code>torch_kHIP</code>, <code>torch_kXPU</code>, or <code>torch_kMPS</code>) rather than <code>torch_kCPU</code>.
    This ensures that the inputs are on the same device type as the model.</p>
 <blockquote>
 <p>Note: <em>You do <strong>not</strong> need to change the device type for the output tensors as we
