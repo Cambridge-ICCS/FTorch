@@ -14,7 +14,7 @@ program example
                     torch_tensor_print, torch_delete, &
                     torch_tensor_backward, torch_tensor_get_gradient, &
                     torch_tensor_mean
-  use ftorch_optim, only: torch_optim, torch_optim_SGD, torch_optim_step, torch_optim_zero_grad
+  use ftorch_optim, only: torch_optim, torch_optim_SGD
 
   implicit none
 
@@ -66,7 +66,7 @@ program example
   do i = 1, n_train+1
     write(*,*) "zero_grad"
     ! Zero any previously stored gradients ready for a new iteration
-    call torch_optim_zero_grad(optimizer)
+    call optimizer%zero_grad()
 
     ! Forward pass: multiply the input of ones by the tensor (elementwise)
     write(*,*) "Forward Pass"
@@ -100,7 +100,7 @@ program example
 
     ! Step the optimizer to update the values in `tensor`
     write(*,*) "Step Optimizer"
-    call torch_optim_step(optimizer)
+    call optimizer%step()
     grad_reqd = loss%requires_grad()
     write(*,*) "loss%requires_grad = ", grad_reqd
 

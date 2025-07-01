@@ -23,6 +23,8 @@ module ftorch_optim
   type torch_optim
     type(c_ptr) :: p = c_null_ptr  !! pointer to the optimizer in memory
   contains
+    procedure :: step => torch_optim_step
+    procedure :: zero_grad => torch_optim_zero_grad
     final :: torch_optim_delete
   end type torch_optim
 
@@ -34,7 +36,7 @@ contains
 
   !> Zero Gradients on tensors associated with a Torch optimizer
   subroutine torch_optim_zero_grad(optim)
-    type(torch_optim), intent(in) :: optim  !! Optimizer to zero gradients for
+    class(torch_optim), intent(in) :: optim  !! Optimizer to zero gradients for
 
     interface
       subroutine torch_optim_zero_grad_c(optim_c) &
@@ -50,7 +52,7 @@ contains
 
   !> Step a Torch optimizer
   subroutine torch_optim_step(optim)
-    type(torch_optim), intent(in) :: optim  !! Optimizer to step
+    class(torch_optim), intent(in) :: optim  !! Optimizer to step
 
     interface
       subroutine torch_optim_step_c(optim_c) &
