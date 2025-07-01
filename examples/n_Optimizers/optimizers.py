@@ -29,16 +29,10 @@ for epoch in range(n_iter + 1):
     output = input_vec * scaling_tensor
 
     # Create a loss tensor as computed mean square error (MSE) between target and input
-    # Then perform backward step on loss to propogate gradients using autograd
-    #
-    # We could use the following 2 lines to do this by explicitly specifying a
-    # gradient of ones to start the process:
-    # loss = ((output - target) ** 2) / 4.0
-    # loss.backward(gradient=torch.ones(4))
-    #
-    # However, we can avoid explicitly passing an initial gradient and instead do this
-    # implicitly by aggregating the loss vector into a scalar value:
     loss = ((output - target_vec) ** 2).mean()
+
+    # Perform backward step on loss to propogate gradients using autograd
+    # NOTE: This implicitly passes a unit 'external gradient' to the backward pass
     loss.backward()
 
     # Step the optimizer to update the values in `tensor`

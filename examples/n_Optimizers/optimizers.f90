@@ -71,18 +71,18 @@ program example
     grad_reqd = loss%requires_grad()
     write(*,*) "loss%requires_grad = ", grad_reqd
 
-    ! Populate loss with mean square error (MSE) between target and input
-    ! Then perform backward step on loss to propogate gradients using autograd
+    ! Create a loss tensor as computed mean square error (MSE) between target and input
     write(*,*) "Set Loss"
     call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
     grad_reqd = loss%requires_grad()
     write(*,*) "loss%requires_grad = ", grad_reqd
 
+    ! Perform backward step on loss to propogate gradients using autograd
+    ! NOTE: This implicitly passes a unit 'external gradient' to the backward pass
     write(*,*) "Backwards Step"
     call torch_tensor_backward(loss, retain_graph=.true.)
     grad_reqd = loss%requires_grad()
     write(*,*) "loss%requires_grad = ", grad_reqd
-
     write(*,*) "Get Gradient"
     call torch_tensor_get_gradient(scaling_grad, scaling_tensor)
     grad_reqd = loss%requires_grad()
