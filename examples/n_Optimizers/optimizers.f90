@@ -14,7 +14,7 @@ program foptimizer
                     torch_tensor_print, torch_delete, &
                     torch_tensor_backward, torch_tensor_get_gradient, &
                     torch_tensor_mean
-  use ftorch_optim, only: torch_optim, torch_optim_SGD, torch_optim_step, torch_optim_zero_grad
+  use ftorch_optim, only: torch_optim, torch_optim_SGD
 
   implicit none
 
@@ -60,7 +60,7 @@ program foptimizer
   ! Conduct training loop
   do i = 1, n_train+1
     ! Zero any previously stored gradients ready for a new iteration
-    call torch_optim_zero_grad(optimizer)
+    call optimizer%zero_grad()
 
     ! Forward pass: multiply the input of ones by the tensor (elementwise)
     call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
@@ -75,7 +75,7 @@ program foptimizer
     call torch_tensor_get_gradient(scaling_grad, scaling_tensor)
 
     ! Step the optimizer to update the values in `tensor`
-    call torch_optim_step(optimizer)
+    call optimizer%step()
 
     if (modulo(i,n_print) == 0) then
         write(*,*) "================================================"

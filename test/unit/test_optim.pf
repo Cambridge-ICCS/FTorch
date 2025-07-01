@@ -85,7 +85,7 @@ contains
     call torch_tensor_backward(loss)
 
     ! Perform an optimizer step
-    call torch_optim_step(optimizer)
+    call optimizer%step()
 
     ! Check if the tensor values are updated correctly
     @assertEqual(tensor_data, target_data)
