@@ -44,6 +44,7 @@ if(CMAKE_BUILD_TESTS)
   # 3. Check the plotting script runs successfully
   add_test(
     NAME plot
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/plot_losses.py && ${CMAKE_COMMAND} -E test_file ${PROJECT_BINARY_DIR}/losses.png
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/plot_losses.py &&
+            ${CMAKE_COMMAND} -E test_file ${PROJECT_BINARY_DIR}/losses.png
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 endif()
