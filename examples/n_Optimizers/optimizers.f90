@@ -16,6 +16,9 @@ program foptimizer
                     torch_tensor_mean
   use ftorch_optim, only: torch_optim, torch_optim_SGD
 
+  ! Import our tools module for testing utils
+  use ftorch_test_utils, only : assert_allclose
+
   implicit none
 
   ! Set working precision for reals
@@ -24,14 +27,14 @@ program foptimizer
   ! Set up Fortran data structures
   integer, parameter :: ndims = 1
   integer, parameter :: n=4
-  real(wp), dimension(n), target :: input_data, output_data, target_data
+  real(wp), dimension(n), target :: input_data, output_data, target_data, scaling_data
+  real(wp), dimension(1), target :: loss_data
+  integer :: scalar_layout(1) = [1]
   integer :: tensor_layout(ndims) = [1]
 
   ! Set up Torch data structures
   integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
-  integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
-  type(torch_tensor) :: input_vec, output_vec, target_vec, &
-                        scaling_tensor, scaling_grad, loss
+  type(torch_tensor) :: input_vec, output_vec, target_vec, scaling_tensor, scaling_grad, loss
   type(torch_optim) :: optimizer
 
   ! Set up training parameters
@@ -46,16 +49,22 @@ program foptimizer
   call torch_tensor_from_array(target_vec, target_data, tensor_layout, torch_kCPU)
 
   ! Initialise Scaling tensor as ones as in Python example
-  call torch_tensor_ones(scaling_tensor, ndims, tensor_shape, &
-                         torch_kFloat32, torch_kCPU, requires_grad=.true.)
+  scaling_data(:) = 1.0_wp
+  call torch_tensor_from_array(scaling_tensor, scaling_data, tensor_layout, torch_kCPU, &
+                               requires_grad=.true.)
 
   ! Initialise an optimizer and apply it to scaling_tensor
   ! TODO optimizer expects an array of tensors, should be a cleaner consistent way to formalise this.
   call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1D0)
 
-  ! Create an empty loss tensor
+  ! Create loss 'tensor' associated with a trivial Fortran array
+  call torch_tensor_from_array(loss, loss_data, scalar_layout, torch_kCPU)
+
+  ! Create an empty tensor for the gradient of the scaling
   call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
-  call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
+
+  ! Create a file for recording the loss function progress
+  open(unit=10, file="losses_ftorch.dat")
 
   ! Conduct training loop
   do i = 1, n_train+1
@@ -66,8 +75,10 @@ program foptimizer
     call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
     output_vec = input_vec * scaling_tensor
 
-    ! Create a loss tensor as computed mean square error (MSE) between target and input
+    ! Evaluate the loss function as computed mean square error (MSE) between target and input, then
+    ! log its value
     call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
+    write(unit=10, fmt="(e9.4)") loss_data(1)
 
     ! Perform backward step on loss to propogate gradients using autograd
     ! NOTE: This implicitly passes a unit 'external gradient' to the backward pass
@@ -96,6 +107,13 @@ program foptimizer
 
     call torch_delete(output_vec)
   end do
+  close(unit=10)
+
+  ! Check scaling tensor converges to the expected value
+  if (.not. assert_allclose(scaling_data, target_data, test_name="optimizers", rtol=1e-3)) then
+    write(*,*) "Error :: value of scaling_data does not match expected value"
+    stop 999
+  end if
 
   write(*,*) "Training complete."
 
