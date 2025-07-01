@@ -28,7 +28,8 @@ if(CMAKE_BUILD_TESTS)
   # 1. Check the Python Optimizers script runs successfully
   add_test(
     NAME pyoptim
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/optimizers.py)
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/optimizers.py
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(pyoptim PROPERTIES PASS_REGULAR_EXPRESSION
                        "Python optimizers example ran successfully")
 
@@ -39,4 +40,10 @@ if(CMAKE_BUILD_TESTS)
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(foptim PROPERTIES PASS_REGULAR_EXPRESSION
                        "Fortran optimizers example ran successfully")
+
+  # 3. Check the plotting script runs successfully
+  add_test(
+    NAME plot
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/plot_losses.py && ${CMAKE_COMMAND} -E test_file ${PROJECT_BINARY_DIR}/losses.png
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 endif()
