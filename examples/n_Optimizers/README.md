@@ -70,9 +70,33 @@ To run the compiled code, simply use
 ```
 ./optimizers
 ```
-Currently, the example constructs Torch Tensors and iterates over a training loop,
-computing a loss with each iteration.
-It does not yet implement an optimiser or step to update the scaling tensor.
+Again, this uses the SGD optimiser to adjust the values of the scaling tensor at
+each step, outputting values of interest to screen in the form:
+```console
+ ================================================
+ Epoch:            1
+
+ Output:   1.00000000       1.00000000       1.00000000       1.00000000
+
+ loss:
+ 3.5000
+[ CPUFloatType{1} ]
+
+ tensor gradient:
+ 0.0000
+-0.5000
+-1.0000
+-1.5000
+[ CPUFloatType{4} ]
+
+ scaling_tensor:
+ 1.0000
+ 1.5000
+ 2.0000
+ 2.5000
+[ CPUFloatType{4} ]
+...
+```
 
 ## Plotting the loss function convergence
 
@@ -85,6 +109,8 @@ python3 plot_losses.py
 ```
 which will read the data files and produce a `losses.png` file in the current
 directory. The result should look something like
+
 ![Losses](expected_losses.png)
+
 That is, the loss function convergence behaviour is the same with PyTorch and
 FTorch, as we might expect.
