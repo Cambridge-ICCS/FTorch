@@ -47,3 +47,4 @@ for epoch in range(n_iter + 1):
         print(f"\tscaling_tensor:\n\t\t{scaling_tensor}")
 
 print("Training complete.")
+print("Fortran optimizers example ran successfully")

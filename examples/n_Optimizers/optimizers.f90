@@ -1,4 +1,4 @@
-program example
+program foptimizer
 
   ! Import precision info from iso
   use, intrinsic :: iso_fortran_env, only : sp => real32
@@ -26,7 +26,6 @@ program example
   integer, parameter :: n=4
   real(wp), dimension(n), target :: input_data, output_data, target_data
   integer :: tensor_layout(ndims) = [1]
-  logical :: grad_reqd
 
   ! Set up Torch data structures
   integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
@@ -60,39 +59,23 @@ program example
 
   ! Conduct training loop
   do i = 1, n_train+1
-    write(*,*) "zero_grad"
     ! Zero any previously stored gradients ready for a new iteration
     call torch_optim_zero_grad(optimizer)
 
     ! Forward pass: multiply the input of ones by the tensor (elementwise)
-    write(*,*) "Forward Pass"
     call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
     output_vec = input_vec * scaling_tensor
-    grad_reqd = loss%requires_grad()
-    write(*,*) "loss%requires_grad = ", grad_reqd
 
     ! Create a loss tensor as computed mean square error (MSE) between target and input
-    write(*,*) "Set Loss"
     call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
-    grad_reqd = loss%requires_grad()
-    write(*,*) "loss%requires_grad = ", grad_reqd
 
     ! Perform backward step on loss to propogate gradients using autograd
     ! NOTE: This implicitly passes a unit 'external gradient' to the backward pass
-    write(*,*) "Backwards Step"
     call torch_tensor_backward(loss, retain_graph=.true.)
-    grad_reqd = loss%requires_grad()
-    write(*,*) "loss%requires_grad = ", grad_reqd
-    write(*,*) "Get Gradient"
     call torch_tensor_get_gradient(scaling_grad, scaling_tensor)
-    grad_reqd = loss%requires_grad()
-    write(*,*) "loss%requires_grad = ", grad_reqd
 
     ! Step the optimizer to update the values in `tensor`
-    write(*,*) "Step Optimizer"
     call torch_optim_step(optimizer)
-    grad_reqd = loss%requires_grad()
-    write(*,*) "loss%requires_grad = ", grad_reqd
 
     if (modulo(i,n_print) == 0) then
         write(*,*) "================================================"
@@ -112,9 +95,6 @@ program example
     end if
 
     call torch_delete(output_vec)
-    grad_reqd = loss%requires_grad()
-    write(*,*) "loss%requires_grad = ", grad_reqd
-
   end do
 
   write(*,*) "Training complete."
@@ -122,6 +102,6 @@ program example
   ! Clean up created tensors
   call torch_delete(loss)
 
-  write (*,*) "Optimizers example ran successfully"
+  write (*,*) "Fortran optimizers example ran successfully"
 
-end program example
+end program foptimizer
