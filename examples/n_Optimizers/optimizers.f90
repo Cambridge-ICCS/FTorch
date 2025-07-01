@@ -49,6 +49,7 @@ program foptimizer
   call torch_tensor_from_array(target_vec, target_data, tensor_layout, torch_kCPU)
 
   ! Initialise Scaling tensor as ones as in Python example
+  scaling_data(:) = 1.0_wp
   call torch_tensor_from_array(scaling_tensor, scaling_data, tensor_layout, torch_kCPU, &
                                requires_grad=.true.)
 
