@@ -16,6 +16,9 @@ program foptimizer
                     torch_tensor_mean
   use ftorch_optim, only: torch_optim, torch_optim_SGD
 
+  ! Import our tools module for testing utils
+  use ftorch_test_utils, only : assert_allclose
+
   implicit none
 
   ! Set working precision for reals
@@ -24,7 +27,7 @@ program foptimizer
   ! Set up Fortran data structures
   integer, parameter :: ndims = 1
   integer, parameter :: n=4
-  real(wp), dimension(n), target :: input_data, output_data, target_data
+  real(wp), dimension(n), target :: input_data, output_data, target_data, scaling_data
   real(wp), dimension(1), target :: loss_data
   integer :: scalar_layout(1) = [1]
   integer :: tensor_layout(ndims) = [1]
@@ -45,15 +48,13 @@ program foptimizer
   call torch_tensor_from_array(input_vec, input_data, tensor_layout, torch_kCPU)
   call torch_tensor_from_array(target_vec, target_data, tensor_layout, torch_kCPU)
 
-  ! Initialise Scaling tensor as ones as in Python example and a tensor for its gradient
-  call torch_tensor_ones(scaling_tensor, ndims, tensor_shape, &
-                         torch_kFloat32, torch_kCPU, requires_grad=.true.)
-  call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
+  ! Initialise Scaling tensor as ones as in Python example
+  call torch_tensor_from_array(scaling_tensor, scaling_data, tensor_layout, torch_kCPU, &
+                               requires_grad=.true.)
 
   ! Initialise an optimizer and apply it to scaling_tensor
   ! NOTE: The optimizer expects an array of tensors.
   call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1D0)
-
 
   ! Create an empty tensor for the gradient of the scaling
   call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
@@ -112,6 +113,12 @@ program foptimizer
 
   end do
   close(unit=10)
+
+  ! Check scaling tensor converges to the expected value
+  if (.not. assert_allclose(scaling_data, target_data, test_name="optimizers", rtol=1e-3)) then
+    write(*,*) "Error :: value of scaling_data does not match expected value"
+    stop 999
+  end if
 
   write(*,*) "Training complete."
 
