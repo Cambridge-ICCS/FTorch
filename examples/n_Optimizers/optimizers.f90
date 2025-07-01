@@ -52,7 +52,7 @@ program example
 
   ! Initialise an optimizer and apply it to scaling_tensor
   ! TODO optimizer expects an array of tensors, should be a cleaner consistent way to formalise this.
-  call torch_optim_SGD(optimizer, [scaling_tensor])
+  call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1D0)
 
   ! Create an empty loss tensor
   call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
