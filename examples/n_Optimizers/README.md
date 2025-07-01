@@ -85,6 +85,6 @@ python3 plot_losses.py
 ```
 which will read the data files and produce a `losses.png` file in the current
 directory. The result should look something like
-![Losses](losses.png)
+![Losses](expected_losses.png)
 That is, the loss function convergence behaviour is the same with PyTorch and
 FTorch, as we might expect.
