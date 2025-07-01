@@ -49,6 +49,9 @@ for epoch in range(n_iter + 1):
         print(f"\ttensor gradient:\n\t\t{scaling_tensor.grad}")
         print(f"\tscaling_tensor:\n\t\t{scaling_tensor}")
 
+# Check scaling tensor converges to the expected value
+assert scaling_tensor.allclose(torch.tensor([1.0, 2.0, 3.0, 4.0]), rtol=1e-3)
+
 # Write loss progress to file
 with open("losses_pytorch.dat", "w+") as floss:
     for loss_val in loss_progress:
