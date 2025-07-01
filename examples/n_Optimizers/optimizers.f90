@@ -32,7 +32,7 @@ program example
   integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
   integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
   type(torch_tensor) :: input_vec, output_vec, target_vec, &
-                        scaling_tensor, scaling_grad, loss, torch_4p0
+                        scaling_tensor, scaling_grad, loss
   type(torch_optim) :: optimizer
 
   ! Set up training parameters
@@ -50,17 +50,13 @@ program example
   call torch_tensor_ones(scaling_tensor, ndims, tensor_shape, &
                          torch_kFloat32, torch_kCPU, requires_grad=.true.)
 
-  ! Initialise scaling factor of 4.0 for use in tensor operations
-  call torch_tensor_from_array(torch_4p0, [4.0_wp], tensor_layout, torch_kCPU)
-
   ! Initialise an optimizer and apply it to scaling_tensor
   ! TODO optimizer expects an array of tensors, should be a cleaner consistent way to formalise this.
   call torch_optim_SGD(optimizer, [scaling_tensor])
 
   ! Create an empty loss tensor
   call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
-  call torch_tensor_empty(loss, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
-  ! call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
+  call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
 
   ! Conduct training loop
   do i = 1, n_train+1
@@ -78,8 +74,7 @@ program example
     ! Populate loss with mean square error (MSE) between target and input
     ! Then perform backward step on loss to propogate gradients using autograd
     write(*,*) "Set Loss"
-    loss = ((output_vec - target_vec) ** 2) / torch_4p0
-    ! call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
+    call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
     grad_reqd = loss%requires_grad()
     write(*,*) "loss%requires_grad = ", grad_reqd
 
@@ -92,11 +87,6 @@ program example
     call torch_tensor_get_gradient(scaling_grad, scaling_tensor)
     grad_reqd = loss%requires_grad()
     write(*,*) "loss%requires_grad = ", grad_reqd
-    ! However, we can avoid explicitly passing an initial gradient and instead do this
-    ! implicitly by aggregating the loss vector into a scalar value:
-    ! TODO: Requires addition of `.mean()` to the FTorch tensor API
-    ! loss = ((output - target_vec) ** 2).mean()
-    ! loss.backward()
 
     ! Step the optimizer to update the values in `tensor`
     write(*,*) "Step Optimizer"
