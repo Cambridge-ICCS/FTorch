@@ -20,6 +20,7 @@ macro: UNIX
        GPU_DEVICE_CUDA=1
        GPU_DEVICE_XPU=11
        GPU_DEVICE_MPS=12
+       GPU_DEVICE_HIP=1
 sort: alpha
 source: true
 graph: true
