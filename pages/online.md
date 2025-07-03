@@ -139,4 +139,10 @@ is probably the best place to get started to see how to use the functionality.
 
 ### Loss functions
 
-*Not yet implemented.*
+The loss function classes defined in PyTorch/LibTorch have not yet been exposed
+in FTorch. However, the `torch_tensor_sum` and `torch_tensor_mean` reduction
+operators have been provided, which should be sufficient for simple loss
+functions such as the mean-square-error (MSE).
+
+See the [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/n_Optimizers)
+for an example of how to use `torch_tensor_mean` to define a MSE loss function.
