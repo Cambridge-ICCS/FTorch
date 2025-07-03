@@ -416,7 +416,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(${RANK}$)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
-    integer(c_int64_t)        :: strides(${RANK}$)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = ${RANK}$                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)

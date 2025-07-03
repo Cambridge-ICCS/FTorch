@@ -448,7 +448,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -478,7 +477,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -508,7 +506,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -538,7 +535,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -568,7 +564,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -598,7 +593,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -628,7 +622,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -658,7 +651,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -688,7 +680,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -718,7 +709,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -748,7 +738,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -778,7 +767,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -808,7 +796,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -838,7 +825,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -868,7 +854,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -898,7 +883,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -928,7 +912,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -958,7 +941,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -988,7 +970,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1018,7 +999,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1048,7 +1028,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1078,7 +1057,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1108,7 +1086,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1138,7 +1115,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1168,7 +1144,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1198,7 +1173,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int64_t)        :: strides(1)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1228,7 +1202,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int64_t)        :: strides(2)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1258,7 +1231,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int64_t)        :: strides(3)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1288,7 +1260,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int64_t)        :: strides(4)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
@@ -1318,7 +1289,6 @@ contains
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int64_t)        :: strides(5)                 !! Strides for accessing data
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
 
     tensor_shape = shape(data_in)
