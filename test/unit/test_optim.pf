@@ -71,6 +71,11 @@ contains
     real(sp), dimension(4) :: expected_zero = [0.0, 0.0, 0.0, 0.0]
     integer, parameter :: dtype = torch_kFloat32
 
+    ! Note that when we call zero_grad libtorch does NOT set the gradients to 0.0, but
+    ! rather makes them "undefined". Therefore we cannot test for gradient being 0.0,
+    ! but rather check implicitly that gradients are 'refreshed' after calling a
+    ! backward operation following zero_grad.
+
     ! Create a tensor with requires_grad set to true
     call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
                                  requires_grad=.true.)
@@ -82,18 +87,27 @@ contains
 
     ! Perform a dummy backward pass to populate gradients
     tensor_sq = tensor ** 2
-    call torch_tensor_backward(tensor_sq)
+    call torch_tensor_backward(tensor_sq, retain_graph=.true.)
 
-    ! Check if gradients are non-zero
+    ! Check gradients are non-zero (2*tensor)
     call torch_tensor_get_gradient(grad, tensor)
+    write(*,*) grad_data
     @assertTrue(assert_allclose(grad_data, 2.0*tensor_data, test_name="test_torch_optim_zero_grad_1"))
+
+    ! Repeat, and check that the gradients stack (2*2*tensor)
+    tensor_sq = tensor ** 2
+    call torch_tensor_backward(tensor_sq, retain_graph=.true.)
+    call torch_tensor_get_gradient(grad, tensor)
+    @assertTrue(assert_allclose(grad_data, 4.0*tensor_data, test_name="test_torch_optim_zero_grad_2"))
 
     ! Zero the gradients
     call optimizer%zero_grad()
 
-    ! Check if gradients are now zero
+    ! Repeat the operation but check gradients no longer stacked (back to 2*tensor)
+    tensor_sq = tensor ** 2
+    call torch_tensor_backward(tensor_sq, retain_graph=.true.)
     call torch_tensor_get_gradient(grad, tensor)
-    @assertTrue(assert_allclose(grad_data, expected_zero, test_name="test_torch_optim_zero_grad_2"))
+    @assertTrue(assert_allclose(grad_data, 2.0*tensor_data, test_name="test_torch_optim_zero_grad_3"))
 
     ! Clean up
     call torch_delete(tensor)
