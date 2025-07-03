@@ -123,9 +123,19 @@ Note that `torch_tensor_get_gradient` must be called after every call to
 the same tensor is being extracted into the same array. This is due to the way
 that pointers are handled on the C++ side.
 
-### Optimisation
+### Optimization
 
-*Not yet implemented.*
+FTorch now supports running optimizers. That is, it's possible to do training in
+Fortran as well as in Python. To make use of optimizers in FTorch, you need the
+`torch_optim` derived type. This derived type has two member subroutines as
+follows:
+* `torch_optim%zero_grad`, which zeroes all tensors associated with the
+  optimizer. This should be called at the beginning of every step of the
+  optimization loop.
+* `torch_optim%step`, which takes an iteration of the optimization method.
+
+The [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/n_Optimizers)
+is probably the best place to get started to see how to use the functionality.
 
 ### Loss functions
 
