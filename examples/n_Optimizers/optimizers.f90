@@ -57,13 +57,14 @@ program foptimizer
   call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
   call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
 
+  ! Create a tensor to store the output of the operation we wish to optimize
+  call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
   ! Conduct training loop
   do i = 1, n_train+1
     ! Zero any previously stored gradients ready for a new iteration
     call optimizer%zero_grad()
 
     ! Forward pass: multiply the input of ones by the tensor (elementwise)
-    call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
     output_vec = input_vec * scaling_tensor
 
     ! Create a loss tensor as computed mean square error (MSE) between target and input
@@ -94,12 +95,12 @@ program foptimizer
         write(*,*)
     end if
 
-    call torch_delete(output_vec)
   end do
 
   write(*,*) "Training complete."
 
   ! Clean up created tensors
+  call torch_delete(output_vec)
   call torch_delete(loss)
 
   write (*,*) "Fortran optimizers example ran successfully"
