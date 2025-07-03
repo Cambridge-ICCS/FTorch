@@ -62,6 +62,9 @@
                 <li class="nav-item">
                   <a class="nav-link" href="../lists/procedures.html">Procedures</a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
                 <form action="../search.html" role="search" class="ms-auto">
@@ -188,7 +191,7 @@ asking for the FTorch developers.</em></p>
 
 <p>inside a Python virtual environment from the base FTorch directory.</p>
 <h3 id="fortran-source-and-fypp">Fortran source and Fypp</h3>
-<p>The Fortran source code for FTorch is contained in <code>src/ftorch.f90</code>.
+<p>The Fortran source code for FTorch is contained in <code>src/ftorch.F90</code>.
 However, this file should not be edited directly, but instead generated from
 <code>src/ftorch.fypp</code>.
 This is a file that is set up to be run through the
@@ -199,7 +202,7 @@ array shapes and data types under interface structures.
 By using Fypp we can generate these programatically.</p>
 <p>Fypp is a pip-installable package that comes bundled with the <a href="#installing-developer-requirements">developer requirements</a>.</p>
 <p>To generate the Fortran code run:</p>
-<div class="codehilite"><pre><span></span><code>fypp src/ftorch.fypp src/ftorch.f90
+<div class="codehilite"><pre><span></span><code>fypp src/ftorch.fypp src/ftorch.F90
 </code></pre></div>
 
 <p><em>Note: Generally it would be advisable to provide only the <code>.fypp</code> source code to
