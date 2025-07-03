@@ -59,7 +59,7 @@ inside a Python virtual environment from the base FTorch directory.
 
 ### Fortran source and Fypp
 
-The Fortran source code for FTorch is contained in `src/ftorch.f90`.
+The Fortran source code for FTorch is contained in `src/ftorch.F90`.
 However, this file should not be edited directly, but instead generated from
 `src/ftorch.fypp`.
 This is a file that is set up to be run through the
@@ -73,7 +73,7 @@ Fypp is a pip-installable package that comes bundled with the [developer require
 
 To generate the Fortran code run:
 ```
-fypp src/ftorch.fypp src/ftorch.f90
+fypp src/ftorch.fypp src/ftorch.F90
 ```
 
 _Note: Generally it would be advisable to provide only the `.fypp` source code to
