@@ -13,6 +13,10 @@ For full API and user documentation please see the
 [online documentation](https://cambridge-iccs.github.io/FTorch/) which is 
 significantly more detailed than this README.
 
+To cite use of this code please refer to
+[Atkinson et al., (2025) DOI:10.21105/joss.07602](https://doi.org/10.21105/joss.07602). See
+[acknowledgment](#authors-and-acknowledgment) below for more details.
+
 
 ## Contents
 - [Description](#description)
@@ -67,12 +71,6 @@ The following presentations provide an introduction and overview of _FTorch_:
   RSECon23, Swansea - September 2023\
   [Slides](https://jackatkinson.net/slides/RSECon23) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
 
-Project status: This project is currently in pre-release with documentation and code
-being prepared for a first release.
-As we stabilise the API in preparation for first release there may be some breaking changes.
-Please see 
-[online updates documentation](https://cambridge-iccs.github.io/FTorch/page/updates.html)
-for clear guidance on how to easily update your older code to run with the latest version.\
 If you are interested in using this library please get in touch.
 
 _For a similar approach to calling TensorFlow models from Fortran please see [Fortran-TF-lib](https://github.com/Cambridge-ICCS/fortran-tf-lib)._
