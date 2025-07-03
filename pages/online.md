@@ -5,14 +5,14 @@ title: Online training
 ## Current state
 
 
-FTorch has supported offline training of ML models for some time (see the
-[offline training user guide page](offline.html) for details). We are
-currently working on extending its functionality to support online training,
-too. This will involve exposing the backpropagation and optimization
-functionalities of PyTorch/LibTorch.
+FTorch has supported offline training of ML models -- where the training is done
+in Python and inference is done in Fortran -- for some time (see the
+[offline training user guide page](offline.html) for details). As of recently,
+it is now possible to train models in Fortran, too, i.e., *online training*.
 
-In the following, we document a workplan of the related functionality. Each step
-below will be updated upon completion.
+To set up online training, you will need to make use of the backpropagation and
+optimization functionalities of PyTorch/LibTorch, which have been exposed in
+FTorch. Details of how to do this are provided in the following.
 
 ### Operator overloading
 
