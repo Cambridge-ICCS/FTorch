@@ -19,6 +19,9 @@ typedef void *torch_jit_script_module_t;
 // Opaque pointer type alias for at::Tensor
 typedef void *torch_tensor_t;
 
+// Opaque pointer type aliases for optimizers
+typedef void *torch_optim_t;
+
 // Opaque pointer type alias for integer scalars
 typedef void *torch_int_t;
 
@@ -314,6 +317,48 @@ EXPORT_C void torch_tensor_backward(const torch_tensor_t tensor,
  */
 EXPORT_C void torch_tensor_get_gradient(const torch_tensor_t tensor,
                                         torch_tensor_t gradient);
+
+// =============================================================================
+// --- Torch optimisers API
+// =============================================================================
+
+/**
+ * Function to create an SGD optimizer over a set of parameters
+ * @param parameters to run the optimizer over
+ * @param number of parameter Tensors in the parameters vector
+ * @param learning rate for the optimizer
+ * @param momentum for the optimizer
+ */
+EXPORT_C torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int nin,
+                                       const double learning_rate,
+                                       const double momentum);
+
+/**
+ * Function to create an Adam optimizer over a set of parameters
+ * @param parameters to run the optimizer over
+ * @param number of parameter Tensors in the parameters vector
+ * @param learning rate for the optimizer
+ */
+EXPORT_C torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int nin,
+                                        const double learning_rate);
+
+/**
+ * Function to zero the gradients on tensors associated with a torch optimizer
+ * @param Torch Optimizer to zero gradients for
+ */
+EXPORT_C void torch_optim_zero_grad(const torch_optim_t optim);
+
+/**
+ * Function to step a torch optimizer on associated tensors
+ * @param Torch Optimizer to step
+ */
+EXPORT_C void torch_optim_step(const torch_optim_t optim);
+
+/**
+ * Function to delete a Torch optimizer to clean up
+ * @param Torch Optimizer to delete
+ */
+EXPORT_C void torch_optim_delete(torch_optim_t optim);
 
 // =============================================================================
 // --- Torch model API

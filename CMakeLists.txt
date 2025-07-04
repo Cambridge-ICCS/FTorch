@@ -99,6 +99,7 @@ find_package(Torch REQUIRED)
 
 # Library with C and Fortran bindings
 add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90
+                               src/ftorch_optim.F90
                                src/ftorch_test_utils.f90)
 
 # Define compile definitions, including GPU devices
@@ -150,6 +151,8 @@ install(
 
 # Install Fortran module files
 install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch.mod"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}")
+install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch_optim.mod"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}")
 install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch_test_utils.mod"
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}")
