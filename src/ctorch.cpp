@@ -539,6 +539,25 @@ void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradi
   }
 }
 
+void *torch_tensor_detach(torch_tensor_t tensor) {
+  // auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  auto t = static_cast<torch::Tensor *>(tensor);
+  validate_tensor(t, "Tensor to detach");
+
+  // Debug: Print tensor state before detach
+  std::cout << "[DEBUG] Before detach: requires_grad = " << t->requires_grad() << "\n";
+
+  // Create a new detached tensor
+  auto detached_tensor = new torch::Tensor(t->detach());
+
+  // Debug: Print tensor state after detach
+  std::cout << "[DEBUG] After detach: requires_grad = "
+            << detached_tensor->requires_grad() << "\n";
+
+  // Return the pointer to the new detached tensor
+  return static_cast<void *>(detached_tensor);
+}
+
 // =============================================================================
 // --- Torch optimisers API
 // =============================================================================
@@ -611,7 +630,33 @@ void torch_optim_zero_grad(torch_optim_t optim) {
   try {
     auto optimizer = static_cast<torch::optim::Optimizer *>(optim);
     validate_optimizer(optimizer, "Optimizer in torch_optim_zero_grad");
+
+    // Debug: Print the gradients before zeroing
+    std::cout << "[DEBUG] Gradients before zero_grad():\n";
+    for (const auto &group : optimizer->param_groups()) {
+      for (const auto &param : group.params()) {
+        if (param.grad().defined()) {
+          std::cout << param.grad() << "\n";
+        } else {
+          std::cout << "Gradient is undefined.\n";
+        }
+      }
+    }
+
     optimizer->zero_grad();
+
+    // Debug: Print the gradients after zeroing
+    std::cout << "[DEBUG] Gradients after zero_grad():\n";
+    for (const auto &group : optimizer->param_groups()) {
+      for (const auto &param : group.params()) {
+        if (param.grad().defined()) {
+          std::cout << param.grad() << "\n";
+        } else {
+          std::cout << "Gradient is undefined.\n";
+        }
+      }
+    }
+
   } catch (const std::exception &e) {
     ctorch_error(std::string(e.what()) + " in torch_optim_zero_grad");
   }

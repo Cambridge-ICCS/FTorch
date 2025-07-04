@@ -2968,6 +2968,23 @@ contains
     call torch_tensor_get_gradient_c(tensor%p, gradient%p)
   end subroutine torch_tensor_get_gradient
 
+  !> Detach a tensor from the computational graph that created it.
+  subroutine torch_tensor_detach(tensor)
+    use, intrinsic :: iso_c_binding, only : c_associated
+    class(torch_tensor), intent(inout) :: tensor  !! Tensor to detach
+
+    interface
+        function torch_tensor_detach_c(tensor_c) bind(c, name='torch_tensor_detach')
+            use, intrinsic :: iso_c_binding, only: c_ptr
+            implicit none
+            type(c_ptr), value, intent(in) :: tensor_c
+            type(c_ptr) :: torch_tensor_detach_c
+        end function torch_tensor_detach_c
+    end interface
+
+    tensor%p = torch_tensor_detach_c(tensor%p)
+  end subroutine torch_tensor_detach
+
   ! ============================================================================
   ! --- Torch Model API
   ! ============================================================================

@@ -13,7 +13,7 @@ program foptimizer
                     torch_tensor_ones, torch_tensor_empty, &
                     torch_tensor_print, torch_delete, &
                     torch_tensor_backward, torch_tensor_get_gradient, &
-                    torch_tensor_mean
+                    torch_tensor_mean, torch_tensor_detach
   use ftorch_optim, only: torch_optim, torch_optim_SGD
 
   implicit none
@@ -65,18 +65,27 @@ program foptimizer
     call optimizer%zero_grad()
 
     ! Forward pass: multiply the input of ones by the tensor (elementwise)
+    write(*,*) "Forward Pass"
     output_vec = input_vec * scaling_tensor
 
     ! Create a loss tensor as computed mean square error (MSE) between target and input
+    write(*,*) "Calculate Loss"
     call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
 
     ! Perform backward step on loss to propogate gradients using autograd
     ! NOTE: This implicitly passes a unit 'external gradient' to the backward pass
-    call torch_tensor_backward(loss, retain_graph=.true.)
+    write(*,*) "Backward Pass"
+    call torch_tensor_backward(loss)
+    write(*,*) "Get Gradient"
     call torch_tensor_get_gradient(scaling_grad, scaling_tensor)
 
     ! Step the optimizer to update the values in `tensor`
+    write(*,*) "Step Optimizer"
     call optimizer%step()
+
+    write(*,*) "Detaching Tensor"
+    call torch_tensor_detach(output_vec)
+    write(*,*) "Tensor Detached"
 
     if (modulo(i,n_print) == 0) then
         write(*,*) "================================================"
