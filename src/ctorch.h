@@ -318,6 +318,12 @@ EXPORT_C void torch_tensor_backward(const torch_tensor_t tensor,
 EXPORT_C void torch_tensor_get_gradient(const torch_tensor_t tensor,
                                         torch_tensor_t gradient);
 
+/**
+ * Function to detach a Torch Tensor from the graph that created it
+ * @param Torch Tensor to detach
+ */
+EXPORT_C void *torch_tensor_detach(torch_tensor_t tensor);
+
 // =============================================================================
 // --- Torch optimisers API
 // =============================================================================
