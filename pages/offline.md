@@ -13,7 +13,7 @@ training approach - see the
 Below we provide a schematic of the offline training workflow, which is broken
 down into separate tasks below.
 
-![schematic](offline.png "Offline training schematic")
+![schematic](offline_light.svg "Offline training schematic")
 
 #### 1. Design the ML model in PyTorch
 
