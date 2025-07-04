@@ -20,6 +20,44 @@ To set up online training, you will need to make use of the backpropagation and
 optimization functionalities of PyTorch/LibTorch, which have been exposed in
 FTorch. Details of how to do this are provided in the following.
 
+#### 1. Design the ML model in PyTorch
+
+This task is identical to the offline case. It is done purely in Python and is
+not described here. See the
+[PyTorch documentation](https://pytorch.org/tutorials/beginner/introyt/modelsyt_tutorial.html)
+for information on how to do this.
+
+#### 2. pt2ts
+
+The scripting section comes earlier in the online workflow. Having written a
+model to a file with `.pt` extension, use the `pt2ts.py` utility Python script
+to convert it to TorchScript format. A template `pt2ts.py` script can be found
+in the [`utils`](https://github.com/Cambridge-ICCS/FTorch/tree/main/utils)
+subdirectory. See the
+[README](https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/README.md)
+there for more details on how to use the script.
+
+#### 3. Data generation and training
+
+In the online case, data generation and training are done in the same step,
+purely in Fortran. Code modifications are made so that we can run the Fortran
+model to generate training data and immediately use this training data (whilst
+in memory) to train the ML model. There is not necessarily an optimization loop
+in this case - one option is to take a pre-trained model and to continue
+improving it using data generated online.
+
+The training code should be set up such that the TorchScript model is both read
+in and written out.
+
+#### 4. Fortran model with inference
+
+In order to run inference with the trained ML model, you will need to create
+another modified version of your Fortran model that loads the TorchScript model
+and uses FTorch syntax to set up appropriate `torch_tensor` and `torch_model`
+objects and call the `torch_tensor_forward` subroutine to run the inference. For
+examples of how to do this, see the
+[optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/n_Optimizers).
+
 ### Operator overloading
 
 Mathematical operators involving Tensors are overloaded, so that we can compute
