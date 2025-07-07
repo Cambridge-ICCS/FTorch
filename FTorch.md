@@ -72,10 +72,6 @@ companion repository
 provides a set of exercises and solutions to help users get started with FTorch.
 Details of upcoming in-person training events are as follows:
 
-* FTorch developers Jack Atkinson and Joe Wallwork will be giving an FTorch
-  tutorial in the
-  [Department of Atmospheric, Oceanic, and Planetary Physics](https://www.physics.ox.ac.uk/research/subdepartment/atmospheric-oceanic-and-planetary-physics)
-  at the University of Oxford on 2nd July 2025.
 * The FTorch developers will be giving an FTorch tutorial at the
   [ICCS Summer School](https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2025)
   on 11th July 2025.
