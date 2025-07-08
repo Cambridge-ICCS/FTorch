@@ -7,6 +7,10 @@ title: Presentations
 The following presentations contain information about FTorch and its
 applications:
 
+* FTorch - Facilitating Hybrid Modelling<br>
+  Seminar at the [Department of Atmospheric, Oceanic, and Planetary Physics](https://www.physics.ox.ac.uk/research/subdepartment/atmospheric-oceanic-and-planetary-physics)
+  at the University of Oxford<br>
+  [Slides](https://jackatkinson.net/slides/Oxford-FTorch)
 * Accelerating UKCA by predicting timesteps with FTorch<br>
   [HPC in Weather & Climate Research](https://durham.readthedocs.io/en/latest/hpcdays/workshops.html#Weather)
   session at
