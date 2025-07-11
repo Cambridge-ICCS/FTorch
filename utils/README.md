@@ -15,7 +15,7 @@ Dependencies:
 
 1. Create and activate a virtual environment with PyTorch and any dependencies for your model.
 2. Place the `pt2ts.py` script in the same folder as your model files.
-3. Import your model into `pt2ts.py` and amend options as necessary (search for `FPTLIB-TODO`).
+3. Import your model into `pt2ts.py` and amend options as necessary (search for `FTORCH-TODO`).
 4. Run with `python3 pt2ts.py`.
 
 The Torchscript model will be saved locally in the same location from which the `pt2ts.py`
