@@ -70,11 +70,7 @@ We offer training on FTorch in the form of tutorials and workshops. The
 companion repository
 [https://github.com/Cambridge-ICCS/FTorch-workshop](https://github.com/Cambridge-ICCS/FTorch-workshop)
 provides a set of exercises and solutions to help users get started with FTorch.
-Details of upcoming in-person training events are as follows:
-
-* The FTorch developers will be giving an FTorch tutorial at the
-  [ICCS Summer School](https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2025)
-  on 11th July 2025.
+<!--Details of upcoming in-person training events are as follows:-->
 
 Publications and Select Presentations
 -------------------------------------
