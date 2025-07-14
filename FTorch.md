@@ -104,7 +104,7 @@ The following presentations contain information about FTorch:
   ML & DL Seminars, LSCE, IPSL, Paris - November 2023<br>
   [Slides](https://jackatkinson.net/slides/IPSL_FTorch) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
 
-See the [presentations](pages/presentations.html) page for a full list of
+See the [presentations](page/presentations.html) page for a full list of
 presentations on FTorch.
 
 License
