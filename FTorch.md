@@ -47,6 +47,13 @@ There are also installation instructions for the library and examples of perform
 
 We support running on both CPU and GPU, and have tested the library on UNIX and Windows based operating systems
 
+Citing FTorch
+-------------
+
+FTorch is published in JOSS. To cite it in your work please refer to:
+
+Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
+_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
 
 News
 ----
@@ -72,13 +79,8 @@ companion repository
 provides a set of exercises and solutions to help users get started with FTorch.
 <!--Details of upcoming in-person training events are as follows:-->
 
-Publications and Select Presentations
--------------------------------------
-
-FTorch is published in JOSS. To cite it in your work please refer to:
-
-Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
-_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
+Select Presentations
+--------------------
 
 The following presentations contain information about FTorch:
 
