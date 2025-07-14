@@ -47,6 +47,13 @@ There are also installation instructions for the library and examples of perform
 
 We support running on both CPU and GPU, and have tested the library on UNIX and Windows based operating systems
 
+Citing FTorch
+-------------
+
+FTorch is published in JOSS. To cite it in your work please refer to:
+
+Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
+_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
 
 News
 ----
@@ -70,19 +77,10 @@ We offer training on FTorch in the form of tutorials and workshops. The
 companion repository
 [https://github.com/Cambridge-ICCS/FTorch-workshop](https://github.com/Cambridge-ICCS/FTorch-workshop)
 provides a set of exercises and solutions to help users get started with FTorch.
-Details of upcoming in-person training events are as follows:
+<!--Details of upcoming in-person training events are as follows:-->
 
-* The FTorch developers will be giving an FTorch tutorial at the
-  [ICCS Summer School](https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2025)
-  on 11th July 2025.
-
-Publications and Select Presentations
--------------------------------------
-
-FTorch is published in JOSS. To cite it in your work please refer to:
-
-Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
-_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
+Select Presentations
+--------------------
 
 The following presentations contain information about FTorch:
 
@@ -106,7 +104,7 @@ The following presentations contain information about FTorch:
   ML & DL Seminars, LSCE, IPSL, Paris - November 2023<br>
   [Slides](https://jackatkinson.net/slides/IPSL_FTorch) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
 
-See the [presentations](pages/presentations.html) page for a full list of
+See the [presentations](page/presentations.html) page for a full list of
 presentations on FTorch.
 
 License
