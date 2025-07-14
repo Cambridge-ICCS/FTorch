@@ -27,6 +27,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Install Graphviz (Required by FORD)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
         with:
