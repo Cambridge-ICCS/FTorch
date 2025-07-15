@@ -54,7 +54,7 @@ in and written out.
 In order to run inference with the trained ML model, you will need to create
 another modified version of your Fortran model that loads the TorchScript model
 and uses FTorch syntax to set up appropriate `torch_tensor` and `torch_model`
-objects and call the `torch_tensor_forward` subroutine to run the inference. For
+objects and call the `torch_model_forward` subroutine to run the inference. For
 examples of how to do this, see the
 [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/n_Optimizers).
 
