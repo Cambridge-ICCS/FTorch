@@ -46,8 +46,14 @@ in memory) to train the ML model. There is not necessarily an optimization loop
 in this case - one option is to take a pre-trained model and to continue
 improving it using data generated online.
 
-The training code should be set up such that the TorchScript model is both read
-in and written out.
+The training code should be set up such that the file containing the TorchScript
+model that was created in step 2 is read in at the start of the Fortran program
+and the modified ML model is written out to the same TorchScript file at the
+end of the Fortran program. This way, the model can be trained in multiple
+Fortran runs, with the same model being read.
+
+*Note: Training and writing out models has not yet been implemented in FTorch,
+but is work in progress.*
 
 #### 4. Fortran model with inference
 
