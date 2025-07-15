@@ -25,7 +25,8 @@ program foptimizer
   integer, parameter :: ndims = 1
   integer, parameter :: n=4
   real(wp), dimension(n), target :: input_data, output_data, target_data
-  integer :: tensor_layout(ndims) = [1]
+  integer, parameter :: scalar_layout(1) = [1]
+  integer, parameter :: tensor_layout(ndims) = [1]
 
   ! Set up Torch data structures
   integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
@@ -45,34 +46,36 @@ program foptimizer
   call torch_tensor_from_array(input_vec, input_data, tensor_layout, torch_kCPU)
   call torch_tensor_from_array(target_vec, target_data, tensor_layout, torch_kCPU)
 
-  ! Initialise Scaling tensor as ones as in Python example
+  ! Initialise Scaling tensor as ones as in Python example and a tensor for its gradient
   call torch_tensor_ones(scaling_tensor, ndims, tensor_shape, &
                          torch_kFloat32, torch_kCPU, requires_grad=.true.)
+  call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
 
   ! Initialise an optimizer and apply it to scaling_tensor
-  ! TODO optimizer expects an array of tensors, should be a cleaner consistent way to formalise this.
-  call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1D0)
+  ! NOTE: The optimizer expects an array of tensors.
+  call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1.0D0)
 
-  ! Create an empty loss tensor
-  call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
-  call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
-
-  ! Create a tensor to store the output of the operation we wish to optimize
-  call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
   ! Conduct training loop
   do i = 1, n_train+1
     ! Zero any previously stored gradients ready for a new iteration
     call optimizer%zero_grad()
 
     ! Forward pass: multiply the input of ones by the tensor (elementwise)
+    ! Create a tensor to extract the output of the operation we wish to optimize
+    ! NOTE: We need to initialize the output tensor as empty each iteration to capture
+    ! a new graph associated with it, as it will be detached after a backward call.
+    call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
     output_vec = input_vec * scaling_tensor
 
     ! Create a loss tensor as computed mean square error (MSE) between target and input
+    ! NOTE: We need to initialize the loss tensor as empty at each iteration to capture
+    ! a new graph associated with it, as it will be detached after a backward call.
+    call torch_tensor_empty(loss, 1, scalar_shape, torch_kFloat32, torch_kCPU)
     call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
 
     ! Perform backward step on loss to propogate gradients using autograd
     ! NOTE: This implicitly passes a unit 'external gradient' to the backward pass
-    call torch_tensor_backward(loss, retain_graph=.true.)
+    call torch_tensor_backward(loss)
     call torch_tensor_get_gradient(scaling_grad, scaling_tensor)
 
     ! Step the optimizer to update the values in `tensor`
@@ -95,13 +98,13 @@ program foptimizer
         write(*,*)
     end if
 
+    ! Clean up created tensors
+    call torch_delete(output_vec)
+    call torch_delete(loss)
+
   end do
 
   write(*,*) "Training complete."
-
-  ! Clean up created tensors
-  call torch_delete(output_vec)
-  call torch_delete(loss)
 
   write (*,*) "Fortran optimizers example ran successfully"
 
