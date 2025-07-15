@@ -197,3 +197,6 @@ cython_debug/
 
 # Apple Desktop Services Store
 **.DS_Store
+
+# Example outputs
+*.png
