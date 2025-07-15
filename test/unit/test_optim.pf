@@ -71,10 +71,12 @@ contains
     real(sp), dimension(4) :: expected_zero = [0.0, 0.0, 0.0, 0.0]
     integer, parameter :: dtype = torch_kFloat32
 
-    ! Note that when we call zero_grad libtorch does NOT set the gradients to 0.0, but
+    ! NOTE: When we call zero_grad libtorch does NOT set the gradients to 0.0, but
     ! rather makes them "undefined". Therefore we cannot test for gradient being 0.0,
     ! but rather check implicitly that gradients are 'refreshed' after calling a
     ! backward operation following zero_grad.
+    ! To do this we make use of the retain_graph property of loss to check that this
+    ! is enforced on a continuous graph, rather than re-creating the tensors each time.
 
     ! Create a tensor with requires_grad set to true
     call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
