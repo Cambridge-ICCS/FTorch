@@ -15,6 +15,7 @@ extra_filetypes: c   //
                  h //
                  py  #
 preprocess: true
+dbg: false
 macro: UNIX
        GPU_DEVICE_NONE=0
        GPU_DEVICE_CUDA=1
@@ -117,7 +118,7 @@ distributed under an [MIT License which can be viewed here](page/LICENSE.html).
 Projects using FTorch
 ---------------------
 
-The following projects make use of FTorch.  
+The following projects make use of FTorch.<br>
 If you use our library in your work please let us know.
 
 * [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/) -

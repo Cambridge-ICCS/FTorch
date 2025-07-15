@@ -237,3 +237,8 @@ by [Doxygen](https://www.doxygen.nl/index.html).
 
 Note that we need to define the macros for GPU devices that are passed to `ftorch.F90`
 via the C preprocessor in `FTorch.md` to match those in the CMakeLists.txt.
+
+If you are building documentation locally and wish FORD to continue when it encounters
+errors, you can change the `dbg` setting in the `FTorch.md` file to `true`. Note that
+in this case the documentation may build but be incomplete. Please pay close attention
+to the warnings.
