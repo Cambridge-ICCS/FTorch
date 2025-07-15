@@ -13,12 +13,13 @@ training approach - see the
 Below we provide a schematic of the offline training workflow, which is broken
 down into separate tasks below.
 
-![schematic](offline.png "Offline training schematic")
+![schematic](offline_light.svg "Offline training schematic")
 
 #### 1. Design the ML model in PyTorch
 
 This task is done purely in Python and is not described here. See the
-[PyTorch documentation](https://pytorch.org/tutorials/beginner/introyt/modelsyt_tutorial.html) for information on how to do this.
+[PyTorch documentation](https://pytorch.org/tutorials/beginner/introyt/modelsyt_tutorial.html)
+for information on how to do this.
 
 #### 2. Data generation
 
@@ -45,7 +46,7 @@ subdirectory. See the
 [README](https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/README.md)
 there for more details on how to use the script.
 
-#### 5. Hybrid model
+#### 5. Fortran model with inference
 
 In order to run inference with the trained ML model, you will need to modify
 your Fortran model so that it uses FTorch syntax to set up appropriate
