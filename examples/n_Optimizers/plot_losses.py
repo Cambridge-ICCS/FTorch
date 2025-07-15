@@ -10,8 +10,8 @@ with open("losses_ftorch.dat", "r") as f:
     ftorch = [float(line) for line in f.readlines()]
 
 fig, axes = plt.subplots()
-axes.loglog(np.arange(1, len(pytorch) + 1), pytorch, "--x", label="PyTorch")
-axes.loglog(np.arange(1, len(ftorch) + 1), ftorch, ":o", label="FTorch")
+axes.loglog(np.arange(1, len(pytorch) + 1), pytorch, "--o", label="PyTorch")
+axes.loglog(np.arange(1, len(ftorch) + 1), ftorch, ":x", label="FTorch")
 axes.set_xlabel("Epoch")
 axes.set_ylabel("Loss")
 axes.legend()
