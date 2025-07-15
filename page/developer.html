@@ -336,6 +336,10 @@ any further items are contained in <code>pages/</code> as markdown files.</p>
 by <a href="https://www.doxygen.nl/index.html">Doxygen</a>.</p>
 <p>Note that we need to define the macros for GPU devices that are passed to <code>ftorch.F90</code>
 via the C preprocessor in <code>FTorch.md</code> to match those in the CMakeLists.txt.</p>
+<p>If you are building documentation locally and wish FORD to continue when it encounters
+errors, you can change the <code>dbg</code> setting in the <code>FTorch.md</code> file to <code>true</code>. Note that
+in this case the documentation may build but be incomplete. Please pay close attention
+to the warnings.</p>
     </div>
   </div>
       <hr>
