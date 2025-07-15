@@ -199,4 +199,4 @@ cython_debug/
 **.DS_Store
 
 # Example outputs
-examples/n_Optimizers/losses.png
+*.png

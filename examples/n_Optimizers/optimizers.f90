@@ -48,17 +48,15 @@ program foptimizer
   call torch_tensor_from_array(input_vec, input_data, tensor_layout, torch_kCPU)
   call torch_tensor_from_array(target_vec, target_data, tensor_layout, torch_kCPU)
 
-  ! Initialise Scaling tensor as ones as in Python example
+  ! Initialise Scaling tensor as ones as in Python example and a tensor for its gradient
   scaling_data(:) = 1.0_wp
   call torch_tensor_from_array(scaling_tensor, scaling_data, tensor_layout, torch_kCPU, &
                                requires_grad=.true.)
+  call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
 
   ! Initialise an optimizer and apply it to scaling_tensor
   ! NOTE: The optimizer expects an array of tensors.
   call torch_optim_SGD(optimizer, [scaling_tensor], learning_rate=1D0)
-
-  ! Create an empty tensor for the gradient of the scaling
-  call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
 
   ! Create a file for recording the loss function progress
   open(unit=10, file="losses_ftorch.dat")
