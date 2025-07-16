@@ -11,7 +11,7 @@ module unittest_optim
                     torch_delete, torch_tensor_from_array, torch_tensor_empty, &
                     torch_tensor_backward, torch_tensor_get_gradient
   use ftorch_optim, only: torch_optim, torch_optim_zero_grad, torch_optim_step, &
-                          torch_optim_delete, torch_optim_SGD
+                          torch_optim_delete, torch_optim_SGD, torch_optim_Adam
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_c_binding, only: c_associated, c_int64_t
   use, intrinsic :: iso_fortran_env, only : sp => real32
@@ -20,15 +20,57 @@ module unittest_optim
 
   public
 
+  @testParameter
+  type, extends(AbstractTestParameter) :: OptimizerTestParameters
+    character(len=:), allocatable :: optimizer_type
+   contains
+    procedure :: toString
+  end type OptimizerTestParameters
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_constructor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(OptimizerTestParameters) :: param
+  end type TestCaseType
+
 contains
 
+  ! Constructor for the test case type
+  function test_case_constructor(param)
+    type(TestCaseType) :: test_case_constructor
+    type(OptimizerTestParameters), intent(in) :: param
+    test_case_constructor%param = param
+  end function test_case_constructor
+
+  ! A fixture for varying the optimizer type
+  function get_optimizer_parameters() result(params)
+    type(OptimizerTestParameters), allocatable :: params(:)
+    params = [ &
+      OptimizerTestParameters("SGD"), &
+      OptimizerTestParameters("Adam") &
+    ]
+  end function get_optimizer_parameters
+
+  ! A fixture for writing out information about the specific parameters a test uses
+function toString(this) result(string)
+  class(OptimizerTestParameters), intent(in) :: this
+  character(:), allocatable :: string
+
+  if (allocated(this%optimizer_type)) then
+    string = trim(this%optimizer_type)
+  else
+    string = "UNDEFINED"
+  end if
+end function toString
+
   ! Unit test for deleting an optimizer by calling torch_optim_delete manually
-  @test()
-  subroutine test_torch_optim_delete()
+  @test(testParameters={get_optimizer_parameters()})
+  subroutine test_torch_optim_delete(this)
     use ftorch, only: torch_tensor_ones
 
     implicit none
 
+    class(TestCaseType), intent(inout) :: this
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
@@ -37,11 +79,20 @@ contains
 
     ! Check the optimizer pointer is not associated
     @assertFalse(c_associated(optimizer%p))
+
     ! Create a tensor to apply an optimizer to
     call torch_tensor_ones(tensor, ndims, tensor_shape, torch_kFloat32, torch_kCPU, &
                             requires_grad=.true.)
-    ! Create an optimizer (we will use SGD in this example)
-    call torch_optim_SGD(optimizer, [tensor])
+
+    ! Create an optimizer based on the parameter type
+    if (this%param%optimizer_type == "SGD") then
+      call torch_optim_SGD(optimizer, [tensor])
+    else if (this%param%optimizer_type == "Adam") then
+      call torch_optim_Adam(optimizer, [tensor])
+    else
+      write(*,*) "Error :: unsupported optimizer type"
+      stop 999
+    end if
 
     ! Check the optimizer pointer is now associated
     @assertTrue(c_associated(optimizer%p))
@@ -56,19 +107,20 @@ contains
 
 
   ! Unit test for zeroing gradients using torch_optim_zero_grad
-  @test()
-  subroutine test_torch_optim_zero_grad()
+  @test(testParameters={get_optimizer_parameters()})
+  subroutine test_torch_optim_zero_grad(this)
     use ftorch, only: torch_tensor_ones
     implicit none
+
+    class(TestCaseType), intent(inout) :: this
 
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor, tensor_sq, grad
     integer, parameter :: ndims = 1
     integer, parameter :: tensor_layout(ndims) = [1]
     integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
-    real(sp), dimension(4) :: tensor_data = [1.0, 2.0, 3.0, 4.0]
-    real(sp), dimension(4) :: grad_data
-    real(sp), dimension(4) :: expected_zero = [0.0, 0.0, 0.0, 0.0]
+    real(sp), dimension(4) :: tensor_data, grad_data
+    real(sp), dimension(4), parameter :: expected_zero = [0.0, 0.0, 0.0, 0.0]
     integer, parameter :: dtype = torch_kFloat32
 
     ! NOTE: When we call zero_grad libtorch does NOT set the gradients to 0.0, but
@@ -78,14 +130,24 @@ contains
     ! To do this we make use of the retain_graph property of loss to check that this
     ! is enforced on a continuous graph, rather than re-creating the tensors each time.
 
+    ! Initialise data for the test to avoid Fortran's implied save
+    tensor_data = [1.0, 2.0, 3.0, 4.0]
+
     ! Create a tensor with requires_grad set to true
     call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
                                  requires_grad=.true.)
     call torch_tensor_from_array(grad, grad_data, tensor_layout, torch_kCPU)
     call torch_tensor_empty(tensor_sq, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
 
-    ! Create an optimizer (SGD with learning rate 1.0)
-    call torch_optim_SGD(optimizer, [tensor])
+    ! Create an optimizer based on the parameter type
+    if (this%param%optimizer_type == "SGD") then
+      call torch_optim_SGD(optimizer, [tensor])
+    else if (this%param%optimizer_type == "Adam") then
+      call torch_optim_Adam(optimizer, [tensor])
+    else
+      write(*,*) "Error :: unsupported optimizer type"
+      stop 999
+    end if
 
     ! Perform a dummy backward pass to populate gradients
     tensor_sq = tensor ** 2
@@ -93,7 +155,6 @@ contains
 
     ! Check gradients are non-zero (2*tensor)
     call torch_tensor_get_gradient(grad, tensor)
-    write(*,*) grad_data
     @assertTrue(assert_allclose(grad_data, 2.0*tensor_data, test_name="test_torch_optim_zero_grad_1"))
 
     ! Repeat, and check that the gradients stack (2*2*tensor)
@@ -122,44 +183,65 @@ contains
   ! Unit test for stepping an optimizer
   ! Uses an optimizer with a learning rate of 1.0 such that a single step with gradients
   ! taken from a MSE loss should take us directly to the target
-  @test()
-  subroutine test_torch_optim_step()
-    use ftorch, only: torch_tensor_ones
+  @test(testParameters={get_optimizer_parameters()})
+  subroutine test_torch_optim_step(this)
+    use ftorch, only: torch_tensor_ones, torch_tensor_mean
     implicit none
 
+    class(TestCaseType), intent(inout) :: this
+
     type(torch_optim) :: optimizer
-    type(torch_tensor) :: tensor, target_tensor, loss, grad, torch_0p5
+    type(torch_tensor) :: tensor, target_tensor, loss, grad
     integer, parameter :: ndims = 1
     integer, parameter :: tensor_layout(ndims) = [1]
     integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
-    real(sp), dimension(4) :: target_data = [1.0, 2.0, 3.0, 4.0]
-    real(sp), dimension(4) :: tensor_data = [1.0, 1.0, 1.0, 1.0]
+    integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
+    real(sp), dimension(4) :: target_data, tensor_data, expected
     integer, parameter :: dtype = torch_kFloat32
+
+    ! Initialise data for the test to avoid Fortran's implied save
+    target_data = [1.0, 2.0, 3.0, 4.0]
+    tensor_data = [1.0, 1.0, 1.0, 1.0]
 
     ! Create a tensor with requires_grad set to true
     call torch_tensor_from_array(target_tensor, target_data, tensor_layout, torch_kCPU)
     call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
                             requires_grad=.true.)
-    call torch_tensor_from_array(torch_0p5, [0.5_sp], tensor_layout, torch_kCPU)
 
-    ! Create an optimizer (SGD with learning rate 1.0)
-    call torch_optim_SGD(optimizer, [tensor], learning_rate=1D0)
+    ! Create an optimizer based on the parameter type, learning rate 1.0
+    ! Also set the expected value of the optimizer step
+    if (this%param%optimizer_type == "SGD") then
+      call torch_optim_SGD(optimizer, [tensor], learning_rate=1.0D0)
+      expected = [1.0D0, 1.5D0, 2.0D0, 2.5D0]
+    else if (this%param%optimizer_type == "Adam") then
+      call torch_optim_Adam(optimizer, [tensor], learning_rate=1.0D0)
+      expected = [1.0D0, 2.0D0, 2.0D0, 2.0D0]
+    else
+      write(*,*) "Error :: unsupported optimizer type: ", this%param%optimizer_type
+      stop 999
+    end if
 
     ! Calculate MSE loss between tensor and target and perform a backwards step
-    call torch_tensor_empty(loss, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
-    loss = torch_0p5 * (tensor - target_tensor)**2
+    call torch_tensor_empty(loss, ndims, scalar_shape, torch_kFloat32, torch_kCPU)
+    call torch_tensor_mean(loss, (tensor - target_tensor) ** 2)
     call torch_tensor_backward(loss)
 
     ! Perform an optimizer step
     call optimizer%step()
 
     ! Check if the tensor values are updated correctly
-    @assertEqual(tensor_data, target_data)
+    if (.not. assert_allclose(tensor_data, expected, test_name="test_torch_optim_step ["//this%param%optimizer_type//"]")) then
+      print *, "Error :: Incorrect value after applying optimizer step."
+      print *, "Expected: ", expected
+      print *, "     Got: ", tensor_data
+      stop 999
+    end if
 
     ! Clean up
     call torch_delete(tensor)
     call torch_delete(target_tensor)
     call torch_delete(loss)
+    call torch_delete(grad)
     call torch_optim_delete(optimizer)
   end subroutine test_torch_optim_step
 
