@@ -290,16 +290,17 @@ end function toString
     ! Also set the expected value of the optimizer step based on approximate value of
     ! calculation fron the appropriate formula.
     if (this%param%optimizer_type == "SGD") then
-      call torch_optim_SGD(optimizer, [tensor], learning_rate=0.1D0, momentum=0.9D0)
-      expected = [1.0D0, 1.863081D0, 2.726163D0, 3.589244D0]
+      call torch_optim_SGD(optimizer, [tensor], learning_rate=0.1D0, momentum=0.9D0, &
+                           weight_decay=0.025D0)
+      expected = [0.979859D0, 1.840596D0, 2.701334D0, 3.562072D0]
     else if (this%param%optimizer_type == "Adam") then
       call torch_optim_Adam(optimizer, [tensor], learning_rate=0.1D0, beta_1=0.75D0, &
-                            beta_2=0.8D0)
-      expected = [1.0D0, 1.389627D0, 1.388414D0, 1.388019D0]
+                            beta_2=0.8D0, weight_decay=0.025D0)
+      expected = [1.067700D0, 1.389061D0, 1.388119D0, 1.387820D0]
     else if (this%param%optimizer_type == "AdamW") then
       call torch_optim_AdamW(optimizer, [tensor], learning_rate=0.1D0, beta_1=0.75D0, &
-                            beta_2=0.8D0)
-      expected = [0.924073D0, 1.385018D0, 1.383819D0, 1.383429D0]
+                            beta_2=0.8D0, weight_decay=0.025D0)
+      expected = [0.919747D0, 1.378128D0, 1.376950D0, 1.376567D0]
     else
       write(*,*) "Error :: unsupported optimizer type: ", this%param%optimizer_type
       stop 999
