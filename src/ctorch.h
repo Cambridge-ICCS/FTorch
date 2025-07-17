@@ -329,10 +329,12 @@ EXPORT_C void torch_tensor_get_gradient(const torch_tensor_t tensor,
  * @param number of parameter Tensors in the parameters vector
  * @param learning rate for the optimizer
  * @param momentum for the optimizer
+ * @param weight decay for the optimizer
  */
 EXPORT_C torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int nin,
                                        const double learning_rate,
-                                       const double momentum);
+                                       const double momentum,
+                                       const double weight_decay);
 
 /**
  * Function to create an Adam optimizer over a set of parameters
@@ -342,10 +344,11 @@ EXPORT_C torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const i
  * @param learning rate for the optimizer
  * @param beta 1 for the optimizer
  * @param beta 2 for the optimizer
+ * @param weight decay for the optimizer
  */
 EXPORT_C torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int nin,
                                         const double learning_rate, const double beta_1,
-                                        const double beta_2);
+                                        const double beta_2, const double weight_decay);
 
 /**
  * Function to create an AdamW optimizer over a set of parameters
@@ -356,10 +359,12 @@ EXPORT_C torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const 
  * @param learning rate for the optimizer
  * @param beta 1 for the optimizer
  * @param beta 2 for the optimizer
+ * @param weight decay for the optimizer
  */
 EXPORT_C torch_optim_t torch_optim_AdamW(const torch_tensor_t *parameters,
                                          const int nin, const double learning_rate,
-                                         const double beta_1, const double beta_2);
+                                         const double beta_1, const double beta_2,
+                                         const double weight_decay);
 
 /**
  * Function to zero the gradients on tensors associated with a torch optimizer

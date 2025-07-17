@@ -30,11 +30,11 @@ def four_step(optim_key):
     data = torch.tensor([1.0, 1.0, 1.0, 1.0], requires_grad=True)
 
     if optim_key == "SGD":
-        optim = torch.optim.SGD([data], lr=0.1, momentum=0.9)
+        optim = torch.optim.SGD([data], lr=0.1, momentum=0.9, weight_decay=0.025)
     elif optim_key == "Adam":
-        optim = torch.optim.Adam([data], lr=0.1, betas=(0.75, 0.8))
+        optim = torch.optim.Adam([data], lr=0.1, betas=(0.75, 0.8), weight_decay=0.025)
     elif optim_key == "AdamW":
-        optim = torch.optim.AdamW([data], lr=0.1, betas=(0.75, 0.8))
+        optim = torch.optim.AdamW([data], lr=0.1, betas=(0.75, 0.8), weight_decay=0.025)
 
     for _ in range(4):
         loss = ((data - target) ** 2).mean()
