@@ -606,6 +606,34 @@ torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
   return nullptr; // Return null in case of error
 }
 
+// Function to create an AdamW optimizer and return a pointer to it
+// TODO: Wrap additional Options beyond learning rate
+torch_optim_t torch_optim_AdamW(const torch_tensor_t *parameters, const int npar,
+                                const double learning_rate) {
+  try {
+    // Cast the parameters pointer into Tensor objects
+    auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
+
+    // Generate a vector of Tensors populated from parameters
+    std::vector<torch::Tensor> parameters_vec;
+    for (int i = 0; i < npar; ++i) {
+      validate_tensor(params[i], "Parameter at index " + std::to_string(i) +
+                                     "in torch_optim_AdamW");
+      parameters_vec.push_back(*(params[i]));
+    }
+
+    // Set up options
+    auto options = torch::optim::AdamWOptions(learning_rate);
+
+    // Create the optimizer and cast to torch_optim_t to return
+    auto optimizer_AdamW = new torch::optim::AdamW(parameters_vec, options);
+    return static_cast<torch_optim_t>(optimizer_AdamW);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_AdamW");
+  }
+  return nullptr; // Return null in case of error
+}
+
 // Function to zero gradients for an optimizer
 void torch_optim_zero_grad(torch_optim_t optim) {
   try {

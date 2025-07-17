@@ -181,4 +181,45 @@ contains
     optim%p = torch_optim_Adam_c(c_loc(parameter_ptrs), n_params, learning_rate_value)
   end subroutine torch_optim_Adam
 
+  !> Create an AdamW optimizer
+  subroutine torch_optim_AdamW(optim, parameters, learning_rate)
+    use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_loc
+    use, intrinsic :: iso_fortran_env, only : real64
+    type(torch_optim), intent(out) :: optim  !! Optimizer we are creating
+    type(torch_tensor), intent(in), dimension(:) :: parameters  !! Array of parameter tensors
+    real(kind=real64), optional, intent(in) :: learning_rate  !! learning rate for the optimization algorithm
+    real(kind=real64) :: learning_rate_value  !! learning rate for the optimization algorithm
+
+    integer(ftorch_int) :: i
+    integer(c_int)      :: n_params
+    type(c_ptr), dimension(size(parameters)), target  :: parameter_ptrs
+
+    interface
+      function torch_optim_AdamW_c(parameters_c, n_params_c, learning_rate_c) &
+          result(optim_c) bind(c, name = 'torch_optim_AdamW')
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double
+        implicit none
+        type(c_ptr), value, intent(in) :: parameters_c
+        integer(c_int), value, intent(in) :: n_params_c
+        real(c_double), value, intent(in) :: learning_rate_c
+        type(c_ptr) :: optim_c
+      end function torch_optim_AdamW_c
+    end interface
+
+    n_params = size(parameters)
+
+    if (.not. present(learning_rate)) then
+      learning_rate_value = 0.001_real64
+    else
+      learning_rate_value = learning_rate
+    end if
+
+    ! Assign array of pointers to the parameters
+    do i = 1, n_params
+      parameter_ptrs(i) = parameters(i)%p
+    end do
+
+    optim%p = torch_optim_AdamW_c(c_loc(parameter_ptrs), n_params, learning_rate_value)
+  end subroutine torch_optim_AdamW
+
 end module ftorch_optim
