@@ -553,7 +553,8 @@ void validate_optimizer(const torch_optim_t optim, const std::string &name) {
 // Function to create an SGD optimizer and return a pointer to it
 // TODO: Wrap additional Options beyond learning rate and momentum
 torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
-                              const double learning_rate, const double momentum = 0.0) {
+                              const double learning_rate, const double momentum = 0.0,
+                              const double weight_decay = 0.0) {
   try {
     // Cast the parameters pointer into Tensor objects
     auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
@@ -567,7 +568,9 @@ torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
     }
 
     // Set up options
-    auto options = torch::optim::SGDOptions(learning_rate).momentum(momentum);
+    auto options = torch::optim::SGDOptions(learning_rate)
+                       .momentum(momentum)
+                       .weight_decay(weight_decay);
 
     // Create the optimizer and cast to torch_optim_t to return
     auto optimizer_SGD = new torch::optim::SGD(parameters_vec, options);
@@ -582,7 +585,8 @@ torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
 // TODO: Wrap additional Options beyond learning rate
 torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
                                const double learning_rate, const double beta_1 = 0.9,
-                               const double beta_2 = 0.999) {
+                               const double beta_2 = 0.999,
+                               const double weight_decay = 0.0) {
   try {
     // Cast the parameters pointer into Tensor objects
     auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
@@ -597,7 +601,9 @@ torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
 
     // Set up options
     auto betas_tup = std::make_tuple(beta_1, beta_2);
-    auto options = torch::optim::AdamOptions(learning_rate).betas(betas_tup);
+    auto options = torch::optim::AdamOptions(learning_rate)
+                       .betas(betas_tup)
+                       .weight_decay(weight_decay);
 
     // Create the optimizer and cast to torch_optim_t to return
     auto optimizer_Adam = new torch::optim::Adam(parameters_vec, options);
@@ -612,7 +618,8 @@ torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
 // TODO: Wrap additional Options beyond learning rate
 torch_optim_t torch_optim_AdamW(const torch_tensor_t *parameters, const int npar,
                                 const double learning_rate, const double beta_1 = 0.9,
-                                const double beta_2 = 0.999) {
+                                const double beta_2 = 0.999,
+                                const double weight_decay = 0.01) {
   try {
     // Cast the parameters pointer into Tensor objects
     auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
@@ -627,7 +634,9 @@ torch_optim_t torch_optim_AdamW(const torch_tensor_t *parameters, const int npar
 
     // Set up options
     auto betas_tup = std::make_tuple(beta_1, beta_2);
-    auto options = torch::optim::AdamWOptions(learning_rate).betas(betas_tup);
+    auto options = torch::optim::AdamWOptions(learning_rate)
+                       .betas(betas_tup)
+                       .weight_decay(weight_decay);
 
     // Create the optimizer and cast to torch_optim_t to return
     auto optimizer_AdamW = new torch::optim::AdamW(parameters_vec, options);
