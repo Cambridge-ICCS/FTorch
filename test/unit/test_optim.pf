@@ -11,7 +11,8 @@ module test_optim
                     torch_delete, torch_tensor_from_array, torch_tensor_empty, &
                     torch_tensor_backward, torch_tensor_get_gradient
   use ftorch_optim, only: torch_optim, torch_optim_zero_grad, torch_optim_step, &
-                          torch_optim_delete, torch_optim_SGD, torch_optim_Adam
+                          torch_optim_delete, torch_optim_SGD, torch_optim_Adam, &
+                          torch_optim_AdamW
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_c_binding, only: c_associated, c_int64_t
   use, intrinsic :: iso_fortran_env, only : sp => real32
@@ -47,7 +48,8 @@ contains
     type(OptimizerTestParameters), allocatable :: params(:)
     params = [ &
       OptimizerTestParameters("SGD"), &
-      OptimizerTestParameters("Adam") &
+      OptimizerTestParameters("Adam"), &
+      OptimizerTestParameters("AdamW") &
     ]
   end function get_optimizer_parameters
 
@@ -89,6 +91,8 @@ end function toString
       call torch_optim_SGD(optimizer, [tensor])
     else if (this%param%optimizer_type == "Adam") then
       call torch_optim_Adam(optimizer, [tensor])
+    else if (this%param%optimizer_type == "AdamW") then
+      call torch_optim_AdamW(optimizer, [tensor])
     else
       write(*,*) "Error :: unsupported optimizer type"
       stop 999
@@ -144,6 +148,8 @@ end function toString
       call torch_optim_SGD(optimizer, [tensor])
     else if (this%param%optimizer_type == "Adam") then
       call torch_optim_Adam(optimizer, [tensor])
+    else if (this%param%optimizer_type == "AdamW") then
+      call torch_optim_AdamW(optimizer, [tensor])
     else
       write(*,*) "Error :: unsupported optimizer type"
       stop 999
@@ -209,13 +215,17 @@ end function toString
                             requires_grad=.true.)
 
     ! Create an optimizer based on the parameter type, learning rate 1.0
-    ! Also set the expected value of the optimizer step
+    ! Also set the expected value of the optimizer step based on approximate value of
+    ! calculation fron the appropriate formula.
     if (this%param%optimizer_type == "SGD") then
       call torch_optim_SGD(optimizer, [tensor], learning_rate=1.0D0)
       expected = [1.0D0, 1.5D0, 2.0D0, 2.5D0]
     else if (this%param%optimizer_type == "Adam") then
       call torch_optim_Adam(optimizer, [tensor], learning_rate=1.0D0)
       expected = [1.0D0, 2.0D0, 2.0D0, 2.0D0]
+    else if (this%param%optimizer_type == "AdamW") then
+      call torch_optim_AdamW(optimizer, [tensor], learning_rate=1.0D0)
+      expected = [0.99D0, 1.99D0, 1.99D0, 1.99D0]
     else
       write(*,*) "Error :: unsupported optimizer type: ", this%param%optimizer_type
       stop 999
