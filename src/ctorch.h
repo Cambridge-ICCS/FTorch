@@ -324,6 +324,7 @@ EXPORT_C void torch_tensor_get_gradient(const torch_tensor_t tensor,
 
 /**
  * Function to create an SGD optimizer over a set of parameters
+ * See the PyTorch documentation for a full description of the algorithm and parameters
  * @param parameters to run the optimizer over
  * @param number of parameter Tensors in the parameters vector
  * @param learning rate for the optimizer
@@ -335,21 +336,30 @@ EXPORT_C torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const i
 
 /**
  * Function to create an Adam optimizer over a set of parameters
+ * See the PyTorch documentation for a full description of the algorithm and parameters
  * @param parameters to run the optimizer over
  * @param number of parameter Tensors in the parameters vector
  * @param learning rate for the optimizer
+ * @param beta 1 for the optimizer
+ * @param beta 2 for the optimizer
  */
 EXPORT_C torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int nin,
-                                        const double learning_rate);
+                                        const double learning_rate, const double beta_1,
+                                        const double beta_2);
 
 /**
  * Function to create an AdamW optimizer over a set of parameters
+ * See the PyTorch documentation for a full description of the algorithm and parameters
  * @param parameters to run the optimizer over
  * @param number of parameter Tensors in the parameters vector
  * @param learning rate for the optimizer
+ * @param learning rate for the optimizer
+ * @param beta 1 for the optimizer
+ * @param beta 2 for the optimizer
  */
 EXPORT_C torch_optim_t torch_optim_AdamW(const torch_tensor_t *parameters,
-                                         const int nin, const double learning_rate);
+                                         const int nin, const double learning_rate,
+                                         const double beta_1, const double beta_2);
 
 /**
  * Function to zero the gradients on tensors associated with a torch optimizer
