@@ -189,6 +189,7 @@ end function toString
   ! Unit test for stepping an optimizer
   ! Uses an optimizer with a learning rate of 1.0 such that a single step with gradients
   ! taken from a MSE loss should take us directly to the target
+  ! See accompanying test_optim.py for PyTorch code.
   @test(testParameters={get_optimizer_parameters()})
   subroutine test_torch_optim_step(this)
     use ftorch, only: torch_tensor_ones, torch_tensor_mean
@@ -254,5 +255,82 @@ end function toString
     call torch_delete(grad)
     call torch_optim_delete(optimizer)
   end subroutine test_torch_optim_step
+
+  ! Unit test for additional optimizer parameters
+  ! Sets additional parameters and then compares the result of a single step to the
+  ! values obtained for the same process through the PyTorch interface
+  ! See accompanying test_optim.py for PyTorch code.
+  @test(testParameters={get_optimizer_parameters()})
+  subroutine test_torch_optim_params(this)
+    use ftorch, only: torch_tensor_ones, torch_tensor_mean
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+
+    type(torch_optim) :: optimizer
+    type(torch_tensor) :: tensor, target_tensor, loss, grad
+    integer, parameter :: ndims = 1
+    integer, parameter :: tensor_layout(ndims) = [1]
+    integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
+    integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
+    real(sp), dimension(4) :: target_data, tensor_data, expected
+    integer, parameter :: dtype = torch_kFloat32
+    integer :: i
+
+    ! Initialise data for the test to avoid Fortran's implied save
+    target_data = [1.0, 2.0, 3.0, 4.0]
+    tensor_data = [1.0, 1.0, 1.0, 1.0]
+
+    ! Create a tensor with requires_grad set to true
+    call torch_tensor_from_array(target_tensor, target_data, tensor_layout, torch_kCPU)
+    call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
+                            requires_grad=.true.)
+
+    ! Create an optimizer based on the parameter type, learning rate 1.0
+    ! Also set the expected value of the optimizer step based on approximate value of
+    ! calculation fron the appropriate formula.
+    if (this%param%optimizer_type == "SGD") then
+      call torch_optim_SGD(optimizer, [tensor], learning_rate=0.1D0, momentum=0.9D0)
+      expected = [1.0D0, 1.863081D0, 2.726163D0, 3.589244D0]
+    else if (this%param%optimizer_type == "Adam") then
+      call torch_optim_Adam(optimizer, [tensor], learning_rate=0.1D0, beta_1=0.75D0, &
+                            beta_2=0.8D0)
+      expected = [1.0D0, 1.389627D0, 1.388414D0, 1.388019D0]
+    else if (this%param%optimizer_type == "AdamW") then
+      call torch_optim_AdamW(optimizer, [tensor], learning_rate=0.1D0, beta_1=0.75D0, &
+                            beta_2=0.8D0)
+      expected = [0.924073D0, 1.385018D0, 1.383819D0, 1.383429D0]
+    else
+      write(*,*) "Error :: unsupported optimizer type: ", this%param%optimizer_type
+      stop 999
+    end if
+
+    ! Run a loop of 4 iterations to capture aspects such as momentum
+    do i = 1,4
+      ! Calculate MSE loss between tensor and target and perform a backwards step
+      call torch_tensor_empty(loss, ndims, scalar_shape, torch_kFloat32, torch_kCPU)
+      call torch_tensor_mean(loss, (tensor - target_tensor) ** 2)
+      call torch_tensor_backward(loss)
+
+      ! Perform an optimizer step
+      call optimizer%step()
+
+      call torch_delete(loss)
+    end do
+
+    ! Check if the tensor values are updated correctly
+    if (.not. assert_allclose(tensor_data, expected, test_name="test_torch_optim_params ["//this%param%optimizer_type//"]")) then
+      print *, "Error :: Incorrect value after optimizer loop."
+      print *, "Expected: ", expected
+      print *, "     Got: ", tensor_data
+      stop 999
+    end if
+
+    ! Clean up
+    call torch_delete(tensor)
+    call torch_delete(target_tensor)
+    call torch_delete(grad)
+    call torch_optim_delete(optimizer)
+  end subroutine test_torch_optim_params
 
 end module unittest_optim
