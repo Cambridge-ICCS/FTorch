@@ -80,7 +80,7 @@ jobs:
       - name: Build FTorch
         run: |
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
-          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
+          export Torch_DIR=$(python -c "import site; print(site.getsitepackages()[0])")
           export BUILD_DIR=$(pwd)/build
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
