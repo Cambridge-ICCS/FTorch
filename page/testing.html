@@ -133,9 +133,8 @@
 <li><a href="#testing">Testing</a><ul>
 <li><a href="#building">Building</a></li>
 <li><a href="#running">Running</a><ul>
-<li><a href="#running-unit-tests-on-unix">Running unit tests on Unix</a></li>
-<li><a href="#running-integration-tests-on-unix">Running integration tests on Unix</a></li>
-<li><a href="#running-integration-tests-on-windows">Running integration tests on Windows</a></li>
+<li><a href="#running-unit-tests">Running unit tests</a></li>
+<li><a href="#running-integration-tests">Running integration tests</a></li>
 </ul>
 </li>
 </ul>
@@ -152,22 +151,17 @@ is set to <code>TRUE</code> for the build,  i.e., <code>-DCMAKE_BUILD_TESTS=True
 to run the unit tests, you will also need to install
 <a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a> and pass its
 install directory to the <code>CMAKE_PREFIX_PATH</code> when building FTorch.</p>
+<p>The CMake build will automatically install any additional Python dependencies
+for the examples.</p>
 <p>Note that, whilst example <code>5_Looping</code> is built if <code>CMAKE_BUILD_TESTS=TRUE</code> is
 specified, it is not run as part of the integration test suite because it
 demonstrates 'good' versus 'bad' practice, as opposed to functionality.</p>
 <h3 id="running">Running</h3>
 <p>Once the build is complete, activate the Python virtual environment you created
-for FTorch<sup>1</sup> and simply run the
-<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/run_test_suite.sh">helper script</a>
-in the root FTorch directory. Depending on the OS you are running you will need
-to use either:</p>
-<ul>
-<li><code>./run_test_suite.sh</code> for Unix operating systems (Mac and Linux).</li>
-<li><code>run_test_suite.bat</code> for Windows operating systems (note this will only run
-  the integration tests, not unit tests).</li>
-</ul>
-<p>This will automatically install any additional Python dependencies for the
-examples.</p>
+for FTorch<sup>1</sup> and simply call <code>ctest</code> from the build directory. Doing
+this, you can pass
+<a href="https://cmake.org/cmake/help/latest/manual/ctest.1.html">arguments</a> to <code>ctest</code>
+for greater control over the testing configuration.</p>
 <p>See the subsections below for instructions on how to run subsets of the full
 test suite.</p>
 <blockquote>
@@ -177,42 +171,34 @@ virtual environment) then you will need to
 the purposes of integration testing as this script will install packages into your
 Python environment and will check that a virtual environment is in use.</em></p>
 </blockquote>
-<h4 id="running-unit-tests-on-unix">Running unit tests on Unix</h4>
-<p>If you are running with a Unix operating system, unit tests may be
-executed either as a suite by specifying the <code>--unit-only</code> command line
-argument:</p>
-<div class="codehilite"><pre><span></span><code>./run_test_suite.sh<span class="w"> </span>--unit-only
-</code></pre></div>
-
-<p>or individually by navigating to <code>${BUILD_DIR}/test/unit</code> (where <code>${BUILD_DIR}</code>
-is the build directory for FTorch) and calling <code>ctest</code> with
-<a href="https://cmake.org/cmake/help/latest/manual/ctest.1.html">appropriate arguments</a>.
-This will produce a report on which tests passed and which failed for your
-build.</p>
-<h4 id="running-integration-tests-on-unix">Running integration tests on Unix</h4>
-<p>If you are running with a Unix operating system, integration tests may be
-executed either as a suite by specifying the <code>--integration-only</code> command line
-argument:</p>
-<div class="codehilite"><pre><span></span><code>./run_test_suite.sh<span class="w"> </span>--integration-only
-</code></pre></div>
-
-<p>or individually by navigating to the corresponding subdirectory of
-<code>${BUILD_DIR}/examples</code> (where <code>${BUILD_DIR}</code> is the build directory for
-FTorch) and calling <code>ctest</code>. This will produce a report on which tests passed
-and which failed for your build. Note that some of the examples have additional
-dependencies, which may need installing into your virtual environment.</p>
-<h4 id="running-integration-tests-on-windows">Running integration tests on Windows</h4>
-<p>As mentioned above, if you are running with a Windows operating system then
-only the integration tests are currently set up. They may be executed either as
-a suite with the command</p>
-<div class="codehilite"><pre><span></span><code>./run_test_suite.bat
-</code></pre></div>
-
-<p>or individually by navigating to the corresponding subdirectory of
-<code>${BUILD_DIR}/examples</code> (where <code>${BUILD_DIR}</code> is the build directory for
-FTorch) and calling <code>ctest</code>. This will produce a report on which tests passed
-and which failed for your build. Note that some of the examples have additional
-dependencies, which may need installing into your virtual environment.</p>
+<h4 id="running-unit-tests">Running unit tests</h4>
+<p>Unit tests may be executed in the following ways:</p>
+<ol>
+<li>Navigate to the build directory and call <code>ctest -R unittest</code> to run all unit
+   tests. (This will run all tests whose names start with 'unittest'.)</li>
+<li>Navigate to the build directory and call
+   <code>ctest -R unittest_tensor_constructors_destructors</code> (for example) to run a
+   specific unit test.</li>
+</ol>
+<p>Either approach will produce a report on which of the requested tests passed
+and which failed for your build.</p>
+<h4 id="running-integration-tests">Running integration tests</h4>
+<p>Integration tests may be executed in the following ways:</p>
+<ol>
+<li>Navigate to the build directory and call <code>ctest -R example</code> to run all
+   integration tests. (This will run all tests whose names start with
+   'example').</li>
+<li>Run the tests associated with a specific example by navigating to the build
+   directory and calling <code>ctest -R example2</code>, for example.</li>
+<li>Run the tests associated with a specific example by navigating to the
+   corresponding subdirectory of <code>${BUILD_DIR}/examples</code> (where <code>${BUILD_DIR}</code>
+   is the build directory for FTorch) and calling <code>ctest</code>.</li>
+</ol>
+<p>Any of the above will produce a report on which of the requested tests passed
+and which failed for your build.</p>
+<p>Note that some of the examples have additional dependencies. While these will be
+installed into your virtual environment as part of the CMake build, you should
+ensure that the same virtual environment is active when you run the tests.</p>
     </div>
   </div>
       <hr>
