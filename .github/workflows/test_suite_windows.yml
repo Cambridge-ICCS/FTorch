@@ -93,8 +93,8 @@ jobs:
           set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
           set PATH=%torch_path%\torch\lib;%PATH%
           cd build
-          ctest -V -R example1
-          ctest -V -R example2
-          ctest -V -R example3
-          ctest -V -R example4
-          ctest -V -R example8
+          ctest --verbose --tests-regex example1
+          ctest --verbose --tests-regex example2
+          ctest --verbose --tests-regex example3
+          ctest --verbose --tests-regex example4
+          ctest --verbose --tests-regex example8

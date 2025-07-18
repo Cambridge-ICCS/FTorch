@@ -149,7 +149,7 @@ The unit tests can be run by navigating to the FTorch build directory and
 calling `ctest`:
 ```sh
 cd build
-ctest -V
+ctest --verbose --tests-regex
 ```
 
 > [!NOTE]  

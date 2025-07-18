@@ -103,10 +103,10 @@ jobs:
         run: |
           . ftorch/bin/activate
           cd build
-          ctest -V -R unit
+          ctest --verbose --tests-regex unit
 
       - name: Run integration tests
         run: |
           . ftorch/bin/activate
           cd build
-          ctest -V -R example
+          ctest --verbose --tests-regex example
