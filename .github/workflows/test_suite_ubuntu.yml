@@ -58,8 +58,6 @@ jobs:
       - name: Install PyTorch
         run: |
           python -m pip install --upgrade pip
-          python -m venv ftorch
-          . ftorch/bin/activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
       # MPI is required by pFUnit
@@ -81,7 +79,6 @@ jobs:
 
       - name: Build FTorch
         run: |
-          . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/build
@@ -101,12 +98,10 @@ jobs:
 
       - name: Run unit tests
         run: |
-          . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex unit
 
       - name: Run integration tests
         run: |
-          . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex example
