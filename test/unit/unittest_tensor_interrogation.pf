@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module test_tensor_interrogation
+module unittest_tensor_interrogation
   use funit
   use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_empty
   use iso_c_binding, only: c_int64_t
@@ -247,4 +247,4 @@ contains
 
   end subroutine test_requires_grad
 
-end module test_tensor_interrogation
+end module unittest_tensor_interrogation

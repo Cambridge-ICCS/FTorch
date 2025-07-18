@@ -102,9 +102,11 @@ jobs:
       - name: Run unit tests
         run: |
           . ftorch/bin/activate
-          ./run_test_suite.sh --verbose --unit-only
+          cd build
+          ctest --verbose --tests-regex unit
 
       - name: Run integration tests
         run: |
           . ftorch/bin/activate
-          ./run_test_suite.sh --verbose --integration-only
+          cd build
+          ctest --verbose --tests-regex example

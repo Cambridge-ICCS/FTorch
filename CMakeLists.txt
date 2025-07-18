@@ -163,6 +163,14 @@ if(CMAKE_BUILD_TESTS)
     COMPONENTS Interpreter
     REQUIRED)
 
+  # Check if Python is in a virtual environment by checking the VIRTUAL_ENV
+  # environment variable exists
+  if(NOT DEFINED ENV{VIRTUAL_ENV})
+    message(FATAL_ERROR
+            "No Python virtual environment detected. Please activate one.")
+  endif()
+
+  # Enable CTest
   enable_testing()
 
   # Unit tests

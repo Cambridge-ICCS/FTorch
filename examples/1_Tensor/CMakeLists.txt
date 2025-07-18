@@ -27,9 +27,10 @@ if(CMAKE_BUILD_TESTS)
 
   # 1. Check the Fortran example runs and its outputs meet expectations
   add_test(
-    NAME tensor_manipulation
+    NAME example1_tensor_manipulation
     COMMAND tensor_manipulation
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(tensor_manipulation PROPERTIES PASS_REGULAR_EXPRESSION
+  set_tests_properties(example1_tensor_manipulation
+                       PROPERTIES PASS_REGULAR_EXPRESSION
                        "Tensor manipulation example ran successfully")
 endif()
