@@ -223,6 +223,10 @@ FORD is pip installable:
 ```
 pip install ford
 ```
+FORD uses [graphviz](https://graphviz.org) to generate dependency graphs from the Fortran
+source code[^1]. 
+For this, you will need to install it on your system - see the [installation guide](https://graphviz.org/download/) for your platform.
+
 To generate the documentation run:
 ```
 ford FTorch.md
@@ -242,3 +246,5 @@ If you are building documentation locally and wish FORD to continue when it enco
 errors, you can change the `dbg` setting in the `FTorch.md` file to `true`. Note that
 in this case the documentation may build but be incomplete. Please pay close attention
 to the warnings.
+
+[^1]: Note: If FORD cannot locate the graphviz executable (it is not a hard dependency) it will generate a warning.
