@@ -325,6 +325,9 @@ but as a quick-start:</p>
 <div class="codehilite"><pre><span></span><code>pip install ford
 </code></pre></div>
 
+<p>FORD uses <a href="https://graphviz.org">graphviz</a> to generate dependency graphs from the Fortran
+source code<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>. 
+For this, you will need to install it on your system - see the <a href="https://graphviz.org/download/">installation guide</a> for your platform.</p>
 <p>To generate the documentation run:</p>
 <div class="codehilite"><pre><span></span><code>ford FTorch.md
 </code></pre></div>
@@ -340,6 +343,14 @@ via the C preprocessor in <code>FTorch.md</code> to match those in the CMakeList
 errors, you can change the <code>dbg</code> setting in the <code>FTorch.md</code> file to <code>true</code>. Note that
 in this case the documentation may build but be incomplete. Please pay close attention
 to the warnings.</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Note: If FORD cannot locate the graphviz executable (it is not a hard dependency) it will generate a warning.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
     </div>
   </div>
       <hr>
