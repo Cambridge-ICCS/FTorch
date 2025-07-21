@@ -157,18 +157,20 @@ install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch_test_utils.mod"
 # Build integration tests
 if(CMAKE_BUILD_TESTS)
 
-  set(Python_FIND_VIRTUALENV FIRST) # cmake-lint: disable=C0103
-  find_package(
-    Python
-    COMPONENTS Interpreter
-    REQUIRED)
-
   # Check if Python is in a virtual environment by checking the VIRTUAL_ENV
   # environment variable exists
+  # Must be done before `find_package` in to prevent system Python getting
+  # cached by CMake
   if(NOT DEFINED ENV{VIRTUAL_ENV})
     message(FATAL_ERROR
             "No Python virtual environment detected. Please activate one.")
   endif()
+
+  set(Python_FIND_VIRTUALENV ONLY) # cmake-lint: disable=C0103
+  find_package(
+    Python
+    COMPONENTS Interpreter
+    REQUIRED)
 
   # Enable CTest
   enable_testing()
