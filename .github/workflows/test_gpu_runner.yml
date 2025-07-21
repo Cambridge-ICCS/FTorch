@@ -1,0 +1,75 @@
+name: GPU Runner Test
+
+on:
+  workflow_dispatch:  # Manual trigger only for now
+
+jobs:
+
+  gpu-runner-info:
+    runs-on: GPU-runner
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: System Information
+      run: |
+        echo "=== System Information ==="
+        uname -a
+        cat /etc/os-release
+        
+    - name: NVIDIA Driver Information
+      run: |
+        echo "=== NVIDIA Driver ==="
+        nvidia-smi
+        
+    - name: CUDA Information
+      run: |
+        echo "=== CUDA Information ==="
+        nvcc --version || echo "nvcc not found in PATH"
+        
+        # Check for CUDA installation paths
+        if [ -d "/usr/local/cuda" ]; then
+          echo "CUDA found at /usr/local/cuda"
+          ls -la /usr/local/cuda/
+          /usr/local/cuda/bin/nvcc --version 2>/dev/null || echo "nvcc not executable at /usr/local/cuda/bin/"
+        fi
+        
+        # Check CUDA runtime version
+        if command -v nvidia-smi &> /dev/null; then
+          echo "CUDA Runtime version from nvidia-smi:"
+          nvidia-smi | grep "CUDA Version"
+        fi
+        
+    - name: Python and PyTorch CUDA Check
+      run: |
+        echo "=== Python Environment ==="
+        python3 --version
+        
+        # Install PyTorch with CUDA support (lightweight test)
+        pip3 install torch --index-url https://download.pytorch.org/whl/cu121
+        
+        echo "=== PyTorch CUDA Information ==="
+        cat << 'EOF' | python3
+        import torch
+        print(f'PyTorch version: {torch.__version__}')
+        print(f'CUDA available: {torch.cuda.is_available()}')
+        if torch.cuda.is_available():
+            print(f'CUDA version: {torch.version.cuda}')
+            print(f'cuDNN version: {torch.backends.cudnn.version()}')
+            print(f'Number of GPUs: {torch.cuda.device_count()}')
+            for i in range(torch.cuda.device_count()):
+                print(f'GPU {i}: {torch.cuda.get_device_name(i)}')
+                props = torch.cuda.get_device_properties(i)
+                print(f'  - Total memory: {props.total_memory / 1024**3:.1f} GB')
+                print(f'  - Major: {props.major}, Minor: {props.minor}')
+                print(f'  - Multi-processor count: {props.multi_processor_count}')
+        else:
+            print('CUDA is not available')
+        EOF
+
+    - name: GPU Device Information
+      run: |
+        echo "=== GPU Device Information ==="
+        nvidia-smi --query-gpu=index,name --format=csv,noheader
+
