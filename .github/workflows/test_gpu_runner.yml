@@ -1,7 +1,31 @@
 name: GPU Runner Test
+ 
+# Controls when the workflow will run
 
 on:
-  workflow_dispatch:  # Manual trigger only for now
+
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with code changes
+  pull_request:
+    paths:
+      - '.github/workflows/test_gpu_runner.yml'
+      - '**.c'
+      - '**.cpp'
+      - '**.fypp'
+      - '**.f90'
+      - '**.F90'
+      - '**.pf'
+      - '**.py'
+      - '**.sh'
+      - '**CMakeLists.txt'
+      - '**requirements.txt'
+      - '**data/*'
+
+  # Manual trigger
+  workflow_dispatch:
 
 jobs:
 
