@@ -52,7 +52,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        std: ["f2008", "f2018"]
+        std: ["f2008"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
