@@ -75,10 +75,14 @@ jobs:
           # CUDA v11.8 chosen as the GPU-runner has v12.4 installed (backward compatible)
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 
+      - name: Install cmake
+        run: |
+          sudo apt update
+          sudo apt install -y cmake
+
       # MPI is required by pFUnit
       - name: Install an MPI distribution
         run: |
-          sudo apt update
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
       - name: Install pFUnit
