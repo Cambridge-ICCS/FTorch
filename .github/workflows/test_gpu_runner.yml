@@ -9,9 +9,13 @@ jobs:
     runs-on: GPU-runner
     
     steps:
-    - name: Checkout repository
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Checkout code
+      with:
+        persist-credentials: false
       uses: actions/checkout@v4
-      
+     
     - name: System Information
       run: |
         echo "=== System Information ==="
