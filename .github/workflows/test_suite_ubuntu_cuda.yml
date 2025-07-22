@@ -79,7 +79,7 @@ jobs:
       - name: Install an MPI distribution
         run: |
           sudo apt update
-          sudo apt install openmpi-bin openmpi-common libopenmpi-dev
+          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
       - name: Install pFUnit
         run: |
