@@ -49,8 +49,8 @@ if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
     endif()
   endif()
   add_pfunit_ctest(
-    test_tensor_interrogation_cuda TEST_SOURCES
-    test_tensor_interrogation_cuda.pf LINK_LIBRARIES FTorch::ftorch)
+    unittest_tensor_interrogation_cuda TEST_SOURCES
+    unittest_tensor_interrogation_cuda.pf LINK_LIBRARIES FTorch::ftorch)
   add_pfunit_ctest(
     test_tensor_manipulation_cuda TEST_SOURCES
     test_tensor_manipulation_cuda.pf LINK_LIBRARIES FTorch::ftorch)
