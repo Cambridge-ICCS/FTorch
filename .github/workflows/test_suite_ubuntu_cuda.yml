@@ -75,10 +75,10 @@ jobs:
           # CUDA v11.8 chosen as the GPU-runner has v12.4 installed (backward compatible)
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 
-      - name: Install cmake
+      - name: Install cmake and NVIDIA dev toolkit
         run: |
           sudo apt update
-          sudo apt install -y cmake
+          sudo apt install -y cmake nvidia-cuda-toolkit
 
       # MPI is required by pFUnit
       - name: Install an MPI distribution
