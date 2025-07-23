@@ -7,7 +7,7 @@ if(CMAKE_BUILD_TESTS)
   # NOTE: Example 5_Looping is built here but not run as part of the integration
   #       test suite. This is because it demonstrates 'good' versus 'bad'
   #       practice, as opposed to functionality.
-  if(NOT "${GPU_DEVICE}" STREQUAL "NONE")
+  if(NOT "${GPU_DEVICE}" STREQUAL "NONE" AND MULTI_GPU)
     add_subdirectory(6_MultiGPU)
   endif()
   # NOTE: We do not currently support running with MPI on Windows

@@ -35,28 +35,34 @@ option(GPU_DEVICE
        "Set the GPU device (NONE [default], CUDA, HIP, XPU, or MPS)" NONE)
 if("${GPU_DEVICE}" STREQUAL "OFF")
   set(GPU_DEVICE NONE)
-endif()
-if("${GPU_DEVICE}" STREQUAL "NONE")
-  set(GPU_DEVICE_CODE ${GPU_DEVICE_NONE})
-elseif("${GPU_DEVICE}" STREQUAL "CUDA")
-  set(GPU_DEVICE_CODE ${GPU_DEVICE_CUDA})
-elseif("${GPU_DEVICE}" STREQUAL "HIP")
-  # As stated in the PyTorch documentation
-  # (https://docs.pytorch.org/docs/stable/notes/hip.html)
-  # > "PyTorch for HIP intentionally reuses the existing torch.cuda interfaces.
-  # > This helps to accelerate the porting of existing PyTorch code and models
-  # > because very few code changes are necessary, if any."
-  # Therefore we use the CUDA backend when HIP is selected. This is technically
-  # equivalent to specifying -DGPU_DEVICE=CUDA.
-  set(GPU_DEVICE_CODE ${GPU_DEVICE_HIP})
-elseif("${GPU_DEVICE}" STREQUAL "XPU")
-  set(GPU_DEVICE_CODE ${GPU_DEVICE_XPU})
-elseif("${GPU_DEVICE}" STREQUAL "MPS")
-  set(GPU_DEVICE_CODE ${GPU_DEVICE_MPS})
 else()
-  message(SEND_ERROR "GPU_DEVICE '${GPU_DEVICE}' not recognised")
-endif()
+  message(STATUS "Building with GPU support")
+  if("${GPU_DEVICE}" STREQUAL "NONE")
+    set(GPU_DEVICE_CODE ${GPU_DEVICE_NONE})
+  elseif("${GPU_DEVICE}" STREQUAL "CUDA")
+    set(GPU_DEVICE_CODE ${GPU_DEVICE_CUDA})
+  elseif("${GPU_DEVICE}" STREQUAL "HIP")
+    # As stated in the PyTorch documentation
+    # (https://docs.pytorch.org/docs/stable/notes/hip.html) > "PyTorch for HIP
+    # intentionally reuses the existing torch.cuda interfaces. > This helps to
+    # accelerate the porting of existing PyTorch code and models > because very
+    # few code changes are necessary, if any." Therefore we use the CUDA backend
+    # when HIP is selected. This is technically equivalent to specifying
+    # -DGPU_DEVICE=CUDA.
+    set(GPU_DEVICE_CODE ${GPU_DEVICE_HIP})
+  elseif("${GPU_DEVICE}" STREQUAL "XPU")
+    set(GPU_DEVICE_CODE ${GPU_DEVICE_XPU})
+  elseif("${GPU_DEVICE}" STREQUAL "MPS")
+    set(GPU_DEVICE_CODE ${GPU_DEVICE_MPS})
+  else()
+    message(SEND_ERROR "GPU_DEVICE '${GPU_DEVICE}' not recognised")
+  endif()
 
+  # If a GPU device is passed, specify if more than one is available. Set to OFF
+  # if only one is available. Used to determine whether to run Multi GPU testing
+  option(MULTI_GPU "Whether to enable Multi GPU testing (ON [default], OFF)"
+         OFF)
+endif()
 # Other GPU specific setup
 include(CheckLanguage)
 if("${GPU_DEVICE}" STREQUAL "CUDA")
@@ -168,6 +174,10 @@ if(CMAKE_BUILD_TESTS)
   if(NOT DEFINED ENV{VIRTUAL_ENV})
     message(FATAL_ERROR
             "No Python virtual environment detected. Please activate one.")
+  endif()
+
+  if(MULTI_GPU)
+    message(STATUS "Building tests with Multi GPU support")
   endif()
 
   # Enable CTest
