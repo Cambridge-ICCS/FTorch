@@ -74,7 +74,7 @@ jobs:
           sudo apt update
           sudo apt install -y cmake nvidia-cuda-toolkit
 
-      # MPI is required by pFUnit
+        # Currently used by example7_mpi
       - name: Install an MPI distribution
         run: |
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
@@ -82,12 +82,12 @@ jobs:
       - name: Install pFUnit
         run: |
           export FC=/usr/bin/gfortran
-          export MPIF90=/usr/bin/mpif90
           # TODO: Avoid version pinning (needed because version appears in install path)
           git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake ..
+          # MPI support is currently not needed for the unit testing
+          cmake .. -DSKIP_MPI=YES
           make -j 4 install
 
       - name: Build FTorch
