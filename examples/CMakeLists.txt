@@ -8,6 +8,7 @@ if(CMAKE_BUILD_TESTS)
   #       test suite. This is because it demonstrates 'good' versus 'bad'
   #       practice, as opposed to functionality.
   if(NOT "${GPU_DEVICE}" STREQUAL "NONE" AND MULTI_GPU)
+    message(STATUS "Build Multi GPU integration tests")
     add_subdirectory(6_MultiGPU)
   endif()
   # NOTE: We do not currently support running with MPI on Windows

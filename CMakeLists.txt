@@ -176,10 +176,6 @@ if(CMAKE_BUILD_TESTS)
             "No Python virtual environment detected. Please activate one.")
   endif()
 
-  if(MULTI_GPU)
-    message(STATUS "Building tests with Multi GPU support")
-  endif()
-
   # Enable CTest
   enable_testing()
 
