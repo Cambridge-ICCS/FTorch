@@ -66,26 +66,29 @@ if(CMAKE_BUILD_TESTS)
               cuda --filepath ${PROJECT_BINARY_DIR}
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 3a. Check the model can be loaded from file and run on two CUDA devices in
-    # Python and that its outputs meet expectations
-    add_test(
-      NAME example6_multigpu_infer_python
-      COMMAND ${Python_EXECUTABLE}
-              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type cuda
-              --filepath ${PROJECT_BINARY_DIR}
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    if(MULTI_GPU)
+      # 3a. Check the model can be loaded from file and run on two CUDA devices
+      # in Python and that its outputs meet expectations
+      add_test(
+        NAME example6_multigpu_infer_python
+        COMMAND ${Python_EXECUTABLE}
+                ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py
+                --device_type cuda
+                --filepath ${PROJECT_BINARY_DIR}
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 4a. Check the model can be loaded from file and run on two CUDA devices in
-    # Fortran and that its outputs meet expectations
-    add_test(
-      NAME example6_multigpu_infer_fortran
-      COMMAND multigpu_infer_fortran cuda
-              ${PROJECT_BINARY_DIR}/saved_multigpu_model_cuda.pt
-      # Command line arguments for device type and model file
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-    set_tests_properties(
-      example6_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-      "MultiGPU example ran successfully")
+      # 4a. Check the model can be loaded from file and run on two CUDA devices
+      # in Fortran and that its outputs meet expectations
+      add_test(
+        NAME example6_multigpu_infer_fortran
+        COMMAND multigpu_infer_fortran cuda
+                ${PROJECT_BINARY_DIR}/saved_multigpu_model_cuda.pt
+        # Command line arguments for device type and model file
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+      set_tests_properties(
+        example6_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+        "MultiGPU example ran successfully")
+    endif()
   endif()
 
   if("${GPU_DEVICE}" STREQUAL "HIP")
@@ -103,26 +106,28 @@ if(CMAKE_BUILD_TESTS)
               hip --filepath ${PROJECT_BINARY_DIR}
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 3b. Check the model can be loaded from file and run on two HIP devices in
-    # Python and that its outputs meet expectations
-    add_test(
-      NAME multigpu_infer_python
-      COMMAND ${Python_EXECUTABLE}
-              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type hip
-              --filepath ${PROJECT_BINARY_DIR}
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    if(MULTI_GPU)
+      # 3b.Check the model can be loaded from file and run on two HIP devices in
+      # Python and that its outputs meet expectations
+      add_test(
+        NAME multigpu_infer_python
+        COMMAND ${Python_EXECUTABLE}
+                ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type hip
+                --filepath ${PROJECT_BINARY_DIR}
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 4b. Check the model can be loaded from file and run on two HIP devices in
-    # Fortran and that its outputs meet expectations
-    add_test(
-      NAME multigpu_infer_fortran
-      COMMAND multigpu_infer_fortran hip
-              ${PROJECT_BINARY_DIR}/saved_multigpu_model_hip.pt
-      # Command line arguments for device type and model file
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-    set_tests_properties(
-      multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-                                        "MultiGPU example ran successfully")
+      # 4b.Check the model can be loaded from file and run on two HIP devices in
+      # Fortran and that its outputs meet expectations
+      add_test(
+        NAME multigpu_infer_fortran
+        COMMAND multigpu_infer_fortran hip
+                ${PROJECT_BINARY_DIR}/saved_multigpu_model_hip.pt
+        # Command line arguments for device type and model file
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+      set_tests_properties(
+        multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+                                          "MultiGPU example ran successfully")
+    endif()
   endif()
 
   if("${GPU_DEVICE}" STREQUAL "XPU")
@@ -140,26 +145,28 @@ if(CMAKE_BUILD_TESTS)
               xpu --filepath ${PROJECT_BINARY_DIR}
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 3b. Check the model can be loaded from file and run on two XPU devices in
-    # Python and that its outputs meet expectations
-    add_test(
-      NAME example6_multigpu_infer_python
-      COMMAND ${Python_EXECUTABLE}
-              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type xpu
-              --filepath ${PROJECT_BINARY_DIR}
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    if(MULTI_GPU)
+      # 3b. Check the model can be loaded from file and run on two XPU devices
+      # in Python and that its outputs meet expectations
+      add_test(
+        NAME example6_multigpu_infer_python
+        COMMAND ${Python_EXECUTABLE}
+                ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type xpu
+                --filepath ${PROJECT_BINARY_DIR}
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 4b. Check the model can be loaded from file and run on two XPU devices in
-    # Fortran and that its outputs meet expectations
-    add_test(
-      NAME example6_multigpu_infer_fortran
-      COMMAND multigpu_infer_fortran xpu
-              ${PROJECT_BINARY_DIR}/saved_multigpu_model_xpu.pt
-      # Command line arguments for device type and model file
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-    set_tests_properties(
-      example6_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-      "MultiGPU example ran successfully")
+      # 4b. Check the model can be loaded from file and run on two XPU devices
+      # in Fortran and that its outputs meet expectations
+      add_test(
+        NAME example6_multigpu_infer_fortran
+        COMMAND multigpu_infer_fortran xpu
+                ${PROJECT_BINARY_DIR}/saved_multigpu_model_xpu.pt
+        # Command line arguments for device type and model file
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+      set_tests_properties(
+        example6_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+        "MultiGPU example ran successfully")
+    endif()
   endif()
 
   if("${GPU_DEVICE}" STREQUAL "MPS")
@@ -176,25 +183,27 @@ if(CMAKE_BUILD_TESTS)
               mps --filepath ${PROJECT_BINARY_DIR}
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 3c. Check the model can be loaded from file and run on one MPS device in
-    # Python and that its outputs meet expectations
-    add_test(
-      NAME example6_multigpu_infer_python
-      COMMAND ${Python_EXECUTABLE}
-              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type mps
-              --filepath ${PROJECT_BINARY_DIR}
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    if(MULTI_GPU)
+      # 3c. Check the model can be loaded from file and run on one MPS device in
+      # Python and that its outputs meet expectations
+      add_test(
+        NAME example6_multigpu_infer_python
+        COMMAND ${Python_EXECUTABLE}
+                ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type mps
+                --filepath ${PROJECT_BINARY_DIR}
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 4c. Check the model can be loaded from file and run on one MPS device in
-    # Fortran and that its outputs meet expectations
-    add_test(
-      NAME example6_multigpu_infer_fortran
-      COMMAND multigpu_infer_fortran mps
-              ${PROJECT_BINARY_DIR}/saved_multigpu_model_mps.pt
-      # Command line arguments for device type and model file
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-    set_tests_properties(
-      example6_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-      "MultiGPU example ran successfully")
+      # 4c. Check the model can be loaded from file and run on one MPS device in
+      # Fortran and that its outputs meet expectations
+      add_test(
+        NAME example6_multigpu_infer_fortran
+        COMMAND multigpu_infer_fortran mps
+                ${PROJECT_BINARY_DIR}/saved_multigpu_model_mps.pt
+        # Command line arguments for device type and model file
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+      set_tests_properties(
+        example6_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+        "MultiGPU example ran successfully")
+    endif()
   endif()
 endif()
