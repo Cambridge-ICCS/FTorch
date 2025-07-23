@@ -4,10 +4,6 @@ name: TestSuiteUbuntuCUDA
 # Controls when the workflow will run
 on:
 
-  schedule:
-    # Run monthly (see https://crontab.guru/#00_00_1_*_*)
-    - cron: '00 00 1 * *'
-
   # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
   push:
     branches: [ "main" ]
