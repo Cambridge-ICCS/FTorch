@@ -57,6 +57,17 @@ else()
   message(SEND_ERROR "GPU_DEVICE '${GPU_DEVICE}' not recognised")
 endif()
 
+# If a GPU device is passed, specify if more than one is available This is used
+# to determine whether to run Multi GPU testing
+if(NOT "${GPU_DEVICE}" STREQUAL "NONE")
+  option(MULTI_GPU "Whether to enable Multi GPU testing (OFF [default], ON)"
+         OFF)
+else()
+  if(MULTI_GPU)
+    message(SEND_ERROR "Multi GPU turned ON but no GPU device specified")
+  endif()
+endif()
+
 # Other GPU specific setup
 include(CheckLanguage)
 if("${GPU_DEVICE}" STREQUAL "CUDA")
@@ -168,6 +179,10 @@ if(CMAKE_BUILD_TESTS)
   if(NOT DEFINED ENV{VIRTUAL_ENV})
     message(FATAL_ERROR
             "No Python virtual environment detected. Please activate one.")
+  endif()
+
+  if(MULTI_GPU)
+    message(STATUS "Building tests with Multi GPU support")
   endif()
 
   # Enable CTest
