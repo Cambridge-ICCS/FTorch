@@ -35,11 +35,11 @@ option(GPU_DEVICE
        "Set the GPU device (NONE [default], CUDA, HIP, XPU, or MPS)" NONE)
 if("${GPU_DEVICE}" STREQUAL "OFF")
   set(GPU_DEVICE NONE)
-else()
+endif()
+
+if(NOT "${GPU_DEVICE}" STREQUAL "NONE")
   message(STATUS "Building with GPU support")
-  if("${GPU_DEVICE}" STREQUAL "NONE")
-    set(GPU_DEVICE_CODE ${GPU_DEVICE_NONE})
-  elseif("${GPU_DEVICE}" STREQUAL "CUDA")
+  if("${GPU_DEVICE}" STREQUAL "CUDA")
     set(GPU_DEVICE_CODE ${GPU_DEVICE_CUDA})
   elseif("${GPU_DEVICE}" STREQUAL "HIP")
     # As stated in the PyTorch documentation
@@ -62,6 +62,9 @@ else()
   # if only one is available. Used to determine whether to run Multi GPU testing
   option(MULTI_GPU "Whether to enable Multi GPU testing (ON [default], OFF)"
          OFF)
+else()
+  message(STATUS "CPU-only build")
+  set(GPU_DEVICE_CODE ${GPU_DEVICE_NONE})
 endif()
 # Other GPU specific setup
 include(CheckLanguage)
