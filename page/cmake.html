@@ -231,6 +231,11 @@ The following CMake flags are available and can be passed as arguments through <
 <td><code>NONE</code> / <code>CUDA</code> / <code>HIP</code> / <code>XPU</code> / <code>MPS</code></td>
 <td>Specifies the target GPU architecture (if any) <sup>3</sup></td>
 </tr>
+<tr>
+<td><code>MULTI_GPU</code></td>
+<td><code>ON</code> / <code>OFF</code></td>
+<td>Specifies whether to build the tests that involve multiple GPU devices (<code>ON</code> by default if <code>CMAKE_BUILD_TESTS</code> and <code>GPU_DEVICE</code> are set).</td>
+</tr>
 </tbody>
 </table>
 <blockquote>

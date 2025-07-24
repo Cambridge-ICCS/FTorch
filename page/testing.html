@@ -150,7 +150,9 @@ and run and their outputs are analysed.</p>
 is set to <code>TRUE</code> for the build,  i.e., <code>-DCMAKE_BUILD_TESTS=True</code>. If you want
 to run the unit tests, you will also need to install
 <a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a> and pass its
-install directory to the <code>CMAKE_PREFIX_PATH</code> when building FTorch.</p>
+install directory to the <code>CMAKE_PREFIX_PATH</code> when building FTorch.
+If a <code>GPU_DEVICE</code> is specified but only one is available, i.e. when in a single GPU setting, you will need to also set the <code>MULTI_GPU</code> option to <code>OFF</code>.
+This will skip the 'multiple GPU' integration test which requires multiple devices to be available.</p>
 <p>The CMake build will automatically install any additional Python dependencies
 for the examples.</p>
 <p>Note that, whilst example <code>5_Looping</code> is built if <code>CMAKE_BUILD_TESTS=TRUE</code> is
