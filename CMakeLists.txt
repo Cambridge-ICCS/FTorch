@@ -46,11 +46,11 @@ elseif("${GPU_DEVICE}" STREQUAL "CUDA")
 elseif("${GPU_DEVICE}" STREQUAL "HIP")
   # As stated in the PyTorch documentation
   # (https://docs.pytorch.org/docs/stable/notes/hip.html) > "PyTorch for HIP
-  # intentionally reuses the existing torch.cuda interfaces. > This helps to
-  # accelerate the porting of existing PyTorch code and models > because very
-  # few code changes are necessary, if any." Therefore we use the CUDA backend
-  # when HIP is selected. This is technically equivalent to specifying
-  # -DGPU_DEVICE=CUDA.
+  # intentionally reuses the existing torch.cuda interfaces. 
+  # > This helps to accelerate the porting of existing PyTorch code and models
+  # > because very few code changes are necessary, if any."
+  # Therefore we use the CUDA backend when HIP is selected. This is technically
+  # equivalent to specifying -DGPU_DEVICE=CUDA.
   message(STATUS "Building with HIP support")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_HIP})
 elseif("${GPU_DEVICE}" STREQUAL "XPU")
