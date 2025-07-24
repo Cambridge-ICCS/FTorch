@@ -181,7 +181,7 @@ if(CMAKE_BUILD_TESTS)
     # OFF if only one is available. Used to determine whether to run Multi GPU
     # testing
     option(MULTI_GPU "Whether to enable Multi GPU testing (ON [default], OFF)"
-           OFF)
+           ON)
   endif()
 
   # Enable CTest
