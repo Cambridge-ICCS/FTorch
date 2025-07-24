@@ -15,6 +15,7 @@ is set to `TRUE` for the build,  i.e., `-DCMAKE_BUILD_TESTS=True`. If you want
 to run the unit tests, you will also need to install
 [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit) and pass its
 install directory to the `CMAKE_PREFIX_PATH` when building FTorch.
+If a `GPU_DEVICE` is specified but only one is available, i.e. when in a single GPU setting, you will need to also set the `MULTI_GPU` option to `OFF`.
 
 The CMake build will automatically install any additional Python dependencies
 for the examples.

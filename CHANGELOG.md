@@ -11,6 +11,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- A new cmake option `MULTI_GPU` to control the build of multi GPU integration tests in [#410](https://github.com/Cambridge-ICCS/FTorch/pull/410)
 - Support for AMD GPU backends (HIP) provided in
   [#385](https://github.com/Cambridge-ICCS/FTorch/pull/385) and
   [#388](https://github.com/Cambridge-ICCS/FTorch/pull/388).
