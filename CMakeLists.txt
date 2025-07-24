@@ -36,22 +36,28 @@ option(GPU_DEVICE
 if("${GPU_DEVICE}" STREQUAL "OFF")
   set(GPU_DEVICE NONE)
 endif()
+
 if("${GPU_DEVICE}" STREQUAL "NONE")
+  message(STATUS "CPU-only build")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_NONE})
 elseif("${GPU_DEVICE}" STREQUAL "CUDA")
+  message(STATUS "Building with CUDA support")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_CUDA})
 elseif("${GPU_DEVICE}" STREQUAL "HIP")
   # As stated in the PyTorch documentation
-  # (https://docs.pytorch.org/docs/stable/notes/hip.html)
-  # > "PyTorch for HIP intentionally reuses the existing torch.cuda interfaces.
+  # (https://docs.pytorch.org/docs/stable/notes/hip.html) > "PyTorch for HIP
+  # intentionally reuses the existing torch.cuda interfaces.
   # > This helps to accelerate the porting of existing PyTorch code and models
   # > because very few code changes are necessary, if any."
   # Therefore we use the CUDA backend when HIP is selected. This is technically
   # equivalent to specifying -DGPU_DEVICE=CUDA.
+  message(STATUS "Building with HIP support")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_HIP})
 elseif("${GPU_DEVICE}" STREQUAL "XPU")
+  message(STATUS "Building with XPU support")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_XPU})
 elseif("${GPU_DEVICE}" STREQUAL "MPS")
+  message(STATUS "Building with MPS support")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_MPS})
 else()
   message(SEND_ERROR "GPU_DEVICE '${GPU_DEVICE}' not recognised")
@@ -168,6 +174,14 @@ if(CMAKE_BUILD_TESTS)
   if(NOT DEFINED ENV{VIRTUAL_ENV})
     message(FATAL_ERROR
             "No Python virtual environment detected. Please activate one.")
+  endif()
+
+  if(NOT "${GPU_DEVICE}" STREQUAL "NONE")
+    # If a GPU device is passed, specify if more than one is available. Set to
+    # OFF if only one is available. Used to determine whether to run Multi GPU
+    # testing
+    option(MULTI_GPU "Whether to enable Multi GPU testing (ON [default], OFF)"
+           ON)
   endif()
 
   # Enable CTest
