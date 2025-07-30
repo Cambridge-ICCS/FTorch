@@ -306,17 +306,10 @@ int torch_tensor_get_rank(const torch_tensor_t tensor) {
   return t->sizes().size();
 }
 
-#ifdef UNIX
-const long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
+const torch_size_t *torch_tensor_get_sizes(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   return t->sizes().data();
 }
-#else
-const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
-  auto t = reinterpret_cast<torch::Tensor *>(tensor);
-  return t->sizes().data();
-}
-#endif
 
 const torch_size_t *torch_tensor_get_stride(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);

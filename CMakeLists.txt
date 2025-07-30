@@ -108,14 +108,9 @@ add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90
                                src/ftorch_test_utils.f90)
 
 # Define compile definitions, including GPU devices
-set(COMPILE_DEFS "")
-if(UNIX AND NOT APPLE)
-  # only add UNIX definition for linux (not apple which is also unix)
-  set(COMPILE_DEFS UNIX)
-endif()
 target_compile_definitions(
   ${LIB_NAME}
-  PRIVATE ${COMPILE_DEFS} GPU_DEVICE=${GPU_DEVICE_CODE}
+  PRIVATE GPU_DEVICE=${GPU_DEVICE_CODE}
           GPU_DEVICE_NONE=${GPU_DEVICE_NONE}
           GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA}
           GPU_DEVICE_HIP=${GPU_DEVICE_HIP}
