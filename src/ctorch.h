@@ -138,11 +138,7 @@ EXPORT_C int torch_tensor_get_rank(const torch_tensor_t tensor);
  * @param Torch Tensor to determine the rank of
  * @return pointer to the sizes array of the Torch Tensor
  */
-#ifdef UNIX
-EXPORT_C const long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
-#else
-EXPORT_C const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
-#endif
+EXPORT_C const torch_size_t *torch_tensor_get_sizes(const torch_tensor_t tensor);
 
 /**
  * Function to determine the strides of a Torch Tensor
