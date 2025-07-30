@@ -318,6 +318,11 @@ const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
 }
 #endif
 
+const torch_size_t *torch_tensor_get_stride(const torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  return t->strides().data();
+}
+
 torch_data_t torch_tensor_get_dtype(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   return get_ftorch_dtype(t->dtype());
