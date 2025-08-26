@@ -199,6 +199,18 @@ EXPORT_C void torch_tensor_to(const torch_tensor_t source_tensor,
 // =============================================================================
 
 /**
+ * Shallow copy a tensor
+ *
+ * Mimics the semantics of `libtorch` assignments to lvalues.
+ * At the end `to` and `from` will use (alias) the same underlying data
+ *
+ * @param to will be associated to a shallow copy of `from`
+ * @param from source
+ *
+ */
+EXPORT_C void torch_tensor_shallow_copy(torch_tensor_t* to, const torch_tensor_t from);
+
+/**
  * Overloads the assignment operator for Torch Tensor
  * @param output Tensor
  * @param input Tensor

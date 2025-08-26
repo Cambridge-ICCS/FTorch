@@ -376,6 +376,22 @@ void torch_tensor_to(const torch_tensor_t source_tensor, torch_tensor_t target_t
 // --- Operator overloads acting on tensors
 // =====================================================================================
 
+void torch_tensor_shallow_copy(torch_tensor_t *to, const torch_tensor_t from) {
+  auto to_tensor = reinterpret_cast<torch::Tensor *>(*to);
+  auto from_tensor = reinterpret_cast<torch::Tensor *>(from);
+
+  validate_tensor(from_tensor, "from");
+  if (!to_tensor) {
+    to_tensor = new torch::Tensor();
+  }
+
+  // Copy Tensors
+  *to_tensor = *from_tensor;
+
+  // Update lhs pointer value
+  *to = to_tensor;
+}
+
 void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input) {
   auto out = reinterpret_cast<torch::Tensor *>(output);
   auto in = reinterpret_cast<torch::Tensor *const>(input);

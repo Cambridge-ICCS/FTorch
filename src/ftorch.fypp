@@ -749,6 +749,27 @@ contains
   ! --- Overloaded operators acting on tensors
   ! ============================================================================
 
+  !> Makes a shallow copy of a tensor
+  !>
+  !> Mimics more Python-like assigment behaviour where `b = a` makes `b` point
+  !> to the same underlying data as `a`.
+  subroutine torch_tensor_shallow_copy(to, from)
+    type(torch_tensor), intent(out) :: to !! target
+    type(torch_tensor), intent(in) :: from !! source
+
+    interface
+      subroutine torch_tensor_shallow_copy_c(output_c, input_c) &
+        bind(c, name = 'torch_tensor_shallow_copy')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), intent(inout) :: output_c
+        type(c_ptr), value, intent(in) :: input_c
+      end subroutine torch_tensor_shallow_copy_c
+    end interface
+    call torch_tensor_shallow_copy_c(to%p, from%p)
+
+  end subroutine torch_tensor_shallow_copy
+
   !> Overloads assignment operator for tensors.
   subroutine torch_tensor_assign(output, input)
     use, intrinsic :: iso_c_binding, only : c_associated

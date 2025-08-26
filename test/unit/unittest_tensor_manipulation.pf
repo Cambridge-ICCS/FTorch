@@ -52,4 +52,32 @@ contains
 
   end subroutine test_torch_tensor_zero
 
+  @test
+  subroutine test_tensor_shallow_copy()
+    use, intrinsic :: iso_fortran_env, only: wp => real64
+    use ftorch, only: torch_tensor_shallow_copy
+
+    type(torch_tensor) :: original, copy,  out
+    real(wp), dimension(2,3), target :: in_data
+    real(wp), dimension(2,3), target :: out_data
+
+
+    ! Original tensor backed by Fortran array
+    in_data = reshape([1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp], [2, 3])
+    call torch_tensor_from_array(original, in_data, device_type)
+
+    ! Another view of the original tensor
+    call torch_tensor_shallow_copy(copy, original)
+
+    ! Output tensor backed by another Fortran array
+    call torch_tensor_from_array(out, out_data, device_type)
+
+    in_data = 2.0_wp * in_data
+
+    out = copy
+
+    @assertTrue( assert_allclose(out_data, in_data, test_name="test_tensor_shallow_copy") )
+
+  end subroutine test_tensor_shallow_copy
+
 end module unittest_tensor_manipulation
