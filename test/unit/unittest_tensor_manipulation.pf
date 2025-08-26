@@ -80,4 +80,42 @@ contains
 
   end subroutine test_tensor_shallow_copy
 
+  @test
+  subroutine test_tensor_permute()
+    use, intrinsic :: iso_fortran_env, only: wp => real64
+    use ftorch, only: torch_tensor_permute, torch_tensor_shallow_copy
+
+    type(torch_tensor) :: original, permuted, out
+    real(wp), dimension(2,3), target :: in_data
+    real(wp), dimension(3,2), target :: out_data
+    integer, dimension(2) :: dims
+    logical :: test_pass
+
+    ! Original tensor backed by Fortran array
+    in_data = reshape([1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp], [2, 3])
+    call torch_tensor_from_array(original, in_data, device_type)
+
+    ! We apply transpose by permutation using positive indices
+    dims = [2, 1]
+    call torch_tensor_shallow_copy(permuted, torch_tensor_permute(original, dims))
+
+    ! Output tensor backed by another Fortran array
+    call torch_tensor_from_array(out, out_data, device_type)
+
+    ! We copy the data from the permuted view
+    ! It should fail is the shape is mismatched
+    out = permuted
+
+    @assertTrue( assert_allclose(out_data, transpose(in_data), test_name="test_tensor_permute") )
+
+    ! We reverse the transposition by applying it with negative indices
+    dims = [0, -1]
+    call torch_tensor_shallow_copy(permuted, torch_tensor_permute(out, dims))
+
+    original = permuted
+    @assertTrue( assert_allclose(in_data, transpose(out_data), test_name="test_tensor_permute") )
+
+
+  end subroutine test_tensor_permute
+
 end module unittest_tensor_manipulation
