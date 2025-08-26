@@ -317,6 +317,6 @@ The following projects make use of this code or derivatives in some way:
 * To replace a BiCGStab bottleneck in the GloSea6 Seasonal Forecasting model\
   See Park and Chung (2025) - [DOI: 10.3390/atmos16010060](https://doi.org/10.3390/atmos16010060)
 * Emulation of cloud resolving models to reduce computational cost\
-  See Hu et al. (2025) - [DOI: 10.1029/2024MS004618](https://doi.org/10.1029%2F2024MS004618)
+  See Hu et al. (2025) - [DOI: 10.1029/2024MS004618](https://doi.org/10.1029%2F2024MS004618) (and [code](https://github.com/zyhu-hu/E3SM_nvlab/tree/ftorch/climsim_scripts/perlmutter_scripts))
 
 Are we missing anyone? Let us know.
