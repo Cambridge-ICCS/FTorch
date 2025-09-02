@@ -135,3 +135,5 @@ If you use our library in your work please let us know.
 * In the [GloSea6 Seasonal Forecasting Model](https://www.metoffice.gov.uk/research/climate/seasonal-to-decadal/gpc-outlooks/user-guide/global-seasonal-forecasting-system-glosea6) -
   Replacing a BiCGStab bottleneck in the code with a deep learning approach to speed up execution without compromising model accuracy.
   See Park and Chung (2025) - [DOI: 10.3390/atmos16010060](https://doi.org/10.3390/atmos16010060)
+* Emulation of cloud resolving models to reduce computational cost in E3SM.
+  See Hu et al. (2025) - [DOI: 10.1029/2024MS004618](https://doi.org/10.1029%2F2024MS004618) (and [code](https://github.com/zyhu-hu/E3SM_nvlab/tree/ftorch/climsim_scripts/perlmutter_scripts))
