@@ -18,7 +18,7 @@ class MultiIONet(nn.Module):
         """
         super().__init__()
         self._fwd_seq = nn.Sequential(nn.Linear(4, 4, bias=False))
-        with torch.no_grad():
+        with torch.inference_mode():
             self._fwd_seq[0].weight = nn.Parameter(
                 torch.kron(torch.Tensor([[2.0, 0.0], [0.0, 3.0]]), torch.eye(4))
             )
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         torch.Tensor([-0.0, -1.0, -2.0, -3.0]),
     )
 
-    with torch.no_grad():
+    with torch.inference_mode():
         output_tensors = model(*input_tensors)
 
     print(output_tensors)
