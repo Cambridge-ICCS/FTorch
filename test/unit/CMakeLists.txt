@@ -30,6 +30,9 @@ add_pfunit_ctest(
   unittest_tensor_operator_overloads_autograd.pf LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(unittest_tensor_autograd
   TEST_SOURCES unittest_tensor_autograd.pf LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(
+  unittest_optim TEST_SOURCES
+  unittest_optim.pf LINK_LIBRARIES FTorch::ftorch)
 
 if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
   if("${GPU_DEVICE}" STREQUAL "CUDA")
