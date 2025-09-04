@@ -58,18 +58,12 @@ call torch_model_forward(model, model_input_arr, model_output_arr)
 
 The following presentations provide an introduction and overview of _FTorch_:
 
+* FTorch: Facilitating Hybrid Modelling\
+  N8-CIR Seminar, Leeds - July 2025\
+  [Slides](https://jackatkinson.net/slides/Leeds-N8-FTorch) - [Recording](https://www.youtube.com/watch?v=je7St0t_W9A)
 * Coupling Machine Learning to Numerical (Climate) Models\
   Platform for Advanced Scientific Computing, Zurich - June 2024\
   [Slides](https://jackatkinson.net/slides/PASC24)
-* Blending Machine Learning and Numerical Simulation, with Applications to Climate Modelling\
-  Durham HPC days, Durham - May 2024\
-  [Slides](https://jackatkinson.net/slides/HPC_Durham_2024)
-* Reducing the overheads for coupling PyTorch machine learning models to Fortran\
-  ML & DL Seminars, LSCE, IPSL, Paris - November 2023\
-  [Slides](https://jackatkinson.net/slides/IPSL_FTorch) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
-* Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran\
-  RSECon23, Swansea - September 2023\
-  [Slides](https://jackatkinson.net/slides/RSECon23) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
 
 If you are interested in using this library please get in touch.
 
