@@ -92,7 +92,7 @@ if __name__ == "__main__":
     for device_index in range(num_devices):
         device_to_run = f"{device_type}:{device_index}"
 
-        with torch.no_grad():
+        with torch.inference_mode():
             result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
         print(f"Output on device {device_to_run}: {result}")
