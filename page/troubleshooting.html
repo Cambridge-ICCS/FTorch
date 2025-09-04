@@ -143,7 +143,7 @@
 <li><a href="#1-missing-import-for-overloaded-assignment-operator">1. Missing import for overloaded assignment operator</a></li>
 </ul>
 </li>
-<li><a href="#do-i-need-to-set-torchno_grad-or-torcheval-somewhere-like-in-pytorch">Do I need to set torch.no_grad() or torch.eval() somewhere like in PyTorch?</a></li>
+<li><a href="#do-i-need-to-set-torchinference_mode-torchno_grad-or-torcheval-somewhere-like-in-pytorch">Do I need to set torch.inference_mode(), torch.no_grad(), or torch.eval() somewhere like in PyTorch?</a></li>
 <li><a href="#how-do-i-compile-an-int64-version-of-ftorch-for-large-tensors">How do I compile an int64 version of ftorch for large tensors?</a></li>
 </ul>
 </li>
@@ -271,7 +271,7 @@ sign, the overloaded assignment operator should be triggered. As such, if you
 aren't using the bare <code>use ftorch</code> import then you should ensure you specify
 <code>use ftorch, only: assignment(=)</code> (as well as any other module members you
 require). See the <a href="tensor.html">tensor documentation</a> for more details.</p>
-<h3 id="do-i-need-to-set-torchno_grad-or-torcheval-somewhere-like-in-pytorch">Do I need to set torch.no_grad() or torch.eval() somewhere like in PyTorch?</h3>
+<h3 id="do-i-need-to-set-torchinference_mode-torchno_grad-or-torcheval-somewhere-like-in-pytorch">Do I need to set <code>torch.inference_mode()</code>, <code>torch.no_grad()</code>, or <code>torch.eval()</code> somewhere like in PyTorch?</h3>
 <p>By default we disable gradient calculations for tensors and models and place models in
 evaluation mode for efficiency.
 These can be adjusted using the <code>requires_grad</code> and <code>is_training</code> optional arguments
