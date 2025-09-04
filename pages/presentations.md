@@ -7,6 +7,9 @@ title: Presentations
 The following presentations contain information about FTorch and its
 applications:
 
+* FTorch: Facilitating Hybrid Modelling<br>
+  N8-CIR Seminar, Leeds - July 2025<br>
+  [Slides](https://jackatkinson.net/slides/Leeds-N8-FTorch) - [Recording](https://www.youtube.com/watch?v=je7St0t_W9A)
 * FTorch - Facilitating Hybrid Modelling<br>
   Seminar at the [Department of Atmospheric, Oceanic, and Planetary Physics](https://www.physics.ox.ac.uk/research/subdepartment/atmospheric-oceanic-and-planetary-physics)
   at the University of Oxford<br>
@@ -62,3 +65,8 @@ on the following occasions:
   June 2025.
 * [ICCS Summer School](https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2024),
   July 2024.
+
+## Past Events
+
+* [Cambridge Hybrid Modelling Workshop](https://cambridge-iccs.github.io/ml-coupling-workshop/) - 3rd-4th September 2025<br>
+  FTorch developers Jack atkinson and Joe Wallwork hosted a workshop on hybrid modelling developments and challenges in Cambridge with support from [C2D3](https://www.c2d3.cam.ac.uk/) and [Accelerate](https://science.ai.cam.ac.uk/).
