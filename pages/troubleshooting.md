@@ -148,7 +148,7 @@ aren't using the bare `use ftorch` import then you should ensure you specify
 `use ftorch, only: assignment(=)` (as well as any other module members you
 require). See the [tensor documentation](doc/page/tensor.html) for more details.
 
-### Do I need to set torch.no_grad() or torch.eval() somewhere like in PyTorch?
+### Do I need to set `torch.inference_mode()`, `torch.no_grad()`, or `torch.eval()` somewhere like in PyTorch?
 
 By default we disable gradient calculations for tensors and models and place models in
 evaluation mode for efficiency.
