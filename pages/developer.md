@@ -71,7 +71,7 @@ By using Fypp we can generate these programatically.
 
 Fypp is a pip-installable package that comes bundled with the [developer requirements](#installing-developer-requirements).
 
-To generate the Fortran code run:
+To generate the Fortran code run (noting the `.F90` required for preprocessing):
 ```
 fypp src/ftorch.fypp src/ftorch.F90
 ```

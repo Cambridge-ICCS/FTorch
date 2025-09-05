@@ -77,7 +77,7 @@ The following CMake flags are available and can be passed as arguments through `
 >       e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
 >
 > <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
->       `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
+>       `pip install torch --index-url https://download.pytorch.org/whl/cpu `.
 >       URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
 
 For example, to build on a unix system using the gnu compilers and install to `$HOME/FTorchbin/`
