@@ -39,9 +39,11 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         # loaded onto CPU, and then are moved to the devices they were saved
         # from, so we don't need to manually transfer the model to the GPU
         model = torch.jit.load(saved_model)
-        input_tensors_gpu = input_tensors.to(torch.device("cuda"))
+        input_tensors_gpu = [
+            input_tensor.to(torch.device("cuda")) for input_tensor in input_tensors
+        ]
         outputs_gpu = model.forward(*input_tensors_gpu)
-        outputs = outputs_gpu.to(torch.device("cpu"))
+        outputs = [output_gpu.to(torch.device("cpu")) for output_gpu in outputs_gpu]
 
     else:
         device_error = f"Device '{device}' not recognised."

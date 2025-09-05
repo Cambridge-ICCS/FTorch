@@ -128,7 +128,10 @@ if __name__ == "__main__":
             device = torch.device(device_type)
         trained_model = trained_model.to(device)
         trained_model.eval()
-        trained_model_dummy_inputs = trained_model_dummy_inputs.to(device)
+        trained_model_dummy_inputs = [
+            trained_model_dummy_input.to(device)
+            for trained_model_dummy_input in trained_model_dummy_inputs
+        ]
 
     # FTORCH-TODO
     # Run model for dummy inputs
