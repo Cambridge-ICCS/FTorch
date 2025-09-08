@@ -6,7 +6,13 @@ maintainer = "ICCS"
 copyright = "Copyright 2019, Institute of Computing for Climate Science"
 
 [library]
-include-dir = ["<paht_to_libtorch>/libtorch/include","<paht_to_libtorch>/libtorch/include/torch","<paht_to_libtorch>/libtorch/include/c10/util","<paht>/libtorch-lin-shared-with-deps-2.1.1+cpu/libtorch/lib"]
+source-dir = "src"
+include-dir = [
+  "src",
+  "${Torch_DIR}/torch/include",
+  "${Torch_DIR}/torch/include/torch",
+  "${Torch_DIR}/torch/include/c10/util",
+]
 
 [build]
 auto-executables = true
