@@ -9,9 +9,8 @@ copyright = "Copyright 2019, Institute of Computing for Climate Science"
 source-dir = "src"
 include-dir = [
   "src",
-  "${Torch_DIR}/torch/include",
-  "${Torch_DIR}/torch/include/torch",
-  "${Torch_DIR}/torch/include/c10/util",
+  "${Torch_DIR}/include",
+  "${Torch_DIR}/include/torch/csrc/api/include",
 ]
 
 [build]
