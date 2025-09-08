@@ -1,0 +1,26 @@
+name = "FTorch"
+version = "0.1.0"
+license = "license"
+author = "ICCS"
+maintainer = "ICCS"
+copyright = "Copyright 2019, Institute of Computing for Climate Science"
+
+[library]
+include-dir = ["<paht_to_libtorch>/libtorch/include","<paht_to_libtorch>/libtorch/include/torch","<paht_to_libtorch>/libtorch/include/c10/util","<paht>/libtorch-lin-shared-with-deps-2.1.1+cpu/libtorch/lib"]
+
+[build]
+auto-executables = true
+auto-tests = true
+auto-examples = true
+module-naming = false
+
+external-modules = ["torch", "torch_cpu", "c10"]
+link = ["torch", "torch_cpu", "c10"]
+
+[install]
+library = false
+
+[fortran]
+implicit-typing = false
+implicit-external = false
+source-form = "free"
