@@ -79,6 +79,11 @@ jobs:
           cmake ..
           make -j 4 install
 
+      - name: Install fpm
+        run: |
+          . ftorch/bin/activate
+          pip install fpm
+
       - name: Build FTorch with fpm
         run: |
           . ftorch/bin/activate
