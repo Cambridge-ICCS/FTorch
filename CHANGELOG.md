@@ -31,6 +31,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#348](https://github.com/Cambridge-ICCS/FTorch/pull/348).
 - Overload taking sum and mean of tensors in
   [#344](https://github.com/Cambridge-ICCS/FTorch/pull/344).
+- Enable building with `fpm` in [#429](https://github.com/Cambridge-ICCS/FTorch/pull/429).
 
 ### Changed
 
