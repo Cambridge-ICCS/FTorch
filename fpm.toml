@@ -1,6 +1,6 @@
 name = "FTorch"
-version = "0.1.0"
-license = "license"
+version = "1.0.0"
+license = "LICENSE"
 author = "ICCS"
 maintainer = "ICCS"
 copyright = "Copyright 2019, Institute of Computing for Climate Science"
