@@ -232,7 +232,7 @@ mapped to the appropriate device code (in this case 12). The chosen device code
 and all other ones defined are passed to the C++ compiler in the following step:</p>
 <div class="codehilite"><pre><span></span><code><span class="nb">target_compile_definitions</span><span class="p">(</span>
 <span class="w">  </span><span class="o">${</span><span class="nv">LIB_NAME</span><span class="o">}</span>
-<span class="w">  </span><span class="s">PRIVATE</span><span class="w"> </span><span class="o">${</span><span class="nv">COMPILE_DEFS</span><span class="o">}</span><span class="w"> </span><span class="s">GPU_DEVICE=</span><span class="o">${</span><span class="nv">GPU_DEVICE_CODE</span><span class="o">}</span>
+<span class="w">  </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">GPU_DEVICE=</span><span class="o">${</span><span class="nv">GPU_DEVICE_CODE</span><span class="o">}</span>
 <span class="w">          </span><span class="s">GPU_DEVICE_NONE=</span><span class="o">${</span><span class="nv">GPU_DEVICE_NONE</span><span class="o">}</span><span class="w"> </span><span class="s">GPU_DEVICE_CUDA=</span><span class="o">${</span><span class="nv">GPU_DEVICE_CUDA</span><span class="o">}</span>
 <span class="w">          </span><span class="s">GPU_DEVICE_XPU=</span><span class="o">${</span><span class="nv">GPU_DEVICE_XPU</span><span class="o">}</span><span class="w"> </span><span class="s">GPU_DEVICE_MPS=</span><span class="o">${</span><span class="nv">GPU_DEVICE_MPS</span><span class="o">}</span><span class="p">)</span>
 </code></pre></div>

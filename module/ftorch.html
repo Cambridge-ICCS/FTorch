@@ -90,7 +90,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="86.9% of total for modules and submodules.">1853 statements</a>
+                 title="87.0% of total for modules and submodules.">1876 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -204,6 +204,7 @@
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_get_dtype">torch_tensor_get_dtype</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_get_rank">torch_tensor_get_rank</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_get_shape">torch_tensor_get_shape</a>
+            <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_get_stride">torch_tensor_get_stride</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_multiply">torch_tensor_multiply</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_negative">torch_tensor_negative</a>
             <a class="list-group-item" href="../module/ftorch.html#proc-torch_tensor_power_int16">torch_tensor_power_int16</a>
@@ -335,8 +336,8 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -8329,6 +8330,11 @@ parameter
               </tr>
               <tr>
                 <td>  procedure, public ::
+  <strong><a href='../type/torch_tensor.html#boundprocedure-get_stride'>get_stride</a></strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_stride.html'>torch_tensor_get_stride</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
   <strong><a href='../type/torch_tensor.html#boundprocedure-requires_grad'>requires_grad</a></strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_requires_grad.html'>torch_tensor_requires_grad</a></td>
                   <td></td>
               </tr>
@@ -8492,7 +8498,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~5"></span>
+              <span class="anchor" id="variable-self~6"></span>
               class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -8537,7 +8543,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~4"></span>
+              <span class="anchor" id="variable-self~5"></span>
               class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -8582,7 +8588,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~3"></span>
+              <span class="anchor" id="variable-self~4"></span>
               class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -8690,7 +8696,52 @@ parameter
 
     <h4>
     Return Value
-    <small>integer(kind=c_long), pointer, (:)</small>
+    <small>integer(kind=c_int64_t), pointer, (:)</small>
+    </h4>
+    <p>Pointer to tensor data</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_get_stride"></span> <h3>public  function <a href='../proc/torch_tensor_get_stride.html'>torch_tensor_get_stride</a>(self) result(strides)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Return the strides of the tensor</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~3"></span>
+              class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+<p>Tensor to get the strides of</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=c_int64_t), pointer, (:)</small>
     </h4>
     <p>Pointer to tensor data</p>
 
@@ -9182,7 +9233,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~6"></span>
+              <span class="anchor" id="variable-self~7"></span>
               class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
