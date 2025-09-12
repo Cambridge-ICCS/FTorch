@@ -11,6 +11,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Expose tensor strides via `get_stride` method [#416](https://github.com/Cambridge-ICCS/FTorch/pull/416)
+- Remove `UNIX` preprocessor variable that selected the  right C-integer type for 64bit int. Use `int64_t` instead [#416](https://github.com/Cambridge-ICCS/FTorch/pull/416)
 - A new cmake option `MULTI_GPU` to control the build of multi GPU integration tests in [#410](https://github.com/Cambridge-ICCS/FTorch/pull/410)
 - Support for AMD GPU backends (HIP) provided in
   [#385](https://github.com/Cambridge-ICCS/FTorch/pull/385) and

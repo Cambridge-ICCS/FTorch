@@ -25,6 +25,15 @@ typedef void *torch_int_t;
 // Opaque pointer type alias for float scalars
 typedef void *torch_float_t;
 
+// Type that represents size, strides and indexing on tensors
+// (like std::size_t for standard containers)
+//
+// Torch is using internally int64_t [i.e. signed 64bit integer]
+// We can as well to avoid portability problems
+// (i.e. 64bit integer beeing long long on Windows)
+//
+typedef int64_t torch_size_t;
+
 // Data types
 typedef enum {
   torch_kUInt8,
@@ -130,11 +139,14 @@ EXPORT_C int torch_tensor_get_rank(const torch_tensor_t tensor);
  * @param Torch Tensor to determine the rank of
  * @return pointer to the sizes array of the Torch Tensor
  */
-#ifdef UNIX
-EXPORT_C const long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
-#else
-EXPORT_C const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
-#endif
+EXPORT_C const torch_size_t *torch_tensor_get_sizes(const torch_tensor_t tensor);
+
+/**
+ * Function to determine the strides of a Torch Tensor
+ * @param tensor Torch tensor
+ * @return pointer to the strides array of the tensor
+ */
+EXPORT_C const torch_size_t *torch_tensor_get_stride(const torch_tensor_t tensor);
 
 /**
  * Function to determine the data type of a Torch Tensor

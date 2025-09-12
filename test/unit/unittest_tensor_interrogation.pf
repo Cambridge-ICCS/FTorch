@@ -156,6 +156,54 @@ contains
 
   end subroutine test_get_shape_3D
 
+  ! Unit test for the torch_tensor_get_stride method of a 1D tensor
+  @test(testparameters={get_parameters_short()})
+  subroutine test_get_stride_1D(this)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 1
+    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [6]
+    integer(kind=c_int64_t), parameter :: expected_stride(ndims) = [1]
+
+    ! Create a tensor with uninitialised values and check torch_tensor_get_stride can correctly
+    ! identify its stride pattern
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+    @assertEqual(expected_stride, tensor%get_stride())
+
+  end subroutine test_get_stride_1D
+
+  ! Unit test for the torch_tensor_get_stride method of a 2D tensor
+  @test(testparameters={get_parameters_short()})
+  subroutine test_get_stride_2D(this)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
+    integer(kind=c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+
+    ! Create a tensor with uninitialised values and check torch_tensor_get_stride can correctly
+    ! identify its stride pattern
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+    @assertEqual(expected_stride, tensor%get_stride())
+
+  end subroutine test_get_stride_2D
+
+  ! Unit test for the torch_tensor_get_stride method of a 3D tensor
+  @test(testparameters={get_parameters_short()})
+  subroutine test_get_stride_3D(this)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 3
+    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1,2,3]
+    integer(kind=c_int64_t), parameter :: expected_stride(ndims) = [6, 3, 1]
+
+    ! Create a tensor with uninitialised values and check torch_tensor_get_stride can correctly
+    ! identify its stride pattern
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+    @assertEqual(expected_stride, tensor%get_stride())
+
+  end subroutine test_get_stride_3D
+
   ! Unit test for the torch_tensor_get_dtype function
   @test(testparameters={get_parameters_short()})
   subroutine test_get_dtype(this)

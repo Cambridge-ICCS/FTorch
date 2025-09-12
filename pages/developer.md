@@ -109,7 +109,7 @@ and all other ones defined are passed to the C++ compiler in the following step:
 ```cmake
 target_compile_definitions(
   ${LIB_NAME}
-  PRIVATE ${COMPILE_DEFS} GPU_DEVICE=${GPU_DEVICE_CODE}
+  PRIVATE GPU_DEVICE=${GPU_DEVICE_CODE}
           GPU_DEVICE_NONE=${GPU_DEVICE_NONE} GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA}
           GPU_DEVICE_XPU=${GPU_DEVICE_XPU} GPU_DEVICE_MPS=${GPU_DEVICE_MPS})
 ```
