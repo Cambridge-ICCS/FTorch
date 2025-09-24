@@ -6,7 +6,7 @@ project(
   VERSION 1.0.0
   LANGUAGES Fortran)
 
-find_package(FTorch)
+find_package(FTorch REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 find_package(PFUNIT REQUIRED)
