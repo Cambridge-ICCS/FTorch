@@ -20,7 +20,7 @@ message(STATUS "Building with Fortran PyTorch coupling")
 
 # Install Python dependencies
 find_package(Python COMPONENTS Interpreter REQUIRED)
-if(NOT DEFINED ENV{VIRTUAL_ENV} OR DEFINED ENV{CONDA_PREFIX})
+if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
   message(FATAL_ERROR "Please activate your virtualenv or conda environment")
 endif()
 execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
