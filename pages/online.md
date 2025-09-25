@@ -2,17 +2,67 @@ title: Online training
 
 [TOC]
 
-## Current state
+## Training in Fortran
 
+FTorch has supported offline training of ML models -- where the training is done
+in Python and inference is done in Fortran -- for some time (see the
+[offline training user guide page](offline.html) for details). As of recently,
+it is now possible to train models in Fortran, too, i.e., *online training*.
 
-FTorch has supported offline training of ML models for some time (see the
-[offline training user guide page](offline.html) for details). We are
-currently working on extending its functionality to support online training,
-too. This will involve exposing the backpropagation and optimization
-functionalities of PyTorch/LibTorch.
+### Workflow
 
-In the following, we document a workplan of the related functionality. Each step
-below will be updated upon completion.
+Below we provide a schematic of the online training workflow, which is broken
+down into separate tasks below.
+
+![schematic](online_light.svg "Online training schematic")
+
+To set up online training, you will need to make use of the backpropagation and
+optimization functionalities of PyTorch/LibTorch, which have been exposed in
+FTorch. Details of how to do this are provided in the following.
+
+#### 1. Design the ML model in PyTorch
+
+This task is identical to the offline case. It is done purely in Python and is
+not described here. See the
+[PyTorch documentation](https://pytorch.org/tutorials/beginner/introyt/modelsyt_tutorial.html)
+for information on how to do this.
+
+#### 2. pt2ts
+
+The scripting section comes earlier in the online workflow. Having written a
+model to a file with `.pt` extension, use the `pt2ts.py` utility Python script
+to convert it to TorchScript format. A template `pt2ts.py` script can be found
+in the [`utils`](https://github.com/Cambridge-ICCS/FTorch/tree/main/utils)
+subdirectory. See the
+[README](https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/README.md)
+there for more details on how to use the script.
+
+#### 3. Data generation and training
+
+In the online case, data generation and training are done in the same step,
+purely in Fortran. Code modifications are made so that we can run the Fortran
+model to generate training data and immediately use this training data (whilst
+in memory) to train the ML model. There is not necessarily an optimization loop
+in this case - one option is to take a pre-trained model and to continue
+improving it using data generated online.
+
+The training code should be set up such that the file containing the TorchScript
+model that was created in step 2 is read in at the start of the Fortran program
+and the modified ML model is written out to the same TorchScript file at the
+end of the Fortran program. This way, the model can be trained in multiple
+Fortran runs, with the same model being read.
+
+*Note: Training and writing out models has not yet been implemented in FTorch,
+but is work in progress.*
+
+#### 4. Fortran model with inference
+
+In order to run inference with the trained ML model, you will need to create
+another modified version of your Fortran model that loads the TorchScript model
+and uses FTorch syntax to set up appropriate `torch_tensor` and `torch_model`
+objects and call the `torch_model_forward` subroutine to run the inference. For
+examples of how to do this, see the
+[optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/n_Optimizers).
 
 ### Operator overloading
 
@@ -123,10 +173,26 @@ Note that `torch_tensor_get_gradient` must be called after every call to
 the same tensor is being extracted into the same array. This is due to the way
 that pointers are handled on the C++ side.
 
-### Optimisation
+### Optimization
 
-*Not yet implemented.*
+FTorch now supports running optimizers. That is, it's possible to do training in
+Fortran as well as in Python. To make use of optimizers in FTorch, you need the
+`torch_optim` derived type. This derived type has two member subroutines as
+follows:
+* `torch_optim%zero_grad`, which zeroes all tensors associated with the
+  optimizer. This should be called at the beginning of every step of the
+  optimization loop.
+* `torch_optim%step`, which takes an iteration of the optimization method.
+
+The [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/n_Optimizers)
+is probably the best place to get started to see how to use the functionality.
 
 ### Loss functions
 
-*Not yet implemented.*
+The loss function classes defined in PyTorch/LibTorch have not yet been exposed
+in FTorch. However, the `torch_tensor_sum` and `torch_tensor_mean` reduction
+operators have been provided, which should be sufficient for simple loss
+functions such as the mean-square-error (MSE).
+
+See the [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/n_Optimizers)
+for an example of how to use `torch_tensor_mean` to define a MSE loss function.
