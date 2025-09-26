@@ -14,7 +14,11 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "" FORCE)
 endif()
 
-find_package(FTorch)
+if(CMAKE_BUILD_TESTS)
+  find_package(FTorch QUIET)
+else()
+  find_package(FTorch REQUIRED)
+endif()
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Install Python dependencies

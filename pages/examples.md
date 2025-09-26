@@ -105,7 +105,7 @@ file to find the FTorch installation and link it to the executable.
 
 This can be done by adding the following to the `CMakeLists.txt` file:
 ```CMake
-find_package(FTorch)
+find_package(FTorch REQUIRED)
 target_link_libraries( <executable> PRIVATE FTorch::ftorch )
 message(STATUS "Building with Fortran PyTorch coupling")
 ```
