@@ -283,7 +283,7 @@ for more information.</em></p>
 <p>We generally advise building projects that make use of FTorch with CMake where possible.</p>
 <p>If doing this you need to include the following in the <code>CMakeLists.txt</code> file to
 find the FTorch installation and link it to the executable.</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">find_package</span><span class="p">(</span><span class="s">FTorch</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><code><span class="nb">find_package</span><span class="p">(</span><span class="s">FTorch</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 <span class="nb">target_link_libraries</span><span class="p">(</span><span class="w"> </span><span class="s">&lt;executable&gt;</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">FTorch::ftorch</span><span class="w"> </span><span class="p">)</span>
 <span class="nb">message</span><span class="p">(</span><span class="s">STATUS</span><span class="w"> </span><span class="s2">&quot;Building with Fortran PyTorch coupling&quot;</span><span class="p">)</span>
 </code></pre></div>

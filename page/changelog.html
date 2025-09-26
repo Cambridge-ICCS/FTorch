@@ -162,6 +162,7 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 </ul>
 <h3 id="changed">Changed</h3>
 <ul>
+<li>In all <code>CMakeLists.txt</code> where <code>find_package(FTorch)</code> was present, now using <code>REQUIRE</code> if not building tests to stop the cmake configuation process early for users who only wish to build examples in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/434">#434</a></li>
 <li>fortitude dependency version increased to 0.7.0</li>
 <li>Examples reordered to be more logical in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/317">#317</a></li>
 <li>scalar multiplication/division of tensors reworked to require the scalar to first be mapped to a <code>torch_tensor</code> in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/289">#289</a></li>
