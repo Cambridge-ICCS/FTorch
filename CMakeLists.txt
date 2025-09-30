@@ -94,14 +94,15 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # Follow GNU conventions for installing directories
 include(GNUInstallDirs)
 
+# Dependencies
+find_package(Torch REQUIRED)
+
 # Define RPATH for executables via a relative expression to enable a fully
 # relocatable package
 file(RELATIVE_PATH relDir ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
      ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
-set(CMAKE_INSTALL_RPATH $ORIGIN/${relDir})
-
-# Dependencies
-find_package(Torch REQUIRED)
+get_filename_component(TORCH_LIBRARY_DIR ${TORCH_LIBRARY} DIRECTORY)
+set(CMAKE_INSTALL_RPATH "$ORIGIN/${relDir};${TORCH_LIBRARY_DIR}")
 
 # Library with C and Fortran bindings
 add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90
@@ -126,8 +127,6 @@ set_target_properties(
 # cmake-format: on
 # Link TorchScript
 target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES})
-get_filename_component(TORCH_LIBRARY_DIR ${TORCH_LIBRARY} DIRECTORY)
-target_link_options(${LIB_NAME} PRIVATE "LINKER:-rpath,${TORCH_LIBRARY_DIR}")
 # Include the Fortran mod files in the library
 target_include_directories(
   ${LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/modules>
