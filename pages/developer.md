@@ -152,7 +152,7 @@ The tools we use are as follows on a language-by-language basis:
 * C: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
 * Python: [ruff](https://docs.astral.sh/ruff/)
 * Shell: [ShellCheck](https://github.com/koalaman/shellcheck)
-* CMake: [cmake-format](https://github.com/cheshirekow/cmake_format)
+* CMake: cmake-lint from [cmake-format](https://github.com/cheshirekow/cmake_format) (Note: We do not use cmake-format's formatter)
 * GitHub Actions workflows: [zizmor](https://woodruffw.github.io/zizmor)
 
 Instructions on installing these tools can be found in their respective documentations.
