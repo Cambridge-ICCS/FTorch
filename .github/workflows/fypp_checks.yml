@@ -15,6 +15,11 @@ on:
       - '**.F90'
       - '**.pf'
 
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 # Write permissions are not required
 permissions: {}
 
