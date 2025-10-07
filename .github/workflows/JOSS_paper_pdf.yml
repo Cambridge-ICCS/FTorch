@@ -27,7 +27,7 @@ jobs:
 
       # Builds/renders the paper using the openjournals action
       - name: Build draft PDF
-        uses: openjournals/openjournals-draft-action@master
+        uses: openjournals/openjournals-draft-action@85a18372e48f551d8af9ddb7a747de685fbbb01c
         with:
           journal: joss
           paper-path: paper/paper.md
