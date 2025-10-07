@@ -25,7 +25,7 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Permissions for Zizmor action
+# Write permissions are not required
 permissions: {}
 
 # Workflow run - one or more jobs that can run sequentially or in parallel

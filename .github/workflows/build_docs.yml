@@ -18,6 +18,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# No write permission by default
+permissions: {}
+
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build-docs"
@@ -31,6 +34,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y graphviz
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
         with:
@@ -61,6 +65,8 @@ jobs:
       - name: Deploy Documentation for main
         if: github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@v4
+        permissions:
+          id-token: write # trusted publishing + attestations
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: doc      # The folder the action should deploy.
