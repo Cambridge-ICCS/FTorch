@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite
-name: TestSuiteUbuntu
+name: Test suite (Ubuntu CPU)
 
 # Controls when the workflow will run
 on:
@@ -30,6 +30,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+# Write permissions are not required
+permissions: {}
 
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:

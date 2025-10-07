@@ -1,5 +1,5 @@
 # Workflow to run Fortran pre-processor checks on source
-name: FyppChecks
+name: Fypp checks
 
 on:
   # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
@@ -14,6 +14,9 @@ on:
       - '**.f90'
       - '**.F90'
       - '**.pf'
+
+# Write permissions are not required
+permissions: {}
 
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:

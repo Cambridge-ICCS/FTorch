@@ -1,5 +1,5 @@
 # Workflow to build and deploy FORD docs for FTorch
-name: BuildDocs
+name: Build docs
 
 # Controls when the workflow will run
 on:
@@ -18,9 +18,12 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# No write permission by default
+permissions: {}
+
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build-docs"
+  # The first job in this workflow builds the documentation for the website
   build-docs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -31,6 +34,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y graphviz
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
         with:
@@ -52,15 +56,28 @@ jobs:
 
       - name: Test docs build
         if: github.ref != 'refs/heads/main'
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 # v4
         with:
           branch: docs-test # The branch the action should deploy to.
           folder: doc      # The folder the action should deploy.
           dry-run: true    # Don't actually push to pages, just test if we can
 
+  # The second job in this workflow publishes the website in the case of a merge into main
+  publish-website:
+    if: github.ref == 'refs/heads/main'
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # The docs need to have been built first
+    needs: [build-docs]
+
+    # We trust the deploy action with write permissions
+    permissions:
+      id-token: write
+    steps:
       - name: Deploy Documentation for main
-        if: github.ref == 'refs/heads/main'
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 # v4
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: doc      # The folder the action should deploy.

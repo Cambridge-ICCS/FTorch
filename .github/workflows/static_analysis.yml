@@ -1,5 +1,5 @@
 # Workflow to run static-analysis and linting checks on source
-name: StaticAnalysis
+name: Static analysis
 
 # Controls when the workflow will run
 on:
@@ -24,6 +24,9 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
+# Write permissions are not required
+permissions: {}
 
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
@@ -85,14 +88,6 @@ jobs:
             shellcheck --external-sources ${FILE}
           done
 
-      # Apply GitHub Actions linter, zizmor
-      - name: zizmor
-        if: always()
-        run: |
-          cd ${{ github.workspace }}
-          . ../ftorch_venv/bin/activate
-          zizmor .github/workflows/*.yml
-
       # Apply Fortran linter, fortitude
       # Configurable using the fortitude.toml file if present
       - name: fortitude source
@@ -107,7 +102,7 @@ jobs:
       # Configurable using the .clang-format and .clang-tidy config files if present
       - name: clang source
         if: always()
-        uses: cpp-linter/cpp-linter-action@v2
+        uses: cpp-linter/cpp-linter-action@b7fbdde0f6776f478f4d8867c2b746077fa7ea89 # v2
         id: linter
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -138,3 +133,18 @@ jobs:
           . ../ftorch_venv/bin/activate
           ruff format --diff ./
           ruff check --diff ./
+
+  # Apply GitHub Actions linter, zizmor
+  zizmor:
+    name: zizmor
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@e673c3917a1aef3c65c972347ed84ccd013ecda4 # v0.2.0
