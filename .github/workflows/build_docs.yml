@@ -1,5 +1,5 @@
 # Workflow to build and deploy FORD docs for FTorch
-name: BuildDocs
+name: Build docs
 
 # Controls when the workflow will run
 on:
@@ -63,8 +63,7 @@ jobs:
           dry-run: true    # Don't actually push to pages, just test if we can
 
   # The second job in this workflow publishes the website in the case of a merge into main
-  publish:
-    name: Publish website
+  publish-website:
     if: github.ref == 'refs/heads/main'
 
     # The type of runner that the job will run on

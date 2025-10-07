@@ -1,5 +1,5 @@
 # Workflow to render the FTorch submission to JOSS
-name: RenderJOSSPaper
+name: Render JOSS paper
 
 # Controls when the workflow will run
 on:
@@ -20,8 +20,6 @@ permissions: {}
 jobs:
   # The first job in this workflow builds a draft of the JOSS paper
   build-draft:
-    name: Build paper draft
-
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -41,8 +39,6 @@ jobs:
 
   # The second job in this workflow uploads the rendered PDF to GitHub
   upload-draft:
-    name: Upload paper draft
-
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 

@@ -1,5 +1,5 @@
 # Workflow to run Fortran pre-processor checks on source
-name: FyppChecks
+name: Fypp checks
 
 on:
   # Triggers the workflow on pushes to the "main" branch, i.e., PR merges

@@ -1,5 +1,5 @@
 # Workflow to run static-analysis and linting checks on source
-name: StaticAnalysis
+name: Static analysis
 
 # Controls when the workflow will run
 on:

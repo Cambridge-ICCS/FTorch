@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite
-name: TestSuiteWindows
+name: Test suite (Windows)
 
 # Controls when the workflow will run
 on:

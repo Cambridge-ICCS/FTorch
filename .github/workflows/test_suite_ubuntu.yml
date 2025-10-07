@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite
-name: TestSuiteUbuntu
+name: Test suite (Ubuntu CPU)
 
 # Controls when the workflow will run
 on:
