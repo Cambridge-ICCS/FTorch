@@ -14,10 +14,17 @@ on:
       - '.github/workflows/JOSS_paper_pdf.yml'
       - 'paper/*'
 
+# No write permission by default
+permissions: {}
+
 jobs:
-  paper:
+  # The first job in this workflow builds a draft of the JOSS paper
+  build-draft:
+    name: Build paper draft
+
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    name: Paper Draft
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
@@ -32,7 +39,20 @@ jobs:
           journal: joss
           paper-path: paper/paper.md
 
-      # Uploads the rendered pdf to GitHub.
+  # The second job in this workflow uploads the rendered PDF to GitHub
+  upload-draft:
+    name: Upload paper draft
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # The draft need to have been built first
+    needs: [build-draft]
+
+    # We trust the deploy action with write permissions
+    permissions:
+      id-token: write
+    steps:
       - name: Upload draft PDF
         uses: actions/upload-artifact@v4
         with:
