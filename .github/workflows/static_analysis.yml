@@ -25,6 +25,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Permissions for Zizmor action
+permissions: {}
+
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "static-analysis"
@@ -85,14 +88,6 @@ jobs:
             shellcheck --external-sources ${FILE}
           done
 
-      # Apply GitHub Actions linter, zizmor
-      - name: zizmor
-        if: always()
-        run: |
-          cd ${{ github.workspace }}
-          . ../ftorch_venv/bin/activate
-          zizmor .github/workflows/*.yml
-
       # Apply Fortran linter, fortitude
       # Configurable using the fortitude.toml file if present
       - name: fortitude source
@@ -138,3 +133,17 @@ jobs:
           . ../ftorch_venv/bin/activate
           ruff format --diff ./
           ruff check --diff ./
+
+  zizmor:
+    name: Apply GitHub Actions linter, zizmor
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@e673c3917a1aef3c65c972347ed84ccd013ecda4 # v0.2.0
