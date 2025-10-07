@@ -33,6 +33,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# Write permissions are not required
+permissions: {}
+
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   test-suite-ubuntu-cuda:

@@ -15,6 +15,9 @@ on:
       - '**.F90'
       - '**.pf'
 
+# Write permissions are not required
+permissions: {}
+
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "fypp-checks"
