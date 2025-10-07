@@ -45,6 +45,9 @@ jobs:
       matrix:
         std: ["f2008", "f2018"]
 
+    # Terminate the job if it runs for more than 10 minutes
+    timeout-minutes: 10
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it

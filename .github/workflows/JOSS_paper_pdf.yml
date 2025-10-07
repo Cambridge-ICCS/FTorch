@@ -28,6 +28,9 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # Terminate the job if it runs for more than 5 minutes
+    timeout-minutes: 5
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
@@ -46,6 +49,9 @@ jobs:
   upload-draft:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    # Terminate the job if it runs for more than 5 minutes
+    timeout-minutes: 5
 
     # The draft need to have been built first
     needs: [build-draft]

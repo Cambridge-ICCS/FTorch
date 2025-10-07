@@ -47,6 +47,9 @@ jobs:
         toolchain:
           - {compiler: intel, version: '2023.2'}
 
+    # Terminate the job if it runs for more than 10 minutes
+    timeout-minutes: 10
+
     steps:
       # configure windows VM with intel compilers
       - uses: fortran-lang/setup-fortran@d2ba6ea44297a24407def2f6e117954d844a5368 # v1
