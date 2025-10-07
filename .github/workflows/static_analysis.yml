@@ -25,17 +25,25 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 # Write permissions are not required
 permissions: {}
 
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "static-analysis"
-  static-analysis:
+  # This workflow contains a single job called "linting"
+  linting:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+
+    # Terminate the job if it runs for more than 5 minutes
+    timeout-minutes: 5
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
