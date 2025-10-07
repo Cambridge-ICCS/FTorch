@@ -65,7 +65,6 @@ jobs:
         run: ford FTorch.md
 
       - name: Test docs build
-        if: github.ref != 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 # v4
         with:
           branch: docs-test # The branch the action should deploy to.
