@@ -79,6 +79,10 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # We trust the deploy action with write permissions
+    permissions:
+      id-token: write
+
     # Terminate the job if it runs for more than 5 minutes
     timeout-minutes: 5
 
@@ -108,13 +112,6 @@ jobs:
       - name: Build docs with FORD
         run: ford FTorch.md
 
-    # The docs need to have been built first
-    needs: [build-docs]
-
-    # We trust the deploy action with write permissions
-    permissions:
-      id-token: write
-    steps:
       - name: Deploy Documentation for main
         uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 # v4
         with:
