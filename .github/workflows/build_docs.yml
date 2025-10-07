@@ -62,11 +62,16 @@ jobs:
           folder: doc      # The folder the action should deploy.
           dry-run: true    # Don't actually push to pages, just test if we can
 
+  publish:
+    name: Publish website
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [build-docs]
+    permissions:
+      id-token: write # trusted publishing + attestations
+    steps:
       - name: Deploy Documentation for main
-        if: github.ref == 'refs/heads/main'
-        uses: JamesIves/github-pages-deploy-action@v4
-        permissions:
-          id-token: write # trusted publishing + attestations
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 # v4
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: doc      # The folder the action should deploy.
