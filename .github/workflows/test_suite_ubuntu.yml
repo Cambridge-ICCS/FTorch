@@ -1,6 +1,6 @@
 # Workflow to run the FTorch test suite using jobs for Intel and GNU compilers
 # Any changes need to be reflected in both GNU and Intel jobs
-name: TestSuiteUbuntu
+name: Test suite (Ubuntu CPU)
 
 # Controls when the workflow will run
 on:
@@ -31,6 +31,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+# Write permissions are not required
+permissions: {}
 
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
@@ -82,6 +85,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.setup-gnu-matrix.outputs.matrix) }}
+
+    # Terminate the job if it runs for more than 10 minutes
+    timeout-minutes: 10
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

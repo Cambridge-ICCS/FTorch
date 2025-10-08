@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite on a CUDA enabled runner
-name: TestSuiteUbuntuCUDA
+name: Test suite (Ubuntu CUDA)
 
 # Controls when the workflow will run
 on:
@@ -33,14 +33,19 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# Write permissions are not required
+permissions: {}
+
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   test-suite-ubuntu-cuda:
     # The type of runner that the job will run on
     runs-on: GPU-runner
-    timeout-minutes: 10
     strategy:
       fail-fast: true
+
+    # Terminate the job if it runs for more than 10 minutes
+    timeout-minutes: 10
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
