@@ -137,6 +137,7 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 <h2 id="unreleased"><a href="https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...HEAD">Unreleased</a></h2>
 <h3 id="added">Added</h3>
 <ul>
+<li>Intel-ifx and Intel-ifort CI and GCC v9-13 CI. Intel CI builds OpenMPI from source to accomodate MPI integration tests <a href="https://github.com/Cambridge-ICCS/FTorch/pull/438">#438</a></li>
 <li>Expose tensor strides via <code>get_stride</code> method <a href="https://github.com/Cambridge-ICCS/FTorch/pull/416">#416</a></li>
 <li>Remove <code>UNIX</code> preprocessor variable that selected the  right C-integer type for 64bit int. Use <code>int64_t</code> instead <a href="https://github.com/Cambridge-ICCS/FTorch/pull/416">#416</a></li>
 <li>A new cmake option <code>MULTI_GPU</code> to control the build of multi GPU integration tests in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/410">#410</a></li>
