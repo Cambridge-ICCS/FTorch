@@ -21,7 +21,8 @@ This will skip the 'multiple GPU' integration test which requires multiple devic
 The CMake build will automatically install any additional Python dependencies
 for the examples.
 
-Note that, whilst example `5_Looping` is built if `CMAKE_BUILD_TESTS=TRUE` is
+Note that, whilst example [`5_Looping`](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_Looping)
+is built if `CMAKE_BUILD_TESTS=TRUE` is
 specified, it is not run as part of the integration test suite because it
 demonstrates 'good' versus 'bad' practice, as opposed to functionality.
 
