@@ -93,7 +93,19 @@ LDFLAGS += -L<path/to/FTorch/install/location>/lib -lftorch
 You may also need to add the location of the dynamic library `.so` files to your
 `LD_LIBRARY_PATH` environment variable unless installing in a default location:
 ```sh
-export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/FTorch/installation>/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path/to/FTorch/installation>/lib
+```
+
+FTorch depends on Torch, and the `RPATH` of the FTorch shared library (i.e.,
+`libftorch.so`) generated during CMake installation contains the path to its
+Torch shared library dependency. The dynamic linker of the GNU C library
+searches for shared libraries first using the `RPATH` (see [ld.so - Linux
+manual page](https://man7.org/linux/man-pages/man8/ld.so.8.html) for details),
+so the correct Torch dependency should be found automatically; however, if you
+encounter issues, you may have to modify the `LD_LIBRARY_PATH` environment
+variable to contain the path to the Torch library: 
+```sh
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path/to/Torch/installation>/lib
 ```
 
 > Note: _Depending on your system and architecture `lib` may be `lib64` or something similar._
