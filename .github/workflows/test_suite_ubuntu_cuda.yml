@@ -65,8 +65,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
-          # CUDA v11.8 chosen as the GPU-runner has v12.4 installed (backward compatible)
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+          # CUDA v12.9 chosen as latest supported by PyTorch
+          # Check this is <= what GPU-runner has installed (backwards compatible)
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cu129
 
       - name: Install cmake and NVIDIA dev toolkit
         run: |
