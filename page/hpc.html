@@ -221,7 +221,19 @@ use ftorch to <em>include</em> the module and header files:</p>
 
 <p>You may also need to add the location of the dynamic library <code>.so</code> files to your
 <code>LD_LIBRARY_PATH</code> environment variable unless installing in a default location:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$LD_LIBRARY_PATH</span>:&lt;path/to/FTorch/installation&gt;/lib
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$LD_LIBRARY_PATH</span>:&lt;path/to/FTorch/installation&gt;/lib
+</code></pre></div>
+
+<p>FTorch depends on Torch, and the <code>RPATH</code> of the FTorch shared library (i.e.,
+<code>libftorch.so</code>) generated during CMake installation contains the path to its
+Torch shared library dependency. The dynamic linker of the GNU C library
+searches for shared libraries first using the <code>RPATH</code> (see <a href="https://man7.org/linux/man-pages/man8/ld.so.8.html">ld.so - Linux
+manual page</a> for details),
+so the correct Torch dependency should be found automatically; however, if you
+encounter issues, you may have to modify the <code>LD_LIBRARY_PATH</code> environment
+variable to also include the path to the Torch library (in addition to the
+path to FTorch described above): </p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$LD_LIBRARY_PATH</span>:&lt;path/to/Torch/installation&gt;/lib
 </code></pre></div>
 
 <blockquote>
