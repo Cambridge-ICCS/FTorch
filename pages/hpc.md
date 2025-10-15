@@ -103,7 +103,8 @@ searches for shared libraries first using the `RPATH` (see [ld.so - Linux
 manual page](https://man7.org/linux/man-pages/man8/ld.so.8.html) for details),
 so the correct Torch dependency should be found automatically; however, if you
 encounter issues, you may have to modify the `LD_LIBRARY_PATH` environment
-variable to contain the path to the Torch library: 
+variable to also include the path to the Torch library (in addition to the
+path to FTorch described above): 
 ```sh
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path/to/Torch/installation>/lib
 ```
