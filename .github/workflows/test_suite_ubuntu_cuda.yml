@@ -24,6 +24,10 @@ on:
       # Build system
       - '**CMakeLists.txt'
       - '**requirements.txt'
+  
+  pull_request:
+    paths:
+      - '.github/workflows/test_suite_ubuntu_cuda.yml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
