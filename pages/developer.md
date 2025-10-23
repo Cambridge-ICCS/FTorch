@@ -59,7 +59,7 @@ inside a Python virtual environment from the base FTorch directory.
 
 ### Fortran source and Fypp
 
-The Fortran source code for FTorch is contained in `src/ftorch.f90`.
+The Fortran source code for FTorch is contained in `src/ftorch.F90`.
 However, this file should not be edited directly, but instead generated from
 `src/ftorch.fypp`.
 This is a file that is set up to be run through the
@@ -73,7 +73,7 @@ Fypp is a pip-installable package that comes bundled with the [developer require
 
 To generate the Fortran code run:
 ```
-fypp src/ftorch.fypp src/ftorch.f90
+fypp src/ftorch.fypp src/ftorch.F90
 ```
 
 _Note: Generally it would be advisable to provide only the `.fypp` source code to
@@ -109,7 +109,7 @@ and all other ones defined are passed to the C++ compiler in the following step:
 ```cmake
 target_compile_definitions(
   ${LIB_NAME}
-  PRIVATE ${COMPILE_DEFS} GPU_DEVICE=${GPU_DEVICE_CODE}
+  PRIVATE GPU_DEVICE=${GPU_DEVICE_CODE}
           GPU_DEVICE_NONE=${GPU_DEVICE_NONE} GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA}
           GPU_DEVICE_XPU=${GPU_DEVICE_XPU} GPU_DEVICE_MPS=${GPU_DEVICE_MPS})
 ```
@@ -152,7 +152,7 @@ The tools we use are as follows on a language-by-language basis:
 * C: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
 * Python: [ruff](https://docs.astral.sh/ruff/)
 * Shell: [ShellCheck](https://github.com/koalaman/shellcheck)
-* CMake: [cmake-format](https://github.com/cheshirekow/cmake_format)
+* CMake: cmake-lint from [cmake-format](https://github.com/cheshirekow/cmake_format) (Note: We do not use cmake-format's formatter)
 * GitHub Actions workflows: [zizmor](https://woodruffw.github.io/zizmor)
 
 Instructions on installing these tools can be found in their respective documentations.
@@ -223,6 +223,10 @@ FORD is pip installable:
 ```
 pip install ford
 ```
+FORD uses [graphviz](https://graphviz.org) to generate dependency graphs from the Fortran
+source code[^1]. 
+For this, you will need to install it on your system - see the [installation guide](https://graphviz.org/download/) for your platform.
+
 To generate the documentation run:
 ```
 ford FTorch.md
@@ -237,3 +241,10 @@ by [Doxygen](https://www.doxygen.nl/index.html).
 
 Note that we need to define the macros for GPU devices that are passed to `ftorch.F90`
 via the C preprocessor in `FTorch.md` to match those in the CMakeLists.txt.
+
+If you are building documentation locally and wish FORD to continue when it encounters
+errors, you can change the `dbg` setting in the `FTorch.md` file to `true`. Note that
+in this case the documentation may build but be incomplete. Please pay close attention
+to the warnings.
+
+[^1]: Note: If FORD cannot locate the graphviz executable (it is not a hard dependency) it will generate a warning.

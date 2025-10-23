@@ -28,19 +28,36 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # throughout source files.
 set(GPU_DEVICE_NONE 0)
 set(GPU_DEVICE_CUDA 1)
+set(GPU_DEVICE_HIP  1)  # NOTE: HIP is treated as CUDA in FTorch
 set(GPU_DEVICE_XPU 12)
 set(GPU_DEVICE_MPS 13)
-option(GPU_DEVICE "Set the GPU device (NONE [default], CUDA, XPU, or MPS)" NONE)
+option(GPU_DEVICE
+       "Set the GPU device (NONE [default], CUDA, HIP, XPU, or MPS)" NONE)
 if("${GPU_DEVICE}" STREQUAL "OFF")
   set(GPU_DEVICE NONE)
 endif()
+
 if("${GPU_DEVICE}" STREQUAL "NONE")
+  message(STATUS "CPU-only build")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_NONE})
 elseif("${GPU_DEVICE}" STREQUAL "CUDA")
+  message(STATUS "Building with CUDA support")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_CUDA})
+elseif("${GPU_DEVICE}" STREQUAL "HIP")
+  # As stated in the PyTorch documentation
+  # (https://docs.pytorch.org/docs/stable/notes/hip.html) > "PyTorch for HIP
+  # intentionally reuses the existing torch.cuda interfaces.
+  # > This helps to accelerate the porting of existing PyTorch code and models
+  # > because very few code changes are necessary, if any."
+  # Therefore we use the CUDA backend when HIP is selected. This is technically
+  # equivalent to specifying -DGPU_DEVICE=CUDA.
+  message(STATUS "Building with HIP support")
+  set(GPU_DEVICE_CODE ${GPU_DEVICE_HIP})
 elseif("${GPU_DEVICE}" STREQUAL "XPU")
+  message(STATUS "Building with XPU support")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_XPU})
 elseif("${GPU_DEVICE}" STREQUAL "MPS")
+  message(STATUS "Building with MPS support")
   set(GPU_DEVICE_CODE ${GPU_DEVICE_MPS})
 else()
   message(SEND_ERROR "GPU_DEVICE '${GPU_DEVICE}' not recognised")
@@ -54,6 +71,14 @@ if("${GPU_DEVICE}" STREQUAL "CUDA")
     enable_language(CUDA)
   else()
     message(WARNING "No CUDA support")
+  endif()
+endif()
+if("${GPU_DEVICE}" STREQUAL "HIP")
+  check_language(HIP)
+  if(CMAKE_HIP_COMPILER)
+    enable_language(HIP)
+  else()
+    message(WARNING "No HIP support")
   endif()
 endif()
 
@@ -70,30 +95,29 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # Follow GNU conventions for installing directories
 include(GNUInstallDirs)
 
+# Dependencies
+find_package(Torch REQUIRED)
+
 # Define RPATH for executables via a relative expression to enable a fully
 # relocatable package
 file(RELATIVE_PATH relDir ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
      ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
-set(CMAKE_INSTALL_RPATH $ORIGIN/${relDir})
-
-# Dependencies
-find_package(Torch REQUIRED)
+get_filename_component(TORCH_LIBRARY_DIR ${TORCH_LIBRARY} DIRECTORY)
+set(CMAKE_INSTALL_RPATH "$ORIGIN/${relDir};${TORCH_LIBRARY_DIR}")
 
 # Library with C and Fortran bindings
 add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90
                                src/ftorch_test_utils.f90)
 
 # Define compile definitions, including GPU devices
-set(COMPILE_DEFS "")
-if(UNIX AND NOT APPLE)
-  # only add UNIX definition for linux (not apple which is also unix)
-  set(COMPILE_DEFS UNIX)
-endif()
 target_compile_definitions(
   ${LIB_NAME}
-  PRIVATE ${COMPILE_DEFS} GPU_DEVICE=${GPU_DEVICE_CODE}
-          GPU_DEVICE_NONE=${GPU_DEVICE_NONE} GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA}
-          GPU_DEVICE_XPU=${GPU_DEVICE_XPU} GPU_DEVICE_MPS=${GPU_DEVICE_MPS})
+  PRIVATE GPU_DEVICE=${GPU_DEVICE_CODE}
+          GPU_DEVICE_NONE=${GPU_DEVICE_NONE}
+          GPU_DEVICE_CUDA=${GPU_DEVICE_CUDA}
+          GPU_DEVICE_HIP=${GPU_DEVICE_HIP}
+          GPU_DEVICE_XPU=${GPU_DEVICE_XPU}
+          GPU_DEVICE_MPS=${GPU_DEVICE_MPS})
 
 # Add an alias FTorch::ftorch for the library
 add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
@@ -142,6 +166,22 @@ if(CMAKE_BUILD_TESTS)
     COMPONENTS Interpreter
     REQUIRED)
 
+  # Check if Python is in a virtual environment by checking the VIRTUAL_ENV
+  # environment variable exists
+  if(NOT DEFINED ENV{VIRTUAL_ENV})
+    message(FATAL_ERROR
+            "No Python virtual environment detected. Please activate one.")
+  endif()
+
+  if(NOT "${GPU_DEVICE}" STREQUAL "NONE")
+    # If a GPU device is passed, specify if more than one is available. Set to
+    # OFF if only one is available. Used to determine whether to run Multi GPU
+    # testing
+    option(MULTI_GPU "Whether to enable Multi GPU testing (ON [default], OFF)"
+           ON)
+  endif()
+
+  # Enable CTest
   enable_testing()
 
   # Unit tests

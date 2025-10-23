@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module test_tensor_constructors_destructors
+module unittest_tensor_constructors_destructors
   use funit
   use ftorch, only: assignment(=), torch_kFloat32, torch_kCPU, torch_tensor, &
                     torch_tensor_delete, torch_tensor_from_array
@@ -103,6 +103,7 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
 
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor%p))
@@ -113,6 +114,10 @@ contains
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor%p))
+
+    ! Check the stride and shape
+    @assertEqual(expected_stride, tensor % get_stride())
+    @assertEqual(tensor_shape, tensor % get_shape())
 
   end subroutine test_torch_tensor_empty
 
@@ -127,6 +132,7 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
 
@@ -139,6 +145,10 @@ contains
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
+
+    ! Check the stride and shape
+    @assertEqual(expected_stride, tensor1 % get_stride())
+    @assertEqual(tensor_shape, tensor1 % get_shape())
 
     ! Create a tensor based off an output array
     call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
@@ -167,6 +177,7 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
 
@@ -179,6 +190,10 @@ contains
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
+
+    ! Check the stride and shape
+    @assertEqual(expected_stride, tensor1 % get_stride())
+    @assertEqual(tensor_shape, tensor1 % get_shape())
 
     ! Create a tensor based off an output array
     call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
@@ -218,6 +233,10 @@ contains
     call torch_tensor_from_array(tensor1, in_data, device_type, device_index, &
                                  this%param%requires_grad)
 
+    ! Check the stride and shape
+    @assertEqual([1], tensor1 % get_stride())
+    @assertEqual([6], tensor1 % get_shape())
+
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
 
@@ -246,6 +265,7 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer :: tensor_layout(ndims)
+    integer(c_int64_t) :: expected_stride(ndims)
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
@@ -259,11 +279,17 @@ contains
     ! Create a tensor based off an input array
     if (this%param%reordered) then
       tensor_layout(:) = [2, 1]
+      expected_stride(:) = [3, 1]
     else
       tensor_layout(:) = [1, 2]
+      expected_stride(:) = [1, 2]
     end if
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
                                  this%param%requires_grad)
+
+    ! Verify the stride and shape
+    @assertEqual(expected_stride, tensor1 % get_stride())
+    @assertEqual(shape(in_data), tensor1 % get_shape())
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
@@ -294,6 +320,7 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 3
     integer :: tensor_layout(ndims)
+    integer(c_int64_t) :: expected_stride(ndims)
     real(wp), dimension(1,2,3), target :: in_data
     real(wp), dimension(1,2,3), target :: out_data
     real(wp), dimension(1,2,3) :: expected
@@ -307,11 +334,17 @@ contains
     ! Create a tensor based off an input array
     if (this%param%reordered) then
       tensor_layout(:) = [3, 2, 1]
+      expected_stride(:) = [6, 3, 1]
     else
       tensor_layout(:) = [1, 2, 3]
+      expected_stride(:) = [1, 1, 2]
     end if
     call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
                                  this%param%requires_grad)
+
+    ! Verify the stride and shape
+    @assertEqual(expected_stride, tensor1 % get_stride())
+    @assertEqual(shape(in_data), tensor1 % get_shape())
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
@@ -413,4 +446,4 @@ contains
 
   end subroutine test_torch_tensor_destruction
 
-end module test_tensor_constructors_destructors
+end module unittest_tensor_constructors_destructors

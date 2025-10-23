@@ -13,6 +13,10 @@ For full API and user documentation please see the
 [online documentation](https://cambridge-iccs.github.io/FTorch/) which is 
 significantly more detailed than this README.
 
+To cite use of this code please refer to
+[Atkinson et al., (2025) DOI:10.21105/joss.07602](https://doi.org/10.21105/joss.07602). See
+[acknowledgment](#authors-and-acknowledgment) below for more details.
+
 
 ## Contents
 - [Description](#description)
@@ -54,25 +58,13 @@ call torch_model_forward(model, model_input_arr, model_output_arr)
 
 The following presentations provide an introduction and overview of _FTorch_:
 
+* FTorch: Facilitating Hybrid Modelling\
+  N8-CIR Seminar, Leeds - July 2025\
+  [Slides](https://jackatkinson.net/slides/Leeds-N8-FTorch) - [Recording](https://www.youtube.com/watch?v=je7St0t_W9A)
 * Coupling Machine Learning to Numerical (Climate) Models\
   Platform for Advanced Scientific Computing, Zurich - June 2024\
   [Slides](https://jackatkinson.net/slides/PASC24)
-* Blending Machine Learning and Numerical Simulation, with Applications to Climate Modelling\
-  Durham HPC days, Durham - May 2024\
-  [Slides](https://jackatkinson.net/slides/HPC_Durham_2024)
-* Reducing the overheads for coupling PyTorch machine learning models to Fortran\
-  ML & DL Seminars, LSCE, IPSL, Paris - November 2023\
-  [Slides](https://jackatkinson.net/slides/IPSL_FTorch) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
-* Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran\
-  RSECon23, Swansea - September 2023\
-  [Slides](https://jackatkinson.net/slides/RSECon23) - [Recording](https://www.youtube.com/watch?v=Ei6H_BoQ7g4&list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&index=33)
 
-Project status: This project is currently in pre-release with documentation and code
-being prepared for a first release.
-As we stabilise the API in preparation for first release there may be some breaking changes.
-Please see 
-[online updates documentation](https://cambridge-iccs.github.io/FTorch/page/updates.html)
-for clear guidance on how to easily update your older code to run with the latest version.\
 If you are interested in using this library please get in touch.
 
 _For a similar approach to calling TensorFlow models from Fortran please see [Fortran-TF-lib](https://github.com/Cambridge-ICCS/fortran-tf-lib)._
@@ -99,8 +91,7 @@ FTorch's test suite has some additional dependencies.
   installed, as opposed to LibTorch. We recommend installing `torchvision` in
   the same command (e.g., `pip install torch torchvision`)<sup>*</sup>. Doing so
   ensures that `torch` and `torchvision` are configured in the same way.
-* Other Python modules are installed automatically by the `run_test_suite.sh`
-  test script (or `run_test_suite.bat` on Windows).
+* Other Python modules are installed automatically upon building the tests.
 
 
 <sup>*</sup> _For more details, see [here](https://pytorch.org/get-started/locally/)._
@@ -166,16 +157,17 @@ To build and install the library:
 
     The following table of CMake options are available to be passed as arguments to `cmake` through `-D<Option>=<Value>`.  
     It is likely that you will need to provide at least `CMAKE_PREFIX_PATH`.  
-    | Option                                                                                            | Value                        | Description                                                   |
-    | ------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------|
-    | [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `gfortran` / `ifx` / `ifort` | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup>1</sup>        |
-    | [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `gcc` / `icx` / `icc`        | Specify a C compiler to build the library with.<sup>1</sup>                |
-    | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `g++` / `icx` / `icpc`       | Specify a C++ compiler to build the library with.<sup>1</sup>              |
-    | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/LibTorch/>`       | Location of Torch installation<sup>2</sup>                    |
-    | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>` | Location at which the library files should be installed. By default this is `/usr/local` |
-    | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`          | Specifies build type. The default is `Debug`, use `Release` for production code|
-    | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`             | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build. |
-    | `GPU_DEVICE` | `NONE` / `CUDA` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>3</sup> |
+    | Option                                                                                            | Value                                   | Description                                                                                                                                                                |
+    | ------------------------------------------------------------------------------------------------- | ----------------------------            | --------------------------------------------------------------                                                                                                             |
+    | [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `gfortran` / `ifx` / `ifort`            | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup>1</sup> |
+    | [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `gcc` / `icx` / `icc`                   | Specify a C compiler to build the library with.<sup>1</sup>                                                                                                                |
+    | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `g++` / `icx` / `icpc`                  | Specify a C++ compiler to build the library with.<sup>1</sup>                                                                                                              |
+    | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/LibTorch/>`                  | Location of Torch installation<sup>2</sup>                                                                                                                                 |
+    | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>`            | Location at which the library files should be installed. By default this is `/usr/local`                                                                                   |
+    | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`                     | Specifies build type. The default is `Debug`, use `Release` for production code                                                                                            |
+    | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build.                                        |
+    | `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU backend architecture (if any) <sup>3</sup>                                                                                                        |
+    | `MULTI_GPU`                                                                                      | `ON` / `OFF` |  Specifies whether to build the tests that involve multiple GPU devices (`ON` by default if `CMAKE_BUILD_TESTS` and `GPU_DEVICE` are set).                                                                                                        |
 
     <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
 
@@ -228,15 +220,16 @@ These steps are described in more detail in the
 ## GPU Support
 
 To run on GPU requires an installation of LibTorch compatible for the GPU device
-you wish to target and two main adaptations to the code:
+you wish to target (using the `GPU_DEVICE` CMake option as detailed in the
+[table above](#library-installation)) and two main adaptations to the code:
 
 1. When saving a TorchScript model, ensure that it is on the appropriate GPU
    device type. The `pt2ts.py` script has a command line argument
-   `--device_type`, which currently accepts four different device types: `cpu`
-   (default), `cuda`, `xpu`, or `mps`.
+   `--device_type`, which currently accepts 5 different device types: `cpu`
+   (default), `cuda`, `hip`, `xpu`, or `mps`.
 2. When using FTorch in Fortran, set the device for the input
    tensor(s) to the appropriate GPU device type, rather than `torch_kCPU`. There
-   are currently three options: `torch_kCUDA`, `torch_kXPU`, or `torch_kMPS`.
+   are currently three options: `torch_kCUDA`, `torch_kHIP`, `torch_kXPU`, or `torch_kMPS`.
 
 For detailed guidance about running on GPU, including instructions for using multiple
 devices, please see the
@@ -317,5 +310,7 @@ The following projects make use of this code or derivatives in some way:
   See Heuer et al. (2024) - [DOI: 10.1029/2024MS004398](https://doi.org/10.1029/2024MS004398)
 * To replace a BiCGStab bottleneck in the GloSea6 Seasonal Forecasting model\
   See Park and Chung (2025) - [DOI: 10.3390/atmos16010060](https://doi.org/10.3390/atmos16010060)
+* Emulation of cloud resolving models to reduce computational cost in E3SM\
+  See Hu et al. (2025) - [DOI: 10.1029/2024MS004618](https://doi.org/10.1029%2F2024MS004618) (and [code](https://github.com/zyhu-hu/E3SM_nvlab/tree/ftorch/climsim_scripts/perlmutter_scripts))
 
 Are we missing anyone? Let us know.

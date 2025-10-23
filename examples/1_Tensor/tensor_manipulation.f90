@@ -35,6 +35,11 @@ program tensor_manipulation
   ! to the list of imports and switching out the following subroutine call.
   call torch_tensor_ones(a, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
 
+  ! Note that the tensor had memory allocated on the Torch side hence it is represented
+  ! in row-major order.
+  write(*,*) "Shape of the ones tensor:", a % get_shape()
+  write(*,*) "Stride of the ones tensor:", a % get_stride()
+
   ! Print the contents of the tensor
   ! --------------------------------
   ! This will show the tensor data as well as its device type, data type, and shape.
@@ -51,6 +56,13 @@ program tensor_manipulation
   ! Another way of viewing the contents of a tensor is to print the array used as its input.
   write(*,*) "Contents of second input tensor:"
   write(*,*) in_data
+
+  ! For a tensor build on top of a Fortran array, the underlying data is in column-major order
+  ! Since FTorch performs no copies, the strides of the tensor will also correspond to column-major
+  ! order. This is different from the default behaviour of Torch which builds tensors with row-major
+  ! order by default.
+  write(*,*) "Shape of the tensor from Fortran array:", b % get_shape()   ! Expected: 2 3
+  write(*,*) "Stride of the tensor from Fortran array:", b % get_stride() ! Expected: 1 2
 
   ! Extract data from the tensor as a Fortran array
   ! -----------------------------------------------

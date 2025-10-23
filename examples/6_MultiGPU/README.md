@@ -1,7 +1,7 @@
 # Example 3 - MultiGPU
 
-This example revisits the SimpleNet example and demonstrates how to run it using
-multiple GPU devices.
+This example revisits the SimpleNet example (again) and demonstrates how to run
+it using multiple GPU devices.
 
 
 ## Description

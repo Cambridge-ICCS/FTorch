@@ -14,8 +14,20 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "" FORCE)
 endif()
 
-find_package(FTorch)
+if(CMAKE_BUILD_TESTS)
+  find_package(FTorch QUIET)
+else()
+  find_package(FTorch REQUIRED)
+endif()
 message(STATUS "Building with Fortran PyTorch coupling")
+
+# Install Python dependencies
+find_package(Python COMPONENTS Interpreter REQUIRED)
+if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
+  message(FATAL_ERROR "Please activate your virtualenv or conda environment")
+endif()
+execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
+                        ${PROJECT_SOURCE_DIR}/requirements.txt)
 
 # Fortran example
 add_executable(simplenet_infer_fortran simplenet_infer_fortran.f90)
@@ -26,13 +38,13 @@ if(CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME simplenet COMMAND ${Python_EXECUTABLE}
-                                  ${PROJECT_SOURCE_DIR}/simplenet.py)
+  add_test(NAME example2_simplenet
+           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py)
 
   # 2. Check the model is saved to file in the expected location with the
   #   pt2ts.py script
   add_test(
-    NAME pt2ts
+    NAME example2_pt2ts
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
             ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
@@ -40,7 +52,7 @@ if(CMAKE_BUILD_TESTS)
   # 3. Check the model can be loaded from file and run in Python and that its
   #   outputs meet expectations
   add_test(
-    NAME simplenet_infer_python
+    NAME example2_simplenet_infer_python
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet_infer_python.py
             --filepath ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
@@ -48,12 +60,12 @@ if(CMAKE_BUILD_TESTS)
   # 4. Check the model can be loaded from file and run in Fortran and that its
   #   outputs meet expectations
   add_test(
-    NAME simplenet_infer_fortran
+    NAME example2_simplenet_infer_fortran
     COMMAND
       simplenet_infer_fortran ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
-    simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-                                       "SimpleNet example ran successfully")
+    example2_simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "SimpleNet example ran successfully")
 endif()

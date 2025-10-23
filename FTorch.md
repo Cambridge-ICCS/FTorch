@@ -15,11 +15,12 @@ extra_filetypes: c   //
                  h //
                  py  #
 preprocess: true
-macro: UNIX
-       GPU_DEVICE_NONE=0
+dbg: false
+macro: GPU_DEVICE_NONE=0
        GPU_DEVICE_CUDA=1
        GPU_DEVICE_XPU=11
        GPU_DEVICE_MPS=12
+       GPU_DEVICE_HIP=1
 sort: alpha
 source: true
 graph: true
@@ -46,6 +47,13 @@ There are also installation instructions for the library and examples of perform
 
 We support running on both CPU and GPU, and have tested the library on UNIX and Windows based operating systems
 
+Citing FTorch
+-------------
+
+FTorch is published in JOSS. To cite it in your work please refer to:
+
+Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
+_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
 
 News
 ----
@@ -59,34 +67,26 @@ Some recent updates about FTorch:
   grant will support development for online training functionality for FTorch,
   as well as research visits, FTorch training tutorials, and organisation of a
   [workshop on hybrid modelling](https://cambridge-iccs.github.io/ml-coupling-workshop).
-* FTorch developers Joe Wallwork and Tom Meltzer will be giving an FTorch
-  tutorial at
-  [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/)
-  on 2nd June 2025. Joe will also be giving a talk on *Accelerating UKCA by
-  predicting timesteps with FTorch* in the
-  [HPC in Weather & Climate Research](https://durham.readthedocs.io/en/latest/hpcdays/workshops.html#Weather)
-  session.
-* FTorch developers Jack Atkinson and Joe Wallwork will be giving an FTorch
-  tutorial in the
-  [Department of Atmospheric, Oceanic, and Planetary Physics](https://www.physics.ox.ac.uk/research/subdepartment/atmospheric-oceanic-and-planetary-physics)
-  at the University of Oxford on 2nd July 2025.
-* The FTorch developers will be giving an FTorch tutorial at the
-  [ICCS Summer School](https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2025)
-  on 11th July 2025.
-  * FTorch developer Jack Atkinson will be presenting FTorch in a SciML seminar at
+* FTorch developer Jack Atkinson will be presenting FTorch in a SciML seminar at
   [CEMAC](https://www.cemac.leeds.ac.uk/) in Leeds on 18th July 2025.
 
+FTorch training
+---------------
 
-Publications and Select Presentations
--------------------------------------
+We offer training on FTorch in the form of tutorials and workshops. The
+companion repository
+[https://github.com/Cambridge-ICCS/FTorch-workshop](https://github.com/Cambridge-ICCS/FTorch-workshop)
+provides a set of exercises and solutions to help users get started with FTorch.
+<!--Details of upcoming in-person training events are as follows:-->
 
-FTorch is published in JOSS. To cite it in your work please refer to:
-
-Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
-_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
+Select Presentations
+--------------------
 
 The following presentations contain information about FTorch:
 
+* FTorch: Facilitating Hybrid Modelling<br>
+  N8-CIR Seminar, Leeds - July 2025<br>
+  [Slides](https://jackatkinson.net/slides/Leeds-N8-FTorch) - [Recording](https://www.youtube.com/watch?v=je7St0t_W9A)
 * Facilitating machine learning in Fortran using FTorch<br>
   Seminars at the University of Reading
   [Data Assimilation Research Centre](https://research.reading.ac.uk/met-darc/news-and-events/darc-seminar-series/)
@@ -100,14 +100,8 @@ The following presentations contain information about FTorch:
 * Coupling Machine Learning to Numerical (Climate) Models<br>
   Platform for Advanced Scientific Computing, Zurich - June 2024<br>
   [Slides](https://jackatkinson.net/slides/PASC24)
-* Blending Machine Learning and Numerical Simulation, with Applications to Climate Modelling<br>
-  Durham HPC days, Durham - May 2024<br>
-  [Slides](https://jackatkinson.net/slides/HPC_Durham_2024)
-* Reducing the overheads for coupling PyTorch machine learning models to Fortran<br>
-  ML & DL Seminars, LSCE, IPSL, Paris - November 2023<br>
-  [Slides](https://jackatkinson.net/slides/IPSL_FTorch) - [Recording](https://www.youtube.com/watch?v=-NJGuV6Rz6U)
 
-See the [presentations](pages/presentations.html) page for a full list of
+See the [presentations](page/presentations.html) page for a full list of
 presentations on FTorch.
 
 License
@@ -120,7 +114,7 @@ distributed under an [MIT License which can be viewed here](page/LICENSE.html).
 Projects using FTorch
 ---------------------
 
-The following projects make use of FTorch.  
+The following projects make use of FTorch.<br>
 If you use our library in your work please let us know.
 
 * [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/) -
@@ -137,3 +131,5 @@ If you use our library in your work please let us know.
 * In the [GloSea6 Seasonal Forecasting Model](https://www.metoffice.gov.uk/research/climate/seasonal-to-decadal/gpc-outlooks/user-guide/global-seasonal-forecasting-system-glosea6) -
   Replacing a BiCGStab bottleneck in the code with a deep learning approach to speed up execution without compromising model accuracy.
   See Park and Chung (2025) - [DOI: 10.3390/atmos16010060](https://doi.org/10.3390/atmos16010060)
+* Emulation of cloud resolving models to reduce computational cost in E3SM.
+  See Hu et al. (2025) - [DOI: 10.1029/2024MS004618](https://doi.org/10.1029%2F2024MS004618) (and [code](https://github.com/zyhu-hu/E3SM_nvlab/tree/ftorch/climsim_scripts/perlmutter_scripts))

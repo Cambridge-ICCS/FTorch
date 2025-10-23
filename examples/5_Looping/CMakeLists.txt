@@ -14,15 +14,33 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "" FORCE)
 endif()
 
-find_package(FTorch)
+if(CMAKE_BUILD_TESTS)
+  find_package(FTorch QUIET)
+else()
+  find_package(FTorch REQUIRED)
+endif()
 message(STATUS "Building with Fortran PyTorch coupling")
 
+# Install Python dependencies
+find_package(Python COMPONENTS Interpreter REQUIRED)
+if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
+  message(FATAL_ERROR "Please activate your virtualenv or conda environment")
+endif()
+execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
+                        ${PROJECT_SOURCE_DIR}/requirements.txt)
+
 # Fortran example - bad
-add_executable(simplenet_infer_fortran_bad bad/simplenet_infer_fortran.f90)
-target_link_libraries(simplenet_infer_fortran_bad PRIVATE FTorch::ftorch)
-target_sources(simplenet_infer_fortran_bad PRIVATE bad/fortran_ml_mod.f90)
+add_executable(example5_simplenet_infer_fortran_bad
+               bad/simplenet_infer_fortran.f90)
+target_link_libraries(example5_simplenet_infer_fortran_bad
+                      PRIVATE FTorch::ftorch)
+target_sources(example5_simplenet_infer_fortran_bad
+               PRIVATE bad/fortran_ml_mod.f90)
 
 # Fortran example - good
-add_executable(simplenet_infer_fortran_good good/simplenet_infer_fortran.f90)
-target_link_libraries(simplenet_infer_fortran_good PRIVATE FTorch::ftorch)
-target_sources(simplenet_infer_fortran_good PRIVATE good/fortran_ml_mod.f90)
+add_executable(example5_simplenet_infer_fortran_good
+               good/simplenet_infer_fortran.f90)
+target_link_libraries(example5_simplenet_infer_fortran_good
+                      PRIVATE FTorch::ftorch)
+target_sources(example5_simplenet_infer_fortran_good
+               PRIVATE good/fortran_ml_mod.f90)

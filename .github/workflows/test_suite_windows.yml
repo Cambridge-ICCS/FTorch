@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite
-name: TestSuiteWindows
+name: Test suite (Windows)
 
 # Controls when the workflow will run
 on:
@@ -32,6 +32,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# Write permissions are not required
+permissions: {}
+
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "test-suite-windows"
@@ -44,9 +47,12 @@ jobs:
         toolchain:
           - {compiler: intel, version: '2023.2'}
 
+    # Terminate the job if it runs for more than 10 minutes
+    timeout-minutes: 10
+
     steps:
       # configure windows VM with intel compilers
-      - uses: fortran-lang/setup-fortran@v1
+      - uses: fortran-lang/setup-fortran@d2ba6ea44297a24407def2f6e117954d844a5368 # v1
         id: setup-fortran
         with:
           compiler: ${{ matrix.toolchain.compiler }}
@@ -92,4 +98,9 @@ jobs:
           for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
           set PATH=%torch_path%\torch\lib;%PATH%
-          run_test_suite.bat
+          cd build
+          ctest --verbose --tests-regex example1
+          ctest --verbose --tests-regex example2
+          ctest --verbose --tests-regex example3
+          ctest --verbose --tests-regex example4
+          ctest --verbose --tests-regex example8

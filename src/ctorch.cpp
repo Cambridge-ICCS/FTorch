@@ -98,7 +98,8 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
       ctorch_warn("device index unused for CPU-only runs");
     }
     return torch::Device(torch::kCPU);
-#if GPU_DEVICE == GPU_DEVICE_CUDA
+#if (GPU_DEVICE == GPU_DEVICE_CUDA) || (GPU_DEVICE == GPU_DEVICE_HIP)
+  // NOTE: HIP is treated as CUDA in this project
   case torch_kCUDA:
     if (device_index == -1) {
       ctorch_warn("device index unset, defaulting to 0");
@@ -144,6 +145,8 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
     return torch_kCPU;
   case torch::kCUDA:
     return torch_kCUDA;
+  case torch::kHIP:
+    return torch_kHIP;
   case torch::kXPU:
     return torch_kXPU;
   case torch::kMPS:
@@ -303,17 +306,15 @@ int torch_tensor_get_rank(const torch_tensor_t tensor) {
   return t->sizes().size();
 }
 
-#ifdef UNIX
-const long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
+const torch_size_t *torch_tensor_get_sizes(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   return t->sizes().data();
 }
-#else
-const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
+
+const torch_size_t *torch_tensor_get_stride(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
-  return t->sizes().data();
+  return t->strides().data();
 }
-#endif
 
 torch_data_t torch_tensor_get_dtype(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);

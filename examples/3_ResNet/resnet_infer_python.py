@@ -96,6 +96,7 @@ if __name__ == "__main__":
 
     batch_size_to_run = 1
 
-    result = deploy(saved_model_file, device_to_run, batch_size_to_run)
+    with torch.inference_mode():
+        result = deploy(saved_model_file, device_to_run, batch_size_to_run)
     print_top_results(result)
     check_results(result)
