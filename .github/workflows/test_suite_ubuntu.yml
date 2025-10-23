@@ -174,6 +174,25 @@ jobs:
           cd build
           ctest --verbose --tests-regex example
 
+      - name: Standalone SimpleNet example
+        run: |
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
+          export FTORCH_BUILD_DIR="$(pwd)/build"
+          cd examples/2_SimpleNet
+          export BUILD_DIR="$(pwd)/build"
+          mkdir "${BUILD_DIR}"
+          cd "${BUILD_DIR}"
+          cmake .. \
+            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="${FTORCH_BUILD_DIR}" \
+            -DCMAKE_BUILD_TESTS=TRUE \
+            -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}"
+          cmake --build .
+          ctest -V
+
   Intel:
     # Trigger intel build only if push to main 
     if: github.event_name == 'push'
