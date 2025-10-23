@@ -8,11 +8,13 @@ project(
   VERSION ${PACKAGE_VERSION}
   LANGUAGES C CXX Fortran)
 
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
 if(WIN32)
   # if building on windows we need to make sure the symbols are exported
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
   # required to build the .dll on windows
-  set(BUILD_SHARED_LIBS TRUE)
+  set(BUILD_SHARED_LIBS ON)
 endif()
 
 include(FortranCInterface)
@@ -105,8 +107,7 @@ get_filename_component(TORCH_LIBRARY_DIR ${TORCH_LIBRARY} DIRECTORY)
 set(CMAKE_INSTALL_RPATH "$ORIGIN/${relDir};${TORCH_LIBRARY_DIR}")
 
 # Library with C and Fortran bindings
-add_library(${LIB_NAME} SHARED src/ctorch.cpp src/ftorch.F90
-                               src/ftorch_test_utils.f90)
+add_library(${LIB_NAME} src/ctorch.cpp src/ftorch.F90 src/ftorch_test_utils.f90)
 
 # Define compile definitions, including GPU devices
 target_compile_definitions(
@@ -126,7 +127,9 @@ set_target_properties(
   Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/modules")
 # cmake-format: on
 # Link TorchScript
-target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES})
+# NOTE: Linking stdc++ for downstream targets fixes ctorch link error
+target_link_libraries(${LIB_NAME}
+  PRIVATE ${TORCH_LIBRARIES} INTERFACE stdc++)
 # Include the Fortran mod files in the library
 target_include_directories(
   ${LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/modules>
@@ -136,17 +139,23 @@ target_include_directories(
 # Install library, create target file
 install(
   TARGETS "${LIB_NAME}"
-  EXPORT ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}Targets
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   PRIVATE_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   INCLUDES
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME})
 
+# Make targets available in build dir
+export(
+  EXPORT ${PROJECT_NAME}Targets
+  NAMESPACE ${PROJECT_NAME}::
+  FILE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}Targets.cmake)
+
 # Install target file
 install(
-  EXPORT ${PROJECT_NAME}
-  FILE ${PROJECT_NAME}Config.cmake
+  EXPORT ${PROJECT_NAME}Targets
+  FILE ${PROJECT_NAME}Targets.cmake
   NAMESPACE ${PROJECT_NAME}::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
@@ -192,3 +201,18 @@ if(CMAKE_BUILD_TESTS)
   # Integration tests
   add_subdirectory(examples)
 endif()
+
+# Setup and install configuration files
+# NOTE: Must occur after BUILD_TESTS because find_package(FTorch QUIET) breaks
+# otherwise
+get_filename_component(TORCH_BASE_DIR "${TORCH_LIBRARY_DIR}" DIRECTORY)
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  "${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
+  "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+  PATH_VARS TORCH_BASE_DIR)
+
+install(
+  FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
