@@ -84,7 +84,7 @@ endif()
 
 # Set RPATH behaviour
 set(CMAKE_SKIP_RPATH FALSE)
-set(CMAKE_BUILD_RPATH "${INSTALL_PREFIX}")
+# set(CMAKE_BUILD_RPATH "${INSTALL_PREFIX}")
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 # Embed absolute paths to external libraries that are not part of the project,
