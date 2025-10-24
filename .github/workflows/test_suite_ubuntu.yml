@@ -183,9 +183,6 @@ jobs:
       fail-fast: false
       matrix:
         toolchain: [intel-ifx, intel-ifort]
-        std: [f08]
-        CC: [icx]
-        CXX: [icpx]
         include:
           - toolchain: intel-ifx 
             FC: ifx
@@ -234,8 +231,8 @@ jobs:
           mkdir pFUnit/build
           cd pFUnit/build
           cmake .. \
-            -DCMAKE_C_COMPILER=${{ matrix.CC }} \
-            -DCMAKE_CXX_COMPILER=${{ matrix.CXX }} \
+            -DCMAKE_C_COMPILER=icx \
+            -DCMAKE_CXX_COMPILER=icpx \
             -DCMAKE_Fortran_COMPILER=${{ matrix.FC }} \
             -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }}
           make -j 4 install
@@ -254,14 +251,14 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_C_COMPILER=${{ matrix.CC }} \
-            -DCMAKE_CXX_COMPILER=${{ matrix.CXX }} \
+            -DCMAKE_C_COMPILER=icx \
+            -DCMAKE_CXX_COMPILER=icpx \
             -DCMAKE_Fortran_COMPILER=${{ matrix.FC }} \
             -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }} \
             -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-stand ${{ matrix.std }}"
+            -DCMAKE_Fortran_FLAGS="-stand f08"
           cmake --build .
           cmake --install .
 
