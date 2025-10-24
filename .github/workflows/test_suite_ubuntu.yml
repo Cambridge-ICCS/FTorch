@@ -226,7 +226,6 @@ jobs:
         run: |
           source /opt/intel/oneapi/setvars.sh
           printenv >> $GITHUB_ENV
-          printenv | grep intel
 
       - name: Install pFUnit
         run: |
