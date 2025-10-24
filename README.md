@@ -165,7 +165,7 @@ To build and install the library:
     | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/LibTorch/>`                  | Location of Torch installation<sup>2</sup>                                                                                                                                 |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>`            | Location at which the library files should be installed. By default this is `/usr/local`                                                                                   |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`                     | Specifies build type. The default is `Debug`, use `Release` for production code                                                                                            |
-    | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build.                                        |
+    | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build.<sup>4</sup>                            |
     | `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU backend architecture (if any) <sup>3</sup>                                                                                                        |
     | `MULTI_GPU`                                                                                      | `ON` / `OFF` |  Specifies whether to build the tests that involve multiple GPU devices (`ON` by default if `CMAKE_BUILD_TESTS` and `GPU_DEVICE` are set).                                                                                                        |
 
@@ -181,6 +181,7 @@ To build and install the library:
     <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
           `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
           URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
+    <sup>4</sup>_To run the tests, your system's MPI must support `use mpi_f08`. Note that OpenMPI < v2.0 and MPICH < v3.1 do not support that module._
 
 4. Make and install the library to the desired location with either:
 	```
