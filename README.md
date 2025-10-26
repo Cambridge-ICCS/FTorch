@@ -207,7 +207,7 @@ To build and install the library:
     you may have `.dll` files or similar._  
 	_Note: In a Windows environment this will require administrator privileges for the default install location._
 
-#### On building FTorch as static vs. shared library
+#### On building FTorch as shared vs. static library
 
 FTorch can be built either as a shared library or as a static library depending
 on how you want to link it with your own application.
