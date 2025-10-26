@@ -133,6 +133,8 @@ Codespace. Full instructions are in the
 For detailed installation instructions please see the
 [online installation documentation](https://cambridge-iccs.github.io/FTorch/page/cmake.html).
 
+#### General approach 
+
 To build and install the library:
 
 1. Navigate to the location in which you wish to install the source and run:  
@@ -200,11 +202,54 @@ To build and install the library:
 
     Installation will place the following directories at the install location:  
     * `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
-    * `CMAKE_INSTALL_PREFIX/lib/` - contains `cmake` directory and `.so` files  
+    * `CMAKE_INSTALL_PREFIX/lib/` - contains `cmake` directory and `.so`/`.ar` files  
     _Note: depending on your system and architecture `lib` may be `lib64`, and 
     you may have `.dll` files or similar._  
 	_Note: In a Windows environment this will require administrator privileges for the default install location._
 
+#### On building FTorch as static vs. shared library
+
+FTorch can be built either as a shared library or as a static library depending
+on how you want to link it with your own application.
+
+By default, FTorch builds as a shared library:
+
+```bash
+cmake -DBUILD_SHARED_LIBS=ON -S <path/to/FTorch>
+```
+
+This configuration dynamically links FTorch and its dependencies (including
+LibTorch) at runtime. A shared build is recommended for *most* users because:
+
+- Multiple programs can use the same FTorch installation.
+- You can update FTorch without recompiling dependent executables.
+
+If you prefer to include FTorch directly inside your executable, you can build
+it statically:
+
+```bash
+cmake -DBUILD_SHARED_LIBS=OFF -S </path/to/FTorch>
+```
+
+A static build links all FTorch code directly into your application executable.
+This can be useful when:
+
+- You want a single self-contained executable.
+- You are installing FTorch on an HPC system and intend to use it in an
+application for which you want maximum reproducibility (i.e., the FTorch
+version embedded in your application is "frozen").
+
+To this second point on building FTorch as a static library, a brief
+justification on applications for which this may be relevant is covered
+[here](https://github.com/Cambridge-ICCS/FTorch/pull/448#issue-3544429539).
+
+For more general details on shared and static libraries as well as their
+trade-offs, see [shared vs. static
+libraries](https://medium.com/@mohitk3000/c-libraries-unpacked-shared-libraries-vs-static-libraries-44764b85056a),
+[a case for static
+linking](https://ro-che.info/articles/2016-09-09-static-binaries-scientific-computing),
+and [static linking considered
+harmful](https://www.akkadia.org/drepper/no_static_linking.html)
 
 ## Usage
 
