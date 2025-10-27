@@ -11,7 +11,7 @@ program inference
    use ftorch_test_utils, only : assert_allclose
 
    ! Import MPI
-   use mpi, only : mpi_comm_rank, mpi_comm_size, mpi_comm_world, mpi_finalize, mpi_float, &
+   use mpi_f08, only : mpi_comm_rank, mpi_comm_size, mpi_comm_world, mpi_finalize, mpi_float, &
                    mpi_gather, mpi_init
 
    implicit none
