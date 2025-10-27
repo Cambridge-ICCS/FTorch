@@ -32,6 +32,10 @@ export PFUNIT_DIR=</path/to/pFUnit/build/installed/PFUNIT-VERSION>
 cmake -DCMAKE_BUILD_TESTS=TRUE -S </path/to/FTorch> -B </path/to/FTorch/build>
 ```
 
+Note that pFUnit includes the version number in the install directory name,
+so for version 4.12 that path will need to be specified as
+`/path/to/pFUnit/build/installed/PFUNIT-4.12`, for example.
+
 If a `GPU_DEVICE` is specified but only one is available, i.e. when in a single GPU setting, you will need to also set the `MULTI_GPU` option to `OFF`.
 This will skip the 'multiple GPU' integration test which requires multiple devices to be available.
 
