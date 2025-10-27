@@ -38,6 +38,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Intel CI now uses Intel oneAPI MPI instead of OpenMPI built with Intel compilers [#449](https://github.com/Cambridge-ICCS/FTorch/pull/449)
 - FTorch library (`libftorch.so`) produced by cmake installation now has `RUNPATH` that contains path to Torch library directory. Downstream targets linking against FTorch can now find the Torch dependency automatically and will compile successfully [#437](https://github.com/Cambridge-ICCS/FTorch/pull/437).
 - In all `CMakeLists.txt` where `find_package(FTorch)` was present, now using `REQUIRE` if not building tests to stop the cmake configuation process early for users who only wish to build examples in [#434](https://github.com/Cambridge-ICCS/FTorch/pull/434)
 - fortitude dependency version increased to 0.7.0

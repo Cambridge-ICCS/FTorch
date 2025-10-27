@@ -61,8 +61,8 @@ The following CMake flags are available and can be passed as arguments through `
 | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`                  | Location of Torch installation<sup>2</sup>                                                                                                                                 |
 | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>`            | Location at which the library files should be installed. By default this is `/usr/local`                                                                                   |
 | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`                     | Specifies build type. The default is `Debug`, use `Release` for production code                                                                                            |
-| `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](testing.html) as part of the build.                                                                                     |
-| `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>3</sup>                                                                                                                |
+| `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](testing.html) as part of the build.<sup>3</sup>                                                                                     |
+| `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>4</sup>                                                                                                                |
 | `MULTI_GPU`                                                                                      | `ON` / `OFF` | Specifies whether to build the tests that involve multiple GPU devices (`ON` by default if `CMAKE_BUILD_TESTS` and `GPU_DEVICE` are set).                                                                                                                |
 
 
@@ -75,10 +75,11 @@ The following CMake flags are available and can be passed as arguments through `
 >       then this should be the absolute path to the unzipped LibTorch distribution.
 >       If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
 >       e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
->
-> <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
+> <sup>3</sup>_To run the tests, your system's MPI must support `use mpi_f08`. Note that OpenMPI < v2.0 and MPICH < v3.1 do not support that module._
+> <sup>4</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
 >       `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
 >       URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
+
 
 For example, to build on a unix system using the gnu compilers and install to `$HOME/FTorchbin/`
 we would need to run:

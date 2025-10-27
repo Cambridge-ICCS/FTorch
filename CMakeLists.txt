@@ -176,7 +176,7 @@ if(CMAKE_BUILD_TESTS)
 
   # Check if Python is in a virtual environment by checking the VIRTUAL_ENV
   # environment variable exists
-  if(NOT DEFINED ENV{VIRTUAL_ENV})
+  if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
     message(FATAL_ERROR
             "No Python virtual environment detected. Please activate one.")
   endif()
