@@ -175,8 +175,11 @@ jobs:
           ctest --verbose --tests-regex example
 
   Intel:
-    # Trigger intel build only if push to main 
-    if: github.event_name == 'push'
+    # Trigger intel build only if push to main, or called manually via dispatch.
+    if: |
+      (github.ref == 'refs/heads/main' && github.event_name == 'push')
+      || github.event_name == 'workflow_dispatch'
+      || (github.event_name == 'pull_request' && contains(github.event.pull_request.changed_files, '.github/workflows/test_suite_ubuntu.yml'))
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
