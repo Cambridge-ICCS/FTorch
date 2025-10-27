@@ -147,11 +147,27 @@ tests based on a subset of the <a href="examples.html">examples</a>. These tests
 and run and their outputs are analysed.</p>
 <h3 id="building">Building</h3>
 <p>To enable FTorch's test suite, ensure that the <code>CMAKE_BUILD_TESTS</code> option
-is set to <code>TRUE</code> for the build,  i.e., <code>-DCMAKE_BUILD_TESTS=True</code>. If you want
+is set to <code>TRUE</code> for the build, i.e., <code>-DCMAKE_BUILD_TESTS=TRUE</code>. If you want
 to run the unit tests, you will also need to install
 <a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a> and pass its
-install directory to the <code>CMAKE_PREFIX_PATH</code> when building FTorch.
-If a <code>GPU_DEVICE</code> is specified but only one is available, i.e. when in a single GPU setting, you will need to also set the <code>MULTI_GPU</code> option to <code>OFF</code>.
+install directory to the <code>CMAKE_PREFIX_PATH</code> or export <code>PFUNIT_DIR</code> as 
+an environment variable whose value is the pFUnit install directory 
+when building FTorch:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Update `CMAKE_PREFIX_PATH` explicitly with pFUnit install directory</span>
+cmake<span class="w"> </span>-DCMAKE_PREFIX_PATH<span class="o">=</span><span class="s2">&quot;&lt;/path/to/pFUnit/build/installed/PFUNIT-VERSION&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>True<span class="w"> </span>-S<span class="w"> </span>&lt;/path/to/FTorch&gt;<span class="w"> </span>-B<span class="w"> </span>&lt;/path/to/FTorch/build&gt;
+</code></pre></div>
+
+<p>or</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Using an environment variable with pFUnit install directory</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PFUNIT_DIR</span><span class="o">=</span>&lt;/path/to/pFUnit/build/installed/PFUNIT-VERSION&gt;
+cmake<span class="w"> </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>TRUE<span class="w"> </span>-S<span class="w"> </span>&lt;/path/to/FTorch&gt;<span class="w"> </span>-B<span class="w"> </span>&lt;/path/to/FTorch/build&gt;
+</code></pre></div>
+
+<p>Note that pFUnit includes the version number in the install directory name,
+so for version 4.12 that path will need to be specified as
+<code>/path/to/pFUnit/build/installed/PFUNIT-4.12</code>, for example.</p>
+<p>If a <code>GPU_DEVICE</code> is specified but only one is available, i.e. when in a single GPU setting, you will need to also set the <code>MULTI_GPU</code> option to <code>OFF</code>.
 This will skip the 'multiple GPU' integration test which requires multiple devices to be available.</p>
 <p>The CMake build will automatically install any additional Python dependencies
 for the examples.</p>
