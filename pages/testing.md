@@ -11,10 +11,31 @@ and run and their outputs are analysed.
 ### Building
 
 To enable FTorch's test suite, ensure that the `CMAKE_BUILD_TESTS` option
-is set to `TRUE` for the build,  i.e., `-DCMAKE_BUILD_TESTS=True`. If you want
+is set to `TRUE` for the build, i.e., `-DCMAKE_BUILD_TESTS=TRUE`. If you want
 to run the unit tests, you will also need to install
 [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit) and pass its
-install directory to the `CMAKE_PREFIX_PATH` when building FTorch.
+install directory to the `CMAKE_PREFIX_PATH` or export `PFUNIT_DIR` as 
+an environment variable whose value is the pFUnit install directory 
+when building FTorch:
+
+```shell
+# Update `CMAKE_PREFIX_PATH` explicitly with pFUnit install directory
+cmake -DCMAKE_PREFIX_PATH="</path/to/pFUnit/build/installed/PFUNIT-VERSION>" \
+    -DCMAKE_BUILD_TESTS=True -S </path/to/FTorch> -B </path/to/FTorch/build>
+```
+
+or
+
+```shell
+# Using an environment variable with pFUnit install directory
+export PFUNIT_DIR=</path/to/pFUnit/build/installed/PFUNIT-VERSION>
+cmake -DCMAKE_BUILD_TESTS=TRUE -S </path/to/FTorch> -B </path/to/FTorch/build>
+```
+
+Note that pFUnit includes the version number in the install directory name,
+so for version 4.12 that path will need to be specified as
+`/path/to/pFUnit/build/installed/PFUNIT-4.12`, for example.
+
 If a `GPU_DEVICE` is specified but only one is available, i.e. when in a single GPU setting, you will need to also set the `MULTI_GPU` option to `OFF`.
 This will skip the 'multiple GPU' integration test which requires multiple devices to be available.
 
