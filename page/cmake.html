@@ -224,12 +224,12 @@ The following CMake flags are available and can be passed as arguments through <
 <tr>
 <td><code>CMAKE_BUILD_TESTS</code></td>
 <td><code>TRUE</code> / <code>FALSE</code></td>
-<td>Specifies whether to compile FTorch's <a href="testing.html">test suite</a> as part of the build.</td>
+<td>Specifies whether to compile FTorch's <a href="testing.html">test suite</a> as part of the build.<sup>3</sup></td>
 </tr>
 <tr>
 <td><code>GPU_DEVICE</code></td>
 <td><code>NONE</code> / <code>CUDA</code> / <code>HIP</code> / <code>XPU</code> / <code>MPS</code></td>
-<td>Specifies the target GPU architecture (if any) <sup>3</sup></td>
+<td>Specifies the target GPU architecture (if any) <sup>4</sup></td>
 </tr>
 <tr>
 <td><code>MULTI_GPU</code></td>
@@ -245,8 +245,9 @@ cannot locate it by default.</em></p>
       If Torch has been <a href="https://pytorch.org/cppdocs/installing.html">installed as LibTorch</a>
       then this should be the absolute path to the unzipped LibTorch distribution.
       If Torch has been installed as PyTorch in a Python <a href="https://docs.python.org/3/library/venv.html">venv (virtual environment)</a>,
-      e.g. with <code>pip install torch</code>, then this should be <code>&lt;/path/to/venv/&gt;lib/python&lt;3.xx&gt;/site-packages/torch/</code>.</em></p>
-<p><sup>3</sup> <em>This is often overridden by PyTorch. When installing with pip, the <code>index-url</code> flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
+      e.g. with <code>pip install torch</code>, then this should be <code>&lt;/path/to/venv/&gt;lib/python&lt;3.xx&gt;/site-packages/torch/</code>.</em>
+<sup>3</sup><em>To run the tests, your system's MPI must support <code>use mpi_f08</code>. Note that OpenMPI &lt; v2.0 and MPICH &lt; v3.1 do not support that module.</em>
+<sup>4</sup> <em>This is often overridden by PyTorch. When installing with pip, the <code>index-url</code> flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
       <code>pip install torch --index-url https://download.pytorch.org/whl/cpu</code>.
       URLs for alternative versions can be found <a href="https://pytorch.org/get-started/locally/">here</a>.</em></p>
 </blockquote>
