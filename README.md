@@ -73,65 +73,18 @@ _For a similar approach to calling TensorFlow models from Fortran please see [Fo
 
 ### Dependencies
 
-To install the library requires the following to be installed on the system:
-
 * CMake >= 3.15
-* [LibTorch](https://pytorch.org/cppdocs/installing.html)<sup>*</sup> or [PyTorch](https://pytorch.org/)
-* Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
-
-<sup>*</sup> _The minimal example provided downloads the CPU-only Linux Nightly binary. [Alternative versions](https://pytorch.org/get-started/locally/) may be required._
-
-#### Additional dependencies of the test suite
-
-FTorch's test suite has some additional dependencies.
-
-* You will also need to install the unit testing framework
-  [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit).
-* FTorch's test suite requires that [PyTorch](https://pytorch.org/) has been
-  installed, as opposed to LibTorch. We recommend installing `torchvision` in
-  the same command (e.g., `pip install torch torchvision`)<sup>*</sup>. Doing so
-  ensures that `torch` and `torchvision` are configured in the same way.
-* Other Python modules are installed automatically upon building the tests.
-
-
-<sup>*</sup> _For more details, see [here](https://pytorch.org/get-started/locally/)._
-
-#### Windows Support
-
-If building in a Windows environment then you can either use
-[Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) (WSL)
-or Visual Studio and the Intel Fortran Compiler.
-For full details on the process see the
-[online Windows documentation](https://cambridge-iccs.github.io/FTorch/page/troubleshooting.html#windows).\
-Note that LibTorch is not supported for the GNU Fortran compiler with MinGW.
-
-#### Apple Silicon Support
-
-At the time of writing [there are issues](https://github.com/pytorch/pytorch/issues/143571)
-building FTorch on Apple Silicon when linking to downloaded `LibTorch` binaries or
-pip-installed PyTorch.
-FTorch can successfully be built, including utilising the MPS backend, from inside a
-conda environment using the environment files and instructions in
-[`conda/`](https://github.com/Cambridge-ICCS/FTorch/tree/main/conda).
-
-#### Conda Support
-
-Conda is not our preferred approach for managing dependencies, but for users who want
-an environment to build FTorch in we provide guidance and environment files in
-[`conda/`](https://github.com/Cambridge-ICCS/FTorch/tree/main/conda). Note that these
-are not minimal and will install Python, PyTorch, and modules required for running the
-tests and examples.
-
-#### GitHub Codespace
-
-It is possible to try FTorch through an interactive browser session using GitHub
-Codespace. Full instructions are in the
-[`codespace/`](https://github.com/Cambridge-ICCS/FTorch/tree/main/codespace) directory.
+* Fortran 2008, C++17, and C compilers
+* [LibTorch](https://pytorch.org/cppdocs/installing.html) or [PyTorch](https://pytorch.org/)
 
 ### Library installation
 
-For detailed installation instructions please see the
-[online installation documentation](https://cambridge-iccs.github.io/FTorch/page/cmake.html).
+Detailed installation instructions are provided in the
+[online installation documentation](https://cambridge-iccs.github.io/FTorch/page/installation/general.html).
+
+The following instructions assume a Unix system.
+For installation on Windows, Apple Silicon, Conda Environments, or Codespaces refer to
+the [system-specific guidance](https://cambridge-iccs.github.io/FTorch/page/installation/systems.html).
 
 #### General approach 
 
@@ -267,21 +220,14 @@ These steps are described in more detail in the
 
 ## GPU Support
 
-To run on GPU requires an installation of LibTorch compatible for the GPU device
-you wish to target (using the `GPU_DEVICE` CMake option as detailed in the
-[table above](#library-installation)) and two main adaptations to the code:
-
-1. When saving a TorchScript model, ensure that it is on the appropriate GPU
-   device type. The `pt2ts.py` script has a command line argument
-   `--device_type`, which currently accepts 5 different device types: `cpu`
-   (default), `cuda`, `hip`, `xpu`, or `mps`.
-2. When using FTorch in Fortran, set the device for the input
-   tensor(s) to the appropriate GPU device type, rather than `torch_kCPU`. There
-   are currently three options: `torch_kCUDA`, `torch_kHIP`, `torch_kXPU`, or `torch_kMPS`.
+FTorch supports running on multiple GPU hardwares including CUDA (NVIDIA),
+HIP (AMD/ROCm), MPS (Apple Silicon) and XPU (Intel). It also supports running on
+multiple devices.
 
 For detailed guidance about running on GPU, including instructions for using multiple
 devices, please see the
-[online GPU documentation](https://cambridge-iccs.github.io/FTorch/page/gpu.html).
+[online GPU documentation](https://cambridge-iccs.github.io/FTorch/page/installation/gpu.html).
+
 
 ## Large tensor support
 
