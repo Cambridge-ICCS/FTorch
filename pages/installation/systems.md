@@ -44,6 +44,9 @@ cmake --build .
 cmake --install .
 ```
 
+> Note: _In a Windows environment administrator privileges are required for the default install location._
+
+
 The following is an example `cmd` script that installs FTorch and runs the integration tests. It assumes you have already
 installed CMake, git, the Intel compilers, and Visual Studio.
 
