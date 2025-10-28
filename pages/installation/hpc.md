@@ -12,7 +12,7 @@ Here we provide some guidance/hints to help with deployment in these settings.
 ### Building for basic use
 
 The basic installation procedure is the same as described in the
-[main documentation](pages/cmake.html) and README, cloning from
+[main documentation](|page|/installation/general.html) and README, cloning from
 [GitHub](https://github.com/Cambridge-ICCS/FTorch) and building using CMake.
 
 ### Obtaining LibTorch
@@ -211,5 +211,5 @@ For a worked example of running with MPI, see the
 #### GPU
 
 For information on running on GPU architectures, see the
-[GPU user guide page](gpu.html) and/or the
+[GPU user guide page](|page|/installation/gpu.html) and/or the
 [MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MultiGPU).

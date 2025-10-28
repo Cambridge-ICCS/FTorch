@@ -112,7 +112,7 @@ message(STATUS "Building with Fortran PyTorch coupling")
 and using the `-DCMAKE_PREFIX_PATH=</path/to/install/location>` flag when running CMake.  
 
 > Note: _If you used the `CMAKE_INSTALL_PREFIX` argument when
-> [building and installing the library](https://cambridge-iccs.github.io/FTorch/page/cmake.html)
+> [building and installing the library](|page|/installation/general.html)
 > then you should use the same path for `</path/to/install/location>`._
 
 ##### Make
@@ -120,7 +120,7 @@ To build with `make` we need to _include_ the library and _link_ the
 executable against it when compiling.
 
 For full details of the flags to set and the linking process see the
-[HPC build pages](page/hpc.html/#building-projects-and-linking-to-ftorch).
+[HPC build pages](|page|/installation/hpc.html/#building-projects-and-linking-to-ftorch).
 
 ### Running on GPUs
 
@@ -130,7 +130,7 @@ In order to run a model on GPU, two main changes to the above process are requir
 2. When calling `torch_tensor_from_array` in Fortran, the device for the input
    tensor(s) should be set to `torch_kCUDA`, rather than `torch_kCPU`.
 
-For more information refer to the [GPU Documentation](gpu.html)
+For more information refer to the [GPU Documentation](|page|/installation/gpu.html)
 
 ## Worked examples
 
@@ -140,7 +140,7 @@ The repository comes with a number of documented
 These are designed to introduce users to FTorch and how to use the various features.
 
 A subset of the examples are included as integration tests as part of FTorch's
-[test suite](testing.html).
+[test suite](|page|/developer/testing.html).
 
 #### 1) Tensor
 
@@ -167,7 +167,7 @@ provides a more realistic demonstration of how to use the library,
 using ResNet-18 to classify an image.
 As the input to this model is four-dimensional (batch size, colour, x, y),
 care must be taken dealing with the data array in Python and Fortran.
-See [when to transpose arrays](transposing.html) for more details.
+See [when to transpose arrays](|page|/usage/transposing.html) for more details.
 
 #### 4) MultiIO
 

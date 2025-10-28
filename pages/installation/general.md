@@ -43,7 +43,7 @@ cmake --install .
 ```
 
 > Note: _if you are building on Windows please refer to the
-> [Windows install guidance](troubleshooting.html#windows) as the process will
+> [Windows install guidance](|page|/installation/troubleshooting.html#windows) as the process will
 > likely differ from the UNIX-based stsyems covered here._
 
 ## CMake build options
@@ -61,7 +61,7 @@ The following CMake flags are available and can be passed as arguments through `
 | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/libTorch/>`                  | Location of Torch installation<sup>2</sup>                                                                                                                                 |
 | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>`            | Location at which the library files should be installed. By default this is `/usr/local`                                                                                   |
 | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`                     | Specifies build type. The default is `Debug`, use `Release` for production code                                                                                            |
-| `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](testing.html) as part of the build.<sup>3</sup>                                                                                     |
+| `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](|page|/developer/testing.html) as part of the build.<sup>3</sup>                                                                                     |
 | `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU architecture (if any) <sup>4</sup>                                                                                                                |
 | `MULTI_GPU`                                                                                      | `ON` / `OFF` | Specifies whether to build the tests that involve multiple GPU devices (`ON` by default if `CMAKE_BUILD_TESTS` and `GPU_DEVICE` are set).                                                                                                                |
 
@@ -134,7 +134,7 @@ To build a project with `make` you need to include the FTorch library when compi
 and link the executable against it.
 
 For full details of the flags to set and the linking process see the
-[HPC build pages](hpc.html).
+[HPC build pages](|page|/installation/hpc.html).
 
 
 ## Conda Support
