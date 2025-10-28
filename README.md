@@ -77,134 +77,55 @@ _For a similar approach to calling TensorFlow models from Fortran please see [Fo
 * Fortran 2008, C++17, and C compilers
 * [LibTorch](https://pytorch.org/cppdocs/installing.html) or [PyTorch](https://pytorch.org/)
 
-### Library installation
+### Build and Install
 
 Detailed installation instructions are provided in the
-[online installation documentation](https://cambridge-iccs.github.io/FTorch/page/installation/general.html).
+[online installation documentation](https://cambridge-iccs.github.io/FTorch/page/installation/index.html).
 
 The following instructions assume a Unix system.
 For installation on Windows, Apple Silicon, Conda Environments, or Codespaces refer to
 the [system-specific guidance](https://cambridge-iccs.github.io/FTorch/page/installation/systems.html).
 
-#### General approach 
+The installation process has three main steps:
 
-To build and install the library:
-
-1. Navigate to the location in which you wish to install the source and run:  
-    ```
-    git clone git@github.com:Cambridge-ICCS/FTorch.git
-    ```
-    to clone via ssh, or  
-    ```
-    git clone https://github.com/Cambridge-ICCS/FTorch.git
-    ```
-    to clone via https.  
-2. Navigate to the root FTorch directory by running:  
-    ```
-    cd FTorch/
-    ```
-3. Build the library using CMake with the relevant options from the table below:  
-    ```
-    mkdir build
-    cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release
-    ```
-
-    The following table of CMake options are available to be passed as arguments to `cmake` through `-D<Option>=<Value>`.  
-    It is likely that you will need to provide at least `CMAKE_PREFIX_PATH`.  
-    | Option                                                                                            | Value                                   | Description                                                                                                                                                                |
-    | ------------------------------------------------------------------------------------------------- | ----------------------------            | --------------------------------------------------------------                                                                                                             |
-    | [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `gfortran` / `ifx` / `ifort`            | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup>1</sup> |
-    | [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `gcc` / `icx` / `icc`                   | Specify a C compiler to build the library with.<sup>1</sup>                                                                                                                |
-    | [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `g++` / `icx` / `icpc`                  | Specify a C++ compiler to build the library with.<sup>1</sup>                                                                                                              |
-    | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/LibTorch/>`                  | Location of Torch installation<sup>2</sup>                                                                                                                                 |
-    | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>`            | Location at which the library files should be installed. By default this is `/usr/local`                                                                                   |
-    | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`                     | Specifies build type. The default is `Debug`, use `Release` for production code                                                                                            |
-    | [`BUILD_SHARED_LIBS`](https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html)        | `ON` / `OFF`                            | Specifies whether to build FTorch as a shared library. The default is `ON`, use `OFF` to build FTorch as a static library.                                                 |
-    | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build.<sup>3</sup>                            |
-    | `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU backend architecture (if any) <sup>4</sup>                                                                                                        |
-    | `MULTI_GPU`                                                                                      | `ON` / `OFF` |  Specifies whether to build the tests that involve multiple GPU devices (`ON` by default if `CMAKE_BUILD_TESTS` and `GPU_DEVICE` are set).                                                                                                        |
-
-    <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
-
-    <sup>2</sup> _The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.  
-          If Torch has been [installed as LibTorch](https://pytorch.org/cppdocs/installing.html)
-          then this should be the absolute path to the unzipped LibTorch distribution.
-          If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
-          e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
-		  You can find the location of your torch install by importing torch from your Python environment (`import torch`) and running `print(torch.__file__)`_
-
-    <sup>3</sup>_To run the tests, your system's MPI must support `use mpi_f08`. Note that OpenMPI < v2.0 and MPICH < v3.1 do not support that module._
-
-    <sup>4</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
-          `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
-          URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
-
-4. Make and install the library to the desired location with either:
-	```
-    cmake --build . --target install
-    ```
-    or, if you want to separate these steps:
-    ```
-    cmake --build .
-    cmake --install .
-    ```
-
-   Note: If using a machine capable of running multiple jobs this can be sped up by
-   adding `--parallel [<jobs>]` or `-j [<jobs>]` to the `cmake build` command.
-   See the [CMake documentation](https://cmake.org/cmake/help/latest/manual/cmake.1.html#cmdoption-cmake-build-j)
-   for more information.
-
-    Installation will place the following directories at the install location:  
-    * `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
-    * `CMAKE_INSTALL_PREFIX/lib/` - contains `cmake` directory and `.so`/`.ar` files  
-    _Note: depending on your system and architecture `lib` may be `lib64`, and 
-    you may have `.dll` files or similar._  
-	_Note: In a Windows environment this will require administrator privileges for the default install location._
-
-#### On building FTorch as shared vs. static library
-
-FTorch can be built either as a shared library or as a static library depending
-on how you want to link it with your own application.
-
-By default, FTorch builds as a shared library:
+1. Fetch the source code from GitHub via git,
+2. Navigate to the root FTorch directory and create a build directory,
+3. Build and install the library using CMake with the relevant options.
 
 ```bash
-cmake -DBUILD_SHARED_LIBS=ON -S <path/to/FTorch>
+git clone https://github.com/Cambridge-ICCS/FTorch.git
+cd FTorch/
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=</path/to/torch/installation>
+cmake --build . --target install
 ```
+This will place the library files at the install location which can be tailored using
+the `CMAKE_INSTALL_PREFIX` option.
 
-This configuration dynamically links FTorch and its dependencies (including
-LibTorch) at runtime. A shared build is recommended for *most* users because:
 
-- Multiple programs can use the same FTorch installation.
-- You can update FTorch without recompiling dependent executables.
+The following table of CMake options are available to be passed as arguments to `cmake` through `-D<Option>=<Value>`.  
+It is likely that you will need to provide at least `CMAKE_PREFIX_PATH`.
 
-If you prefer to include FTorch directly inside your executable, you can build
-it statically:
+| Option                                                                                            | Value                                   | Description                                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`CMAKE_Fortran_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) | `gfortran` / `ifx` / `ifort`            | Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.             |
+| [`CMAKE_C_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)       | `gcc` / `icx` / `icc`                   | Specify a C compiler to build the library with.                                                                                                                            |
+| [`CMAKE_CXX_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html)     | `g++` / `icx` / `icpc`                  | Specify a C++ compiler to build the library with.                                                                                                                          |
+| [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/LibTorch/>`                  | Location of Torch installation<sup>1</sup>                                                                                                                                 |
+| [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>`            | Location at which the library files should be installed. By default this is `/usr/local`                                                                                   |
+| [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`                     | Specifies build type. The default is `Debug`, use `Release` for production code                                                                                            |
+| [`BUILD_SHARED_LIBS`](https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html)        | `ON` / `OFF`                            | Specifies whether to build FTorch as a shared library. The default is `ON`, use `OFF` to build FTorch as a static library.                                                 |
+| `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build.                                        |
+| `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU backend architecture (if any)                                                                                                                     |
+| `MULTI_GPU`                                                                                       | `ON` / `OFF`                            | Specifies whether to build the tests that involve multiple GPU devices (`ON` by default if `CMAKE_BUILD_TESTS` and `GPU_DEVICE` are set).                                  |
 
-```bash
-cmake -DBUILD_SHARED_LIBS=OFF -S </path/to/FTorch>
-```
+<sup>1</sup> _The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.  
+      If Torch has been [installed as LibTorch](https://pytorch.org/cppdocs/installing.html)
+      then this should be the absolute path to the unzipped LibTorch distribution.
+      If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
+      e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
 
-A static build links all FTorch code directly into your application executable.
-This can be useful when:
-
-- You want a single self-contained executable.
-- You are installing FTorch on an HPC system and intend to use it in an
-application for which you want maximum reproducibility (i.e., the FTorch
-version embedded in your application is "frozen").
-
-To this second point on building FTorch as a static library, a brief
-justification on applications for which this may be relevant is covered
-[here](https://github.com/Cambridge-ICCS/FTorch/pull/448#issue-3544429539).
-
-For more general details on shared and static libraries as well as their
-trade-offs, see [shared vs. static
-libraries](https://medium.com/@mohitk3000/c-libraries-unpacked-shared-libraries-vs-static-libraries-44764b85056a),
-[a case for static
-linking](https://ro-che.info/articles/2016-09-09-static-binaries-scientific-computing),
-and [static linking considered
-harmful](https://www.akkadia.org/drepper/no_static_linking.html)
 
 ## Usage
 
