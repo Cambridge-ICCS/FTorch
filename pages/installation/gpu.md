@@ -80,9 +80,9 @@ if device_type != "cpu":
 > Whilst this is not necessary for saving the model the tensors must be on
 > the same GPU device to test that the models runs._
 
-3) When calling `torch_tensor_from_array` in Fortran, the device type for the
-   input tensor(s) should be set to the relevant device type (`torch_kCUDA`,
-   `torch_kHIP`, `torch_kXPU`, or `torch_kMPS`) rather than `torch_kCPU`.
+3) When calling [[ftorch(module):torch_tensor_from_array(interface)]] in Fortran,
+   the device type for the input tensor(s) should be set to the relevant device type
+   (`torch_kCUDA`, `torch_kHIP`, `torch_kXPU`, or `torch_kMPS`) rather than `torch_kCPU`.
    This ensures that the inputs are on the same device type as the model.
 
 > Note: _You do **not** need to change the device type for the output tensors as we
