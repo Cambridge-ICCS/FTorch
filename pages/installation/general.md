@@ -1,8 +1,8 @@
-title: Installation and Build Process
+title: Installation and Build
+author: Jack Atkinson
+date: Last Updated: October 2025
 
-[TOC]
-
-Installation of FTorch is done by CMake.
+Installation of FTorch is performed using the CMake build system.
 
 This is controlled by the `CMakeLists.txt` file in the root FTorch directory.
 
@@ -11,8 +11,24 @@ This is controlled by the `CMakeLists.txt` file in the root FTorch directory.
 To install the library requires the following to be installed on the system:
 
 - CMake >= 3.15
-- LibTorch or PyTorch
 - Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
+- [LibTorch](https://pytorch.org/cppdocs/installing.html)<sup>*</sup> or [PyTorch](https://pytorch.org/)
+
+<sup>*</sup> _The minimal example provided downloads the CPU-only Linux Nightly binary. [Alternative versions](https://pytorch.org/get-started/locally/) may be required._
+
+#### Additional dependencies of the test suite
+
+FTorch's test suite has some additional dependencies.
+
+- You will also need to install the unit testing framework
+  [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit).
+- FTorch's test suite requires that [PyTorch](https://pytorch.org/) has been
+  installed, as opposed to LibTorch. We recommend installing `torchvision` in
+  the same command (e.g., `pip install torch torchvision`)<sup>*</sup>. Doing so
+  ensures that `torch` and `torchvision` are configured in the same way.
+- Other Python modules are installed automatically upon building the tests.
+
+<sup>*</sup> _For more details, see [here](https://pytorch.org/get-started/locally/)._
 
 
 ## Basic instructions
@@ -75,7 +91,9 @@ The following CMake flags are available and can be passed as arguments through `
 >       then this should be the absolute path to the unzipped LibTorch distribution.
 >       If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
 >       e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`._
+>
 > <sup>3</sup>_To run the tests, your system's MPI must support `use mpi_f08`. Note that OpenMPI < v2.0 and MPICH < v3.1 do not support that module._
+>
 > <sup>4</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
 >       `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
 >       URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
@@ -135,11 +153,3 @@ and link the executable against it.
 
 For full details of the flags to set and the linking process see the
 [HPC build pages](|page|/installation/hpc.html).
-
-
-## Conda Support
-
-Conda is not our preferred approach for managing dependencies, but for users who want
-an environment to build FTorch in we provide [guidance and environment files](https://github.com/Cambridge-ICCS/FTorch/tree/main/conda).
-Note that these are not minimal and will install Python, PyTorch, and modules required
-for running the tests and examples.
