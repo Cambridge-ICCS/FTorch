@@ -1,4 +1,4 @@
-# Example 0 - Tensor manipulation
+# Example 1 - Tensor manipulation
 
 This example provides a simple demonstration of how to create, manipulate,
 interrogate, and destroy instances of the `torch_tensor` derived type. This is
