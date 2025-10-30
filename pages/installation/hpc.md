@@ -1,15 +1,20 @@
-title: Guidance for use in High Performance Computing (HPC)
+title: HPC Support
+author: Jack Atkinson
+date: Last Updated: October 2025
 
-[TOC]
+# Guidance for use in High Performance Computing (HPC)
+
+- [Installation](#installation)
+- [Building and Linking](#building-and-linking)
+- [Parallelism](#parallelism)
 
 A common application of FTorch (indeed, the driving one for development) is the
-coupling of machine learning components to models running on HPC systems.
+coupling of machine learning components to large scientific codes/models running on
+HPC systems.
 
-Here we provide some guidance/hints to help with deployment in these settings.
+Here we provide some guidance to help with deployment in these settings.
 
 ## Installation
-
-### Building for basic use
 
 The basic installation procedure is the same as described in the
 [main documentation](|page|/installation/general.html) and README, cloning from
@@ -32,15 +37,18 @@ This will improve reproducibility and simplify the process for future users on y
 system.
 See the [information below](#libtorch-as-a-module) for further details.
 
+
 ### Environment management
 
 It is important that FTorch is built using the same environment and compilers as the
-software to which it will be linked.
+model/code in which it will be used.
 
-Therefore before starting the build you should ensure that you match the environment to
-that which your code will be built with.
+Most HPC systems manage software environments through
+[Environment Modules](https://modules.sourceforge.net/).
+It is important to load the same modules when building FTorch as you would
+when building your main code.
 This will usually be done by using the same `module` commands as you would use to build
-the model:
+your code/model:
 ```sh
 module purge
 module load ...
@@ -52,66 +60,109 @@ environment variables etc. that can be sourced:
 source model_environment.sh
 ```
 
-Complex models with custom build systems may obfuscate this process, and you might need
+Complex codes with custom build systems may obfuscate this process, and you might need
 to probe the build system/scripts for this information.
 If in doubt speak to the maintainer of the software for your system, or the manager of
 the software stack on the machine.
 
-Because of the need to match compilers it is strongly recommended to specify the
-`CMAKE_Fortran_COMPILER`, `CMAKE_C_COMPILER`, and `CMAKE_CXX_COMPILER` when building
-with CMake to enforce this.
+As a minimal requirement you will need to load modules for compilers and CMake.
+These may be installed by the base OS/environment, but it is recommended to use modules
+for reproducibility, access to a wider range of versions, and to match the compilers
+used to build the main code.
+Because of the need to match compilers it is strongly recommended to
+[specify the CMake flags](|page|/installation/general.html#cmake-build-options)
+`CMAKE_Fortran_COMPILER`, `CMAKE_C_COMPILER`, and `CMAKE_CXX_COMPILER` when building.
 
-### Building Projects and Linking to FTorch
+Further functionalities may require loading of additional modules such as an
+MPI installation and CUDA.
 
-Whilst we describe how to link to FTorch using CMake to build a project on our
-main page, many HPC models do not use CMake and rely on `make` or more
-elaborate build systems. This section assumes that you have successfully
-configured, built, *and* installed FTorch using CMake.
 
+#### LibTorch as a module
+
+Once you have a working build of FTorch it is advisable to pin the version of LibTorch
+and make it a loadable module to improve reproducibility and simplify the build process
+for subsequent users on the system.
+
+This can be done by the manager of the software stack, after which you can use
+```sh
+module load libtorch
+```
+or similar instead of downloading the binary from the PyTorch website.
+
+Note that the module name on your system may include additional information about the
+version, compilers used, and a hash code as well as the name `libtorch`.
+
+You should always verify that the version of LibTorch used to build FTorch is
+compatible with the version used to build and train your PyTorch model and save to
+TorchScript. If a newer version is used in Python it may be neccessary to provide the
+matching version in the software stack.
+
+
+#### FTorch as a module 
+
+If there are many users who want to use FTorch on a system it may be worth building
+and making it loadable as a module itself.
+The module should be labelled with the compilers it was built with (see the
+[importance of environment matching](#environment-management)) and automatically load
+any subdependencies (e.g. LibTorch, CUDA)
+
+For production builds, ensure that FTorch is built using the `CMAKE_BUILD_TYPE=Release`
+[flag](|page|/installation/general.html#cmake-build-options) to enable optimisations.
+It is also recommended to run FTorch's unit tests after building to verify successful
+installation.
+<!- TODO: Link to testing documentation -->
+
+Once complete it should be possible to:
+```sh
+module load ftorch
+```
+or similar.
+Loading an ftorch module should also add to the `LD_LIBRARY_PATH` and
+`CMAKE_PREFIX_PATH`, rather than requiring the user to specify them manually as
+discussed in [building and linking](|page|/installation/hpc.html#building-and-linking)
+below.
+
+
+## Building and Linking
+
+Whilst we describe how to link to FTorch using CMake to build a project on our main
+page, many HPC codes rely on `make` or more elaborate custom build systems.
 To build a project with `make` or similar you need to _include_ the FTorch's
 header (`.h`) and module (`.mod`) files and _link_ the executable
 to the Ftorch library (e.g., `.so`, `.dll`, `.dylib` depending on your system) when
 compiling.
 
 To compile with `make` use the following compiler flag for any files that
-use ftorch to _include_ the module and header files:
-```sh
--I<path/to/FTorch/install/location>/include/ftorch
-```
+use ftorch to _include_ the module and header files.
 This is often done by appending to an `FCFLAGS` compiler flags variable or similar:
 ```sh
 FCFLAGS+=" -I<path/to/FTorch/install/location>/include/ftorch"
 ```
 
-When compiling the final executable add the following _linker_ flag:
-```sh
--L<path/to/FTorch/install/location>/lib -lftorch
-```
+When compiling the final executable add the following _linker_ flag.
 This is often done by appending to an `LDFLAGS` linker flags variable or similar:
 ```sh
 LDFLAGS+=" -L<path/to/FTorch/install/location>/lib -lftorch"
 ```
 
+### pkg-config
+
 If you have [pkg-config](https://en.wikipedia.org/wiki/Pkg-config) installed,
-you can easily query the compiler and linker flags of FTorch rather than
-manually specifying them as was shown above. FTorch provides a standard
-pkg-config file in both the directory in which FTorch was built (e.g.,
-`</path/to/FTorch>/build`) as well as the library directory in which it was
-installed (e.g., `</path/to/FTorch/install/location>/lib/pkgconfig`). For
-example, the following commands are equivalent to adding the manually specified
-flags:
+you can easily query the compiler and linker flags of FTorch instead of specifying
+them manually as above.
+FTorch provides a standard pkg-config file in the `lib/` installation for this purpose allowing users to instead use:
 ```sh
 FCFLAGS+=" $(pkg-config --cflags </path/to/FTorch/install/location>/lib/pkgconfig/ftorch.pc)"
 LDFLAGS+=" $(pkg-config --libs </path/to/FTorch/install/location>/lib/pkgconfig/ftorch.pc)"
 ```
-
-You can simplify these commands by adding FTorch to the `PKG_CONFIG_PATH`
-environment variable:
+or, further simplified by extensing teh `PKG_CONFIG_PATH` environment variable:
 ```sh
 export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:</path/to/FTorch/install/location>/lib/pkgconfig/
 FCFLAGS+=" $(pkg-config --cflags ftorch)"
 LDFLAGS+=" $(pkg-config --libs ftorch)"
 ```
+
+### Adding to the runtime library path
 
 You may also need to add the location of the dynamic library `.so` files to your
 `LD_LIBRARY_PATH` environment variable unless installing in a default location:
@@ -132,83 +183,34 @@ path to FTorch described above):
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path/to/Torch/installation>/lib
 ```
 
-> Note: _Depending on your system and architecture `lib` may be `lib64` or something similar._
+@Note
+_Depending on your system and architecture `lib` may be `lib64` or something similar._
+_On MacOS devices you will need to set `DYLD_LIBRARY_PATH` rather than `LD_LIBRARY_PATH`._
+@endnote
 
-> Note: _On MacOS devices you will need to set `DYLD_LIBRARY_PATH` rather than `LD_LIBRARY_PATH`._
+@Note
+If you wish to build your model/code with static linking it is possible to build FTorch 
+as both a shared or a static library. For more information see the
+[static vs. shared guidance](|page|/installation/general.html#building-ftorch-as-a-shared-vs-static-library)
+on the main installation page.
+@endnote
 
-Whilst experimenting, it may be useful to build FTorch using the
-`CMAKE_BUILD_TYPE=Debug` (see [CMAKE_BUILD_TYPE](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)
+### Debug builds
+
+Whilst experimenting, it may be useful to [build FTorch](|page|/installation/general.html)
+using the `CMAKE_BUILD_TYPE=Debug` CMake flag (see
+[CMAKE_BUILD_TYPE](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)
 and [CMAKE_<LANG\>_FLAGS](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_FLAGS.html))
-CMake flag to allow useful error messages and investigation with debugging
-tools.
+to allow useful error messages and investigation with debugging tools.
 
-### Module systems
-
-Most HPC systems are managed using [Environment Modules](https://modules.sourceforge.net/).
-To build FTorch it is important you
-[match the environment in which you build FTorch to that of the executable](#environment-management)
-by loading the same modules as when building the main code.
-
-As a minimal requirement you will need to load modules for compilers and CMake.
-These may be installed by the base OS/environment, but it is recommended to use modules
-for reproducibility, access to a wider range of versions, and to match the compilers
-used to build the main code.
-
-Further functionalities may require loading of additional modules such as an
-MPI installation and CUDA.
-Some systems may also have pFUnit available as a loadable module to save you needing to
-build from scratch per the documentation if you plan to run FTorch's test suite.
-
-#### LibTorch as a module
-
-Once you have a working build of FTorch it is advisable to pin the version of LibTorch
-and make it a loadable module to improve reproducibility and simplify the build process
-for subsequent users on the system.
-
-This can be done by the software manager after which you can use
-```sh
-module load libtorch
-```
-or similar instead of downloading the binary from the PyTorch website.
-
-Note that the module name on your system may include additional information about the
-version, compilers used, and a hash code.
-
-#### FTorch as a module 
-
-If there are many users who want to use FTorch on a system it may be worth building
-and making it loadable as a module itself.
-The module should be labelled with the compilers it was built with (see the
-[importance of environment matching](#environment-management)) and automatically load
-any subdependencies (e.g. CUDA)
-
-For production builds, ensure that FTorch is built using the `CMAKE_BUILD_TYPE=Release`
-CMake flag.
-This will build FTorch with optimization enabled.
-It is recommended to run FTorch's unit tests after building to verify successful
-installation.
-
-Once complete it should be possible to:
-```sh
-module load ftorch
-```
-or similar.
-
-This process should also add FTorch to the `LD_LIBRARY_PATH` and `CMAKE_PREFIX_PATH`
-rather than requiring the user to specify them manually as suggested elsewhere in this
-documentation.
 
 ## Parallelism
 
 If you are investigating running FTorch on HPC then you are probably interested
 in improving computational efficiency via parallelism.
 
-#### MPI
-
 For a worked example of running with MPI, see the
 [associated example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_MPI).
-
-#### GPU
 
 For information on running on GPU architectures, see the
 [GPU user guide page](|page|/installation/gpu.html) and/or the
