@@ -122,6 +122,15 @@ device codes and pre-processor conditions and tried to build with a CPU-only or
 CUDA LibTorch installation then compile errors would arise from the use of the
 `torch::xpu` module in `src/ctorch.cpp`.
 
+@note
+_The HIP/ROCm backend uses the same API as the CUDA backend, so FTorch treats
+HIP as CUDA in places when calling LibTorch or PyTorch.
+This should not concern end-users as the FTorch and pt2ts.py APIs handle this.
+For further information see the
+[PyTorch HIP documentation](https://docs.pytorch.org/docs/stable/notes/hip.html)_
+@endnote
+
+
 ### git hook
 
 In order to streamline the process of uploading we provide a pre-commit hook in
