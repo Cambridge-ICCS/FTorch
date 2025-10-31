@@ -30,17 +30,17 @@ execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
                         ${PROJECT_SOURCE_DIR}/requirements.txt)
 
 # Fortran example - bad
-add_executable(example5_simplenet_infer_fortran_bad
+add_executable(simplenet_infer_fortran_bad
                bad/simplenet_infer_fortran.f90)
-target_link_libraries(example5_simplenet_infer_fortran_bad
+target_link_libraries(simplenet_infer_fortran_bad
                       PRIVATE FTorch::ftorch)
-target_sources(example5_simplenet_infer_fortran_bad
+target_sources(simplenet_infer_fortran_bad
                PRIVATE bad/fortran_ml_mod.f90)
 
 # Fortran example - good
-add_executable(example5_simplenet_infer_fortran_good
+add_executable(simplenet_infer_fortran_good
                good/simplenet_infer_fortran.f90)
-target_link_libraries(example5_simplenet_infer_fortran_good
+target_link_libraries(simplenet_infer_fortran_good
                       PRIVATE FTorch::ftorch)
-target_sources(example5_simplenet_infer_fortran_good
+target_sources(simplenet_infer_fortran_good
                PRIVATE good/fortran_ml_mod.f90)
