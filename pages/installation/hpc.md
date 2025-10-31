@@ -125,8 +125,9 @@ below.
 
 ## Building and Linking
 
-Whilst we describe how to link to FTorch using CMake to build a project on our main
-page, many HPC codes rely on `make` or more elaborate custom build systems.
+Whilst we describe how to link to FTorch using CMake to build a project in our
+[generic usage example](|page|/usage/generic_example.html),
+many HPC codes rely on `make` or more elaborate custom build systems.
 To build a project with `make` or similar you need to _include_ the FTorch's
 header (`.h`) and module (`.mod`) files and _link_ the executable
 to the Ftorch library (e.g., `.so`, `.dll`, `.dylib` depending on your system) when

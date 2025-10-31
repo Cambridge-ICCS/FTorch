@@ -1,4 +1,6 @@
 title: Worked Examples
+author: Joe Wallwork
+date: Last Updated: October 2025
 
 ## Worked Examples
 

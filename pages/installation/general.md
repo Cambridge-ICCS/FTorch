@@ -197,27 +197,8 @@ and [static linking considered
 harmful](https://www.akkadia.org/drepper/no_static_linking.html)
 
 
-### Other projects using CMake
-
-We generally advise building projects that make use of FTorch with CMake where possible.
-
-If doing this you need to include the following in the `CMakeLists.txt` file to
-find the FTorch installation and link it to the executable.
-
-```CMake
-find_package(FTorch REQUIRED)
-target_link_libraries( <executable> PRIVATE FTorch::ftorch )
-message(STATUS "Building with Fortran PyTorch coupling")
-```
-
-You will then need to use the `-DFTorch_DIR=</path/to/install/location>` flag
-when running CMake.
-
-
-## Building other projects with make
-
-To build a project with `make` you need to include the FTorch library when compiling
-and link the executable against it.
-
-For full details of the flags to set and the linking process see the
-[HPC build pages](|page|/installation/hpc.html).
+@note
+For discussion on how to build and link another code to the FTorch library see the
+[generic usage example](|page|/usage/generic_example.html), and the detailed discussion
+on the [HPC page](|page|/installation/hpc.html).
+@endnote
