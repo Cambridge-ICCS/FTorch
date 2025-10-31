@@ -5,7 +5,7 @@ title: FTorch test suite
 ## Testing
 
 FTorch's test suite is currently comprised of unit tests, as well as integration
-tests based on a subset of the [examples](examples.html). These tests are built
+tests based on a subset of the [examples](|page|examples/). These tests are built
 and run and their outputs are analysed.
 
 ### Building
