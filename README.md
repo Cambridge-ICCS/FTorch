@@ -150,14 +150,6 @@ devices, please see the
 [online GPU documentation](https://cambridge-iccs.github.io/FTorch/page/installation/gpu.html).
 
 
-## Large tensor support
-
-If your code uses large tensors (where large means more than 2,147,483,647 elements
-in any one dimension (the maximum value of a 32-bit integer)), you may
-need to compile `ftorch` with 64-bit integers. For information on how to do
-this, please see our
-[FAQ](https://cambridge-iccs.github.io/FTorch/page/troubleshooting.html#faq)
-
 ## Examples
 
 Examples of how to use this library are provided in the [examples directory](examples/).  
