@@ -1,9 +1,10 @@
 title: Installation
+author: Jack Atkinson
+date: Last Updated: October 2025
 ordered_subpage: general.md
 ordered_subpage: systems.md
 ordered_subpage: gpu.md
 ordered_subpage: hpc.md
-ordered_subpage: troubleshooting.md
 
 ## FTorch Installation & Build
 
@@ -21,4 +22,3 @@ architectures, and configurations.
 - [System-Specific Guidance](|page|/installation/systems.html)
 - [GPU Support](|page|/installation/gpu.html)
 - [HPC Guidance](|page|/installation/hpc.html)
-- [Troubleshooting](|page|/installation/troubleshooting.html)
