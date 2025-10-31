@@ -1,4 +1,8 @@
 title: When to transpose data
+author: Jack Atkinson
+date: Last Updated: October 2025
+
+## When to transpose data
 
 Transposition of data between Fortran and C can lead to a lot of unnecessary confusion.
 The FTorch library looks after this for you with the
@@ -8,9 +12,8 @@ allows you to index a tensor in Torch in **exactly the same way** as you would i
 If you wish to do something different to this then there are more complex functions
 available and we describe here how and when to use them.
 
-[TOC]
 
-## Introduction - row- vs. column-major
+### Introduction - row- vs. column-major
 
 Astute users will note that Fortran is a
 [column-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order)
@@ -57,7 +60,7 @@ $$
 reading along each row before progressing down the column dimension.
 
 
-## Why does this matter?
+### Why does this matter?
 
 This matters for FTorch because a key feature is no-copy memory transfer between Fortran
 and Torch.
@@ -80,7 +83,7 @@ This means we need to be careful when passing data to make sure that what we rea
 to our Torch net is correct as we expect.
 
 
-## What can we do?
+### What can we do?
 
 There are a few approaches we can take to address this.
 The first two of these are listed for conceptual purposes, whilst in practice we
@@ -176,7 +179,8 @@ $$
 > \end{pmatrix}
 > $$
 
-## Advanced use with `torch_tensor_from_blob`
+
+### Advanced use with `torch_tensor_from_blob`
 
 For more advanced options for manipulating and controlling data access when passing
 between Fortran and Torch see the more powerful but more complex
