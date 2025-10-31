@@ -1,6 +1,8 @@
 title: Offline training
+author: Joe Wallwork
+date: Last Updated: April 2025
 
-[TOC]
+## Offline Training
 
 The established approach for designing and training a model for running
 inference in FTorch is the so-called 'offline' approach, which is described in
@@ -52,4 +54,4 @@ your Fortran model so that it uses FTorch syntax to set up appropriate
 [[ftorch(module):torch_tensor(type)]] and [[ftorch(module):torch_model(type)]]
 objects and call the [[ftorch(module):torch_model_forward(subroutine)]]
 subroutine to run the inference. For examples of how to do this, see the
-[examples user guide page](|page|examples/index.html).
+[examples user guides](|page|/usage/index.html#examples).

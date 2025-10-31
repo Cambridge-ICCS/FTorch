@@ -1,8 +1,18 @@
 title: Tensor API
+author: Joe Wallwork
+date: Last Updated: October 2025
 
-[TOC]
+## Tensor API Documentation
 
-## Overview
+- [Overview](#overview)
+- [Procedures](#procedures)
+    - [Constructors](#constructors)
+    - [Interrogation](#interrogation)
+    - [Deallocation](#deallocation)
+    - [Manipulation](#manipulation)
+    - [Operator Overloading](#operator-overloading)
+
+### Overview
 
 FTorch provides a [[ftorch(module):torch_tensor(type)]] derived type, which exposes the
 functionality of the `torch::Tensor` C++ class. The interface is designed to be familiar to
@@ -14,9 +24,9 @@ Under the hood, the [[ftorch(module):torch_tensor(type)]] type holds a pointer t
 intrinsic module). This allows us to avoid unnecessary data copies between C++ and
 Fortran.
 
-## Procedures
+### Procedures
 
-### Constructors
+#### Constructors
 
 We provide several subroutines for constructing [[ftorch(module):torch_tensor(type)]]
 objects. These include:
@@ -45,7 +55,8 @@ any of the ways described in the following. Each of the constructors sets the
 pointer attribute of the [[ftorch(module):torch_tensor(type)]]; without this being set,
 most of the other operations are meaningless.
 
-### Tensor interrogation
+
+#### Interrogation
 
 We provide several subroutines for interrogating [[ftorch(module):torch_tensor(type)]]
 objects. These include:
@@ -70,7 +81,8 @@ procedures. For example, `tensor%get_rank` can be used in place of
 (which would be the tensor itself). The naming pattern is similar for the other methods
 (simply drop the preceding `torch_tensor_`).
 
-### Tensor deallocation
+
+#### Deallocation
 
 We provide a subroutine for deallocating the memory associated with a
 [[ftorch(module):torch_tensor(type)]] object: [[ftorch(module):torch_delete(interface)]].
@@ -78,7 +90,8 @@ An interface is provided such that this can also be applied to arrays of tensors
 Calling this subroutine manually is optional as it is called as a destructor when a
 [[ftorch(module):torch_tensor(type)]] goes out of scope.
 
-### Tensor manipulation
+
+#### Manipulation
 
 We provide the following subroutines for manipulating the data values associated
 with a [[ftorch(module):torch_tensor(type)]] object:
@@ -86,7 +99,14 @@ with a [[ftorch(module):torch_tensor(type)]] object:
 * [[ftorch(module):torch_tensor_zero(subroutine)]] (aliased as class method `torch_tensor%zero`), which
   sets all the data entries associated with a tensor to zero.
 
-### Operator overloading
+@note
+For a concrete example of how to construct, interrogate, manipulate, and delete
+Torch tensors, see the
+[tensor manipulation worked example](|page|/usage/worked_examples.html).
+@endnote
+
+
+#### Operator overloading
 
 Mathematical operators involving Tensors are overloaded, so that we can compute
 expressions involving outputs from one or more ML models.
@@ -103,8 +123,7 @@ use ftorch, only: assignment(=), operator(+), operator(-), operator(*), &
   operator(/), operator(**)
 ```
 
-
-#### Overloaded assignment operator
+##### Overloaded assignment operator
 
 Particular care should be taken with the overloaded assignment operator.
 Whenever you execute code involving [[ftorch(module):torch_tensor(type)]]s on each side
@@ -133,6 +152,10 @@ Following this, the intermediate tensor is assigned to `c`.
 Finally, the finalizer for [[ftorch(module):torch_tensor(type)]] is called for the
 intermediate tensor because it goes out of scope.
 
+[^1]: Note: In most cases, these should be the same, so that the operator makes
+sense. In the case of the `requires_grad` property, the values might differ, and
+the result should be the logical `.and.` of the two values.
+
 Similarly as above, in the case where you have some function `func` that returns
 a [[ftorch(module):torch_tensor(type)]], an intermediate
 [[ftorch(module):torch_tensor(type)]] will be created, assigned, and
@@ -141,23 +164,14 @@ destroyed because the call will have the form
 a = func()
 ```
 
-### Other operators acting on tensors
+#### Other operators acting on tensors
 
 We have also exposed the operators for taking the sum or mean over the entries
 in a tensor, which can be achieved with the subroutines
 [[ftorch(module):torch_tensor_sum(subroutine)]] and
 [[ftorch(module):torch_tensor_mean(subroutine)]], respectively.
 
-## Examples
-
-For a concrete example of how to construct, interrogate, manipulate, and delete
-Torch tensors, see the
-[tensor manipulation worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/1_Tensor).
-
-For an example of how to compute mathematical expressions involving Torch
-tensors, see the
-[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd).
-
-[^1]: Note: In most cases, these should be the same, so that the operator makes
-sense. In the case of the `requires_grad` property, the values might differ, and
-the result should be the logical `.and.` of the two values.
+@note
+For a concrete example of how to compute mathematical expressions involving Torch
+tensors, see the [autograd worked example](|page|/usage/worked_examples.html).
+@endnote
