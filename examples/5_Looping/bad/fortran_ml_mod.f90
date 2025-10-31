@@ -37,7 +37,7 @@ module ml_mod
     call torch_tensor_from_array(output_tensors(1), out_data, tensor_layout, torch_kCPU)
 
     ! Load ML model
-    model_torchscript_file = '../saved_simplenet_model.pt'
+    model_torchscript_file = '../saved_simplenet_cpu.pt'
     call torch_model_load(torch_net, model_torchscript_file, torch_kCPU)
 
     ! Infer
