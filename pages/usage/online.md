@@ -1,9 +1,8 @@
 title: Online training
+author: Joe Wallwork
+date: Last Updated: April 2025
 
-[TOC]
-
-## Current state
-
+## Online Training
 
 FTorch has supported offline training of ML models for some time (see the
 [offline training user guide page](|page|/usage/offline.html) for details). We are
@@ -14,11 +13,12 @@ functionalities of PyTorch/LibTorch.
 In the following, we document a workplan of the related functionality. Each step
 below will be updated upon completion.
 
+
 ### Operator overloading
 
 Mathematical operators involving Tensors are overloaded, so that we can compute
 expressions involving outputs from one or more ML models. For more information
-on this, see the [tensor API][|page|/usage/tensor.html] documentation page.
+on this, see the [tensor API](|page|/usage/tensor.html) documentation page.
 
 Whilst it's possible to import such functionality with a bare
 ```fortran
@@ -43,10 +43,12 @@ For a concrete example of how to compute mathematical expressions involving
 Torch tensors, see the
 [autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd).
 
+
 ### The `requires_grad` property
 
 For Tensors that you would like to differentiate with respect to, be sure to
 set the `requires_grad` optional argument to `.true.` when you construct it.
+
 
 ### Backpropagation
 
@@ -124,10 +126,14 @@ Note that [[ftorch(module):torch_tensor_get_gradient(subroutine)]] must be calle
 the same tensor is being extracted into the same array. This is due to the way
 that pointers are handled on the C++ side.
 
+
 ### Optimisation
 
+<!- Write as part of the API Documentation Pages -->
 *Not yet implemented.*
+
 
 ### Loss functions
 
+<!- Write as part of the API Documentation Pages -->
 *Not yet implemented.*

@@ -43,8 +43,9 @@ understand how to use FTorch.
 
 ### API Documentation
 
-These pages contain detailed documentation of the various component APIs included in FTorch. Currently there is detail for [Tensors](|page|/usage/tensor.html), with
-Models and Optimizers being work in progress.
+These pages contain detailed documentation of the various component APIs included in FTorch.
+Currently there is detail for [Tensors](|page|/usage/tensor.html), with Models and
+Optimizers being work in progress.
 
 
 ### Training
