@@ -36,6 +36,8 @@ target_link_libraries(simplenet_infer_fortran_bad
                       PRIVATE FTorch::ftorch)
 target_sources(simplenet_infer_fortran_bad
                PRIVATE bad/fortran_ml_mod.f90)
+# Both targets define the same Fortran module name (ml_mod). Write .mod files
+# to per-target directories to avoid collisions during parallel builds
 set_target_properties(example5_simplenet_infer_fortran_bad PROPERTIES
                       Fortran_MODULE_DIRECTORY
                       ${CMAKE_CURRENT_BINARY_DIR}/mod_bad)
@@ -49,6 +51,7 @@ target_link_libraries(simplenet_infer_fortran_good
                       PRIVATE FTorch::ftorch)
 target_sources(simplenet_infer_fortran_good
                PRIVATE good/fortran_ml_mod.f90)
+# Same purpose as above: isolate this target's .mod output for parallel builds
 set_target_properties(example5_simplenet_infer_fortran_good PROPERTIES
                       Fortran_MODULE_DIRECTORY
                       ${CMAKE_CURRENT_BINARY_DIR}/mod_good)
