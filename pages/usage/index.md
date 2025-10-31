@@ -1,4 +1,5 @@
 title: Usage
+ordered_subpage: troubleshooting.md
 ordered_subpage: tensor.md
 ordered_subpage: transposing.md
 ordered_subpage: offline.md
