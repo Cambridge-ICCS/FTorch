@@ -37,7 +37,8 @@ target_link_libraries(simplenet_infer_fortran_bad
 target_sources(simplenet_infer_fortran_bad
                PRIVATE bad/fortran_ml_mod.f90)
 set_target_properties(example5_simplenet_infer_fortran_bad PROPERTIES
-                      Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mod_bad)
+                      Fortran_MODULE_DIRECTORY
+                      ${CMAKE_CURRENT_BINARY_DIR}/mod_bad)
 target_include_directories(example5_simplenet_infer_fortran_bad PRIVATE
                            ${CMAKE_CURRENT_BINARY_DIR}/mod_bad)
 
