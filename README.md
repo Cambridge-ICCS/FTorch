@@ -159,7 +159,7 @@ instructions to modify, build, and run as necessary.
 ## Tests
 
 For information on testing, see the corresponding
-[webpage](https://cambridge-iccs.github.io/FTorch/page/testing.html)
+[webpage](https://cambridge-iccs.github.io/FTorch/page/developer/testing.html)
 or the [`README` in the `test` subdirectory](test/README.md).
 
 ## License
