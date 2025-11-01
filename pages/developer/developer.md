@@ -1,34 +1,53 @@
 title: Developer Guide
+author: Jack Atkinson
+date: Last Updated: October 2025
 
-If you would like to contribute to the FTorch project, or modify the code at a deeper
-level, please see below for guidance.
+## Developer Guide
 
-[TOC]
+This guide covers how to extend FTorch, contribute code, and the standards
+expected for submissions.
 
-
-## Getting involved
-
-Contributions and collaborations are welcome.
-
-For bugs, feature requests, and clear suggestions for improvement please
-[open an issue](https://github.com/Cambridge-ICCS/FTorch/issues/new/choose).
-
-If you have built something upon _FTorch_ that would be useful to others, or can
-address an [open issue](https://github.com/Cambridge-ICCS/FTorch/issues), please
-[fork the repository](https://github.com/Cambridge-ICCS/FTorch/fork) and open a
-pull request.
-
-
-### Code of Conduct
-Everyone participating in the FTorch project, and in particular in the
-issue tracker, pull requests, and social media activity, is expected to treat other
-people with respect and, more generally, to follow the guidelines articulated in the
-[Python Community Code of Conduct](https://www.python.org/psf/codeofconduct/).
+- [Developer Requirements](#developer-requirements)
+- [Extending the API](#extending-the-api)
+    - [General guidelines](#general-guidelines)
+    - [Fortran source generation using Fypp](#fortran-source-generation-using-fypp)
+    - [GPU device handling](#gpu-device-handling)
+- [Contribution Guidelines](#contribution-guidelines)
+    - [Code style and standards](#code-style-and-standards)
+- [Documentation](#documentation)
+    - [In-code Documentation](#in-code-documentation)
+    - [Written](#written-documentation)
+    - [Versioning and Changelog](#versioning-and-changelog)
 
 
-## Extending the API
+### Developer requirements
 
-If you have a Torch functionality that you wish to bring in from the C++ API to
+Development tools for [pre-processing](#fortran-source-and-fypp),
+[code styling](#code-style) etc. are pip-installable using the
+[requirements-dev file](https://github.com/Cambridge-ICCS/FTorch/blob/main/requirements-dev.txt):
+```sh
+pip install -r requirements-dev.txt
+```
+
+In order to streamline the process of uploading we provide a pre-commit hook in
+[`.githooks/pre-commit`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.githooks/pre-commit).
+This will check that both the `.fypp` and `.F90` files have been updated together in a
+synchronous fashion before a commmit can take place
+([see below](#fortran-source-generation-using-fypp)).
+Use of the hook is not automatic and needs to be enabled by the developer
+(after they have inspected it and are happy with its contents).
+Hooks can be enabled by placing them in the `.git` directory with the following commands:
+```
+cp .githooks/pre-commit .git/hooks/
+chmod +x .git/hooks/pre-commit
+```
+
+
+### Extending the API
+
+#### General guidelines
+
+If you wish to add Torch functionality from the C++ API to
 the FTorch Fortran API the steps are generally as follows:
 
 * Modify `ctorch.cpp` to create a C++ version of the function that accesses `torch::<item>`.
@@ -36,61 +55,41 @@ the FTorch Fortran API the steps are generally as follows:
 * Modify `ftorch.fypp` to create a Fortran version of the function
   that binds to the version in `ctorch.cpp`.
 
-Details of C++ functionalities available to be wrapped can be found
-in the [LibTorch C++ API](https://pytorch.org/cppdocs/).
+Refer to the [LibTorch C++ Documentation](https://pytorch.org/cppdocs/)
+and [C++ API documentation](https://pytorch.org/cppdocs/api/library_root.html)
+for details of the available functions.
 
-As this is an open-source project we appreciate any contributions
-back from users that have extended the functionality.
-If you have done something but don't know where to start with
-open-source contributions please get in touch!<sup>*</sup>
+The following guidelines should be followed whilst writing new routines:
 
-<sup>*</sup>_Our preferred method of contact is via Github issues and discussions,
-but if you are unfamiliar with this you can [email ICCS](mailto:jwa34@cam.ac.uk)
-asking for the FTorch developers._
+* Match optional argument defaults between Fortran, C, and C++
+  ([principle of least astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment)).
+* Handle `torch::Error` and `std::exception` in the C++ functions by catching and
+  printing to screen before exiting cleanly.
 
+#### Fortran source generation using Fypp
 
-### Installing developer requirements
-
-Most of the development tools ([pre-processing](#fortran-source-and-fypp),[code styling](#code-style)) happen to be pip-installable [packages](https://github.com/Cambridge-ICCS/FTorch/blob/main/requirements-dev.txt). You can install them by running
-```
-pip install -r requirements-dev.txt
-```
-inside a Python virtual environment from the base FTorch directory.
-
-### Fortran source and Fypp
-
-The Fortran source code for FTorch is contained in `src/ftorch.F90`.
-However, this file should not be edited directly, but instead generated from
-`src/ftorch.fypp`.
-This is a file that is set up to be run through the
+The Fortran source code in `src/ftorch.F90` should not be edited directly
+but instead generated from `src/ftorch.fypp` by running the
 [Fypp](https://fypp.readthedocs.io/en/stable/index.html) preprocessor.
-We use this because we want to create a pleasant interface of single function calls.
-The nature of Fortran means that this requires a lot of repeated combinations of
-array shapes and data types under interface structures.
-By using Fypp we can generate these programatically.
-
-Fypp is a pip-installable package that comes bundled with the [developer requirements](#installing-developer-requirements).
+This is done to simplify the process of overloading functions for multiple data
+Fypp can be installed with the [developer requirements](#installing-developer-requirements).
 
 To generate the Fortran code run:
-```
+```sh
 fypp src/ftorch.fypp src/ftorch.F90
 ```
 
-_Note: Generally it would be advisable to provide only the `.fypp` source code to
+Conformance of these files is checked using GitHub continuous integration and
+the [provided pre-commit hook](#developer-requirements).
+
+@note
+Generally it would be advisable to provide only the `.fypp` source code to
 reduce duplication and confusion. However, because it is a relatively small file
 and many of our users wish to _"clone-and-go"_ rather than develop, we provide both.<br>
 Development should only take place in `ftorch.fypp`, however._
+@endnote
 
-
-### Torch C++ API
-
-When extending or modifying functionality related to C++ header and/or source
-files `src/ctorch.h` and `src/ctorch.cpp`, we refer to the Torch
-[C++ documentation](https://pytorch.org/cppdocs) and more specifically the
-[C++ API documentation](https://pytorch.org/cppdocs/api/library_root.html)
-pages on the PyTorch website for details.
-
-### GPU device handling
+#### GPU device handling
 
 GPU device-specific code is handled in FTorch using codes defined in the root
 `CMakeLists.txt` file:
@@ -100,12 +99,12 @@ set(GPU_DEVICE_CUDA 1)
 set(GPU_DEVICE_XPU 12)
 set(GPU_DEVICE_MPS 13)
 ```
-These device codes are chosen to be consistent with the numbering used in
-PyTorch (see
-https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h). When a user
-specifies `-DGPU_DEVICE=XPU` (for example) in the FTorch CMake build, this is
-mapped to the appropriate device code (in this case 12). The chosen device code
-and all other ones defined are passed to the C++ compiler in the following step:
+These are chosen to be consistent with the numbering used
+[in PyTorch](https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h).
+
+When a user specifies `-DGPU_DEVICE=XPU` (for example) in the FTorch CMake build, this
+is mapped to the appropriate device code (in this case 12). Device codes
+are passed to the C++ compiler in the following step:
 ```cmake
 target_compile_definitions(
   ${LIB_NAME}
@@ -131,25 +130,18 @@ For further information see the
 @endnote
 
 
-### git hook
+### Contribution Guidelines
 
-In order to streamline the process of uploading we provide a pre-commit hook in
-[`.githooks/pre-commit`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.githooks/pre-commit).
-This will check that both the `.fypp` and `.f90` files have been updated together in a
-synchronous fashion before a commmit can take place.
-If this does not happen then the second line of defence (GitHub continuous integration)
-will fail following the commit.
+Contributions for new features, bugfixes, or improvements should be raised in a pull
+request.
 
-Use of the hook is not automatic and needs to be enabled by the developer
-(after they have inspected it and are happy with its contents).
-Hooks can be enabled by placing them in the `.git` directory with the following commands:
-```
-cp .githooks/pre-commit .git/hooks/
-chmod +x .git/hooks/pre-commit
-```
+In addition to making code contributions as [described above](#extending-the-api)
+users should also include [documentation](#documentation), in-code and written if
+required, and tests to cover any changes/additions.
+Guidance on testing can be found on the [testing page](|page|/developer/testing.html).
+Notable changes should also be documented in the [Changelog](#versioning-and-changelog).
 
-
-### Code style
+#### Code style and standards
 
 FTorch source code is subject to a number of static analysis checks to ensure that it
 conforms to quality and legibility. These tools are a mixture of formatters and linters.
@@ -157,37 +149,103 @@ conforms to quality and legibility. These tools are a mixture of formatters and 
 The tools we use are as follows on a language-by-language basis:
 
 * Fortran: [fortitude](https://github.com/PlasmaFAIR/fortitude)
-* C++: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
-* C: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
+* C++: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and
+  [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
+* C: [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and
+  [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
 * Python: [ruff](https://docs.astral.sh/ruff/)
 * Shell: [ShellCheck](https://github.com/koalaman/shellcheck)
-* CMake: cmake-lint from [cmake-format](https://github.com/cheshirekow/cmake_format) (Note: We do not use cmake-format's formatter)
+* CMake: cmake-lint from [cmake-format](https://github.com/cheshirekow/cmake_format)
+  (Note: We do not use cmake-format's formatter)
 * GitHub Actions workflows: [zizmor](https://woodruffw.github.io/zizmor)
 
-Instructions on installing these tools can be found in their respective documentations.
+Instructions on using these tools can be found in their respective documentations.
+Note that all but ShellCheck may be installed with pip as described in the
+[developer requirements](#developer-requirements).
 
-Note that all but ShellCheck may be installed with pip. Check out the [dev tools installation section](#installing-developer-requirements) for instructions on how to do so.
-
-
-Contributors should run them over their code and ensure that it conforms before submitting
-a pull request. If there is a good reason to ignore a particular rule this should be
+Contributors should run these tools over their code and ensure that it conforms before
+submitting a pull request.
+If there is a good reason to ignore a particular rule this should be
 justified in the pull request and ideally documented in the code.
-
 There is a GitHub action as part of the continuous integration that will perform these
-checks on all opened pull requests before they are merged.
+checks on all pull requests.
 
 
-### General guidelines
+### Documentation
 
-* Match optional argument defaults between Fortran, C, and C++<br>
-  ([principle of least astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment)).
-* Handle `torch::Error` and `std::exception` in the C++ functions by catching and
-  printing to screen before exiting cleanly.
+The documentation for FTorch is generated using
+[FORD](https://forddocs.readthedocs.io/en/latest/) which is installed as part of the
+[developer requirements](#developer-requirements).
+This builds API documentation based off of in-code docstring syntax, and
+web-based documentation from markdown pages.
+For detailed information refer to the
+[FORD User Guide](https://forddocs.readthedocs.io/en/latest/user_guide/index.html).
 
+To generate the documentation run:
+```
+ford FTorch.md
+```
+from the root of the repository.
 
-## Documentation
+FORD uses [graphviz](https://graphviz.org) to generate dependency graphs from the Fortran
+source code[^2].
+For this, you will need to install it on your system - see the [installation guide](https://graphviz.org/download/) for your platform.
 
-### Versioning and Changelog
+[^2]: Note: If FORD cannot locate the graphviz executable (it is not a hard dependency)
+it will generate a warning.
+
+#### In-code Documentation
+
+Ford makes use of a docstring syntax for annotating code.
+As a quick-start:
+
+* `!!` is used to signify documentation.
+* Documentation comes _after_ whatever it is documenting (inline or subsequent line).
+* Documentation can precede an item if designated using `!>`.
+
+The following examples from FORD and FTorch show this in context:
+```fortran
+subroutine feed_pets(cats, dogs, food)
+    !! Feeds your cats and dogs, if enough food is available.
+
+    ! Arguments
+    integer, intent(in)  :: cats  !! The number of cats.
+    integer, intent(in)  :: dogs  !! The number of dogs.
+    real, intent(inout)  :: food
+        !! The ammount of pet food (in kilograms) which you have on hand.
+
+    !...
+
+end subroutine feed_pets
+```
+```fortran
+!> Type for holding a torch neural net (nn.Module).
+type torch_model
+    type(c_ptr) :: p = c_null_ptr  !! pointer to the neural net in memory
+end type torch_model
+```
+
+Documentation of the C/C++ functions is provided
+by [Doxygen](https://www.doxygen.nl/index.html).
+This should be included in the header file `ctorch.h`.
+
+#### Written Documentation
+
+`FTorch.md` is the FORD index file that contains project metadata and describes
+the project homepage.
+Additional pages are contained in `pages/` as markdown files.
+
+Notes:
+
+- We need to define macros for GPU devices that are passed to `ftorch.F90`
+  via the C preprocessor in `FTorch.md` to match those in the CMakeLists.txt.
+- If building documentation locally you can set the `dbg: true` in `FTorch.md` to allow
+  FORD to continue when encountering errors. Note that in this case the documentation
+  may build but be incomplete.
+- When writing new pages you can set `graph: false` in `FTorch.md` whilst prototyping
+  to skip the time-consuming generation of dependency graphs.
+
+#### Versioning and Changelog
 
 FTorch has follows [semantic versioning](https://semver.org/).
 
@@ -201,11 +259,13 @@ CMakeLists.txt for each new release.
 A log of notable changes to the software is kept in `CHANGELOG.md`.
 This follows the conventions of [Keep a Changelog](https://keepachangelog.com/) and should
 be updated by contributors and maintainers as part of a pull request when appropriate.
-<br>
+
+@note
 "Notable" includes new features, bugfixes, dependency updates etc.
-<br>
+
 "Notable" does not cover typo corrections, documentation rephrasing and restyling,
 or correction of other minor infelicities that do not impact the user or developer.
+@endnote
 
 New minor releases are made when deemed appropriate by maintainers by adding a tag to
 the commit and creating a corresponding GitHub Release.
@@ -215,45 +275,3 @@ finalised in the changelog, and a clean log for 'Unreleased' changes created.
 New patch releases are made whenever a bugfix is merged.
 The patch number of the version should be incremented, a tag attached to the commit,
 and a note made under the current 'Unreleased' patches header in the changelog.
-
-### API Documentation
-
-The API documentation for FTorch is generated using 
-[FORD](https://forddocs.readthedocs.io/en/latest/).
-For detailed information refer to the 
-[FORD User Guide](https://forddocs.readthedocs.io/en/latest/user_guide/index.html),
-but as a quick-start:
-
-* `!!` is used to signify documentation.
-* Documentation comes _after_ whatever it is documenting (inline or subsequent line).
-* Documentation can precede an item if designated using `!>`.
-
-FORD is pip installable:
-```
-pip install ford
-```
-FORD uses [graphviz](https://graphviz.org) to generate dependency graphs from the Fortran
-source code[^1]. 
-For this, you will need to install it on your system - see the [installation guide](https://graphviz.org/download/) for your platform.
-
-To generate the documentation run:
-```
-ford FTorch.md
-```
-from the root of the repository.
-
-`FTorch.md` is the FORD index file, API documentation is automatically generated, and
-any further items are contained in `pages/` as markdown files.
-
-Documentation of the C functions in `ctorch.h` is provided
-by [Doxygen](https://www.doxygen.nl/index.html).
-
-Note that we need to define the macros for GPU devices that are passed to `ftorch.F90`
-via the C preprocessor in `FTorch.md` to match those in the CMakeLists.txt.
-
-If you are building documentation locally and wish FORD to continue when it encounters
-errors, you can change the `dbg` setting in the `FTorch.md` file to `true`. Note that
-in this case the documentation may build but be incomplete. Please pay close attention
-to the warnings.
-
-[^1]: Note: If FORD cannot locate the graphviz executable (it is not a hard dependency) it will generate a warning.

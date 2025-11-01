@@ -110,7 +110,7 @@ For production builds, ensure that FTorch is built using the `CMAKE_BUILD_TYPE=R
 [flag](|page|/installation/general.html#cmake-build-options) to enable optimisations.
 It is also recommended to run FTorch's unit tests after building to verify successful
 installation.
-<!- TODO: Link to testing documentation -->
+For details on running FTorch's unit and integration tests after building, see the [testing documentation](|page|/developer/testing.html).
 
 Once complete it should be possible to:
 ```sh
