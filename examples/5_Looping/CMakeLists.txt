@@ -56,5 +56,4 @@ set_target_properties(simplenet_infer_fortran_good PROPERTIES
                       Fortran_MODULE_DIRECTORY
                       ${CMAKE_CURRENT_BINARY_DIR}/mod_good)
 target_include_directories(simplenet_infer_fortran_good PRIVATE
-                           ${CMAKE_CURRENT_BINARY_DIR}/mod_good
-)
+                           ${CMAKE_CURRENT_BINARY_DIR}/mod_good)
