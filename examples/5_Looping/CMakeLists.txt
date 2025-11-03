@@ -40,7 +40,8 @@ target_sources(simplenet_infer_fortran_bad
 # to per-target directories to avoid collisions during parallel builds
 set_target_properties(simplenet_infer_fortran_bad PROPERTIES
                       Fortran_MODULE_DIRECTORY
-                      ${CMAKE_CURRENT_BINARY_DIR}/mod_bad)
+                      ${CMAKE_CURRENT_BINARY_DIR}/mod_bad
+)
 target_include_directories(simplenet_infer_fortran_bad PRIVATE
                            ${CMAKE_CURRENT_BINARY_DIR}/mod_bad)
 
