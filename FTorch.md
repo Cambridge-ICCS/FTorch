@@ -1,10 +1,12 @@
 ---
 project: FTorch
 summary: A library for coupling (Py)Torch machine learning models to Fortran
-author: ICCS Cambridge
 license: mit
-github: https://github.com/Cambridge-ICCS
+version: 1.0.0
 project_github: https://github.com/Cambridge-ICCS/FTorch
+author: ICCS Cambridge
+github: https://github.com/Cambridge-ICCS
+website: https://iccs.cam.ac.uk
 page_dir: pages
 src_dir: ./src
          ./utils

@@ -7,7 +7,7 @@ on this page.
 
 For more recent updates after the release of version 1.0.0 please refer to the ongoing
 changelog, either on [GitHub](https://github.com/Cambridge-ICCS/FTorch/blob/main/CHANGELOG.md)
-on [this website](page/changelog.html).
+on [this website](|page|/resources/changelog.html).
 
 [TOC]
 
@@ -38,8 +38,8 @@ cmake .. <CMAKE_ARGUMENTS>
 If you use a version of FTorch from before commit
 [c488f20](https://github.com/Cambridge-ICCS/FTorch/commit/c488f20d8d49a15f98176c39a6c8e8db8e708f51)
 (January 2025) you may notice that the `device_type` argument for
-`torch_model_load` changed from being optional to being compulsory. This is
-because the optional argument defaulted to `torch_kCPU`, which is not suitable
+[[ftorch(module):torch_model_load(subroutine)]] changed from being optional to being compulsory.
+This is because the optional argument defaulted to `torch_kCPU`, which is not suitable
 for GPU workloads. For recent FTorch configurations, simply specify the device
 type as the third argument. For example:
 ```fortran
@@ -94,7 +94,9 @@ integer :: tensor_layout(1) = [1]
 
 my_tensor = torch_tensor_from_array(fortran_data, tensor_layout, torch_kCPU)
 ```
+
 <br>
+
 Now a call is made to a subroutine with the tensor as the first argument:
 ```fortran
 real, dimension(5), target :: fortran_data
@@ -115,7 +117,9 @@ type(torch_module) :: model
 model = torch_module_load(args(1))
 call torch_module_forward(model, in_tensors, out_tensors)
 ```
+
 <br>
+
 Following user feedback we now refer to a neural net and its associated types and calls
 as a '`model`'.
 The process of loading a net is also now a subroutine call for consistency with the
@@ -126,7 +130,7 @@ call torch_model_load(model, 'path_to_saved_net.pt', torch_kCPU)
 call torch_model_forward(model, in_tensors, out_tensors)
 ```
 Note that the `device_type` argument has also been specified in the call to
-`torch_model_load`, for the reason mentioned [above](#january-2025).
+[[ftorch(module):torch_model_load(subroutine)]], for the reason mentioned [above](#january-2025).
 
 <br>
 
@@ -137,7 +141,9 @@ in the array of inputs:
 ```fortran
 call torch_model_forward(model, in_tensors, n_inputs, out_tensors)
 ```
+
 <br>
+
 Now all that is supplied to the forward call is the model, and the arrays of input and
 output tensors. No need for `n_inputs` (or `n_outputs`)!
 ```fortran
@@ -148,7 +154,8 @@ call torch_model_forward(model, in_tensors, out_tensors)
 
 #### Outputs now need to be an array of `torch_tensor`s
 
-Previously you passed an array of `torch_tensor` types as inputs, and a single `torch_tensor`
+Previously you passed an array of [[ftorch(module):torch_tensor(type)]] types as
+inputs, and a single [[ftorch(module):torch_tensor(type)]]
 to the forward method:
 ```fortran
 type(torch_tensor), dimension(n_inputs) :: input_tensor_array
@@ -156,8 +163,11 @@ type(torch_tensor) :: output_tensor
 ...
 call torch_model_forward(model, input_tensor_array, n_inputs, output_tensor)
 ```
+
 <br>
-Now both the inputs and the outputs need to be an array of `torch_tensor` types:
+
+Now both the inputs and the outputs need to be an array of
+[[ftorch(module):torch_tensor(type)]] types:
 ```fortran
 type(torch_tensor), dimension(n_inputs)  :: input_tensor_array
 type(torch_tensor), dimension(n_outputs) :: output_tensor_array
