@@ -113,9 +113,11 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path/to/Torch/installation>/lib
 
 > Note: _On MacOS devices you will need to set `DYLD_LIBRARY_PATH` rather than `LD_LIBRARY_PATH`._
 
-Whilst experimenting it may be useful to build FTorch using the `CMAKE_BUILD_TYPE=RELEASE`
-CMake flag to allow useful error messages and investigation with debugging tools.
-
+Whilst experimenting, it may be useful to build FTorch using the
+`CMAKE_BUILD_TYPE=Debug` (see [CMAKE_BUILD_TYPE](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_FLAGS.html)
+and [CMAKE_\<LANG\>_FLAGS](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_FLAGS.html))
+CMake flag to allow useful error messages and investigation with debugging
+tools.
 
 ### Module systems
 
