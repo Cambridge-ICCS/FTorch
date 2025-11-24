@@ -240,8 +240,11 @@ path to FTorch described above): </p>
 <p>Note: <em>Depending on your system and architecture <code>lib</code> may be <code>lib64</code> or something similar.</em></p>
 <p>Note: <em>On MacOS devices you will need to set <code>DYLD_LIBRARY_PATH</code> rather than <code>LD_LIBRARY_PATH</code>.</em></p>
 </blockquote>
-<p>Whilst experimenting it may be useful to build FTorch using the <code>CMAKE_BUILD_TYPE=RELEASE</code>
-CMake flag to allow useful error messages and investigation with debugging tools.</p>
+<p>Whilst experimenting, it may be useful to build FTorch using the
+<code>CMAKE_BUILD_TYPE=Debug</code> (see <a href="https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html">CMAKE_BUILD_TYPE</a>
+and <a href="https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_FLAGS.html">CMAKE_\&lt;LANG&gt;_FLAGS</a>)
+CMake flag to allow useful error messages and investigation with debugging
+tools.</p>
 <h3 id="module-systems">Module systems</h3>
 <p>Most HPC systems are managed using <a href="https://modules.sourceforge.net/">Environment Modules</a>.
 To build FTorch it is important you
