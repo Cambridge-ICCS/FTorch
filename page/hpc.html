@@ -195,10 +195,11 @@ the software stack on the machine.</p>
 <code>CMAKE_Fortran_COMPILER</code>, <code>CMAKE_C_COMPILER</code>, and <code>CMAKE_CXX_COMPILER</code> when building
 with CMake to enforce this.</p>
 <h3 id="building-projects-and-linking-to-ftorch">Building Projects and Linking to FTorch</h3>
-<p>Whilst we describe how to link to FTorch using CMake to build a project on our main
-page, many HPC models do not use CMake and rely on <code>make</code> or more elaborate build
-systems.
-To build a project with <code>make</code> or similar you need to <em>include</em> the FTorch's
+<p>Whilst we describe how to link to FTorch using CMake to build a project on our
+main page, many HPC models do not use CMake and rely on <code>make</code> or more
+elaborate build systems. This section assumes that you have successfully
+configured, built, <em>and</em> installed FTorch using CMake.</p>
+<p>To build a project with <code>make</code> or similar you need to <em>include</em> the FTorch's
 header (<code>.h</code>) and module (<code>.mod</code>) files and <em>link</em> the executable
 to the Ftorch library (e.g., <code>.so</code>, <code>.dll</code>, <code>.dylib</code> depending on your system) when
 compiling.</p>
@@ -208,7 +209,7 @@ use ftorch to <em>include</em> the module and header files:</p>
 </code></pre></div>
 
 <p>This is often done by appending to an <code>FCFLAGS</code> compiler flags variable or similar:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">FCFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-I&lt;path/to/FTorch/install/location&gt;/include/ftorch
+<div class="codehilite"><pre><span></span><code><span class="nv">FCFLAGS</span><span class="o">+=</span><span class="s2">&quot; -I&lt;path/to/FTorch/install/location&gt;/include/ftorch&quot;</span>
 </code></pre></div>
 
 <p>When compiling the final executable add the following <em>linker</em> flag:</p>
@@ -216,7 +217,26 @@ use ftorch to <em>include</em> the module and header files:</p>
 </code></pre></div>
 
 <p>This is often done by appending to an <code>LDFLAGS</code> linker flags variable or similar:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">LDFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-L&lt;path/to/FTorch/install/location&gt;/lib<span class="w"> </span>-lftorch
+<div class="codehilite"><pre><span></span><code><span class="nv">LDFLAGS</span><span class="o">+=</span><span class="s2">&quot; -L&lt;path/to/FTorch/install/location&gt;/lib -lftorch&quot;</span>
+</code></pre></div>
+
+<p>If you have <a href="https://en.wikipedia.org/wiki/Pkg-config">pkg-config</a> installed,
+you can easily query the compiler and linker flags of FTorch rather than
+manually specifying them as was shown above. FTorch provides a standard
+pkg-config file in both the directory in which FTorch was built (e.g.,
+<code>&lt;/path/to/FTorch&gt;/build</code>) as well as the library directory in which it was
+installed (e.g., <code>&lt;/path/to/FTorch/install/location&gt;/lib/pkgconfig</code>). For
+example, the following commands are equivalent to adding the manually specified
+flags:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">FCFLAGS</span><span class="o">+=</span><span class="s2">&quot; </span><span class="k">$(</span>pkg-config<span class="w"> </span>--cflags<span class="w"> </span>&lt;/path/to/FTorch/install/location&gt;/lib/pkgconfig/ftorch.pc<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">LDFLAGS</span><span class="o">+=</span><span class="s2">&quot; </span><span class="k">$(</span>pkg-config<span class="w"> </span>--libs<span class="w"> </span>&lt;/path/to/FTorch/install/location&gt;/lib/pkgconfig/ftorch.pc<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+<p>You can simplify these commands by adding FTorch to the <code>PKG_CONFIG_PATH</code>
+environment variable:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">PKG_CONFIG_PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PKG_CONFIG_PATH</span><span class="si">}</span>:&lt;/path/to/FTorch/install/location&gt;/lib/pkgconfig/
+<span class="nv">FCFLAGS</span><span class="o">+=</span><span class="s2">&quot; </span><span class="k">$(</span>pkg-config<span class="w"> </span>--cflags<span class="w"> </span>ftorch<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">LDFLAGS</span><span class="o">+=</span><span class="s2">&quot; </span><span class="k">$(</span>pkg-config<span class="w"> </span>--libs<span class="w"> </span>ftorch<span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
 
 <p>You may also need to add the location of the dynamic library <code>.so</code> files to your
