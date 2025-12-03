@@ -162,6 +162,46 @@ jobs:
           cmake --build .
           cmake --install .
 
+      - name: Check pkg-config file 
+        run: |
+          # pkg-config looks in the `build` directory for libraries
+          export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
+
+          libs=$(pkg-config --libs ftorch)
+          cflags=$(pkg-config --cflags ftorch)
+
+          # Assert linker flags not empty
+          if [[ -z "${libs}" ]]
+          then
+            echo "::error ::pkg-config --libs ftorch returned empty output"
+            exit 1
+          fi
+
+          # Assert expected linker flags
+          lib_dir=$(grep -oE "\-L.*/lib" <<< ${libs})
+          lib=$(grep -oE "\-lftorch" <<< ${libs})
+          if [[ -z "${lib_dir}" || -z "${lib}" ]]
+          then
+            echo "::error ::pkg-config --libs ftorch do not contain expected linker flags"
+            exit 1
+          fi
+
+          # Assert compiler flags not empty
+          if [[ -z "${cflags}" ]]
+          then
+            echo "::error ::pkg-config --cflags ftorch returned empty output"
+            exit 1
+          fi
+
+          # Assert expected compiler flags
+          include_dir=$(grep -oE "/include " <<< ${cflags})
+          module_dir=$(grep -oE "/include/ftorch" <<< ${cflags})
+          if [[ -z ${include_dir} || -z ${module_dir} ]]
+          then
+              echo "::error ::pkg-config --cflags ftorch do not contain expected compiler flags"
+              exit 1
+          fi
+
       - name: Run unit tests
         run: |
           . ftorch/bin/activate

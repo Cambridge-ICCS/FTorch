@@ -6,6 +6,7 @@ set(PACKAGE_VERSION 1.0.0)
 project(
   ${PROJECT_NAME}
   VERSION ${PACKAGE_VERSION}
+  DESCRIPTION "A library for directly calling PyTorch ML models from Fortran"
   LANGUAGES C CXX Fortran)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
@@ -106,6 +107,11 @@ file(RELATIVE_PATH relDir ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
 get_filename_component(TORCH_LIBRARY_DIR ${TORCH_LIBRARY} DIRECTORY)
 set(CMAKE_INSTALL_RPATH "$ORIGIN/${relDir};${TORCH_LIBRARY_DIR}")
 
+# Initialize Fortran module build output directory for all subsequent targets
+if(NOT DEFINED CMAKE_Fortran_MODULE_DIRECTORY)
+  set(CMAKE_Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/modules")
+endif()
+
 # Library with C and Fortran bindings
 add_library(${LIB_NAME} src/ctorch.cpp src/ftorch.F90 src/ftorch_test_utils.f90)
 
@@ -122,9 +128,7 @@ target_compile_definitions(
 # Add an alias FTorch::ftorch for the library
 add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
 # cmake-format: off
-set_target_properties(
-  ${LIB_NAME} PROPERTIES PUBLIC_HEADER "src/ctorch.h"
-  Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/modules")
+set_target_properties(${LIB_NAME} PROPERTIES PUBLIC_HEADER "src/ctorch.h")
 # cmake-format: on
 # Link TorchScript
 # NOTE: Linking stdc++ for downstream targets fixes ctorch link error
@@ -132,7 +136,7 @@ target_link_libraries(${LIB_NAME}
   PRIVATE ${TORCH_LIBRARIES} INTERFACE stdc++)
 # Include the Fortran mod files in the library
 target_include_directories(
-  ${LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/modules>
+  ${LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
   # $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
@@ -160,10 +164,18 @@ install(
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 # Install Fortran module files
-install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch.mod"
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}")
-install(FILES "${CMAKE_BINARY_DIR}/modules/ftorch_test_utils.mod"
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}")
+if(NOT DEFINED CMAKE_INSTALL_MODULEDIR)
+  set(
+    CMAKE_INSTALL_MODULEDIR
+    "${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME}"
+    CACHE STRING "Directory in prefix to install generated module files"
+  )
+endif()
+
+install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch.mod"
+        DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
+install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_test_utils.mod"
+        DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
 
 # Build integration tests
 if(CMAKE_BUILD_TESTS)
@@ -216,3 +228,15 @@ configure_package_config_file(
 install(
   FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+
+# Export a pkg-config file
+configure_file(
+  "${PROJECT_SOURCE_DIR}/cmake/template.pc"
+  "${PROJECT_BINARY_DIR}/${LIB_NAME}.pc"
+  @ONLY
+)
+install(
+  FILES
+  "${PROJECT_BINARY_DIR}/${LIB_NAME}.pc"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+)
