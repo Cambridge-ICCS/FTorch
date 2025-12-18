@@ -211,5 +211,5 @@ For a worked example of running with MPI, see the
 #### GPU
 
 For information on running on GPU architectures, see the
-[GPU user guide page](pages/gpu.html) and/or the
+[GPU user guide page](gpu.html) and/or the
 [MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MultiGPU).
