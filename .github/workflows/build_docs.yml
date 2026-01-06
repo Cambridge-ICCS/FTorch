@@ -52,10 +52,10 @@ jobs:
           persist-credentials: false
         uses: actions/checkout@v4
 
-      - name: Install Python
-        uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
         with:
-          python-version: '3.x'
+          python-version: '3.13'
 
       - name: Install dependencies
         run: |
@@ -101,10 +101,10 @@ jobs:
           persist-credentials: true
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Install Python
-        uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
         with:
-          python-version: '3.x'
+          python-version: '3.13'
 
       - name: Install dependencies
         run: |
