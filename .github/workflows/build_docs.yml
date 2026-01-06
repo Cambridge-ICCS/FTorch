@@ -82,8 +82,8 @@ jobs:
 
     # We trust the deploy action with write permissions
     permissions:
-      contents: write
-      id-token: write
+      contents: write  # We trust the deploy action with write permissions
+      id-token: write  # We trust the deploy action with write permissions
 
     # Terminate the job if it runs for more than 5 minutes
     timeout-minutes: 5

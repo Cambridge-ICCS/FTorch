@@ -60,9 +60,8 @@ jobs:
     # The draft need to have been built first
     needs: [build-draft]
 
-    # We trust the deploy action with write permissions
     permissions:
-      id-token: write
+      id-token: write  # We trust the deploy action with write permissions
     steps:
       - name: Upload draft PDF
         uses: actions/upload-artifact@v4

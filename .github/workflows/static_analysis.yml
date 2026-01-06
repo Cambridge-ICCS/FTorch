@@ -148,8 +148,12 @@ jobs:
   zizmor:
     name: zizmor
     runs-on: ubuntu-latest
+
+    # Terminate the job if it runs for more than 5 minutes
+    timeout-minutes: 5
+
     permissions:
-      security-events: write
+      security-events: write  # We trust the zizmor action with write permissions
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
