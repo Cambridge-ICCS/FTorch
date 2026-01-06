@@ -133,6 +133,8 @@ Codespace. Full instructions are in the
 For detailed installation instructions please see the
 [online installation documentation](https://cambridge-iccs.github.io/FTorch/page/cmake.html).
 
+#### General approach 
+
 To build and install the library:
 
 1. Navigate to the location in which you wish to install the source and run:  
@@ -165,8 +167,9 @@ To build and install the library:
     | [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html)        | `</path/to/LibTorch/>`                  | Location of Torch installation<sup>2</sup>                                                                                                                                 |
     | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>`            | Location at which the library files should be installed. By default this is `/usr/local`                                                                                   |
     | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`                     | Specifies build type. The default is `Debug`, use `Release` for production code                                                                                            |
-    | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build.                                        |
-    | `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU backend architecture (if any) <sup>3</sup>                                                                                                        |
+    | [`BUILD_SHARED_LIBS`](https://cmake.org/cmake/help/latest/variable/BUILD_SHARED_LIBS.html)        | `ON` / `OFF`                            | Specifies whether to build FTorch as a shared library. The default is `ON`, use `OFF` to build FTorch as a static library.                                                 |
+    | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](https://cambridge-iccs.github.io/FTorch/page/testing.html) as part of the build.<sup>3</sup>                            |
+    | `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU backend architecture (if any) <sup>4</sup>                                                                                                        |
     | `MULTI_GPU`                                                                                      | `ON` / `OFF` |  Specifies whether to build the tests that involve multiple GPU devices (`ON` by default if `CMAKE_BUILD_TESTS` and `GPU_DEVICE` are set).                                                                                                        |
 
     <sup>1</sup> _On Windows this may need to be the full path to the compiler if CMake cannot locate it by default._  
@@ -178,7 +181,9 @@ To build and install the library:
           e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
 		  You can find the location of your torch install by importing torch from your Python environment (`import torch`) and running `print(torch.__file__)`_
 
-    <sup>3</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
+    <sup>3</sup>_To run the tests, your system's MPI must support `use mpi_f08`. Note that OpenMPI < v2.0 and MPICH < v3.1 do not support that module._
+
+    <sup>4</sup> _This is often overridden by PyTorch. When installing with pip, the `index-url` flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
           `pip install torch --index-url https://download.pytorch.org/whl/cpu`.
           URLs for alternative versions can be found [here](https://pytorch.org/get-started/locally/)._
 
@@ -199,11 +204,54 @@ To build and install the library:
 
     Installation will place the following directories at the install location:  
     * `CMAKE_INSTALL_PREFIX/include/` - contains header and mod files
-    * `CMAKE_INSTALL_PREFIX/lib/` - contains `cmake` directory and `.so` files  
+    * `CMAKE_INSTALL_PREFIX/lib/` - contains `cmake` directory and `.so`/`.ar` files  
     _Note: depending on your system and architecture `lib` may be `lib64`, and 
     you may have `.dll` files or similar._  
 	_Note: In a Windows environment this will require administrator privileges for the default install location._
 
+#### On building FTorch as shared vs. static library
+
+FTorch can be built either as a shared library or as a static library depending
+on how you want to link it with your own application.
+
+By default, FTorch builds as a shared library:
+
+```bash
+cmake -DBUILD_SHARED_LIBS=ON -S <path/to/FTorch>
+```
+
+This configuration dynamically links FTorch and its dependencies (including
+LibTorch) at runtime. A shared build is recommended for *most* users because:
+
+- Multiple programs can use the same FTorch installation.
+- You can update FTorch without recompiling dependent executables.
+
+If you prefer to include FTorch directly inside your executable, you can build
+it statically:
+
+```bash
+cmake -DBUILD_SHARED_LIBS=OFF -S </path/to/FTorch>
+```
+
+A static build links all FTorch code directly into your application executable.
+This can be useful when:
+
+- You want a single self-contained executable.
+- You are installing FTorch on an HPC system and intend to use it in an
+application for which you want maximum reproducibility (i.e., the FTorch
+version embedded in your application is "frozen").
+
+To this second point on building FTorch as a static library, a brief
+justification on applications for which this may be relevant is covered
+[here](https://github.com/Cambridge-ICCS/FTorch/pull/448#issue-3544429539).
+
+For more general details on shared and static libraries as well as their
+trade-offs, see [shared vs. static
+libraries](https://medium.com/@mohitk3000/c-libraries-unpacked-shared-libraries-vs-static-libraries-44764b85056a),
+[a case for static
+linking](https://ro-che.info/articles/2016-09-09-static-binaries-scientific-computing),
+and [static linking considered
+harmful](https://www.akkadia.org/drepper/no_static_linking.html)
 
 ## Usage
 

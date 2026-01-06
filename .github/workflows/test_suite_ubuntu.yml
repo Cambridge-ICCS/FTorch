@@ -86,8 +86,8 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.setup-gnu-matrix.outputs.matrix) }}
 
-    # Terminate the job if it runs for more than 10 minutes
-    timeout-minutes: 10
+    # Terminate the job if it runs for more than 15 minutes
+    timeout-minutes: 15
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -111,7 +111,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
 
       - name: Install PyTorch
         run: |
@@ -127,13 +127,13 @@ jobs:
 
       - name: Install pFUnit
         run: |
-          export FC=/usr/bin/gfortran
-          export MPIF90=/usr/bin/mpif90
           # TODO: Avoid version pinning (needed because version appears in install path)
           git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake ..
+          cmake ..\
+            -DCMAKE_Fortran_COMPILER=gfortran\
+            -DMPI_Fortran_COMPILER=mpif90
           make -j 4 install
 
       - name: Build FTorch
@@ -152,15 +152,55 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER=${FC} \
-            -DCMAKE_C_COMPILER=${CC} \
-            -DCMAKE_CXX_COMPILER=${CXX} \
+            -DCMAKE_Fortran_COMPILER=gfortran  \
+            -DCMAKE_C_COMPILER=gcc  \
+            -DCMAKE_CXX_COMPILER=g++  \
             -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
             -DCMAKE_Fortran_FLAGS="-std=$FORTRAN_STANDARD"
           cmake --build .
           cmake --install .
+
+      - name: Check pkg-config file 
+        run: |
+          # pkg-config looks in the `build` directory for libraries
+          export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
+
+          libs=$(pkg-config --libs ftorch)
+          cflags=$(pkg-config --cflags ftorch)
+
+          # Assert linker flags not empty
+          if [[ -z "${libs}" ]]
+          then
+            echo "::error ::pkg-config --libs ftorch returned empty output"
+            exit 1
+          fi
+
+          # Assert expected linker flags
+          lib_dir=$(grep -oE "\-L.*/lib" <<< ${libs})
+          lib=$(grep -oE "\-lftorch" <<< ${libs})
+          if [[ -z "${lib_dir}" || -z "${lib}" ]]
+          then
+            echo "::error ::pkg-config --libs ftorch do not contain expected linker flags"
+            exit 1
+          fi
+
+          # Assert compiler flags not empty
+          if [[ -z "${cflags}" ]]
+          then
+            echo "::error ::pkg-config --cflags ftorch returned empty output"
+            exit 1
+          fi
+
+          # Assert expected compiler flags
+          include_dir=$(grep -oE "/include " <<< ${cflags})
+          module_dir=$(grep -oE "/include/ftorch" <<< ${cflags})
+          if [[ -z ${include_dir} || -z ${module_dir} ]]
+          then
+              echo "::error ::pkg-config --cflags ftorch do not contain expected compiler flags"
+              exit 1
+          fi
 
       - name: Run unit tests
         run: |
@@ -194,24 +234,24 @@ jobs:
           ctest -V
 
   Intel:
-    # Trigger intel build only if push to main 
-    if: github.event_name == 'push'
+    # Trigger intel build only if push to main, or called manually via dispatch.
+    if: |
+      (github.ref == 'refs/heads/main' && github.event_name == 'push')
+      || github.event_name == 'workflow_dispatch'
+      || (github.event_name == 'pull_request' && contains(github.event.pull_request.changed_files, '.github/workflows/test_suite_ubuntu.yml'))
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         toolchain: [intel-ifx, intel-ifort]
-        std: ["f08"]
         include:
           - toolchain: intel-ifx 
-            FC: "/opt/intel/oneapi/compiler/2023.2.0/linux/bin/ifx"
-            CC: "/opt/intel/oneapi/compiler/2023.2.0/linux/bin/icx"
-            CXX: "/opt/intel/oneapi/compiler/2023.2.0/linux/bin/icpx"
+            FC: ifx
+            MPIFC: mpiifx 
           - toolchain: intel-ifort 
-            FC: "/opt/intel/oneapi/compiler/2023.2.0/linux/bin/intel64/ifort"
-            CC: "/opt/intel/oneapi/compiler/2023.2.0/linux/bin/icx"
-            CXX: "/opt/intel/oneapi/compiler/2023.2.0/linux/bin/icpx"
+            FC: ifort
+            MPIFC: mpiifort
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -224,7 +264,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
 
       - name: Install PyTorch
         run: |
@@ -233,55 +273,33 @@ jobs:
           . ftorch/bin/activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
-      # NOTE: Based on github action logs, this installs ifx/ifort, 
-      # icx/icc, and icpx/icpc for v2023.2.0
-      # see https://www.intel.com/content/www/us/en/developer/articles/tool/compilers-redistributable-libraries-by-version.html 
-      - name: Install Intel classic and modern compilers
-        uses: fortran-lang/setup-fortran@d2ba6ea44297a24407def2f6e117954d844a5368 # v1
-        id: setup-fortran
+      - name: Install Intel tools
+        uses: rscohn2/setup-oneapi@8affb2b9c36a17ffc190a96fd27ba5ad9b4b5447 # v0
         with:
-          compiler: intel-classic 
-          version: '2021.10'
+          components: |
+            icx@2023.2.1
+            ifx@2023.2.1
+            impi@2021.14.0
 
-      - name: Cache OpenMPI
-        id: cache-openmpi
-        uses: actions/cache@v4
-        with:
-          path: /home/runner/openmpi-${{ matrix.toolchain }}
-          key: openmpi-${{ runner.os }}-openmpi-4.1.2-${{ matrix.toolchain }}
-
-      - name: Build OpenMPI with Intel compilers 
-        if: steps.cache-openmpi.outputs.cache-hit != 'true'
+      - name: Setup Intel oneAPI environment
         run: |
-          wget https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.2.tar.gz
-          tar -xzf openmpi-4.1.2.tar.gz
-          cd openmpi-4.1.2
-          ./configure \
-            CC=${{ matrix.CC }} CXX=${{ matrix.CXX }} FC=${{ matrix.FC }} \
-            --prefix=$HOME/openmpi-${{ matrix.toolchain }}
-          make -j 8 
-          make install
-
-      - name: Add OpenMPI to env 
-        run: |
-          echo "PATH=$HOME/openmpi-${{ matrix.toolchain }}/bin:${PATH}" >> $GITHUB_ENV 
-          echo "LD_LIBRARY_PATH=$HOME/openmpi-${{ matrix.toolchain }}/lib:${LD_LIBRARY_PATH}" >> $GITHUB_ENV 
+          source /opt/intel/oneapi/setvars.sh
+          printenv >> $GITHUB_ENV
 
       - name: Install pFUnit
         run: |
-          export FC=${{ matrix.FC }}
-          export CC=${{ matrix.CC }}
-          export CXX=${{ matrix.CXX }}
-          export MPIF90=mpif90
-          export OPENMPI_DIR=$HOME/openmpi-${{ matrix.toolchain }}
           # TODO: Avoid version pinning (needed because version appears in install path)
           git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake .. -DCMAKE_PREFIX_PATH=${OPENMPI_DIR}
+          cmake .. \
+            -DCMAKE_C_COMPILER=icx \
+            -DCMAKE_CXX_COMPILER=icpx \
+            -DCMAKE_Fortran_COMPILER=${{ matrix.FC }} \
+            -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }}
           make -j 4 install
 
-      - name: Build FTorch
+      - name: Build and install FTorch
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
@@ -292,20 +310,17 @@ jobs:
           mkdir ${FTORCH_BUILD_DIR}
           cd ${FTORCH_BUILD_DIR}
 
-          export FC=${{ matrix.FC }}
-          export CC=${{ matrix.CC }}
-          export CXX=${{ matrix.CXX }}
-          export OPENMPI_DIR=$HOME/openmpi-${{ matrix.toolchain }}
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER=${FC} \
-            -DCMAKE_C_COMPILER=${CC} \
-            -DCMAKE_CXX_COMPILER=${CXX} \
+            -DCMAKE_C_COMPILER=icx \
+            -DCMAKE_CXX_COMPILER=icpx \
+            -DCMAKE_Fortran_COMPILER=${{ matrix.FC }} \
+            -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }} \
             -DCMAKE_INSTALL_PREFIX=${FTORCH_BUILD_DIR} \
             -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_PREFIX_PATH="${OPENMPI_DIR};${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-stand ${{ matrix.std }}"
+            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+            -DCMAKE_Fortran_FLAGS="-stand f08"
           cmake --build .
           cmake --install .
 

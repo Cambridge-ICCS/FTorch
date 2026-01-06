@@ -48,8 +48,8 @@ jobs:
     strategy:
       fail-fast: true
 
-    # Terminate the job if it runs for more than 10 minutes
-    timeout-minutes: 10
+    # Terminate the job if it runs for more than 15 minutes
+    timeout-minutes: 15
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
