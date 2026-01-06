@@ -25,6 +25,8 @@ permissions: {}
 jobs:
   # The first job in this workflow builds a draft of the JOSS paper
   build-draft:
+    name: build draft
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -33,10 +35,10 @@ jobs:
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout repository
         with:
-          persist-credentials: false
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       # Builds/renders the paper using the openjournals action
       - name: Build draft PDF
@@ -47,6 +49,8 @@ jobs:
 
   # The second job in this workflow uploads the rendered PDF to GitHub
   upload-draft:
+    name: upload draft
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 

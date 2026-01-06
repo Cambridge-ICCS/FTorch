@@ -39,6 +39,8 @@ permissions: {}
 jobs:
   # This workflow contains a single job called "test-suite-windows"
   test-suite-windows:
+    name: test suite
+
     # The type of runner that the job will run on
     runs-on: windows-latest
     strategy:
@@ -59,10 +61,10 @@ jobs:
           version: ${{ matrix.toolchain.version }}
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
+      - name: Checkout repository
         with:
-          persist-credentials: false
-        uses: actions/checkout@v4
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Python
         uses: actions/setup-python@v5

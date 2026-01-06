@@ -30,6 +30,7 @@ permissions: {}
 jobs:
   # The first job in this workflow builds the documentation for the website
   build-docs:
+    name: build docs
     if: github.ref != 'refs/heads/main'
 
     # The type of runner that the job will run on
@@ -73,6 +74,7 @@ jobs:
 
   # The second job in this workflow publishes the website in the case of a merge into main
   publish-website:
+    name: publish website
     if: github.ref == 'refs/heads/main'
 
     # The type of runner that the job will run on
@@ -94,10 +96,10 @@ jobs:
           sudo apt-get install -y graphviz
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
+      - name: Checkout repository
         with:
           persist-credentials: true
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Python
         uses: actions/setup-python@v5

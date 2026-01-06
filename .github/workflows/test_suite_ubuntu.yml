@@ -39,46 +39,48 @@ permissions: {}
 jobs:
   # Dynamically build matrix for GNU job 
   setup-gnu-matrix:
-      runs-on: ubuntu-latest
-      outputs:
-        matrix: ${{ steps.set-matrix.outputs.matrix }}
-      env:
-        EVENT_NAME: ${{ github.event_name }}
-      steps:
-        - id: set-matrix
-          run: |
-            if [[ "$EVENT_NAME" == 'push' ]]
-            then
-              # Include GCC 9–13 for PRs to main
-              MATRIX_JSON='
-              {
-                "toolchain": [
-                  {"compiler": "gcc", "version": 13},
-                  {"compiler": "gcc", "version": 12},
-                  {"compiler": "gcc", "version": 11},
-                  {"compiler": "gcc", "version": 10},
-                  {"compiler": "gcc", "version": 9}
-                ],
-                "std": ["f2008"],
-                "include": [
-                  {"toolchain": {"compiler": "gcc", "version": 13}, "std": "f2018"}
-                ]
-              }'
-            else
-              # Only GCC 13 for everything else
-              MATRIX_JSON='
-              {
-                "toolchain": [
-                  {"compiler": "gcc", "version": 13}
-                ],
-                "std": ["f2008", "f2018"]
-              }'
-            fi
-            # Convert json to compact line expected by github action
-            MATRIX_JSON=$(echo "$MATRIX_JSON" | jq -c .)
-            echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
+    name: setup GNU matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    env:
+      EVENT_NAME: ${{ github.event_name }}
+    steps:
+      - id: set-matrix
+        run: |
+          if [[ "$EVENT_NAME" == 'push' ]]
+          then
+            # Include GCC 9–13 for PRs to main
+            MATRIX_JSON='
+            {
+              "toolchain": [
+                {"compiler": "gcc", "version": 13},
+                {"compiler": "gcc", "version": 12},
+                {"compiler": "gcc", "version": 11},
+                {"compiler": "gcc", "version": 10},
+                {"compiler": "gcc", "version": 9}
+              ],
+              "std": ["f2008"],
+              "include": [
+                {"toolchain": {"compiler": "gcc", "version": 13}, "std": "f2018"}
+              ]
+            }'
+          else
+            # Only GCC 13 for everything else
+            MATRIX_JSON='
+            {
+              "toolchain": [
+                {"compiler": "gcc", "version": 13}
+              ],
+              "std": ["f2008", "f2018"]
+            }'
+          fi
+          # Convert json to compact line expected by github action
+          MATRIX_JSON=$(echo "$MATRIX_JSON" | jq -c .)
+          echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
 
   GNU:
+    name: GNU test suite
     needs: setup-gnu-matrix 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -92,10 +94,10 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
+      - name: Checkout repository
         with:
-          persist-credentials: false
-        uses: actions/checkout@v4
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: setup-fortran
         uses: fortran-lang/setup-fortran@d2ba6ea44297a24407def2f6e117954d844a5368 # v1
@@ -215,6 +217,7 @@ jobs:
           ctest --verbose --tests-regex example
 
   Intel:
+    name: Intel test suite
     # Trigger intel build only if push to main, or called manually via dispatch.
     if: |
       (github.ref == 'refs/heads/main' && github.event_name == 'push')
