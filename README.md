@@ -208,16 +208,9 @@ for a full list of contributors.
 
 
 ## Used by
-The following projects make use of this code or derivatives in some way:
 
-* [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/)
-* [DataWave - MiMA ML](https://github.com/DataWaveProject/MiMA-machine-learning)\
-  See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
-* [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization)\
-  See Heuer et al. (2024) - [DOI: 10.1029/2024MS004398](https://doi.org/10.1029/2024MS004398)
-* To replace a BiCGStab bottleneck in the GloSea6 Seasonal Forecasting model\
-  See Park and Chung (2025) - [DOI: 10.3390/atmos16010060](https://doi.org/10.3390/atmos16010060)
-* Emulation of cloud resolving models to reduce computational cost in E3SM\
-  See Hu et al. (2025) - [DOI: 10.1029/2024MS004618](https://doi.org/10.1029%2F2024MS004618) (and [code](https://github.com/zyhu-hu/E3SM_nvlab/tree/ftorch/climsim_scripts/perlmutter_scripts))
-
-Are we missing anyone? Let us know.
+Multiple projects build on FTorch in their work.
+Those we are aware of are listed on the
+[use cases page](https://cambridge-iccs.github.io/FTorch/community/case_studies.html)
+in the online documentation.
+Are we missing anyone? Let us know!
