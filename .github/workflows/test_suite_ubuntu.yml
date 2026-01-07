@@ -67,7 +67,8 @@ jobs:
               "std": ["f2008"],
               "include": [
                 {"toolchain": {"compiler": "gcc", "version": 13}, "std": "f2018"}
-              ]
+              ],
+              "build_system": ["cmake", "fpm"]
             }'
           else
             # Only GCC 13 for everything else
@@ -76,7 +77,8 @@ jobs:
               "toolchain": [
                 {"compiler": "gcc", "version": 13}
               ],
-              "std": ["f2008", "f2018"]
+              "std": ["f2008", "f2018"],
+              "build_system": ["cmake", "fpm"]
             }'
           fi
           # Convert json to compact line expected by github action
@@ -145,6 +147,7 @@ jobs:
       - name: Build FTorch
         env:
           FORTRAN_STANDARD: ${{ matrix.std }}
+          BUILD_SYSTEM: ${{ matrix.build_system }}
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
@@ -152,23 +155,37 @@ jobs:
           export BUILD_DIR=$(pwd)/build
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
-          mkdir ${BUILD_DIR}
-          cd ${BUILD_DIR}
 
-          cmake .. \
-            -DPython_EXECUTABLE="$(which python)" \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER=gfortran  \
-            -DCMAKE_C_COMPILER=gcc  \
-            -DCMAKE_CXX_COMPILER=g++  \
-            -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} \
-            -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-std=$FORTRAN_STANDARD"
-          cmake --build .
-          cmake --install .
+          if [ "${{ matrix.build_system}}" = "cmake" ]; then
+            mkdir ${BUILD_DIR}
+            cd ${BUILD_DIR}
+            cmake .. \
+              -DPython_EXECUTABLE="$(which python)" \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_Fortran_COMPILER=gfortran  \
+              -DCMAKE_C_COMPILER=gcc  \
+              -DCMAKE_CXX_COMPILER=g++  \
+              -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} \
+              -DCMAKE_BUILD_TESTS=TRUE \
+              -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+              -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+            cmake --build .
+            cmake --install .
+          elif [ "${{ matrix.build_system}}" = "fpm" ]; then
+            fpm build \
+              --profile release \
+              --compiler gfortran \
+              --c-compiler gcc \
+              --cxx-compiler g++ \
+              --flag "-std=${FORTRAN_STANDARD} -I${PFUNIT_DIR}/include -L${PFUNIT_DIR}/lib" \
+              --cxx-flag "-cpp -std=c++17 -I${Torch_DIR}/torch/include -I${Torch_DIR}/torch/include/torch/csrc/api/include -L${Torch_DIR}/torch/lib" \
+              --verbose
+          else
+            echo "Unsupported build system ${{ matrix.build_system }}"
+            exit 1
+          fi
 
-      - name: Check pkg-config file 
+      - name: Check pkg-config file
         run: |
           # pkg-config looks in the `build` directory for libraries
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
@@ -291,23 +308,30 @@ jobs:
             -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }}
           make -j 4 install
 
-      - name: Install fpm
-        run: |
-          . ftorch/bin/activate
-          pip install fpm
-
-      - name: Build and install FTorch with fpm
+      - name: Build and install FTorch
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
-          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/build
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
-          fpm build \
-            --flag "-std=${{ matrix.std }} -I${PFUNIT_DIR}/include -L${PFUNIT_DIR}/lib" \
-            --cxx-flag "-cpp -std=c++17 -I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include -L${Torch_DIR}/lib" \
-            --verbose
+          mkdir ${BUILD_DIR}
+          cd ${BUILD_DIR}
+
+          cmake .. \
+            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=icx \
+            -DCMAKE_CXX_COMPILER=icpx \
+            -DCMAKE_Fortran_COMPILER=${{ matrix.FC }} \
+            -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }} \
+            -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} \
+            -DCMAKE_BUILD_TESTS=TRUE \
+            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+            -DCMAKE_Fortran_FLAGS="-stand f08"
+          cmake --build .
+          cmake --install .
 
       - name: Run unit tests
         run: |
