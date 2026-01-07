@@ -6,7 +6,11 @@ project(
   VERSION 1.0.0
   LANGUAGES Fortran)
 
-find_package(FTorch)
+if(CMAKE_BUILD_TESTS)
+  find_package(FTorch QUIET)
+else()
+  find_package(FTorch REQUIRED)
+endif()
 message(STATUS "Building with Fortran PyTorch coupling")
 
 find_package(PFUNIT REQUIRED)

@@ -25,10 +25,10 @@ typedef void *torch_int_t;
 // Opaque pointer type alias for float scalars
 typedef void *torch_float_t;
 
-// Type that represent size, strides and indexing on tensors
+// Type that represents size, strides and indexing on tensors
 // (like std::size_t for standard containers)
 //
-// Torch is using internally int64_t [i.e. signed 64bit integer] (30/07/2025)
+// Torch is using internally int64_t [i.e. signed 64bit integer]
 // We can as well to avoid portability problems
 // (i.e. 64bit integer beeing long long on Windows)
 //

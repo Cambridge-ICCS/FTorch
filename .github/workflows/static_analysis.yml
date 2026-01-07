@@ -1,5 +1,5 @@
 # Workflow to run static-analysis and linting checks on source
-name: StaticAnalysis
+name: Static analysis
 
 # Controls when the workflow will run
 on:
@@ -25,27 +25,40 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Write permissions are not required
+permissions: {}
+
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "static-analysis"
-  static-analysis:
+  # This workflow contains a single job called "linting"
+  linting:
+    name: linting
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
 
+    # Terminate the job if it runs for more than 5 minutes
+    timeout-minutes: 5
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
+      - name: Checkout FTorch repository
         with:
-          persist-credentials: false
-        uses: actions/checkout@v4
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Install Python
-        uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
         with:
-          python-version: '3.x'
+          python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
 
       - name: Install Dependencies
         run: |
@@ -85,14 +98,6 @@ jobs:
             shellcheck --external-sources ${FILE}
           done
 
-      # Apply GitHub Actions linter, zizmor
-      - name: zizmor
-        if: always()
-        run: |
-          cd ${{ github.workspace }}
-          . ../ftorch_venv/bin/activate
-          zizmor .github/workflows/*.yml
-
       # Apply Fortran linter, fortitude
       # Configurable using the fortitude.toml file if present
       - name: fortitude source
@@ -107,7 +112,7 @@ jobs:
       # Configurable using the .clang-format and .clang-tidy config files if present
       - name: clang source
         if: always()
-        uses: cpp-linter/cpp-linter-action@v2
+        uses: cpp-linter/cpp-linter-action@b7fbdde0f6776f478f4d8867c2b746077fa7ea89 # v2
         id: linter
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -138,3 +143,22 @@ jobs:
           . ../ftorch_venv/bin/activate
           ruff format --diff ./
           ruff check --diff ./
+
+  # Apply GitHub Actions linter, zizmor
+  zizmor:
+    name: zizmor
+    runs-on: ubuntu-latest
+
+    # Terminate the job if it runs for more than 5 minutes
+    timeout-minutes: 5
+
+    permissions:
+      security-events: write  # We trust the zizmor action with write permissions
+    steps:
+      - name: Checkout FTorch repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@e673c3917a1aef3c65c972347ed84ccd013ecda4 # v0.2.0

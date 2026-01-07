@@ -90,7 +90,7 @@ To save the SimpleNet model to TorchScript, run the modified version of the
 ```
 python3 pt2ts.py
 ```
-which will generate `saved_simplenet_model.pt` - the TorchScript instance of
+which will generate `saved_simplenet_cpu.pt` - the TorchScript instance of
 the network and perform a quick sanity check that it can be read.
 
 At this point we no longer require Python, so can deactivate the virtual

@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite
-name: TestSuiteWindows
+name: Test suite (Windows)
 
 # Controls when the workflow will run
 on:
@@ -32,10 +32,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# Write permissions are not required
+permissions: {}
+
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "test-suite-windows"
   test-suite-windows:
+    name: test suite
+
     # The type of runner that the job will run on
     runs-on: windows-latest
     strategy:
@@ -44,24 +49,27 @@ jobs:
         toolchain:
           - {compiler: intel, version: '2023.2'}
 
+    # Terminate the job if it runs for more than 15 minutes
+    timeout-minutes: 15
+
     steps:
       # configure windows VM with intel compilers
-      - uses: fortran-lang/setup-fortran@v1
+      - uses: fortran-lang/setup-fortran@d2ba6ea44297a24407def2f6e117954d844a5368 # v1
         id: setup-fortran
         with:
           compiler: ${{ matrix.toolchain.compiler }}
           version: ${{ matrix.toolchain.version }}
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
+      - name: Checkout FTorch repository
         with:
-          persist-credentials: false
-        uses: actions/checkout@v4
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Install Python
-        uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
         with:
-          python-version: '3.x'
+          python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
 
       - name: Install PyTorch
         shell: cmd

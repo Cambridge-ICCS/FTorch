@@ -61,8 +61,8 @@ program tensor_manipulation
   ! Since FTorch performs no copies, the strides of the tensor will also correspond to column-major
   ! order. This is different from the default behaviour of Torch which builds tensors with row-major
   ! order by default.
-  write(*,*) "Shape of the tensor from Fortran array:", b % get_shape()
-  write(*,*) "Stride of the tensor from Fortran array:", b % get_stride()
+  write(*,*) "Shape of the tensor from Fortran array:", b % get_shape()   ! Expected: 2 3
+  write(*,*) "Stride of the tensor from Fortran array:", b % get_stride() ! Expected: 1 2
 
   ! Extract data from the tensor as a Fortran array
   ! -----------------------------------------------

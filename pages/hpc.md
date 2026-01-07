@@ -63,9 +63,11 @@ with CMake to enforce this.
 
 ### Building Projects and Linking to FTorch
 
-Whilst we describe how to link to FTorch using CMake to build a project on our main
-page, many HPC models do not use CMake and rely on `make` or more elaborate build
-systems.
+Whilst we describe how to link to FTorch using CMake to build a project on our
+main page, many HPC models do not use CMake and rely on `make` or more
+elaborate build systems. This section assumes that you have successfully
+configured, built, *and* installed FTorch using CMake.
+
 To build a project with `make` or similar you need to _include_ the FTorch's
 header (`.h`) and module (`.mod`) files and _link_ the executable
 to the Ftorch library (e.g., `.so`, `.dll`, `.dylib` depending on your system) when
@@ -78,7 +80,7 @@ use ftorch to _include_ the module and header files:
 ```
 This is often done by appending to an `FCFLAGS` compiler flags variable or similar:
 ```sh
-FCFLAGS += -I<path/to/FTorch/install/location>/include/ftorch
+FCFLAGS+=" -I<path/to/FTorch/install/location>/include/ftorch"
 ```
 
 When compiling the final executable add the following _linker_ flag:
@@ -87,22 +89,58 @@ When compiling the final executable add the following _linker_ flag:
 ```
 This is often done by appending to an `LDFLAGS` linker flags variable or similar:
 ```sh
-LDFLAGS += -L<path/to/FTorch/install/location>/lib -lftorch
+LDFLAGS+=" -L<path/to/FTorch/install/location>/lib -lftorch"
+```
+
+If you have [pkg-config](https://en.wikipedia.org/wiki/Pkg-config) installed,
+you can easily query the compiler and linker flags of FTorch rather than
+manually specifying them as was shown above. FTorch provides a standard
+pkg-config file in both the directory in which FTorch was built (e.g.,
+`</path/to/FTorch>/build`) as well as the library directory in which it was
+installed (e.g., `</path/to/FTorch/install/location>/lib/pkgconfig`). For
+example, the following commands are equivalent to adding the manually specified
+flags:
+```sh
+FCFLAGS+=" $(pkg-config --cflags </path/to/FTorch/install/location>/lib/pkgconfig/ftorch.pc)"
+LDFLAGS+=" $(pkg-config --libs </path/to/FTorch/install/location>/lib/pkgconfig/ftorch.pc)"
+```
+
+You can simplify these commands by adding FTorch to the `PKG_CONFIG_PATH`
+environment variable:
+```sh
+export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:</path/to/FTorch/install/location>/lib/pkgconfig/
+FCFLAGS+=" $(pkg-config --cflags ftorch)"
+LDFLAGS+=" $(pkg-config --libs ftorch)"
 ```
 
 You may also need to add the location of the dynamic library `.so` files to your
 `LD_LIBRARY_PATH` environment variable unless installing in a default location:
 ```sh
-export LD_LIBRARY_PATH = $LD_LIBRARY_PATH:<path/to/FTorch/installation>/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path/to/FTorch/installation>/lib
+```
+
+FTorch depends on Torch, and the `RPATH` of the FTorch shared library (i.e.,
+`libftorch.so`) generated during CMake installation contains the path to its
+Torch shared library dependency. The dynamic linker of the GNU C library
+searches for shared libraries first using the `RPATH` (see [ld.so - Linux
+manual page](https://man7.org/linux/man-pages/man8/ld.so.8.html) for details),
+so the correct Torch dependency should be found automatically; however, if you
+encounter issues, you may have to modify the `LD_LIBRARY_PATH` environment
+variable to also include the path to the Torch library (in addition to the
+path to FTorch described above): 
+```sh
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path/to/Torch/installation>/lib
 ```
 
 > Note: _Depending on your system and architecture `lib` may be `lib64` or something similar._
 
 > Note: _On MacOS devices you will need to set `DYLD_LIBRARY_PATH` rather than `LD_LIBRARY_PATH`._
 
-Whilst experimenting it may be useful to build FTorch using the `CMAKE_BUILD_TYPE=RELEASE`
-CMake flag to allow useful error messages and investigation with debugging tools.
-
+Whilst experimenting, it may be useful to build FTorch using the
+`CMAKE_BUILD_TYPE=Debug` (see [CMAKE_BUILD_TYPE](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)
+and [CMAKE_<LANG\>_FLAGS](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_FLAGS.html))
+CMake flag to allow useful error messages and investigation with debugging
+tools.
 
 ### Module systems
 
@@ -173,5 +211,5 @@ For a worked example of running with MPI, see the
 #### GPU
 
 For information on running on GPU architectures, see the
-[GPU user guide page](pages/gpu.html) and/or the
+[GPU user guide page](gpu.html) and/or the
 [MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MultiGPU).

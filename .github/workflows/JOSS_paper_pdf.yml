@@ -1,5 +1,5 @@
 # Workflow to render the FTorch submission to JOSS
-name: RenderJOSSPaper
+name: Render JOSS paper
 
 # Controls when the workflow will run
 on:
@@ -14,25 +14,55 @@ on:
       - '.github/workflows/JOSS_paper_pdf.yml'
       - 'paper/*'
 
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# No write permission by default
+permissions: {}
+
 jobs:
-  paper:
+  # The first job in this workflow builds a draft of the JOSS paper
+  build-draft:
+    name: build draft
+
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    name: Paper Draft
+
+    # Terminate the job if it runs for more than 5 minutes
+    timeout-minutes: 5
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout FTorch repository
         with:
-          persist-credentials: false
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       # Builds/renders the paper using the openjournals action
       - name: Build draft PDF
-        uses: openjournals/openjournals-draft-action@master
+        uses: openjournals/openjournals-draft-action@85a18372e48f551d8af9ddb7a747de685fbbb01c
         with:
           journal: joss
           paper-path: paper/paper.md
 
-      # Uploads the rendered pdf to GitHub.
+  # The second job in this workflow uploads the rendered PDF to GitHub
+  upload-draft:
+    name: upload draft
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Terminate the job if it runs for more than 5 minutes
+    timeout-minutes: 5
+
+    # The draft need to have been built first
+    needs: [build-draft]
+
+    permissions:
+      id-token: write  # We trust the deploy action with write permissions
+    steps:
       - name: Upload draft PDF
         uses: actions/upload-artifact@v4
         with:
