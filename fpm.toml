@@ -26,8 +26,8 @@ link = ["torch", "torch_cpu", "c10"]
 library = false
 
 [fortran]
-implicit-typing = false
-implicit-external = false
+implicit-external=true
+implicit-typing=true
 source-form = "free"
 
 [preprocess]
@@ -47,6 +47,9 @@ macros = [
   "GPU_DEVICE_XPU=12",
   "GPU_DEVICE_MPS=13",
 ]
+
+[dependencies]
+mpi = "*"
 
 # # TODO: pFUnit currently doesn't provide an fpm.toml
 # [dev-dependencies]
