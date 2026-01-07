@@ -1,4 +1,4 @@
-program inference
+program mpi_infer_fortran
 
    ! Import precision info from iso
    use, intrinsic :: iso_fortran_env, only : sp => real32, stdout => output_unit
@@ -120,4 +120,4 @@ program inference
       deallocate(recvbuf)
     end subroutine clean_up
 
-end program inference
+end program mpi_infer_fortran

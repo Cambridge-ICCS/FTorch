@@ -51,4 +51,4 @@ In order to run inference with the trained ML model, you will need to modify
 your Fortran model so that it uses FTorch syntax to set up appropriate
 `torch_tensor` and `torch_model` objects and call the `torch_tensor_forward`
 subroutine to run the inference. For examples of how to do this, see the
-[examples user guide page](examples.html).
+[examples user guide page](example.html).

@@ -133,7 +133,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           . ../ftorch_venv/bin/activate
-          fortitude check examples
+          fortitude check example
 
       # Apply Python linter, ruff
       - name: ruff

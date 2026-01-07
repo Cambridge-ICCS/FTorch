@@ -31,7 +31,7 @@ execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
 
 # Fortran example - bad
 add_executable(simplenet_infer_fortran_bad
-               bad/simplenet_infer_fortran.f90)
+               bad/simplenet_infer_fortran_bad.f90)
 target_link_libraries(simplenet_infer_fortran_bad
                       PRIVATE FTorch::ftorch)
 target_sources(simplenet_infer_fortran_bad
@@ -47,7 +47,7 @@ target_include_directories(simplenet_infer_fortran_bad PRIVATE
 
 # Fortran example - good
 add_executable(simplenet_infer_fortran_good
-               good/simplenet_infer_fortran.f90)
+               good/simplenet_infer_fortran_good.f90)
 target_link_libraries(simplenet_infer_fortran_good
                       PRIVATE FTorch::ftorch)
 target_sources(simplenet_infer_fortran_good

@@ -1,0 +1,58 @@
+name = "FTorch"
+version = "1.0.0"
+license = "LICENSE"
+author = "ICCS"
+maintainer = "ICCS"
+copyright = "Copyright 2019, Institute of Computing for Climate Science"
+
+[library]
+source-dir = "src"
+include-dir = [
+  "src",
+  "${Torch_DIR}/include",
+  "${Torch_DIR}/include/torch/csrc/api/include",
+]
+
+[build]
+auto-executables = true
+# TODO: pFUnit currently doesn't provide an fpm.toml
+auto-tests = false
+auto-examples = true
+module-naming = false
+
+external-modules = ["torch", "torch_cpu", "c10"]
+link = ["torch", "torch_cpu", "c10"]
+
+[install]
+library = false
+
+[fortran]
+implicit-external=true
+implicit-typing=true
+source-form = "free"
+
+[preprocess]
+[preprocess.cpp]
+macros = [
+  "GPU_DEVICE_NONE=0",
+  "GPU_DEVICE_CUDA=1",
+  "GPU_DEVICE_HIP=1",  # NOTE: HIP is treated as CUDA in FTorch
+  "GPU_DEVICE_XPU=12",
+  "GPU_DEVICE_MPS=13",
+]
+[preprocess.fortran]
+macros = [
+  "GPU_DEVICE_NONE=0",
+  "GPU_DEVICE_CUDA=1",
+  "GPU_DEVICE_HIP=1",  # NOTE: HIP is treated as CUDA in FTorch
+  "GPU_DEVICE_XPU=12",
+  "GPU_DEVICE_MPS=13",
+]
+
+[dependencies]
+mpi = "*"
+
+# # TODO: pFUnit currently doesn't provide an fpm.toml
+# [dev-dependencies]
+# pFUnit.git = "https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git"
+# pFUnit.tag = "v4.12.0"

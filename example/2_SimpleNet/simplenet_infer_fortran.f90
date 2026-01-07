@@ -1,4 +1,4 @@
-program inference
+program simplenet_infer_fortran
 
    ! Import precision info from iso
    use, intrinsic :: iso_fortran_env, only : sp => real32
@@ -68,4 +68,4 @@ program inference
 
   write (*,*) "SimpleNet example ran successfully"
 
-end program inference
+end program simplenet_infer_fortran
