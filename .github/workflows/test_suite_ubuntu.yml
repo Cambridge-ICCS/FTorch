@@ -156,7 +156,7 @@ jobs:
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
 
-          if [ "${{ matrix.build_system}}" = "cmake" ]; then
+          if [ "${BUILD_SYSTEM}" == "cmake" ]; then
             mkdir ${BUILD_DIR}
             cd ${BUILD_DIR}
             cmake .. \
@@ -171,7 +171,7 @@ jobs:
               -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
             cmake --build .
             cmake --install .
-          elif [ "${{ matrix.build_system}}" = "fpm" ]; then
+          elif [ "${BUILD_SYSTEM}" == "fpm" ]; then
             fpm build \
               --profile release \
               --compiler gfortran \
@@ -181,7 +181,7 @@ jobs:
               --cxx-flag "-cpp -std=c++17 -I${Torch_DIR}/torch/include -I${Torch_DIR}/torch/include/torch/csrc/api/include -L${Torch_DIR}/torch/lib" \
               --verbose
           else
-            echo "Unsupported build system ${{ matrix.build_system }}"
+            echo "Unsupported build system ${BUILD_SYSTEM}"
             exit 1
           fi
 
