@@ -1,10 +1,10 @@
-program inference
+program simplenet_infer_fortran_bad
 
    ! Import precision info from iso
    use, intrinsic :: iso_fortran_env, only : sp => real32
 
    ! Import the ml module
-   use ml_mod, only : ml_routine
+   use bad_ml_mod, only : ml_routine
 
    implicit none
 
@@ -32,4 +32,4 @@ program inference
    ! Write out the result of calling the net
    write (*,*) sum_data(:)
 
-end program inference
+end program simplenet_infer_fortran_bad
