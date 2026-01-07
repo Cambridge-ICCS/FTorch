@@ -1,4 +1,4 @@
-program inference
+program multiio_infer_fortran
 
    ! Import precision info from iso
    use, intrinsic :: iso_fortran_env, only : sp => real32, stdout => output_unit
@@ -103,4 +103,4 @@ program inference
 
    write (*,*) "MultiGPU example ran successfully"
 
-end program inference
+end program multiio_infer_fortran

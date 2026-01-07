@@ -1,4 +1,4 @@
-program inference
+program resnet_infer_fortran
 
    use, intrinsic :: iso_fortran_env, only : sp => real32
 
@@ -189,4 +189,4 @@ contains
 
    end subroutine calc_probs
 
-end program inference
+end program resnet_infer_fortran
