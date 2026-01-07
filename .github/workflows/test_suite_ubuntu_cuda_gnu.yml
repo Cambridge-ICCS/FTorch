@@ -20,8 +20,8 @@ on:
       # Unit tests
       - 'test/unit/*.pf'
       # Integration tests
-      - 'examples/**/*.py'
-      - 'examples/**/*.f90'
+      - 'example/**/*.py'
+      - 'example/**/*.f90'
       # Build system
       - '**CMakeLists.txt'
       - '**requirements.txt'
