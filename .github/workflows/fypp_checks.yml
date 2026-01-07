@@ -46,7 +46,7 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Install Fortran pre-processor
+      - name: Install fypp, the Fortran pre-processor
         run: pip install fypp
 
       - name: Check ftorch.fypp matches ftorch.F90
