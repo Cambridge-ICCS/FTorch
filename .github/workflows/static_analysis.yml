@@ -58,7 +58,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
         with:
-          python-version: '3.13'
+          python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
 
       - name: Install Dependencies
         run: |
