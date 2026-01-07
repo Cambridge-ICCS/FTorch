@@ -47,3 +47,8 @@ macros = [
   "GPU_DEVICE_XPU=12",
   "GPU_DEVICE_MPS=13",
 ]
+
+# # TODO: pFUnit currently doesn't provide an fpm.toml
+# [dev-dependencies]
+# pFUnit.git = "https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git"
+# pFUnit.tag = "v4.12.0"
