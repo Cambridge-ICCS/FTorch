@@ -144,6 +144,12 @@ jobs:
             -DMPI_Fortran_COMPILER=mpif90
           make -j 4 install
 
+      - name: Install fpm
+        if: matrix.build_system == 'fpm'
+        run: |
+          . ftorch/bin/activate
+          pip install fpm
+
       - name: Build FTorch
         env:
           FORTRAN_STANDARD: ${{ matrix.std }}
