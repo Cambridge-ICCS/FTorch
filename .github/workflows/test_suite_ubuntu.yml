@@ -192,6 +192,7 @@ jobs:
           fi
 
       - name: Check pkg-config file
+        if: matrix.build_system == 'cmake'
         run: |
           # pkg-config looks in the `build` directory for libraries
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
@@ -234,14 +235,29 @@ jobs:
       - name: Run unit tests
         run: |
           . ftorch/bin/activate
-          cd build
-          ctest --verbose --tests-regex unit
+          if [ "${BUILD_SYSTEM}" == "cmake" ]; then
+            cd build
+            ctest --verbose --tests-regex unit
+          elif [ "${BUILD_SYSTEM}" == "fpm" ]; then
+            fpm test
+          else
+            echo "Unsupported build system ${BUILD_SYSTEM}"
+            exit 1
+          fi
 
       - name: Run integration tests
         run: |
           . ftorch/bin/activate
-          cd build
-          ctest --verbose --tests-regex example
+          if [ "${BUILD_SYSTEM}" == "cmake" ]; then
+            cd build
+            ctest --verbose --tests-regex example
+          elif [ "${BUILD_SYSTEM}" == "fpm" ]; then
+            # TODO: Would need to rename examples as example for this to work
+            fpm run --example
+          else
+            echo "Unsupported build system ${BUILD_SYSTEM}"
+            exit 1
+          fi
 
   Intel:
     name: Intel test suite
