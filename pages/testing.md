@@ -5,7 +5,7 @@ title: FTorch test suite
 ## Testing
 
 FTorch's test suite is currently comprised of unit tests, as well as integration
-tests based on a subset of the [examples](examples.html). These tests are built
+tests based on a subset of the [examples](example.html). These tests are built
 and run and their outputs are analysed.
 
 ### Building
@@ -86,7 +86,7 @@ Integration tests may be executed in the following ways:
 2. Run the tests associated with a specific example by navigating to the build
    directory and calling `ctest -R example2`, for example.
 3. Run the tests associated with a specific example by navigating to the
-   corresponding subdirectory of `${BUILD_DIR}/examples` (where `${BUILD_DIR}`
+   corresponding subdirectory of `${BUILD_DIR}/example` (where `${BUILD_DIR}`
    is the build directory for FTorch) and calling `ctest`.
 
 Any of the above will produce a report on which of the requested tests passed

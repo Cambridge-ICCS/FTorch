@@ -147,11 +147,11 @@ in `torch_tensor_mean`, respectively.
 
 For a concrete example of how to construct, interrogate, manipulate, and delete
 Torch tensors, see the
-[tensor manipulation worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/1_Tensor).
+[tensor manipulation worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/example/1_Tensor).
 
 For an example of how to compute mathematical expressions involving Torch
 tensors, see the
-[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Autograd).
+[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/example/6_Autograd).
 
 [^1]: Note: In most cases, these should be the same, so that the operator makes
 sense. In the case of the `requires_grad` property, the values might differ, and
