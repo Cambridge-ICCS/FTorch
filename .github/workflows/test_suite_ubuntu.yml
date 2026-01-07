@@ -233,6 +233,8 @@ jobs:
           fi
 
       - name: Run unit tests
+        env:
+          BUILD_SYSTEM: ${{ matrix.build_system }}
         run: |
           . ftorch/bin/activate
           if [ "${BUILD_SYSTEM}" == "cmake" ]; then
@@ -246,6 +248,8 @@ jobs:
           fi
 
       - name: Run integration tests
+        env:
+          BUILD_SYSTEM: ${{ matrix.build_system }}
         run: |
           . ftorch/bin/activate
           if [ "${BUILD_SYSTEM}" == "cmake" ]; then
