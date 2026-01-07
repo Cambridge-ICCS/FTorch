@@ -1,6 +1,6 @@
 title: Presentations
 author: Joe Wallwork
-date: Last Updated: October 2025
+date: Last Updated: January 2026
 
 ## Contents
 
@@ -14,6 +14,9 @@ date: Last Updated: October 2025
 The following presentations contain information about FTorch and its
 applications:
 
+* **An Overview of the FTorch Project**<br>
+  ICCS Journal Club, Cambridge - October 2025<br>
+  [Slides](https://jackatkinson.net/slides/ICCS-Seminar-Oct25/) - [Recording](https://www.youtube.com/watch?v=u7np_kUJtIY)
 * **FTorch: Facilitating Hybrid Modelling**<br>
   N8-CIR Seminar, Leeds - July 2025<br>
   [Slides](https://jackatkinson.net/slides/Leeds-N8-FTorch) - [Recording](https://www.youtube.com/watch?v=je7St0t_W9A)

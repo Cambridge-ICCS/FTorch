@@ -1,19 +1,20 @@
-# FTorch
+![logo](./pages/media/FTorch_logo.svg)
 
 **_A library for coupling (Py)Torch machine learning models to Fortran_**
 
 ![GitHub](https://img.shields.io/github/license/Cambridge-ICCS/FTorch)
 ![Fortran](https://img.shields.io/badge/Fortran-2008-purple)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.07602/status.svg)](https://doi.org/10.21105/joss.07602)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Cambridge-ICCS/FTorch/build_docs.yml?label=docs)](https://cambridge-iccs.github.io/FTorch/)
 
-This repository contains code, utilities, and examples for directly calling PyTorch ML
+This repository contains code, utilities, and examples for directly using PyTorch ML
 models from Fortran.
 
 For full API and user documentation please see the
 [online documentation](https://cambridge-iccs.github.io/FTorch/) which is 
 significantly more detailed than this README.
 
-To cite use of this code please refer to
+To cite use of this software please refer to
 [Atkinson et al., (2025) DOI:10.21105/joss.07602](https://doi.org/10.21105/joss.07602). See
 [acknowledgment](#authors-and-acknowledgment) below for more details.
 
@@ -31,43 +32,31 @@ To cite use of this code please refer to
 
 ## Description
 
-It is desirable to be able to run machine learning (ML) models directly in Fortran.
-Such models are often trained in some other language (say Python) using popular
-frameworks (say PyTorch) and saved.
-We want to run inference on this model without having to call a Python executable.
-To achieve this we use the existing Torch C++ interface.
+It is desirable to run machine learning (ML) models directly in Fortran.
+ML models are often trained in some other language using popular frameworks (say, Python and PyTorch) however.
 
-This project provides a library enabling a user to directly couple their PyTorch
-models to Fortran code.
-We provide installation instructions for the library as well as instructions and
+FTorch is a library enabling users to directly couple their PyTorch models to Fortran code.
+It supports running on both CPU and GPU, and is tested on UNIX and Windows operating systems
+We provide installation instructions for the library as well as comprehensive
 examples for performing coupling.
 
 ```fortran
 use ftorch
 ...
 type(torch_model) :: model
-type(torch_tensor), dimension(n_inputs)  :: model_inputs_arr
-type(torch_tensor), dimension(n_outputs) :: model_output_arr
+type(torch_tensor), dimension(n_inputs)  :: input_tensors
+type(torch_tensor), dimension(n_outputs) :: output_tensors
 ...
 call torch_model_load(model, "/my/saved/TorchScript/model.pt", torch_kCPU)
-call torch_tensor_from_array(model_inputs_arr(1), input_fortran, in_layout, torch_kCPU)
-call torch_tensor_from_array(model_output_arr(1), output_fortran, out_layout, torch_kCPU)
+call torch_tensor_from_array(input_tensors(1), input_fortran, torch_kCPU)
+call torch_tensor_from_array(output_tensors(1), output_fortran, torch_kCPU)
 
-call torch_model_forward(model, model_input_arr, model_output_arr)
+call torch_model_forward(model, input_tensors, output_tensors)
 ```
 
-The following presentations provide an introduction and overview of _FTorch_:
+A recent talk providing an introduction and overview of _FTorch_ can be seen here: [Slides](https://jackatkinson.net/slides/Leeds-N8-FTorch) - [Recording](https://www.youtube.com/watch?v=je7St0t_W9A)
+See our [presentations page](https://cambridge-iccs.github.io/FTorch/page/community/presentations.html) for more examples.
 
-* FTorch: Facilitating Hybrid Modelling\
-  N8-CIR Seminar, Leeds - July 2025\
-  [Slides](https://jackatkinson.net/slides/Leeds-N8-FTorch) - [Recording](https://www.youtube.com/watch?v=je7St0t_W9A)
-* Coupling Machine Learning to Numerical (Climate) Models\
-  Platform for Advanced Scientific Computing, Zurich - June 2024\
-  [Slides](https://jackatkinson.net/slides/PASC24)
-
-If you are interested in using this library please get in touch.
-
-_For a similar approach to calling TensorFlow models from Fortran please see [Fortran-TF-lib](https://github.com/Cambridge-ICCS/fortran-tf-lib)._
 
 ## Installation
 
@@ -156,11 +145,13 @@ Examples of how to use this library are provided in the [examples directory](exa
 They demonstrate different functionalities of the code and are provided with
 instructions to modify, build, and run as necessary.
 
+
 ## Tests
 
 For information on testing, see the corresponding
 [webpage](https://cambridge-iccs.github.io/FTorch/page/developer/testing.html)
 or the [`README` in the `test` subdirectory](test/README.md).
+
 
 ## License
 
@@ -183,6 +174,8 @@ pull request.
 
 Detailed guidelines can be found in the
 [online developer documentation](https://cambridge-iccs.github.io/FTorch/page/developer.html).
+
+If you are interested in using FTorch please get in touch.
 
 
 ### Code of Conduct
@@ -213,4 +206,3 @@ Multiple projects build on FTorch in their work.
 Those we are aware of are listed on the
 [use cases page](https://cambridge-iccs.github.io/FTorch/community/case_studies.html)
 in the online documentation.
-Are we missing anyone? Let us know!
