@@ -24,7 +24,7 @@ To cite use of this software please refer to
 - [Installation](#installation)
 - [Usage](#usage)
 - [GPU Support](#gpu-support)
-- [Examples](#examples)
+- [Examples](#example)
 - [License](#license)
 - [Contributions](#contributions)
 - [Authors and Acknowledgment](#authors-and-acknowledgment)
@@ -141,7 +141,7 @@ devices, please see the
 
 ## Examples
 
-Examples of how to use this library are provided in the [examples directory](examples/).  
+Examples of how to use this library are provided in the [examples directory](example/).  
 They demonstrate different functionalities of the code and are provided with
 instructions to modify, build, and run as necessary.
 

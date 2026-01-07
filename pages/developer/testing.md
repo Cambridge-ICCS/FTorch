@@ -98,11 +98,11 @@ New components should come with unit tests written using the pFUnit framework.
 New functionalities should come with integration tests in the form of worked
 examples.
 
-- These should take the form of a new example in the `examples/` directory.
+- These should take the form of a new example in the `example/` directory.
 - In addition to a `CMakeLists.txt` to build the example code there
   should also be a section at the end setting up running of the example
   using CTest.
     - Integration test names should start with `example_`
-    - New examples will also need including in `examples/CMakeLists.txt`
+    - New examples will also need including in `example/CMakeLists.txt`
 - Ensure the documentation on [worked examples](|page|/usage/worked_examples.html) is
   updated accordingly.

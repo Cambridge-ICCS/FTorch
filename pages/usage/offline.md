@@ -54,4 +54,4 @@ your Fortran model so that it uses FTorch syntax to set up appropriate
 [[ftorch(module):torch_tensor(type)]] and [[ftorch(module):torch_model(type)]]
 objects and call the [[ftorch(module):torch_model_forward(subroutine)]]
 subroutine to run the inference. For examples of how to do this, see the
-[examples user guides](|page|/usage/index.html#examples).
+[examples user guides](|page|/usage/index.html#example).
