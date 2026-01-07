@@ -15,7 +15,8 @@ include-dir = [
 
 [build]
 auto-executables = true
-auto-tests = true
+# TODO: pFUnit currently doesn't provide an fpm.toml
+auto-tests = false
 auto-examples = true
 module-naming = false
 
