@@ -37,6 +37,8 @@ permissions: {}
 jobs:
   # This workflow contains a single job called "linting"
   linting:
+    name: linting
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
@@ -48,13 +50,13 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
+      - name: Checkout FTorch repository
         with:
-          persist-credentials: false
-        uses: actions/checkout@v4
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Install Python
-        uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
         with:
           python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
 
@@ -146,10 +148,14 @@ jobs:
   zizmor:
     name: zizmor
     runs-on: ubuntu-latest
+
+    # Terminate the job if it runs for more than 5 minutes
+    timeout-minutes: 5
+
     permissions:
-      security-events: write
+      security-events: write  # We trust the zizmor action with write permissions
     steps:
-      - name: Checkout repository
+      - name: Checkout FTorch repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
