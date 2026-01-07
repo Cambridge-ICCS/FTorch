@@ -14,6 +14,9 @@ date: Last Updated: January 2026
 The following presentations contain information about FTorch and its
 applications:
 
+* **Facilitating machine learning in Fortran using FTorch**<br>
+  [Deutsches Zentrum für Luft- und Raumfahrt (DLR)](https://www.dlr.de/), Munich, Germany - December 2025<br>
+  ([Slides](https://joewallwork.com/pwp/slides/ftorch/2025-12-18_DLR-Seminar/index.html)).
 * **An Overview of the FTorch Project**<br>
   ICCS Journal Club, Cambridge - October 2025<br>
   [Slides](https://jackatkinson.net/slides/ICCS-Seminar-Oct25/) - [Recording](https://www.youtube.com/watch?v=u7np_kUJtIY)
