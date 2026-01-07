@@ -258,7 +258,6 @@ jobs:
             cd build
             ctest --verbose --tests-regex example
           elif [ "${BUILD_SYSTEM}" == "fpm" ]; then
-            # TODO: Would need to rename examples as example for this to work
             fpm run --example
           else
             echo "Unsupported build system ${BUILD_SYSTEM}"

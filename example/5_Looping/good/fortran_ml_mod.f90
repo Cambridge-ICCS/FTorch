@@ -1,4 +1,4 @@
-module ml_mod
+module good_ml_mod
 
   use, intrinsic :: iso_fortran_env, only : sp=>real32
 
@@ -57,4 +57,4 @@ module ml_mod
 
   end subroutine ml_final
 
-end module ml_mod
+end module good_ml_mod
