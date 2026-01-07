@@ -31,3 +31,9 @@ If you make use of FTorch in your work please cite our publication:
 Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.<br>
 <em>Journal of Open Source Software</em>, 10(107), 7602, <a href="https://doi.org/10.21105/joss.07602">https://doi.org/10.21105/joss.07602</a>
 </div>
+
+For feature requests, bug reports, or assistance in using FTorch please get in touch via
+GitHub by either [raising an issue](https://github.com/Cambridge-ICCS/FTorch/issues)
+or [opening an discussion](https://github.com/Cambridge-ICCS/FTorch/discussions).
+
+For general enquiries please contact ICCS via [iccs@maths.cam.ac.uk](mailto:iccs@maths.cam.ac.uk).

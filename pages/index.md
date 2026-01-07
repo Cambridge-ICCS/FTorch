@@ -12,7 +12,7 @@ FTorch is a library for coupling PyTorch machine learning (ML) models to Fortran
 the development of hybrid models that combine high-performance scientific computing with
 modern ML techniques.
 
-It has been used in [multiple scientific projects](|page|/resources/use_cases.html).<br>
+It has been used in [multiple scientific projects](|page|/community/case_studies.html).<br>
 If you make use of FTorch in your work please cite our publication:
 <div style="margin-left: 2em;">
 Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.<br>
@@ -39,5 +39,5 @@ The site also contains detailed API documentation for those using FTorch in proj
 ### External Resources
 
 - [FTorch on GitHub](https://github.com/Cambridge-ICCS/FTorch)
-- [Use Cases](|page|/community/use_cases.html)
+- [Case Studies](|page|/community/case_studies.html)
 - [The LibTorch C++ API documentation](https://pytorch.org/cppdocs/)
