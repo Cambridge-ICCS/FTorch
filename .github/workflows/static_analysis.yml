@@ -50,7 +50,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout repository
+      - name: Checkout FTorch repository
         with:
           persist-credentials: true
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -155,7 +155,7 @@ jobs:
     permissions:
       security-events: write  # We trust the zizmor action with write permissions
     steps:
-      - name: Checkout repository
+      - name: Checkout FTorch repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false

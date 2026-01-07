@@ -61,7 +61,7 @@ jobs:
           version: ${{ matrix.toolchain.version }}
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout repository
+      - name: Checkout FTorch repository
         with:
           persist-credentials: true
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
