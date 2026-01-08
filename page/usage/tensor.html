@@ -1,0 +1,334 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
+    <meta name="author" content="ICCS Cambridge" >
+    <link rel="icon" href="../../favicon.png">
+
+    <title>Tensor API &ndash; FTorch</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>Tensor API</h1>
+    <div class="container p-2 mb-4 bg-light border rounded-3">
+      <div class="row align-items-center justify-content-between">
+        <div class="col">
+          <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Joe Wallwork</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
+          </ul>
+        </div>
+        <div class="col">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Usage</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Tensor API</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="col-3">
+        <div class="card card-body bg-light" id="sidebar-toc">
+          <ul class="nav flex-column align-items">
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html">User Guide</a>
+            </li>
+          </ul>
+          <hr>
+          <nav class="nav nav-pills flex-column">
+              <a class="nav-link" href="../installation/index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../installation/general.html">Installation and Build</a>
+              <a class="nav-link" href="../installation/systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="../installation/gpu.html">GPU Support</a>
+              <a class="nav-link" href="../installation/hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="generic_example.html">Generic Example</a>
+              <a class="nav-link" href="worked_examples.html">Worked Examples</a>
+              <a class="nav-link active disabled" href="tensor.html">Tensor API</a>
+              <a class="nav-link" href="transposing.html">When to transpose data</a>
+              <a class="nav-link" href="offline.html">Offline training</a>
+              <a class="nav-link" href="online.html">Online training</a>
+              <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
+
+                </nav>
+              <a class="nav-link" href="../community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../community/news_archive.html">News archive</a>
+              <a class="nav-link" href="../community/presentations.html">Presentations</a>
+              <a class="nav-link" href="../community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="../community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="../developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
+          </nav>
+        </div>
+      </div>
+
+    <div class="col-9" id='text'>
+      <h2 id="tensor-api-documentation">Tensor API Documentation</h2>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#procedures">Procedures</a><ul>
+<li><a href="#constructors">Constructors</a></li>
+<li><a href="#interrogation">Interrogation</a></li>
+<li><a href="#deallocation">Deallocation</a></li>
+<li><a href="#manipulation">Manipulation</a></li>
+<li><a href="#operator-overloading">Operator Overloading</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="overview">Overview</h3>
+<p>FTorch provides a <a href="../../type/torch_tensor.html">torch_tensor</a> derived type, which exposes the
+functionality of the <code>torch::Tensor</code> C++ class. The interface is designed to be familiar to
+Fortran programmers, whilst retaining strong similarity with <code>torch::Tensor</code> and
+the <code>torch.Tensor</code> Python class.</p>
+<p>Under the hood, the <a href="../../type/torch_tensor.html">torch_tensor</a> type holds a pointer to a
+<code>torch::Tensor</code> object in C++ (implemented using <code>c_ptr</code> from the <code>iso_c_binding</code>
+intrinsic module). This allows us to avoid unnecessary data copies between C++ and
+Fortran.</p>
+<h3 id="procedures">Procedures</h3>
+<h4 id="constructors">Constructors</h4>
+<p>We provide several subroutines for constructing <a href="../../type/torch_tensor.html">torch_tensor</a>
+objects. These include:</p>
+<ul>
+<li><a href="../../proc/torch_tensor_empty.html">torch_tensor_empty</a> which allocates memory for the
+  <a href="../../type/torch_tensor.html">torch_tensor</a> but does not set any values.</li>
+<li><a href="../../proc/torch_tensor_zeros.html">torch_tensor_zeros</a> which creates a
+  <a href="../../type/torch_tensor.html">torch_tensor</a> whose values are uniformly zero.</li>
+<li><a href="../../proc/torch_tensor_ones.html">torch_tensor_ones</a> which creates a
+  <a href="../../type/torch_tensor.html">torch_tensor</a> whose values are
+  uniformly one.</li>
+<li><a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> which allows the user to create
+  a <a href="../../type/torch_tensor.html">torch_tensor</a> with the same rank, shape, and data type as a
+  given Fortran array. Note that the data is <em>not</em> copied - the tensor data points to the
+  Fortran array, meaning the array must have been declared with the <code>target</code> property.
+  The array will continue to be pointed to even when operations are applied to the
+  tensor, so this subroutine can be used 'in advance' to set up an array for
+  outputting data. <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> may be called
+  with or without the <code>layout</code> argument - an array which specifies the order in which
+  indices should be looped over. The default <code>layout</code> is <code>[1,2,...,n]</code> implies that data
+  will be read into the same indices by Torch. (See the
+  <a href="transposing.html">transposing user guide page</a> for more details.</li>
+</ul>
+<p>It is <em>compulsory</em> to call one of the constructors before interacting with it in
+any of the ways described in the following. Each of the constructors sets the
+pointer attribute of the <a href="../../type/torch_tensor.html">torch_tensor</a>; without this being set,
+most of the other operations are meaningless.</p>
+<h4 id="interrogation">Interrogation</h4>
+<p>We provide several subroutines for interrogating <a href="../../type/torch_tensor.html">torch_tensor</a>
+objects. These include:</p>
+<ul>
+<li><a href="../../proc/torch_tensor_get_rank.html">torch_tensor_get_rank</a> which determines the rank
+  (i.e., dimensionality) of the tensor.</li>
+<li><a href="../../proc/torch_tensor_get_shape.html">torch_tensor_get_shape</a> which determines the shape
+  (i.e., extent in each dimension) of the tensor.</li>
+<li><a href="../../proc/torch_tensor_get_dtype.html">torch_tensor_get_dtype</a> which determines the data type
+  of the tensor in terms of the enums <code>torch_kInt8</code>, <code>torch_kFloat32</code>, etc.</li>
+<li><a href="../../proc/torch_tensor_get_device_type.html">torch_tensor_get_device_type</a>, which determines the device
+  type that the tensor resides on in terms of the enums <code>torch_kCPU</code>, <code>torch_kCUDA</code>,
+  <code>torch_kXPU</code>, etc.</li>
+<li><a href="../../proc/torch_tensor_get_device_index.html">torch_tensor_get_device_index</a>, which determines the
+  index of the device that the tensor resides on as an integer.
+  For a CPU device, this index should be set to <code>-1</code> (the default).
+  For GPU devices, the index should be non-negative (defaulting to <code>0</code>).</li>
+</ul>
+<p>Procedures for interrogation are implemented as methods as well as stand-alone
+procedures. For example, <code>tensor%get_rank</code> can be used in place of
+<a href="../../proc/torch_tensor_get_rank.html">torch_tensor_get_rank</a>, omitting the first argument
+(which would be the tensor itself). The naming pattern is similar for the other methods
+(simply drop the preceding <code>torch_tensor_</code>).</p>
+<h4 id="deallocation">Deallocation</h4>
+<p>We provide a subroutine for deallocating the memory associated with a
+<a href="../../type/torch_tensor.html">torch_tensor</a> object: <a href="../../interface/torch_delete.html">torch_delete</a>.
+An interface is provided such that this can also be applied to arrays of tensors.
+Calling this subroutine manually is optional as it is called as a destructor when a
+<a href="../../type/torch_tensor.html">torch_tensor</a> goes out of scope.</p>
+<h4 id="manipulation">Manipulation</h4>
+<p>We provide the following subroutines for manipulating the data values associated
+with a <a href="../../type/torch_tensor.html">torch_tensor</a> object:</p>
+<ul>
+<li><a href="../../proc/torch_tensor_zero.html">torch_tensor_zero</a> (aliased as class method <code>torch_tensor%zero</code>), which
+  sets all the data entries associated with a tensor to zero.</li>
+</ul>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>For a concrete example of how to construct, interrogate, manipulate, and delete
+Torch tensors, see the
+<a href="worked_examples.html">tensor manipulation worked example</a>.</p>
+</div>
+<h4 id="operator-overloading">Operator overloading</h4>
+<p>Mathematical operators involving Tensors are overloaded, so that we can compute
+expressions involving outputs from one or more ML models.</p>
+<p>Whilst it's possible to import such functionality with a bare</p>
+<div class="codehilite"><pre><span></span><code><span class="k">use </span><span class="n">ftorch</span>
+</code></pre></div>
+
+<p>statement, the best practice is to import specifically the operators that you
+wish to use. Note that the assignment operator <code>=</code> has a slightly different
+notation:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">use</span><span class="w"> </span><span class="n">ftorch</span><span class="p">,</span><span class="w"> </span><span class="nl">only:</span><span class="w"> </span><span class="n">assignment</span><span class="p">(</span><span class="o">=</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">+</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">-</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span>
+<span class="w">  </span><span class="n">operator</span><span class="p">(</span><span class="o">/</span><span class="p">),</span><span class="w"> </span><span class="n">operator</span><span class="p">(</span><span class="o">**</span><span class="p">)</span>
+</code></pre></div>
+
+<h5 id="overloaded-assignment-operator">Overloaded assignment operator</h5>
+<p>Particular care should be taken with the overloaded assignment operator.
+Whenever you execute code involving <a href="../../type/torch_tensor.html">torch_tensor</a>s on each side
+of an equals sign, the overloaded assignment operator should be triggered.
+As such, if you aren't using the bare <code>use ftorch</code> import then you should ensure you
+specify <code>use ftorch, only: assignment(=)</code> (as well as any other module members you
+require).</p>
+<p>For a straightforward assignment of two <a href="../../type/torch_tensor.html">torch_tensor</a>s
+<code>a</code> and <code>b</code>,</p>
+<div class="codehilite"><pre><span></span><code><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span>
+</code></pre></div>
+
+<p>the overloaded assignment operator is called once.</p>
+<p>For overloaded operators the situation is more complex. Consider the overloaded
+addition operator (the same applies for the rest). When we execute the line</p>
+<div class="codehilite"><pre><span></span><code><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+</code></pre></div>
+
+<p>the addition is evaluated first. It is implemented as a Fortran function and its
+return value is an <em>intermediate</em> tensor. The setup is such that this is created
+using <a href="../../proc/torch_tensor_empty.html">torch_tensor_empty</a> under the hood
+(inheriting all the properties of the tensors being added<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>).
+Following this, the intermediate tensor is assigned to <code>c</code>.
+Finally, the finalizer for <a href="../../type/torch_tensor.html">torch_tensor</a> is called for the
+intermediate tensor because it goes out of scope.</p>
+<p>Similarly as above, in the case where you have some function <code>func</code> that returns
+a <a href="../../type/torch_tensor.html">torch_tensor</a>, an intermediate
+<a href="../../type/torch_tensor.html">torch_tensor</a> will be created, assigned, and
+destroyed because the call will have the form</p>
+<div class="codehilite"><pre><span></span><code><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">func</span><span class="p">()</span>
+</code></pre></div>
+
+<h4 id="other-operators-acting-on-tensors">Other operators acting on tensors</h4>
+<p>We have also exposed the operators for taking the sum or mean over the entries
+in a tensor, which can be achieved with the subroutines
+<a href="../../proc/torch_tensor_sum.html">torch_tensor_sum</a> and
+<a href="../../proc/torch_tensor_mean.html">torch_tensor_mean</a>, respectively.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>For a concrete example of how to compute mathematical expressions involving Torch
+tensors, see the <a href="worked_examples.html">autograd worked example</a>.</p>
+</div>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Note: In most cases, these should be the same, so that the operator makes
+sense. In the case of the <code>requires_grad</code> property, the values might differ, and
+the result should be the logical <code>.and.</code> of the two values.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+    </div>
+  </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              FTorch
+ was developed by ICCS Cambridge<br>              &copy; 2026 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

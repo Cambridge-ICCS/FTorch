@@ -1,0 +1,400 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
+    <meta name="author" content="ICCS Cambridge" >
+    <link rel="icon" href="../../favicon.png">
+
+    <title>Installation and Build &ndash; FTorch</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>Installation and Build</h1>
+    <div class="container p-2 mb-4 bg-light border rounded-3">
+      <div class="row align-items-center justify-content-between">
+        <div class="col">
+          <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
+          </ul>
+        </div>
+        <div class="col">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Installation</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Installation and Build</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="col-3">
+        <div class="card card-body bg-light" id="sidebar-toc">
+          <ul class="nav flex-column align-items">
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html">User Guide</a>
+            </li>
+          </ul>
+          <hr>
+          <nav class="nav nav-pills flex-column">
+              <a class="nav-link" href="index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link active disabled" href="general.html">Installation and Build</a>
+              <a class="nav-link" href="systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="gpu.html">GPU Support</a>
+              <a class="nav-link" href="hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="../usage/index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../usage/generic_example.html">Generic Example</a>
+              <a class="nav-link" href="../usage/worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="../usage/tensor.html">Tensor API</a>
+              <a class="nav-link" href="../usage/transposing.html">When to transpose data</a>
+              <a class="nav-link" href="../usage/offline.html">Offline training</a>
+              <a class="nav-link" href="../usage/online.html">Online training</a>
+              <a class="nav-link" href="../usage/troubleshooting.html">Troubleshooting</a>
+
+                </nav>
+              <a class="nav-link" href="../community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../community/news_archive.html">News archive</a>
+              <a class="nav-link" href="../community/presentations.html">Presentations</a>
+              <a class="nav-link" href="../community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="../community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="../developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
+          </nav>
+        </div>
+      </div>
+
+    <div class="col-9" id='text'>
+      <h2 id="installation-and-build">Installation and Build</h2>
+<p>Installation of FTorch is performed using the CMake build system.
+This is controlled by the <code>CMakeLists.txt</code> file in the root FTorch directory.</p>
+<ul>
+<li><a href="#dependencies">Dependencies</a></li>
+<li><a href="#basic-installation-instructions">Basic Installation Instructions</a></li>
+<li><a href="#cmake-build-options">CMake Build Options</a></li>
+<li><a href="#building-ftorch-as-a-shared-vs-static-library">Building FTorch as a Shared vs. Static library</a></li>
+</ul>
+<h3 id="dependencies">Dependencies</h3>
+<p>To install FTorch requires the following to be installed on the system:</p>
+<ul>
+<li><a href="https://cmake.org/">CMake</a> &gt;= 3.15</li>
+<li>Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers</li>
+<li><a href="https://pytorch.org/cppdocs/installing.html">LibTorch</a><sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> or <a href="https://pytorch.org/">PyTorch</a></li>
+</ul>
+<h4 id="additional-dependencies-of-the-test-suite">Additional dependencies of the test suite</h4>
+<p>FTorch's test suite has some additional dependencies.</p>
+<ul>
+<li>You will also need to install the unit testing framework
+  <a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a>.</li>
+<li>FTorch's test suite requires that <a href="https://pytorch.org/">PyTorch</a> has been
+  installed, as opposed to LibTorch. We recommend installing <code>torchvision</code> in
+  the same command (e.g., <code>pip install torch torchvision</code>).<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup> Doing so
+  ensures that <code>torch</code> and <code>torchvision</code> are configured in the same way.</li>
+<li>Other Python modules are installed automatically upon building the tests.</li>
+</ul>
+<h3 id="basic-installation-instructions">Basic Installation Instructions</h3>
+<p>The following instructions assume a Unix system.
+For installation on Windows, Apple Silicon, Conda Environments, or Codespaces refer to
+the <a href="../../pageinstallation/systems.html">system-specific guidance</a> as the process may differ.</p>
+<p>To build the library, first clone it from GitHub to your local machine using either ssh:</p>
+<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:Cambridge-ICCS/FTorch.git
+</code></pre></div>
+
+<p>or https:</p>
+<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Cambridge-ICCS/FTorch.git
+</code></pre></div>
+
+<p>Then navigate to the FTorch directory and create a build directory:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>FTorch
+mkdir<span class="w"> </span>build
+<span class="nb">cd</span><span class="w"> </span>build
+</code></pre></div>
+
+<p>From here invoke CMake with the <code>Release</code> build type option, plus any other options as
+required from the <a href="#cmake-build-options">table below</a>.
+Note: you will likely <em>need</em> to provide at least the <code>CMAKE_PREFIX_PATH</code> flag
+plus any other options to enforce a consistent build on your machine:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release
+</code></pre></div>
+
+<p>Finally build and install the library using:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>install
+</code></pre></div>
+
+<p>or, if you want to separate these steps:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.
+cmake<span class="w"> </span>--install<span class="w"> </span>.
+</code></pre></div>
+
+<p>Note: <em>If using a machine capable of running multiple jobs this can be sped up by
+adding <code>--parallel [&lt;jobs&gt;]</code> or <code>-j [&lt;jobs&gt;]</code> to the cmake build command.
+See the <a href="https://cmake.org/cmake/help/latest/manual/cmake.1.html#cmdoption-cmake-build-j">CMake documentation</a>
+for more information.</em></p>
+<p>Installation will place the following directories at the install location:</p>
+<ul>
+<li><code>include/</code> - contains C header and Fortran mod files</li>
+<li><code>lib/</code> - contains <code>cmake</code> directory and <code>.so</code>/<code>.a</code> files<br>
+  Note: <em>Depending on your system and architecture <code>lib</code> may be <code>lib64</code>, and 
+  you may have <code>.dll</code> files or similar.</em></li>
+</ul>
+<h3 id="cmake-build-options">CMake build options</h3>
+<p>The following CMake flags are available and can be passed as arguments through <code>-D&lt;Option&gt;=&lt;Value&gt;</code>
+in order to tailor your build:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html"><code>CMAKE_Fortran_COMPILER</code></a></td>
+<td><code>gfortran</code> / <code>ifx</code> / <code>ifort</code></td>
+<td>Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup id="fnref3:3"><a class="footnote-ref" href="#fn:3">3</a></sup></td>
+</tr>
+<tr>
+<td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html"><code>CMAKE_C_COMPILER</code></a></td>
+<td><code>gcc</code> / <code>icx</code> / <code>icc</code></td>
+<td>Specify a C compiler to build the library with.<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup></td>
+</tr>
+<tr>
+<td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html"><code>CMAKE_CXX_COMPILER</code></a></td>
+<td><code>g++</code> / <code>icx</code> / <code>icpc</code></td>
+<td>Specify a C++ compiler to build the library with.<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></td>
+</tr>
+<tr>
+<td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html"><code>CMAKE_PREFIX_PATH</code></a></td>
+<td><code>&lt;/path/to/libTorch/&gt;</code></td>
+<td>Location of Torch installation<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup></td>
+</tr>
+<tr>
+<td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html"><code>CMAKE_INSTALL_PREFIX</code></a></td>
+<td><code>&lt;/path/to/install/lib/at/&gt;</code></td>
+<td>Location at which the library files should be installed. By default this is <code>/usr/local</code></td>
+</tr>
+<tr>
+<td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html"><code>CMAKE_BUILD_TYPE</code></a></td>
+<td><code>Release</code> / <code>Debug</code></td>
+<td>Specifies build type. The default is <code>Debug</code>, use <code>Release</code> for production code</td>
+</tr>
+<tr>
+<td><code>CMAKE_BUILD_TESTS</code></td>
+<td><code>TRUE</code> / <code>FALSE</code></td>
+<td>Specifies whether to compile FTorch's <a href="../developer/testing.html">test suite</a> as part of the build.<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup></td>
+</tr>
+<tr>
+<td><code>GPU_DEVICE</code></td>
+<td><code>NONE</code> / <code>CUDA</code> / <code>HIP</code> / <code>XPU</code> / <code>MPS</code></td>
+<td>Specifies the target GPU architecture (if any)<sup id="fnref:6"><a class="footnote-ref" href="#fn:6">6</a></sup></td>
+</tr>
+<tr>
+<td><code>MULTI_GPU</code></td>
+<td><code>ON</code> / <code>OFF</code></td>
+<td>Specifies whether to build the tests that involve multiple GPU devices (<code>ON</code> by default if <code>CMAKE_BUILD_TESTS</code> and <code>GPU_DEVICE</code> are set).</td>
+</tr>
+</tbody>
+</table>
+<p>For example, to build using the GNU compilers and install to <code>$HOME/FTorchbin/</code>
+we would need to run:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span><span class="se">\</span>
+-DCMAKE_Fortran_COMPILER<span class="o">=</span>gfortran<span class="w"> </span><span class="se">\</span>
+-DCMAKE_C_COMPILER<span class="o">=</span>gcc<span class="w"> </span><span class="se">\</span>
+-DCMAKE_CXX_COMPILER<span class="o">=</span>g++<span class="w"> </span><span class="se">\</span>
+-DCMAKE_PREFIX_PATH<span class="o">=</span>/path/to/venv/lib/python3.xx/site-packages/torch/<span class="w"> </span><span class="se">\</span>
+-DCMAKE_INSTALL_PREFIX<span class="o">=</span>~/FTorchbin
+</code></pre></div>
+
+<p>Once this completes you should be able to generate the code and install using:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>install
+</code></pre></div>
+
+<h3 id="building-ftorch-as-a-shared-vs-static-library">Building FTorch as a Shared vs. Static library</h3>
+<p>FTorch can be built as either a shared or static library depending
+on how you want to link it with your own application.</p>
+<p>By default, FTorch builds as a shared library:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>-DBUILD_SHARED_LIBS<span class="o">=</span>ON<span class="w"> </span>...
+</code></pre></div>
+
+<p>This configuration dynamically links FTorch with its dependencies (including
+LibTorch) at runtime. A shared build is recommended for <em>most</em> users because:</p>
+<ul>
+<li>Multiple programs can use the same FTorch installation.</li>
+<li>You can update FTorch without recompiling dependent executables.</li>
+</ul>
+<p>If you prefer to include FTorch directly inside your executable, you can build
+it statically:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>-DBUILD_SHARED_LIBS<span class="o">=</span>OFF<span class="w"> </span>...
+</code></pre></div>
+
+<p>A static build links all FTorch code directly into your application executable.
+This can be useful when:</p>
+<ul>
+<li>You want a single self-contained executable.</li>
+<li>You are installing FTorch on an HPC system and intend to use it in an
+application for which you want maximum reproducibility (i.e., the FTorch
+version embedded in your application is "frozen").</li>
+</ul>
+<p>To this second point on building FTorch as a static library, a brief
+justification on applications for which this may be relevant is covered
+<a href="https://github.com/Cambridge-ICCS/FTorch/pull/448#issue-3544429539">here</a>.</p>
+<p>For more general details on shared and static libraries as well as their
+trade-offs, see <a href="https://medium.com/@mohitk3000/c-libraries-unpacked-shared-libraries-vs-static-libraries-44764b85056a">shared vs. static
+libraries</a>,
+<a href="https://ro-che.info/articles/2016-09-09-static-binaries-scientific-computing">a case for static
+linking</a>,
+and <a href="https://www.akkadia.org/drepper/no_static_linking.html">static linking considered
+harmful</a></p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>For discussion on how to build and link another code to the FTorch library see the
+<a href="../usage/generic_example.html">generic usage example</a>, and the detailed discussion
+on the <a href="hpc.html">HPC page</a>.</p>
+</div>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p><em>The minimal example provided downloads the CPU-only Linux Nightly binary.
+<a href="https://pytorch.org/get-started/locally/">Alternative versions</a> to match hardware
+may be required.</em>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><em>For more details, see <a href="https://pytorch.org/get-started/locally/">here</a>.</em>&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p><em>This may need to be the full path to the compiler if CMake
+cannot locate it by default.</em>&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p><em>The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.<br>
+If Torch has been <a href="https://pytorch.org/cppdocs/installing.html">installed as LibTorch</a>
+then this should be the absolute path to the unzipped LibTorch distribution.
+If Torch has been installed as PyTorch in a Python <a href="https://docs.python.org/3/library/venv.html">venv (virtual environment)</a>,
+e.g. with <code>pip install torch</code>, then this should be<br>
+<code>&lt;/path/to/venv/&gt;lib/python&lt;3.xx&gt;/site-packages/torch/</code>.<br>
+You can find the location of your torch install by importing torch from your Python environment (<code>import torch</code>) and running <code>print(torch.__file__)</code></em>&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p><em>To run the tests, your system's MPI must support <code>use mpi_f08</code>.<br>
+Note that <code>OpenMPI &lt; v2.0</code> and <code>MPICH &lt; v3.1</code> do not support this module.</em>&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:6">
+<p><em>This must match the installed PyTorch/Libtorch library. When installing with pip, the <code>index-url</code> flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
+<code>pip install torch --index-url https://download.pytorch.org/whl/cpu</code>
+URLs for alternative versions can be found <a href="https://pytorch.org/get-started/locally/">here</a>.</em>&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+    </div>
+  </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              FTorch
+ was developed by ICCS Cambridge<br>              &copy; 2026 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

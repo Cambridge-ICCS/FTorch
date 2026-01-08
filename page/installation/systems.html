@@ -6,11 +6,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="A library for coupling (Py)Torch machine learning models to Fortran">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
     <meta name="author" content="ICCS Cambridge" >
-    <link rel="icon" href="../favicon.png">
+    <link rel="icon" href="../../favicon.png">
 
-    <title>Troubleshooting &ndash; FTorch</title>
+    <title>System-Specific Guidance &ndash; FTorch</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -18,12 +18,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- Font Awesome -->
-    <link href="../css/fontawesome.min.css" rel="stylesheet">
-    <link href="../css/brands.min.css" rel="stylesheet">
-    <link href="../css/regular.min.css" rel="stylesheet">
-    <link href="../css/solid.min.css" rel="stylesheet">
-    <link href="../css/v4-font-face.min.css" rel="stylesheet">
-    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
     <!-- MathJax -->
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
@@ -33,9 +33,10 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
             integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
     <!-- Other scripts and stylesheets -->
-    <link href="../css/local.css" rel="stylesheet">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <script src="../js/svg-pan-zoom.min.js"></script>
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -44,7 +45,7 @@
     <div class="container-fluid mb-sm-4 mb-xl-2">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="../index.html">FTorch </a>
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
           <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
                   aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon">
@@ -52,22 +53,22 @@
 
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="index.html">User Guide</a></li>
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
                   </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
                 </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
-                <form action="../search.html" role="search" class="ms-auto">
+                <form action="../../search.html" role="search" class="ms-auto">
                   <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
                 </form>
               </div>
@@ -78,18 +79,21 @@
 
     <div class="container">
   <div class="row">
-    <h1>Troubleshooting</h1>
+    <h1>System-Specific Guidance</h1>
     <div class="container p-2 mb-4 bg-light border rounded-3">
       <div class="row align-items-center justify-content-between">
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
           </ul>
         </div>
         <div class="col">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='index.html'>User Guide</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Troubleshooting</li>
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Installation</a></li>
+              <li class="breadcrumb-item active" aria-current="page">System-Specific Guidance</li>
             </ol>
           </nav>
         </div>
@@ -102,82 +106,89 @@
         <div class="card card-body bg-light" id="sidebar-toc">
           <ul class="nav flex-column align-items">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">User Guide</a>
+              <a class="nav-link" href="../index.html">User Guide</a>
             </li>
           </ul>
           <hr>
           <nav class="nav nav-pills flex-column">
-              <a class="nav-link" href="LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="archive.html">News archive</a>
-              <a class="nav-link" href="changelog.html">FTorch Changelog</a>
-              <a class="nav-link" href="cmake.html">Installation and Build Process</a>
-              <a class="nav-link" href="developer.html">Developer Guide</a>
-              <a class="nav-link" href="examples.html">Examples</a>
+              <a class="nav-link" href="index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="general.html">Installation and Build</a>
+              <a class="nav-link active disabled" href="systems.html">System-Specific Guidance</a>
               <a class="nav-link" href="gpu.html">GPU Support</a>
-              <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
-              <a class="nav-link" href="offline.html">Offline training</a>
-              <a class="nav-link" href="online.html">Online training</a>
-              <a class="nav-link" href="presentations.html">Presentations</a>
-              <a class="nav-link" href="tensor.html">Tensor API</a>
-              <a class="nav-link" href="testing.html">FTorch test suite</a>
-              <a class="nav-link" href="transposing.html">When to transpose data</a>
-              <a class="nav-link active disabled" href="troubleshooting.html">Troubleshooting</a>
-              <a class="nav-link" href="updates.html">Recent API Changes</a>
+              <a class="nav-link" href="hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="../usage/index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../usage/generic_example.html">Generic Example</a>
+              <a class="nav-link" href="../usage/worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="../usage/tensor.html">Tensor API</a>
+              <a class="nav-link" href="../usage/transposing.html">When to transpose data</a>
+              <a class="nav-link" href="../usage/offline.html">Offline training</a>
+              <a class="nav-link" href="../usage/online.html">Online training</a>
+              <a class="nav-link" href="../usage/troubleshooting.html">Troubleshooting</a>
+
+                </nav>
+              <a class="nav-link" href="../community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../community/news_archive.html">News archive</a>
+              <a class="nav-link" href="../community/presentations.html">Presentations</a>
+              <a class="nav-link" href="../community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="../community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="../developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
           </nav>
         </div>
       </div>
 
     <div class="col-9" id='text'>
-      <p>If you are experiencing problems building or using FTorch please see below for guidance on common problems.</p>
-<div class="toc">
+      <h2 id="system-specific-guidance">System-Specific Guidance</h2>
 <ul>
-<li><a href="#windows">Windows</a><ul>
-<li><a href="#visual-studio">Visual Studio</a></li>
-<li><a href="#mingw">MinGW</a></li>
-</ul>
-</li>
+<li><a href="#windows">Windows</a></li>
 <li><a href="#apple-silicon">Apple Silicon</a></li>
-<li><a href="#faq">FAQ</a><ul>
-<li><a href="#why-are-inputsoutputs-tofrom-torch-models-arrays">Why are inputs/outputs to/from torch models arrays?</a></li>
-<li><a href="#common-sources-of-segmentation-faults">Common sources of segmentation faults</a><ul>
-<li><a href="#1-missing-import-for-overloaded-assignment-operator">1. Missing import for overloaded assignment operator</a></li>
+<li><a href="#conda">Conda</a></li>
+<li><a href="#github-codespace">GitHub Codespace</a></li>
 </ul>
-</li>
-<li><a href="#do-i-need-to-set-torchinference_mode-torchno_grad-or-torcheval-somewhere-like-in-pytorch">Do I need to set torch.inference_mode(), torch.no_grad(), or torch.eval() somewhere like in PyTorch?</a></li>
-<li><a href="#how-do-i-compile-an-int64-version-of-ftorch-for-large-tensors">How do I compile an int64 version of ftorch for large tensors?</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<h2 id="windows">Windows</h2>
+<h3 id="windows">Windows</h3>
 <p>If possible we recommend using the <a href="https://learn.microsoft.com/en-us/windows/wsl/">Windows Subsystem for Linux</a> (WSL) to build
 the library. In this case the build process is the same as for a Linux environment.</p>
-<p>If you need to build in native Windows please read the following information:</p>
-<h3 id="visual-studio">Visual Studio</h3>
-<p>It is possible to build using Visual Studio and the Intel Fortran Compiler. In this case you must install the following:</p>
+<p>To build in native Windows using Visual Studio and the Intel Fortran resources the following additional dependencies are required:</p>
 <ul>
 <li><a href="https://visualstudio.microsoft.com/">Visual Studio</a> ensuring C++ tools are selected and installed.</li>
 <li><a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html">Intel OneAPI Basetoolkit</a></li>
 <li><a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit.html">Intel OneAPI HPC toolkit</a> ensuring that the Intel Fortran compiler and VS integration is selected.</li>
 </ul>
-<p>You will then need to load the intel Fortran compilers using <code>setvars.bat</code> which is found in the Intel compiler install
-directory (see the <a href="https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/use-the-setvars-script-with-windows.html">intel
+<p>Note that LibTorch is <em>not</em> supported for the GNU Fortran compiler with MinGW.</p>
+<h4 id="installation">Installation</h4>
+<p>Load the Intel Fortran compilers using <code>setvars.bat</code> which is found in the Intel compiler install
+directory (see the <a href="https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/use-the-setvars-script-with-windows.html">Intel
 docs</a>)
-for more details.<br></p>
+for more details.</p>
 <p>From <code>cmd</code> this can be done with:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">call</span><span class="w"> </span><span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
 </code></pre></div>
 
-<p>Finally you will need to add <code>-G "NMake Makefiles"</code> to the <code>cmake</code> command in the
-<a href="cmake.html">regular install instructions</a>.<br>
-So the basic command to build from <code>cmd</code> becomes:</p>
+<p>FTorch can then be built according to the <a href="general.html">regular CMake instructions</a>,
+with the addition of <code>-G "NMake Makefiles"</code>.</p>
+<p>So the basic command to build from <code>cmd</code> becomes:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\&lt;path-to-libtorch-download&gt;\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">build</span><span class="w"> </span><span class="o">.</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">install</span><span class="w"> </span><span class="o">.</span>
 </code></pre></div>
 
+<blockquote>
+<p>Note: <em>In a Windows environment administrator privileges are required for the default install location.</em></p>
+</blockquote>
 <p>The following is an example <code>cmd</code> script that installs FTorch and runs the integration tests. It assumes you have already
-install <code>cmake</code>, <code>git</code>, the intel compilers and visual studio.</p>
+installed CMake, git, the Intel compilers, and Visual Studio.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">rem</span><span class="w"> </span><span class="n">disable</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">now</span>
 <span class="n">ECHO</span><span class="w"> </span><span class="n">ON</span>
 
@@ -230,7 +241,7 @@ install <code>cmake</code>, <code>git</code>, the intel compilers and visual stu
 <span class="k">if</span><span class="w"> </span><span class="o">%</span><span class="n">errorlevel</span><span class="o">%</span><span class="w"> </span><span class="n">neq</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">exit</span><span class="w"> </span><span class="o">/</span><span class="n">b</span><span class="w"> </span><span class="o">%</span><span class="n">errorlevel</span><span class="o">%</span>
 </code></pre></div>
 
-<p>We would also recommend Windows users to review the Windows CI workflow (<code>.github/workflows/test_suite_windows.yml</code>) for more
+<p>We recommend Windows users review the Windows CI workflow (<code>.github/workflows/test_suite_windows.yml</code>) for more
 information, as this provides another example of how to build and run FTorch and its integration tests.</p>
 <p>If using powershell the setvars and build commands become:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">cmd</span><span class="w"> </span><span class="o">/</span><span class="n">k</span><span class="w"> </span><span class="s1">&#39;&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot; &amp;&amp; powershell&#39;</span>
@@ -239,69 +250,22 @@ information, as this provides another example of how to build and run FTorch and
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">install</span><span class="w"> </span><span class="o">.</span>
 </code></pre></div>
 
-<h3 id="mingw">MinGW</h3>
-<p>It may be tempting to build on Windows using MinGW.
-However, <a href="https://github.com/pytorch/pytorch/issues/15099">LibTorch does not currently support MinGW</a>.
-Instead please build using Visual Studio and the intel Fortran compiler (ifort) as
-detailed in the project README.</p>
-<h2 id="apple-silicon">Apple Silicon</h2>
-<p>At the time of writing, LibTorch is currently only officially available for x86
-architectures (according to <a href="https://pytorch.org/">pytorch.org</a>).
-However, the version of PyTorch provided by pip install provides an ARM binary
-for LibTorch which works on Apple Silicon.
-Therefore you should <code>pip install torch</code> in this situation and follow the guidance
-on locating Torch within a virtual environment (venv) for CMake.</p>
-<h2 id="faq">FAQ</h2>
-<h3 id="why-are-inputsoutputs-tofrom-torch-models-arrays">Why are inputs/outputs to/from torch models arrays?</h3>
-<p>The reason input and output tensors to/from <a href="../proc/torch_model_forward.html">torch_model_forward</a> are
-contained in arrays is because it is possible to pass multiple input tensors to
-the <code>forward()</code> method of a torch net, and it is possible for the net to return
-multiple output arrays.<br>
-The nature of Fortran means that it is not possible to set an arbitrary number
-of inputs to the <code>torch_model_forward</code> subroutine, so instead we use a single
-array of input tensors which <em>can</em> have an arbitrary length. Similarly, a single
-array of output tensors is used.</p>
-<p>Note that this does not refer to batching data.
-This should be done in the same way as in Torch; by extending the dimensionality of
-the input tensors.</p>
-<h3 id="common-sources-of-segmentation-faults">Common sources of segmentation faults</h3>
-<h4 id="1-missing-import-for-overloaded-assignment-operator">1. Missing import for overloaded assignment operator</h4>
-<p>Whenever you execute code involving <code>torch_tensor</code>s on each side of an equals
-sign, the overloaded assignment operator should be triggered. As such, if you
-aren't using the bare <code>use ftorch</code> import then you should ensure you specify
-<code>use ftorch, only: assignment(=)</code> (as well as any other module members you
-require). See the <a href="tensor.html">tensor documentation</a> for more details.</p>
-<h3 id="do-i-need-to-set-torchinference_mode-torchno_grad-or-torcheval-somewhere-like-in-pytorch">Do I need to set <code>torch.inference_mode()</code>, <code>torch.no_grad()</code>, or <code>torch.eval()</code> somewhere like in PyTorch?</h3>
-<p>By default we disable gradient calculations for tensors and models and place models in
-evaluation mode for efficiency.
-These can be adjusted using the <code>requires_grad</code> and <code>is_training</code> optional arguments
-in the Fortran interface. See the <a href="lists/procedures.html">API procedures documentation</a>
-for details.</p>
-<h3 id="how-do-i-compile-an-int64-version-of-ftorch-for-large-tensors">How do I compile an int64 version of <code>ftorch</code> for large tensors?</h3>
-<p>Currently FTorch represents the number of elements in an array dimension using
-32-bit integers. For most users this will be more than enough, but if your code
-uses large tensors (where large means more than 2,147,483,647 elements
-in any one dimension (the maximum value of a 32-bit integer)), you may you may
-need to compile <code>ftorch</code> with 64-bit integers. If you do not, you may receive a
-compile time error like the following:</p>
-<div class="codehilite"><pre><span></span><code>   39 |   call torch_tensor_from_array(tensor, in_data, tensor_layout, torch_kCPU)
-      |                                                                          1
-Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
-</code></pre></div>
-
-<p>To fix this, we can build ftorch with 64-bit integers. We need to modify this
-line in <code>src/ftorch.fypp</code></p>
-<div class="codehilite"><pre><span></span><code><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ftorch_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">int32</span><span class="w"> </span><span class="c">! set integer size for FTorch library</span>
-</code></pre></div>
-
-<p>We can use 64-bit integers by changing the above line to this</p>
-<div class="codehilite"><pre><span></span><code><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ftorch_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">int64</span><span class="w"> </span><span class="c">! set integer size for FTorch library</span>
-</code></pre></div>
-
-<p>Finally, you will need to run <code>fypp</code> (<code>fypp</code> is not a core dependency, so you
-may need to install this separately) e.g.,</p>
-<div class="codehilite"><pre><span></span><code>fypp<span class="w"> </span>src/ftorch.fypp<span class="w"> </span>src/ftorch.F90
-</code></pre></div>
+<h3 id="apple-silicon">Apple Silicon</h3>
+<p>FTorch can successfully be built on Apple Silicon machines, including utilising the MPS backend,
+following the <a href="general.html">regular CMake instructions</a>.</p>
+<p>To leverage MPS include the <code>-DGPU_DEVICE=MPS</code>
+<a href="general.html#cmake-build-options">CMake flag</a> at build time.</p>
+<h3 id="conda">Conda</h3>
+<p>Conda is not our preferred approach for managing dependencies, but for users who want
+an environment to build FTorch in we provide guidance and environment files in a
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/conda"><code>conda/</code></a> directory.
+Note that these environments are not minimal and will install Python, PyTorch,
+and other modules required for running the tests and examples.</p>
+<h3 id="github-codespace">GitHub Codespace</h3>
+<p>It is possible to try FTorch through an interactive browser session without
+installing anything locally using GitHub Codespace.
+Full instructions are in the
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/codespace"><code>codespace/</code></a> directory.</p>
     </div>
   </div>
       <hr>

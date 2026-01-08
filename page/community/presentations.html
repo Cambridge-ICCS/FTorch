@@ -6,9 +6,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="A library for coupling (Py)Torch machine learning models to Fortran">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
     <meta name="author" content="ICCS Cambridge" >
-    <link rel="icon" href="../favicon.png">
+    <link rel="icon" href="../../favicon.png">
 
     <title>Presentations &ndash; FTorch</title>
 
@@ -18,12 +18,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- Font Awesome -->
-    <link href="../css/fontawesome.min.css" rel="stylesheet">
-    <link href="../css/brands.min.css" rel="stylesheet">
-    <link href="../css/regular.min.css" rel="stylesheet">
-    <link href="../css/solid.min.css" rel="stylesheet">
-    <link href="../css/v4-font-face.min.css" rel="stylesheet">
-    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
     <!-- MathJax -->
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
@@ -33,9 +33,10 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
             integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
     <!-- Other scripts and stylesheets -->
-    <link href="../css/local.css" rel="stylesheet">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <script src="../js/svg-pan-zoom.min.js"></script>
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -44,7 +45,7 @@
     <div class="container-fluid mb-sm-4 mb-xl-2">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="../index.html">FTorch </a>
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
           <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
                   aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon">
@@ -52,22 +53,22 @@
 
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="index.html">User Guide</a></li>
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
                   </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
                 </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
-                <form action="../search.html" role="search" class="ms-auto">
+                <form action="../../search.html" role="search" class="ms-auto">
                   <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
                 </form>
               </div>
@@ -83,12 +84,15 @@
       <div class="row align-items-center justify-content-between">
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Joe Wallwork</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: January 2026</li>
           </ul>
         </div>
         <div class="col">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Community</a></li>
               <li class="breadcrumb-item active" aria-current="page">Presentations</li>
             </ol>
           </nav>
@@ -102,104 +106,127 @@
         <div class="card card-body bg-light" id="sidebar-toc">
           <ul class="nav flex-column align-items">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">User Guide</a>
+              <a class="nav-link" href="../index.html">User Guide</a>
             </li>
           </ul>
           <hr>
           <nav class="nav nav-pills flex-column">
-              <a class="nav-link" href="LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="archive.html">News archive</a>
-              <a class="nav-link" href="changelog.html">FTorch Changelog</a>
-              <a class="nav-link" href="cmake.html">Installation and Build Process</a>
-              <a class="nav-link" href="developer.html">Developer Guide</a>
-              <a class="nav-link" href="examples.html">Examples</a>
-              <a class="nav-link" href="gpu.html">GPU Support</a>
-              <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
-              <a class="nav-link" href="offline.html">Offline training</a>
-              <a class="nav-link" href="online.html">Online training</a>
+              <a class="nav-link" href="../installation/index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../installation/general.html">Installation and Build</a>
+              <a class="nav-link" href="../installation/systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="../installation/gpu.html">GPU Support</a>
+              <a class="nav-link" href="../installation/hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="../usage/index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../usage/generic_example.html">Generic Example</a>
+              <a class="nav-link" href="../usage/worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="../usage/tensor.html">Tensor API</a>
+              <a class="nav-link" href="../usage/transposing.html">When to transpose data</a>
+              <a class="nav-link" href="../usage/offline.html">Offline training</a>
+              <a class="nav-link" href="../usage/online.html">Online training</a>
+              <a class="nav-link" href="../usage/troubleshooting.html">Troubleshooting</a>
+
+                </nav>
+              <a class="nav-link" href="index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="news_archive.html">News archive</a>
               <a class="nav-link active disabled" href="presentations.html">Presentations</a>
-              <a class="nav-link" href="tensor.html">Tensor API</a>
-              <a class="nav-link" href="testing.html">FTorch test suite</a>
-              <a class="nav-link" href="transposing.html">When to transpose data</a>
-              <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
-              <a class="nav-link" href="updates.html">Recent API Changes</a>
+              <a class="nav-link" href="case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="../developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
           </nav>
         </div>
       </div>
 
     <div class="col-9" id='text'>
-      <div class="toc">
+      <h2 id="contents">Contents</h2>
 <ul>
 <li><a href="#talks-and-posters">Talks and posters</a></li>
-<li><a href="#past-ftorch-tutorials">Past FTorch tutorials:</a></li>
-<li><a href="#past-events">Past Events</a></li>
+<li><a href="#tutorials">Tutorials</a></li>
+<li><a href="#events">Events</a></li>
 </ul>
-</div>
 <h2 id="talks-and-posters">Talks and posters</h2>
 <p>The following presentations contain information about FTorch and its
 applications:</p>
 <ul>
-<li>FTorch: Facilitating Hybrid Modelling<br>
+<li><strong>Facilitating machine learning in Fortran using FTorch</strong><br>
+  <a href="https://www.dlr.de/">Deutsches Zentrum für Luft- und Raumfahrt (DLR)</a>, Munich, Germany - December 2025<br>
+  (<a href="https://joewallwork.com/pwp/slides/ftorch/2025-12-18_DLR-Seminar/index.html">Slides</a>).</li>
+<li><strong>An Overview of the FTorch Project</strong><br>
+  ICCS Journal Club, Cambridge - October 2025<br>
+  <a href="https://jackatkinson.net/slides/ICCS-Seminar-Oct25/">Slides</a> - <a href="https://www.youtube.com/watch?v=u7np_kUJtIY">Recording</a></li>
+<li><strong>FTorch: Facilitating Hybrid Modelling</strong><br>
   N8-CIR Seminar, Leeds - July 2025<br>
   <a href="https://jackatkinson.net/slides/Leeds-N8-FTorch">Slides</a> - <a href="https://www.youtube.com/watch?v=je7St0t_W9A">Recording</a></li>
-<li>FTorch - Facilitating Hybrid Modelling<br>
+<li><strong>FTorch - Facilitating Hybrid Modelling</strong><br>
   Seminar at the <a href="https://www.physics.ox.ac.uk/research/subdepartment/atmospheric-oceanic-and-planetary-physics">Department of Atmospheric, Oceanic, and Planetary Physics</a>
   at the University of Oxford<br>
   <a href="https://jackatkinson.net/slides/Oxford-FTorch">Slides</a></li>
-<li>Accelerating UKCA by predicting timesteps with FTorch<br>
+<li><strong>Accelerating UKCA by predicting timesteps with FTorch</strong><br>
   <a href="https://durham.readthedocs.io/en/latest/hpcdays/workshops.html#Weather">HPC in Weather &amp; Climate Research</a>
   session at
   <a href="https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/">Durham HPC Days</a>
   University of Durham - June 2025<br>
   <a href="https://hackmd.io/@jwallwork/2025-durham-hpc-days?type=slide">Slides</a></li>
-<li>Facilitating machine learning in Fortran using FTorch<br>
+<li><strong>Facilitating machine learning in Fortran using FTorch</strong><br>
   Seminars at the University of Reading
   <a href="https://research.reading.ac.uk/met-darc/news-and-events/darc-seminar-series/">Data Assimilation Research Centre</a>
   and <a href="https://www.ecmwf.int/en/about/location/ecmwf-reading">ECMWF, Reading</a> -
   May 2025<br>
   <a href="https://hackmd.io/@jwallwork/darc-seminar-2025?type=slide">Slides</a></li>
-<li>FTorch: Enabling Online Training for Large-Scale Fortran Models<br>
+<li><strong>FTorch: Enabling Online Training for Large-Scale Fortran Models</strong><br>
   <a href="https://polarnetwork.org/events/ccfcs-polar-symposium-2025/">CCfCS Polar Symposium 2025</a>,
   British Antarctic Survey, Cambridge - May 2025<br>
   <a href="https://niccolozanotti.com/CCfCS-PolarSymposium25/poster.pdf">Poster</a><br></li>
-<li>FTorch: A library to couple PyTorch ML models with Fortran climate models<br>
+<li><strong>FTorch: A library to couple PyTorch ML models with Fortran climate models</strong><br>
   AI for Climate and Nature Community Day, Cambridge - May 2025<br>
   <a href="https://niccolozanotti.github.io/ftorch-flash">Slides</a></li>
-<li>Facilitating online training in Fortran-based climate models<br>
+<li><strong>Facilitating online training in Fortran-based climate models</strong><br>
   EuroAD, Kaiserslautern - April 2025<br>
   <a href="https://hackmd.io/@jwallwork/euroad-2025?type=slide">Slides</a></li>
-<li>Coupling Machine Learning to Numerical (Climate) Models<br>
+<li><strong>Coupling Machine Learning to Numerical (Climate) Models</strong><br>
   Platform for Advanced Scientific Computing, Zurich - June 2024<br>
   <a href="https://jackatkinson.net/slides/PASC24">Slides</a></li>
-<li>Blending Machine Learning and Numerical Simulation, with Applications to Climate Modelling<br>
+<li><strong>Blending Machine Learning and Numerical Simulation, with Applications to Climate Modelling</strong><br>
   Durham HPC days, Durham - May 2024<br>
   <a href="https://jackatkinson.net/slides/HPC_Durham_2024">Slides</a></li>
-<li>Reducing the overheads for coupling PyTorch machine learning models to Fortran<br>
+<li><strong>Reducing the overheads for coupling PyTorch machine learning models to Fortran</strong><br>
   ML &amp; DL Seminars, LSCE, IPSL, Paris - November 2023<br>
   <a href="https://jackatkinson.net/slides/IPSL_FTorch">Slides</a> - <a href="https://www.youtube.com/watch?v=-NJGuV6Rz6U">Recording</a></li>
-<li>Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran<br>
+<li><strong>Reducing the Overhead of Coupled Machine Learning Models between Python and Fortran</strong><br>
   RSECon23, Swansea - September 2023<br>
   <a href="https://jackatkinson.net/slides/RSECon23">Slides</a> - <a href="https://www.youtube.com/watch?v=Ei6H_BoQ7g4&amp;list=PL27mQJy8eDHmibt_aL3M68x-4gnXpxvZP&amp;index=33">Recording</a></li>
 </ul>
-<h2 id="past-ftorch-tutorials">Past FTorch tutorials:</h2>
+<h2 id="tutorials">Tutorials:</h2>
 <p>We have given in-person training on FTorch in the form of tutorials and
 workshops based on the companion repository
 <a href="https://github.com/Cambridge-ICCS/FTorch-workshop">https://github.com/Cambridge-ICCS/FTorch-workshop</a>
 on the following occasions:</p>
 <ul>
-<li><a href="https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2025">ICCS Summer School</a>,
+<li><a href="https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2025"><strong>ICCS Summer School</strong></a>,
   July 2025.</li>
-<li><a href="https://www.physics.ox.ac.uk/research/subdepartment/atmospheric-oceanic-and-planetary-physics">Department of Atmospheric, Oceanic, and Planetary Physics</a>,
+<li><a href="https://www.physics.ox.ac.uk/research/subdepartment/atmospheric-oceanic-and-planetary-physics"><strong>Department of Atmospheric, Oceanic, and Planetary Physics</strong></a>,
   July 2025.
   at the University of Oxford.</li>
-<li><a href="https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/">Durham HPC Days</a>,
+<li><a href="https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/"><strong>Durham HPC Days</strong></a>,
   June 2025.</li>
-<li><a href="https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2024">ICCS Summer School</a>,
+<li><a href="https://iccs.cam.ac.uk/events/institute-computing-climate-science-annual-summer-school-2024"><strong>ICCS Summer School</strong></a>,
   July 2024.</li>
 </ul>
-<h2 id="past-events">Past Events</h2>
+<h2 id="events">Events</h2>
 <ul>
-<li><a href="https://cambridge-iccs.github.io/ml-coupling-workshop/">Cambridge Hybrid Modelling Workshop</a> - 3rd-4th September 2025<br>
+<li><a href="https://cambridge-iccs.github.io/ml-coupling-workshop/"><strong>Cambridge Hybrid Modelling Workshop</strong></a> - 3rd-4th September 2025<br>
   FTorch developers Jack atkinson and Joe Wallwork hosted a workshop on hybrid modelling developments and challenges in Cambridge with support from <a href="https://www.c2d3.cam.ac.uk/">C2D3</a> and <a href="https://science.ai.cam.ac.uk/">Accelerate</a>.</li>
 </ul>
     </div>

@@ -1,0 +1,251 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
+    <meta name="author" content="ICCS Cambridge" >
+    <link rel="icon" href="../../favicon.png">
+
+    <title>Troubleshooting &ndash; FTorch</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>Troubleshooting</h1>
+    <div class="container p-2 mb-4 bg-light border rounded-3">
+      <div class="row align-items-center justify-content-between">
+        <div class="col">
+          <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
+          </ul>
+        </div>
+        <div class="col">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Usage</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Troubleshooting</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="col-3">
+        <div class="card card-body bg-light" id="sidebar-toc">
+          <ul class="nav flex-column align-items">
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html">User Guide</a>
+            </li>
+          </ul>
+          <hr>
+          <nav class="nav nav-pills flex-column">
+              <a class="nav-link" href="../installation/index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../installation/general.html">Installation and Build</a>
+              <a class="nav-link" href="../installation/systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="../installation/gpu.html">GPU Support</a>
+              <a class="nav-link" href="../installation/hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="generic_example.html">Generic Example</a>
+              <a class="nav-link" href="worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="tensor.html">Tensor API</a>
+              <a class="nav-link" href="transposing.html">When to transpose data</a>
+              <a class="nav-link" href="offline.html">Offline training</a>
+              <a class="nav-link" href="online.html">Online training</a>
+              <a class="nav-link active disabled" href="troubleshooting.html">Troubleshooting</a>
+
+                </nav>
+              <a class="nav-link" href="../community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../community/news_archive.html">News archive</a>
+              <a class="nav-link" href="../community/presentations.html">Presentations</a>
+              <a class="nav-link" href="../community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="../community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="../developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
+          </nav>
+        </div>
+      </div>
+
+    <div class="col-9" id='text'>
+      <h2 id="faq">FAQ</h2>
+<p>If you are experiencing problems building or using FTorch please see below for guidance on common problems or queries.</p>
+<ul>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#common-errors">Common Errors</a><ul>
+<li><a href="#no-specific-subroutine">No specific subroutine</a></li>
+<li><a href="#segmentation-faults">Segmentation faults</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="usage">Usage</h3>
+<h5 id="why-are-inputsoutputs-tofrom-torch-models-arrays">Why are inputs/outputs to/from torch models arrays?</h5>
+<p>The reason input and output tensors to/from <a href="../../proc/torch_model_forward.html">torch_model_forward</a>
+are contained in arrays is because it is possible to pass multiple input tensors to
+the <code>forward()</code> method of a torch net, and it is possible for the net to return
+multiple output tensors.</p>
+<p>The nature of Fortran means that it is not possible to set an arbitrary number
+of inputs to the <a href="../../proc/torch_model_forward.html">torch_model_forward</a> subroutine,
+so instead we use a single array of input tensors which <em>can</em> have an arbitrary length.
+Similarly, a single array of output tensors is used.</p>
+<p>Note that this does not refer to batching data.
+This should be done in the same way as in Torch; by extending the dimensionality of
+the input tensors.</p>
+<h5 id="do-i-need-to-set-torchinference_mode-torchno_grad-or-torcheval-somewhere-like-in-pytorch">Do I need to set <code>torch.inference_mode()</code>, <code>torch.no_grad()</code>, or <code>torch.eval()</code> somewhere like in PyTorch?</h5>
+<p>By default we disable gradient calculations for tensors and models and place models in
+evaluation mode for efficiency.
+These can be adjusted using the <code>requires_grad</code> and <code>is_training</code> optional arguments
+in the Fortran interface. See the <a href="../../lists/procedures.html">API procedures documentation</a>
+for <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> and
+<a href="../../proc/torch_model_load.html">torch_model_load</a> etc. for details.</p>
+<h3 id="common-errors">Common Errors</h3>
+<h4 id="no-specific-subroutine">No specific subroutine</h4>
+<p>FTorch makes heavy use of Fortran <code>interfaces</code> to <code>module procedure</code>s to achieve
+<a href="https://fortran-lang.org/learn/oop_features_in_fortran/object_based_programming_techniques/">overloading of subroutines</a>
+such that for users do not need to call a different subroutine for each rank or type
+of tensor.</p>
+<p>If you make a call to a subroutine that fails to match anything in the interface
+you will face a compile-time error of the form:</p>
+<div class="codehilite"><pre><span></span><code>   42 |   call torch_tensor_from_array(tensor, in_data, tensor_layout, torch_kCPU)
+      |                                                                          1
+Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+</code></pre></div>
+
+<p>The first thing to do in this instance is to inspect the interface you are trying to
+call, and instead attempt to call the specific procedure you expect to use.
+This can often provide more instructive error messages about what you are doing
+incorrectly</p>
+<h5 id="int64-versions-of-ftorch-for-large-tensors"><code>int64</code> versions of <code>ftorch</code> for large tensors</h5>
+<p>An alternative cause of the 'no specific subroutine' error can occur if your tensor
+dimension is larger than FTorch supports by default.
+Currently FTorch represents the number of elements in an array dimension using
+32-bit integers. For most users this will be more than enough, but if your code
+uses large tensors (where large means more than 2,147,483,647 elements
+in any one dimension (the maximum value of a 32-bit integer)), you may you may
+need to compile <code>ftorch</code> with 64-bit integers. If you do not, you may receive a
+compile time error like the following:</p>
+<p>To fix this, rebuild FTorch with 64-bit integers by modifying the following line in
+<code>src/ftorch.fypp</code></p>
+<div class="codehilite"><pre><span></span><code><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ftorch_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">int32</span><span class="w"> </span><span class="c">! set integer size for FTorch library</span>
+</code></pre></div>
+
+<p>to instead use 64-bit integers:</p>
+<div class="codehilite"><pre><span></span><code><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ftorch_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">int64</span><span class="w"> </span><span class="c">! set integer size for FTorch library</span>
+</code></pre></div>
+
+<p>Note: <em>You will need to re-run <code>fypp</code> to regenerate the source files as described in the 
+<a href="../developer/developer.html">developer documentation</a></em></p>
+<h4 id="segmentation-faults">Segmentation faults</h4>
+<h5 id="missing-import-for-overloaded-assignment-operator">Missing import for overloaded assignment operator</h5>
+<p>Whenever you execute code involving <a href="../../type/torch_tensor.html">torch_tensor</a>s on each side
+of an equals sign, the overloaded assignment operator should be triggered.
+As such, if you aren't using the bare <code>use ftorch</code> import then you should ensure you
+specify <code>use ftorch, only: assignment(=)</code> (as well as any other module members you
+require). See the <a href="tensor.html">tensor documentation</a> for more details.</p>
+    </div>
+  </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              FTorch
+ was developed by ICCS Cambridge<br>              &copy; 2026 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

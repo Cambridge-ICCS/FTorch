@@ -6,9 +6,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="A library for coupling (Py)Torch machine learning models to Fortran">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
     <meta name="author" content="ICCS Cambridge" >
-    <link rel="icon" href="../favicon.png">
+    <link rel="icon" href="../../favicon.png">
 
     <title>FTorch Changelog &ndash; FTorch</title>
 
@@ -18,12 +18,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- Font Awesome -->
-    <link href="../css/fontawesome.min.css" rel="stylesheet">
-    <link href="../css/brands.min.css" rel="stylesheet">
-    <link href="../css/regular.min.css" rel="stylesheet">
-    <link href="../css/solid.min.css" rel="stylesheet">
-    <link href="../css/v4-font-face.min.css" rel="stylesheet">
-    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
     <!-- MathJax -->
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
@@ -33,9 +33,10 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
             integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
     <!-- Other scripts and stylesheets -->
-    <link href="../css/local.css" rel="stylesheet">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <script src="../js/svg-pan-zoom.min.js"></script>
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -44,7 +45,7 @@
     <div class="container-fluid mb-sm-4 mb-xl-2">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="../index.html">FTorch </a>
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
           <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
                   aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon">
@@ -52,22 +53,22 @@
 
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="index.html">User Guide</a></li>
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
                   </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
                 </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
-                <form action="../search.html" role="search" class="ms-auto">
+                <form action="../../search.html" role="search" class="ms-auto">
                   <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
                 </form>
               </div>
@@ -83,12 +84,14 @@
       <div class="row align-items-center justify-content-between">
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
           </ul>
         </div>
         <div class="col">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Community</a></li>
               <li class="breadcrumb-item active" aria-current="page">FTorch Changelog</li>
             </ol>
           </nav>
@@ -102,27 +105,45 @@
         <div class="card card-body bg-light" id="sidebar-toc">
           <ul class="nav flex-column align-items">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">User Guide</a>
+              <a class="nav-link" href="../index.html">User Guide</a>
             </li>
           </ul>
           <hr>
           <nav class="nav nav-pills flex-column">
-              <a class="nav-link" href="LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="archive.html">News archive</a>
-              <a class="nav-link active disabled" href="changelog.html">FTorch Changelog</a>
-              <a class="nav-link" href="cmake.html">Installation and Build Process</a>
-              <a class="nav-link" href="developer.html">Developer Guide</a>
-              <a class="nav-link" href="examples.html">Examples</a>
-              <a class="nav-link" href="gpu.html">GPU Support</a>
-              <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
-              <a class="nav-link" href="offline.html">Offline training</a>
-              <a class="nav-link" href="online.html">Online training</a>
+              <a class="nav-link" href="../installation/index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../installation/general.html">Installation and Build</a>
+              <a class="nav-link" href="../installation/systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="../installation/gpu.html">GPU Support</a>
+              <a class="nav-link" href="../installation/hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="../usage/index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../usage/generic_example.html">Generic Example</a>
+              <a class="nav-link" href="../usage/worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="../usage/tensor.html">Tensor API</a>
+              <a class="nav-link" href="../usage/transposing.html">When to transpose data</a>
+              <a class="nav-link" href="../usage/offline.html">Offline training</a>
+              <a class="nav-link" href="../usage/online.html">Online training</a>
+              <a class="nav-link" href="../usage/troubleshooting.html">Troubleshooting</a>
+
+                </nav>
+              <a class="nav-link" href="index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="news_archive.html">News archive</a>
               <a class="nav-link" href="presentations.html">Presentations</a>
-              <a class="nav-link" href="tensor.html">Tensor API</a>
-              <a class="nav-link" href="testing.html">FTorch test suite</a>
-              <a class="nav-link" href="transposing.html">When to transpose data</a>
-              <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
-              <a class="nav-link" href="updates.html">Recent API Changes</a>
+              <a class="nav-link" href="case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link active disabled" href="changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="../developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
           </nav>
         </div>
       </div>
@@ -165,6 +186,8 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 </ul>
 <h3 id="changed">Changed</h3>
 <ul>
+<li>Significant overhaul of the online FORD documentation and reduction of content in the README
+  in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/459">#459</a></li>
 <li>Intel CI now uses Intel oneAPI MPI instead of OpenMPI built with Intel compilers <a href="https://github.com/Cambridge-ICCS/FTorch/pull/449">#449</a></li>
 <li>FTorch library (<code>libftorch.so</code>) produced by cmake installation now has <code>RUNPATH</code> that contains path to Torch library directory. Downstream targets linking against FTorch can now find the Torch dependency automatically and will compile successfully <a href="https://github.com/Cambridge-ICCS/FTorch/pull/437">#437</a>.</li>
 <li>In all <code>CMakeLists.txt</code> where <code>find_package(FTorch)</code> was present, now using <code>REQUIRE</code> if not building tests to stop the cmake configuation process early for users who only wish to build examples in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/434">#434</a></li>

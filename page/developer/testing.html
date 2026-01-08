@@ -1,0 +1,276 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
+    <meta name="author" content="ICCS Cambridge" >
+    <link rel="icon" href="../../favicon.png">
+
+    <title>FTorch test suite &ndash; FTorch</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>FTorch test suite</h1>
+    <div class="container p-2 mb-4 bg-light border rounded-3">
+      <div class="row align-items-center justify-content-between">
+        <div class="col">
+          <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Joe Wallwork</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
+          </ul>
+        </div>
+        <div class="col">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Developer Guide</a></li>
+              <li class="breadcrumb-item active" aria-current="page">FTorch test suite</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="col-3">
+        <div class="card card-body bg-light" id="sidebar-toc">
+          <ul class="nav flex-column align-items">
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html">User Guide</a>
+            </li>
+          </ul>
+          <hr>
+          <nav class="nav nav-pills flex-column">
+              <a class="nav-link" href="../installation/index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../installation/general.html">Installation and Build</a>
+              <a class="nav-link" href="../installation/systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="../installation/gpu.html">GPU Support</a>
+              <a class="nav-link" href="../installation/hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="../usage/index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../usage/generic_example.html">Generic Example</a>
+              <a class="nav-link" href="../usage/worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="../usage/tensor.html">Tensor API</a>
+              <a class="nav-link" href="../usage/transposing.html">When to transpose data</a>
+              <a class="nav-link" href="../usage/offline.html">Offline training</a>
+              <a class="nav-link" href="../usage/online.html">Online training</a>
+              <a class="nav-link" href="../usage/troubleshooting.html">Troubleshooting</a>
+
+                </nav>
+              <a class="nav-link" href="../community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../community/news_archive.html">News archive</a>
+              <a class="nav-link" href="../community/presentations.html">Presentations</a>
+              <a class="nav-link" href="../community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="../community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="developer.html">Developer Guide</a>
+              <a class="nav-link active disabled" href="testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
+          </nav>
+        </div>
+      </div>
+
+    <div class="col-9" id='text'>
+      <h2 id="testing">Testing</h2>
+<p>FTorch's test suite includes unit tests of components, and integration
+tests based on a subset of the <a href="../usage/worked_examples.html">worked examples</a>.</p>
+<ul>
+<li><a href="#building">Building Tests</a></li>
+<li><a href="#running">Running Tests</a><ul>
+<li><a href="#unit-tests">Unit Tests</a></li>
+<li><a href="#integration-tests">Integration Tests</a></li>
+</ul>
+</li>
+<li><a href="#adding-tests">Adding Tests</a></li>
+</ul>
+<h3 id="building">Building</h3>
+<p>To enable FTorch's test suite, set <code>CMAKE_BUILD_TESTS=TRUE</code> during the build.
+To run the unit tests, you will need to install
+<a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a> and provide its
+install location to the <code>CMAKE_PREFIX_PATH</code> or as the environment variable <code>PFUNIT_DIR</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Update `CMAKE_PREFIX_PATH` explicitly with pFUnit install directory</span>
+cmake<span class="w"> </span>-DCMAKE_PREFIX_PATH<span class="o">=</span><span class="s2">&quot;&lt;/path/to/pFUnit/build/installed/PFUNIT-VERSION&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>True<span class="w"> </span>-S<span class="w"> </span>&lt;/path/to/FTorch&gt;<span class="w"> </span>-B<span class="w"> </span>&lt;/path/to/FTorch/build&gt;
+</code></pre></div>
+
+<p>or</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Using an environment variable with pFUnit install directory</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PFUNIT_DIR</span><span class="o">=</span>&lt;/path/to/pFUnit/build/installed/PFUNIT-VERSION&gt;
+cmake<span class="w"> </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>TRUE<span class="w"> </span>-S<span class="w"> </span>&lt;/path/to/FTorch&gt;<span class="w"> </span>-B<span class="w"> </span>&lt;/path/to/FTorch/build&gt;
+</code></pre></div>
+
+<p>Note that pFUnit includes the version number in the install directory name,
+so for version 4.12 that path will need to be specified as
+<code>/path/to/pFUnit/build/installed/PFUNIT-4.12</code>, for example.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>If a <code>GPU_DEVICE</code> is specified but only one is available, set <code>MULTI_GPU=OFF</code> to skip
+the 'multiple GPU devices' integration test.</p>
+</div>
+<p>Building with tests enabled will automatically install any Python
+dependencies for the examples, so should be executed from within a virtual environment.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> If this is not the case it will fail with appropriate warnings.</p>
+<p>Note that, whilst example <code>5_Looping</code> is built if <code>CMAKE_BUILD_TESTS=TRUE</code> is
+specified, it is not run as part of the integration test suite because it
+demonstrates 'good' versus 'bad' practice, as opposed to functionality.</p>
+<h3 id="running">Running</h3>
+<p>Ensure that the Python virtual environment used when
+building is active and then run <code>ctest</code> from the build directory to execute all tests.
+Use <a href="https://cmake.org/cmake/help/latest/manual/ctest.1.html">ctest arguments</a>
+for greater control over the testing configuration.</p>
+<p>This will produce a report on which of the requested tests passed, and which, if any,
+failed for your build.</p>
+<h4 id="unit-tests">Unit tests</h4>
+<p>Unit tests may be executed in the following ways:</p>
+<ol>
+<li>To run just the unit tests (tests whose names start with 'unittest') use
+   <code>ctest -R unittest</code>.</li>
+<li>To run a specific unit test use
+   <code>ctest -R unittest_tensor_constructors_destructors</code>, for example.</li>
+</ol>
+<h4 id="integration-tests">Integration tests</h4>
+<p>Integration tests may be executed in the following ways:</p>
+<ol>
+<li>To run just the integration tests (tests whose names start with 'example') use
+   <code>ctest -R example</code></li>
+<li>To run a specific integration test use <code>ctest -R example2</code>, for example.<br>
+   Alternatively navigate to the corresponding example in <code>${BUILD_DIR}/examples</code>
+   and call <code>ctest</code>.</li>
+</ol>
+<h3 id="adding-tests">Adding Tests</h3>
+<p>New components should come with unit tests written using the pFUnit framework.</p>
+<ul>
+<li>New unit tests should be added to the <code>test/unit/</code> directory and start with
+  <code>unittest_</code>.</li>
+<li>New tests need including in the <code>CMakeLists.txt</code> in that directory in order
+  to be built as part of the test suite.</li>
+</ul>
+<p>New functionalities should come with integration tests in the form of worked
+examples.</p>
+<ul>
+<li>These should take the form of a new example in the <code>examples/</code> directory.</li>
+<li>In addition to a <code>CMakeLists.txt</code> to build the example code there
+  should also be a section at the end setting up running of the example
+  using CTest.<ul>
+<li>Integration test names should start with <code>example_</code></li>
+<li>New examples will also need including in <code>examples/CMakeLists.txt</code></li>
+</ul>
+</li>
+<li>Ensure the documentation on <a href="../usage/worked_examples.html">worked examples</a> is
+  updated accordingly.</li>
+</ul>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p><em>If you built FTorch against LibTorch (rather than creating a
+virtual environment) then you will need to
+<a href="https://docs.python.org/3/library/venv.html">create a virtual environment</a> for
+the purposes of integration testing as this script will install packages into your
+Python environment and will check that a virtual environment is in use.</em>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+    </div>
+  </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              FTorch
+ was developed by ICCS Cambridge<br>              &copy; 2026 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

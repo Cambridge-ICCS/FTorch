@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="A library for coupling (Py)Torch machine learning models to Fortran">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
@@ -35,6 +35,7 @@
     <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
     <link href="../css/pygments.css" rel="stylesheet">
+      <link href="../css/user.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -83,6 +84,8 @@
       <div class="row align-items-center justify-content-between">
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
           </ul>
         </div>
         <div class="col">
@@ -106,36 +109,76 @@
           </ul>
           <hr>
           <nav class="nav nav-pills flex-column">
+              <a class="nav-link" href="installation/index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="installation/general.html">Installation and Build</a>
+              <a class="nav-link" href="installation/systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="installation/gpu.html">GPU Support</a>
+              <a class="nav-link" href="installation/hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="usage/index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="usage/generic_example.html">Generic Example</a>
+              <a class="nav-link" href="usage/worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="usage/tensor.html">Tensor API</a>
+              <a class="nav-link" href="usage/transposing.html">When to transpose data</a>
+              <a class="nav-link" href="usage/offline.html">Offline training</a>
+              <a class="nav-link" href="usage/online.html">Online training</a>
+              <a class="nav-link" href="usage/troubleshooting.html">Troubleshooting</a>
+
+                </nav>
+              <a class="nav-link" href="community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="community/news_archive.html">News archive</a>
+              <a class="nav-link" href="community/presentations.html">Presentations</a>
+              <a class="nav-link" href="community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="developer/testing.html">FTorch test suite</a>
+
+                </nav>
               <a class="nav-link" href="LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="archive.html">News archive</a>
-              <a class="nav-link" href="changelog.html">FTorch Changelog</a>
-              <a class="nav-link" href="cmake.html">Installation and Build Process</a>
-              <a class="nav-link" href="developer.html">Developer Guide</a>
-              <a class="nav-link" href="examples.html">Examples</a>
-              <a class="nav-link" href="gpu.html">GPU Support</a>
-              <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
-              <a class="nav-link" href="offline.html">Offline training</a>
-              <a class="nav-link" href="online.html">Online training</a>
-              <a class="nav-link" href="presentations.html">Presentations</a>
-              <a class="nav-link" href="tensor.html">Tensor API</a>
-              <a class="nav-link" href="testing.html">FTorch test suite</a>
-              <a class="nav-link" href="transposing.html">When to transpose data</a>
-              <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
-              <a class="nav-link" href="updates.html">Recent API Changes</a>
           </nav>
         </div>
       </div>
 
     <div class="col-9" id='text'>
-      <p>Please see the menu on the left for detailed documentation and user guides for using
-<em>FTorch</em>.</p>
-<div class="toc">
-<ul>
-<li><a href="#useful-resources">Useful resources</a></li>
-</ul>
+      <h2 id="welcome-to-the-ftorch-user-documentation">Welcome to the FTorch user documentation!</h2>
+<p>FTorch is a library for coupling PyTorch machine learning (ML) models to Fortran, enabling
+the development of hybrid models that combine high-performance scientific computing with
+modern ML techniques.</p>
+<p>It has been used in <a href="community/case_studies.html">multiple scientific projects</a>.<br>
+If you make use of FTorch in your work please cite our publication:</p>
+<div style="margin-left: 2em;">
+Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.<br>
+<em>Journal of Open Source Software</em>, 10(107), 7602, <a href="https://doi.org/10.21105/joss.07602">https://doi.org/10.21105/joss.07602</a>
 </div>
-<h2 id="useful-resources">Useful resources</h2>
+<p><br></p>
+<p>This section of the documentation is designed to help users familiarise themselves with
+the library, how to install and use it, and the community around FTorch.
+The site also contains detailed API documentation for those using FTorch in projects.</p>
+<h3 id="getting-started">Getting Started</h3>
 <ul>
+<li><a href="installation/index.html">Installation Guide</a></li>
+<li><a href="usage/index.html#examples">Worked Examples</a></li>
+<li><a href="usage/index.html">Usage Guidance</a></li>
+</ul>
+<h3 id="documentation-map">Documentation Map</h3>
+<ul>
+<li><a href="installation/index.html">Installation &amp; Build</a></li>
+<li><a href="usage/index.html">Usage Guidance</a></li>
+<li><a href="developer/index.html">Developer Guide</a></li>
+<li><a href="community/index.html">Resources &amp; Community</a></li>
+</ul>
+<h3 id="external-resources">External Resources</h3>
+<ul>
+<li><a href="https://github.com/Cambridge-ICCS/FTorch">FTorch on GitHub</a></li>
+<li><a href="community/case_studies.html">Case Studies</a></li>
 <li><a href="https://pytorch.org/cppdocs/">The LibTorch C++ API documentation</a></li>
 </ul>
     </div>

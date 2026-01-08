@@ -6,9 +6,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="A library for coupling (Py)Torch machine learning models to Fortran">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
     <meta name="author" content="ICCS Cambridge" >
-    <link rel="icon" href="../favicon.png">
+    <link rel="icon" href="../../favicon.png">
 
     <title>Online training &ndash; FTorch</title>
 
@@ -18,12 +18,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- Font Awesome -->
-    <link href="../css/fontawesome.min.css" rel="stylesheet">
-    <link href="../css/brands.min.css" rel="stylesheet">
-    <link href="../css/regular.min.css" rel="stylesheet">
-    <link href="../css/solid.min.css" rel="stylesheet">
-    <link href="../css/v4-font-face.min.css" rel="stylesheet">
-    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
     <!-- MathJax -->
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
@@ -33,9 +33,10 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
             integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
     <!-- Other scripts and stylesheets -->
-    <link href="../css/local.css" rel="stylesheet">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <script src="../js/svg-pan-zoom.min.js"></script>
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -44,7 +45,7 @@
     <div class="container-fluid mb-sm-4 mb-xl-2">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="../index.html">FTorch </a>
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
           <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
                   aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon">
@@ -52,22 +53,22 @@
 
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="index.html">User Guide</a></li>
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
                   </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
                 </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
-                <form action="../search.html" role="search" class="ms-auto">
+                <form action="../../search.html" role="search" class="ms-auto">
                   <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
                 </form>
               </div>
@@ -83,12 +84,15 @@
       <div class="row align-items-center justify-content-between">
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Joe Wallwork</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: April 2025</li>
           </ul>
         </div>
         <div class="col">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Usage</a></li>
               <li class="breadcrumb-item active" aria-current="page">Online training</li>
             </ol>
           </nav>
@@ -102,50 +106,51 @@
         <div class="card card-body bg-light" id="sidebar-toc">
           <ul class="nav flex-column align-items">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">User Guide</a>
+              <a class="nav-link" href="../index.html">User Guide</a>
             </li>
           </ul>
           <hr>
           <nav class="nav nav-pills flex-column">
-              <a class="nav-link" href="LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="archive.html">News archive</a>
-              <a class="nav-link" href="changelog.html">FTorch Changelog</a>
-              <a class="nav-link" href="cmake.html">Installation and Build Process</a>
-              <a class="nav-link" href="developer.html">Developer Guide</a>
-              <a class="nav-link" href="examples.html">Examples</a>
-              <a class="nav-link" href="gpu.html">GPU Support</a>
-              <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
+              <a class="nav-link" href="../installation/index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../installation/general.html">Installation and Build</a>
+              <a class="nav-link" href="../installation/systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="../installation/gpu.html">GPU Support</a>
+              <a class="nav-link" href="../installation/hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="generic_example.html">Generic Example</a>
+              <a class="nav-link" href="worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="tensor.html">Tensor API</a>
+              <a class="nav-link" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="offline.html">Offline training</a>
               <a class="nav-link active disabled" href="online.html">Online training</a>
-              <a class="nav-link" href="presentations.html">Presentations</a>
-              <a class="nav-link" href="tensor.html">Tensor API</a>
-              <a class="nav-link" href="testing.html">FTorch test suite</a>
-              <a class="nav-link" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
-              <a class="nav-link" href="updates.html">Recent API Changes</a>
+
+                </nav>
+              <a class="nav-link" href="../community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../community/news_archive.html">News archive</a>
+              <a class="nav-link" href="../community/presentations.html">Presentations</a>
+              <a class="nav-link" href="../community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="../community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="../developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
           </nav>
         </div>
       </div>
 
     <div class="col-9" id='text'>
-      <div class="toc">
-<ul>
-<li><a href="#current-state">Current state</a><ul>
-<li><a href="#operator-overloading">Operator overloading</a></li>
-<li><a href="#the-requires_grad-property">The requires_grad property</a></li>
-<li><a href="#backpropagation">Backpropagation</a><ul>
-<li><a href="#retain_graph-argument">retain_graph argument</a></li>
-<li><a href="#zeroing-gradients">Zeroing gradients</a></li>
-<li><a href="#extracting-gradients">Extracting gradients</a></li>
-</ul>
-</li>
-<li><a href="#optimisation">Optimisation</a></li>
-<li><a href="#loss-functions">Loss functions</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<h2 id="current-state">Current state</h2>
+      <h2 id="online-training">Online Training</h2>
 <p>FTorch has supported offline training of ML models for some time (see the
 <a href="offline.html">offline training user guide page</a> for details). We are
 currently working on extending its functionality to support online training,
@@ -156,7 +161,7 @@ below will be updated upon completion.</p>
 <h3 id="operator-overloading">Operator overloading</h3>
 <p>Mathematical operators involving Tensors are overloaded, so that we can compute
 expressions involving outputs from one or more ML models. For more information
-on this, see the [tensor API][pages/tensor.html] documentation page.</p>
+on this, see the <a href="tensor.html">tensor API</a> documentation page.</p>
 <p>Whilst it's possible to import such functionality with a bare</p>
 <div class="codehilite"><pre><span></span><code><span class="k">use </span><span class="n">ftorch</span>
 </code></pre></div>
@@ -169,8 +174,8 @@ notation:</p>
 </code></pre></div>
 
 <p>If you would like to make use of scalar multiplication or scalar division, this
-can be achieved by setting the scalar as a rank-1 <code>torch_tensor</code> with a single
-entry. For example:</p>
+can be achieved by setting the scalar as a rank-1 <a href="../../type/torch_tensor.html">torch_tensor</a>
+with a single entry. For example:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">multiplier</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">3.0_wp</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 </code></pre></div>
 
@@ -184,8 +189,8 @@ set the <code>requires_grad</code> optional argument to <code>.true.</code> when
 <p>Having defined some tensors with the <code>requires_grad</code> property set to <code>.true.</code>
 and computed another tensor in terms of an expression involving these, we can
 compute gradients of that tensor with respect to those that it depends on. This
-is achieved using the <code>torch_tensor_backward</code> subroutine. For example, for
-input tensors <code>a</code> and <code>b</code> and an output tensor <code>Q</code>:</p>
+is achieved using the <a href="../../proc/torch_tensor_backward.html">torch_tensor_backward</a> subroutine.
+For example, for input tensors <code>a</code> and <code>b</code> and an output tensor <code>Q</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">in_data1</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">                             </span><span class="n">requires_grad</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
 <span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">in_data2</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
@@ -198,7 +203,7 @@ input tensors <code>a</code> and <code>b</code> and an output tensor <code>Q</co
 </code></pre></div>
 
 <p>Following the example code above, we can extract gradients of <code>Q</code> with respect
-to <code>a</code> and/or <code>b</code>. To do this, we can use the <code>torch_tensor_get_gradient</code>
+to <code>a</code> and/or <code>b</code>. To do this, we can use the <a href="../../proc/torch_tensor_get_gradient.html">torch_tensor_get_gradient</a>
 subroutine. That is, for tensors <code>dQda</code> and <code>dQdb</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">dQda</span><span class="p">,</span><span class="w"> </span><span class="n">out_data2</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 <span class="k">call </span><span class="n">torch_tensor_get_gradient</span><span class="p">(</span><span class="n">dQda</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
@@ -209,7 +214,7 @@ subroutine. That is, for tensors <code>dQda</code> and <code>dQdb</code>:</p>
 
 <h4 id="retain_graph-argument"><code>retain_graph</code> argument</h4>
 <p>If you wish to call the backpropagation operator multiple times then you may
-need to make use of the <code>retain_graph</code> argument for <code>torch_tensor_backward</code>.
+need to make use of the <code>retain_graph</code> argument for <a href="../../proc/torch_tensor_backward.html">torch_tensor_backward</a>.
 This argument accepts logical values and defaults to <code>.false.</code>, for consistency
 with PyTorch and LibTorch. According to the
 <a href="https://pytorch.org/docs/stable/generated/torch.Tensor.backward.html">PyTorch docs</a>,
@@ -220,7 +225,7 @@ for the cases where it is.</p>
 suppose you wish to compute gradients of another tensor. Since the gradient
 values associated with each dependency are accumulated, you should zero the
 gradients before computing the next gradient. This can be achieved using the
-<code>torch_tensor_zero_grad</code> subroutine.</p>
+<a href="../../proc/torch_tensor_zero_grad.html">torch_tensor_zero_grad</a> subroutine.</p>
 <p>Following the example code above:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">Q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span>
 <span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
@@ -238,13 +243,16 @@ gradients before computing the next gradient. This can be achieved using the
 </code></pre></div>
 
 <h4 id="extracting-gradients">Extracting gradients</h4>
-<p>Note that <code>torch_tensor_get_gradient</code> must be called after every call to
-<code>torch_tensor_backward</code> or <code>torch_tensor_zero_grad</code>, even if the gradient for
+<p>Note that <a href="../../proc/torch_tensor_get_gradient.html">torch_tensor_get_gradient</a> must be called after every call to
+<a href="../../proc/torch_tensor_backward.html">torch_tensor_backward</a> or
+<a href="../../proc/torch_tensor_zero_grad.html">torch_tensor_zero_grad</a>, even if the gradient for
 the same tensor is being extracted into the same array. This is due to the way
 that pointers are handled on the C++ side.</p>
 <h3 id="optimisation">Optimisation</h3>
+<!--- Write as part of the API Documentation Pages ---->
 <p><em>Not yet implemented.</em></p>
 <h3 id="loss-functions">Loss functions</h3>
+<!--- Write as part of the API Documentation Pages ---->
 <p><em>Not yet implemented.</em></p>
     </div>
   </div>

@@ -6,11 +6,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="A library for coupling (Py)Torch machine learning models to Fortran">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
     <meta name="author" content="ICCS Cambridge" >
-    <link rel="icon" href="../favicon.png">
+    <link rel="icon" href="../../favicon.png">
 
-    <title>Examples &ndash; FTorch</title>
+    <title>Generic Example &ndash; FTorch</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -18,12 +18,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- Font Awesome -->
-    <link href="../css/fontawesome.min.css" rel="stylesheet">
-    <link href="../css/brands.min.css" rel="stylesheet">
-    <link href="../css/regular.min.css" rel="stylesheet">
-    <link href="../css/solid.min.css" rel="stylesheet">
-    <link href="../css/v4-font-face.min.css" rel="stylesheet">
-    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
     <!-- MathJax -->
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
@@ -33,9 +33,10 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
             integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
     <!-- Other scripts and stylesheets -->
-    <link href="../css/local.css" rel="stylesheet">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <script src="../js/svg-pan-zoom.min.js"></script>
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -44,7 +45,7 @@
     <div class="container-fluid mb-sm-4 mb-xl-2">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="../index.html">FTorch </a>
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
           <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
                   aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon">
@@ -52,22 +53,22 @@
 
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="index.html">User Guide</a></li>
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
                   </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
                 </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
-                <form action="../search.html" role="search" class="ms-auto">
+                <form action="../../search.html" role="search" class="ms-auto">
                   <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
                 </form>
               </div>
@@ -78,18 +79,21 @@
 
     <div class="container">
   <div class="row">
-    <h1>Examples</h1>
+    <h1>Generic Example</h1>
     <div class="container p-2 mb-4 bg-light border rounded-3">
       <div class="row align-items-center justify-content-between">
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
           </ul>
         </div>
         <div class="col">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='index.html'>User Guide</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Examples</li>
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Usage</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Generic Example</li>
             </ol>
           </nav>
         </div>
@@ -102,62 +106,55 @@
         <div class="card card-body bg-light" id="sidebar-toc">
           <ul class="nav flex-column align-items">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">User Guide</a>
+              <a class="nav-link" href="../index.html">User Guide</a>
             </li>
           </ul>
           <hr>
           <nav class="nav nav-pills flex-column">
-              <a class="nav-link" href="LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="archive.html">News archive</a>
-              <a class="nav-link" href="changelog.html">FTorch Changelog</a>
-              <a class="nav-link" href="cmake.html">Installation and Build Process</a>
-              <a class="nav-link" href="developer.html">Developer Guide</a>
-              <a class="nav-link active disabled" href="examples.html">Examples</a>
-              <a class="nav-link" href="gpu.html">GPU Support</a>
-              <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
+              <a class="nav-link" href="../installation/index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../installation/general.html">Installation and Build</a>
+              <a class="nav-link" href="../installation/systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="../installation/gpu.html">GPU Support</a>
+              <a class="nav-link" href="../installation/hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link active disabled" href="generic_example.html">Generic Example</a>
+              <a class="nav-link" href="worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="tensor.html">Tensor API</a>
+              <a class="nav-link" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="offline.html">Offline training</a>
               <a class="nav-link" href="online.html">Online training</a>
-              <a class="nav-link" href="presentations.html">Presentations</a>
-              <a class="nav-link" href="tensor.html">Tensor API</a>
-              <a class="nav-link" href="testing.html">FTorch test suite</a>
-              <a class="nav-link" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
-              <a class="nav-link" href="updates.html">Recent API Changes</a>
+
+                </nav>
+              <a class="nav-link" href="../community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../community/news_archive.html">News archive</a>
+              <a class="nav-link" href="../community/presentations.html">Presentations</a>
+              <a class="nav-link" href="../community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="../community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="../developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
           </nav>
         </div>
       </div>
 
     <div class="col-9" id='text'>
-      <div class="toc">
-<ul>
-<li><a href="#generic-example">Generic example</a><ul>
-<li><a href="#overview-of-the-interfacing-process">Overview of the interfacing process</a><ul>
-<li><a href="#1-saving-the-model-as-torchscript">1. Saving the model as TorchScript</a></li>
-<li><a href="#2-using-the-model-from-fortran">2. Using the model from Fortran</a></li>
-<li><a href="#3-build-the-code">3. Build the code</a><ul>
-<li><a href="#cmake">CMake</a></li>
-<li><a href="#make">Make</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#running-on-gpus">Running on GPUs</a></li>
-</ul>
-</li>
-<li><a href="#worked-examples">Worked examples</a><ul>
-<li><a href="#1-tensor">1) Tensor</a></li>
-<li><a href="#2-simplenet">2) SimpleNet</a></li>
-<li><a href="#3-resnet">3) Resnet</a></li>
-<li><a href="#4-multiio">4) MultiIO</a></li>
-<li><a href="#5-looping">5) Looping</a></li>
-<li><a href="#6-multigpu">6) MultiGPU</a></li>
-<li><a href="#7-mpi">7) MPI</a></li>
-<li><a href="#8-autograd">8) Autograd</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<h2 id="generic-example">Generic example</h2>
+      <h2 id="generic-example">Generic Example</h2>
+<p>This page provides abstract guidance to the general process of using FTorch.
+It covers the full process of saving a model from PyTorch and coupling it into a Fortran code.
+To see this process in context we strongly advise following the
+<a href="../examples/worked_examples.html">Worked Examples</a>.</p>
 <h3 id="overview-of-the-interfacing-process">Overview of the interfacing process</h3>
 <p>In order to use FTorch users will typically need to follow these steps:</p>
 <ol>
@@ -176,7 +173,7 @@ or
 functionalities from within Python.</p>
 <p>If you are not familiar with these we provide a tool
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py"><code>pt2ts.py</code></a>
-as part of this distribution which contains an easily adaptable script to save your
+as part of FTorch which contains an easily adaptable script to save your
 PyTorch model as TorchScript.</p>
 <h4 id="2-using-the-model-from-fortran">2. Using the model from Fortran</h4>
 <p>To use the trained Torch model from within Fortran we need to import the <code>ftorch</code>
@@ -188,8 +185,9 @@ A very simple example is given below.</p>
 This is for illustrative purposes only, and we recommend following the
 <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples">examples</a>
 before writing your own code to fully explore the features.</p>
-<div class="codehilite"><pre><span></span><code><span class="c">! Import library for interfacing with PyTorch</span>
-<span class="k">use </span><span class="n">ftorch</span>
+<div class="codehilite"><pre><span></span><code><span class="c">! Import FTorch library for interfacing with PyTorch</span>
+<span class="k">use </span><span class="n">ftorch</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">torch_model</span><span class="p">,</span><span class="w"> </span><span class="n">torch_tensor</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">,</span><span class="w"> </span><span class="n">torch_delete</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">torch_tensor_from_array</span><span class="p">,</span><span class="w"> </span><span class="n">torch_model_load</span><span class="p">,</span><span class="w"> </span><span class="n">torch_model_forward</span>
 
 <span class="k">implicit none</span>
 
@@ -208,12 +206,6 @@ before writing your own code to fully explore the features.</p>
 <span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">input</span>
 <span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="n">output</span>
 
-<span class="c">! Set up number of dimensions of input tensor and axis order</span>
-<span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">in_dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-<span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">in_layout</span><span class="p">(</span><span class="n">in_dims</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
-<span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">out_dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">out_layout</span><span class="p">(</span><span class="n">out_dims</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
 <span class="c">! Initialise the Torch model to be used</span>
 <span class="n">torch_model_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/path/to/saved/model.pt&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 
@@ -223,8 +215,8 @@ before writing your own code to fully explore the features.</p>
 <span class="c">! Wrap Fortran data as no-copy Torch Tensors</span>
 <span class="c">! There may well be some reshaping required depending on the </span>
 <span class="c">! structure of the model which is not covered here (see examples)</span>
-<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">model_input_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">in_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
-<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">model_output_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">out_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">model_input_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">model_output_arr</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 
 <span class="c">! Run model forward method and Infer</span>
 <span class="c">! Again, there may be some reshaping required depending on model design</span>
@@ -239,11 +231,11 @@ before writing your own code to fully explore the features.</p>
 <span class="k">call </span><span class="n">torch_delete</span><span class="p">(</span><span class="n">model_output_arr</span><span class="p">)</span>
 </code></pre></div>
 
-<h4 id="3-build-the-code">3. Build the code</h4>
+<h4 id="3-building-the-code">3. Building the code</h4>
 <p>The code now needs to be compiled and linked against our installed library.
 Here we describe how to do this for two build systems, CMake and make.</p>
 <h5 id="cmake">CMake</h5>
-<p>If our project were using CMake we would need the following in the <code>CMakeLists.txt</code>
+<p>If using CMake include the following in the <code>CMakeLists.txt</code>
 file to find the FTorch installation and link it to the executable.</p>
 <p>This can be done by adding the following to the <code>CMakeLists.txt</code> file:</p>
 <div class="codehilite"><pre><span></span><code><span class="nb">find_package</span><span class="p">(</span><span class="s">FTorch</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
@@ -252,16 +244,17 @@ file to find the FTorch installation and link it to the executable.</p>
 </code></pre></div>
 
 <p>and using the <code>-DCMAKE_PREFIX_PATH=&lt;/path/to/install/location&gt;</code> flag when running CMake.  </p>
-<blockquote>
-<p>Note: <em>If you used the <code>CMAKE_INSTALL_PREFIX</code> argument when
-<a href="https://cambridge-iccs.github.io/FTorch/page/cmake.html">building and installing the library</a>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p><em>If you used the <code>CMAKE_INSTALL_PREFIX</code> argument when
+<a href="../installation/general.html">building and installing the library</a>
 then you should use the same path for <code>&lt;/path/to/install/location&gt;</code>.</em></p>
-</blockquote>
+</div>
 <h5 id="make">Make</h5>
 <p>To build with <code>make</code> we need to <em>include</em> the library and <em>link</em> the
 executable against it when compiling.</p>
 <p>For full details of the flags to set and the linking process see the
-<a href="page/hpc.html/#building-projects-and-linking-to-ftorch">HPC build pages</a>.</p>
+<a href="../installation/hpc.html/#building-projects-and-linking-to-ftorch">HPC build pages</a>.</p>
 <h3 id="running-on-gpus">Running on GPUs</h3>
 <p>In order to run a model on GPU, two main changes to the above process are required:</p>
 <ol>
@@ -269,56 +262,7 @@ executable against it when compiling.</p>
 <li>When calling <code>torch_tensor_from_array</code> in Fortran, the device for the input
    tensor(s) should be set to <code>torch_kCUDA</code>, rather than <code>torch_kCPU</code>.</li>
 </ol>
-<p>For more information refer to the <a href="gpu.html">GPU Documentation</a></p>
-<h2 id="worked-examples">Worked examples</h2>
-<p>The repository comes with a number of documented
-<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples">worked examples</a>.</p>
-<p>These are designed to introduce users to FTorch and how to use the various features.</p>
-<p>A subset of the examples are included as integration tests as part of FTorch's
-<a href="testing.html">test suite</a>.</p>
-<h4 id="1-tensor">1) Tensor</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/1_Tensor">This worked example</a>
-provides a simple demonstration of how to create, manipulate,
-interrogate, and destroy instances of the <code>torch_tensor</code> derived type. This is
-one of the core derived types in the FTorch library, providing an interface to
-the <code>torch::Tensor</code> C++ class. Like <code>torch::Tensor</code>, the <code>torch_tensor</code> derived
-type is designed to have a similar API to PyTorch's <code>torch.Tensor</code> class.</p>
-<h4 id="2-simplenet">2) SimpleNet</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/2_SimpleNet">This worked example</a>
-provides a simple but complete demonstration of how to use the library.
-It uses simple PyTorch 'net' that takes an input vector of length 5 and applies a single
-Linear layer to multiply it by 2.
-The aim is to demonstrate the most basic features of coupling before worrying about
-more complex issues that are covered in later examples.</p>
-<h4 id="3-resnet">3) Resnet</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/3_ResNet">This worked example</a>
-provides a more realistic demonstration of how to use the library,
-using ResNet-18 to classify an image.
-As the input to this model is four-dimensional (batch size, colour, x, y),
-care must be taken dealing with the data array in Python and Fortran.
-See <a href="transposing.html">when to transpose arrays</a> for more details.</p>
-<h4 id="4-multiio">4) MultiIO</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_MultiIO">This worked example</a>
-considers a variant of the SimpleNet demo, which demonstrates how to account for
-multiple input tensors and multiple output tensors.</p>
-<h4 id="5-looping">5) Looping</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_Looping">This worked example</a>
-demonstrates best practices for performing inference on the same network with
-different input multiple times in the same workflow.</p>
-<h4 id="6-multigpu">6) MultiGPU</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MultiGPU">This worked example</a>
-builds on the SimpleNet demo and shows how to account for the case of sending different
-data to multiple GPU devices.</p>
-<h4 id="7-mpi">7) MPI</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_MPI">This worked example</a>
-demonstrates how to run the SimpleNet example in the context of MPI parallelism,
-running the net with different input arrays on each MPI rank.</p>
-<h4 id="8-autograd">8) Autograd</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd">This worked example</a>
-is currently under development. Eventually, it will demonstrate how to perform
-automatic differentiation in FTorch by leveraging PyTorch's Autograd module.
-Currently, it just demonstrates how to compute mathematical expressions
-involving Torch tensors.</p>
+<p>For more information refer to the <a href="../installation/gpu.html">GPU Documentation</a></p>
     </div>
   </div>
       <hr>

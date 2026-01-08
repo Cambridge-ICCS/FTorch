@@ -6,9 +6,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="A library for coupling (Py)Torch machine learning models to Fortran">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
     <meta name="author" content="ICCS Cambridge" >
-    <link rel="icon" href="../favicon.png">
+    <link rel="icon" href="../../favicon.png">
 
     <title>GPU Support &ndash; FTorch</title>
 
@@ -18,12 +18,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- Font Awesome -->
-    <link href="../css/fontawesome.min.css" rel="stylesheet">
-    <link href="../css/brands.min.css" rel="stylesheet">
-    <link href="../css/regular.min.css" rel="stylesheet">
-    <link href="../css/solid.min.css" rel="stylesheet">
-    <link href="../css/v4-font-face.min.css" rel="stylesheet">
-    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
     <!-- MathJax -->
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
@@ -33,9 +33,10 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
             integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
     <!-- Other scripts and stylesheets -->
-    <link href="../css/local.css" rel="stylesheet">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <script src="../js/svg-pan-zoom.min.js"></script>
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -44,7 +45,7 @@
     <div class="container-fluid mb-sm-4 mb-xl-2">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="../index.html">FTorch </a>
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
           <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
                   aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon">
@@ -52,22 +53,22 @@
 
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="index.html">User Guide</a></li>
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
                   </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
                 </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
-                <form action="../search.html" role="search" class="ms-auto">
+                <form action="../../search.html" role="search" class="ms-auto">
                   <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
                 </form>
               </div>
@@ -83,12 +84,15 @@
       <div class="row align-items-center justify-content-between">
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
           </ul>
         </div>
         <div class="col">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Installation</a></li>
               <li class="breadcrumb-item active" aria-current="page">GPU Support</li>
             </ol>
           </nav>
@@ -102,97 +106,102 @@
         <div class="card card-body bg-light" id="sidebar-toc">
           <ul class="nav flex-column align-items">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">User Guide</a>
+              <a class="nav-link" href="../index.html">User Guide</a>
             </li>
           </ul>
           <hr>
           <nav class="nav nav-pills flex-column">
-              <a class="nav-link" href="LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="archive.html">News archive</a>
-              <a class="nav-link" href="changelog.html">FTorch Changelog</a>
-              <a class="nav-link" href="cmake.html">Installation and Build Process</a>
-              <a class="nav-link" href="developer.html">Developer Guide</a>
-              <a class="nav-link" href="examples.html">Examples</a>
+              <a class="nav-link" href="index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="general.html">Installation and Build</a>
+              <a class="nav-link" href="systems.html">System-Specific Guidance</a>
               <a class="nav-link active disabled" href="gpu.html">GPU Support</a>
-              <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
-              <a class="nav-link" href="offline.html">Offline training</a>
-              <a class="nav-link" href="online.html">Online training</a>
-              <a class="nav-link" href="presentations.html">Presentations</a>
-              <a class="nav-link" href="tensor.html">Tensor API</a>
-              <a class="nav-link" href="testing.html">FTorch test suite</a>
-              <a class="nav-link" href="transposing.html">When to transpose data</a>
-              <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
-              <a class="nav-link" href="updates.html">Recent API Changes</a>
+              <a class="nav-link" href="hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="../usage/index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../usage/generic_example.html">Generic Example</a>
+              <a class="nav-link" href="../usage/worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="../usage/tensor.html">Tensor API</a>
+              <a class="nav-link" href="../usage/transposing.html">When to transpose data</a>
+              <a class="nav-link" href="../usage/offline.html">Offline training</a>
+              <a class="nav-link" href="../usage/online.html">Online training</a>
+              <a class="nav-link" href="../usage/troubleshooting.html">Troubleshooting</a>
+
+                </nav>
+              <a class="nav-link" href="../community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../community/news_archive.html">News archive</a>
+              <a class="nav-link" href="../community/presentations.html">Presentations</a>
+              <a class="nav-link" href="../community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="../community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="../developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
           </nav>
         </div>
       </div>
 
     <div class="col-9" id='text'>
-      <div class="toc">
+      <h2 id="gpu-support">GPU Support</h2>
 <ul>
-<li><a href="#gpu-support">GPU Support</a></li>
-<li><a href="#obtaining-appropriate-versions-of-pytorchlibtorch">Obtaining appropriate versions of PyTorch/LibTorch</a><ul>
-<li><a href="#using-pip">Using pip</a></li>
-<li><a href="#libtorch-binary">LibTorch binary</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
+<li><a href="#changes-required">Changes Required</a></li>
+<li><a href="#multiple-gpus">Multiple GPUs</a></li>
 </ul>
-</li>
-<li><a href="#changes-required-to-run-on-gpu">Changes required to run on GPU</a><ul>
-<li><a href="#multi-gpu-runs">Multi-GPU runs</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<h2 id="gpu-support">GPU Support</h2>
 <p>FTorch supports running on a number of GPU hardwares by utilising the PyTorch/LibTorch
 backends.
 Currently supported are:</p>
 <ul>
 <li>CUDA (NVIDIA)</li>
 <li>HIP (AMD/ROCm)</li>
-<li>MPS (Apple silicon)</li>
+<li>MPS (Apple Silicon)</li>
 <li>XPU (Intel)</li>
 </ul>
-<blockquote>
-<p>Note: <em>The HIP/ROCm backend uses the same API as the CUDA backend, so FTorch treats
-HIP as CUDA in places when calling LibTorch or PyTorch.
-This should not concern end-users as the FTorch and pt2ts.py APIs handle this.
-For further information see the
-<a href="https://docs.pytorch.org/docs/stable/notes/hip.html">PyTorch HIP documentation</a></em></p>
-</blockquote>
-<h2 id="obtaining-appropriate-versions-of-pytorchlibtorch">Obtaining appropriate versions of PyTorch/LibTorch</h2>
+<h3 id="dependencies">Dependencies</h3>
 <p>To run FTorch on different hardwares requires downloading the appropriate version of
-PyTorch/LibTorch.</p>
+Torch compatible with the device you wish to target.</p>
 <p>This can be done for all hardwares by using a pip-installed version, and for CUDA and
 HIP with a LibTorch binary.</p>
-<h3 id="using-pip">Using pip</h3>
+<h4 id="installation-using-pip">Installation using pip</h4>
 <p>If installing using pip the appropriate version for the hardware can be specified by
 using the <code>--index-url</code> option during <code>pip install</code>.</p>
 <p>Instructions for CPU, CUDA, and HIP/ROCm can be found in the installation matrix on
 <a href="https://pytorch.org/">pytorch.org</a>.</p>
 <p>For XPU use <code>--index-url https://download.pytorch.org/whl/test/xpu</code>, whilst for MPS
 pip should automatically detect the hardware and install the appropriate version.</p>
-<h3 id="libtorch-binary">LibTorch binary</h3>
+<h4 id="libtorch-binary">LibTorch binary</h4>
 <p>For pure LibTorch binaries see the installation matrix on
 <a href="https://pytorch.org/">pytorch.org</a>.
 Currently standalone LibTorch binaries are only provided for CPU, CUDA, and HIP/ROCm.</p>
-<h2 id="changes-required-to-run-on-gpu">Changes required to run on GPU</h2>
+<h3 id="changes-required">Changes Required</h3>
 <p>In order to run a model on GPU, three main changes are required:</p>
-<p>1) When building FTorch, specify the target GPU architecture using the
-<code>GPU_DEVICE</code> argument. That is, set</p>
+<p><strong>1) Build for the target device</strong><br>
+When building FTorch, specify the target GPU architecture using the
+<a href="general.html#cmake-build-options"><code>GPU_DEVICE</code> CMake argument</a>:</p>
 <div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span>-DGPU_DEVICE<span class="o">=</span>&lt;CUDA/HIP/XPU/MPS&gt;
 </code></pre></div>
 
-<p>as appropriate. The default setting is equivalent to</p>
+<p>The default setting is equivalent to</p>
 <div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span>-DGPU_DEVICE<span class="o">=</span>NONE
 </code></pre></div>
 
 <p>i.e., CPU-only.</p>
-<p>2) When saving your TorchScript model, ensure that it is on the GPU.
+<p><strong>2) Save TorchScript models on the target device</strong><br>
+When saving a TorchScript model, ensure that it is on the GPU.
 For example, when using
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py"><code>pt2ts.py</code></a>,
-this can be done by passing the <code>--device_type &lt;cuda/hip/xpu/mps&gt;</code> argument. This
+this can be done by passing the <code>--device_type &lt;cpu/cuda/hip/xpu/mps&gt;</code> argument. This
 sets the <code>device_type</code> variable, which has the effect of transferring the model
-and any input arrays to the specified GPU device in the following lines:</p>
+(and any input arrays used in tracing/testing) to the specified GPU device in the
+following lines:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">if</span> <span class="n">device_type</span> <span class="o">!=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">:</span>
     <span class="n">trained_model</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
     <span class="n">trained_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
@@ -200,24 +209,31 @@ and any input arrays to the specified GPU device in the following lines:</p>
     <span class="n">trained_model_dummy_input_2</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
 </code></pre></div>
 
-<blockquote>
-<p>Note: <em>This code moves the dummy input tensors to the GPU, as well as the
-model.
-Whilst this is not necessary for saving the model the tensors must be on
-the same GPU device to test that the models runs.</em></p>
-</blockquote>
-<p>3) When calling <code>torch_tensor_from_array</code> in Fortran, the device type for the
-   input tensor(s) should be set to the relevant device type (<code>torch_kCUDA</code>,
-   <code>torch_kHIP</code>, <code>torch_kXPU</code>, or <code>torch_kMPS</code>) rather than <code>torch_kCPU</code>.
-   This ensures that the inputs are on the same device type as the model.</p>
-<blockquote>
+<p><strong>3) Specify the target device from FTorch</strong><br>
+When calling <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> and
+<a href="../../proc/torch_model_load.html">torch_model_load</a>  in Fortran,
+the device type for the input tensor(s) and model should be set to the appropriate
+device type (<code>torch_kCUDA</code>, <code>torch_kHIP</code>, <code>torch_kXPU</code>, or <code>torch_kMPS</code>) rather
+than <code>torch_kCPU</code>.</p>
+<p>The following snippet shows how you would load a model to a CUDA device, create tensors,
+and run inference:</p>
+<div class="codehilite"><pre><span></span><code><span class="c">! Load in from Torchscript to device</span>
+<span class="k">call </span><span class="n">torch_model_load</span><span class="p">(</span><span class="n">torch_net</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;path/to/saved/model.pt&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">)</span>
+
+<span class="c">! Cast Fortran data to Tensors</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">input_tensors</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">in_data</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">output_tensors</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">out_data</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+
+<span class="c">! Inference</span>
+<span class="k">call </span><span class="n">torch_model_forward</span><span class="p">(</span><span class="n">torch_net</span><span class="p">,</span><span class="w"> </span><span class="n">input_tensors</span><span class="p">,</span><span class="w"> </span><span class="n">output_tensors</span><span class="p">)</span>
+</code></pre></div>
+
 <p>Note: <em>You do <strong>not</strong> need to change the device type for the output tensors as we
-want them to be on the CPU for subsequent use in Fortran.</em></p>
-</blockquote>
-<h3 id="multi-gpu-runs">Multi-GPU runs</h3>
-<p>In the case of having multiple GPU devices, as well as setting the device type
-for any input tensors and models, you should also specify their device index
-as the GPU device to be targeted. This argument is optional and will default to
+      want them to be on the CPU for subsequent use in Fortran.</em></p>
+<h3 id="multiple-gpus">Multiple GPUs</h3>
+<p>For the case of having multiple GPU devices you should also specify a device index
+of the GPU to be targeted for any input tensors and models in addition to
+the device type. This argument is optional and will default to
 device index 0 if unset.</p>
 <p>For example, the following code snippet sets up a Torch tensor with CUDA GPU
 device index 2:</p>
@@ -232,14 +248,12 @@ device index 0:</p>
 <span class="w">                             </span><span class="n">torch_kCUDA</span><span class="p">)</span>
 </code></pre></div>
 
-<p>Similarly for the XPU device type.</p>
-<blockquote>
-<p>Note: The MPS device type does not currently support multiple devices, so the
+<p>Similarly for the <code>HIP</code> or <code>XPU</code> device type.
+Note that <code>MPS</code> does not currently support multiple devices, so the
 default device index should always be used.</p>
-</blockquote>
 <p>See the
 <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MultiGPU">MultiGPU example</a>
-for a worked example of running with multiple GPUs.</p>
+for a worked example of running with multiple devices from one code.</p>
     </div>
   </div>
       <hr>

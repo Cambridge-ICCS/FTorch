@@ -1,0 +1,422 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
+    <meta name="author" content="ICCS Cambridge" >
+    <link rel="icon" href="../../favicon.png">
+
+    <title>Developer Guide &ndash; FTorch</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>Developer Guide</h1>
+    <div class="container p-2 mb-4 bg-light border rounded-3">
+      <div class="row align-items-center justify-content-between">
+        <div class="col">
+          <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
+          </ul>
+        </div>
+        <div class="col">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Developer Guide</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Developer Guide</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="col-3">
+        <div class="card card-body bg-light" id="sidebar-toc">
+          <ul class="nav flex-column align-items">
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html">User Guide</a>
+            </li>
+          </ul>
+          <hr>
+          <nav class="nav nav-pills flex-column">
+              <a class="nav-link" href="../installation/index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../installation/general.html">Installation and Build</a>
+              <a class="nav-link" href="../installation/systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="../installation/gpu.html">GPU Support</a>
+              <a class="nav-link" href="../installation/hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="../usage/index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../usage/generic_example.html">Generic Example</a>
+              <a class="nav-link" href="../usage/worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="../usage/tensor.html">Tensor API</a>
+              <a class="nav-link" href="../usage/transposing.html">When to transpose data</a>
+              <a class="nav-link" href="../usage/offline.html">Offline training</a>
+              <a class="nav-link" href="../usage/online.html">Online training</a>
+              <a class="nav-link" href="../usage/troubleshooting.html">Troubleshooting</a>
+
+                </nav>
+              <a class="nav-link" href="../community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../community/news_archive.html">News archive</a>
+              <a class="nav-link" href="../community/presentations.html">Presentations</a>
+              <a class="nav-link" href="../community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="../community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link active disabled" href="developer.html">Developer Guide</a>
+              <a class="nav-link" href="testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
+          </nav>
+        </div>
+      </div>
+
+    <div class="col-9" id='text'>
+      <h2 id="developer-guide">Developer Guide</h2>
+<p>This guide covers how to extend FTorch, contribute code, and the standards
+expected for submissions.</p>
+<ul>
+<li><a href="#developer-requirements">Developer Requirements</a></li>
+<li><a href="#extending-the-api">Extending the API</a><ul>
+<li><a href="#general-guidelines">General guidelines</a></li>
+<li><a href="#fortran-source-generation-using-fypp">Fortran source generation using Fypp</a></li>
+<li><a href="#gpu-device-handling">GPU device handling</a></li>
+</ul>
+</li>
+<li><a href="#contribution-guidelines">Contribution Guidelines</a><ul>
+<li><a href="#code-style-and-standards">Code style and standards</a></li>
+</ul>
+</li>
+<li><a href="#documentation">Documentation</a><ul>
+<li><a href="#in-code-documentation">In-code Documentation</a></li>
+<li><a href="#written-documentation">Written</a></li>
+<li><a href="#versioning-and-changelog">Versioning and Changelog</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="developer-requirements">Developer requirements</h3>
+<p>Development tools for <a href="#fortran-source-and-fypp">pre-processing</a>,
+<a href="#code-style">code styling</a> etc. are pip-installable using the
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/requirements-dev.txt">requirements-dev file</a>:</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-dev.txt
+</code></pre></div>
+
+<p>In order to streamline the process of uploading we provide a pre-commit hook in
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/.githooks/pre-commit"><code>.githooks/pre-commit</code></a>.
+This will check that both the <code>.fypp</code> and <code>.F90</code> files have been updated together in a
+synchronous fashion before a commmit can take place
+(<a href="#fortran-source-generation-using-fypp">see below</a>).
+Use of the hook is not automatic and needs to be enabled by the developer
+(after they have inspected it and are happy with its contents).
+Hooks can be enabled by placing them in the <code>.git</code> directory with the following commands:</p>
+<div class="codehilite"><pre><span></span><code>cp .githooks/pre-commit .git/hooks/
+chmod +x .git/hooks/pre-commit
+</code></pre></div>
+
+<h3 id="extending-the-api">Extending the API</h3>
+<h4 id="general-guidelines">General guidelines</h4>
+<p>If you wish to add Torch functionality from the C++ API to
+the FTorch Fortran API the steps are generally as follows:</p>
+<ul>
+<li>Modify <code>ctorch.cpp</code> to create a C++ version of the function that accesses <code>torch::&lt;item&gt;</code>.</li>
+<li>Add the function to the header file <code>ctorch.h</code></li>
+<li>Modify <code>ftorch.fypp</code> to create a Fortran version of the function
+  that binds to the version in <code>ctorch.cpp</code>.</li>
+</ul>
+<p>Refer to the <a href="https://pytorch.org/cppdocs/">LibTorch C++ Documentation</a>
+and <a href="https://pytorch.org/cppdocs/api/library_root.html">C++ API documentation</a>
+for details of the available functions.</p>
+<p>The following guidelines should be followed whilst writing new routines:</p>
+<ul>
+<li>Match optional argument defaults between Fortran, C, and C++
+  (<a href="https://en.wikipedia.org/wiki/Principle_of_least_astonishment">principle of least astonishment</a>).</li>
+<li>Handle <code>torch::Error</code> and <code>std::exception</code> in the C++ functions by catching and
+  printing to screen before exiting cleanly.</li>
+</ul>
+<h4 id="fortran-source-generation-using-fypp">Fortran source generation using Fypp</h4>
+<p>The Fortran source code in <code>src/ftorch.F90</code> should not be edited directly
+but instead generated from <code>src/ftorch.fypp</code> by running the
+<a href="https://fypp.readthedocs.io/en/stable/index.html">Fypp</a> preprocessor.
+This is done to simplify the process of overloading functions for multiple data
+Fypp can be installed with the <a href="#installing-developer-requirements">developer requirements</a>.</p>
+<p>To generate the Fortran code run:</p>
+<div class="codehilite"><pre><span></span><code>fypp<span class="w"> </span>src/ftorch.fypp<span class="w"> </span>src/ftorch.F90
+</code></pre></div>
+
+<p>Conformance of these files is checked using GitHub continuous integration and
+the <a href="#developer-requirements">provided pre-commit hook</a>.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>Generally it would be advisable to provide only the <code>.fypp</code> source code to
+reduce duplication and confusion. However, because it is a relatively small file
+and many of our users wish to <em>"clone-and-go"</em> rather than develop, we provide both.<br>
+Development should only take place in <code>ftorch.fypp</code>, however._</p>
+</div>
+<h4 id="gpu-device-handling">GPU device handling</h4>
+<p>GPU device-specific code is handled in FTorch using codes defined in the root
+<code>CMakeLists.txt</code> file:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">set</span><span class="p">(</span><span class="s">GPU_DEVICE_NONE</span><span class="w"> </span><span class="s">0</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">GPU_DEVICE_CUDA</span><span class="w"> </span><span class="s">1</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">GPU_DEVICE_XPU</span><span class="w"> </span><span class="s">12</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">GPU_DEVICE_MPS</span><span class="w"> </span><span class="s">13</span><span class="p">)</span>
+</code></pre></div>
+
+<p>These are chosen to be consistent with the numbering used
+<a href="https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h">in PyTorch</a>.</p>
+<p>When a user specifies <code>-DGPU_DEVICE=XPU</code> (for example) in the FTorch CMake build, this
+is mapped to the appropriate device code (in this case 12). Device codes
+are passed to the C++ compiler in the following step:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">target_compile_definitions</span><span class="p">(</span>
+<span class="w">  </span><span class="o">${</span><span class="nv">LIB_NAME</span><span class="o">}</span>
+<span class="w">  </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">GPU_DEVICE=</span><span class="o">${</span><span class="nv">GPU_DEVICE_CODE</span><span class="o">}</span>
+<span class="w">          </span><span class="s">GPU_DEVICE_NONE=</span><span class="o">${</span><span class="nv">GPU_DEVICE_NONE</span><span class="o">}</span><span class="w"> </span><span class="s">GPU_DEVICE_CUDA=</span><span class="o">${</span><span class="nv">GPU_DEVICE_CUDA</span><span class="o">}</span>
+<span class="w">          </span><span class="s">GPU_DEVICE_XPU=</span><span class="o">${</span><span class="nv">GPU_DEVICE_XPU</span><span class="o">}</span><span class="w"> </span><span class="s">GPU_DEVICE_MPS=</span><span class="o">${</span><span class="nv">GPU_DEVICE_MPS</span><span class="o">}</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The chosen device code will enable the appropriate C pre-processor conditions in
+the C++ source so that that the code relevant to that device type becomes
+active.</p>
+<p>An example illustrating why this approach was taken is that if we removed the
+device codes and pre-processor conditions and tried to build with a CPU-only or
+CUDA LibTorch installation then compile errors would arise from the use of the
+<code>torch::xpu</code> module in <code>src/ctorch.cpp</code>.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p><em>The HIP/ROCm backend uses the same API as the CUDA backend, so FTorch treats
+HIP as CUDA in places when calling LibTorch or PyTorch.
+This should not concern end-users as the FTorch and pt2ts.py APIs handle this.
+For further information see the
+<a href="https://docs.pytorch.org/docs/stable/notes/hip.html">PyTorch HIP documentation</a></em></p>
+</div>
+<h3 id="contribution-guidelines">Contribution Guidelines</h3>
+<p>Contributions for new features, bugfixes, or improvements should be raised in a pull
+request.</p>
+<p>In addition to making code contributions as <a href="#extending-the-api">described above</a>
+users should also include <a href="#documentation">documentation</a>, in-code and written if
+required, and tests to cover any changes/additions.
+Guidance on testing can be found on the <a href="testing.html">testing page</a>.
+Notable changes should also be documented in the <a href="#versioning-and-changelog">Changelog</a>.</p>
+<h4 id="code-style-and-standards">Code style and standards</h4>
+<p>FTorch source code is subject to a number of static analysis checks to ensure that it
+conforms to quality and legibility. These tools are a mixture of formatters and linters.</p>
+<p>The tools we use are as follows on a language-by-language basis:</p>
+<ul>
+<li>Fortran: <a href="https://github.com/PlasmaFAIR/fortitude">fortitude</a></li>
+<li>C++: <a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format</a> and
+  <a href="https://clang.llvm.org/extra/clang-tidy/">clang-tidy</a></li>
+<li>C: <a href="https://clang.llvm.org/docs/ClangFormat.html">clang-format</a> and
+  <a href="https://clang.llvm.org/extra/clang-tidy/">clang-tidy</a></li>
+<li>Python: <a href="https://docs.astral.sh/ruff/">ruff</a></li>
+<li>Shell: <a href="https://github.com/koalaman/shellcheck">ShellCheck</a></li>
+<li>CMake: cmake-lint from <a href="https://github.com/cheshirekow/cmake_format">cmake-format</a>
+  (Note: We do not use cmake-format's formatter)</li>
+<li>GitHub Actions workflows: <a href="https://woodruffw.github.io/zizmor">zizmor</a></li>
+</ul>
+<p>Instructions on using these tools can be found in their respective documentations.
+Note that all but ShellCheck may be installed with pip as described in the
+<a href="#developer-requirements">developer requirements</a>.</p>
+<p>Contributors should run these tools over their code and ensure that it conforms before
+submitting a pull request.
+If there is a good reason to ignore a particular rule this should be
+justified in the pull request and ideally documented in the code.
+There is a GitHub action as part of the continuous integration that will perform these
+checks on all pull requests.</p>
+<h3 id="documentation">Documentation</h3>
+<p>The documentation for FTorch is generated using
+<a href="https://forddocs.readthedocs.io/en/latest/">FORD</a> which is installed as part of the
+<a href="#developer-requirements">developer requirements</a>.
+This builds API documentation based off of in-code docstring syntax, and
+web-based documentation from markdown pages.
+For detailed information refer to the
+<a href="https://forddocs.readthedocs.io/en/latest/user_guide/index.html">FORD User Guide</a>.</p>
+<p>To generate the documentation run:</p>
+<div class="codehilite"><pre><span></span><code>ford FTorch.md
+</code></pre></div>
+
+<p>from the root of the repository.</p>
+<p>FORD uses <a href="https://graphviz.org">graphviz</a> to generate dependency graphs from the Fortran
+source code<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">1</a></sup>.
+For this, you will need to install it on your system - see the <a href="https://graphviz.org/download/">installation guide</a> for your platform.</p>
+<h4 id="in-code-documentation">In-code Documentation</h4>
+<p>Ford makes use of a docstring syntax for annotating code.
+As a quick-start:</p>
+<ul>
+<li><code>!!</code> is used to signify documentation.</li>
+<li>Documentation comes <em>after</em> whatever it is documenting (inline or subsequent line).</li>
+<li>Documentation can precede an item if designated using <code>!&gt;</code>.</li>
+</ul>
+<p>The following examples from FORD and FTorch show this in context:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">subroutine </span><span class="n">feed_pets</span><span class="p">(</span><span class="n">cats</span><span class="p">,</span><span class="w"> </span><span class="n">dogs</span><span class="p">,</span><span class="w"> </span><span class="n">food</span><span class="p">)</span>
+<span class="w">    </span><span class="c">!! Feeds your cats and dogs, if enough food is available.</span>
+
+<span class="w">    </span><span class="c">! Arguments</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">cats</span><span class="w">  </span><span class="c">!! The number of cats.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">dogs</span><span class="w">  </span><span class="c">!! The number of dogs.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">food</span>
+<span class="w">        </span><span class="c">!! The ammount of pet food (in kilograms) which you have on hand.</span>
+
+<span class="w">    </span><span class="c">!...</span>
+
+<span class="k">end subroutine </span><span class="n">feed_pets</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="c">!&gt; Type for holding a torch neural net (nn.Module).</span>
+<span class="k">type </span><span class="n">torch_model</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">c_null_ptr</span><span class="w">  </span><span class="c">!! pointer to the neural net in memory</span>
+<span class="k">end type </span><span class="n">torch_model</span>
+</code></pre></div>
+
+<p>Documentation of the C/C++ functions is provided
+by <a href="https://www.doxygen.nl/index.html">Doxygen</a>.
+This should be included in the header file <code>ctorch.h</code>.</p>
+<h4 id="written-documentation">Written Documentation</h4>
+<p><code>FTorch.md</code> is the FORD index file that contains project metadata and describes
+the project homepage.
+Additional pages are contained in <code>pages/</code> as markdown files.</p>
+<p>Notes:</p>
+<ul>
+<li>We need to define macros for GPU devices that are passed to <code>ftorch.F90</code>
+  via the C preprocessor in <code>FTorch.md</code> to match those in the CMakeLists.txt.</li>
+<li>If building documentation locally you can set the <code>dbg: true</code> in <code>FTorch.md</code> to allow
+  FORD to continue when encountering errors. Note that in this case the documentation
+  may build but be incomplete.</li>
+<li>When writing new pages you can set <code>graph: false</code> in <code>FTorch.md</code> whilst prototyping
+  to skip the time-consuming generation of dependency graphs.</li>
+</ul>
+<h4 id="versioning-and-changelog">Versioning and Changelog</h4>
+<p>FTorch has follows <a href="https://semver.org/">semantic versioning</a>.</p>
+<ul>
+<li>Major releases for API changes</li>
+<li>Minor releases periodically for new features</li>
+<li>Patches for bug fixes</li>
+</ul>
+<p>The project version should be updated accordingly through the <code>PACKAGE_VERSION</code> in
+CMakeLists.txt for each new release.</p>
+<p>A log of notable changes to the software is kept in <code>CHANGELOG.md</code>.
+This follows the conventions of <a href="https://keepachangelog.com/">Keep a Changelog</a> and should
+be updated by contributors and maintainers as part of a pull request when appropriate.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>"Notable" includes new features, bugfixes, dependency updates etc.</p>
+<p>"Notable" does not cover typo corrections, documentation rephrasing and restyling,
+or correction of other minor infelicities that do not impact the user or developer.</p>
+</div>
+<p>New minor releases are made when deemed appropriate by maintainers by adding a tag to
+the commit and creating a corresponding GitHub Release.
+The minor number of the version should be incremented, the entry for the version
+finalised in the changelog, and a clean log for 'Unreleased' changes created.</p>
+<p>New patch releases are made whenever a bugfix is merged.
+The patch number of the version should be incremented, a tag attached to the commit,
+and a note made under the current 'Unreleased' patches header in the changelog.</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:2">
+<p>Note: If FORD cannot locate the graphviz executable (it is not a hard dependency)
+it will generate a warning.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+    </div>
+  </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              FTorch
+ was developed by ICCS Cambridge<br>              &copy; 2026 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

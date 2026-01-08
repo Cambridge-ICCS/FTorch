@@ -6,9 +6,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="A library for coupling (Py)Torch machine learning models to Fortran">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
     <meta name="author" content="ICCS Cambridge" >
-    <link rel="icon" href="../favicon.png">
+    <link rel="icon" href="../../favicon.png">
 
     <title>When to transpose data &ndash; FTorch</title>
 
@@ -18,12 +18,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <!-- Font Awesome -->
-    <link href="../css/fontawesome.min.css" rel="stylesheet">
-    <link href="../css/brands.min.css" rel="stylesheet">
-    <link href="../css/regular.min.css" rel="stylesheet">
-    <link href="../css/solid.min.css" rel="stylesheet">
-    <link href="../css/v4-font-face.min.css" rel="stylesheet">
-    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <link href="../../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../../css/brands.min.css" rel="stylesheet">
+    <link href="../../css/regular.min.css" rel="stylesheet">
+    <link href="../../css/solid.min.css" rel="stylesheet">
+    <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../../css/v4-shims.min.css" rel="stylesheet">
     <!-- MathJax -->
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
@@ -33,9 +33,10 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
             integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
     <!-- Other scripts and stylesheets -->
-    <link href="../css/local.css" rel="stylesheet">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <script src="../js/svg-pan-zoom.min.js"></script>
+    <link href="../../css/local.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+      <link href="../../css/user.css" rel="stylesheet">
+    <script src="../../js/svg-pan-zoom.min.js"></script>
   </head>
 
   <body>
@@ -44,7 +45,7 @@
     <div class="container-fluid mb-sm-4 mb-xl-2">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="../index.html">FTorch </a>
+          <a class="navbar-brand" href="../../index.html">FTorch </a>
           <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
                   aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon">
@@ -52,22 +53,22 @@
 
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="index.html">User Guide</a></li>
+                <li class="nav-item"><a class="nav-link" href="../index.html">User Guide</a></li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                    <a class="nav-link" href="../../lists/files.html">Source Files</a>
                   </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                  <a class="nav-link" href="../../lists/modules.html">Modules</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                  <a class="nav-link" href="../../lists/procedures.html">Procedures</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                  <a class="nav-link" href="../../lists/types.html">Derived Types</a>
                 </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
-                <form action="../search.html" role="search" class="ms-auto">
+                <form action="../../search.html" role="search" class="ms-auto">
                   <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
                 </form>
               </div>
@@ -83,12 +84,15 @@
       <div class="row align-items-center justify-content-between">
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
+              <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
           </ul>
         </div>
         <div class="col">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='../index.html'>User Guide</a></li>
+                <li class="breadcrumb-item"><a href='index.html'>Usage</a></li>
               <li class="breadcrumb-item active" aria-current="page">When to transpose data</li>
             </ol>
           </nav>
@@ -102,52 +106,58 @@
         <div class="card card-body bg-light" id="sidebar-toc">
           <ul class="nav flex-column align-items">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">User Guide</a>
+              <a class="nav-link" href="../index.html">User Guide</a>
             </li>
           </ul>
           <hr>
           <nav class="nav nav-pills flex-column">
-              <a class="nav-link" href="LICENSE.html">FTorch License</a>
-              <a class="nav-link" href="archive.html">News archive</a>
-              <a class="nav-link" href="changelog.html">FTorch Changelog</a>
-              <a class="nav-link" href="cmake.html">Installation and Build Process</a>
-              <a class="nav-link" href="developer.html">Developer Guide</a>
-              <a class="nav-link" href="examples.html">Examples</a>
-              <a class="nav-link" href="gpu.html">GPU Support</a>
-              <a class="nav-link" href="hpc.html">Guidance for use in High Performance Computing (HPC)</a>
+              <a class="nav-link" href="../installation/index.html">Installation</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../installation/general.html">Installation and Build</a>
+              <a class="nav-link" href="../installation/systems.html">System-Specific Guidance</a>
+              <a class="nav-link" href="../installation/gpu.html">GPU Support</a>
+              <a class="nav-link" href="../installation/hpc.html">HPC Support</a>
+
+                </nav>
+              <a class="nav-link" href="index.html">Usage</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="generic_example.html">Generic Example</a>
+              <a class="nav-link" href="worked_examples.html">Worked Examples</a>
+              <a class="nav-link" href="tensor.html">Tensor API</a>
+              <a class="nav-link active disabled" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="offline.html">Offline training</a>
               <a class="nav-link" href="online.html">Online training</a>
-              <a class="nav-link" href="presentations.html">Presentations</a>
-              <a class="nav-link" href="tensor.html">Tensor API</a>
-              <a class="nav-link" href="testing.html">FTorch test suite</a>
-              <a class="nav-link active disabled" href="transposing.html">When to transpose data</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
-              <a class="nav-link" href="updates.html">Recent API Changes</a>
+
+                </nav>
+              <a class="nav-link" href="../community/index.html">Community</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../community/news_archive.html">News archive</a>
+              <a class="nav-link" href="../community/presentations.html">Presentations</a>
+              <a class="nav-link" href="../community/case_studies.html">FTorch Case Studies</a>
+              <a class="nav-link" href="../community/changelog.html">FTorch Changelog</a>
+
+                </nav>
+              <a class="nav-link" href="../developer/index.html">Developer Guide</a>
+                <nav class="nav nav-pills flex-column">
+                                <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
+              <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+
+                </nav>
+              <a class="nav-link" href="../LICENSE.html">FTorch License</a>
           </nav>
         </div>
       </div>
 
     <div class="col-9" id='text'>
-      <p>Transposition of data between Fortran and C can lead to a lot of unnecessary confusion.
+      <h2 id="when-to-transpose-data">When to transpose data</h2>
+<p>Transposition of data between Fortran and C can lead to a lot of unnecessary confusion.
 The FTorch library looks after this for you with the
-<a href="../interface/torch_tensor_from_array.html"><code>torch_tensor_from_array()</code></a> function which
+<a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> function which
 allows you to index a tensor in Torch in <strong>exactly the same way</strong> as you would in Fortran.</p>
 <p>If you wish to do something different to this then there are more complex functions
 available and we describe here how and when to use them.</p>
-<div class="toc">
-<ul>
-<li><a href="#introduction-row-vs-column-major">Introduction - row- vs. column-major</a></li>
-<li><a href="#why-does-this-matter">Why does this matter?</a></li>
-<li><a href="#what-can-we-do">What can we do?</a><ul>
-<li><a href="#1-transpose-before-passing">1) Transpose before passing</a></li>
-<li><a href="#2-design-nets-to-use-transpose">2) Design nets to use transpose</a></li>
-<li><a href="#3-use-the-layout-argument-in-torch_tensor_from_array">3) Use the layout argument in torch_tensor_from_array</a></li>
-</ul>
-</li>
-<li><a href="#advanced-use-with-torch_tensor_from_blob">Advanced use with torch_tensor_from_blob</a></li>
-</ul>
-</div>
-<h2 id="introduction-row-vs-column-major">Introduction - row- vs. column-major</h2>
+<h3 id="introduction-row-vs-column-major">Introduction - row- vs. column-major</h3>
 <p>Astute users will note that Fortran is a
 <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order">column-major</a>
 language whilst C, C++, and Python are 
@@ -190,7 +200,7 @@ a & b & c & d
 \end{pmatrix}
 </script>
 reading along each row before progressing down the column dimension.</p>
-<h2 id="why-does-this-matter">Why does this matter?</h2>
+<h3 id="why-does-this-matter">Why does this matter?</h3>
 <p>This matters for FTorch because a key feature is no-copy memory transfer between Fortran
 and Torch.
 To do this the Fortran data that will be used in Torch is stored in memory and a
@@ -208,11 +218,11 @@ which is the <a href="https://en.wikipedia.org/wiki/Transpose">transpose</a> of 
 matrix we had in Fortran; likely not what we were expecting!</p>
 <p>This means we need to be careful when passing data to make sure that what we read in
 to our Torch net is correct as we expect.</p>
-<h2 id="what-can-we-do">What can we do?</h2>
+<h3 id="what-can-we-do">What can we do?</h3>
 <p>There are a few approaches we can take to address this.
 The first two of these are listed for conceptual purposes, whilst in practice we
-advise handling this using the <code>torch_tensor_from_array</code> function described in
-<a href="#3-use-the-layout-argument-in-torch_tensor_from_array">3) below</a>.</p>
+advise handling this using the <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a>
+subroutine described in <a href="#3-use-the-layout-argument-in-torch_tensor_from_array">3) below</a>.</p>
 <h4 id="1-transpose-before-passing">1) Transpose before passing</h4>
 <p>As seen from the above example, writing out from Fortran and reading directly in to
 Torch results in us receiving the transpose.</p>
@@ -249,7 +259,7 @@ Not doing so could leave us open to introducing bugs.</p>
 <h4 id="3-use-the-layout-argument-in-torch_tensor_from_array">3) Use the <code>layout</code> argument in <code>torch_tensor_from_array</code></h4>
 <p>By far the easiest way to deal with the issue is not to worry about it at all!</p>
 <p>As described at the top of this page, the
-<a href="../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> function
+<a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> function
 provides functionality for handling this through its optional <code>layout</code> argument.
 This allows us to take data from Fortran and send it to Torch to be indexed in exactly
 the same way by using strided access based on the shape of the array.</p>
@@ -257,12 +267,12 @@ the same way by using strided access based on the shape of the array.</p>
 i.e. <code>[1, 2]</code> will read <code>i</code> then <code>j</code>.
 By passing <code>layout = [1, 2]</code> the data will be read into the correct indices by
 Torch. The natural ordering <code>[1, 2, ..., n]</code> (where <code>n</code> is the dimension of the
-array) is the default used by <code>torch_tensor_from_array</code>.
+array) is the default used by <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a>.
 In cases where your tensors are indexed the same way in both Fortran and Torch, it
 should be sufficient to just use the default value, in which case you don't need
 to pass a <code>layout</code> argument at all.</p>
 <p>The strided access is achieved by wrapping the <code>torch_tensor_from_blob</code> function
-to automatically generate strides assuming that a straightforward conversion
+to automatically generate strides, assuming that a straightforward conversion
 between row- and column-major is what should happen.</p>
 <p>i.e. if the Fortran array <code>A</code>
 <script type="math/tex; mode=display">
@@ -291,10 +301,10 @@ b & d
 </script>
 </p>
 </blockquote>
-<h2 id="advanced-use-with-torch_tensor_from_blob">Advanced use with <code>torch_tensor_from_blob</code></h2>
+<h3 id="advanced-use-with-torch_tensor_from_blob">Advanced use with <code>torch_tensor_from_blob</code></h3>
 <p>For more advanced options for manipulating and controlling data access when passing
 between Fortran and Torch see the more powerful but more complex
-<a href="../proc/torch_tensor_from_blob.html">torch_tensor_from_blob function</a></p>
+<a href="../../proc/torch_tensor_from_blob.html">torch_tensor_from_blob</a> subroutine.</p>
     </div>
   </div>
       <hr>
