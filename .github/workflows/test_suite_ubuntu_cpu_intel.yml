@@ -26,7 +26,7 @@ permissions: {}
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   test-suite:
-    name: Intel test suite
+    name: test suite
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -44,6 +44,7 @@ jobs:
           - toolchain: intel-ifort
             FC: ifort
             MPIFC: mpiifort
+        version: 2024.1.0
         std: [f08]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -70,8 +71,8 @@ jobs:
         uses: rscohn2/setup-oneapi@2ad0cf6b74bc2426bdcee825cf88f9db719dd727 # v0.1.0
         with:
           components: |
-            icx@2024.1.0
-            ifx@2024.1.0
+            icx@${{ matrix.version }}
+            ifx@${{ matrix.version }}
             impi@2021.12.0
 
       - name: Setup Intel oneAPI environment
