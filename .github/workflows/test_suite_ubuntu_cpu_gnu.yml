@@ -38,7 +38,7 @@ permissions: {}
 jobs:
   # Dynamically build matrix for GNU job
   setup-matrix:
-    name: setup GNU matrix
+    name: setup matrix
     runs-on: ubuntu-latest
 
     # Terminate the job if it runs for more than 5 minutes
@@ -84,7 +84,7 @@ jobs:
 
   test-suite:
     name: test suite
-    needs: setup-gnu-matrix 
+    needs: setup-matrix
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
@@ -102,16 +102,11 @@ jobs:
           persist-credentials: true
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: setup-fortran
+      - name: Setup Fortran
         uses: fortran-lang/setup-fortran@d2ba6ea44297a24407def2f6e117954d844a5368 # v1
         with:
           compiler: ${{ matrix.toolchain.compiler }}
           version: ${{ matrix.toolchain.version }}
-
-      - name: check-compilers-env
-        run: ${FC}
-        env:
-          FC: ${{ steps.setup-fortran.outputs.fc }}
 
       - name: Setup Python
         uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
