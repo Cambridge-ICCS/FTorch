@@ -1,0 +1,133 @@
+# Workflow to run the FTorch test suite using jobs for Intel compiler
+name: Test suite (Ubuntu CPU Intel)
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with changes to this workflow
+  pull_request:
+    paths:
+      - '.github/workflows/test_suite_ubuntu_cpu_intel.yml'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Write permissions are not required
+permissions: {}
+
+# Workflow run - one or more jobs that can run sequentially or in parallel
+jobs:
+  test-suite:
+    name: test suite
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Terminate the job if it runs for more than 15 minutes
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain: [intel-ifx, intel-ifort]
+        include:
+          - toolchain: intel-ifx
+            FC: ifx
+            MPIFC: mpiifx
+          - toolchain: intel-ifort
+            FC: ifort
+            MPIFC: mpiifort
+        version: [2024.1.0]
+        std: [f08]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout FTorch repository
+        with:
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup Python
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
+        with:
+          python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
+
+      - name: Install PyTorch
+        run: |
+          python -m pip install --upgrade pip
+          python -m venv ftorch
+          . ftorch/bin/activate
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install Intel tools
+        uses: rscohn2/setup-oneapi@2ad0cf6b74bc2426bdcee825cf88f9db719dd727 # v0.1.0
+        with:
+          components: |
+            icx@${{ matrix.version }}
+            ifx@${{ matrix.version }}
+            impi@2021.12.0
+
+      - name: Setup Intel oneAPI environment
+        run: |
+          source /opt/intel/oneapi/setvars.sh
+          printenv >> ${GITHUB_ENV}
+
+      - name: Install pFUnit
+        run: |
+          # TODO: Avoid version pinning (needed because version appears in install path)
+          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          mkdir pFUnit/build
+          cd pFUnit/build
+          cmake .. \
+            -DCMAKE_C_COMPILER=icx \
+            -DCMAKE_CXX_COMPILER=icpx \
+            -DCMAKE_Fortran_COMPILER=${{ matrix.FC }} \
+            -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }}
+          make -j 4 install
+
+      - name: Build and install FTorch
+        env:
+          FORTRAN_STANDARD: ${{ matrix.std }}
+        run: |
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
+          export BUILD_DIR=$(pwd)/build
+          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
+          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
+          mkdir ${BUILD_DIR}
+          cd ${BUILD_DIR}
+
+          cmake .. \
+            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=icx \
+            -DCMAKE_CXX_COMPILER=icpx \
+            -DCMAKE_Fortran_COMPILER="${{ matrix.FC }}" \
+            -DMPI_Fortran_COMPILER="${{ matrix.MPIFC }}" \
+            -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
+            -DCMAKE_BUILD_TESTS=TRUE \
+            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+          cmake --build .
+          cmake --install .
+
+      - name: Run unit tests
+        run: |
+          . ftorch/bin/activate
+          cd build
+          ctest --verbose --tests-regex unit
+
+      - name: Run integration tests
+        run: |
+          . ftorch/bin/activate
+          cd build
+          ctest --verbose --tests-regex example

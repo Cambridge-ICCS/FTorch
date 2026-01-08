@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite
-name: Test suite (Windows)
+name: Test suite (Windows CPU Intel)
 
 # Controls when the workflow will run
 on:
@@ -11,17 +11,21 @@ on:
   # # Triggers the workflow on pushes to open pull requests with code changes
   # pull_request:
   #   paths:
-  #     - '.github/workflows/test_suite_windows.yml'
-  #     - '**.bat'
+  #     # This workflow
+  #     - '.github/workflows/test_suite_windows_cpu_intel.yml'
+  #     # Source files
   #     - '**.c'
   #     - '**.cpp'
   #     - '**.fypp'
   #     - '**.f90'
   #     - '**.F90'
-  #     - '**.pf'
   #     - '**.py'
+  #     # Unit tests
+  #     - '**.pf'
+  #     # Build system
   #     - '**CMakeLists.txt'
   #     - '**requirements.txt'
+  #     # Data
   #     - '**data/*'
 
   # Allows you to run this workflow manually from the Actions tab
@@ -38,7 +42,7 @@ permissions: {}
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "test-suite-windows"
-  test-suite-windows:
+  test-suite:
     name: test suite
 
     # The type of runner that the job will run on
