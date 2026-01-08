@@ -66,7 +66,7 @@ jobs:
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
       - name: Install Intel tools
-        uses: rscohn2/setup-oneapi@8affb2b9c36a17ffc190a96fd27ba5ad9b4b5447 # v0
+        uses: rscohn2/setup-oneapi@2ad0cf6b74bc2426bdcee825cf88f9db719dd727 # v0.1.0
         with:
           components: |
             icx@2023.2.1
