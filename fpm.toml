@@ -4,6 +4,10 @@ license = "LICENSE"
 author = "ICCS"
 maintainer = "ICCS"
 copyright = "Copyright 2019, Institute of Computing for Climate Science"
+description = "FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes."
+categories = ["machine-learning", "interoperability"]
+keywords = ["python", "machine-learning", "deep-learning", "torch", "pytorch", "interoperability", "libtorch"]
+homepage = "https://cambridge-iccs.github.io/FTorch/"
 
 [library]
 source-dir = "src"
@@ -21,7 +25,7 @@ auto-examples = true
 module-naming = false
 
 external-modules = ["torch", "torch_cpu", "c10"]
-link = ["torch", "torch_cpu", "c10"]
+link = ["torch", "torch_cpu", "c10", "stdc++"]
 
 [install]
 library = false
@@ -48,6 +52,8 @@ macros = [
   "GPU_DEVICE_XPU=12",
   "GPU_DEVICE_MPS=13",
 ]
+[preprocess.fypp]
+directories = ["src"]
 
 [dependencies]
 mpi = "*"
