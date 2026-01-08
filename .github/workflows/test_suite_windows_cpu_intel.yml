@@ -11,17 +11,21 @@ on:
   # # Triggers the workflow on pushes to open pull requests with code changes
   # pull_request:
   #   paths:
+  #     # This workflow
   #     - '.github/workflows/test_suite_windows_cpu_intel.yml'
-  #     - '**.bat'
+  #     # Source files
   #     - '**.c'
   #     - '**.cpp'
   #     - '**.fypp'
   #     - '**.f90'
   #     - '**.F90'
-  #     - '**.pf'
   #     - '**.py'
+  #     # Unit tests
+  #     - '**.pf'
+  #     # Build system
   #     - '**CMakeLists.txt'
   #     - '**requirements.txt'
+  #     # Data
   #     - '**data/*'
 
   # Allows you to run this workflow manually from the Actions tab

@@ -44,6 +44,7 @@ jobs:
           - toolchain: intel-ifort
             FC: ifort
             MPIFC: mpiifort
+        std: [f08]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -92,6 +93,8 @@ jobs:
           make -j 4 install
 
       - name: Build and install FTorch
+        env:
+          FORTRAN_STANDARD: ${{ matrix.std }}
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
@@ -109,10 +112,10 @@ jobs:
             -DCMAKE_CXX_COMPILER=icpx \
             -DCMAKE_Fortran_COMPILER=${{ matrix.FC }} \
             -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }} \
-            -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} \
+            -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-stand f08"
+            -DCMAKE_Fortran_FLAGS="${FORTRAN_STANDARD}"
           cmake --build .
           cmake --install .
 
