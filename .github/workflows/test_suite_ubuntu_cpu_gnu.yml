@@ -89,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.setup-gnu-matrix.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
 
     # Terminate the job if it runs for more than 15 minutes
     timeout-minutes: 15
