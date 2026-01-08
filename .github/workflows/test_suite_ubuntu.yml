@@ -98,8 +98,8 @@ jobs:
     timeout-minutes: 15
 
     # The Docker container that the job will use
+    # NOTE: This will also be used for all build systems
     container:
-      if: ${{ matrix.build_system == 'spack' }}
       image: ghcr.io/cambridge-iccs/ftorch-dev-env:latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
