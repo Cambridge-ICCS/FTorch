@@ -1,0 +1,5 @@
+rules:
+  unpinned-images:
+    ignore:
+      # Ignore unpinned images for trusted Docker images
+      - test_suite_ubuntu.yml:103
