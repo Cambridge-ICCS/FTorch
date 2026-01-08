@@ -44,7 +44,7 @@ jobs:
           - toolchain: intel-ifort
             FC: ifort
             MPIFC: mpiifort
-        version: 2024.1.0
+        version: [2024.1.0]
         std: [f08]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
