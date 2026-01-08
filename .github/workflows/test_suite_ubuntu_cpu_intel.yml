@@ -69,9 +69,9 @@ jobs:
         uses: rscohn2/setup-oneapi@2ad0cf6b74bc2426bdcee825cf88f9db719dd727 # v0.1.0
         with:
           components: |
-            icx@2023.2.1
-            ifx@2023.2.1
-            impi@2021.14.0
+            icx@2024.1.0
+            ifx@2024.1.0
+            impi@2021.12.0
 
       - name: Setup Intel oneAPI environment
         run: |
