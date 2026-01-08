@@ -68,6 +68,7 @@ jobs:
                 {"compiler": "gcc", "version": 9}
               ],
               "std": ["f2008"],
+              "build_system": ["cmake", "fpm"],
               "include": [
                 {"toolchain": {"compiler": "gcc", "version": 13}, "std": "f2018"}
               ]
@@ -79,7 +80,8 @@ jobs:
               "toolchain": [
                 {"compiler": "gcc", "version": 13}
               ],
-              "std": ["f2008", "f2018"]
+              "std": ["f2008", "f2018"],
+              "build_system": ["cmake", "fpm"]
             }'
           fi
           # Convert json to compact line expected by github action
@@ -140,9 +142,16 @@ jobs:
             -DMPI_Fortran_COMPILER=mpif90
           make -j 4 install
 
+      - name: Install fpm
+        if: matrix.build_system == 'fpm'
+        run: |
+          . ftorch/bin/activate
+          pip install fpm
+
       - name: Build FTorch
         env:
           FORTRAN_STANDARD: ${{ matrix.std }}
+          BUILD_SYSTEM: ${{ matrix.build_system }}
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
@@ -150,23 +159,38 @@ jobs:
           export BUILD_DIR=$(pwd)/build
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
-          mkdir ${BUILD_DIR}
-          cd ${BUILD_DIR}
 
-          cmake .. \
-            -DPython_EXECUTABLE="$(which python)" \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER=gfortran  \
-            -DCMAKE_C_COMPILER=gcc  \
-            -DCMAKE_CXX_COMPILER=g++  \
-            -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
-            -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
-          cmake --build .
-          cmake --install .
+          if [ "${BUILD_SYSTEM}" == "cmake" ]; then
+            mkdir ${BUILD_DIR}
+            cd ${BUILD_DIR}
+            cmake .. \
+              -DPython_EXECUTABLE="$(which python)" \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_Fortran_COMPILER=gfortran  \
+              -DCMAKE_C_COMPILER=gcc  \
+              -DCMAKE_CXX_COMPILER=g++  \
+              -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
+              -DCMAKE_BUILD_TESTS=TRUE \
+              -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+              -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+            cmake --build .
+            cmake --install .
+          elif [ "${BUILD_SYSTEM}" == "fpm" ]; then
+            fpm build \
+              --profile release \
+              --compiler gfortran \
+              --c-compiler gcc \
+              --cxx-compiler g++ \
+              --flag "-std=${FORTRAN_STANDARD} -I${PFUNIT_DIR}/include -L${PFUNIT_DIR}/lib" \
+              --cxx-flag "-cpp -std=c++17 -I${Torch_DIR}/torch/include -I${Torch_DIR}/torch/include/torch/csrc/api/include -L${Torch_DIR}/torch/lib" \
+              --verbose
+          else
+            echo "Unsupported build system ${BUILD_SYSTEM}"
+            exit 1
+          fi
 
-      - name: Check pkg-config file 
+      - name: Check pkg-config file
+        if: matrix.build_system == 'cmake'
         run: |
           # pkg-config looks in the `build` directory for libraries
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
@@ -207,13 +231,33 @@ jobs:
           fi
 
       - name: Run unit tests
+        env:
+          BUILD_SYSTEM: ${{ matrix.build_system }}
         run: |
           . ftorch/bin/activate
-          cd build
-          ctest --verbose --tests-regex unit
+          if [ "${BUILD_SYSTEM}" == "cmake" ]; then
+            cd build
+            ctest --verbose --tests-regex unit
+          elif [ "${BUILD_SYSTEM}" == "fpm" ]; then
+            # # TODO: pFUnit currently doesn't provide an fpm.toml
+            # fpm test
+            echo "UNIT TESTS SKIPPED because pFUnit doesn't provide an fpm.toml"
+          else
+            echo "Unsupported build system ${BUILD_SYSTEM}"
+            exit 1
+          fi
 
       - name: Run integration tests
+        env:
+          BUILD_SYSTEM: ${{ matrix.build_system }}
         run: |
           . ftorch/bin/activate
-          cd build
-          ctest --verbose --tests-regex example
+          if [ "${BUILD_SYSTEM}" == "cmake" ]; then
+            cd build
+            ctest --verbose --tests-regex example
+          elif [ "${BUILD_SYSTEM}" == "fpm" ]; then
+            fpm run --example
+          else
+            echo "Unsupported build system ${BUILD_SYSTEM}"
+            exit 1
+          fi
