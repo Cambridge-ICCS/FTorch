@@ -82,7 +82,6 @@ jobs:
 
       # Apply CMake linter, cmake-lint
       - name: cmake-lint
-        if: always()
         run: |
           cd ${{ github.workspace }}
           . ../ftorch_venv/bin/activate
@@ -90,7 +89,6 @@ jobs:
 
       # Apply Shell linter, shellcheck
       - name: shellcheck
-        if: always()
         run: |
           cd ${{ github.workspace }}
           sudo apt install shellcheck
@@ -101,7 +99,6 @@ jobs:
       # Apply Fortran linter, fortitude
       # Configurable using the fortitude.toml file if present
       - name: fortitude source
-        if: always()
         run: |
           cd ${{ github.workspace }}
           . ../ftorch_venv/bin/activate
@@ -111,7 +108,6 @@ jobs:
       # Apply C++ and C linter and formatter, clang
       # Configurable using the .clang-format and .clang-tidy config files if present
       - name: clang source
-        if: always()
         uses: cpp-linter/cpp-linter-action@b7fbdde0f6776f478f4d8867c2b746077fa7ea89 # v2
         id: linter
         env:
@@ -129,7 +125,6 @@ jobs:
 
       # Apply Fortran linter, fortitude to examples
       - name: fortitude examples
-        if: always()
         run: |
           cd ${{ github.workspace }}
           . ../ftorch_venv/bin/activate
@@ -137,7 +132,6 @@ jobs:
 
       # Apply Python linter, ruff
       - name: ruff
-        if: always()
         run: |
           cd ${{ github.workspace }}
           . ../ftorch_venv/bin/activate
