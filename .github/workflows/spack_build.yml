@@ -74,7 +74,6 @@ jobs:
             gettext \
             gfortran \
             git \
-            gmake \
             groff \
             gzip \
             libtool \
