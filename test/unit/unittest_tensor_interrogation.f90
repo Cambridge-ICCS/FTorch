@@ -5,19 +5,23 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module unittest_tensor_interrogation
-  use funit
+  use testdrive, only: unittest_type, new_unittest, error_type, check
   use ftorch, only: torch_kFloat32, torch_kCPU, torch_tensor, torch_tensor_empty
+
   use iso_c_binding, only: c_int64_t
 
   implicit none
 
-  public
+  private
+  public :: collect_tensor_interrogation_suite
 
   ! All unit tests in this module run on CPU
   integer, parameter :: device_type = torch_kCPU
 
   ! All unit tests in this module use float32 precision
   integer, parameter :: dtype = torch_kFloat32
+
+  ! TODO: Port everything below
 
   ! Typedef holding a set of parameter values
   @testParameter

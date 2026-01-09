@@ -80,18 +80,17 @@ jobs:
           source /opt/intel/oneapi/setvars.sh
           printenv >> ${GITHUB_ENV}
 
-      - name: Install pFUnit
+      - name: Install Fortran Package Manager (fpm)
         run: |
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
-          mkdir pFUnit/build
-          cd pFUnit/build
-          cmake .. \
-            -DCMAKE_C_COMPILER=icx \
-            -DCMAKE_CXX_COMPILER=icpx \
-            -DCMAKE_Fortran_COMPILER=${{ matrix.FC }} \
-            -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }}
-          make -j 4 install
+          . ftorch/bin/activate
+          pip install fpm
+
+      - name: Install test-drive
+        run: |
+          . ftorch/bin/activate
+          git clone https://github.com/fortran-lang/test-drive.git
+          cd test-drive
+          fpm build
 
       - name: Build and install FTorch
         env:
@@ -101,8 +100,6 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/build
-          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
 
@@ -115,7 +112,7 @@ jobs:
             -DMPI_Fortran_COMPILER="${{ matrix.MPIFC }}" \
             -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+            -DCMAKE_PREFIX_PATH="${Torch_DIR}" \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
           cmake --build .
           cmake --install .

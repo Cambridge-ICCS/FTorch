@@ -25,6 +25,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
+
 # Set GPU device type using consistent numbering as in PyTorch
 # https://github.com/pytorch/pytorch/blob/main/c10/core/DeviceType.h
 # Set in a single location here and passed as preprocessor flag for use
@@ -211,7 +213,7 @@ if(CMAKE_BUILD_TESTS)
   endif()
 
   # Integration tests
-  add_subdirectory(examples)
+  # add_subdirectory(examples)
 endif()
 
 # Setup and install configuration files

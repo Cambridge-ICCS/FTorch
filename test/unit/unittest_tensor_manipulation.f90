@@ -5,26 +5,37 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module unittest_tensor_manipulation
-  use funit
+  use testdrive, only: unittest_type, new_unittest, error_type, check
   use ftorch, only: assignment(=), torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_from_array
   use ftorch_test_utils, only: assert_allclose
+
   use, intrinsic :: iso_c_binding, only : c_int64_t
 
   implicit none
 
-  public
+  private
+  public :: collect_tensor_manipulation_suite
 
   integer, parameter :: device_type = torch_kCPU
 
 contains
 
-  @test
-  subroutine test_torch_tensor_zero()
+  !> Collect all exported unit tests
+  subroutine collect_tensor_manipulation_suite(testsuite)
+    type(unittest_type), allocatable, intent(out) :: testsuite(:)
+
+    testsuite = [ &
+      new_unittest("valid", test_torch_tensor_zero) &
+    ]
+  end subroutine collect_tensor_manipulation_suite
+
+  subroutine test_torch_tensor_zero(error)
     use, intrinsic :: iso_fortran_env, only: sp => real32
 
     ! Set working precision for reals
     integer, parameter :: wp = sp
 
+    type(error_type), allocatable, intent(out) :: error
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer, parameter :: dtype = torch_kFloat32
@@ -43,12 +54,7 @@ contains
 
     ! Compare the data in the tensor to the input array
     expected(:,:) = 0.0
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_zero")
-
-    if (.not. test_pass) then
-      print *, "Error :: incorrect output from torch_tensor_zero"
-      stop 999
-    end if
+    call check(error, assert_allclose(in_data, expected, test_name="test_torch_tensor_zero"))
 
   end subroutine test_torch_tensor_zero
 

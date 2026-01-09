@@ -24,7 +24,6 @@ on:
       - 'examples/**/*.f90'
       # Build system
       - '**CMakeLists.txt'
-      - '**requirements.txt'
 
   pull_request:
     paths:
@@ -86,16 +85,17 @@ jobs:
         run: |
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
-      - name: Install pFUnit
+      - name: Install Fortran Package Manager (fpm)
         run: |
-          export FC=/usr/bin/gfortran
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
-          mkdir pFUnit/build
-          cd pFUnit/build
-          # MPI support is currently not needed for the unit testing
-          cmake .. -DSKIP_MPI=YES
-          make -j 4 install
+          . ftorch/bin/activate
+          pip install fpm
+
+      - name: Install test-drive
+        run: |
+          . ftorch/bin/activate
+          git clone https://github.com/fortran-lang/test-drive.git
+          cd test-drive
+          fpm build
 
       - name: Build FTorch
         env:
@@ -105,8 +105,6 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/build
-          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
           cmake .. \
@@ -116,7 +114,7 @@ jobs:
             -DCMAKE_BUILD_TESTS=TRUE \
             -DGPU_DEVICE=CUDA \
             -DMULTI_GPU=OFF \
-            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+            -DCMAKE_PREFIX_PATH="${Torch_DIR}" \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
           cmake --build .
           cmake --install .
