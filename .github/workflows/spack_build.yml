@@ -98,7 +98,7 @@ jobs:
 
       - name: Install Spack
         run: |
-          git clone -b develop https://github.com/spack/spack.git
+          git clone -b v1.1.0 --depth 1 https://github.com/spack/spack.git
           export SPACK_ROOT=$(pwd)/spack
           source ${SPACK_ROOT}/share/spack/setup-env.sh
           spack --version
