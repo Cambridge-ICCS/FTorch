@@ -62,27 +62,13 @@ jobs:
           source ${SPACK_ROOT}/share/spack/setup-env.sh
           spack --version
 
-      - name: Setup Spack environment
+      - name: Setup Spack and Add FTorch package
         run: |
           export SPACK_ROOT=$(pwd)/spack
           source ${SPACK_ROOT}/share/spack/setup-env.sh
-          
-          # Create a temporary spack environment for FTorch
-          spack env create ftorch-test
-          spack env activate ftorch-test
           
           # Configure compilers
           spack compiler find
-          
-          # Install basic dependencies
-          spack install cmake
-          spack install "py-torch~cuda"
-
-      - name: Add FTorch to Spack
-        run: |
-          export SPACK_ROOT=$(pwd)/spack
-          source ${SPACK_ROOT}/share/spack/setup-env.sh
-          spack env activate ftorch-test
           
           # Copy package.py to Spack repo
           mkdir -p ${SPACK_ROOT}/var/spack/repos/builtin/packages/ftorch
@@ -95,9 +81,9 @@ jobs:
         run: |
           export SPACK_ROOT=$(pwd)/spack
           source ${SPACK_ROOT}/share/spack/setup-env.sh
-          spack env activate ftorch-test
           
           # Build FTorch with specified variants
+          # Dependencies (cmake, py-torch) are automatically installed
           spack install "ftorch@main~cuda${{ matrix.variant }}"
 
       - name: Verify installation
