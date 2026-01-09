@@ -36,9 +36,22 @@ class Ftorch(CMakePackage):
     depends_on("fortran", type="build")
     depends_on("py-torch", type=("build", "link"))
 
-    # GPU support dependencies
+    # GPU support dependencies - ensure PyTorch has matching GPU support
     depends_on("cuda", when="+cuda", type=("build", "link"))
+    depends_on("py-torch+cuda", when="+cuda", type=("build", "link"))
+    
     depends_on("rocm", when="+hip", type=("build", "link"))
+    depends_on("py-torch+rocm", when="+hip", type=("build", "link"))
+    
+    # XPU (Intel GPU) support requires Intel Extension for PyTorch (IPEX)
+    # which is not yet widely available in Spack. Users building with +xpu
+    # will need to manually provide IPEX or use an external PyTorch installation.
+    # depends_on("intel-extension-for-pytorch", when="+xpu", type=("build", "link"))
+    
+    # MPS (Metal Performance Shaders) is built into PyTorch on macOS
+    # No additional dependencies needed beyond platform check
+    depends_on("py-torch", when="+mps", type=("build", "link"))
+    
     depends_on("python", when="+tests", type=("build", "run"))
 
     # Conflicts for mutually exclusive GPU backends
