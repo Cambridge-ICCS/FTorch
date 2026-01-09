@@ -31,7 +31,7 @@ jobs:
   spack-validate:
     name: Validate Spack Package
     runs-on: ubuntu-22.04
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout FTorch repository
@@ -65,19 +65,104 @@ jobs:
           python -m py_compile package.py
           echo "Package syntax is valid"
 
-      - name: Test concretization
+      - name: Test valid variant combinations
         run: |
-          # Test that the package can be concretized with different variants
-          echo "=== Testing concretization: ftorch@main ~cuda ~tests ==="
-          spack spec ftorch@main~cuda~tests
+          # Test successful concretization for all valid variant combinations
           
-          echo "=== Testing concretization: ftorch@main ~cuda +tests ==="
-          spack spec ftorch@main~cuda+tests
+          echo "=== Base configuration (all GPU backends disabled) ==="
+          spack spec ftorch@main~cuda~hip~xpu~mps~tests
           
-          echo "=== Testing concretization: ftorch@main +cuda ~tests ==="
-          spack spec ftorch@main+cuda~tests
+          echo "=== With tests enabled ==="
+          spack spec ftorch@main~cuda~hip~xpu~mps+tests
           
-          echo "All concretization tests passed!"
+          echo "=== CUDA variant ==="
+          spack spec ftorch@main+cuda~hip~xpu~mps~tests
+          spack spec ftorch@main+cuda~hip~xpu~mps+tests
+          
+          echo "=== HIP variant ==="
+          spack spec ftorch@main~cuda+hip~xpu~mps~tests
+          spack spec ftorch@main~cuda+hip~xpu~mps+tests
+          
+          echo "=== XPU variant ==="
+          spack spec ftorch@main~cuda~hip+xpu~mps~tests
+          spack spec ftorch@main~cuda~hip+xpu~mps+tests
+          
+          echo "=== MPS variant (will fail on Linux platform) ==="
+          # MPS should fail on Linux due to platform conflict
+          if spack spec ftorch@main~cuda~hip~xpu+mps~tests 2>&1 | grep -q "conflicts"; then
+            echo "PASS: MPS correctly conflicts on Linux platform"
+          else
+            echo "ERROR: MPS should conflict on Linux platform"
+            exit 1
+          fi
+          
+          echo "=== Shared library variants ==="
+          spack spec ftorch@main~cuda~hip~xpu~mps+shared~tests
+          spack spec ftorch@main~cuda~hip~xpu~mps~shared~tests
+          
+          echo "All valid variant combinations passed!"
+
+      - name: Test conflicting GPU backend combinations (expected failures)
+        run: |
+          # Test that mutually exclusive GPU backends correctly fail
+          
+          echo "=== Testing CUDA + HIP conflict ==="
+          if spack spec ftorch@main+cuda+hip 2>&1 | grep -q "conflicts"; then
+            echo "PASS: +cuda+hip correctly failed with conflict"
+          else
+            echo "ERROR: +cuda+hip should have failed but didn't"
+            exit 1
+          fi
+          
+          echo "=== Testing CUDA + XPU conflict ==="
+          if spack spec ftorch@main+cuda+xpu 2>&1 | grep -q "conflicts"; then
+            echo "PASS: +cuda+xpu correctly failed with conflict"
+          else
+            echo "ERROR: +cuda+xpu should have failed but didn't"
+            exit 1
+          fi
+          
+          echo "=== Testing CUDA + MPS conflict ==="
+          if spack spec ftorch@main+cuda+mps 2>&1 | grep -q "conflicts"; then
+            echo "PASS: +cuda+mps correctly failed with conflict"
+          else
+            echo "ERROR: +cuda+mps should have failed but didn't"
+            exit 1
+          fi
+          
+          echo "=== Testing HIP + XPU conflict ==="
+          if spack spec ftorch@main+hip+xpu 2>&1 | grep -q "conflicts"; then
+            echo "PASS: +hip+xpu correctly failed with conflict"
+          else
+            echo "ERROR: +hip+xpu should have failed but didn't"
+            exit 1
+          fi
+          
+          echo "=== Testing HIP + MPS conflict ==="
+          if spack spec ftorch@main+hip+mps 2>&1 | grep -q "conflicts"; then
+            echo "PASS: +hip+mps correctly failed with conflict"
+          else
+            echo "ERROR: +hip+mps should have failed but didn't"
+            exit 1
+          fi
+          
+          echo "=== Testing XPU + MPS conflict ==="
+          if spack spec ftorch@main+xpu+mps 2>&1 | grep -q "conflicts"; then
+            echo "PASS: +xpu+mps correctly failed with conflict"
+          else
+            echo "ERROR: +xpu+mps should have failed but didn't"
+            exit 1
+          fi
+          
+          echo "=== Testing all GPU backends enabled (multiple conflicts) ==="
+          if spack spec ftorch@main+cuda+hip+xpu+mps 2>&1 | grep -q "conflicts"; then
+            echo "PASS: +cuda+hip+xpu+mps correctly failed with conflicts"
+          else
+            echo "ERROR: +cuda+hip+xpu+mps should have failed but didn't"
+            exit 1
+          fi
+          
+          echo "All conflict tests passed!"
 
   # Job 2: Build FTorch with CMake using pip-installed PyTorch
   # This validates the build process works, similar to other CI tests
