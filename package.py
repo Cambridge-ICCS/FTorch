@@ -1,0 +1,127 @@
+# Copyright Spack Project Developers. See LICENSE file for details.
+#
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
+
+from spack.package import *
+
+
+class Ftorch(CMakePackage):
+    """FTorch: A library for coupling PyTorch models to Fortran.
+    
+    FTorch enables users to directly couple their PyTorch models to Fortran code,
+    supporting both CPU and GPU execution on UNIX and Windows operating systems.
+    """
+
+    homepage = "https://github.com/Cambridge-ICCS/FTorch"
+    url = "https://github.com/Cambridge-ICCS/FTorch/archive/refs/tags/v1.0.0.tar.gz"
+    git = "https://github.com/Cambridge-ICCS/FTorch.git"
+
+    license("MIT")
+
+    version("1.0.0", sha256="e6e3bb6a27f4c5b42b9e6d5c5f5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5")
+    version("main", branch="main", git=git)
+
+    # Variants for optional features
+    variant("cuda", default=False, description="Enable CUDA GPU support")
+    variant("hip", default=False, description="Enable HIP (ROCm) GPU support")
+    variant("xpu", default=False, description="Enable Intel XPU support")
+    variant("mps", default=False, description="Enable Apple Metal Performance Shaders support")
+    variant("shared", default=True, description="Build shared library (default) instead of static")
+    variant("tests", default=False, description="Build tests")
+
+    # Core dependencies
+    depends_on("cmake@3.15:", type="build")
+    depends_on("fortran", type="build")
+    depends_on("py-torch", type=("build", "link"))
+
+    # GPU support dependencies
+    depends_on("cuda", when="+cuda", type=("build", "link"))
+    depends_on("rocm", when="+hip", type=("build", "link"))
+    depends_on("python", when="+tests", type=("build", "run"))
+
+    # Conflicts for mutually exclusive GPU backends
+    conflicts("+cuda", when="+hip")
+    conflicts("+cuda", when="+xpu")
+    conflicts("+cuda", when="+mps")
+    conflicts("+hip", when="+xpu")
+    conflicts("+hip", when="+mps")
+    conflicts("+xpu", when="+mps")
+
+    # Conflicts with platform-specific GPU support
+    conflicts("+mps", when="platform=linux")
+    conflicts("+mps", when="platform=windows")
+    conflicts("+hip", when="platform=darwin")
+
+    def cmake_args(self):
+        """Define CMake arguments for FTorch build."""
+        args = [
+            self.define_from_variant("BUILD_SHARED_LIBS", "shared"),
+            self.define_from_variant("CMAKE_BUILD_TESTS", "tests"),
+        ]
+
+        # Determine GPU device target
+        gpu_device = "NONE"
+        if self.spec.satisfies("+cuda"):
+            gpu_device = "CUDA"
+        elif self.spec.satisfies("+hip"):
+            gpu_device = "HIP"
+        elif self.spec.satisfies("+xpu"):
+            gpu_device = "XPU"
+        elif self.spec.satisfies("+mps"):
+            gpu_device = "MPS"
+
+        args.append(self.define("GPU_DEVICE", gpu_device))
+
+        # Torch setup: prefer PyTorch installation via Spack
+        if self.spec["py-torch"].package.spec.satisfies("@1.13:"):
+            # Modern PyTorch with better CMake support
+            torch_root = self.spec["py-torch"].prefix
+            # PyTorch in site-packages typically at: <prefix>/lib/pythonX.Y/site-packages/torch
+            args.append(
+                self.define(
+                    "CMAKE_PREFIX_PATH",
+                    join_path(
+                        torch_root,
+                        "lib",
+                        "python{0}.{1}".format(
+                            self.spec["python"].version.major,
+                            self.spec["python"].version.minor,
+                        ),
+                        "site-packages",
+                        "torch",
+                    ),
+                )
+            )
+        else:
+            # Fallback for older PyTorch versions
+            args.append(self.define("CMAKE_PREFIX_PATH", self.spec["py-torch"].prefix))
+
+        return args
+
+    def setup_build_environment(self, env):
+        """Set up build environment variables."""
+        # Ensure proper Fortran environment
+        if self.compiler.fc:
+            env.set("CMAKE_Fortran_COMPILER", self.compiler.fc)
+        if self.compiler.cc:
+            env.set("CMAKE_C_COMPILER", self.compiler.cc)
+        if self.compiler.cxx:
+            env.set("CMAKE_CXX_COMPILER", self.compiler.cxx)
+
+    def setup_run_environment(self, env):
+        """Set up runtime environment."""
+        # Add installation paths to environment
+        env.prepend_path("LD_LIBRARY_PATH", join_path(self.prefix, "lib"))
+        env.prepend_path(
+            "FORTRAN_MODULE_PATH", join_path(self.prefix, "include", "ftorch")
+        )
+
+    @run_after("install")
+    def setup_fortran_module_path(self):
+        """Ensure Fortran module files are properly installed."""
+        # Verify Fortran module files are installed
+        ftorch_mod = join_path(self.prefix, "include", "ftorch", "ftorch.mod")
+        if not os.path.exists(ftorch_mod):
+            tty.warn(
+                "Expected Fortran module file not found at {0}".format(ftorch_mod)
+            )

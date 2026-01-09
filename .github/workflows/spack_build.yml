@@ -1,0 +1,134 @@
+# Workflow to test building FTorch with Spack package manager
+name: Spack Build Test
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with code changes
+  pull_request:
+    paths:
+      # This workflow
+      - '.github/workflows/spack_build.yml'
+      # Package definition
+      - 'package.py'
+      # Source files
+      - 'src/**'
+      # Build system
+      - 'CMakeLists.txt'
+      - 'cmake/**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Write permissions are not required
+permissions: {}
+
+# Workflow run - one or more jobs that can run sequentially or in parallel
+jobs:
+  spack-build:
+    name: Build with Spack
+    runs-on: ubuntu-latest
+
+    # Terminate the job if it runs for more than 30 minutes
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.11", "3.12" ]
+        variant: [ "", "+tests" ]
+
+    steps:
+      - name: Checkout FTorch repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup Python
+        uses: actions/setup-python@83679a892e2d98755f2dac6acb0bfd1e9ac5d548 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Spack
+        run: |
+          git clone -b develop https://github.com/spack/spack.git
+          export SPACK_ROOT=$(pwd)/spack
+          source ${SPACK_ROOT}/share/spack/setup-env.sh
+          spack --version
+
+      - name: Setup Spack environment
+        run: |
+          export SPACK_ROOT=$(pwd)/spack
+          source ${SPACK_ROOT}/share/spack/setup-env.sh
+          
+          # Create a temporary spack environment for FTorch
+          spack env create ftorch-test
+          spack env activate ftorch-test
+          
+          # Configure compilers
+          spack compiler find
+          
+          # Install basic dependencies
+          spack install cmake
+          spack install "py-torch~cuda"
+
+      - name: Add FTorch to Spack
+        run: |
+          export SPACK_ROOT=$(pwd)/spack
+          source ${SPACK_ROOT}/share/spack/setup-env.sh
+          spack env activate ftorch-test
+          
+          # Copy package.py to Spack repo
+          mkdir -p ${SPACK_ROOT}/var/spack/repos/builtin/packages/ftorch
+          cp package.py ${SPACK_ROOT}/var/spack/repos/builtin/packages/ftorch/
+          
+          # Verify package is found
+          spack list ftorch
+
+      - name: Build FTorch with Spack
+        run: |
+          export SPACK_ROOT=$(pwd)/spack
+          source ${SPACK_ROOT}/share/spack/setup-env.sh
+          spack env activate ftorch-test
+          
+          # Build FTorch with specified variants
+          spack install "ftorch@main~cuda${{ matrix.variant }}"
+
+      - name: Verify installation
+        run: |
+          export SPACK_ROOT=$(pwd)/spack
+          source ${SPACK_ROOT}/share/spack/setup-env.sh
+          spack env activate ftorch-test
+          
+          # Check library installation
+          ftorch_spec=$(spack find -p ftorch | tail -1 | awk '{print $1}')
+          ftorch_prefix=$(spack location -i ${ftorch_spec})
+          
+          echo "FTorch installed at: ${ftorch_prefix}"
+          
+          # Verify key files
+          if [[ ! -f "${ftorch_prefix}/lib/libftorch.so" ]]; then
+            echo "ERROR: libftorch.so not found at ${ftorch_prefix}/lib/"
+            exit 1
+          fi
+          
+          if [[ ! -f "${ftorch_prefix}/include/ctorch.h" ]]; then
+            echo "ERROR: ctorch.h not found at ${ftorch_prefix}/include/"
+            exit 1
+          fi
+          
+          if [[ ! -f "${ftorch_prefix}/include/ftorch/ftorch.mod" ]]; then
+            echo "ERROR: ftorch.mod not found at ${ftorch_prefix}/include/ftorch/"
+            exit 1
+          fi
+          
+          echo "All expected files found!"
+          
+          # List library contents
+          nm ${ftorch_prefix}/lib/libftorch.so | head -20
