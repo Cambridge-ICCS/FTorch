@@ -70,12 +70,20 @@ jobs:
           # Configure compilers
           spack compiler find
           
-          # Copy package.py to Spack repo
-          mkdir -p ${SPACK_ROOT}/var/spack/repos/builtin/packages/ftorch
-          cp package.py ${SPACK_ROOT}/var/spack/repos/builtin/packages/ftorch/
+          # Create a custom Spack repository for FTorch
+          mkdir -p ftorch-repo/packages/ftorch
+          cp package.py ftorch-repo/packages/ftorch/
           
-          # Verify package is found
-          spack list ftorch
+          # Create repo.yaml for the custom repo (avoid heredoc for YAML compatibility)
+          echo "repo:" > ftorch-repo/repo.yaml
+          echo "  namespace: ftorch" >> ftorch-repo/repo.yaml
+          
+          # Add the custom repo to Spack
+          spack repo add $(pwd)/ftorch-repo
+          
+          # Verify repos and package
+          spack repo list
+          spack info ftorch
 
       - name: Build FTorch with Spack
         run: |
