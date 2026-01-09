@@ -41,6 +41,17 @@ class Ftorch(CMakePackage):
         description="CUDA architecture(s) to build for",
         when="+cuda",
     )
+    
+    # AMD GPU target variant - required when building with ROCm/HIP
+    # Common targets: gfx906 (MI50/MI60), gfx908 (MI100), gfx90a (MI200), gfx942 (MI300)
+    variant(
+        "amdgpu_target",
+        default="none",
+        values=("none", "gfx906", "gfx908", "gfx90a", "gfx942"),
+        multi=True,
+        description="AMD GPU target(s) to build for",
+        when="+hip",
+    )
 
     # Core dependencies
     depends_on("cmake@3.15:", type="build")
@@ -54,7 +65,9 @@ class Ftorch(CMakePackage):
         depends_on(f"py-torch+cuda cuda_arch={arch}", when=f"+cuda cuda_arch={arch}", type=("build", "link"))
     
     depends_on("hip", when="+hip", type=("build", "link"))
-    depends_on("py-torch+rocm", when="+hip", type=("build", "link"))
+    # Pass amdgpu_target to py-torch - user must specify at least one target
+    for target in ("gfx906", "gfx908", "gfx90a", "gfx942"):
+        depends_on(f"py-torch+rocm amdgpu_target={target}", when=f"+hip amdgpu_target={target}", type=("build", "link"))
     
     # XPU (Intel GPU) support requires Intel Extension for PyTorch (IPEX)
     # which is not yet widely available in Spack. Users building with +xpu

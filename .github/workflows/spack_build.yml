@@ -54,11 +54,11 @@ jobs:
             description: "CUDA with tests"
             should_fail: false
             
-          - spec: "ftorch@main~cuda+hip~xpu~mps~tests"
+          - spec: "ftorch@main~cuda+hip~xpu~mps~tests amdgpu_target=gfx90a"
             description: "HIP/ROCm (no tests)"
             should_fail: false
             
-          - spec: "ftorch@main~cuda+hip~xpu~mps+tests"
+          - spec: "ftorch@main~cuda+hip~xpu~mps+tests amdgpu_target=gfx90a"
             description: "HIP/ROCm with tests"
             should_fail: false
             
@@ -79,7 +79,7 @@ jobs:
             should_fail: optional
             
           # Conflict tests (should fail)
-          - spec: "ftorch@main+cuda+hip cuda_arch=80"
+          - spec: "ftorch@main+cuda+hip cuda_arch=80 amdgpu_target=gfx90a"
             description: "CUDA+HIP conflict"
             should_fail: true
             
@@ -91,11 +91,11 @@ jobs:
             description: "CUDA+MPS conflict"
             should_fail: true
             
-          - spec: "ftorch@main+hip+xpu"
+          - spec: "ftorch@main+hip+xpu amdgpu_target=gfx90a"
             description: "HIP+XPU conflict"
             should_fail: true
             
-          - spec: "ftorch@main+hip+mps"
+          - spec: "ftorch@main+hip+mps amdgpu_target=gfx90a"
             description: "HIP+MPS conflict"
             should_fail: true
             
@@ -103,7 +103,7 @@ jobs:
             description: "XPU+MPS conflict"
             should_fail: true
             
-          - spec: "ftorch@main+cuda+hip+xpu+mps cuda_arch=80"
+          - spec: "ftorch@main+cuda+hip+xpu+mps cuda_arch=80 amdgpu_target=gfx90a"
             description: "All GPU backends (multiple conflicts)"
             should_fail: true
 
