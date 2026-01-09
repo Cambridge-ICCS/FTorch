@@ -55,6 +55,48 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install system packages for Spack externals
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            autoconf \
+            automake \
+            bison \
+            bzip2 \
+            cmake \
+            coreutils \
+            curl \
+            diffutils \
+            file \
+            findutils \
+            flex \
+            gawk \
+            gettext \
+            gfortran \
+            git \
+            gmake \
+            groff \
+            gzip \
+            libtool \
+            m4 \
+            make \
+            ninja-build \
+            openssh-client \
+            openssl \
+            patch \
+            perl \
+            pkg-config \
+            python3 \
+            python3-pip \
+            python3-venv \
+            rsync \
+            sed \
+            tar \
+            unzip \
+            wget \
+            xz-utils \
+            zlib1g-dev
+
       - name: Install Spack
         run: |
           git clone -b develop https://github.com/spack/spack.git
@@ -69,6 +111,13 @@ jobs:
           
           # Configure compilers
           spack compiler find
+          
+          # Find and register external packages installed via apt
+          spack external find --not-buildable
+          
+          # Show what externals were found
+          echo "=== External packages found ==="
+          spack external list
           
           # Create a custom Spack repository for FTorch
           mkdir -p ftorch-repo/packages/ftorch
@@ -98,11 +147,9 @@ jobs:
         run: |
           export SPACK_ROOT=$(pwd)/spack
           source ${SPACK_ROOT}/share/spack/setup-env.sh
-          spack env activate ftorch-test
           
           # Check library installation
-          ftorch_spec=$(spack find -p ftorch | tail -1 | awk '{print $1}')
-          ftorch_prefix=$(spack location -i ${ftorch_spec})
+          ftorch_prefix=$(spack location -i ftorch)
           
           echo "FTorch installed at: ${ftorch_prefix}"
           
