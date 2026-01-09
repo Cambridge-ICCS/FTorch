@@ -30,6 +30,17 @@ class Ftorch(CMakePackage):
     variant("mps", default=False, description="Enable Apple Metal Performance Shaders support")
     variant("shared", default=True, description="Build shared library (default) instead of static")
     variant("tests", default=False, description="Build tests")
+    
+    # CUDA architecture variant - required when building with CUDA
+    # Common architectures: 70 (Volta), 75 (Turing), 80 (Ampere), 86 (Ampere), 89 (Ada), 90 (Hopper)
+    variant(
+        "cuda_arch",
+        default="none",
+        values=("none", "70", "75", "80", "86", "89", "90"),
+        multi=True,
+        description="CUDA architecture(s) to build for",
+        when="+cuda",
+    )
 
     # Core dependencies
     depends_on("cmake@3.15:", type="build")
@@ -38,9 +49,11 @@ class Ftorch(CMakePackage):
 
     # GPU support dependencies - ensure PyTorch has matching GPU support
     depends_on("cuda", when="+cuda", type=("build", "link"))
-    depends_on("py-torch+cuda", when="+cuda", type=("build", "link"))
+    # Pass cuda_arch to py-torch - user must specify at least one architecture
+    for arch in ("70", "75", "80", "86", "89", "90"):
+        depends_on(f"py-torch+cuda cuda_arch={arch}", when=f"+cuda cuda_arch={arch}", type=("build", "link"))
     
-    depends_on("rocm", when="+hip", type=("build", "link"))
+    depends_on("hip", when="+hip", type=("build", "link"))
     depends_on("py-torch+rocm", when="+hip", type=("build", "link"))
     
     # XPU (Intel GPU) support requires Intel Extension for PyTorch (IPEX)

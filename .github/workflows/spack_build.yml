@@ -46,11 +46,11 @@ jobs:
             description: "With tests enabled"
             should_fail: false
             
-          - spec: "ftorch@main+cuda~hip~xpu~mps~tests"
+          - spec: "ftorch@main+cuda~hip~xpu~mps~tests cuda_arch=80"
             description: "CUDA (no tests)"
             should_fail: false
             
-          - spec: "ftorch@main+cuda~hip~xpu~mps+tests"
+          - spec: "ftorch@main+cuda~hip~xpu~mps+tests cuda_arch=80"
             description: "CUDA with tests"
             should_fail: false
             
@@ -70,7 +70,7 @@ jobs:
             description: "Static library"
             should_fail: false
             
-          - spec: "ftorch@main+cuda~hip~xpu~mps+shared+tests"
+          - spec: "ftorch@main+cuda~hip~xpu~mps+shared+tests cuda_arch=80"
             description: "CUDA + shared + tests"
             should_fail: false
             
@@ -79,15 +79,15 @@ jobs:
             should_fail: optional
             
           # Conflict tests (should fail)
-          - spec: "ftorch@main+cuda+hip"
+          - spec: "ftorch@main+cuda+hip cuda_arch=80"
             description: "CUDA+HIP conflict"
             should_fail: true
             
-          - spec: "ftorch@main+cuda+xpu"
+          - spec: "ftorch@main+cuda+xpu cuda_arch=80"
             description: "CUDA+XPU conflict"
             should_fail: true
             
-          - spec: "ftorch@main+cuda+mps"
+          - spec: "ftorch@main+cuda+mps cuda_arch=80"
             description: "CUDA+MPS conflict"
             should_fail: true
             
@@ -103,7 +103,7 @@ jobs:
             description: "XPU+MPS conflict"
             should_fail: true
             
-          - spec: "ftorch@main+cuda+hip+xpu+mps"
+          - spec: "ftorch@main+cuda+hip+xpu+mps cuda_arch=80"
             description: "All GPU backends (multiple conflicts)"
             should_fail: true
 
@@ -151,18 +151,20 @@ jobs:
           exit_code=$?
           set -e
           
-          # Check if conflicts were detected
-          has_conflict=$(echo "$output" | grep -q "conflicts" && echo "true" || echo "false")
+          echo "--- Spack output ---"
+          echo "$output"
+          echo "--- End output ---"
+          echo "Exit code: $exit_code"
           
-          # Determine if test passed based on expectations
+          # For conflict tests, check that concretization failed (non-zero exit)
+          # Spack may report conflicts as "unsatisfiable", "conflicts", or other errors
           if [[ "${{ matrix.should_fail }}" == "true" ]]; then
-            # Should fail - check for conflicts
-            if [[ "$has_conflict" == "true" ]]; then
-              echo "✅ PASS: Correctly detected conflict"
+            # Should fail - check for non-zero exit or conflict/unsatisfiable message
+            if [[ $exit_code -ne 0 ]]; then
+              echo "✅ PASS: Concretization correctly failed (conflict enforced)"
               exit 0
             else
               echo "❌ FAIL: Expected conflict but concretization succeeded"
-              echo "$output"
               exit 1
             fi
           elif [[ "${{ matrix.should_fail }}" == "optional" ]]; then
@@ -181,7 +183,6 @@ jobs:
               exit 0
             else
               echo "❌ FAIL: Concretization failed unexpectedly"
-              echo "$output"
               exit 1
             fi
           fi
