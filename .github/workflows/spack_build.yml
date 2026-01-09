@@ -35,118 +35,61 @@ permissions: {}
 jobs:
   spack-build:
     name: Build with Spack
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
-    # Terminate the job if it runs for more than 30 minutes
-    timeout-minutes: 30
+    # Terminate the job if it runs for more than 45 minutes
+    timeout-minutes: 45
 
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ "3.11", "3.12" ]
-        variant: [ "", "+tests" ]
+        variant: [ "~tests", "+tests" ]
 
     steps:
       - name: Checkout FTorch repository
         uses: actions/checkout@v5
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install system packages for Spack externals
+      - name: Install system packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            autoconf \
-            automake \
-            bison \
-            bzip2 \
-            cmake \
-            coreutils \
-            curl \
-            diffutils \
-            file \
-            findutils \
-            flex \
-            gawk \
-            gettext \
-            gfortran \
-            git \
-            groff \
-            gzip \
-            libtool \
-            m4 \
-            make \
-            ninja-build \
-            openssh-client \
-            openssl \
-            patch \
-            perl \
-            pkg-config \
-            python3 \
-            python3-pip \
-            python3-venv \
-            rsync \
-            sed \
-            tar \
-            unzip \
-            wget \
-            xz-utils \
-            zlib1g-dev
+          sudo apt-get install -y gfortran
 
-      - name: Install Spack
-        run: |
-          git clone -b v1.1.0 --depth 1 https://github.com/spack/spack.git
-          export SPACK_ROOT=$(pwd)/spack
-          source ${SPACK_ROOT}/share/spack/setup-env.sh
-          spack --version
+      - name: Setup Spack
+        uses: spack/setup-spack@v2
+        with:
+          ref: develop
+          buildcache: true
+          color: true
 
-      - name: Setup Spack and Add FTorch package
+      - name: Add FTorch package to Spack
         run: |
-          export SPACK_ROOT=$(pwd)/spack
-          source ${SPACK_ROOT}/share/spack/setup-env.sh
-          
-          # Configure compilers
-          spack compiler find
-          
-          # Find and register external packages installed via apt
-          spack external find --not-buildable
-          
-          # Show what externals were found
-          echo "=== External packages found ==="
-          spack external list
-          
           # Create a custom Spack repository for FTorch
           mkdir -p ftorch-repo/packages/ftorch
           cp package.py ftorch-repo/packages/ftorch/
           
-          # Create repo.yaml for the custom repo (avoid heredoc for YAML compatibility)
+          # Create repo.yaml for the custom repo
           echo "repo:" > ftorch-repo/repo.yaml
           echo "  namespace: ftorch" >> ftorch-repo/repo.yaml
           
           # Add the custom repo to Spack
           spack repo add $(pwd)/ftorch-repo
           
+          # Configure compilers and externals
+          spack compiler find
+          spack external find --not-buildable cmake ninja
+
           # Verify repos and package
           spack repo list
           spack info ftorch
 
       - name: Build FTorch with Spack
         run: |
-          export SPACK_ROOT=$(pwd)/spack
-          source ${SPACK_ROOT}/share/spack/setup-env.sh
-          
           # Build FTorch with specified variants
-          # Dependencies (cmake, py-torch) are automatically installed
-          spack install "ftorch@main~cuda${{ matrix.variant }}"
+          # Dependencies from build cache, FTorch built from source
+          spack install --fresh "ftorch@main~cuda${{ matrix.variant }}"
 
       - name: Verify installation
         run: |
-          export SPACK_ROOT=$(pwd)/spack
-          source ${SPACK_ROOT}/share/spack/setup-env.sh
-          
           # Check library installation
           ftorch_prefix=$(spack location -i ftorch)
           
