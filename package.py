@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+import os
+
 from spack.package import *
 
 
@@ -72,16 +74,22 @@ class Ftorch(CMakePackage):
 
         args.append(self.define("GPU_DEVICE", gpu_device))
 
-        # Torch setup: prefer PyTorch installation via Spack
-        if self.spec["py-torch"].package.spec.satisfies("@1.13:"):
-            # Modern PyTorch with better CMake support
-            torch_root = self.spec["py-torch"].prefix
-            # PyTorch in site-packages typically at: <prefix>/lib/pythonX.Y/site-packages/torch
+        # Torch setup: find the torch directory for CMake
+        torch_prefix = self.spec["py-torch"].prefix
+        
+        # Check if this is an external package (pip-installed PyTorch)
+        # External packages have prefix pointing to site-packages directory
+        torch_cmake_dir = join_path(torch_prefix, "torch")
+        if os.path.isdir(torch_cmake_dir):
+            # External: prefix is site-packages, torch is a subdirectory
+            args.append(self.define("CMAKE_PREFIX_PATH", torch_cmake_dir))
+        elif "python" in self.spec:
+            # Spack-built: construct path to site-packages/torch
             args.append(
                 self.define(
                     "CMAKE_PREFIX_PATH",
                     join_path(
-                        torch_root,
+                        torch_prefix,
                         "lib",
                         "python{0}.{1}".format(
                             self.spec["python"].version.major,
@@ -93,8 +101,8 @@ class Ftorch(CMakePackage):
                 )
             )
         else:
-            # Fallback for older PyTorch versions
-            args.append(self.define("CMAKE_PREFIX_PATH", self.spec["py-torch"].prefix))
+            # Fallback: assume prefix points directly to torch
+            args.append(self.define("CMAKE_PREFIX_PATH", torch_prefix))
 
         return args
 

@@ -54,6 +54,22 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gfortran
 
+      - name: Setup Python and install PyTorch
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyTorch via pip
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          # Get PyTorch installation path and version for Spack
+          TORCH_PATH=$(python -c "import torch; print(torch.__path__[0])")
+          TORCH_VERSION=$(python -c "import torch; print(torch.__version__.split('+')[0])")
+          echo "TORCH_PATH=${TORCH_PATH}" >> $GITHUB_ENV
+          echo "TORCH_VERSION=${TORCH_VERSION}" >> $GITHUB_ENV
+          echo "PyTorch ${TORCH_VERSION} installed at: ${TORCH_PATH}"
+
       - name: Setup Spack
         uses: spack/setup-spack@v2
         with:
@@ -77,10 +93,25 @@ jobs:
           # Configure compilers and externals
           spack compiler find
           spack external find --not-buildable cmake ninja
-
-          # Configure packages to use target compatible with build cache
-          # The GitHub Actions build cache is built for x86_64_v3
-          spack config add "packages:all:require:target=x86_64_v3"
+          
+          # Configure PyTorch as an external package (installed via pip)
+          # This avoids building py-torch and all its dependencies from source
+          # Get the site-packages directory (parent of torch)
+          TORCH_PREFIX=$(python -c "import torch; import os; print(os.path.dirname(torch.__path__[0]))")
+          
+          # Create packages.yaml entry for py-torch external
+          mkdir -p ~/.spack
+          echo "packages:" > ~/.spack/packages.yaml
+          echo "  py-torch:" >> ~/.spack/packages.yaml
+          echo "    buildable: false" >> ~/.spack/packages.yaml
+          echo "    externals:" >> ~/.spack/packages.yaml
+          echo "    - spec: py-torch@${TORCH_VERSION}" >> ~/.spack/packages.yaml
+          echo "      prefix: ${TORCH_PREFIX}" >> ~/.spack/packages.yaml
+          
+          # Show the config
+          echo "=== packages.yaml ==="
+          cat ~/.spack/packages.yaml
+          spack config get packages
 
           # Verify repos and package
           spack repo list
@@ -89,7 +120,6 @@ jobs:
       - name: Build FTorch with Spack
         run: |
           # Build FTorch with specified variants
-          # Dependencies from build cache, FTorch built from source
           spack install "ftorch@main~cuda${{ matrix.variant }}"
 
       - name: Verify installation
