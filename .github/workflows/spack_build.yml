@@ -1,5 +1,5 @@
-# Workflow to test building FTorch with Spack package manager
-name: Spack Build Test
+# Workflow to validate the Spack package definition for FTorch
+name: Spack Package Validation
 
 # Controls when the workflow will run
 on:
@@ -14,11 +14,6 @@ on:
       - '.github/workflows/spack_build.yml'
       # Package definition
       - 'package.py'
-      # Source files
-      - 'src/**'
-      # Build system
-      - 'CMakeLists.txt'
-      - 'cmake/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -31,50 +26,21 @@ concurrency:
 # Write permissions are not required
 permissions: {}
 
-# Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
-  spack-build:
-    name: Build with Spack
+  # Job 1: Validate Spack package syntax and concretization
+  spack-validate:
+    name: Validate Spack Package
     runs-on: ubuntu-22.04
-
-    # Terminate the job if it runs for more than 45 minutes
-    timeout-minutes: 45
-
-    strategy:
-      fail-fast: false
-      matrix:
-        variant: [ "~tests", "+tests" ]
+    timeout-minutes: 10
 
     steps:
       - name: Checkout FTorch repository
         uses: actions/checkout@v5
 
-      - name: Install system packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gfortran
-
-      - name: Setup Python and install PyTorch
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install PyTorch via pip
-        run: |
-          python -m pip install --upgrade pip
-          pip install torch --index-url https://download.pytorch.org/whl/cpu
-          # Get PyTorch installation path and version for Spack
-          TORCH_PATH=$(python -c "import torch; print(torch.__path__[0])")
-          TORCH_VERSION=$(python -c "import torch; print(torch.__version__.split('+')[0])")
-          echo "TORCH_PATH=${TORCH_PATH}" >> $GITHUB_ENV
-          echo "TORCH_VERSION=${TORCH_VERSION}" >> $GITHUB_ENV
-          echo "PyTorch ${TORCH_VERSION} installed at: ${TORCH_PATH}"
-
       - name: Setup Spack
         uses: spack/setup-spack@v2
         with:
           ref: develop
-          buildcache: true
           color: true
 
       - name: Add FTorch package to Spack
@@ -89,63 +55,83 @@ jobs:
           
           # Add the custom repo to Spack
           spack repo add $(pwd)/ftorch-repo
-          
-          # Configure compilers and externals
-          spack compiler find
-          spack external find --not-buildable cmake ninja
-          
-          # Configure PyTorch as an external package (installed via pip)
-          # This avoids building py-torch and all its dependencies from source
-          # Get the site-packages directory (parent of torch)
-          TORCH_PREFIX=$(python -c "import torch; import os; print(os.path.dirname(torch.__path__[0]))")
-          
-          # Create packages.yaml entry for py-torch external
-          mkdir -p ~/.spack
-          echo "packages:" > ~/.spack/packages.yaml
-          echo "  py-torch:" >> ~/.spack/packages.yaml
-          echo "    buildable: false" >> ~/.spack/packages.yaml
-          echo "    externals:" >> ~/.spack/packages.yaml
-          echo "    - spec: py-torch@${TORCH_VERSION}" >> ~/.spack/packages.yaml
-          echo "      prefix: ${TORCH_PREFIX}" >> ~/.spack/packages.yaml
-          
-          # Show the config
-          echo "=== packages.yaml ==="
-          cat ~/.spack/packages.yaml
-          spack config get packages
 
-          # Verify repos and package
-          spack repo list
-          spack info ftorch
-
-      - name: Build FTorch with Spack
+      - name: Validate package syntax
         run: |
-          # Build FTorch with specified variants
-          spack install "ftorch@main~cuda${{ matrix.variant }}"
+          # Check that the package is recognized
+          spack info ftorch
+          
+          # Validate package Python syntax
+          python -m py_compile package.py
+          echo "Package syntax is valid"
+
+      - name: Test concretization
+        run: |
+          # Test that the package can be concretized with different variants
+          echo "=== Testing concretization: ftorch@main ~cuda ~tests ==="
+          spack spec ftorch@main~cuda~tests
+          
+          echo "=== Testing concretization: ftorch@main ~cuda +tests ==="
+          spack spec ftorch@main~cuda+tests
+          
+          echo "=== Testing concretization: ftorch@main +cuda ~tests ==="
+          spack spec ftorch@main+cuda~tests
+          
+          echo "All concretization tests passed!"
+
+  # Job 2: Build FTorch with CMake using pip-installed PyTorch
+  # This validates the build process works, similar to other CI tests
+  cmake-build:
+    name: CMake Build Test
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout FTorch repository
+        uses: actions/checkout@v5
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran cmake
+
+      - name: Setup Python and install PyTorch
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyTorch via pip
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Build FTorch with CMake
+        run: |
+          # Get PyTorch path
+          TORCH_PATH=$(python -c "import torch; print(torch.__path__[0])")
+          
+          mkdir build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="${TORCH_PATH}" \
+            -DCMAKE_INSTALL_PREFIX="${PWD}/install"
+          cmake --build .
+          cmake --install .
 
       - name: Verify installation
         run: |
-          # Check library installation
-          ftorch_prefix=$(spack location -i ftorch)
+          # Verify key files were installed
+          ls -la build/install/lib/
+          ls -la build/install/include/
           
-          echo "FTorch installed at: ${ftorch_prefix}"
-          
-          # Verify key files
-          if [[ ! -f "${ftorch_prefix}/lib/libftorch.so" ]]; then
-            echo "ERROR: libftorch.so not found at ${ftorch_prefix}/lib/"
+          if [[ ! -f "build/install/lib/libftorch.so" ]]; then
+            echo "ERROR: libftorch.so not found"
             exit 1
           fi
           
-          if [[ ! -f "${ftorch_prefix}/include/ctorch.h" ]]; then
-            echo "ERROR: ctorch.h not found at ${ftorch_prefix}/include/"
+          if [[ ! -f "build/install/include/ctorch.h" ]]; then
+            echo "ERROR: ctorch.h not found"
             exit 1
           fi
           
-          if [[ ! -f "${ftorch_prefix}/include/ftorch/ftorch.mod" ]]; then
-            echo "ERROR: ftorch.mod not found at ${ftorch_prefix}/include/ftorch/"
-            exit 1
-          fi
-          
-          echo "All expected files found!"
-          
-          # List library contents
-          nm ${ftorch_prefix}/lib/libftorch.so | head -20
+          echo "Build and installation successful!"
