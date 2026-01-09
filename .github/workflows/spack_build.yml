@@ -78,6 +78,10 @@ jobs:
           spack compiler find
           spack external find --not-buildable cmake ninja
 
+          # Configure packages to use target compatible with build cache
+          # The GitHub Actions build cache is built for x86_64_v3
+          spack config add "packages:all:require:target=x86_64_v3"
+
           # Verify repos and package
           spack repo list
           spack info ftorch
@@ -86,7 +90,7 @@ jobs:
         run: |
           # Build FTorch with specified variants
           # Dependencies from build cache, FTorch built from source
-          spack install --fresh "ftorch@main~cuda${{ matrix.variant }}"
+          spack install "ftorch@main~cuda${{ matrix.variant }}"
 
       - name: Verify installation
         run: |
