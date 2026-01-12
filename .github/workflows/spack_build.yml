@@ -109,10 +109,14 @@ jobs:
 
     steps:
       - name: Checkout FTorch repository
-        uses: actions/checkout@v5
+        # v5.0.0 pinned to SHA for security
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
 
       - name: Setup Spack
-        uses: spack/setup-spack@v2
+        # v2.2.1 pinned to SHA for security
+        uses: spack/setup-spack@2319132e7e9a21a1f3914c0a57f5fe2c1c180dd0
         with:
           ref: develop
           color: true
@@ -196,7 +200,10 @@ jobs:
 
     steps:
       - name: Checkout FTorch repository
-        uses: actions/checkout@v5
+        # v5.0.0 pinned to SHA for security
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
 
       - name: Install system packages
         run: |
@@ -204,7 +211,8 @@ jobs:
           sudo apt-get install -y gfortran cmake
 
       - name: Setup Python and install PyTorch
-        uses: actions/setup-python@v5
+        # v5.5.0 pinned to SHA for security
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.11'
 
