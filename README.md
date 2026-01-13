@@ -173,7 +173,7 @@ address an [open issue](https://github.com/Cambridge-ICCS/FTorch/issues), please
 pull request.
 
 Detailed guidelines can be found in the
-[online developer documentation](https://cambridge-iccs.github.io/FTorch/page/developer.html).
+[online developer documentation](https://cambridge-iccs.github.io/FTorch/page/developer/developer.html).
 
 If you are interested in using FTorch please get in touch.
 
