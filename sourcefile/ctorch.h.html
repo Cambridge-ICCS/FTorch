@@ -223,7 +223,7 @@
 <a id="ln-66" name="ln-66" href="#ln-66"></a><span class="cm"> * @param shape of the Tensor</span>
 <a id="ln-67" name="ln-67" href="#ln-67"></a><span class="cm"> * @param data type of the elements of the Tensor</span>
 <a id="ln-68" name="ln-68" href="#ln-68"></a><span class="cm"> * @param device type used (cpu, CUDA, etc.)</span>
-<a id="ln-69" name="ln-69" href="#ln-69"></a><span class="cm"> * @param device index for the CUDA case</span>
+<a id="ln-69" name="ln-69" href="#ln-69"></a><span class="cm"> * @param device index for GPU devices</span>
 <a id="ln-70" name="ln-70" href="#ln-70"></a><span class="cm"> * @param whether gradient is required</span>
 <a id="ln-71" name="ln-71" href="#ln-71"></a><span class="cm"> */</span>
 <a id="ln-72" name="ln-72" href="#ln-72"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">torch_empty</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">ndim</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="o">*</span><span class="n">shape</span><span class="p">,</span><span class="w"> </span><span class="n">torch_data_t</span><span class="w"> </span><span class="n">dtype</span><span class="p">,</span>
@@ -236,7 +236,7 @@
 <a id="ln-79" name="ln-79" href="#ln-79"></a><span class="cm"> * @param shape of the Tensor</span>
 <a id="ln-80" name="ln-80" href="#ln-80"></a><span class="cm"> * @param data type of the elements of the Tensor</span>
 <a id="ln-81" name="ln-81" href="#ln-81"></a><span class="cm"> * @param device type used (cpu, CUDA, etc.)</span>
-<a id="ln-82" name="ln-82" href="#ln-82"></a><span class="cm"> * @param device index for the CUDA case</span>
+<a id="ln-82" name="ln-82" href="#ln-82"></a><span class="cm"> * @param device index for GPU devices</span>
 <a id="ln-83" name="ln-83" href="#ln-83"></a><span class="cm"> * @param whether gradient is required</span>
 <a id="ln-84" name="ln-84" href="#ln-84"></a><span class="cm"> */</span>
 <a id="ln-85" name="ln-85" href="#ln-85"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">torch_zeros</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">ndim</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="o">*</span><span class="n">shape</span><span class="p">,</span><span class="w"> </span><span class="n">torch_data_t</span><span class="w"> </span><span class="n">dtype</span><span class="p">,</span>
@@ -249,7 +249,7 @@
 <a id="ln-92" name="ln-92" href="#ln-92"></a><span class="cm"> * @param shape of the Tensor</span>
 <a id="ln-93" name="ln-93" href="#ln-93"></a><span class="cm"> * @param data type of the elements of the Tensor</span>
 <a id="ln-94" name="ln-94" href="#ln-94"></a><span class="cm"> * @param device type used (cpu, CUDA, etc.)</span>
-<a id="ln-95" name="ln-95" href="#ln-95"></a><span class="cm"> * @param device index for the CUDA case</span>
+<a id="ln-95" name="ln-95" href="#ln-95"></a><span class="cm"> * @param device index for GPU devices</span>
 <a id="ln-96" name="ln-96" href="#ln-96"></a><span class="cm"> * @param whether gradient is required</span>
 <a id="ln-97" name="ln-97" href="#ln-97"></a><span class="cm"> */</span>
 <a id="ln-98" name="ln-98" href="#ln-98"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">torch_ones</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">ndim</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="o">*</span><span class="n">shape</span><span class="p">,</span><span class="w"> </span><span class="n">torch_data_t</span><span class="w"> </span><span class="n">dtype</span><span class="p">,</span>
@@ -265,7 +265,7 @@
 <a id="ln-108" name="ln-108" href="#ln-108"></a><span class="cm"> * @param strides to take through data</span>
 <a id="ln-109" name="ln-109" href="#ln-109"></a><span class="cm"> * @param data type of the elements of the Tensor</span>
 <a id="ln-110" name="ln-110" href="#ln-110"></a><span class="cm"> * @param device type used (cpu, CUDA, etc.)</span>
-<a id="ln-111" name="ln-111" href="#ln-111"></a><span class="cm"> * @param device index for the CUDA case</span>
+<a id="ln-111" name="ln-111" href="#ln-111"></a><span class="cm"> * @param device index for GPU devices</span>
 <a id="ln-112" name="ln-112" href="#ln-112"></a><span class="cm"> * @param whether gradient is required</span>
 <a id="ln-113" name="ln-113" href="#ln-113"></a><span class="cm"> * @return Torch Tensor interpretation of the data pointed at</span>
 <a id="ln-114" name="ln-114" href="#ln-114"></a><span class="cm"> */</span>
@@ -493,7 +493,7 @@
 <a id="ln-336" name="ln-336" href="#ln-336"></a><span class="cm"> * Torch Module</span>
 <a id="ln-337" name="ln-337" href="#ln-337"></a><span class="cm"> * @param filename where TorchScript description of model is stored</span>
 <a id="ln-338" name="ln-338" href="#ln-338"></a><span class="cm"> * @param device type used (cpu, CUDA, etc.)</span>
-<a id="ln-339" name="ln-339" href="#ln-339"></a><span class="cm"> * @param device index for the CUDA case</span>
+<a id="ln-339" name="ln-339" href="#ln-339"></a><span class="cm"> * @param device index for GPU devices</span>
 <a id="ln-340" name="ln-340" href="#ln-340"></a><span class="cm"> * @param whether gradient is required</span>
 <a id="ln-341" name="ln-341" href="#ln-341"></a><span class="cm"> * @param whether model is being trained</span>
 <a id="ln-342" name="ln-342" href="#ln-342"></a><span class="cm"> * @return Torch Module loaded in from file</span>
