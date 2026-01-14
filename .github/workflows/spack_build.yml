@@ -115,8 +115,8 @@ jobs:
           persist-credentials: false
 
       - name: Setup Spack
-        # v2.2.1 pinned to SHA for security
-        uses: spack/setup-spack@2319132e7e9a21a1f3914c0a57f5fe2c1c180dd0
+        # v2 pinned to recent stable commit for security
+        uses: spack/setup-spack@b01309596568e0f36df3e38124601ed3327871ed
         with:
           ref: develop
           color: true
