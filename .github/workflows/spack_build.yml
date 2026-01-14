@@ -123,22 +123,9 @@ jobs:
 
       - name: Add FTorch package to Spack
         run: |
-          # Debug: Check current directory and files
-          pwd
-          ls -la
-          
           # Create a custom Spack repository for FTorch
-          mkdir -p ftorch-repo/packages/ftorch
-          
-          # Copy the package definition
-          if [ -f ".spack-package/package.py" ]; then
-            cp .spack-package/package.py ftorch-repo/packages/ftorch/
-          else
-            echo "ERROR: .spack-package/package.py not found!"
-            echo "Looking for files:"
-            find . -name "package.py" -type f | grep -v test_repos | head -20
-            exit 1
-          fi
+          mkdir -p ftorch-repo/packages/FTorch
+          cp .spack-package/package.py ftorch-repo/packages/FTorch/
           
           # Create repo.yaml for the custom repo
           echo "repo:" > ftorch-repo/repo.yaml
