@@ -3,7 +3,7 @@ import os
 from spack.package import *
 
 
-class FTorch(CMakePackage):
+class Ftorch(CMakePackage):
     """FTorch: A library for coupling PyTorch models to Fortran.
 
     FTorch enables users to directly couple their PyTorch models to Fortran code,
