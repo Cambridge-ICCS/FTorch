@@ -13,7 +13,7 @@ on:
       # This workflow
       - '.github/workflows/spack_build.yml'
       # Package definition
-      - 'package.py'
+      - 'spack/package.py'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -125,7 +125,7 @@ jobs:
         run: |
           # Create a custom Spack repository for FTorch
           mkdir -p ftorch-repo/packages/ftorch
-          cp package.py ftorch-repo/packages/ftorch/
+          cp spack/package.py ftorch-repo/packages/ftorch/
           
           # Create repo.yaml for the custom repo
           echo "repo:" > ftorch-repo/repo.yaml
@@ -141,7 +141,7 @@ jobs:
           spack info ftorch
           
           # Validate package Python syntax
-          python -m py_compile package.py
+          python -m py_compile spack/package.py
           echo "Package syntax is valid"
 
       - name: Test concretization - ${{ matrix.description }}

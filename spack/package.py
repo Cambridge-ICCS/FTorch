@@ -3,9 +3,9 @@ import os
 from spack.package import *
 
 
-class Ftorch(CMakePackage):
+class FTorch(CMakePackage):
     """FTorch: A library for coupling PyTorch models to Fortran.
-    
+
     FTorch enables users to directly couple their PyTorch models to Fortran code,
     supporting both CPU and GPU execution on UNIX and Windows operating systems.
     """
@@ -16,7 +16,7 @@ class Ftorch(CMakePackage):
 
     license("MIT")
 
-    version("1.0.0", sha256="e6e3bb6a27f4c5b42b9e6d5c5f5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5")
+    version("1.0.0", sha256="c4b6741e582623b7ecaecd59d02f779e8a6f6017f8068c85da8a034f468df375")
     version("main", branch="main", git=git)
 
     # Variants for optional features
@@ -26,7 +26,7 @@ class Ftorch(CMakePackage):
     variant("mps", default=False, description="Enable Apple Metal Performance Shaders support")
     variant("shared", default=True, description="Build shared library (default) instead of static")
     variant("tests", default=False, description="Build tests")
-    
+
     # CUDA architecture variant - required when building with CUDA
     # Common architectures: 70 (Volta), 75 (Turing), 80 (Ampere), 86 (Ampere), 89 (Ada), 90 (Hopper)
     variant(
@@ -37,7 +37,7 @@ class Ftorch(CMakePackage):
         description="CUDA architecture(s) to build for",
         when="+cuda",
     )
-    
+
     # AMD GPU target variant - required when building with ROCm/HIP
     # Common targets: gfx906 (MI50/MI60), gfx908 (MI100), gfx90a (MI200), gfx942 (MI300)
     variant(
@@ -58,22 +58,30 @@ class Ftorch(CMakePackage):
     depends_on("cuda", when="+cuda", type=("build", "link"))
     # Pass cuda_arch to py-torch - user must specify at least one architecture
     for arch in ("70", "75", "80", "86", "89", "90"):
-        depends_on(f"py-torch+cuda cuda_arch={arch}", when=f"+cuda cuda_arch={arch}", type=("build", "link"))
-    
+        depends_on(
+            f"py-torch+cuda cuda_arch={arch}",
+            when=f"+cuda cuda_arch={arch}",
+            type=("build", "link"),
+        )
+
     depends_on("hip", when="+hip", type=("build", "link"))
     # Pass amdgpu_target to py-torch - user must specify at least one target
     for target in ("gfx906", "gfx908", "gfx90a", "gfx942"):
-        depends_on(f"py-torch+rocm amdgpu_target={target}", when=f"+hip amdgpu_target={target}", type=("build", "link"))
-    
+        depends_on(
+            f"py-torch+rocm amdgpu_target={target}",
+            when=f"+hip amdgpu_target={target}",
+            type=("build", "link"),
+        )
+
     # XPU (Intel GPU) support requires Intel Extension for PyTorch (IPEX)
     # which is not yet widely available in Spack. Users building with +xpu
     # will need to manually provide IPEX or use an external PyTorch installation.
     # depends_on("intel-extension-for-pytorch", when="+xpu", type=("build", "link"))
-    
+
     # MPS (Metal Performance Shaders) is built into PyTorch on macOS
     # No additional dependencies needed beyond platform check
     depends_on("py-torch", when="+mps", type=("build", "link"))
-    
+
     depends_on("python", when="+tests", type=("build", "run"))
 
     # Conflicts for mutually exclusive GPU backends
@@ -111,7 +119,7 @@ class Ftorch(CMakePackage):
 
         # Torch setup: find the torch directory for CMake
         torch_prefix = self.spec["py-torch"].prefix
-        
+
         # Check if this is an external package (pip-installed PyTorch)
         # External packages have prefix pointing to site-packages directory
         torch_cmake_dir = join_path(torch_prefix, "torch")
