@@ -13,7 +13,7 @@ on:
       # This workflow
       - '.github/workflows/spack_build.yml'
       # Package definition
-      - 'spack/package.py'
+      - '.spack-package/package.py'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -131,12 +131,12 @@ jobs:
           mkdir -p ftorch-repo/packages/ftorch
           
           # Copy the package definition
-          if [ -f "spack/package.py" ]; then
-            cp spack/package.py ftorch-repo/packages/ftorch/
+          if [ -f ".spack-package/package.py" ]; then
+            cp .spack-package/package.py ftorch-repo/packages/ftorch/
           else
-            echo "ERROR: spack/package.py not found!"
+            echo "ERROR: .spack-package/package.py not found!"
             echo "Looking for files:"
-            find . -name "package.py" -type f
+            find . -name "package.py" -type f | grep -v test_repos | head -20
             exit 1
           fi
           
@@ -154,7 +154,7 @@ jobs:
           spack info ftorch
           
           # Validate package Python syntax
-          python -m py_compile spack/package.py
+          python -m py_compile .spack-package/package.py
           echo "Package syntax is valid"
 
       - name: Test concretization - ${{ matrix.description }}
