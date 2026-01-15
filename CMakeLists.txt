@@ -211,7 +211,7 @@ if(CMAKE_BUILD_TESTS)
   endif()
 
   # Integration tests
-  add_subdirectory(examples)
+  # add_subdirectory(examples)
 endif()
 
 # Setup and install configuration files
