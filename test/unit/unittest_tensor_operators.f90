@@ -4,16 +4,18 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module test_tensor_operators
-  use funit
+module unittest_tensor_operators
+  use testdrive, only: unittest_type, new_unittest, error_type, check
   use ftorch, only: assignment(=), torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_from_array
   use ftorch_test_utils, only: assert_allclose
+
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use, intrinsic :: iso_c_binding, only : c_int64_t
 
   implicit none
 
-  public
+  private
+  public :: collect_tensor_operators_suite
 
   ! Set working precision for reals
   integer, parameter :: wp = sp
@@ -27,10 +29,20 @@ module test_tensor_operators
 
 contains
 
-  @test
-  subroutine test_torch_tensor_sum()
+  !> Collect all exported unit tests
+  subroutine collect_tensor_operators_suite(testsuite)
+    type(unittest_type), allocatable, intent(out) :: testsuite(:)
+
+    testsuite = [ &
+      new_unittest("valid", test_torch_tensor_sum), &
+      new_unittest("valid", test_torch_tensor_mean) &
+    ]
+  end subroutine collect_tensor_operators_suite
+
+  subroutine test_torch_tensor_sum(error)
     use ftorch, only: torch_tensor_sum
 
+    type(error_type), allocatable, intent(out) :: error
     type(torch_tensor) :: in_tensor, out_tensor
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(1), target :: out_data
@@ -53,25 +65,18 @@ contains
 
     ! Check input arrays are unchanged by the summation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    if (.not. assert_allclose(in_data, expected2d, test_name="test_torch_tensor_sum")) then
-      print *, "Error :: first input array was changed during summation"
-      stop 999
-    end if
+    call check(error, assert_allclose(in_data, expected2d, test_name="test_torch_tensor_sum"))
 
-    ! Compare the data in the tensor to the negative of the input array
+    ! Compare the data in the tensor to the expected sum
     expected1d(:) = 21.0
-    test_pass = assert_allclose(out_data, expected1d, test_name="test_torch_tensor_sum")
-    if (.not. test_pass) then
-      print *, "Error :: incorrect output from overloaded summation operator"
-      stop 999
-    end if
+    call check(error, assert_allclose(out_data, expected1d, test_name="test_torch_tensor_sum"))
 
   end subroutine test_torch_tensor_sum
 
-  @test(testParameters={get_parameters_short()})
-  subroutine test_torch_tensor_mean()
+  subroutine test_torch_tensor_mean(error)
     use ftorch, only: torch_tensor_mean
 
+    type(error_type), allocatable, intent(out) :: error
     type(torch_tensor) :: in_tensor, out_tensor
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(1), target :: out_data
@@ -92,21 +97,14 @@ contains
     ! second
     call torch_tensor_mean(out_tensor, in_tensor)
 
-    ! Check input arrays are unchanged by the summation
+    ! Check input arrays are unchanged by the mean operation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    if (.not. assert_allclose(in_data, expected2d, test_name="test_torch_tensor_mean")) then
-      print *, "Error :: first input array was changed when taking the mean"
-      stop 999
-    end if
+    call check(error, assert_allclose(in_data, expected2d, test_name="test_torch_tensor_mean"))
 
-    ! Compare the data in the tensor to the negative of the input array
+    ! Compare the data in the tensor to the expected mean
     expected1d(:) = 21.0 / 6.0
-    test_pass = assert_allclose(out_data, expected1d, test_name="test_torch_tensor_mean")
-    if (.not. test_pass) then
-      print *, "Error :: incorrect output from overloaded mean operator"
-      stop 999
-    end if
+    call check(error, assert_allclose(out_data, expected1d, test_name="test_torch_tensor_mean"))
 
   end subroutine test_torch_tensor_mean
 
-end module test_tensor_operators
+end module unittest_tensor_operators
