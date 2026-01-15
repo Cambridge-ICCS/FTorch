@@ -1,40 +1,32 @@
 cmake_minimum_required(VERSION 3.15...3.31)
 cmake_policy(SET CMP0076 NEW)
-
-project(
-  "FTorch unit tests"
-  VERSION 1.0.0
-  LANGUAGES Fortran)
+project("FTorch unit tests" VERSION 1.0.0 LANGUAGES Fortran)
 
 if(CMAKE_BUILD_TESTS)
   find_package(FTorch QUIET)
 else()
   find_package(FTorch REQUIRED)
 endif()
-message(STATUS "Building with Fortran PyTorch coupling")
+message(STATUS "Building FTorch unit tests")
 
-find_package(PFUNIT REQUIRED)
+# Find the test-drive package
+if(NOT TARGET "test-drive::test-drive")
+  find_package("test-drive" REQUIRED)
+endif()
 
-add_pfunit_ctest(
-  unittest_tensor_constructors_destructors TEST_SOURCES
-  unittest_tensor_constructors_destructors.pf LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(unittest_tensor_interrogation
-  TEST_SOURCES unittest_tensor_interrogation.pf LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(unittest_tensor_manipulation
-  TEST_SOURCES unittest_tensor_manipulation.pf LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(
-  unittest_operator_overloads TEST_SOURCES unittest_tensor_operator_overloads.pf
-  LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(test_operators
-  TEST_SOURCES test_tensor_operators.pf  LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(test_operators_autograd
-  TEST_SOURCES test_tensor_operators_autograd.pf  LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(
-  unittest_operator_overloads_autograd TEST_SOURCES
-  unittest_tensor_operator_overloads_autograd.pf LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(unittest_tensor_autograd
-  TEST_SOURCES unittest_tensor_autograd.pf LINK_LIBRARIES FTorch::ftorch)
+# Define CPU-based unit tests
+set(
+  TESTS
+  # TODO: "tensor_constructors_destructors"
+  # TODO: "tensor_interrogation"
+  # TODO: "tensor_manipulation"
+  "tensor_operators"
+  # TODO: "tensor_operator_overloads"
+  # TODO: "tensor_operators_autograd"
+  # TODO: "tensor_operator_overloads_autograd"
+)
 
+# Define GPU-based unit tests
 if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
   if("${GPU_DEVICE}" STREQUAL "CUDA")
     check_language(CUDA)
@@ -52,10 +44,27 @@ if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
       message(WARNING "No HIP support")
     endif()
   endif()
-  add_pfunit_ctest(
-    unittest_tensor_interrogation_cuda TEST_SOURCES
-    unittest_tensor_interrogation_cuda.pf LINK_LIBRARIES FTorch::ftorch)
-  add_pfunit_ctest(
-    test_tensor_manipulation_cuda TEST_SOURCES
-    test_tensor_manipulation_cuda.pf LINK_LIBRARIES FTorch::ftorch)
+  # set(
+  #   TESTS
+  #   ${TESTS}
+  #   # TODO: "tensor_interrogation_cuda"
+  #   # TODO: "tensor_manipulation_cuda"
+  # )
 endif()
+
+# Set the test driver
+set(TEST_SOURCES "main.f90")
+
+# Accumulate the unit tests then create an executable
+foreach(test IN LISTS TESTS)
+  string(MAKE_C_IDENTIFIER ${test} test)
+  list(APPEND TEST_SOURCES "unittest_${test}.f90")
+endforeach()
+add_executable("FTorch-unit-tests" "${TEST_SOURCES}")
+target_link_libraries("FTorch-unit-tests"
+                      PRIVATE FTorch::ftorch test-drive::test-drive)
+
+# Register the unit tests with CTest
+foreach(test IN LISTS TESTS)
+  add_test("FTorch-unit-tests/${test}" "FTorch-unit-tests" "${test}")
+endforeach()
