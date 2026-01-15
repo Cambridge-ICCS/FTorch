@@ -31,14 +31,12 @@ contains
 
   !> Collect all exported unit tests
   subroutine collect_test_tensor_operators_suite(testsuite)
-    !> Collection of tests
     type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
     testsuite = [ &
       new_unittest("valid", test_torch_tensor_sum), &
       new_unittest("valid", test_torch_tensor_mean) &
     ]
-
   end subroutine collect_test_tensor_operators_suite
 
   subroutine test_torch_tensor_sum(error)
