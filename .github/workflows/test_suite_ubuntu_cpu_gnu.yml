@@ -23,7 +23,6 @@ on:
       - '**.pf'
       # Build system
       - '**CMakeLists.txt'
-      - '**requirements.txt'
       # Data
       - '**data/*'
 
@@ -124,21 +123,21 @@ jobs:
           . ftorch/bin/activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
+      - name: Install Fortran Package Manager (fpm)
+        run: |
+          . ftorch/bin/activate
+          pip install fpm
+
+      - name: Install test-drive
+        run: |
+          . ftorch/bin/activate
+          git clone https://github.com/fortran-lang/test-drive.git
+          fpm build
+
       - name: Install OpenMPI
         run: |
           sudo apt update
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
-
-      - name: Install pFUnit
-        run: |
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
-          mkdir pFUnit/build
-          cd pFUnit/build
-          cmake ..\
-            -DCMAKE_Fortran_COMPILER=gfortran\
-            -DMPI_Fortran_COMPILER=mpif90
-          make -j 4 install
 
       - name: Build FTorch
         env:
@@ -148,8 +147,6 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/build
-          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
 
@@ -161,7 +158,7 @@ jobs:
             -DCMAKE_CXX_COMPILER=g++  \
             -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+            -DCMAKE_PREFIX_PATH="${Torch_DIR}" \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
           cmake --build .
           cmake --install .
