@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module test_tensor_operators
+module unittest_tensor_operators
   use testdrive, only: unittest_type, new_unittest, error_type, check
   use ftorch, only: assignment(=), torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_from_array
   use ftorch_test_utils, only: assert_allclose
@@ -15,7 +15,7 @@ module test_tensor_operators
   implicit none
 
   private
-  public :: collect_test_tensor_operators_suite
+  public :: collect_tensor_operators_suite
 
   ! Set working precision for reals
   integer, parameter :: wp = sp
@@ -30,14 +30,14 @@ module test_tensor_operators
 contains
 
   !> Collect all exported unit tests
-  subroutine collect_test_tensor_operators_suite(testsuite)
+  subroutine collect_tensor_operators_suite(testsuite)
     type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
     testsuite = [ &
       new_unittest("valid", test_torch_tensor_sum), &
       new_unittest("valid", test_torch_tensor_mean) &
     ]
-  end subroutine collect_test_tensor_operators_suite
+  end subroutine collect_tensor_operators_suite
 
   subroutine test_torch_tensor_sum(error)
     use ftorch, only: torch_tensor_sum
@@ -107,4 +107,4 @@ contains
 
   end subroutine test_torch_tensor_mean
 
-end module test_tensor_operators
+end module unittest_tensor_operators
