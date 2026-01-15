@@ -94,6 +94,7 @@ jobs:
         run: |
           . ftorch/bin/activate
           git clone https://github.com/fortran-lang/test-drive.git
+          cd test-drive
           fpm build
 
       - name: Build FTorch
