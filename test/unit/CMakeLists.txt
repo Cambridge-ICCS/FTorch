@@ -19,7 +19,7 @@ set(
   TESTS
   # TODO: "tensor_constructors_destructors"
   # TODO: "tensor_interrogation"
-  # TODO: "tensor_manipulation"
+  "tensor_manipulation"
   "tensor_operators"
   # TODO: "tensor_operator_overloads"
   # TODO: "tensor_operators_autograd"
