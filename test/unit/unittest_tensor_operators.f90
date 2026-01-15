@@ -70,6 +70,7 @@ contains
     ! Compare the data in the tensor to the expected sum
     expected1d(:) = 21.0
     call check(error, assert_allclose(out_data, expected1d, test_name="test_torch_tensor_sum"))
+
   end subroutine test_torch_tensor_sum
 
   subroutine test_torch_tensor_mean(error)
