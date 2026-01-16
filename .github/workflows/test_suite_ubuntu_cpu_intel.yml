@@ -90,7 +90,7 @@ jobs:
           . ftorch/bin/activate
           git clone https://gitlab.com/everythingfunctional/veggies.git
           cd veggies
-          fpm build
+          fpm build --compiler ${{ matrix.FC }}
 
       - name: Build and install FTorch
         env:
