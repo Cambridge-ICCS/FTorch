@@ -65,7 +65,6 @@ running the net with different input arrays on each MPI rank.
 #### 8) Autograd
 
 [This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd)
-is currently under development. Eventually, it will demonstrate how to perform
-automatic differentiation in FTorch by leveraging PyTorch's Autograd module.
-Currently, it just demonstrates how to compute mathematical expressions
-involving Torch tensors.
+demonstrates how to perform automatic differentiation of mathematical
+expressions involving Torch tensors in FTorch by leveraging PyTorch's Autograd
+module.
