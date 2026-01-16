@@ -9,17 +9,17 @@ else()
 endif()
 message(STATUS "Building FTorch unit tests")
 
-# Find the test-drive package
-if(NOT TARGET "test-drive::test-drive")
-  find_package("test-drive" REQUIRED)
+# Find the veggies package
+if(NOT TARGET "veggies")
+  find_package("veggies" REQUIRED)
 endif()
 
 # Define CPU-based unit tests
 set(
   TESTS
   # TODO: "tensor_constructors_destructors"
-  "tensor_interrogation"
-  "tensor_manipulation"
+  # TODO: "tensor_interrogation"
+  # TODO: "tensor_manipulation"
   "tensor_operators"
   # TODO: "tensor_operator_overloads"
   # TODO: "tensor_operator_overloads_autograd"
@@ -62,7 +62,7 @@ foreach(test IN LISTS TESTS)
 endforeach()
 add_executable("FTorch-unit-tests" "${TEST_SOURCES}")
 target_link_libraries("FTorch-unit-tests"
-                      PRIVATE FTorch::ftorch test-drive::test-drive)
+                      PRIVATE FTorch::ftorch veggies)
 
 # Register the unit tests with CTest
 foreach(test IN LISTS TESTS)

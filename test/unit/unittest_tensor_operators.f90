@@ -5,7 +5,6 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module unittest_tensor_operators
-  use testdrive, only: unittest_type, new_unittest, error_type, check
   use ftorch, only: assignment(=), torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_from_array
   use ftorch_test_utils, only: assert_allclose
 
@@ -29,20 +28,28 @@ module unittest_tensor_operators
 
 contains
 
-  !> Collect all exported unit tests
-  subroutine collect_tensor_operators_suite(testsuite)
-    type(unittest_type), allocatable, intent(out) :: testsuite(:)
+  !> The test suite for the mesh_generator
+  function test_tensor_operators() result(tests)
+    use veggies, only: describe, it, test_item_t, example_t
+    implicit none
+    type(test_item_t) :: tests
 
-    testsuite = [ &
-      new_unittest("valid", test_torch_tensor_sum), &
-      new_unittest("valid", test_torch_tensor_mean) &
-    ]
-  end subroutine collect_tensor_operators_suite
+    tests = describe( &
+            "test_tensor_operators", &
+            [ it( &
+                "test_torch_tensor_sum passes", &
+                test_torch_tensor_sum) &
+            , it( &
+                "test_torch_tensor_mean passes", &
+                test_torch_tensor_mean) &
+            ])
+  end function test_tensor_operators
 
-  subroutine test_torch_tensor_sum(error)
+  function test_torch_tensor_sum() result(result_)
     use ftorch, only: torch_tensor_sum
+    use veggies, only: result_t, assert_that
 
-    type(error_type), allocatable, intent(out) :: error
+    type(result_t) :: result_
     type(torch_tensor) :: in_tensor, out_tensor
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(1), target :: out_data
@@ -65,18 +72,22 @@ contains
 
     ! Check input arrays are unchanged by the summation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    call check(error, assert_allclose(in_data, expected2d, test_name="test_torch_tensor_sum"))
+    result_ = assert_that(assert_allclose(in_data, expected2d, test_name="test_torch_tensor_sum"))
+    if (.not. result_%passed) then
+      return
+    end if
 
     ! Compare the data in the tensor to the expected sum
     expected1d(:) = 21.0
-    call check(error, assert_allclose(out_data, expected1d, test_name="test_torch_tensor_sum"))
+    result_ = assert_that(assert_allclose(out_data, expected1d, test_name="test_torch_tensor_sum"))
 
-  end subroutine test_torch_tensor_sum
+  end function test_torch_tensor_sum
 
   subroutine test_torch_tensor_mean(error)
     use ftorch, only: torch_tensor_mean
+    use veggies, only: result_t, assert_that
 
-    type(error_type), allocatable, intent(out) :: error
+    type(result_t) :: result_
     type(torch_tensor) :: in_tensor, out_tensor
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(1), target :: out_data
@@ -99,11 +110,14 @@ contains
 
     ! Check input arrays are unchanged by the mean operation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    call check(error, assert_allclose(in_data, expected2d, test_name="test_torch_tensor_mean"))
+    result_ = assert_that(assert_allclose(in_data, expected2d, test_name="test_torch_tensor_mean"))
+    if (.not. result_%passed) then
+      return
+    end if
 
     ! Compare the data in the tensor to the expected mean
     expected1d(:) = 21.0 / 6.0
-    call check(error, assert_allclose(out_data, expected1d, test_name="test_torch_tensor_mean"))
+    result_ = assert_that(assert_allclose(out_data, expected1d, test_name="test_torch_tensor_mean"))
 
   end subroutine test_torch_tensor_mean
 

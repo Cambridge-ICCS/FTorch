@@ -1,16 +1,16 @@
 #[[.rst:
-Find test-drive
+Find veggies
 ---------------
 
-Makes the test-drive project available.
+Makes the veggies project available.
 
 Imported Targets
 ^^^^^^^^^^^^^^^^
 
 This module provides the following imported target, if found:
 
-``test-drive::test-drive``
-  The test-drive library
+``veggies::veggies``
+  The veggies library
 
 
 Result Variables
@@ -18,15 +18,15 @@ Result Variables
 
 This module will define the following variables:
 
-``TEST_DRIVE_FOUND``
-  True if the test-drive library is available
+``VEGGIES_FOUND``
+  True if the veggies library is available
 
-``TEST_DRIVE_SOURCE_DIR``
-  Path to the source directory of the test-drive project,
+``VEGGIES_SOURCE_DIR``
+  Path to the source directory of the veggies project,
   only set if the project is included as source.
 
-``TEST_DRIVE_BINARY_DIR``
-  Path to the binary directory of the test-drive project,
+``VEGGIES_BINARY_DIR``
+  Path to the binary directory of the veggies project,
   only set if the project is included as source.
 
 Cache variables
@@ -34,27 +34,27 @@ Cache variables
 
 The following cache variables may be set to influence the library detection:
 
-``TEST_DRIVE_FIND_METHOD``
+``VEGGIES_FIND_METHOD``
   Methods to find or make the project available. Available methods are
   - ``cmake``: Try to find via CMake config file
   - ``pkgconf``: Try to find via pkg-config file
   - ``subproject``: Use source in subprojects directory
   - ``fetch``: Fetch the source from upstream
 
-``TEST_DRIVE_DIR``
+``VEGGIES_DIR``
   Used for searching the CMake config file
 
-``TEST_DRIVE_SUBPROJECT``
-  Directory to find the test-drive subproject, relative to the project root
+``VEGGIES_SUBPROJECT``
+  Directory to find the veggies subproject, relative to the project root
 
-``TEST_DRIVE_GIT_TAG``
+``VEGGIES_GIT_TAG``
   The tag to use if fetching from git.
 
 #]]
 
-set(_lib "test-drive")
-set(_pkg "TEST_DRIVE")
-set(_url "https://github.com/fortran-lang/test-drive")
+set(_lib "veggies")
+set(_pkg "VEGGIES")
+set(_url "https://gitlab.com/everythingfunctional/veggies.git")
 
 if(NOT DEFINED "${_pkg}_FIND_METHOD")
   if(DEFINED "${PROJECT_NAME}-dependency-method")
