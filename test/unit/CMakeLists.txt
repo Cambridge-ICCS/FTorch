@@ -66,5 +66,5 @@ target_link_libraries("FTorch-unit-tests"
 
 # Register the unit tests with CTest
 foreach(test IN LISTS TESTS)
-  add_test("FTorch-unit-tests/${test}" "FTorch-unit-tests" "${test}")
+  add_test("FTorch-unit-tests/${test}" "FTorch-unit-tests")
 endforeach()

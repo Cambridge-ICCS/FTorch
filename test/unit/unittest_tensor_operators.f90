@@ -35,7 +35,7 @@ contains
     type(test_item_t) :: tests
 
     tests = describe( &
-            "test_tensor_operators", &
+            "tensor_operators", &
             [ it( &
                 "test_torch_tensor_sum passes", &
                 test_torch_tensor_sum) &
