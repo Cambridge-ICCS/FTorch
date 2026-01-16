@@ -102,7 +102,7 @@ jobs:
 
           # FIXME: Workaround for including veggies modules
           VEGGIES_FLAGS=""
-          for SUBDIR in /home/runner/work/FTorch/FTorch/veggies/build/i_*; do
+          for SUBDIR in /home/runner/work/FTorch/FTorch/veggies/build/i*; do
             VEGGIES_FLAGS="${VEGGIES_FLAGS} -I${SUBDIR} -L${SUBDIR}/veggies"
           done
 
