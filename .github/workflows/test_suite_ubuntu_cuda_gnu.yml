@@ -90,11 +90,11 @@ jobs:
           . ftorch/bin/activate
           pip install fpm
 
-      - name: Install test-drive
+      - name: Install veggies
         run: |
           . ftorch/bin/activate
-          git clone https://github.com/fortran-lang/test-drive.git
-          cd test-drive
+          git clone https://gitlab.com/everythingfunctional/veggies.git
+          cd veggies
           fpm build
 
       - name: Build FTorch
