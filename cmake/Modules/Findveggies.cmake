@@ -60,7 +60,7 @@ if(NOT DEFINED "${_pkg}_FIND_METHOD")
   if(DEFINED "${PROJECT_NAME}-dependency-method")
     set("${_pkg}_FIND_METHOD" "${${PROJECT_NAME}-dependency-method}")
   else()
-    set("${_pkg}_FIND_METHOD" "cmake" "pkgconf" "subproject" "fetch")
+    set("${_pkg}_FIND_METHOD" "cmake" "pkgconf" "subproject") # "fetch"
   endif()
   set("_${_pkg}_FIND_METHOD")
 endif()

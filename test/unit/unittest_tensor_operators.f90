@@ -14,7 +14,7 @@ module unittest_tensor_operators
   implicit none
 
   private
-  public :: collect_tensor_operators_suite
+  public :: test_tensor_operators
 
   ! Set working precision for reals
   integer, parameter :: wp = sp
@@ -73,9 +73,9 @@ contains
     ! Check input arrays are unchanged by the summation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     result_ = assert_that(assert_allclose(in_data, expected2d, test_name="test_torch_tensor_sum"))
-    if (.not. result_%passed) then
-      return
-    end if
+    ! if (.not. result_%passed) then
+    !   return
+    ! end if
 
     ! Compare the data in the tensor to the expected sum
     expected1d(:) = 21.0
@@ -83,7 +83,7 @@ contains
 
   end function test_torch_tensor_sum
 
-  subroutine test_torch_tensor_mean(error)
+  function test_torch_tensor_mean() result(result_)
     use ftorch, only: torch_tensor_mean
     use veggies, only: result_t, assert_that
 
@@ -111,14 +111,14 @@ contains
     ! Check input arrays are unchanged by the mean operation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
     result_ = assert_that(assert_allclose(in_data, expected2d, test_name="test_torch_tensor_mean"))
-    if (.not. result_%passed) then
-      return
-    end if
+    ! if (.not. result_%passed) then
+    !   return
+    ! end if
 
     ! Compare the data in the tensor to the expected mean
     expected1d(:) = 21.0 / 6.0
     result_ = assert_that(assert_allclose(out_data, expected1d, test_name="test_torch_tensor_mean"))
 
-  end subroutine test_torch_tensor_mean
+  end function test_torch_tensor_mean
 
 end module unittest_tensor_operators

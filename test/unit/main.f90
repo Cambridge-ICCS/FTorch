@@ -1,6 +1,5 @@
 program unit_test_suite
     use veggies, only : test_item_t, test_that, run_tests
-    use veggies_mesh_generator, only: test_mesh_generator
     use unittest_tensor_operators, only: test_tensor_operators
     ! TODO: use unittest_tensor_constructors_destructors, only: test_tensor_constructors_destructors
     ! TODO: use unittest_tensor_interrogation, only: test_tensor_interrogation
