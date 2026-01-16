@@ -102,7 +102,7 @@ jobs:
 
           # FIXME: Workaround for including veggies modules
           VEGGIES_FLAGS=""
-          for SUBDIR in ${veggies_DIR}/build/if_*; do
+          for SUBDIR in veggies/build/if_*; do
             VEGGIES_FLAGS="${VEGGIES_FLAGS} -I${SUBDIR} -L${SUBDIR}/veggies"
           done
 

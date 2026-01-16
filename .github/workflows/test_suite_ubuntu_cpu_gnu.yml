@@ -150,7 +150,7 @@ jobs:
 
           # FIXME: Workaround for including veggies modules
           VEGGIES_FLAGS=""
-          for SUBDIR in ${veggies_DIR}/build/gfortran_*; do
+          for SUBDIR in veggies/build/gfortran_*; do
             VEGGIES_FLAGS="${VEGGIES_FLAGS} -I${SUBDIR} -L${SUBDIR}/veggies"
           done
 
