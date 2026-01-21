@@ -62,7 +62,7 @@ demonstrates 'good' versus 'bad' practice, as opposed to functionality.
 
 Ensure that the Python virtual environment used when
 building is active and then run `ctest` from the build directory to execute all tests.
-Use [ctest arguments](https://cmake.org/cmake/help/latest/manual/ctest.1.html)
+Use [CTest arguments](https://cmake.org/cmake/help/latest/manual/ctest.1.html)
 for greater control over the testing configuration.
 
 This will produce a report on which of the requested tests passed, and which, if any,
@@ -72,17 +72,21 @@ failed for your build.
 
 Unit tests may be executed in the following ways:
 
-1. To run just the unit tests (tests whose names start with 'unittest') use
-   `ctest -R unittest`.
-2. To run a specific unit test use
-   `ctest -R unittest_tensor_constructors_destructors`, for example.
+1. To run all unit tests, use `ctest -R unittest`.<br>
+   (`ctest -R` accepts a regular expression to search for and this works because
+   all unit tests start with `unittest`.)
+2. Use a different regular expression to select a subset of unit tests, e.g.,
+   `ctest -R unittest_tensor` to run all unit tests related to `torch_tensor`s.
+3. To run a specific unit test just use its full name, e.g.
+   `ctest -R unittest_tensor_constructors_destructors`.
 
 #### Integration tests
 
 Integration tests may be executed in the following ways:
 
-1. To run just the integration tests (tests whose names start with 'example') use
-   `ctest -R example`
+1. To run just the integration tests, use `ctest -R example`.<br>
+   (`ctest -R` accepts a regular expression to search for and this works because
+   all integration tests start with `example`.)
 2. To run a specific integration test use `ctest -R example2`, for example.<br>
    Alternatively navigate to the corresponding example in `${BUILD_DIR}/examples`
    and call `ctest`.
@@ -111,7 +115,8 @@ examples.
 - In addition to a `CMakeLists.txt` to build the example code there
   should also be a section at the end setting up running of the example
   using [CTest](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Testing%20With%20CMake%20and%20CTest.html).
-    - Integration test names should start with `example_`
-    - New examples will also need including in `examples/CMakeLists.txt`
-- Ensure the documentation on [worked examples](|page|/usage/worked_examples.html) is
-  updated accordingly.
+    - Integration test names should start with `example` followed by the example
+      number, e.g. `example9`.
+- New examples will also need including in `examples/CMakeLists.txt`
+- Ensure the documentation on
+  [worked examples](|page|/usage/worked_examples.html) is updated accordingly.
