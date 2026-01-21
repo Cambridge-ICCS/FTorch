@@ -18,6 +18,7 @@ module unittest_tensor_manipulation
 
 contains
 
+  ! Unit test for the torch_tensor_zero subroutine
   @test
   subroutine test_torch_tensor_zero()
     use, intrinsic :: iso_fortran_env, only: sp => real32

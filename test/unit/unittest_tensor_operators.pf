@@ -27,6 +27,7 @@ module unittest_tensor_operators
 
 contains
 
+  ! Unit test for the summation reduction
   @test
   subroutine test_torch_tensor_sum()
     use ftorch, only: torch_tensor_sum
@@ -60,6 +61,7 @@ contains
 
   end subroutine test_torch_tensor_sum
 
+  ! Unit test for the mean reduction
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_mean()
     use ftorch, only: torch_tensor_mean

@@ -72,6 +72,7 @@ contains
     string = str
   end function toString
 
+  ! Unit test for the assignment operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_assign(this)
 
@@ -105,6 +106,7 @@ contains
 
   end subroutine test_torch_tensor_assign
 
+  ! Unit test for the addition operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_add(this)
     use ftorch, only: operator(+)
@@ -140,6 +142,7 @@ contains
 
   end subroutine test_torch_tensor_add
 
+  ! Unit test for the subtraction operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_subtract(this)
     use ftorch, only: operator(-)
@@ -176,6 +179,7 @@ contains
 
   end subroutine test_torch_tensor_subtract
 
+  ! Unit test for the negative operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_negative(this)
     use ftorch, only: operator(-)
@@ -207,6 +211,7 @@ contains
 
   end subroutine test_torch_tensor_negative
 
+  ! Unit test for the tensor multiplication operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_multiply(this)
     use ftorch, only: operator(*)
@@ -243,6 +248,7 @@ contains
 
   end subroutine test_torch_tensor_multiply
 
+  ! Unit test for the scalar multiplication operator
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_scalar_multiply(this)
     use ftorch, only: operator(*)
@@ -280,6 +286,7 @@ contains
 
   end subroutine test_torch_tensor_scalar_multiply
 
+  ! Unit test for the tensor division operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_divide(this)
     use ftorch, only: operator(/)
@@ -315,6 +322,7 @@ contains
 
   end subroutine test_torch_tensor_divide
 
+  ! Unit test for the scalar division operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_scalar_divide(this)
     use ftorch, only: operator(/)
@@ -354,6 +362,7 @@ contains
 
   end subroutine test_torch_tensor_scalar_divide
 
+  ! Unit test for the integer exponentiation operator
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_square(this)
     use ftorch, only: operator(**)
@@ -390,6 +399,7 @@ contains
 
   end subroutine test_torch_tensor_square
 
+  ! Unit test for the fractional exponentiation operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_sqrt(this)
     use ftorch, only: operator(**)
