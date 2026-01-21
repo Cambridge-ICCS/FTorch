@@ -12,7 +12,9 @@ tests based on a subset of the [worked examples](|page|/usage/worked_examples.ht
 - [Running Tests](#running)
     - [Unit Tests](#unit-tests)
     - [Integration Tests](#integration-tests)
-- [Adding Tests](#adding-tests)
+- [Contributing Tests](#contributing-tests)
+    - [Contributing Unit Tests](#contributing-unit-tests)
+    - [Contributing Integration Tests](#contributing-integration-tests)
 
 
 ### Building
@@ -86,22 +88,29 @@ Integration tests may be executed in the following ways:
    and call `ctest`.
 
 
-### Adding Tests
+### Contributing tests
 
-New components should come with unit tests written using the pFUnit framework.
+#### Contributing unit tests
+
+New components should come with unit tests written using the
+[pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit) framework.
 
 - New unit tests should be added to the `test/unit/` directory and start with
   `unittest_`.
-- New tests need including in the `CMakeLists.txt` in that directory in order
-  to be built as part of the test suite.
+- New unit tests should be included in `test/unit/CMakeLists.txt` in order to
+  be built as part of the test suite.
+
+#### Contributing integration tests
 
 New functionalities should come with integration tests in the form of worked
 examples.
 
 - These should take the form of a new example in the `examples/` directory.
+- Create a subdirectory named with the next sequential number and a descriptive
+  name, e.g. `9_NewFeature`.
 - In addition to a `CMakeLists.txt` to build the example code there
   should also be a section at the end setting up running of the example
-  using CTest.
+  using [CTest](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Testing%20With%20CMake%20and%20CTest.html).
     - Integration test names should start with `example_`
     - New examples will also need including in `examples/CMakeLists.txt`
 - Ensure the documentation on [worked examples](|page|/usage/worked_examples.html) is
