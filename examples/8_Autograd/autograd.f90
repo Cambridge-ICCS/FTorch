@@ -55,9 +55,11 @@ program autograd
   ! `grad` property for both of them.
   call torch_tensor_backward(Q)
 
-  ! Create tensors based off output arrays for the gradients and then retrieve them
+  ! Create arrays based of the gradient tensors to hold gradient information
   call torch_tensor_from_array(dQda, out_data2, torch_kCPU)
   call torch_tensor_from_array(dQdb, out_data3, torch_kCPU)
+
+  ! Specify that we want the gradients with respect to a and b
   call torch_tensor_get_gradient(dQda, a)
   call torch_tensor_get_gradient(dQdb, b)
 

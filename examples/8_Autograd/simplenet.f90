@@ -6,7 +6,7 @@ program autograd_simplenet
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only: torch_kCPU, torch_delete, torch_model, torch_model_load, torch_model_forward,  &
                     torch_tensor, torch_tensor_backward, torch_tensor_from_array, &
-                    torch_tensor_get_gradient, assignment(=), operator(*)
+                    torch_tensor_get_gradient
 
   ! Import our tools module for testing utils
   use ftorch_test_utils, only : assert_allclose
@@ -21,8 +21,7 @@ program autograd_simplenet
   real(wp), dimension(n), target :: in_array, out_array, grad_array
   real(wp), dimension(n) :: expected
 
-  ! Flag for testing
-  logical :: test_pass
+  character(len=128), parameter :: filename = trim("simplenet.pt")
 
   ! Set up Torch data structures
   type(torch_model) :: model
@@ -35,11 +34,14 @@ program autograd_simplenet
   ! Initialise Torch Tensors from array used for output
   call torch_tensor_from_array(out_tensors(1), out_array, torch_kCPU) ! , requires_grad=.true.)
 
-  ! ! Load the model and run inference
-  call torch_model_load(model, trim("simplenet.pt"), torch_kCPU, requires_grad=.true.)
+  ! Load the model from file
+  call torch_model_load(model, filename, torch_kCPU)
+
+  ! Propagate the input tensor through the model to get the output tensor
+  ! NOTE: We set requires_grad=.true. here to track operations for autograd
   call torch_model_forward(model, in_tensors, out_tensors, requires_grad=.true.)
 
-  ! Check the output takes expected values
+  ! Check the output array takes expected values
   expected(:) = [2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp, 10.0_wp]
   if (.not. assert_allclose(out_array, expected, test_name="autograd_simplenet_y")) then
     write(*,*) "Error :: value of y does not match expected value"
@@ -51,11 +53,13 @@ program autograd_simplenet
   ! property for x
   call torch_tensor_backward(out_tensors(1))
 
-  ! Create tensors based off output arrays for the gradients and then retrieve them
+  ! Create an array based of the gradient tensor to hold gradient information
   call torch_tensor_from_array(grad_tensors(1), grad_array, torch_kCPU)
+
+  ! Specify that we want the gradient with respect to the input tensor
   call torch_tensor_get_gradient(grad_tensors(1), in_tensors(1))
 
-  ! Check the gradients take expected values
+  ! Check the gradient array takes expected values
   expected(:) = 2.0
   if (.not. assert_allclose(grad_array, expected, test_name="autograd_simplenet_dydx")) then
     write(*,*) "Error :: value of dydx does not match expected value"
