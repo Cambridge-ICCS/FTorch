@@ -6,7 +6,7 @@ program autograd_simplenet
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only: torch_kCPU, torch_delete, torch_model, torch_model_load, torch_model_forward,  &
                     torch_tensor, torch_tensor_backward, torch_tensor_from_array, &
-                    torch_tensor_get_gradient
+                    torch_tensor_get_gradient, assignment(=), operator(*)
 
   ! Import our tools module for testing utils
   use ftorch_test_utils, only : assert_allclose
@@ -26,16 +26,20 @@ program autograd_simplenet
 
   ! Set up Torch data structures
   type(torch_model) :: model
-  type(torch_tensor) :: in_tensors(1), out_tensors(1) , grad_tensors(1)
+  type(torch_tensor) :: in_tensors(1), out_tensors(1), grad_tensors(1), multiplier
 
   ! Initialise Torch Tensors from input arrays as in Python example
   in_array(:) = [1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp]
   call torch_tensor_from_array(in_tensors(1), in_array, torch_kCPU, requires_grad=.true.)
 
   ! Initialise Torch Tensors from array used for output
-  call torch_tensor_from_array(out_tensors(1), out_array, torch_kCPU)
+  call torch_tensor_from_array(out_tensors(1), out_array, torch_kCPU) ! , requires_grad=.true.)
 
-  ! Load the model and run inference
+  ! ! Load the model and run inference
+  ! ! NOTE: Works with the following two lines
+  ! call torch_tensor_from_array(multiplier, [2.0_wp], torch_kCPU)
+  ! out_tensors(1) = multiplier * in_tensors(1)
+  ! FIXME: Doesn't work with the following two lines
   call torch_model_load(model, trim("simplenet.pt"), torch_kCPU)
   call torch_model_forward(model, in_tensors, out_tensors)
 
