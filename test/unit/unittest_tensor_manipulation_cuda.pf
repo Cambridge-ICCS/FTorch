@@ -18,7 +18,8 @@ module unittest_tensor_manipulation_cuda
 
 contains
 
-    ! Unit test for the torch_tensor_to subroutine moving a tensor from the CPU (Float64) to a CUDA device (FLoat32)
+  ! Unit test for the torch_tensor_to subroutine moving a tensor from the CPU (Float64) to a CUDA
+  ! device (Float32)
   @test
   subroutine test_torch_tensor_to()
     use, intrinsic :: iso_fortran_env, only: sp => real32, dp => real64
