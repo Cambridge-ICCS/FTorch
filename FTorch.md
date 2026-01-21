@@ -1,11 +1,17 @@
 ---
 project: FTorch
-summary: A library for coupling (Py)Torch machine learning models to Fortran
-author: ICCS Cambridge
+summary: FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.<br>Written in modern Fortran (2008) with source code available on [GitHub](https://github.com/Cambridge-ICCS/FTorch) it has been used in [multiple scientific projects](https://cambridge-iccs.github.io/FTorch/page/community/case_studies.html).<br>The associated JOSS paper can read [here](https://joss.theoj.org/papers/10.21105/joss.07602).
 license: mit
-github: https://github.com/Cambridge-ICCS
 project_github: https://github.com/Cambridge-ICCS/FTorch
+author: ICCS Cambridge
+author_pic: https://raw.githubusercontent.com/Cambridge-ICCS/FTorch/refs/heads/main/pages/media/ICCS_logo.png
+author_description: Research Software Engineering team supporting software development and standards across the climate sciences domain.
+github: https://github.com/Cambridge-ICCS
+website: https://iccs.cam.ac.uk
 page_dir: pages
+media_dir: ./pages/media/
+css: ./pages/media/theme/ftorch.css
+favicon: ./pages/media/FTorch_Favicon.jpg
 src_dir: ./src
          ./utils
 output_dir: ./doc
@@ -32,104 +38,69 @@ md_extensions: markdown.extensions.toc
 
 --------------------
 
-[TOC]
+![logo](|media|/FTorch_logo.svg "FTorch logo"){width=100%}
 
-Brief description
------------------
 
-It is desirable to be able to run machine learning (ML) models directly in Fortran.
-ML models are often trained in some other language (say, Python) using a popular frameworks (say, PyTorch) and saved.
-We want to run inference on this model without having to call a Python executable.
-To achieve this we use the existing Torch C++ interface, LibTorch.
+Description
+-----------
 
-FTorch provides a library enabling a user to directly couple their PyTorch models to Fortran code.
-There are also installation instructions for the library and examples of performing coupling.
+It is desirable to run machine learning (ML) models directly in Fortran.
+However, ML models are often trained in some other language using popular frameworks (say, Python and PyTorch).
 
-We support running on both CPU and GPU, and have tested the library on UNIX and Windows based operating systems
+FTorch is a library enabling users to directly couple their PyTorch models to Fortran code enabling the development of hybrid models that combine high-performance scientific computing with modern ML techniques.
+It supports running on both CPU and GPU, and is tested on UNIX and Windows operating systems
 
-Citing FTorch
--------------
+This site contains user and API documentation for FTorch as well as community information.
+There are also installation instructions for the library and numerous examples of
+performing coupling.
+
+
+Using and Citing FTorch
+-----------------------
 
 FTorch is published in JOSS. To cite it in your work please refer to:
 
-Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.
-_Journal of Open Source Software_, 10(107), 7602, [https://doi.org/10.21105/joss.07602](https://doi.org/10.21105/joss.07602)
+<div style="margin-left: 2em;">
+Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortran.<br>
+<em>Journal of Open Source Software</em>, 10(107), 7602, <a href="https://doi.org/10.21105/joss.07602">https://doi.org/10.21105/joss.07602</a>
+</div><br>
+
+For examples of the many projects and publications that rely on FTorch please see our [user case studies page](|page|/community/case_studies.html).
+If you use FTorch and want to be included please get in touch.
+
+The [presentations](|page|/community/presentations.html) page has a full list of recent talks about FTorch with links to slides and recordings.
+
 
 News
 ----
 
-Some recent updates about FTorch:
+For the latest updates and developments please see the
+[news page](|page|/community/news_archive.html) and
+[join our user mailing list](https://www.jiscmail.ac.uk/cgi-bin/webadmin?A0=ftorch-announce).
 
-* FTorch developers Jack Atkinson and Joe Wallwork
-  [were recently awarded funding from C2D3-Accelerate](https://science.ai.cam.ac.uk/news/2024-12-09-exploring-novel-applications-of-ai-for-research-and-innovation-%E2%80%93-announcing-our-2024-funded-projects.html)
-  for a project entitled *Online training of large-scale Fortran-based hybrid
-  computational science models, with applications in climate science*. This
-  grant will support development for online training functionality for FTorch,
-  as well as research visits, FTorch training tutorials, and organisation of a
-  [workshop on hybrid modelling](https://cambridge-iccs.github.io/ml-coupling-workshop).
-* FTorch developer Jack Atkinson will be presenting FTorch in a SciML seminar at
-  [CEMAC](https://www.cemac.leeds.ac.uk/) in Leeds on 18th July 2025.
 
-FTorch training
----------------
+Training
+--------
 
 We offer training on FTorch in the form of tutorials and workshops. The
 companion repository
 [https://github.com/Cambridge-ICCS/FTorch-workshop](https://github.com/Cambridge-ICCS/FTorch-workshop)
 provides a set of exercises and solutions to help users get started with FTorch.
-<!--Details of upcoming in-person training events are as follows:-->
+Upcoming in-person sessions will be listed on the [news page](|page|/community/news_archive.html).
 
-Select Presentations
---------------------
 
-The following presentations contain information about FTorch:
+Contact
+--------
 
-* FTorch: Facilitating Hybrid Modelling<br>
-  N8-CIR Seminar, Leeds - July 2025<br>
-  [Slides](https://jackatkinson.net/slides/Leeds-N8-FTorch) - [Recording](https://www.youtube.com/watch?v=je7St0t_W9A)
-* Facilitating machine learning in Fortran using FTorch<br>
-  Seminars at the University of Reading
-  [Data Assimilation Research Centre](https://research.reading.ac.uk/met-darc/news-and-events/darc-seminar-series/)
-  and [ECMWF, Reading](https://www.ecmwf.int/en/about/location/ecmwf-reading) -
-  May 2025<br>
-  [Slides](https://hackmd.io/@jwallwork/darc-seminar-2025?type=slide)
-* FTorch: Enabling Online Training for Large-Scale Fortran Models<br>
-  [CCfCS Polar Symposium 2025](https://polarnetwork.org/events/ccfcs-polar-symposium-2025/),
-  British Antarctic Survey, Cambridge - May 2025<br>
-  [Poster](https://niccolozanotti.com/CCfCS-PolarSymposium25/poster.pdf)<br>
-* Coupling Machine Learning to Numerical (Climate) Models<br>
-  Platform for Advanced Scientific Computing, Zurich - June 2024<br>
-  [Slides](https://jackatkinson.net/slides/PASC24)
+For feature requests, bug reports, or assistance in using FTorch please get in touch via
+GitHub by either [raising an issue](https://github.com/Cambridge-ICCS/FTorch/issues)
+or [opening an discussion](https://github.com/Cambridge-ICCS/FTorch/discussions).
 
-See the [presentations](page/presentations.html) page for a full list of
-presentations on FTorch.
+For general enquiries please contact ICCS via [iccs@maths.cam.ac.uk](mailto:iccs@maths.cam.ac.uk).
+
 
 License
 -------
 
 The FTorch source code, related files and documentation are
-distributed under an [MIT License which can be viewed here](page/LICENSE.html).
-
-
-Projects using FTorch
----------------------
-
-The following projects make use of FTorch.<br>
-If you use our library in your work please let us know.
-
-* [DataWave CAM-GW](https://github.com/DataWaveProject/CAM/) -
-  Using FTorch to couple neural net parameterisations of gravity waves to the CAM
-  atmospheric model.
-* [MiMA Machine Learning](https://github.com/DataWaveProject/MiMA-machine-learning) -
-  Implementing a neural net parameterisation of gravity waves in the MiMA atmospheric model.
-  Demonstrates that nets trained near-identically offline can display greatly varied behaviours when coupled online.
-  See Mansfield and Sheshadri (2024) - [DOI: 10.1029/2024MS004292](https://doi.org/10.1029/2024MS004292)
-* [Convection parameterisations in ICON](https://github.com/EyringMLClimateGroup/heuer23_ml_convection_parameterization) -
-  Implementing machine-learnt convection parameterisations in the ICON atmospheric model
-  showing that best online performance occurs when causal relations are eliminated from the net.
-  See Heuer et al (2024) - [DOI: 10.1029/2024MS004398](https://doi.org/10.1029/2024MS004398)
-* In the [GloSea6 Seasonal Forecasting Model](https://www.metoffice.gov.uk/research/climate/seasonal-to-decadal/gpc-outlooks/user-guide/global-seasonal-forecasting-system-glosea6) -
-  Replacing a BiCGStab bottleneck in the code with a deep learning approach to speed up execution without compromising model accuracy.
-  See Park and Chung (2025) - [DOI: 10.3390/atmos16010060](https://doi.org/10.3390/atmos16010060)
-* Emulation of cloud resolving models to reduce computational cost in E3SM.
-  See Hu et al. (2025) - [DOI: 10.1029/2024MS004618](https://doi.org/10.1029%2F2024MS004618) (and [code](https://github.com/zyhu-hu/E3SM_nvlab/tree/ftorch/climsim_scripts/perlmutter_scripts))
+distributed under an [MIT License which can be viewed here](|page|/LICENSE.html).

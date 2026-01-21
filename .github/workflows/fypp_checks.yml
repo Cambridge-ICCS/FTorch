@@ -27,6 +27,8 @@ permissions: {}
 jobs:
   # This workflow contains a single job called "fypp-checks"
   fypp-checks:
+    name: fypp checks
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -34,32 +36,37 @@ jobs:
     timeout-minutes: 5
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-        persist-credentials: false
-    - uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
-    - run: pip install fypp
+      - name: Checkout FTorch repository
+        with:
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-    - name: Check ftorch.fypp matches ftorch.F90
-      run: |
-        fypp src/ftorch.fypp src/temp.F90_temp
-        if ! diff -q src/ftorch.F90 src/temp.F90_temp; then
-          echo "Error: The code in ftorch.F90 does not match that expected from ftorch.fypp."
-          echo "Please re-run fypp on ftorch.fypp to ensure consistency and re-commit."
-          exit 1
-        else
-          exit 0
-        fi
+      - name: Setup Python
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
+        with:
+          python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
 
-    - name: Check ftorch_test_utils.fypp matches ftorch_test_utils.f90
-      run: |
-        fypp src/ftorch_test_utils.fypp src/temp.f90_temp
-        if ! diff -q src/ftorch_test_utils.f90 src/temp.f90_temp; then
-          echo "Error: The code in ftorch_test_utils.f90 does not match that expected from ftorch_test_utils.fypp."
-          echo "Please re-run fypp on ftorch_test_utils.fypp to ensure consistency and re-commit."
-          exit 1
-        else
-          exit 0
-        fi
+      - name: Install fypp, the Fortran pre-processor
+        run: pip install fypp
+
+      - name: Check ftorch.fypp matches ftorch.F90
+        run: |
+          fypp src/ftorch.fypp src/temp.F90_temp
+          if ! diff -q src/ftorch.F90 src/temp.F90_temp; then
+            echo "Error: The code in ftorch.F90 does not match that expected from ftorch.fypp."
+            echo "Please re-run fypp on ftorch.fypp to ensure consistency and re-commit."
+            exit 1
+          else
+            exit 0
+          fi
+
+      - name: Check ftorch_test_utils.fypp matches ftorch_test_utils.f90
+        run: |
+          fypp src/ftorch_test_utils.fypp src/temp.f90_temp
+          if ! diff -q src/ftorch_test_utils.f90 src/temp.f90_temp; then
+            echo "Error: The code in ftorch_test_utils.f90 does not match that expected from ftorch_test_utils.fypp."
+            echo "Please re-run fypp on ftorch_test_utils.fypp to ensure consistency and re-commit."
+            exit 1
+          else
+            exit 0
+          fi

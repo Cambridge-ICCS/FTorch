@@ -1,19 +1,21 @@
 title: Offline training
+author: Joe Wallwork
+date: Last Updated: April 2025
 
-[TOC]
+## Offline Training
 
 The established approach for designing and training a model for running
 inference in FTorch is the so-called 'offline' approach, which is described in
 the following. We are currently working on implementing an alternative online
 training approach - see the
-[online training user guide page](online.html) for details.
+[online training user guide page](|page|/usage/online.html) for details.
 
 ## Workflow
 
 Below we provide a schematic of the offline training workflow, which is broken
 down into separate tasks below.
 
-![schematic](offline.png "Offline training schematic")
+![schematic](|media|/usage/offline.png "Offline training schematic")
 
 #### 1. Design the ML model in PyTorch
 
@@ -49,6 +51,7 @@ there for more details on how to use the script.
 
 In order to run inference with the trained ML model, you will need to modify
 your Fortran model so that it uses FTorch syntax to set up appropriate
-`torch_tensor` and `torch_model` objects and call the `torch_tensor_forward`
+[[ftorch(module):torch_tensor(type)]] and [[ftorch(module):torch_model(type)]]
+objects and call the [[ftorch(module):torch_model_forward(subroutine)]]
 subroutine to run the inference. For examples of how to do this, see the
-[examples user guide page](examples.html).
+[examples user guides](|page|/usage/index.html#examples).

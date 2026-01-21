@@ -1,16 +1,19 @@
 title: When to transpose data
+author: Jack Atkinson
+date: Last Updated: October 2025
+
+## When to transpose data
 
 Transposition of data between Fortran and C can lead to a lot of unnecessary confusion.
 The FTorch library looks after this for you with the
-[`torch_tensor_from_array()`](doc/interface/torch_tensor_from_array.html) function which
+[[ftorch(module):torch_tensor_from_array(interface)]] function which
 allows you to index a tensor in Torch in **exactly the same way** as you would in Fortran.
 
 If you wish to do something different to this then there are more complex functions
 available and we describe here how and when to use them.
 
-[TOC]
 
-## Introduction - row- vs. column-major
+### Introduction - row- vs. column-major
 
 Astute users will note that Fortran is a
 [column-major](https://en.wikipedia.org/wiki/Row-_and_column-major_order)
@@ -57,7 +60,7 @@ $$
 reading along each row before progressing down the column dimension.
 
 
-## Why does this matter?
+### Why does this matter?
 
 This matters for FTorch because a key feature is no-copy memory transfer between Fortran
 and Torch.
@@ -80,12 +83,12 @@ This means we need to be careful when passing data to make sure that what we rea
 to our Torch net is correct as we expect.
 
 
-## What can we do?
+### What can we do?
 
 There are a few approaches we can take to address this.
 The first two of these are listed for conceptual purposes, whilst in practice we
-advise handling this using the `torch_tensor_from_array` function described in
-[3) below](#3-use-the-layout-argument-in-torch_tensor_from_array).
+advise handling this using the [[ftorch(module):torch_tensor_from_array(interface)]]
+subroutine described in [3) below](#3-use-the-layout-argument-in-torch_tensor_from_array).
 
 #### 1) Transpose before passing
 As seen from the above example, writing out from Fortran and reading directly in to
@@ -133,7 +136,7 @@ Not doing so could leave us open to introducing bugs.
 By far the easiest way to deal with the issue is not to worry about it at all!
 
 As described at the top of this page, the
-[torch_tensor_from_array](doc/interface/torch_tensor_from_array.html) function
+[[ftorch(module):torch_tensor_from_array(interface)]] function
 provides functionality for handling this through its optional `layout` argument.
 This allows us to take data from Fortran and send it to Torch to be indexed in exactly
 the same way by using strided access based on the shape of the array.
@@ -142,13 +145,13 @@ It takes the form of an array specifying which order to read the indices in.
 i.e. `[1, 2]` will read `i` then `j`.
 By passing `layout = [1, 2]` the data will be read into the correct indices by
 Torch. The natural ordering `[1, 2, ..., n]` (where `n` is the dimension of the
-array) is the default used by `torch_tensor_from_array`.
+array) is the default used by [[ftorch(module):torch_tensor_from_array(interface)]].
 In cases where your tensors are indexed the same way in both Fortran and Torch, it
 should be sufficient to just use the default value, in which case you don't need
 to pass a `layout` argument at all.
 
 The strided access is achieved by wrapping the `torch_tensor_from_blob` function
-to automatically generate strides assuming that a straightforward conversion
+to automatically generate strides, assuming that a straightforward conversion
 between row- and column-major is what should happen.
 
 i.e. if the Fortran array `A`
@@ -176,8 +179,9 @@ $$
 > \end{pmatrix}
 > $$
 
-## Advanced use with `torch_tensor_from_blob`
+
+### Advanced use with `torch_tensor_from_blob`
 
 For more advanced options for manipulating and controlling data access when passing
 between Fortran and Torch see the more powerful but more complex
-[torch_tensor_from_blob function](doc/proc/torch_tensor_from_blob.html)
+[[ftorch(module):torch_tensor_from_blob(subroutine)]] subroutine.
