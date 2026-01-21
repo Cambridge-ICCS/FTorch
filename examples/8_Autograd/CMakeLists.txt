@@ -29,9 +29,11 @@ endif()
 execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
                         ${PROJECT_SOURCE_DIR}/requirements.txt)
 
-# Fortran example
+# Fortran examples
 add_executable(autograd autograd.f90)
 target_link_libraries(autograd PRIVATE FTorch::ftorch)
+add_executable(simplenet simplenet.f90)
+target_link_libraries(simplenet PRIVATE FTorch::ftorch)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
@@ -48,4 +50,16 @@ if(CMAKE_BUILD_TESTS)
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(example8_fautograd PROPERTIES PASS_REGULAR_EXPRESSION
                        "Autograd example ran successfully")
+
+  # 3. Check the Python SimpleNet Autograd script runs successfully
+  add_test(NAME example8_pysimplenet COMMAND ${Python_EXECUTABLE}
+                                             ${PROJECT_SOURCE_DIR}/simplenet.py)
+
+  # 4. Check the Fortran SimpleNet Autograd script runs successfully
+  add_test(
+    NAME example8_fsimplenet
+    COMMAND simplenet
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_tests_properties(example8_fsimplenet PROPERTIES PASS_REGULAR_EXPRESSION
+                       "SimpleNet Autograd example ran successfully")
 endif()
