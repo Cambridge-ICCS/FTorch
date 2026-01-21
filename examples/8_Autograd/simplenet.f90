@@ -32,7 +32,7 @@ program autograd_simplenet
   call torch_tensor_from_array(in_tensors(1), in_array, torch_kCPU, requires_grad=.true.)
 
   ! Initialise Torch Tensors from array used for output
-  call torch_tensor_from_array(out_tensors(1), out_array, torch_kCPU) ! , requires_grad=.true.)
+  call torch_tensor_from_array(out_tensors(1), out_array, torch_kCPU)
 
   ! Load the model from file
   call torch_model_load(model, filename, torch_kCPU)
