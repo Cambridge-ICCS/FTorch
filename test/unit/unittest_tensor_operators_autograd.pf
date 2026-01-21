@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module test_tensor_operators_autograd
+module unittest_tensor_operators_autograd
   use funit
   use ftorch, only: assignment(=), torch_kCPU, torch_kFloat32, torch_tensor, &
                     torch_tensor_backward, torch_tensor_empty, torch_tensor_get_gradient, &
@@ -103,4 +103,4 @@ contains
 
   end subroutine test_torch_tensor_mean
 
-end module test_tensor_operators_autograd
+end module unittest_tensor_operators_autograd
