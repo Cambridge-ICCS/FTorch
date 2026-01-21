@@ -218,7 +218,7 @@ jobs:
           cd build
           ctest --verbose --tests-regex example
 
-            - name: Standalone SimpleNet example
+      - name: Standalone SimpleNet example
         env:
           FORTRAN_STANDARD: ${{ matrix.std }}
         run: |
