@@ -70,7 +70,7 @@ if __name__ == "__main__":
     with torch.inference_mode():
         result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
-    print(result)
+    print(f"Model output: {result}")
 
     if not torch.allclose(result, torch.Tensor([0.0, 2.0, 4.0, 6.0, 8.0])):
         result_error = (

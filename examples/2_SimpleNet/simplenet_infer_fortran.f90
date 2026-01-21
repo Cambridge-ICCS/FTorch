@@ -5,7 +5,8 @@ program inference
 
    ! Import our library for interfacing with PyTorch
    use ftorch, only : torch_model, torch_tensor, torch_kCPU, torch_delete, &
-                      torch_tensor_from_array, torch_model_load, torch_model_forward
+                      torch_tensor_from_array, torch_model_load, torch_model_forward, &
+                      torch_model_print_parameters
 
    ! Import our tools module for testing utils
    use ftorch_test_utils, only : assert_allclose
@@ -49,8 +50,13 @@ program inference
    ! Load ML model
    call torch_model_load(model, args(1), torch_kCPU)
 
+   ! Print the parameters associated with the pre-trained model
+   write (*,*) "Model parameters:"
+   call torch_model_print_parameters(model)
+
    ! Infer
    call torch_model_forward(model, in_tensors, out_tensors)
+   write (*,*) "Model output:"
    write (*,*) out_data(:)
 
    ! Check output tensor matches expected value
