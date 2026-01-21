@@ -77,6 +77,6 @@ program autograd_tensor_arithmetic
     stop 999
   end if
 
-  write (*,*) "autograd_tensor arithmetic Autograd example ran successfully"
+  write (*,*) "Tensor arithmetic Autograd example ran successfully"
 
 end program autograd_tensor_arithmetic
