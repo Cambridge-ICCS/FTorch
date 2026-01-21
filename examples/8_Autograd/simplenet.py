@@ -31,6 +31,7 @@ dydx = torch.autograd.grad(
     allow_unused=True,
 )[0]
 
-print(f"y = {y}, dy/dx = {dydx}")
+print(f"y = {y}")
+print(f"dy/dx = {dydx}")
 
 assert torch.allclose(dydx, 2.0 * torch.ones_like(y))

@@ -42,6 +42,7 @@ program autograd_simplenet
   call torch_model_forward(model, in_tensors, out_tensors, requires_grad=.true.)
 
   ! Check the output array takes expected values
+  write(*,*) "y = ", out_array
   expected(:) = [2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp, 10.0_wp]
   if (.not. assert_allclose(out_array, expected, test_name="autograd_simplenet_y")) then
     write(*,*) "Error :: value of y does not match expected value"
@@ -60,6 +61,7 @@ program autograd_simplenet
   call torch_tensor_get_gradient(grad_tensors(1), in_tensors(1))
 
   ! Check the gradient array takes expected values
+  write(*,*) "dy/dx = ", grad_array
   expected(:) = 2.0
   if (.not. assert_allclose(grad_array, expected, test_name="autograd_simplenet_dydx")) then
     write(*,*) "Error :: value of dydx does not match expected value"

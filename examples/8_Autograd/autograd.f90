@@ -64,13 +64,13 @@ program autograd
   call torch_tensor_get_gradient(dQdb, b)
 
   ! Check the gradients take expected values
-  write(*,*) "dQda = 9*a^2 = ", out_data2
+  write(*,*) "dQ/da = 9*a^2 = ", out_data2
   expected(:) = [36.0_wp, 81.0_wp]
   if (.not. assert_allclose(out_data2, expected, test_name="autograd_dQdb")) then
     write(*,*) "Error :: value of dQdb does not match expected value"
     stop 999
   end if
-  write(*,*) "dQdb = - 2*b = ", out_data3
+  write(*,*) "dQ/db = - 2*b = ", out_data3
   expected(:) = [-12.0_wp, -8.0_wp]
   if (.not. assert_allclose(out_data3, expected, test_name="autograd_dQdb")) then
     write(*,*) "Error :: value of dQdb does not match expected value"
