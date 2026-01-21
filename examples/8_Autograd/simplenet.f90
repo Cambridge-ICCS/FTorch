@@ -36,15 +36,10 @@ program autograd_simplenet
   call torch_tensor_from_array(out_tensors(1), out_array, torch_kCPU) ! , requires_grad=.true.)
 
   ! ! Load the model and run inference
-  ! ! NOTE: Works with the following two lines
-  ! call torch_tensor_from_array(multiplier, [2.0_wp], torch_kCPU)
-  ! out_tensors(1) = multiplier * in_tensors(1)
-  ! FIXME: Doesn't work with the following two lines
-  call torch_model_load(model, trim("simplenet.pt"), torch_kCPU)
-  call torch_model_forward(model, in_tensors, out_tensors)
+  call torch_model_load(model, trim("simplenet.pt"), torch_kCPU, requires_grad=.true.)
+  call torch_model_forward(model, in_tensors, out_tensors, requires_grad=.true.)
 
   ! Check the output takes expected values
-  write(*,*) "Output:", out_array(:)
   expected(:) = [2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp, 10.0_wp]
   if (.not. assert_allclose(out_array, expected, test_name="autograd_simplenet_y")) then
     write(*,*) "Error :: value of y does not match expected value"
@@ -52,8 +47,8 @@ program autograd_simplenet
   end if
 
   ! Run the backpropagation operator
-  ! This will perform backpropogation on the tensors involved in generating y (i.e., x), setting the
-  ! `grad` property for both of them.
+  ! This will perform backpropogation on the computational graph from x to y, setting the `grad`
+  ! property for x
   call torch_tensor_backward(out_tensors(1))
 
   ! Create tensors based off output arrays for the gradients and then retrieve them
@@ -61,7 +56,6 @@ program autograd_simplenet
   call torch_tensor_get_gradient(grad_tensors(1), in_tensors(1))
 
   ! Check the gradients take expected values
-  write(*,*) "Gradient:", grad_array(:)
   expected(:) = 2.0
   if (.not. assert_allclose(grad_array, expected, test_name="autograd_simplenet_dydx")) then
     write(*,*) "Error :: value of dydx does not match expected value"
