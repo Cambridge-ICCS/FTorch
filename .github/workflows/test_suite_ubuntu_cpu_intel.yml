@@ -146,6 +146,10 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=icx \
+            -DCMAKE_CXX_COMPILER=icpx \
+            -DCMAKE_Fortran_COMPILER="${{ matrix.FC }}" \
+            -DMPI_Fortran_COMPILER="${{ matrix.MPIFC }}" \
             -DCMAKE_INSTALL_PREFIX="${FTORCH_BUILD_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
