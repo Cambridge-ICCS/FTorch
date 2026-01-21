@@ -1,6 +1,6 @@
 title: FTorch test suite
 author: Joe Wallwork
-date: Last Updated: October 2025
+date: Last Updated: January 2026
 
 
 ## Testing
@@ -80,6 +80,9 @@ Unit tests may be executed in the following ways:
 3. To run a specific unit test just use its full name, e.g.
    `ctest -R unittest_tensor_constructors_destructors`.
 
+For a summary of the current unit tests, see the
+[README](https://github.com/Cambridge-ICCS/FTorch/blob/main/test/README.md).
+
 #### Integration tests
 
 Integration tests may be executed in the following ways:
@@ -101,8 +104,13 @@ New components should come with unit tests written using the
 
 - New unit tests should be added to the `test/unit/` directory and start with
   `unittest_`.
+- pFUnit unit test files should use the `.pf` extension.
+- If MPI parallelism is required for the unit test, use the `pfunit` module that
+  is built with pFUnit, otherwise it's `funit` module should be sufficient.
 - New unit tests should be included in `test/unit/CMakeLists.txt` in order to
   be built as part of the test suite.
+- Don't forget to add a brief summary of the new unit test in the unit test
+  [README](https://github.com/Cambridge-ICCS/FTorch/blob/main/test/README.md).
 
 #### Contributing integration tests
 
