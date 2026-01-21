@@ -10,7 +10,7 @@ module unittest_tensor_operator_overloads_autograd
                     torch_tensor, torch_tensor_backward, torch_tensor_delete, torch_tensor_empty, &
                     torch_tensor_from_array, torch_tensor_ones, torch_tensor_get_gradient, &
                     torch_tensor_print
-  use ftorch_test_utils, only: assert_allclose
+  use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
@@ -108,7 +108,7 @@ contains
     ! Check the computed gradient takes the expected value:
     !   Q(a) = a => dQ/da = 1
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_assign")) then
+    if (.not. allclose(out_data, expected, test_name="test_torch_tensor_assign")) then
       print *, "Error :: incorrect gradient for assignment"
       stop 999
     end if
@@ -151,12 +151,12 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a + b => dQ/da = 1
     expected(:,:) = 1.0
-    @assertTrue(assert_allclose(out_data1, expected, test_name="test_torch_tensor_add1"))
+    @assertTrue(allclose(out_data1, expected, test_name="test_torch_tensor_add1"))
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a + b => dQ/db = 1
     expected(:,:) = 1.0
-    @assertTrue(assert_allclose(out_data2, expected, test_name="test_torch_tensor_add2"))
+    @assertTrue(allclose(out_data2, expected, test_name="test_torch_tensor_add2"))
 
   end subroutine test_torch_tensor_add
 
@@ -192,7 +192,7 @@ contains
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a => dQ/da = -1
     expected(:,:) = -1.0
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_negative"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_negative"))
 
   end subroutine test_torch_tensor_negative
 
@@ -232,12 +232,12 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a - b => dQ/da = 1
     expected(:,:) = 1.0
-    @assertTrue(assert_allclose(out_data1, expected, test_name="test_torch_tensor_subtract1"))
+    @assertTrue(allclose(out_data1, expected, test_name="test_torch_tensor_subtract1"))
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a - b => dQ/db = -1
     expected(:,:) = -1.0
-    @assertTrue(assert_allclose(out_data2, expected, test_name="test_torch_tensor_subtract2"))
+    @assertTrue(allclose(out_data2, expected, test_name="test_torch_tensor_subtract2"))
 
   end subroutine test_torch_tensor_subtract
 
@@ -277,12 +277,12 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a * b => dQ/da = b
     expected(:,:) = in_data2
-    @assertTrue(assert_allclose(out_data1, expected, test_name="test_torch_tensor_multiply1"))
+    @assertTrue(allclose(out_data1, expected, test_name="test_torch_tensor_multiply1"))
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a * b => dQ/db = a
     expected(:,:) = in_data1
-    @assertTrue(assert_allclose(out_data2, expected, test_name="test_torch_tensor_multiply2"))
+    @assertTrue(allclose(out_data2, expected, test_name="test_torch_tensor_multiply2"))
 
   end subroutine test_torch_tensor_multiply
 
@@ -326,7 +326,7 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = scalar * a => dQ/da = scalar
     expected(:,:) = scalar
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply"))
 
   end subroutine test_torch_tensor_scalar_multiply
 
@@ -366,12 +366,12 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a / b => dQ/da = 1 / b
     expected(:,:) = 1.0 / in_data2
-    @assertTrue(assert_allclose(out_data1, expected, test_name="test_torch_tensor_divide1"))
+    @assertTrue(allclose(out_data1, expected, test_name="test_torch_tensor_divide1"))
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a / b => dQ/db = -a / b^2
     expected(:,:) = -in_data1 / in_data2 ** 2
-    @assertTrue(assert_allclose(out_data2, expected, test_name="test_torch_tensor_divide2"))
+    @assertTrue(allclose(out_data2, expected, test_name="test_torch_tensor_divide2"))
 
   end subroutine test_torch_tensor_divide
 
@@ -411,7 +411,7 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a / scalar => dQ/da = 1 / scalar
     expected(:,:) = 1.0 / scalar
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide"))
 
   end subroutine test_torch_tensor_scalar_divide
 
@@ -451,7 +451,7 @@ contains
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a^2 => dQ/da = 2 * a
     expected(:,:) = 2.0 * in_data
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_square"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_square"))
 
   end subroutine test_torch_tensor_square
 
@@ -487,7 +487,7 @@ contains
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a^{1/2} => dQ/da = 0.5 * a^{-1/2})
     expected(:,:) = 0.5 / in_data ** 0.5
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_sqrt"))
 
   end subroutine test_torch_tensor_sqrt
 

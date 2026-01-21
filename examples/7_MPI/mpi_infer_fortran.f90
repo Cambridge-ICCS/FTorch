@@ -8,7 +8,7 @@ program inference
                       torch_tensor_from_array, torch_model_load, torch_model_forward
 
    ! Import our tools module for testing utils
-   use ftorch_test_utils, only : assert_allclose
+   use ftorch_test_utils, only : allclose
 
    ! Import MPI
    use mpi_f08, only : mpi_comm_rank, mpi_comm_size, mpi_comm_world, mpi_finalize, mpi_float, &
@@ -94,7 +94,7 @@ program inference
       do rank_chk = 0, size-1
         expected = [(2 * (rank_chk + i), i = 0, 4)]
         result_chk(:) = recvbuf(:,rank_chk+1)
-        test_pass = assert_allclose(result_chk, expected, test_name="MPI")
+        test_pass = allclose(result_chk, expected, test_name="MPI")
         if (.not. test_pass) then
           write(unit=stdout, fmt="('rank ',i1,' result: ')") rank_chk
           write(unit=stdout, fmt=100) result_chk(:)

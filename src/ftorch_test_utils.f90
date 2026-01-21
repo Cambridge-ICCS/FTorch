@@ -13,18 +13,18 @@ module ftorch_test_utils
 
   public
 
-  interface assert_isclose
-    module procedure assert_isclose_real32
-    module procedure assert_isclose_real64
+  interface isclose
+    module procedure isclose_real32
+    module procedure isclose_real64
   end interface
 
-  interface assert_allclose
-    module procedure assert_allclose_real32_1d
-    module procedure assert_allclose_real32_2d
-    module procedure assert_allclose_real32_3d
-    module procedure assert_allclose_real64_1d
-    module procedure assert_allclose_real64_2d
-    module procedure assert_allclose_real64_3d
+  interface allclose
+    module procedure allclose_real32_1d
+    module procedure allclose_real32_2d
+    module procedure allclose_real32_3d
+    module procedure allclose_real64_1d
+    module procedure allclose_real64_2d
+    module procedure allclose_real64_3d
   end interface
 
   contains
@@ -47,7 +47,7 @@ module ftorch_test_utils
     end subroutine test_print
 
     !> Asserts that two real32 values coincide to a given relative tolerance
-    function assert_isclose_real32(got, expect, test_name, rtol, print_result) result(test_pass)
+    function isclose_real32(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                      !! Name of the test being run
       real(kind=real32), intent(in) :: got             !! The value to be tested
@@ -81,10 +81,10 @@ module ftorch_test_utils
         call test_print(test_name, message, test_pass)
       end if
 
-    end function assert_isclose_real32
+    end function isclose_real32
 
     !> Asserts that two real64 values coincide to a given relative tolerance
-    function assert_isclose_real64(got, expect, test_name, rtol, print_result) result(test_pass)
+    function isclose_real64(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                      !! Name of the test being run
       real(kind=real64), intent(in) :: got             !! The value to be tested
@@ -118,11 +118,11 @@ module ftorch_test_utils
         call test_print(test_name, message, test_pass)
       end if
 
-    end function assert_isclose_real64
+    end function isclose_real64
 
 
     !> Asserts that two real32-valued 1D arrays coincide to a given relative tolerance
-    function assert_allclose_real32_1d(got, expect, test_name, rtol, print_result) result(test_pass)
+    function allclose_real32_1d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
       real(kind=real32), intent(in), dimension(:) :: got     !! The array of values to be tested
@@ -164,10 +164,10 @@ module ftorch_test_utils
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
       endif
 
-    end function assert_allclose_real32_1d
+    end function allclose_real32_1d
 
     !> Asserts that two real32-valued 2D arrays coincide to a given relative tolerance
-    function assert_allclose_real32_2d(got, expect, test_name, rtol, print_result) result(test_pass)
+    function allclose_real32_2d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
       real(kind=real32), intent(in), dimension(:,:) :: got     !! The array of values to be tested
@@ -209,10 +209,10 @@ module ftorch_test_utils
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
       endif
 
-    end function assert_allclose_real32_2d
+    end function allclose_real32_2d
 
     !> Asserts that two real32-valued 3D arrays coincide to a given relative tolerance
-    function assert_allclose_real32_3d(got, expect, test_name, rtol, print_result) result(test_pass)
+    function allclose_real32_3d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
       real(kind=real32), intent(in), dimension(:,:,:) :: got     !! The array of values to be tested
@@ -254,10 +254,10 @@ module ftorch_test_utils
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
       endif
 
-    end function assert_allclose_real32_3d
+    end function allclose_real32_3d
 
     !> Asserts that two real64-valued 1D arrays coincide to a given relative tolerance
-    function assert_allclose_real64_1d(got, expect, test_name, rtol, print_result) result(test_pass)
+    function allclose_real64_1d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
       real(kind=real64), intent(in), dimension(:) :: got     !! The array of values to be tested
@@ -299,10 +299,10 @@ module ftorch_test_utils
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
       endif
 
-    end function assert_allclose_real64_1d
+    end function allclose_real64_1d
 
     !> Asserts that two real64-valued 2D arrays coincide to a given relative tolerance
-    function assert_allclose_real64_2d(got, expect, test_name, rtol, print_result) result(test_pass)
+    function allclose_real64_2d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
       real(kind=real64), intent(in), dimension(:,:) :: got     !! The array of values to be tested
@@ -344,10 +344,10 @@ module ftorch_test_utils
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
       endif
 
-    end function assert_allclose_real64_2d
+    end function allclose_real64_2d
 
     !> Asserts that two real64-valued 3D arrays coincide to a given relative tolerance
-    function assert_allclose_real64_3d(got, expect, test_name, rtol, print_result) result(test_pass)
+    function allclose_real64_3d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
       real(kind=real64), intent(in), dimension(:,:,:) :: got     !! The array of values to be tested
@@ -389,7 +389,7 @@ module ftorch_test_utils
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
       endif
 
-    end function assert_allclose_real64_3d
+    end function allclose_real64_3d
 
 
 end module ftorch_test_utils

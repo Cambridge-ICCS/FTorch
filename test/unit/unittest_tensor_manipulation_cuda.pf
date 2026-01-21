@@ -9,7 +9,7 @@ module unittest_tensor_manipulation_cuda
   use ftorch, only: torch_kCPU, torch_kCUDA, torch_kFloat64, torch_kFloat32, &
                     torch_tensor, torch_tensor_delete, torch_tensor_print, &
                     torch_tensor_from_array, torch_tensor_empty, torch_tensor_to
-  use ftorch_test_utils, only: assert_allclose
+  use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_c_binding, only : c_int64_t
 
   implicit none
@@ -61,7 +61,7 @@ contains
     ! Cast the data cpu_tensor is holding in double precision to single precision to
     ! do the comparison with the data held by gpu_tensor (via temp_array)
     sp_data_expected = real(dp_data, sp) 
-    if (.not. assert_allclose(temp_array, sp_data_expected, "test_torch_tensor_to")) then
+    if (.not. allclose(temp_array, sp_data_expected, "test_torch_tensor_to")) then
       print *, "Error :: incorrect output from torch_tensor_to"
       print *, "Source Tensor:"
       call torch_tensor_print(cpu_tensor)

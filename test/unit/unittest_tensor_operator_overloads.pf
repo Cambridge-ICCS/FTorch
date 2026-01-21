@@ -7,7 +7,7 @@
 module unittest_tensor_operator_overloads
   use funit
   use ftorch, only: assignment(=), torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_from_array
-  use ftorch_test_utils, only: assert_allclose
+  use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use, intrinsic :: iso_c_binding, only : c_int64_t
 
@@ -95,13 +95,13 @@ contains
 
     ! Check input array is unchanged by the assignment
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    if (.not. assert_allclose(in_data, expected, test_name="test_torch_tensor_assign")) then
+    if (.not. allclose(in_data, expected, test_name="test_torch_tensor_assign")) then
       print *, "Error :: input array was changed during assignment"
       stop 999
     end if
 
     ! Compare the data in the tensor to the input array
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_assign"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_assign"))
 
   end subroutine test_torch_tensor_assign
 
@@ -130,13 +130,13 @@ contains
 
     ! Check input arrays are unchanged by the addition
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(assert_allclose(in_data1, expected, test_name="test_torch_tensor_add_input1"))
+    @assertTrue(allclose(in_data1, expected, test_name="test_torch_tensor_add_input1"))
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
-    @assertTrue(assert_allclose(in_data2, expected, test_name="test_torch_tensor_add_input2"))
+    @assertTrue(allclose(in_data2, expected, test_name="test_torch_tensor_add_input2"))
 
     ! Compare the data in the tensor to the sum of the input arrays
     expected(:,:) = in_data1 + in_data2
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_add_output"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_add_output"))
 
   end subroutine test_torch_tensor_add
 
@@ -166,13 +166,13 @@ contains
 
     ! Check input arrays are unchanged by the subtraction
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(assert_allclose(in_data1, expected, test_name="test_torch_tensor_subtract_input1"))
+    @assertTrue(allclose(in_data1, expected, test_name="test_torch_tensor_subtract_input1"))
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
-    @assertTrue(assert_allclose(in_data2, expected, test_name="test_torch_tensor_subtract_input2"))
+    @assertTrue(allclose(in_data2, expected, test_name="test_torch_tensor_subtract_input2"))
 
     ! Compare the data in the tensor to the difference of the input arrays
     expected(:,:) = in_data1 - in_data2
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_subtract_output"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_subtract_output"))
 
   end subroutine test_torch_tensor_subtract
 
@@ -199,11 +199,11 @@ contains
 
     ! Check input arrays are unchanged by the negation
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(assert_allclose(in_data, expected, test_name="test_torch_tensor_negative_input"))
+    @assertTrue(allclose(in_data, expected, test_name="test_torch_tensor_negative_input"))
 
     ! Compare the data in the tensor to the negative of the input array
     expected(:,:) = -in_data
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_negative_output"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_negative_output"))
 
   end subroutine test_torch_tensor_negative
 
@@ -233,13 +233,13 @@ contains
 
     ! Check input arrays are unchanged by the multiplication
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(assert_allclose(in_data1, expected, test_name="test_torch_tensor_multiply_input1"))
+    @assertTrue(allclose(in_data1, expected, test_name="test_torch_tensor_multiply_input1"))
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
-    @assertTrue(assert_allclose(in_data2, expected, test_name="test_torch_tensor_multiply_input2"))
+    @assertTrue(allclose(in_data2, expected, test_name="test_torch_tensor_multiply_input2"))
 
     ! Compare the data in the tensor to the product of the input arrays
     expected(:,:) = in_data1 * in_data2
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_multiply_output"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_multiply_output"))
 
   end subroutine test_torch_tensor_multiply
 
@@ -272,11 +272,11 @@ contains
 
     ! Check input array is unchanged by scalar multiplication
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(assert_allclose(in_data, expected, test_name="test_torch_tensor_scalar_multiply_input"))
+    @assertTrue(allclose(in_data, expected, test_name="test_torch_tensor_scalar_multiply_input"))
 
     ! Compare the data in the tensors to the scaled input arrays
     expected(:,:) = scalar * in_data
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply_output"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply_output"))
 
   end subroutine test_torch_tensor_scalar_multiply
 
@@ -305,13 +305,13 @@ contains
 
     ! Check input arrays are unchanged by the division
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(assert_allclose(in_data1, expected, test_name="test_torch_tensor_divide_input1"))
+    @assertTrue(allclose(in_data1, expected, test_name="test_torch_tensor_divide_input1"))
     expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
-    @assertTrue(assert_allclose(in_data2, expected, test_name="test_torch_tensor_divide_input2"))
+    @assertTrue(allclose(in_data2, expected, test_name="test_torch_tensor_divide_input2"))
 
     ! Compare the data in the tensor to the quotient of the input arrays
     expected(:,:) = in_data1 / in_data2
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_divide_output"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_divide_output"))
 
   end subroutine test_torch_tensor_divide
 
@@ -346,11 +346,11 @@ contains
 
     ! Check input array is unchanged by post-division
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(assert_allclose(in_data, expected, test_name="test_torch_tensor_scalar_divide_input"))
+    @assertTrue(allclose(in_data, expected, test_name="test_torch_tensor_scalar_divide_input"))
 
     ! Compare the data in the tensor to the scaled input array
     expected(:,:) = in_data / scalar
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide_output"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide_output"))
 
   end subroutine test_torch_tensor_scalar_divide
 
@@ -382,11 +382,11 @@ contains
 
     ! Check input array is unchanged by pre-multiplication
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(assert_allclose(in_data, expected, test_name="test_torch_tensor_square_input"))
+    @assertTrue(allclose(in_data, expected, test_name="test_torch_tensor_square_input"))
 
     ! Compare the data in the tensors to the squared input array
     expected(:,:) = in_data ** 2
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_square_output"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_square_output"))
 
   end subroutine test_torch_tensor_square
 
@@ -414,11 +414,11 @@ contains
 
     ! Check input array is unchanged by taking the square root
     expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(assert_allclose(in_data, expected, test_name="test_torch_tensor_sqrt_input"))
+    @assertTrue(allclose(in_data, expected, test_name="test_torch_tensor_sqrt_input"))
 
     ! Compare the data in the tensors to the square root of the input array
     expected(:,:) = in_data ** 0.5
-    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt_output"))
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_sqrt_output"))
 
   end subroutine test_torch_tensor_sqrt
 
