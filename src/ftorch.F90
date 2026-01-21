@@ -3080,6 +3080,22 @@ contains
                                    logical(requires_grad_value, c_bool))
   end subroutine torch_model_forward
 
+  !> Prints the parameters associated with a model
+  subroutine torch_model_print_parameters(model)
+    type(torch_model), intent(in) :: model  !! Model to print the parameters of
+
+    interface
+      subroutine torch_model_print_parameters_c(model_c) &
+          bind(c, name = 'torch_module_print_parameters')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: model_c
+      end subroutine torch_model_print_parameters_c
+    end interface
+
+    call torch_model_print_parameters_c(model%p)
+  end subroutine torch_model_print_parameters
+
   !> Deallocates a TorchScript model
   subroutine torch_model_delete(model)
     type(torch_model), intent(in) :: model  !! Torch Model to deallocate
