@@ -41,25 +41,28 @@ if(CMAKE_BUILD_TESTS)
 
   # 1. Check the Python tensor_arithmetic script runs successfully
   add_test(NAME example8_tensor_arithmetic_python
-           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/tensor_arithmetic.py)
+           COMMAND ${Python_EXECUTABLE}
+                   ${PROJECT_SOURCE_DIR}/tensor_arithmetic.py)
 
   # 2. Check the Fortran tensor_arithmetic script runs successfully
   add_test(
     NAME example8_tensor_arithmetic_fortran
     COMMAND tensor_arithmetic
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example8_tensor_arithmetic_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-    "Tensor arithmetic Autograd example ran successfully")
+  set_tests_properties(example8_tensor_arithmetic_fortran
+                       PROPERTIES PASS_REGULAR_EXPRESSION
+                       "Tensor arithmetic Autograd example ran successfully")
 
   # 3. Check the Python SimpleNet Autograd script runs successfully
-  add_test(NAME example8_simplenet_python COMMAND ${Python_EXECUTABLE}
-                                                  ${PROJECT_SOURCE_DIR}/simplenet.py)
+  add_test(NAME example8_simplenet_python
+           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py)
 
   # 4. Check the Fortran SimpleNet Autograd script runs successfully
   add_test(
     NAME example8_simplenet_fortran
     COMMAND simplenet
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example8_simplenet_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+  set_tests_properties(example8_simplenet_fortran
+                       PROPERTIES PASS_REGULAR_EXPRESSION
                        "SimpleNet Autograd example ran successfully")
 endif()
