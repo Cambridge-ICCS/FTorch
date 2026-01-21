@@ -173,20 +173,14 @@ contains
     call torch_tensor_backward(Q)
     call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_zero_grad1")) then
-      print *, "Error :: incorrect value for first gradient computation"
-      stop 999
-    end if
+    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_zero_grad1"))
 
     ! Call torch_tensor_zero_grad and check the gradient is indeed reset to zero. Note that we need
     ! to call torch_tensor_get_gradient again after zeroing out these values.
     call a%zero_grad()
     call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 0.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_zero_grad2")) then
-      print *, "Error :: incorrectly zeroed gradient"
-      stop 999
-    end if
+    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_zero_grad2"))
 
   end subroutine test_torch_tensor_zero_grad
 
@@ -219,20 +213,14 @@ contains
     call torch_tensor_backward(Q)
     call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_retain_graph1")) then
-      print *, "Error :: incorrect value for first gradient computation"
-      stop 999
-    end if
+    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_retain_graph1"))
 
     ! Zero the gradient and then call back-propagation again and check the computed gradient still
     ! takes the expected value
     call a%zero_grad()
     call torch_tensor_backward(Q, retain_graph=.true.)
     call torch_tensor_get_gradient(dQda, a)
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_retain_graph3")) then
-      print *, "Error :: incorrect value for second gradient computation"
-      stop 999
-    end if
+    @assertTrue(assert_allclose(out_data, expected, test_name="test_torch_tensor_retain_graph2"))
 
   end subroutine test_torch_tensor_retain_graph
  
@@ -247,7 +235,6 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    logical :: expected
 
     ! Create a tensor of ones with the provided requires_grad value
     call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
@@ -260,11 +247,7 @@ contains
     tensor2 = tensor1
 
     ! Check that requires_grad is updated correctly
-    expected = this%param%switch
-    if (expected .neqv. tensor2%requires_grad()) then
-      print *, "Error :: tensor%requires_grad() returned incorrect value"
-      stop 999
-    end if
+    @assertEqual(this%param%switch, tensor2%requires_grad())
 
   end subroutine test_requires_grad_assign
 
@@ -277,7 +260,6 @@ contains
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    logical :: expected
 
     ! Create two tensors of ones with the provided requires_grad value
     call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
@@ -303,11 +285,7 @@ contains
     end if
 
     ! Check that requires_grad is updated correctly
-    expected = this%param%switch
-    if (expected .neqv. tensor3%requires_grad()) then
-      print *, "Error :: tensor%requires_grad() returned incorrect value"
-      stop 999
-    end if
+    @assertEqual(this%param%switch, tensor3%requires_grad())
 
   end subroutine test_requires_grad_binary_same
 
@@ -320,7 +298,6 @@ contains
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    logical :: expected
 
     ! Create two tensors of ones with the provided requires_grad value
     call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
@@ -347,11 +324,7 @@ contains
     end if
 
     ! Check that requires_grad is updated correctly
-    expected = .true.
-    if (expected .neqv. tensor3%requires_grad()) then
-      print *, "Error :: tensor%requires_grad() returned incorrect value"
-      stop 999
-    end if
+    @assertTrue(tensor3%requires_grad())
 
   end subroutine test_requires_grad_binary_different
 
@@ -364,7 +337,6 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    logical :: expected
 
     ! Create a tensor of ones with the provided requires_grad value
     call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
@@ -387,11 +359,7 @@ contains
     end if
 
     ! Check that requires_grad is updated correctly
-    expected = this%param%switch
-    if (expected .neqv. tensor2%requires_grad()) then
-      print *, "Error :: tensor%requires_grad() returned incorrect value"
-      stop 999
-    end if
+    @assertEqual(this%param%switch, tensor2%requires_grad())
 
   end subroutine test_requires_grad_unary
 
@@ -404,7 +372,6 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    logical :: expected
 
     ! Create a tensor of ones with the provided requires_grad value
     call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
@@ -424,11 +391,7 @@ contains
     end if
 
     ! Check that requires_grad is updated correctly
-    expected = this%param%switch
-    if (expected .neqv. tensor2%requires_grad()) then
-      print *, "Error :: tensor%requires_grad() returned incorrect value"
-      stop 999
-    end if
+    @assertEqual(this%param%switch, tensor2%requires_grad())
 
   end subroutine test_requires_grad_reduction
 

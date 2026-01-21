@@ -36,7 +36,6 @@ contains
     real(wp), dimension(1), target :: out_data
     real(wp), dimension(2,3) :: expected2d
     real(wp), dimension(1) :: expected1d
-    logical :: test_pass
 
     ! Create two arbitrary input arrays
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -53,18 +52,11 @@ contains
 
     ! Check input arrays are unchanged by the summation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    if (.not. assert_allclose(in_data, expected2d, test_name="test_torch_tensor_sum")) then
-      print *, "Error :: first input array was changed during summation"
-      stop 999
-    end if
+    @assertTrue(assert_allclose(in_data, expected2d, test_name="test_torch_tensor_sum_input"))
 
     ! Compare the data in the tensor to the negative of the input array
     expected1d(:) = 21.0
-    test_pass = assert_allclose(out_data, expected1d, test_name="test_torch_tensor_sum")
-    if (.not. test_pass) then
-      print *, "Error :: incorrect output from overloaded summation operator"
-      stop 999
-    end if
+    @assertTrue(assert_allclose(out_data, expected1d, test_name="test_torch_tensor_sum_output"))
 
   end subroutine test_torch_tensor_sum
 
@@ -77,7 +69,6 @@ contains
     real(wp), dimension(1), target :: out_data
     real(wp), dimension(2,3) :: expected2d
     real(wp), dimension(1) :: expected1d
-    logical :: test_pass
 
     ! Create two arbitrary input arrays
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -94,18 +85,11 @@ contains
 
     ! Check input arrays are unchanged by the summation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    if (.not. assert_allclose(in_data, expected2d, test_name="test_torch_tensor_mean")) then
-      print *, "Error :: first input array was changed when taking the mean"
-      stop 999
-    end if
+    @assertTrue(assert_allclose(in_data, expected2d, test_name="test_torch_tensor_mean_input"))
 
     ! Compare the data in the tensor to the negative of the input array
     expected1d(:) = 21.0 / 6.0
-    test_pass = assert_allclose(out_data, expected1d, test_name="test_torch_tensor_mean")
-    if (.not. test_pass) then
-      print *, "Error :: incorrect output from overloaded mean operator"
-      stop 999
-    end if
+    @assertTrue(assert_allclose(out_data, expected1d, test_name="test_torch_tensor_mean_output"))
 
   end subroutine test_torch_tensor_mean
 

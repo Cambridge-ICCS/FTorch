@@ -30,7 +30,6 @@ contains
     integer, parameter :: dtype = torch_kFloat32
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -43,12 +42,7 @@ contains
 
     ! Compare the data in the tensor to the input array
     expected(:,:) = 0.0
-    test_pass = assert_allclose(in_data, expected, test_name="test_torch_tensor_zero")
-
-    if (.not. test_pass) then
-      print *, "Error :: incorrect output from torch_tensor_zero"
-      stop 999
-    end if
+    @assertTrue(assert_allclose(in_data, expected, test_name="test_torch_tensor_zero"))
 
   end subroutine test_torch_tensor_zero
 

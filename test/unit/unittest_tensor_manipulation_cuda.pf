@@ -31,7 +31,6 @@ contains
     integer, parameter :: dtype_source = torch_kFloat64
     integer, parameter :: dtype_target = torch_kFloat32
     integer :: i, j, k
-    logical :: test_pass
 
     do k = 1, 4
        do j = 1, 3
@@ -62,9 +61,7 @@ contains
     ! Cast the data cpu_tensor is holding in double precision to single precision to
     ! do the comparison with the data held by gpu_tensor (via temp_array)
     sp_data_expected = real(dp_data, sp) 
-    test_pass = assert_allclose(temp_array, sp_data_expected, "test_torch_tensor_to")
-
-    if (.not. test_pass) then
+    if (.not. assert_allclose(temp_array, sp_data_expected, "test_torch_tensor_to")) then
       print *, "Error :: incorrect output from torch_tensor_to"
       print *, "Source Tensor:"
       call torch_tensor_print(cpu_tensor)
