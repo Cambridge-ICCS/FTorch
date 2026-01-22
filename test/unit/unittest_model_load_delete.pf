@@ -39,4 +39,9 @@ contains
 
   end subroutine test_torch_model_pointers
 
+  ! TODO: Test that the model gets the device_type property correctly set
+  ! TODO: Test that the model gets the device_index property correctly set
+  ! TODO: Test that the model gets the requires_grad property correctly set
+  ! TODO: Test that the model gets the is_training property correctly set
+
 end module unittest_model_load_delete
