@@ -28,6 +28,13 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     if device == "cpu":
         # Load saved TorchScript model
         model = torch.jit.load(saved_model)
+
+        # Print the parameters associated with the pre-trained model
+        print("Model parameters:")
+        for name, tensor in model.state_dict().items():
+            print(f"Parameter: {name}")
+            print(tensor)
+
         # Inference
         output = model.forward(input_tensor)
 

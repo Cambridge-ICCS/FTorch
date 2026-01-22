@@ -58,10 +58,19 @@ You can check that everything is working by running the `simplenet_infer_python.
 python3 simplenet_infer_python.py
 ```
 This reads the model in from the TorchScript file and runs it with an input tensor
-[0.0, 1.0, 2.0, 3.0, 4.0] to produce the result:
+[0.0, 1.0, 2.0, 3.0, 4.0] to produce the following output:
 ```
+Model parameters:
+Parameter: _fwd_seq.0.weight
+tensor([[2., 0., 0., 0., 0.],
+        [0., 2., 0., 0., 0.],
+        [0., 0., 2., 0., 0.],
+        [0., 0., 0., 2., 0.],
+        [0., 0., 0., 0., 2.]])
 Model output: tensor([[0., 2., 4., 6., 8.]])
 ```
+First, the model parameters are printed (the weights of the linear layer),
+followed by the output of the model.
 
 At this point we no longer require Python, so can deactivate the virtual environment:
 ```
@@ -101,7 +110,7 @@ _fwd_seq.0.weight:
  Model output:
    0.00000000       2.00000000       4.00000000       6.00000000       8.00000000
 ```
-First, the model parameters are printed (the weights of the linear layer),
+Again, the model parameters are printed first (the weights of the linear layer),
 followed by the output of the model, which is consistent with the earlier
 Python results. The `CPUFloatType{5,5}` indicates that the weight tensor is a
 5x5 matrix of 32-bit floats stored on the CPU.
