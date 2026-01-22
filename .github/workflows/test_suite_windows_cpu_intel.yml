@@ -7,24 +7,10 @@ on:
   push:
     branches: [ "main" ]
 
-  # Triggers the workflow on pushes to open pull requests with code changes
+  # Triggers the workflow on pushes to open pull requests with changes to this workflow
   pull_request:
     paths:
-      # This workflow
       - '.github/workflows/test_suite_windows_cpu_intel.yml'
-      # Source files
-      - '**.c'
-      - '**.cpp'
-      - '**.fypp'
-      - '**.f90'
-      - '**.F90'
-      - '**.py'
-      # Unit tests
-      - '**.pf'
-      # Build system
-      - '**CMakeLists.txt'
-      # Data
-      - '**data/*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
