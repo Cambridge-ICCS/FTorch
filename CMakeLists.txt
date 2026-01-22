@@ -129,14 +129,13 @@ add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
 set_target_properties(${LIB_NAME} PROPERTIES PUBLIC_HEADER "src/ctorch.h")
 # cmake-format: on
 # Link TorchScript
-# NOTE: Linking stdc++ for downstream targets fixes ctorch link error on Unix-like systems
-# stdc++ is not available on Windows, so we only link it on Unix
 if(UNIX)
-  target_link_libraries(${LIB_NAME}
-    PRIVATE ${TORCH_LIBRARIES} INTERFACE stdc++)
+  # NOTE: Linking stdc++ for downstream targets fixes ctorch link error on
+  #       Unix-like systems
+  target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES} INTERFACE stdc++)
 else()
-  target_link_libraries(${LIB_NAME}
-    PRIVATE ${TORCH_LIBRARIES})
+  # NOTE: stdc++ is not available on Windows
+  target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES})
 endif()
 # Include the Fortran mod files in the library
 target_include_directories(
