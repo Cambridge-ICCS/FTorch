@@ -218,6 +218,7 @@ jobs:
           cd build
           ctest --verbose --tests-regex example
 
+        # Check that we can successfully build and run an example outside the main FTorch build process
       - name: Standalone SimpleNet example
         env:
           FORTRAN_STANDARD: ${{ matrix.std }}
