@@ -6,8 +6,7 @@
 !    file for details.
 module unittest_model_load_delete
   use funit
-  use ftorch, only: torch_kCPU, torch_kFloat32, torch_model, torch_model_delete, &
-                    torch_model_load
+  use ftorch, only: torch_kCPU, torch_model, torch_model_delete, torch_model_load
   use iso_c_binding, only: c_associated
 
   implicit none
