@@ -51,6 +51,9 @@ program inference
    call torch_model_load(model, args(1), torch_kCPU)
 
    ! Print the parameters associated with the pre-trained model
+   ! NOTE: While viewing parameters in this way can be helpful for small toy models, it will produce
+   !       large amounts of output for models with many, large, or high-dimensional parameters. In
+   !       particular, tensors of 3 or more dimensions will be represented in terms of 2D arrays.
    write (*,*) "Model parameters:"
    call model%print_parameters()
 

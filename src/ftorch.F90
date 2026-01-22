@@ -3083,7 +3083,10 @@ contains
                                    logical(requires_grad_value, c_bool))
   end subroutine torch_model_forward
 
-  !> Prints the parameters associated with a model
+  !| Prints the parameters associated with a model
+  !  NOTE: While viewing parameters in this way can be helpful for small toy models, it will produce
+  !        large amounts of output for models with many, large, or high-dimensional parameters. In
+  !        particular, tensors of 3 or more dimensions will be represented in terms of 2D arrays.
   subroutine torch_model_print_parameters(self)
     class(torch_model), intent(in) :: self  !! Model to print the parameters of
 
