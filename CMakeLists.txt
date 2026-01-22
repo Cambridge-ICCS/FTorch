@@ -12,9 +12,7 @@ project(
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 if(WIN32)
-  message(
-    WARNING "Windows builds are untested, so functionality is not guaranteed")
-  # if building on windows we need to make sure the symbols are exported
+  # If building on Windows we need to make sure the symbols are exported
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif()
 
