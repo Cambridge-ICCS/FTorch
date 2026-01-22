@@ -102,11 +102,30 @@ Integration tests may be executed in the following ways:
 New components should come with unit tests written using the
 [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit) framework.
 
-- New unit tests should be added to the `test/unit/` directory and start with
-  `unittest_`.
-- pFUnit unit test files should use the `.pf` extension.
-- If MPI parallelism is required for the unit test, use the `pfunit` module that
-  is built with pFUnit, otherwise it's `funit` module should be sufficient.
+- New unit tests should be added to the `test/unit/` directory and have names
+  that start with `unittest_` and use the `.pf` extension.
+  - Unit test files should include a `module` with the same name as the file
+    (minus the extension).
+  - If MPI parallelism is required for the unit test, use the `pfunit` module
+    that comes with pFUnit, otherwise its `funit` module should be sufficient.
+  - Tests contained within the module should be written as subroutines with the
+    `@test` decorator and name starting with `test_`.
+  - pFUnit's `@assertTrue`, `@assertFalse`, and `@assertEqual` decorators should be
+    used to check expected outcomes.
+  - In some cases, it can be useful to use parameterisation. This can be
+    achieved by defining a derived type of `AbstractTestParameter` and giving it
+    the `@testParameter` decorator. Additionally, define a derived type of
+    `ParameterizedTestCase` and give it the `@testCase` decorator. The test case
+    acts as a constructor that determines how to pass the parameters to the
+    tests. Where parameterisation is used, parameter sets should be defined as
+    functons to create instances of the derived test parameter type.
+    Parameterised tests should pass the parameters through the `@test`
+    decorator. For example,
+    ```fortran
+    @test(testparameters={get_parameters()})
+    ```
+    where `get_parameters` is such a function as mentioned above. See existing
+    unit tests for examples of this.
 - New unit tests should be included in `test/unit/CMakeLists.txt` in order to
   be built as part of the test suite.
 - Don't forget to add a brief summary of the new unit test in the unit test
