@@ -1263,7 +1263,8 @@ contains
 
   !> Deallocates a TorchScript model
   subroutine torch_model_delete(model)
-    type(torch_model), intent(in) :: model  !! Torch Model to deallocate
+    use, intrinsic :: iso_c_binding, only : c_associated, c_null_ptr
+    type(torch_model), intent(inout) :: model  !! Torch Model to deallocate
 
     interface
       subroutine torch_jit_model_delete_c(model_c) &
@@ -1274,7 +1275,11 @@ contains
       end subroutine torch_jit_model_delete_c
     end interface
 
-    call torch_jit_model_delete_c(model%p)
+    ! Call the destructor, if it hasn't already been called
+    if (c_associated(model%p)) then
+      call torch_jit_model_delete_c(model%p)
+      model%p = c_null_ptr
+    end if
   end subroutine torch_model_delete
 
 end module ftorch
