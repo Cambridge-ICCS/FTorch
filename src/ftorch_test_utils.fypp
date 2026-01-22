@@ -181,7 +181,7 @@ module ftorch_test_utils
     #:for PREC in PRECISIONS
     #:for RANK in RANKS
     !> Alias for allclose_${PREC}$_${RANK}$d
-    function allclose_${PREC}$_${RANK}$d(got, expect, test_name, rtol, print_result) result(test_pass)
+    function assert_allclose_${PREC}$_${RANK}$d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
       ${f_type(PREC)}$(kind=${PREC}$), intent(in), dimension${ranksuffix(RANK)}$ :: got     !! The array of values to be tested
@@ -195,7 +195,7 @@ module ftorch_test_utils
 
       test_pass = allclose_${PREC}$_${RANK}$d(got, expect, test_name, rtol, print_result)
 
-    end function allclose_${PREC}$_${RANK}$d
+    end function assert_allclose_${PREC}$_${RANK}$d
 
     #:endfor
     #:endfor
