@@ -1,4 +1,4 @@
-!| Utils module for FTorch containing assertions for testing
+!| Utils module for FTorch containing value comparisons for testing
 !
 !  * License
 !    FTorch is released under an MIT license.
@@ -27,6 +27,20 @@ module ftorch_test_utils
     module procedure allclose_real64_3d
   end interface
 
+  interface assert_isclose
+    module procedure assert_isclose_real32
+    module procedure assert_isclose_real64
+  end interface
+
+  interface assert_allclose
+    module procedure assert_allclose_real32_1d
+    module procedure assert_allclose_real32_2d
+    module procedure assert_allclose_real32_3d
+    module procedure assert_allclose_real64_1d
+    module procedure assert_allclose_real64_2d
+    module procedure assert_allclose_real64_3d
+  end interface
+
   contains
 
     !> Print the result of a test to the terminal
@@ -34,7 +48,7 @@ module ftorch_test_utils
 
       character(len=*), intent(in) :: test_name  !! Name of the test being run
       character(len=*), intent(in) :: message    !! Message to print
-      logical, intent(in) :: test_pass           !! Result of the assertion
+      logical, intent(in) :: test_pass           !! Result of the value comparison
 
       character(len=15) :: report
 
@@ -46,7 +60,7 @@ module ftorch_test_utils
       write(*, '(A, " :: [", A, "] ", A)') report, trim(test_name), trim(message)
     end subroutine test_print
 
-    !> Asserts that two real32 values coincide to a given relative tolerance
+    !> Determines whether two real32 values coincide to a given relative tolerance
     function isclose_real32(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                      !! Name of the test being run
@@ -55,7 +69,7 @@ module ftorch_test_utils
       real(kind=real32), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
       logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass  !! Did the assertion pass?
+      logical :: test_pass  !! Did the comparison pass?
 
       character(len=80) :: message
 
@@ -83,7 +97,7 @@ module ftorch_test_utils
 
     end function isclose_real32
 
-    !> Asserts that two real64 values coincide to a given relative tolerance
+    !> Determines whether two real64 values coincide to a given relative tolerance
     function isclose_real64(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                      !! Name of the test being run
@@ -92,7 +106,7 @@ module ftorch_test_utils
       real(kind=real64), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
       logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass  !! Did the assertion pass?
+      logical :: test_pass  !! Did the comparison pass?
 
       character(len=80) :: message
 
@@ -121,7 +135,7 @@ module ftorch_test_utils
     end function isclose_real64
 
 
-    !> Asserts that two real32-valued 1D arrays coincide to a given relative tolerance
+    !> Determines whether two real32-valued 1D arrays coincide to a given relative tolerance
     function allclose_real32_1d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -130,7 +144,7 @@ module ftorch_test_utils
       real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
       logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass  !! Did the assertion pass?
+      logical :: test_pass  !! Did the comparison pass?
 
       character(len=80) :: message
 
@@ -166,7 +180,7 @@ module ftorch_test_utils
 
     end function allclose_real32_1d
 
-    !> Asserts that two real32-valued 2D arrays coincide to a given relative tolerance
+    !> Determines whether two real32-valued 2D arrays coincide to a given relative tolerance
     function allclose_real32_2d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -175,7 +189,7 @@ module ftorch_test_utils
       real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
       logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass  !! Did the assertion pass?
+      logical :: test_pass  !! Did the comparison pass?
 
       character(len=80) :: message
 
@@ -211,7 +225,7 @@ module ftorch_test_utils
 
     end function allclose_real32_2d
 
-    !> Asserts that two real32-valued 3D arrays coincide to a given relative tolerance
+    !> Determines whether two real32-valued 3D arrays coincide to a given relative tolerance
     function allclose_real32_3d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -220,7 +234,7 @@ module ftorch_test_utils
       real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
       logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass  !! Did the assertion pass?
+      logical :: test_pass  !! Did the comparison pass?
 
       character(len=80) :: message
 
@@ -256,7 +270,7 @@ module ftorch_test_utils
 
     end function allclose_real32_3d
 
-    !> Asserts that two real64-valued 1D arrays coincide to a given relative tolerance
+    !> Determines whether two real64-valued 1D arrays coincide to a given relative tolerance
     function allclose_real64_1d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -265,7 +279,7 @@ module ftorch_test_utils
       real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
       logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass  !! Did the assertion pass?
+      logical :: test_pass  !! Did the comparison pass?
 
       character(len=80) :: message
 
@@ -301,7 +315,7 @@ module ftorch_test_utils
 
     end function allclose_real64_1d
 
-    !> Asserts that two real64-valued 2D arrays coincide to a given relative tolerance
+    !> Determines whether two real64-valued 2D arrays coincide to a given relative tolerance
     function allclose_real64_2d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -310,7 +324,7 @@ module ftorch_test_utils
       real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
       logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass  !! Did the assertion pass?
+      logical :: test_pass  !! Did the comparison pass?
 
       character(len=80) :: message
 
@@ -346,7 +360,7 @@ module ftorch_test_utils
 
     end function allclose_real64_2d
 
-    !> Asserts that two real64-valued 3D arrays coincide to a given relative tolerance
+    !> Determines whether two real64-valued 3D arrays coincide to a given relative tolerance
     function allclose_real64_3d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -355,7 +369,7 @@ module ftorch_test_utils
       real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
       logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass  !! Did the assertion pass?
+      logical :: test_pass  !! Did the comparison pass?
 
       character(len=80) :: message
 
@@ -388,6 +402,144 @@ module ftorch_test_utils
       else if (print_result_value) then
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
       endif
+
+    end function allclose_real64_3d
+
+
+    !> Alias for isclose_real32
+    function assert_isclose_real32(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                      !! Name of the test being run
+      real(kind=real32), intent(in) :: got             !! The value to be tested
+      real(kind=real32), intent(in) :: expect          !! The expected value
+      real(kind=real32), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the assertion pass?
+
+      write(*,*) "Warning: assert_isclose is deprecated and will be removed in FTorch version 2.0. Please use isclose instead."
+
+      test_pass = isclose_real32(got, expect, test_name, rtol, print_result)
+
+    end function assert_isclose_real32
+
+    !> Alias for isclose_real64
+    function assert_isclose_real64(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                      !! Name of the test being run
+      real(kind=real64), intent(in) :: got             !! The value to be tested
+      real(kind=real64), intent(in) :: expect          !! The expected value
+      real(kind=real64), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the assertion pass?
+
+      write(*,*) "Warning: assert_isclose is deprecated and will be removed in FTorch version 2.0. Please use isclose instead."
+
+      test_pass = isclose_real64(got, expect, test_name, rtol, print_result)
+
+    end function assert_isclose_real64
+
+
+    !> Alias for allclose_real32_1d
+    function allclose_real32_1d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real32), intent(in), dimension(:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:) :: expect  !! The array of expected values
+      real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the assertion pass?
+
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
+
+      test_pass = allclose_real32_1d(got, expect, test_name, rtol, print_result)
+
+    end function allclose_real32_1d
+
+    !> Alias for allclose_real32_2d
+    function allclose_real32_2d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real32), intent(in), dimension(:,:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:,:) :: expect  !! The array of expected values
+      real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the assertion pass?
+
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
+
+      test_pass = allclose_real32_2d(got, expect, test_name, rtol, print_result)
+
+    end function allclose_real32_2d
+
+    !> Alias for allclose_real32_3d
+    function allclose_real32_3d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real32), intent(in), dimension(:,:,:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:,:,:) :: expect  !! The array of expected values
+      real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the assertion pass?
+
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
+
+      test_pass = allclose_real32_3d(got, expect, test_name, rtol, print_result)
+
+    end function allclose_real32_3d
+
+    !> Alias for allclose_real64_1d
+    function allclose_real64_1d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real64), intent(in), dimension(:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:) :: expect  !! The array of expected values
+      real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the assertion pass?
+
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
+
+      test_pass = allclose_real64_1d(got, expect, test_name, rtol, print_result)
+
+    end function allclose_real64_1d
+
+    !> Alias for allclose_real64_2d
+    function allclose_real64_2d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real64), intent(in), dimension(:,:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:,:) :: expect  !! The array of expected values
+      real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the assertion pass?
+
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
+
+      test_pass = allclose_real64_2d(got, expect, test_name, rtol, print_result)
+
+    end function allclose_real64_2d
+
+    !> Alias for allclose_real64_3d
+    function allclose_real64_3d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real64), intent(in), dimension(:,:,:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:,:,:) :: expect  !! The array of expected values
+      real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the assertion pass?
+
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
+
+      test_pass = allclose_real64_3d(got, expect, test_name, rtol, print_result)
 
     end function allclose_real64_3d
 

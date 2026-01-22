@@ -6,7 +6,7 @@ $:'' if RANK == 0 else '(' + ':' + ',:' * (RANK - 1) + ')'
 #:def f_type(PRECISION)
 $:'integer' if PRECISION[:3] == 'int' else 'real'
 #:enddef f_type
-!| Utils module for FTorch containing assertions for testing
+!| Utils module for FTorch containing value comparisons for testing
 !
 !  * License
 !    FTorch is released under an MIT license.
@@ -35,6 +35,20 @@ module ftorch_test_utils
     #:endfor
   end interface
 
+  interface assert_isclose
+    #:for PREC in PRECISIONS
+    module procedure assert_isclose_${PREC}$
+    #:endfor
+  end interface
+
+  interface assert_allclose
+    #:for PREC in PRECISIONS
+    #:for RANK in RANKS
+    module procedure assert_allclose_${PREC}$_${RANK}$d
+    #:endfor
+    #:endfor
+  end interface
+
   contains
 
     !> Print the result of a test to the terminal
@@ -42,7 +56,7 @@ module ftorch_test_utils
 
       character(len=*), intent(in) :: test_name  !! Name of the test being run
       character(len=*), intent(in) :: message    !! Message to print
-      logical, intent(in) :: test_pass           !! Result of the assertion
+      logical, intent(in) :: test_pass           !! Result of the value comparison
 
       character(len=15) :: report
 
@@ -55,7 +69,7 @@ module ftorch_test_utils
     end subroutine test_print
 
     #:for PREC in PRECISIONS
-    !> Asserts that two ${PREC}$ values coincide to a given relative tolerance
+    !> Determines whether two ${PREC}$ values coincide to a given relative tolerance
     function isclose_${PREC}$(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                      !! Name of the test being run
@@ -64,7 +78,7 @@ module ftorch_test_utils
       ${f_type(PREC)}$(kind=${PREC}$), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
       logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass  !! Did the assertion pass?
+      logical :: test_pass  !! Did the comparison pass?
 
       character(len=80) :: message
 
@@ -96,7 +110,7 @@ module ftorch_test_utils
 
     #:for PREC in PRECISIONS
     #:for RANK in RANKS
-    !> Asserts that two ${PREC}$-valued ${RANK}$D arrays coincide to a given relative tolerance
+    !> Determines whether two ${PREC}$-valued ${RANK}$D arrays coincide to a given relative tolerance
     function allclose_${PREC}$_${RANK}$d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -105,7 +119,7 @@ module ftorch_test_utils
       ${f_type(PREC)}$(kind=${PREC}$), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
       logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
 
-      logical :: test_pass  !! Did the assertion pass?
+      logical :: test_pass  !! Did the comparison pass?
 
       character(len=80) :: message
 
@@ -138,6 +152,48 @@ module ftorch_test_utils
       else if (print_result_value) then
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
       endif
+
+    end function allclose_${PREC}$_${RANK}$d
+
+    #:endfor
+    #:endfor
+
+    #:for PREC in PRECISIONS
+    !> Alias for isclose_${PREC}$
+    function assert_isclose_${PREC}$(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                      !! Name of the test being run
+      ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: got             !! The value to be tested
+      ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: expect          !! The expected value
+      ${f_type(PREC)}$(kind=${PREC}$), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the assertion pass?
+
+      write(*,*) "Warning: assert_isclose is deprecated and will be removed in FTorch version 2.0. Please use isclose instead."
+
+      test_pass = isclose_${PREC}$(got, expect, test_name, rtol, print_result)
+
+    end function assert_isclose_${PREC}$
+
+    #:endfor
+
+    #:for PREC in PRECISIONS
+    #:for RANK in RANKS
+    !> Alias for allclose_${PREC}$_${RANK}$d
+    function allclose_${PREC}$_${RANK}$d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      ${f_type(PREC)}$(kind=${PREC}$), intent(in), dimension${ranksuffix(RANK)}$ :: got     !! The array of values to be tested
+      ${f_type(PREC)}$(kind=${PREC}$), intent(in), dimension${ranksuffix(RANK)}$ :: expect  !! The array of expected values
+      ${f_type(PREC)}$(kind=${PREC}$), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the assertion pass?
+
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
+
+      test_pass = allclose_${PREC}$_${RANK}$d(got, expect, test_name, rtol, print_result)
 
     end function allclose_${PREC}$_${RANK}$d
 
