@@ -1,0 +1,43 @@
+!| Unit tests for loading and deleting TorchScript models with FTorch.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_model_load_delete
+  use funit
+  use ftorch, only: torch_kCPU, torch_kFloat32, torch_model, torch_model_delete, &
+                    torch_model_load
+  use iso_c_binding, only: c_associated
+
+  implicit none
+
+  public
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  character(len=256), parameter :: filename = "test_model.pt"
+
+contains
+
+  ! Unit test for the association of model pointers before and after loading
+  ! a TorchScript model and after deletion.
+  @test
+  subroutine test_torch_model_pointers()
+    type(torch_model) :: model
+
+    ! Check the model pointer is not associated
+    @assertFalse(c_associated(model%p))
+
+    ! Load the test model from file and check the pointer is now associated
+    call torch_model_load(model, trim(filename), device_type)
+    @assertTrue(c_associated(model%p))
+
+    ! Check torch_model_delete does indeed free the memory
+    call torch_model_delete(model)
+    @assertFalse(c_associated(model%p))
+
+  end subroutine test_torch_model_pointers
+
+end module unittest_model_load_delete

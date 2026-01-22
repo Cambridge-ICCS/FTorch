@@ -42,8 +42,8 @@ execute_process(
           "${CMAKE_CURRENT_SOURCE_DIR}/create_test_model.py"
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
 )
-add_pfunit_ctest(unittest_model_load
-                 TEST_SOURCES unittest_model_load.pf
+add_pfunit_ctest(unittest_model_load_delete
+                 TEST_SOURCES unittest_model_load_delete.pf
                  LINK_LIBRARIES FTorch::ftorch)
 
 # Unit tests on CUDA or HIP devices
