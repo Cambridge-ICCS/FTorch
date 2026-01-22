@@ -1,0 +1,56 @@
+!| Unit tests for propagation of tensors through TorchScript models with FTorch.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_model_forward
+  use funit
+  use ftorch, only: torch_kCPU, torch_kFloat32, torch_model, torch_model_load, &
+                    torch_model_forward, torch_tensor, torch_tensor_from_array
+  use ftorch_test_utils, only: assert_allclose
+  use, intrinsic :: iso_fortran_env, only : sp => real32
+
+  implicit none
+
+  public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  ! All unit tests in this module use float32 precision
+  integer, parameter :: dtype = torch_kFloat32
+
+  character(len=256), parameter :: filename = "test_model.pt"
+
+contains
+
+  ! Unit test for checking values are propagated correctly through the test model
+  @test
+  subroutine test_torch_model_forward_value()
+    type(torch_model) :: model
+    type(torch_tensor) :: input_tensors(1), output_tensors(1)
+    real(wp), dimension(5), target :: input_array, output_array, expected
+
+    ! Initialise an input tensor and an output tensor
+    input_array = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
+    call torch_tensor_from_array(input_tensors(1), input_array, torch_kCPU)
+    call torch_tensor_from_array(output_tensors(1), output_array, torch_kCPU)
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Propagate the input tensor through the model
+    call torch_model_forward(model, input_tensors, output_tensors)
+
+    expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
+    @assertTrue(assert_allclose(output_array, expected, test_name="test_torch_model_forward_value"))
+
+  end subroutine test_torch_model_forward_value
+
+  ! TODO: Test that requires_grad is propagated to the output tensor
+
+end module unittest_model_forward
