@@ -15,6 +15,7 @@ message(STATUS "Building with Fortran PyTorch coupling")
 
 find_package(PFUNIT REQUIRED)
 
+# Torch Tensor API on CPU
 add_pfunit_ctest(
   unittest_tensor_constructors_destructors TEST_SOURCES
   unittest_tensor_constructors_destructors.pf LINK_LIBRARIES FTorch::ftorch)
@@ -35,6 +36,13 @@ add_pfunit_ctest(
 add_pfunit_ctest(unittest_tensor_autograd
   TEST_SOURCES unittest_tensor_autograd.pf LINK_LIBRARIES FTorch::ftorch)
 
+# Torch Model API
+# TODO: Create the test model first
+add_pfunit_ctest(unittest_model_load
+                 TEST_SOURCES unittest_model_load.pf
+                 LINK_LIBRARIES FTorch::ftorch)
+
+# Unit tests on CUDA or HIP devices
 if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
   if("${GPU_DEVICE}" STREQUAL "CUDA")
     check_language(CUDA)
@@ -52,6 +60,8 @@ if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
       message(WARNING "No HIP support")
     endif()
   endif()
+
+  # Torch Tensor API
   add_pfunit_ctest(
     unittest_tensor_interrogation_cuda TEST_SOURCES
     unittest_tensor_interrogation_cuda.pf LINK_LIBRARIES FTorch::ftorch)
