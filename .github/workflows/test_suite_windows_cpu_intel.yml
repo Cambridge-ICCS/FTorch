@@ -76,11 +76,15 @@ jobs:
       - name: Install PyTorch
         shell: cmd
         run: |
+          pip install --upgrade pip
+          python -m venv ftorch
+          call ftorch\Scripts\activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
       - name: Build FTorch
         shell: cmd
         run: |
+          call ftorch\Scripts\activate
           rem find torch location
           for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           cmake ^
@@ -99,6 +103,7 @@ jobs:
       - name: Integration tests
         shell: cmd
         run: |
+          call ftorch\Scripts\activate
           for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
           set PATH=%torch_path%\torch\lib;%PATH%
