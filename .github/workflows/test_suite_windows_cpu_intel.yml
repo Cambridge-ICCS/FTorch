@@ -90,7 +90,7 @@ jobs:
           cmake ^
             -Bbuild ^
             -G "NMake Makefiles" ^
-            -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
+            -DCMAKE_Fortran_FLAGS="/fpscomp:logicals /iface:cref /names:lowercase /libs:dll /threads" ^
             -DCMAKE_PREFIX_PATH=%torch_path% ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DCMAKE_Fortran_COMPILER=ifx ^
