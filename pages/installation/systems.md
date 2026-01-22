@@ -14,9 +14,8 @@ date: Last Updated: October 2025
 If possible we recommend using the [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/) (WSL) to build
 the library. In this case the build process is the same as for a Linux environment.
 
-If you really want or need to build in Windows itself then this can be done
-using Visual Studio and the Intel Fortran resources. The following additional
-dependencies are also required:
+Building in Windows itself can be done using Visual Studio and the Intel Fortran
+resources. The following additional dependencies are also required:
 
 * [Visual Studio](https://visualstudio.microsoft.com/) ensuring C++ tools are selected and installed.
 * [Intel OneAPI Basetoolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html)
