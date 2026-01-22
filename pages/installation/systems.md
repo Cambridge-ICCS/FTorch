@@ -50,7 +50,10 @@ cmake --install .
 
 
 The following is an example `cmd` script that installs FTorch and runs the integration tests. It assumes you have already
-installed CMake, git, the Intel compilers, and Visual Studio.
+installed CMake, git, the Intel compilers, and Visual Studio. There are a few
+places where output is turned on or off using the `ECHO` command. If you are
+experiencing issues with the install then it may be helpful to set `ECHO ON`
+throughout.
 
 ```cmd
 rem Disable output for now
