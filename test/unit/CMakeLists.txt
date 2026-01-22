@@ -37,7 +37,11 @@ add_pfunit_ctest(unittest_tensor_autograd
   TEST_SOURCES unittest_tensor_autograd.pf LINK_LIBRARIES FTorch::ftorch)
 
 # Torch Model API
-# TODO: Create the test model first
+execute_process(
+  COMMAND "${Python_EXECUTABLE}"
+          "${CMAKE_CURRENT_SOURCE_DIR}/create_test_model.py"
+  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+)
 add_pfunit_ctest(unittest_model_load
                  TEST_SOURCES unittest_model_load.pf
                  LINK_LIBRARIES FTorch::ftorch)
