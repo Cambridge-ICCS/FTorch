@@ -116,6 +116,12 @@ ctest --verbose --tests-regex example8
 if %errorlevel% neq 0 exit /b %errorlevel%
 ```
 
+Here the `/fpscomp:logicals` flag is used to ensure Fortran logicals are
+compatible with those used by PyTorch. The
+`/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH` flag is used to suppress warnings
+related to mismatched compiler versions between the Intel compilers and
+those used to build LibTorch.
+
 We recommend Windows users review the Windows continuous integration workflow
 ([`.github/workflows/test_suite_windows_cpu_intel.yml`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_windows_cpu_intel.yml))
 for more information, as this provides another example of how to build and run
