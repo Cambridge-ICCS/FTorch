@@ -45,6 +45,9 @@ execute_process(
 add_pfunit_ctest(unittest_model_load_delete
                  TEST_SOURCES unittest_model_load_delete.pf
                  LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(unittest_model_print_parameters
+                 TEST_SOURCES unittest_model_print_parameters.pf
+                 LINK_LIBRARIES FTorch::ftorch)
 
 # Unit tests on CUDA or HIP devices
 if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
