@@ -25,6 +25,8 @@ module ftorch
   !> Type for holding a torch neural net (nn.Module).
   type torch_model
     type(c_ptr) :: p = c_null_ptr  !! pointer to the neural net in memory
+  contains
+    procedure :: print_parameters => torch_model_print_parameters
   end type torch_model
 
   !> Type for holding a Torch tensor.
@@ -40,6 +42,7 @@ module ftorch
     procedure :: requires_grad => torch_tensor_requires_grad
     procedure :: zero => torch_tensor_zero
     procedure :: zero_grad => torch_tensor_zero_grad
+    procedure :: print => torch_tensor_print
     final :: torch_tensor_delete
   end type torch_tensor
 
@@ -2210,8 +2213,8 @@ contains
   ! ============================================================================
 
   !> Prints the contents of a tensor.
-  subroutine torch_tensor_print(tensor)
-    type(torch_tensor), intent(in) :: tensor  !! Tensor to print the contents of
+  subroutine torch_tensor_print(self)
+    class(torch_tensor), intent(in) :: self  !! Tensor to print the contents of
 
     interface
       subroutine torch_tensor_print_c(tensor_c) &
@@ -2222,7 +2225,7 @@ contains
       end subroutine torch_tensor_print_c
     end interface
 
-    call torch_tensor_print_c(tensor%p)
+    call torch_tensor_print_c(self%p)
   end subroutine torch_tensor_print
 
   !> Determines the rank of a tensor.
@@ -3081,8 +3084,8 @@ contains
   end subroutine torch_model_forward
 
   !> Prints the parameters associated with a model
-  subroutine torch_model_print_parameters(model)
-    type(torch_model), intent(in) :: model  !! Model to print the parameters of
+  subroutine torch_model_print_parameters(self)
+    class(torch_model), intent(in) :: self  !! Model to print the parameters of
 
     interface
       subroutine torch_model_print_parameters_c(model_c) &
@@ -3093,7 +3096,7 @@ contains
       end subroutine torch_model_print_parameters_c
     end interface
 
-    call torch_model_print_parameters_c(model%p)
+    call torch_model_print_parameters_c(self%p)
   end subroutine torch_model_print_parameters
 
   !> Deallocates a TorchScript model

@@ -52,7 +52,7 @@ program inference
 
    ! Print the parameters associated with the pre-trained model
    write (*,*) "Model parameters:"
-   call torch_model_print_parameters(model)
+   call model%print_parameters()
 
    ! Infer
    call torch_model_forward(model, in_tensors, out_tensors)
