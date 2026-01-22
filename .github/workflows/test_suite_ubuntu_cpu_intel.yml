@@ -99,8 +99,8 @@ jobs:
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
-          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
-          export BUILD_DIR=$(pwd)/build
+          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages"
+          export BUILD_DIR="$(pwd)/build"
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
           mkdir ${BUILD_DIR}
@@ -131,3 +131,28 @@ jobs:
           . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex example
+
+      # Check that we can successfully build and run an example outside the main FTorch build process
+      - name: Standalone SimpleNet example
+        env:
+          FORTRAN_STANDARD: ${{ matrix.std }}
+        run: |
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
+          export FTORCH_BUILD_DIR="$(pwd)/build"
+          export EXAMPLE_BUILD_DIR="examples/2_SimpleNet/build"
+          mkdir "${EXAMPLE_BUILD_DIR}"
+          cd "${EXAMPLE_BUILD_DIR}"
+          cmake .. \
+            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=icx \
+            -DCMAKE_CXX_COMPILER=icpx \
+            -DCMAKE_Fortran_COMPILER="${{ matrix.FC }}" \
+            -DMPI_Fortran_COMPILER="${{ matrix.MPIFC }}" \
+            -DCMAKE_INSTALL_PREFIX="${FTORCH_BUILD_DIR}" \
+            -DCMAKE_BUILD_TESTS=TRUE \
+            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+          cmake --build .
+          ctest -V
