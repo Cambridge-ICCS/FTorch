@@ -1,4 +1,5 @@
-# Workflow to run the FTorch test suite using jobs for GNU compiler (macOS arm64)
+# Workflow to run the FTorch test suite using jobs for GNU Fortran compiler
+# and system Clang compilers (macOS arm64)
 name: Test suite (macOS CPU GNU)
 
 # Controls when the workflow will run
@@ -41,12 +42,8 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          # Only GCC 13 for fortran on macOS
           MATRIX_JSON='
           {
-            "toolchain": [
-              {"compiler": "gcc", "version": 13}
-            ],
             "std": ["f2008", "f2018"]
           }'
           # Convert json to compact line expected by github action
@@ -62,8 +59,8 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
 
-    # Terminate the job if it runs for more than 15 minutes
-    timeout-minutes: 15
+    # Terminate the job if it runs for more than 20 minutes
+    timeout-minutes: 20
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -72,12 +69,6 @@ jobs:
         with:
           persist-credentials: true
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Setup Fortran
-        uses: fortran-lang/setup-fortran@d2ba6ea44297a24407def2f6e117954d844a5368 # v1
-        with:
-          compiler: ${{ matrix.toolchain.compiler }}
-          version: ${{ matrix.toolchain.version }}
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
@@ -91,15 +82,21 @@ jobs:
           . ftorch/bin/activate
           pip install torch torchvision
 
-      - name: Install OpenMPI
+      - name: Install gfortran and OpenMPI
         # Install from source to avoid compiler mismatch between gfortran versions
         # between open-mpi installation and when building FTorch.
         run: |
           brew update
-          export FC=$(which gfortran)
-          export CC=clang
-          export CXX=clang++
-          brew install openmpi --build-from-source
+          brew install gcc openmpi
+
+      - name: Set compilers as GitHub environment variables
+        run: |
+          # Export homebrew location to PATH to allow location
+          echo "PATH=$(brew --prefix)/bin:$PATH" >> $GITHUB_ENV
+          echo "FC=$(which gfortran)" >> $GITHUB_ENV
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
+          echo "MPI_FC=$(which mpif90)" >> $GITHUB_ENV
 
       - name: Install pFUnit
         run: |
@@ -108,10 +105,10 @@ jobs:
           mkdir pFUnit/build
           cd pFUnit/build
           cmake ..\
-            -DCMAKE_C_COMPILER=clang  \
-            -DCMAKE_CXX_COMPILER=clang++  \
-            -DCMAKE_Fortran_COMPILER=gfortran\
-            -DMPI_Fortran_COMPILER=mpif90
+            -DCMAKE_C_COMPILER=$CC  \
+            -DCMAKE_CXX_COMPILER=$CXX  \
+            -DCMAKE_Fortran_COMPILER=$FC\
+            -DMPI_Fortran_COMPILER=$MPI_FC
           make -j 4 install
 
       - name: Build FTorch
@@ -130,9 +127,9 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER=gfortran  \
-            -DCMAKE_C_COMPILER=clang  \
-            -DCMAKE_CXX_COMPILER=clang++  \
+            -DCMAKE_C_COMPILER=$CC  \
+            -DCMAKE_CXX_COMPILER=$CXX  \
+            -DCMAKE_Fortran_COMPILER=$FC\
             -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
