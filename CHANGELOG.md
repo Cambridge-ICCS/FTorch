@@ -11,6 +11,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Provide worked example and documentation on differentiating through calls to
+  `torch_model_forward`.
+  [#486](https://github.com/Cambridge-ICCS/FTorch/pull/486)
 - Provide support for using FTorch with pkg-config. [#464](https://github.com/Cambridge-ICCS/FTorch/pull/464)
 - Support building FTorch as a static library. [#448](https://github.com/Cambridge-ICCS/FTorch/pull/448)
 - Intel-ifx and Intel-ifort CI and GCC v9-13 CI. Intel CI builds OpenMPI from source to accomodate MPI integration tests [#438](https://github.com/Cambridge-ICCS/FTorch/pull/438)
