@@ -41,7 +41,7 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          # Only GCC 13 for everything on macOS
+          # Only GCC 13 for fortran on macOS
           MATRIX_JSON='
           {
             "toolchain": [
@@ -97,6 +97,8 @@ jobs:
         run: |
           brew update
           export FC=$(which gfortran)
+          export CC=clang
+          export CXX=clang++
           brew install openmpi --build-from-source
 
       - name: Install pFUnit
@@ -106,6 +108,8 @@ jobs:
           mkdir pFUnit/build
           cd pFUnit/build
           cmake ..\
+            -DCMAKE_C_COMPILER=clang  \
+            -DCMAKE_CXX_COMPILER=clang++  \
             -DCMAKE_Fortran_COMPILER=gfortran\
             -DMPI_Fortran_COMPILER=mpif90
           make -j 4 install
@@ -127,8 +131,8 @@ jobs:
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_Fortran_COMPILER=gfortran  \
-            -DCMAKE_C_COMPILER=gcc  \
-            -DCMAKE_CXX_COMPILER=g++  \
+            -DCMAKE_C_COMPILER=clang  \
+            -DCMAKE_CXX_COMPILER=clang++  \
             -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
