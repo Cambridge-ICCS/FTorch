@@ -92,9 +92,12 @@ jobs:
           pip install torch torchvision
 
       - name: Install OpenMPI
+        # Install from source to avoid compiler mismatch between gfortran versions
+        # between open-mpi installation and when building FTorch.
         run: |
           brew update
-          brew install open-mpi
+          export FC=$(which gfortran)
+          brew install openmpi --build-from-source
 
       - name: Install pFUnit
         run: |
