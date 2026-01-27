@@ -96,6 +96,11 @@ jobs:
             ln -s "$GFORTRAN_PATH" "$(brew --prefix)/bin/gfortran"
           fi
           ls -l $(brew --prefix)/bin/gfortran*
+          GCC_PATH=$(ls $(brew --prefix)/bin/gcc-* | grep -E 'gcc-[0-9]+$' | sort -V | tail -n 1)
+          if [ ! -e "$(brew --prefix)/bin/gcc" ]; then
+            ln -s "$GCC_PATH" "$(brew --prefix)/bin/gcc"
+          fi
+          ls -l $(brew --prefix)/bin/gcc*
 
       - name: Set compilers as GitHub environment variables
         run: |
@@ -103,8 +108,8 @@ jobs:
           echo "PATH=$(brew --prefix)/bin:$PATH" >> $GITHUB_ENV
           # brew specifically installs gcc-<version> so extract this as generic FC.
           echo "FC=$(brew --prefix)/bin/gfortran" >> $GITHUB_ENV
-          echo "CC=clang" >> $GITHUB_ENV
-          echo "CXX=clang++" >> $GITHUB_ENV
+          echo "CC=$(brew --prefix)/bin/gcc" >> $GITHUB_ENV
+          echo "CXX=$(brew --prefix)/bin/gcc" >> $GITHUB_ENV
           echo "MPI_FC=$(brew --prefix)/bin/mpif90" >> $GITHUB_ENV
 
       - name: Debug - Fortran compiler information
@@ -120,6 +125,17 @@ jobs:
             gfortran --version
           fi
 
+          echo "Checking for gcc..."
+          which gcc|| echo "gcc not found in PATH"
+          echo "PATH contents:"
+          echo $PATH
+          echo "Checking for any C compilers..."
+          which gcc gcc-13 gcc-12 gcc-11 cc || echo "No C compilers found"
+          if command -v gcc &> /dev/null; then
+            echo "gcc version:"
+            $CC --version
+          fi
+
       - name: Install pFUnit
         run: |
           # TODO: Avoid version pinning (needed because version appears in install path)
@@ -128,7 +144,6 @@ jobs:
           cd pFUnit/build
           cmake ..\
             -DCMAKE_C_COMPILER=$CC  \
-            -DCMAKE_CXX_COMPILER=$CXX  \
             -DCMAKE_Fortran_COMPILER=$FC\
             -DMPI_Fortran_COMPILER=$MPI_FC
           make -j 4 install
