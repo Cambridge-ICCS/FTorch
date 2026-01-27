@@ -87,7 +87,7 @@ jobs:
         # between open-mpi installation and when building FTorch.
         run: |
           brew update
-          brew install gcc openmpi
+          brew install gcc openmpi libomp
 
       - name: Ensure gfortran symlink exists
         run: |
