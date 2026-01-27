@@ -19,7 +19,7 @@ if(CMAKE_BUILD_TESTS)
 else()
   find_package(FTorch REQUIRED)
 endif()
-find_package(MPI REQUIRED)
+find_package(MPI REQUIRED Fortran)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Install Python dependencies
