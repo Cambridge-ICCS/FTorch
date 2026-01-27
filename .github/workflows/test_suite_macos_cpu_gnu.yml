@@ -91,9 +91,8 @@ jobs:
 
       - name: Set compilers as GitHub environment variables
         run: |
-          # Export homebrew location to PATH to allow location
-          echo "PATH=$(brew --prefix)/bin:$PATH" >> $GITHUB_ENV
-          echo "FC=$(which gfortran)" >> $GITHUB_ENV
+          # brew specifically installs gcc-<version> so extract this as generic FC.
+          echo "FC=$(find /opt/homebrew/bin -name 'gfortran-*' | head -n 1)" >> $GITHUB_ENV
           echo "CC=clang" >> $GITHUB_ENV
           echo "CXX=clang++" >> $GITHUB_ENV
           echo "MPI_FC=$(which mpif90)" >> $GITHUB_ENV
@@ -101,14 +100,14 @@ jobs:
       - name: Debug - Fortran compiler information
         run: |
           echo "Checking for gfortran..."
-          which gfortran || echo "gfortran not found in PATH"
+          which $FC || echo "gfortran not found in PATH"
           echo "PATH contents:"
           echo $PATH
           echo "Checking for any Fortran compilers..."
           which gfortran gfortran-13 gfortran-12 gfortran-11 fc || echo "No Fortran compilers found"
-          if command -v gfortran &> /dev/null; then
+          if command -v $FC &> /dev/null; then
             echo "gfortran version:"
-            gfortran --version
+            $FC --version
           fi
 
       - name: Install pFUnit
