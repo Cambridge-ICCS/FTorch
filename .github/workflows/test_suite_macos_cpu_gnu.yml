@@ -155,7 +155,9 @@ jobs:
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${Torch_DIR}/torch/lib
           export BUILD_DIR=$(pwd)/build
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${BUILD_DIR}/lib
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
           mkdir ${BUILD_DIR}
@@ -172,7 +174,7 @@ jobs:
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"\
             -DCMAKE_C_FLAGS="-Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include" \
-            -DCMAKE_CXX_FLAGS="-Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include" \
+            -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include" \
             -DCMAKE_EXE_LINKER_FLAGS="-L$(brew --prefix libomp)/lib -lomp"
           cmake --build .
           cmake --install .
