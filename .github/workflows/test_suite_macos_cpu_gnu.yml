@@ -89,6 +89,14 @@ jobs:
           brew update
           brew install gcc openmpi
 
+      - name: Ensure gfortran symlink exists
+        run: |
+          GFORTRAN_PATH=$(ls $(brew --prefix)/bin/gfortran-* | sort -V | tail -n 1)
+          if [ ! -e "$(brew --prefix)/bin/gfortran" ]; then
+            ln -s "$GFORTRAN_PATH" "$(brew --prefix)/bin/gfortran"
+          fi
+          ls -l $(brew --prefix)/bin/gfortran*
+
       - name: Set compilers as GitHub environment variables
         run: |
           # Add homebrew to path
