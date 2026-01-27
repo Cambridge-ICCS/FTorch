@@ -64,9 +64,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Install Xcode tools
-        run: xcode-select --install || true
-
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout FTorch repository
         with:
@@ -92,7 +89,7 @@ jobs:
           brew update
           brew install gcc openmpi libomp
 
-      - name: Ensure gfortran symlink exists
+      - name: Ensure gcc symlinks exist
         run: |
           GFORTRAN_PATH=$(ls $(brew --prefix)/bin/gfortran-* | sort -V | tail -n 1)
           if [ ! -e "$(brew --prefix)/bin/gfortran" ]; then
@@ -104,6 +101,11 @@ jobs:
             ln -s "$GCC_PATH" "$(brew --prefix)/bin/gcc"
           fi
           ls -l $(brew --prefix)/bin/gcc*
+          GXX_PATH=$(ls $(brew --prefix)/bin/g++-* | sort -V | tail -n 1)
+          if [ ! -e "$(brew --prefix)/bin/g++" ]; then
+            ln -s "$GXX_PATH" "$(brew --prefix)/bin/g++"
+          fi
+          ls -l $(brew --prefix)/bin/g++*
 
       - name: Set compilers as GitHub environment variables
         run: |
@@ -112,7 +114,7 @@ jobs:
           # brew specifically installs gcc-<version> so extract this as generic FC.
           echo "FC=$(brew --prefix)/bin/gfortran" >> $GITHUB_ENV
           echo "CC=$(brew --prefix)/bin/gcc" >> $GITHUB_ENV
-          echo "CXX=$(brew --prefix)/bin/gcc" >> $GITHUB_ENV
+          echo "CXX=$(brew --prefix)/bin/g++" >> $GITHUB_ENV
           echo "MPI_FC=$(brew --prefix)/bin/mpif90" >> $GITHUB_ENV
 
       - name: Debug - Fortran compiler information
@@ -137,6 +139,17 @@ jobs:
           if command -v gcc &> /dev/null; then
             echo "gcc version:"
             $CC --version
+          fi
+
+          echo "Checking for g++..."
+          which gcc|| echo "g++ not found in PATH"
+          echo "PATH contents:"
+          echo $PATH
+          echo "Checking for any C++ compilers..."
+          which g++ g++-13 g++-12 g++-11 cppc || echo "No C++ compilers found"
+          if command -v g++ &> /dev/null; then
+            echo "g++ version:"
+            $CXX --version
           fi
 
       - name: Install pFUnit
