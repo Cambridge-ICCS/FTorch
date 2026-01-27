@@ -98,6 +98,19 @@ jobs:
           echo "CXX=clang++" >> $GITHUB_ENV
           echo "MPI_FC=$(which mpif90)" >> $GITHUB_ENV
 
+      - name: Debug - Fortran compiler information
+        run: |
+          echo "Checking for gfortran..."
+          which gfortran || echo "gfortran not found in PATH"
+          echo "PATH contents:"
+          echo $PATH
+          echo "Checking for any Fortran compilers..."
+          which gfortran gfortran-13 gfortran-12 gfortran-11 fc || echo "No Fortran compilers found"
+          if command -v gfortran &> /dev/null; then
+            echo "gfortran version:"
+            gfortran --version
+          fi
+
       - name: Install pFUnit
         run: |
           # TODO: Avoid version pinning (needed because version appears in install path)
