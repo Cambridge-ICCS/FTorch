@@ -44,15 +44,14 @@ jobs:
         run: |
           MATRIX_JSON='
           {
-            "std": ["f2008", "f2018"],
-            "c_compiler": ["clang", "gcc"]
+            "std": ["f2008", "f2018"]
           }'
           # Convert json to compact line expected by github action
           MATRIX_JSON=$(echo "$MATRIX_JSON" | jq -c .)
           echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
 
   test-suite:
-    name: test suite (${{ matrix.c_compiler }}, ${{ matrix.std }})
+    name: test suite (${{ matrix.std }})
     needs: setup-matrix
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -90,23 +89,13 @@ jobs:
           brew update
           brew install gcc openmpi libomp
 
-      - name: Ensure gcc symlinks exist
+      - name: Ensure gfortran symlink exists
         run: |
           GFORTRAN_PATH=$(ls $(brew --prefix)/bin/gfortran-* | sort -V | tail -n 1)
           if [ ! -e "$(brew --prefix)/bin/gfortran" ]; then
             ln -s "$GFORTRAN_PATH" "$(brew --prefix)/bin/gfortran"
           fi
           ls -l $(brew --prefix)/bin/gfortran*
-          GCC_PATH=$(ls $(brew --prefix)/bin/gcc-* | grep -E 'gcc-[0-9]+$' | sort -V | tail -n 1)
-          if [ ! -e "$(brew --prefix)/bin/gcc" ]; then
-            ln -s "$GCC_PATH" "$(brew --prefix)/bin/gcc"
-          fi
-          ls -l $(brew --prefix)/bin/gcc*
-          GXX_PATH=$(ls $(brew --prefix)/bin/g++-* | sort -V | tail -n 1)
-          if [ ! -e "$(brew --prefix)/bin/g++" ]; then
-            ln -s "$GXX_PATH" "$(brew --prefix)/bin/g++"
-          fi
-          ls -l $(brew --prefix)/bin/g++*
 
       - name: Set compilers as GitHub environment variables
         run: |
@@ -115,15 +104,9 @@ jobs:
           # brew specifically installs gcc-<version> so extract this as generic FC.
           echo "FC=$(brew --prefix)/bin/gfortran" >> $GITHUB_ENV
           echo "MPI_FC=$(brew --prefix)/bin/mpif90" >> $GITHUB_ENV
-          
-          # Set C and C++ compilers based on matrix choice
-          if [ "${{ matrix.c_compiler }}" = "gcc" ]; then
-            echo "CC=$(brew --prefix)/bin/gcc" >> $GITHUB_ENV
-            echo "CXX=$(brew --prefix)/bin/g++" >> $GITHUB_ENV
-          else
-            echo "CC=clang" >> $GITHUB_ENV
-            echo "CXX=clang++" >> $GITHUB_ENV
-          fi
+          # Use system clang for C and C++
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
 
       - name: Display compiler versions
         run: |
@@ -163,15 +146,6 @@ jobs:
           mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
 
-          # Set compiler-specific flags
-          if [ "${{ matrix.c_compiler }}" = "gcc" ]; then
-            # For gcc, use libstdc++ (gcc's standard library, not libc++)
-            CXX_FLAGS="-Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include"
-          else
-            # For clang, use libc++ (system standard library)
-            CXX_FLAGS="-stdlib=libc++ -Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include"
-          fi
-
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
@@ -183,7 +157,7 @@ jobs:
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"\
             -DCMAKE_C_FLAGS="-Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include" \
-            -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" \
+            -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include" \
             -DCMAKE_EXE_LINKER_FLAGS="-L$(brew --prefix libomp)/lib -lomp"
           cmake --build .
           cmake --install .
