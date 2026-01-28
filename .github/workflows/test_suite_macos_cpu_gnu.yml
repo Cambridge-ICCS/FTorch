@@ -125,40 +125,16 @@ jobs:
             echo "CXX=clang++" >> $GITHUB_ENV
           fi
 
-      - name: Debug - Fortran compiler information
+      - name: Display compiler versions
         run: |
-          echo "Checking for gfortran..."
-          which gfortran|| echo "gfortran not found in PATH"
-          echo "PATH contents:"
-          echo $PATH
-          echo "Checking for any Fortran compilers..."
-          which gfortran gfortran-13 gfortran-12 gfortran-11 fc || echo "No Fortran compilers found"
-          if command -v gfortran &> /dev/null; then
-            echo "gfortran version:"
-            gfortran --version
-          fi
-
-          echo "Checking for gcc..."
-          which gcc|| echo "gcc not found in PATH"
-          echo "PATH contents:"
-          echo $PATH
-          echo "Checking for any C compilers..."
-          which gcc gcc-13 gcc-12 gcc-11 cc || echo "No C compilers found"
-          if command -v gcc &> /dev/null; then
-            echo "gcc version:"
-            $CC --version
-          fi
-
-          echo "Checking for g++..."
-          which gcc|| echo "g++ not found in PATH"
-          echo "PATH contents:"
-          echo $PATH
-          echo "Checking for any C++ compilers..."
-          which g++ g++-13 g++-12 g++-11 cppc || echo "No C++ compilers found"
-          if command -v g++ &> /dev/null; then
-            echo "g++ version:"
-            $CXX --version
-          fi
+          echo "Fortran compiler:"
+          $FC --version
+          echo ""
+          echo "C compiler:"
+          $CC --version
+          echo ""
+          echo "C++ compiler:"
+          $CXX --version
 
       - name: Install pFUnit
         run: |
