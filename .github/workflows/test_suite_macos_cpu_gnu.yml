@@ -51,7 +51,7 @@ jobs:
           echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
 
   test-suite:
-    name: test suite
+    name: test suite (${{ matrix.std }})
     needs: setup-matrix
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -89,68 +89,35 @@ jobs:
           brew update
           brew install gcc openmpi libomp
 
-      - name: Ensure gcc symlinks exist
+      - name: Ensure gfortran symlink exists
         run: |
           GFORTRAN_PATH=$(ls $(brew --prefix)/bin/gfortran-* | sort -V | tail -n 1)
           if [ ! -e "$(brew --prefix)/bin/gfortran" ]; then
             ln -s "$GFORTRAN_PATH" "$(brew --prefix)/bin/gfortran"
           fi
           ls -l $(brew --prefix)/bin/gfortran*
-          GCC_PATH=$(ls $(brew --prefix)/bin/gcc-* | grep -E 'gcc-[0-9]+$' | sort -V | tail -n 1)
-          if [ ! -e "$(brew --prefix)/bin/gcc" ]; then
-            ln -s "$GCC_PATH" "$(brew --prefix)/bin/gcc"
-          fi
-          ls -l $(brew --prefix)/bin/gcc*
-          GXX_PATH=$(ls $(brew --prefix)/bin/g++-* | sort -V | tail -n 1)
-          if [ ! -e "$(brew --prefix)/bin/g++" ]; then
-            ln -s "$GXX_PATH" "$(brew --prefix)/bin/g++"
-          fi
-          ls -l $(brew --prefix)/bin/g++*
 
       - name: Set compilers as GitHub environment variables
         run: |
           # Add homebrew to path
           echo "PATH=$(brew --prefix)/bin:$PATH" >> $GITHUB_ENV
-          # brew specifically installs gcc-<version> so extract this as generic FC.
+          # brew installs gfortran-<version> from the gcc package, so extract this as generic FC
           echo "FC=$(brew --prefix)/bin/gfortran" >> $GITHUB_ENV
-          echo "CC=$(brew --prefix)/bin/gcc" >> $GITHUB_ENV
-          echo "CXX=$(brew --prefix)/bin/g++" >> $GITHUB_ENV
           echo "MPI_FC=$(brew --prefix)/bin/mpif90" >> $GITHUB_ENV
+          # Use system clang for C and C++
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
 
-      - name: Debug - Fortran compiler information
+      - name: Display compiler versions
         run: |
-          echo "Checking for gfortran..."
-          which gfortran|| echo "gfortran not found in PATH"
-          echo "PATH contents:"
-          echo $PATH
-          echo "Checking for any Fortran compilers..."
-          which gfortran gfortran-13 gfortran-12 gfortran-11 fc || echo "No Fortran compilers found"
-          if command -v gfortran &> /dev/null; then
-            echo "gfortran version:"
-            gfortran --version
-          fi
-
-          echo "Checking for gcc..."
-          which gcc|| echo "gcc not found in PATH"
-          echo "PATH contents:"
-          echo $PATH
-          echo "Checking for any C compilers..."
-          which gcc gcc-13 gcc-12 gcc-11 cc || echo "No C compilers found"
-          if command -v gcc &> /dev/null; then
-            echo "gcc version:"
-            $CC --version
-          fi
-
-          echo "Checking for g++..."
-          which gcc|| echo "g++ not found in PATH"
-          echo "PATH contents:"
-          echo $PATH
-          echo "Checking for any C++ compilers..."
-          which g++ g++-13 g++-12 g++-11 cppc || echo "No C++ compilers found"
-          if command -v g++ &> /dev/null; then
-            echo "g++ version:"
-            $CXX --version
-          fi
+          echo "Fortran compiler:"
+          $FC --version
+          echo ""
+          echo "C compiler:"
+          $CC --version
+          echo ""
+          echo "C++ compiler:"
+          $CXX --version
 
       - name: Install pFUnit
         run: |
@@ -238,12 +205,22 @@ jobs:
       - name: Run unit tests
         run: |
           . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${Torch_DIR}/torch/lib
+          export BUILD_DIR=$(pwd)/build
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${BUILD_DIR}/lib
           cd build
           ctest --verbose --tests-regex unit
 
       - name: Run integration tests
         run: |
           . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${Torch_DIR}/torch/lib
+          export BUILD_DIR=$(pwd)/build
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${BUILD_DIR}/lib
           cd build
           ctest --verbose --tests-regex example
 
@@ -255,7 +232,9 @@ jobs:
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch/lib
           export FTORCH_BUILD_DIR="$(pwd)/build"
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${FTORCH_BUILD_DIR}/lib
           export EXAMPLE_BUILD_DIR="examples/2_SimpleNet/build"
           mkdir "${EXAMPLE_BUILD_DIR}"
           cd "${EXAMPLE_BUILD_DIR}"
