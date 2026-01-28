@@ -120,16 +120,6 @@ jobs:
           if [ "${{ matrix.c_compiler }}" = "gcc" ]; then
             echo "CC=$(brew --prefix)/bin/gcc" >> $GITHUB_ENV
             echo "CXX=$(brew --prefix)/bin/g++" >> $GITHUB_ENV
-            # For gcc on macOS, we need to find the SDK path for C++ stdlib
-            SDK_PATH=$(xcrun --show-sdk-path)
-            echo "SDKROOT=${SDK_PATH}" >> $GITHUB_ENV
-            echo "MACOS_SDK_PATH=${SDK_PATH}" >> $GITHUB_ENV
-            # Set CPLUS_INCLUDE_PATH properly, handling unset case
-            if [ -z "${CPLUS_INCLUDE_PATH:-}" ]; then
-              echo "CPLUS_INCLUDE_PATH=${SDK_PATH}/usr/include/c++/v1" >> $GITHUB_ENV
-            else
-              echo "CPLUS_INCLUDE_PATH=${SDK_PATH}/usr/include/c++/v1:${CPLUS_INCLUDE_PATH}" >> $GITHUB_ENV
-            fi
           else
             echo "CC=clang" >> $GITHUB_ENV
             echo "CXX=clang++" >> $GITHUB_ENV
@@ -199,10 +189,10 @@ jobs:
 
           # Set compiler-specific flags
           if [ "${{ matrix.c_compiler }}" = "gcc" ]; then
-            # For gcc, include SDK path for C++ standard library (using env var from earlier step)
-            CXX_FLAGS="-stdlib=libc++ -isysroot ${MACOS_SDK_PATH} -Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include"
+            # For gcc, use libstdc++ (gcc's standard library, not libc++)
+            CXX_FLAGS="-Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include"
           else
-            # For clang, use standard flags
+            # For clang, use libc++ (system standard library)
             CXX_FLAGS="-stdlib=libc++ -Xpreprocessor -fopenmp -I$(brew --prefix libomp)/include"
           fi
 
