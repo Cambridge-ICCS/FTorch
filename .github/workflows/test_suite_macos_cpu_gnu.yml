@@ -101,7 +101,7 @@ jobs:
         run: |
           # Add homebrew to path
           echo "PATH=$(brew --prefix)/bin:$PATH" >> $GITHUB_ENV
-          # brew specifically installs gcc-<version> so extract this as generic FC.
+          # brew installs gfortran-<version> from the gcc package, so extract this as generic FC
           echo "FC=$(brew --prefix)/bin/gfortran" >> $GITHUB_ENV
           echo "MPI_FC=$(brew --prefix)/bin/mpif90" >> $GITHUB_ENV
           # Use system clang for C and C++
