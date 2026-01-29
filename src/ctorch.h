@@ -369,28 +369,6 @@ EXPORT_C void torch_jit_module_forward(const torch_jit_script_module_t module,
 EXPORT_C void torch_module_print_parameters(const torch_jit_script_module_t module);
 
 /**
- * Function to determine the device type of a Torch Model
- * @param Torch Model to determine the device type of
- * @return device type of the Torch Model represented as an enum
- */
-EXPORT_C torch_device_t torch_module_get_device_type(const torch_jit_script_module_t module);
-
-
-/**
- * Function to determine the device index of a Torch Model
- * @param Torch Model to determine the device index of
- * @return device index of the Torch Model
- */
-EXPORT_C int torch_module_get_device_index(const torch_jit_script_module_t module);
-
-/**
- * Function to determine whether a Torch Model requires the autograd module
- * @param Torch Model to interrogate
- * @return whether the Torch Model requires autograd
- */
-EXPORT_C bool torch_module_requires_grad(const torch_jit_script_module_t module);
-
-/**
  * Function to determine whether a Torch Model is in training mode
  * @param Torch Model to interrogate
  * @return whether the Torch Model is in training mode

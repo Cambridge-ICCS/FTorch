@@ -623,21 +623,6 @@ void torch_module_print_parameters(const torch_jit_script_module_t module) {
   }
 }
 
-torch_device_t torch_module_get_device_type(const torch_jit_script_module_t module) {
-  auto m = reinterpret_cast<torch::jit::script::Module *>(module);
-  return get_ftorch_device(m->device().type());
-}
-
-int torch_module_get_device_index(const torch_jit_script_module_t module) {
-  auto m = reinterpret_cast<torch::jit::script::Module *>(module);
-  return m->device().index();
-}
-
-bool torch_module_requires_grad(const torch_jit_script_module_t module) {
-  auto m = reinterpret_cast<torch::jit::script::Module *>(module);
-  return m->requires_grad();
-}
-
 bool torch_module_is_training(const torch_jit_script_module_t module) {
   auto m = reinterpret_cast<torch::jit::script::Module *>(module);
   return m->is_training();
