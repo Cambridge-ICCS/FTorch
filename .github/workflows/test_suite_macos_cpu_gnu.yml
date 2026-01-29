@@ -44,14 +44,16 @@ jobs:
         run: |
           MATRIX_JSON='
           {
-            "std": ["f2008", "f2018"]
+            "std": ["f2008", "f2018"],
+            "compiler": ["clang"],
+            "version": ["system"]
           }'
           # Convert json to compact line expected by github action
           MATRIX_JSON=$(echo "$MATRIX_JSON" | jq -c .)
           echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
 
   test-suite:
-    name: test suite (${{ matrix.std }})
+    name: test suite (${{ matrix.compiler }}, ${{ matrix.version }}, ${{ matrix.std }})
     needs: setup-matrix
     # The type of runner that the job will run on
     runs-on: macos-latest
@@ -107,17 +109,6 @@ jobs:
           # Use system clang for C and C++
           echo "CC=clang" >> $GITHUB_ENV
           echo "CXX=clang++" >> $GITHUB_ENV
-
-      - name: Display compiler versions
-        run: |
-          echo "Fortran compiler:"
-          $FC --version
-          echo ""
-          echo "C compiler:"
-          $CC --version
-          echo ""
-          echo "C++ compiler:"
-          $CXX --version
 
       - name: Install pFUnit
         run: |
@@ -207,9 +198,8 @@ jobs:
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
-          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${Torch_DIR}/torch/lib
           export BUILD_DIR=$(pwd)/build
-          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${BUILD_DIR}/lib
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${Torch_DIR}/torch/lib:${BUILD_DIR}/lib
           cd build
           ctest --verbose --tests-regex unit
 
@@ -218,9 +208,8 @@ jobs:
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
-          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${Torch_DIR}/torch/lib
           export BUILD_DIR=$(pwd)/build
-          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${BUILD_DIR}/lib
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${Torch_DIR}/torch/lib:${BUILD_DIR}/lib
           cd build
           ctest --verbose --tests-regex example
 
@@ -232,9 +221,8 @@ jobs:
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
-          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch/lib
           export FTORCH_BUILD_DIR="$(pwd)/build"
-          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${FTORCH_BUILD_DIR}/lib
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch/lib:${FTORCH_BUILD_DIR}/lib
           export EXAMPLE_BUILD_DIR="examples/2_SimpleNet/build"
           mkdir "${EXAMPLE_BUILD_DIR}"
           cd "${EXAMPLE_BUILD_DIR}"
