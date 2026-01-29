@@ -45,8 +45,8 @@ execute_process(
 add_pfunit_ctest(unittest_model_load_delete
                  TEST_SOURCES unittest_model_load_delete.pf
                  LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(unittest_model_print_parameters
-                 TEST_SOURCES unittest_model_print_parameters.pf
+add_pfunit_ctest(unittest_model_interrogation
+                 TEST_SOURCES unittest_model_interrogation.pf
                  LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(unittest_model_forward
                  TEST_SOURCES unittest_model_forward.pf

@@ -1,0 +1,52 @@
+!| Unit tests for printing parameters associated with TorchScript models with FTorch.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_model_interrogation
+  use funit
+  use ftorch, only: torch_kCPU, torch_model, torch_model_load
+
+  implicit none
+
+  public
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  character(len=256), parameter :: filename = "test_model.pt"
+
+contains
+
+  ! Unit test for printing the parameters associated with a TorchScript model
+  @test
+  subroutine test_torch_model_print_parameters()
+    use ftorch, only: torch_model_print_parameters
+    type(torch_model) :: model
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Check that printing the model parameters doesn't raise an error
+    call torch_model_print_parameters(model)
+
+  end subroutine test_torch_model_print_parameters
+
+  ! Unit test for checking the default of whether a Torch Model is in training mode
+  @test
+  subroutine test_torch_model_is_training_default()
+    use ftorch, only: torch_model_is_training
+    type(torch_model) :: model
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Check that printing the model parameters doesn't raise an error
+    @assertFalse(model%is_training())
+
+  end subroutine test_torch_model_is_training_default
+
+  ! TODO: Parametrise and add another is_training test
+
+end module unittest_model_interrogation
