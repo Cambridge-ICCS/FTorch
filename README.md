@@ -204,5 +204,5 @@ for a full list of contributors.
 
 Multiple projects build on FTorch in their work.
 Those we are aware of are listed on the
-[use cases page](https://cambridge-iccs.github.io/FTorch/community/case_studies.html)
+[use cases page](https://cambridge-iccs.github.io/FTorch/page/community/case_studies.html)
 in the online documentation.
