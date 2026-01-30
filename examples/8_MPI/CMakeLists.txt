@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.18...3.31)
 # target_sources is run
 cmake_policy(SET CMP0076 NEW)
 
-set(PROJECT_NAME BatchingExample)
+set(PROJECT_NAME MPIExample)
 
 project(${PROJECT_NAME} LANGUAGES Fortran)
 
@@ -19,6 +19,7 @@ if(CMAKE_BUILD_TESTS)
 else()
   find_package(FTorch REQUIRED)
 endif()
+find_package(MPI REQUIRED)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Install Python dependencies
@@ -30,35 +31,48 @@ execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
                         ${PROJECT_SOURCE_DIR}/requirements.txt)
 
 # Fortran example
-add_executable(batchingnet_infer_fortran batchingnet_infer_fortran.f90)
-target_link_libraries(batchingnet_infer_fortran PRIVATE FTorch::ftorch)
+add_executable(mpi_infer_fortran mpi_infer_fortran.f90)
+target_link_libraries(mpi_infer_fortran PRIVATE FTorch::ftorch)
+target_link_libraries(mpi_infer_fortran PRIVATE MPI::MPI_Fortran)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME exampleN_batchingnet
-           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/batching_demo.py)
+  add_test(NAME example8_simplenet COMMAND ${Python_EXECUTABLE}
+                                           ${PROJECT_SOURCE_DIR}/simplenet.py)
 
   # 2. Check the model is saved to file in the expected location with the
   #   pt2ts.py script
   add_test(
-    NAME exampleN_pt2ts
+    NAME example8_pt2ts
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
             ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-  # 3. Load the model and run in Fortran checking that outputs meet expectations
+  # 3. Check the model can be loaded from file and run with MPI in Python and
+  #   that its outputs meet expectations
   add_test(
-    NAME exampleN_batchingnet_infer_fortran
+    NAME example8_mpi_infer_python
     COMMAND
-      batchingnet_infer_fortran
-      ${PROJECT_BINARY_DIR}/saved_batchingnet_model_cpu.pt
+      ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${Python_EXECUTABLE}
+      ${PROJECT_SOURCE_DIR}/mpi_infer_python.py --filepath ${PROJECT_BINARY_DIR}
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_tests_properties(
+    example8_mpi_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
+    "MPI Python example ran successfully")
+
+  # 4. Check the model can be loaded from file and run with MPI in Fortran and
+  #   that its outputs meet expectations
+  add_test(
+    NAME example8_mpi_infer_fortran
+    COMMAND
+      ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ./mpi_infer_fortran
+      ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
-    batchingnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-    "BatchingNet Fortran example ran successfully")
+    example8_mpi_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "MPI Fortran example ran successfully")
 endif()
-

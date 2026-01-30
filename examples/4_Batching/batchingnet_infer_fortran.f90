@@ -1,8 +1,9 @@
+! Example 4 - Batching and Higher-Dimensional Inference
 program batchingnet_infer
 
   use, intrinsic :: iso_fortran_env, only : sp => real32
   use ftorch, only : torch_model, torch_tensor, torch_kCPU, torch_delete, &
-                    torch_tensor_from_array, torch_model_load, torch_model_forward
+                     torch_tensor_from_array, torch_model_load, torch_model_forward
   use ftorch_test_utils, only : assert_allclose
 
   implicit none

@@ -1,4 +1,4 @@
-# Example: Batching and Higher-Dimensional Inference with PyTorch
+# Example 4 - Batching and Higher-Dimensional Inference with PyTorch
 
 This example demonstrates how to use a PyTorch model trained on 1D vectors to perform
 inference on batched and higher-dimensional data. We start with a simple batch and then

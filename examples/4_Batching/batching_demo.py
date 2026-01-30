@@ -1,5 +1,5 @@
 """
-Demonstrate batching and higher-dimensional inference with BatchingNet.
+Example 4 - Demonstrate batching and higher-dimensional inference with BatchingNet.
 
 This script shows how a model trained on 1D vectors can be used for batched and
 higher-dimensional inference in PyTorch. It includes examples for simple batches,
