@@ -1,0 +1,112 @@
+!| Unit tests for printing parameters associated with TorchScript models with FTorch.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_model_interrogation
+  use funit
+  use ftorch, only: torch_kCPU, torch_model, torch_model_load, torch_model_is_training
+
+  implicit none
+
+  public
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  character(len=256), parameter :: filename = "test_model.pt"
+
+  ! Typedef holding a set of parameter values
+  @testParameter
+  type, extends(AbstractTestParameter) :: TestParametersType
+    logical :: is_training  ! Value used for the is_training argument
+  contains
+    procedure :: toString
+  end type TestParametersType
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_constructor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(TestParametersType) :: param
+  end type TestCaseType
+
+contains
+
+  ! Constructor for the test case type
+  function test_case_constructor(param)
+    type(TestCaseType) :: test_case_constructor
+    type(TestParametersType), intent(in) :: param
+    test_case_constructor%param = param
+  end function test_case_constructor
+
+  ! A minimal fixture for tests with no parameters
+  function get_parameters_short() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.) &
+    ]
+  end function get_parameters_short
+
+  ! A fixture comprised of parameter sets for varying the is_training argument
+  function get_parameters_is_training() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.), &
+      TestParametersType(.true.) &
+    ]
+  end function get_parameters_is_training
+
+  ! Function for representing a parameter set as a string
+  function toString(this) result(string)
+    class(TestParametersType), intent(in) :: this
+    character(:), allocatable :: string
+    character(len=1) :: str
+    write(str,"(l1)") this%is_training
+    string = str
+  end function toString
+
+  ! Unit test for printing the parameters associated with a TorchScript model
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_model_print_parameters(this)
+    use ftorch, only: torch_model_print_parameters
+    class(TestCaseType), intent(inout) :: this
+    type(torch_model) :: model
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Check that printing the model parameters doesn't raise an error
+    call torch_model_print_parameters(model)
+
+  end subroutine test_torch_model_print_parameters
+
+  ! Unit test for checking the default of whether a Torch Model is in training mode
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_model_is_training_default(this)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_model) :: model
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Check that printing the model parameters doesn't raise an error
+    @assertFalse(model%is_training())
+
+  end subroutine test_torch_model_is_training_default
+
+  ! Unit test for checking whether a Torch Model is in training mode
+  @test(testparameters={get_parameters_is_training()})
+  subroutine test_torch_model_is_training(this)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_model) :: model
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type, is_training=this%param%is_training)
+
+    ! Check that printing the model parameters doesn't raise an error
+    @assertEqual(this%param%is_training, model%is_training())
+
+  end subroutine test_torch_model_is_training
+
+end module unittest_model_interrogation
