@@ -21,7 +21,7 @@ TorchScript model in inference mode.
 
 To run this example requires:
 
-- CMake
+- CMake or Make
 - Fortran compiler
 - FTorch (installed as described in main package)
 - Python 3
