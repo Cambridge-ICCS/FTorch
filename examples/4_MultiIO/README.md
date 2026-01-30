@@ -97,3 +97,25 @@ This runs the model with the same inputs as above and should produce the output:
    0.00000000       2.00000000       4.00000000       6.00000000    
    0.00000000      -3.00000000      -6.00000000      -9.00000000
 ```
+
+---
+
+## Extension: Batching Support and Architectural Warnings
+
+As an extension exercise try adding implementing batching following the approach
+in [the batching example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_Batching).
+This works as you would expect by increasing the rank of the input and output arrays to
+add a batching dimension (i.e., making the shapes `[batch, 4]` instead of `[4]`).
+
+**Warning:**
+Not all neural network architectures support batching automatically, and there are a
+few 'gotchas' to watch out for when it comes to multiple inputs and outputs.
+
+Avoid architectures that:
+
+- Flatten or concatenate input tensors in a way that destroys the batching dimension
+  e.g., concatenating along the batch axis and flattening.
+- Mix batch and feature dimensions incorrectly before passing to layers like.
+
+As a general rule when writing architectures always preserve the batch dimension as the
+leading dimension in all inputs and outputs for reliable batching support.
