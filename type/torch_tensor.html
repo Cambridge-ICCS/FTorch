@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p>82.4% of total for derived types.</p>Including implementation: 185 statements, 98.4% of total for derived types.">14 statements</a>
+                 title="<p>71.4% of total for derived types.</p>Including implementation: 197 statements, 86.8% of total for derived types.">15 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -177,6 +177,7 @@
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_rank">get_rank</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_shape">get_shape</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_stride">get_stride</a>
+            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-print">print</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-requires_grad">requires_grad</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-zero">zero</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-zero_grad">zero_grad</a>
@@ -359,7 +360,7 @@ said component(s).
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~66"></span>
+              <span class="anchor" id="variable-tensor~65"></span>
               type(<a href='torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(inout)</td>
@@ -742,6 +743,60 @@ said component(s).
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-print"></span>
+      <h3>
+          procedure, public ::
+  <strong>print</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_print.html'>torch_tensor_print</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/torch_tensor_print.html'>torch_tensor_print</a>(self)  
+</h3>
+    
+
+  <p>Prints the contents of a tensor.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+<p>Tensor to print the contents of</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
       <span class="anchor" id="boundprocedure-requires_grad"></span>
       <h3>
           procedure, public ::
@@ -922,6 +977,7 @@ said component(s).
 <span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_requires_grad</span>
 <span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_zero</span>
 <span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">zero_grad</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_zero_grad</span>
+<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">print</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_print</span>
 <span class="w">    </span><span class="k">final</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">torch_tensor_delete</span>
 <span class="w">  </span><span class="k">end type </span><span class="n">torch_tensor</span>
 </pre></div>

@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p>17.6% of total for derived types.</p>Including implementation: 3 statements,  1.6% of total for derived types.">3 statements</a>
+                 title="<p>28.6% of total for derived types.</p>Including implementation: 30 statements, 13.2% of total for derived types.">6 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -153,7 +153,19 @@
   
   
   
-  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#boundprocs-0"
+         aria-expanded="false" aria-controls="boundprocs-0">
+         <h4 class="card-header bg-primary text-white">Type-Bound Procedures</h4>
+      </a>
+      <div id="boundprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/torch_model.html#boundprocedure-is_training">is_training</a>
+            <a class="list-group-item" href="../type/torch_model.html#boundprocedure-print_parameters">print_parameters</a>
+        </div>
+      </div>
+    </div>
+
   
   
     <div class="card card-primary">
@@ -297,11 +309,133 @@ said component(s).
     
 
 
+      <section>
+        <h2>Type-Bound Procedures</h2>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-is_training"></span>
+      <h3>
+          procedure, public ::
+  <strong>is_training</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_model_is_training.html'>torch_model_is_training</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  function <a href='../proc/torch_model_is_training.html'>torch_model_is_training</a>(self) result(is_training)  
+</h3>
+    
+
+  <p>Determines whether a model is set up for training</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='torch_model.html'>torch_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+<p>Model to query</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Whether the model is set up for training</p>
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-print_parameters"></span>
+      <h3>
+          procedure, public ::
+  <strong>print_parameters</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_model_print_parameters.html'>torch_model_print_parameters</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/torch_model_print_parameters.html'>torch_model_print_parameters</a>(self)  
+</h3>
+    
+
+  <p>Prints the parameters associated with a model
+ NOTE: While viewing parameters in this way can be helpful for small toy models, it will produce
+       large amounts of output for models with many, large, or high-dimensional parameters. In
+       particular, tensors of 3 or more dimensions will be represented in terms of 2D arrays.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='torch_model.html'>torch_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+<p>Model to print the parameters of</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+      </section>
 
     <section>
     <h3><span class="anchor" id="src"></span>Source Code</h3>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">type </span><span class="n">torch_model</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">c_null_ptr</span><span class="w">  </span><span class="c">!! pointer to the neural net in memory</span>
+<span class="w">  </span><span class="k">contains</span>
+<span class="k">    procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">print_parameters</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_model_print_parameters</span>
+<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_training</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_model_is_training</span>
 <span class="w">  </span><span class="k">end type </span><span class="n">torch_model</span>
 </pre></div>
 

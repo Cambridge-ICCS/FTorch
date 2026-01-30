@@ -10,7 +10,7 @@
     <meta name="author" content="ICCS Cambridge" >
     <link rel="icon" href="../favicon.png">
 
-    <title>torch_tensor_print &ndash; FTorch</title>
+    <title>torch_model_print_parameters &ndash; FTorch</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -79,7 +79,7 @@
 
     <div class="container">
   <div class="row">
-    <h1>torch_tensor_print
+    <h1>torch_model_print_parameters
       <small>Subroutine</small>
       
     </h1>
@@ -105,7 +105,7 @@
           <ol class="breadcrumb justify-content-end mb-0">
                 <li class="breadcrumb-item"><a href='../sourcefile/ftorch.f90.html'>ftorch.F90</a></li>
                 <li class="breadcrumb-item"><a href='../module/ftorch.html'>ftorch</a></li>
-            <li class="breadcrumb-item active" aria-current="page">torch_tensor_print</li>
+            <li class="breadcrumb-item active" aria-current="page">torch_model_print_parameters</li>
           </ol>
         </nav>
       </div>
@@ -148,7 +148,7 @@
     <div class="card card-primary">
       <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
-        <a class="list-group-item" href="../proc/torch_tensor_print.html#src">torch_tensor_print</a>
+        <a class="list-group-item" href="../proc/torch_model_print_parameters.html#src">torch_model_print_parameters</a>
       </div>
     </div>
 
@@ -158,14 +158,17 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public  subroutine torch_tensor_print(self)  
+    <h2>public  subroutine torch_model_print_parameters(self)  
 </h2>
     
 
-    <p>Prints the contents of a tensor.</p>
+    <p>Prints the parameters associated with a model
+ NOTE: While viewing parameters in this way can be helpful for small toy models, it will produce
+       large amounts of output for models with many, large, or high-dimensional parameters. In
+       particular, tensors of 3 or more dimensions will be represented in terms of 2D arrays.</p>
 
     <h3>Type Bound</h3>
-    <p><a href='../type/torch_tensor.html'>torch_tensor</a></p>
+    <p><a href='../type/torch_model.html'>torch_model</a></p>
 
     <h3>Arguments</h3>
         <table class="table table-striped varlist">
@@ -180,8 +183,8 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self"></span>
-              class(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+              <span class="anchor" id="variable-self~9"></span>
+              class(<a href='../type/torch_model.html'>torch_model</a>),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -190,7 +193,7 @@
             <td>::</td>
             <td><strong>self</strong></td>
             <td>
-                <p>Tensor to print the contents of</p>
+                <p>Model to print the parameters of</p>
             </td>
         </tr>
     </tbody>
@@ -210,20 +213,20 @@
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_print</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
-<span class="w">    </span><span class="k">class</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">self</span><span class="w">  </span><span class="c">!! Tensor to print the contents of</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_model_print_parameters</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">class</span><span class="p">(</span><span class="n">torch_model</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">self</span><span class="w">  </span><span class="c">!! Model to print the parameters of</span>
 
 <span class="w">    </span><span class="k">interface</span>
-<span class="k">      subroutine </span><span class="n">torch_tensor_print_c</span><span class="p">(</span><span class="n">tensor_c</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
-<span class="w">          </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;torch_tensor_print&#39;</span><span class="p">)</span>
+<span class="k">      subroutine </span><span class="n">torch_jit_model_print_parameters_c</span><span class="p">(</span><span class="n">model_c</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">          </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;torch_jit_module_print_parameters&#39;</span><span class="p">)</span>
 <span class="w">        </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_ptr</span>
 <span class="kt">        </span><span class="k">implicit none</span>
-<span class="k">        type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_c</span>
-<span class="w">      </span><span class="k">end subroutine </span><span class="n">torch_tensor_print_c</span>
+<span class="k">        type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">model_c</span>
+<span class="w">      </span><span class="k">end subroutine </span><span class="n">torch_jit_model_print_parameters_c</span>
 <span class="w">    </span><span class="k">end interface</span>
 
-<span class="k">    call </span><span class="n">torch_tensor_print_c</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">p</span><span class="p">)</span>
-<span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_tensor_print</span>
+<span class="k">    call </span><span class="n">torch_jit_model_print_parameters_c</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">p</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_model_print_parameters</span>
 </pre></div>
 
     </section>
