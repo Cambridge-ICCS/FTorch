@@ -15,6 +15,16 @@ message(STATUS "Building with Fortran PyTorch coupling")
 
 find_package(PFUNIT REQUIRED)
 
+add_pfunit_ctest(
+  fixtures TEST_SOURCES
+  fixtures.pf LINK_LIBRARIES FTorch::ftorch)
+# install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mod/fixtures/fixtures.mod"
+#         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
+execute_process(
+  COMMAND mv "${CMAKE_CURRENT_BINARY_DIR}/mod/fixtures/fixtures.mod" .
+  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
 # Torch Tensor API on CPU
 add_pfunit_ctest(
   unittest_tensor_constructors_destructors TEST_SOURCES
