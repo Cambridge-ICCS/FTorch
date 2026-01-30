@@ -13,6 +13,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 - Add subroutine for printing parameters associated with a Torch Model
   [#488](https://github.com/Cambridge-ICCS/FTorch/pull/488)
+- Add unit testing for the Torch Model API [#496](https://github.com/Cambridge-ICCS/FTorch/pull/496)
 - Provide support for using FTorch with pkg-config. [#464](https://github.com/Cambridge-ICCS/FTorch/pull/464)
 - Support building FTorch as a static library. [#448](https://github.com/Cambridge-ICCS/FTorch/pull/448)
 - Intel-ifx and Intel-ifort CI and GCC v9-13 CI. Intel CI builds OpenMPI from source to accomodate MPI integration tests [#438](https://github.com/Cambridge-ICCS/FTorch/pull/438)
