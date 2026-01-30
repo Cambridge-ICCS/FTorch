@@ -623,6 +623,11 @@ void torch_module_print_parameters(const torch_jit_script_module_t module) {
   }
 }
 
+bool torch_module_is_training(const torch_jit_script_module_t module) {
+  auto m = reinterpret_cast<torch::jit::script::Module *>(module);
+  return m->is_training();
+}
+
 void torch_jit_module_delete(torch_jit_script_module_t module) {
   auto m = reinterpret_cast<torch::jit::script::Module *>(module);
   delete m;

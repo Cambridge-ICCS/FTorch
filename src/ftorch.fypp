@@ -46,6 +46,7 @@ module ftorch
     type(c_ptr) :: p = c_null_ptr  !! pointer to the neural net in memory
   contains
     procedure :: print_parameters => torch_model_print_parameters
+    procedure :: is_training => torch_model_is_training
   end type torch_model
 
   !> Type for holding a Torch tensor.
@@ -1261,9 +1262,28 @@ contains
     call torch_model_print_parameters_c(self%p)
   end subroutine torch_model_print_parameters
 
+  !> Determines whether a model is set up for training
+  function torch_model_is_training(self) result(is_training)
+    class(torch_model), intent(in) :: self  !! Model to query
+    logical :: is_training                  !! Whether the model is set up for training
+
+    interface
+      function torch_model_is_training_c(model_c) result(is_training_c) &
+          bind(c, name = 'torch_module_is_training')
+        use, intrinsic :: iso_c_binding, only : c_bool, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: model_c
+        logical(c_bool) :: is_training_c
+      end function torch_model_is_training_c
+    end interface
+
+    is_training = torch_model_is_training_c(self%p)
+  end function torch_model_is_training
+
   !> Deallocates a TorchScript model
   subroutine torch_model_delete(model)
-    type(torch_model), intent(in) :: model  !! Torch Model to deallocate
+    use, intrinsic :: iso_c_binding, only : c_associated, c_null_ptr
+    type(torch_model), intent(inout) :: model  !! Torch Model to deallocate
 
     interface
       subroutine torch_jit_model_delete_c(model_c) &
@@ -1274,7 +1294,11 @@ contains
       end subroutine torch_jit_model_delete_c
     end interface
 
-    call torch_jit_model_delete_c(model%p)
+    ! Call the destructor, if it hasn't already been called
+    if (c_associated(model%p)) then
+      call torch_jit_model_delete_c(model%p)
+      model%p = c_null_ptr
+    end if
   end subroutine torch_model_delete
 
 end module ftorch
