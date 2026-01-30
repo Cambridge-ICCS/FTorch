@@ -3092,15 +3092,15 @@ contains
     class(torch_model), intent(in) :: self  !! Model to print the parameters of
 
     interface
-      subroutine torch_model_print_parameters_c(model_c) &
-          bind(c, name = 'torch_module_print_parameters')
+      subroutine torch_jit_model_print_parameters_c(model_c) &
+          bind(c, name = 'torch_jit_module_print_parameters')
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: model_c
-      end subroutine torch_model_print_parameters_c
+      end subroutine torch_jit_model_print_parameters_c
     end interface
 
-    call torch_model_print_parameters_c(self%p)
+    call torch_jit_model_print_parameters_c(self%p)
   end subroutine torch_model_print_parameters
 
   !> Determines whether a model is set up for training
@@ -3109,16 +3109,16 @@ contains
     logical :: is_training                  !! Whether the model is set up for training
 
     interface
-      function torch_model_is_training_c(model_c) result(is_training_c) &
-          bind(c, name = 'torch_module_is_training')
+      function torch_jit_model_is_training_c(model_c) result(is_training_c) &
+          bind(c, name = 'torch_jit_module_is_training')
         use, intrinsic :: iso_c_binding, only : c_bool, c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: model_c
         logical(c_bool) :: is_training_c
-      end function torch_model_is_training_c
+      end function torch_jit_model_is_training_c
     end interface
 
-    is_training = torch_model_is_training_c(self%p)
+    is_training = torch_jit_model_is_training_c(self%p)
   end function torch_model_is_training
 
   !> Deallocates a TorchScript model
