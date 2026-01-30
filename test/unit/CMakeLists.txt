@@ -71,7 +71,7 @@ if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
     endif()
   endif()
 
-  # Torch Tensor API
+  # Torch Tensor API on CUDA
   add_pfunit_ctest(
     unittest_tensor_interrogation_cuda TEST_SOURCES
     unittest_tensor_interrogation_cuda.pf LINK_LIBRARIES FTorch::ftorch)
