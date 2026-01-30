@@ -8,6 +8,8 @@
 
 #include "ctorch.h"
 
+#include <sstream>
+
 #ifndef GPU_DEVICE
 #define GPU_DEVICE GPU_DEVICE_NONE
 #endif
@@ -30,6 +32,19 @@ void ctorch_error(const std::string &message,
 void ctorch_warn(const std::string &message) {
   std::cerr << "[WARNING]: " << message << std::endl;
 }
+
+void assert_not_nullptr(const void *ptr, const char *variable_name) {
+  if (!ptr) {
+    std::stringstream ss;
+    ss << "Pointer " << variable_name << "cannot be null\n";
+    ctorch_error(ss.str());
+  }
+}
+
+/**
+ * Raise `ctorch_error` if the expression evaluates to a NULL ptr
+ */
+#define CTORCH_ASSERT_NOT_NULLPTR(ptr) assert_not_nullptr(ptr, #ptr)
 
 // =============================================================================
 // --- Constant expressions
@@ -370,9 +385,49 @@ void torch_tensor_to(const torch_tensor_t source_tensor, torch_tensor_t target_t
   std::move(*target_tens) = source_tens->to(device_type, dtype, non_blocking);
 }
 
+// =============================================================================
+// --- Tensor view functions
+// =============================================================================
+
+torch_tensor_t torch_tensor_permute(const torch_tensor_t self, const int64_t dims[]) {
+  auto t = reinterpret_cast<const torch::Tensor *>(self);
+  validate_tensor(t, "self");
+
+  CTORCH_ASSERT_NOT_NULLPTR(dims);
+
+  // `dim()` method of the tensor returns a signed int64, but ArrayRef requires
+  // unsigned std::size_t. Since dimensions of a tensor are never negative the cast
+  // is safe... unless we are on a system where 64bit is not used for size_t.
+  static_assert(sizeof(int64_t) == sizeof(std::size_t),
+                "CTorch has an assumption that `size_t` is 64bit to safely cast "
+                "between `int64` and `size_t`. This should be the case for most modern "
+                "64bit systems. If you are running into this problem when "
+                "compiling FTorch please open an Issue so we can fix this!");
+  const auto dims_arrayref = at::IntArrayRef{dims, static_cast<std::size_t>(t->dim())};
+
+  auto *out = new torch::Tensor(at::permute(*t, dims_arrayref));
+  return out;
+}
+
 // =====================================================================================
 // --- Operator overloads acting on tensors
 // =====================================================================================
+
+void torch_tensor_shallow_copy(torch_tensor_t *to, const torch_tensor_t from) {
+  auto to_tensor = reinterpret_cast<torch::Tensor *>(*to);
+  auto from_tensor = reinterpret_cast<torch::Tensor *>(from);
+
+  validate_tensor(from_tensor, "from");
+  if (!to_tensor) {
+    to_tensor = new torch::Tensor();
+  }
+
+  // Copy Tensors
+  *to_tensor = *from_tensor;
+
+  // Update lhs pointer value
+  *to = to_tensor;
+}
 
 void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input) {
   auto out = reinterpret_cast<torch::Tensor *>(output);

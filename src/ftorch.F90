@@ -2511,8 +2511,90 @@ contains
   end subroutine torch_tensor_to
 
   ! ============================================================================
+  ! --- Tensor view functions
+  ! ============================================================================
+
+
+  !>
+  !> Return a permuted tensor view
+  !>
+  !> @note
+  !> The `dims` are specified using a 1-based indexing to be consistent
+  !> with Fortran conventions. However, as in PyTorch negative values are also
+  !> allowed to specifiy dimensions counting from the end!
+  !>
+  !> As the result one needs to pay attention to the dimension `0`!
+  !>
+  !>   - In Python: `0` indicates the first dimension
+  !>   - In FTorch: `0` indicates the last dimension
+  !> @endnote
+  !>
+  function torch_tensor_permute(tensor, dims) result(out)
+    use, intrinsic :: iso_c_binding, only : c_int64_t, c_associated
+    type(torch_tensor), intent(in) :: tensor    !! Tensor to permute
+    integer(ftorch_int), intent(in) :: dims(:)  !! New ordering of dimensions
+    type(torch_tensor) :: out                   !! Permuted tensor view
+    integer(c_int64_t) :: dims_c(size(dims))
+
+    interface
+      function torch_tensor_permute_c(tensor_c, dims_c) result(out_c) &
+        bind(c, name = 'torch_tensor_permute')
+        use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        integer(c_int64_t), intent(in) :: dims_c(*)
+        type(c_ptr) :: out_c
+      end function torch_tensor_permute_c
+    end interface
+
+    ! Check preconditions
+    if (.not. c_associated(tensor%p)) then
+      write(*,*) "Error :: tensor must be constructed before permuting dimensions"
+      stop 1
+    end if
+
+    if (size(dims) /= tensor % get_rank()) then
+      write(*, *) "Error :: number of dimensions: ", size(dims), &
+        " in dims must match rank of tensor: ", tensor % get_rank()
+      stop 1
+    end if
+
+    ! Convert the dims specifiers from 1 to 0 indexing
+    ! Don't forget that the negative values are allowed
+    where (dims <= 0)
+      dims_c = tensor % get_rank() + dims - 1
+    elsewhere
+      dims_c = dims - 1
+    end where
+
+    out%p = torch_tensor_permute_c(tensor%p, dims_c)
+
+  end function torch_tensor_permute
+
+  ! ============================================================================
   ! --- Overloaded operators acting on tensors
   ! ============================================================================
+
+  !> Makes a shallow copy of a tensor
+  !>
+  !> Mimics more Python-like assigment behaviour where `b = a` makes `b` point
+  !> to the same underlying data as `a`.
+  subroutine torch_tensor_shallow_copy(to, from)
+    type(torch_tensor), intent(out) :: to !! target
+    type(torch_tensor), intent(in) :: from !! source
+
+    interface
+      subroutine torch_tensor_shallow_copy_c(output_c, input_c) &
+        bind(c, name = 'torch_tensor_shallow_copy')
+        use, intrinsic :: iso_c_binding, only : c_ptr
+        implicit none
+        type(c_ptr), intent(inout) :: output_c
+        type(c_ptr), value, intent(in) :: input_c
+      end subroutine torch_tensor_shallow_copy_c
+    end interface
+    call torch_tensor_shallow_copy_c(to%p, from%p)
+
+  end subroutine torch_tensor_shallow_copy
 
   !> Overloads assignment operator for tensors.
   subroutine torch_tensor_assign(output, input)

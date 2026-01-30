@@ -207,8 +207,38 @@ EXPORT_C void torch_tensor_to(const torch_tensor_t source_tensor,
                               torch_tensor_t target_tensor, bool non_blocking);
 
 // =============================================================================
+// --- Tensor view functions
+// =============================================================================
+
+/**
+ * Return a permuted View of the tensor
+ * @param self Source Torch tensor
+ * @param dims Array indicating the new indexing, 0-indexed e.g [2,1,0]. The size
+ *   of the array is not checked. Must be at least equal to the dimensions of `self`
+ *
+ * @return A new Tensor view (sharing underlying memory with `self`)
+ *
+ * @note This function creates a new tensor. Don't forget to free it as well as
+ *   the original to avoid leaking memory!
+ */
+EXPORT_C torch_tensor_t torch_tensor_permute(const torch_tensor_t self,
+                                             const int64_t dims[]);
+
+// =============================================================================
 // --- Operator overloads acting on tensors
 // =============================================================================
+
+/**
+ * Shallow copy a tensor
+ *
+ * Mimics the semantics of `libtorch` assignments to lvalues.
+ * At the end `to` and `from` will use (alias) the same underlying data
+ *
+ * @param to will be associated to a shallow copy of `from`
+ * @param from source
+ *
+ */
+EXPORT_C void torch_tensor_shallow_copy(torch_tensor_t *to, const torch_tensor_t from);
 
 /**
  * Overloads the assignment operator for Torch Tensor
