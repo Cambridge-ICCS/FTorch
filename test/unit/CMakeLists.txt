@@ -15,13 +15,14 @@ message(STATUS "Building with Fortran PyTorch coupling")
 
 find_package(PFUNIT REQUIRED)
 
+# Module containing common fixtures
 add_pfunit_ctest(
   fixtures TEST_SOURCES
   fixtures.pf LINK_LIBRARIES FTorch::ftorch)
-# install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mod/fixtures/fixtures.mod"
-#         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
+# FIXME: Avoid the following hack
 execute_process(
-  COMMAND mv "${CMAKE_CURRENT_BINARY_DIR}/mod/fixtures/fixtures.mod" .
+  COMMAND mv "${CMAKE_CURRENT_BINARY_DIR}/mod/fixtures/fixtures.mod"
+             "${CMAKE_CURRENT_BINARY_DIR}/fixtures.mod"
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
 )
 

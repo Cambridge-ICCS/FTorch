@@ -5,11 +5,11 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module unittest_model_forward
-  use fixtures, only: TestParametersType
   use funit
   use ftorch, only: torch_kCPU, torch_kFloat32, torch_model, torch_model_load, &
                     torch_model_forward, torch_tensor
   use ftorch_test_utils, only: assert_allclose
+  use fixtures, only: TestCaseType, get_parameters_short, get_parameters_requires_grad
   use, intrinsic :: iso_fortran_env, only : sp => real32
   use iso_c_binding, only: c_int64_t
 
@@ -29,46 +29,7 @@ module unittest_model_forward
 
   character(len=256), parameter :: filename = "test_model.pt"
 
-  ! Typedef for a test case with a particular set of parameters
-  @testCase(constructor=test_case_constructor)
-  type, extends (ParameterizedTestCase) :: TestCaseType
-    type(TestParametersType) :: param
-  end type TestCaseType
-
 contains
-
-  ! Constructor for the test case type
-  function test_case_constructor(param)
-    type(TestCaseType) :: test_case_constructor
-    type(TestParametersType), intent(in) :: param
-    test_case_constructor%param = param
-  end function test_case_constructor
-
-  ! A minimal fixture for tests with no parameters
-  function get_parameters_short() result(params)
-    type(TestParametersType), allocatable :: params(:)
-    params = [ &
-      TestParametersType(.false.) &
-    ]
-  end function get_parameters_short
-
-  ! A fixture comprised of parameter sets for varying the requires_grad argument
-  function get_parameters_requires_grad() result(params)
-    type(TestParametersType), allocatable :: params(:)
-    params = [ &
-      TestParametersType(.false.), &
-      TestParametersType(.true.) &
-    ]
-  end function get_parameters_requires_grad
-
-  ! Function for representing a parameter set as a string
-  function toString(this) result(string)
-    class(TestParametersType), intent(in) :: this
-    character(:), allocatable :: string
-    character(len=1) :: str
-    write(str,"(l1)") this%requires_grad
-    string = str
-  end function toString
 
   ! Unit test for checking values are propagated correctly through the test model
   @test(testparameters={get_parameters_short()})
