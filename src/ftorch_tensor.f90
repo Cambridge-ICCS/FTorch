@@ -8,7 +8,6 @@
 !    file for details.
 
 module ftorch_tensor
-
   use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
   use, intrinsic :: iso_fortran_env, only: int32
   use ftorch_types, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS, &
@@ -18,10 +17,6 @@ module ftorch_tensor
   implicit none
 
   public
-
-  ! ============================================================================
-  ! --- Derived types and enums
-  ! ============================================================================
 
   !> Type for holding a Torch tensor.
   type torch_tensor
@@ -41,7 +36,7 @@ module ftorch_tensor
   end type torch_tensor
 
   ! ============================================================================
-  ! --- Interfaces for core FTorch procedures
+  ! --- Interfaces for tensor constructors
   ! ============================================================================
 
   !> Interface for directing `torch_tensor_from_array` to possible input types and ranks

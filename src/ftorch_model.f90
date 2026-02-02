@@ -23,7 +23,7 @@ module ftorch_model
 contains
 
   ! ============================================================================
-  ! --- Torch Model API
+  ! --- Procedures for constructing tensors
   ! ============================================================================
 
   !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
@@ -82,6 +82,10 @@ contains
                                logical(is_training_value, c_bool))
   end subroutine torch_model_load
 
+  ! ============================================================================
+  ! --- Procedures for performing inference
+  ! ============================================================================
+
   !> Performs a forward pass of the model with the input tensors
   subroutine torch_model_forward(model, input_tensors, output_tensors, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int, c_loc
@@ -136,6 +140,10 @@ contains
                                    logical(requires_grad_value, c_bool))
   end subroutine torch_model_forward
 
+  ! ============================================================================
+  ! --- Procedures for interrogating tensors
+  ! ============================================================================
+
   !| Prints the parameters associated with a model
   !  NOTE: While viewing parameters in this way can be helpful for small toy models, it will produce
   !        large amounts of output for models with many, large, or high-dimensional parameters. In
@@ -172,6 +180,10 @@ contains
 
     is_training = torch_jit_model_is_training_c(self%p)
   end function torch_model_is_training
+
+  ! ============================================================================
+  ! --- Procedures for deallocating models
+  ! ============================================================================
 
   !> Deallocates a TorchScript model
   subroutine torch_model_delete(model)
