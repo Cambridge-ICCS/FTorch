@@ -15,6 +15,9 @@ message(STATUS "Building with Fortran PyTorch coupling")
 
 find_package(PFUNIT REQUIRED)
 
+# Set up fixtures for the unit tests
+add_subdirectory(fixtures)
+
 # Torch Tensor API on CPU
 add_pfunit_ctest(
   unittest_tensor_constructors_destructors TEST_SOURCES
@@ -37,11 +40,6 @@ add_pfunit_ctest(unittest_tensor_autograd
   TEST_SOURCES unittest_tensor_autograd.pf LINK_LIBRARIES FTorch::ftorch)
 
 # Torch Model API
-execute_process(
-  COMMAND "${Python_EXECUTABLE}"
-          "${CMAKE_CURRENT_SOURCE_DIR}/create_test_model.py"
-  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-)
 add_pfunit_ctest(unittest_model_constructors_destructors
                  TEST_SOURCES unittest_model_constructors_destructors.pf
                  LINK_LIBRARIES FTorch::ftorch)

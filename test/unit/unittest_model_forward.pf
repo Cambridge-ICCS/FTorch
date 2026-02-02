@@ -26,7 +26,7 @@ module unittest_model_forward
   ! All unit tests in this module use float32 precision
   integer, parameter :: dtype = torch_kFloat32
 
-  character(len=256), parameter :: filename = "test_model.pt"
+  character(len=256), parameter :: filename = "fixtures/test_model.pt"
 
   ! Typedef holding a set of parameter values
   @testParameter
