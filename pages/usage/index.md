@@ -28,12 +28,12 @@ ordered_subpage: troubleshooting.md
 
 ### Examples
 
-The [Overview & Generic Example](|page|/examples/generic_example.html) page walks
+The [Overview & Generic Example](|page|/usage/generic_example.html) page walks
 through the process of saving a model from Python and using it within Fortran,
 including how to build and link the code using FTorch to the library.
 This is the best place to start to understand how FTorch works and how to use it.
 
-The [Worked Examples](|page|/examples/worked_examples.html) page summarises the
+The [Worked Examples](|page|/usage/worked_examples.html) page summarises the
 comprehensive set or practical examples included in the FTorch repository.
 These demonstrate how to use FTorch for model coupling, tensor manipulation, with GPU
 acceleration, with MPI, and more.
