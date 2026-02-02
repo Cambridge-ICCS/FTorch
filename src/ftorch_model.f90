@@ -5,22 +5,12 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module ftorch_model
-
-  use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
-  use, intrinsic :: iso_fortran_env, only: int32
-  use ftorch_types, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
+  use ftorch_types, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS, ftorch_int
   use ftorch_tensor, only: torch_tensor
 
   implicit none
 
   public
-
-  ! Set integer size for FTorch library
-  integer, parameter :: ftorch_int = int32
-
-  ! ============================================================================
-  ! --- Derived types and enums
-  ! ============================================================================
 
   !> Type for holding a torch neural net (nn.Module).
   type torch_model

@@ -19,9 +19,6 @@ module ftorch_tensor
 
   public
 
-  ! Set integer size for FTorch library
-  integer, parameter :: ftorch_int = int32
-
   ! ============================================================================
   ! --- Derived types and enums
   ! ============================================================================
