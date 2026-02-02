@@ -5,10 +5,6 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module ftorch
-  implicit none
-
-  public
-
   use ftorch_types, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
   use ftorch_tensor, only: assignment(=), operator(+), operator(-), operator(*), operator(/), &
                            operator(**), torch_tensor, torch_tensor_empty, torch_tensor_zeros, &
@@ -20,6 +16,10 @@ module ftorch
                            torch_tensor_zero, torch_tensor_zero_grad, torch_tensor_print
   use ftorch_model, only: torch_model, torch_model_load, torch_model_forward, torch_model_delete, &
                           torch_model_print_parameters, torch_model_is_training
+
+  implicit none
+
+  public
 
   !> Interface for deleting generic torch objects
   interface torch_delete
