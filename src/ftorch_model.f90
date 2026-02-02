@@ -5,6 +5,7 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module ftorch_model
+  use, intrinsic :: iso_c_binding, only : c_null_ptr, c_ptr
   use ftorch_types, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS, ftorch_int
   use ftorch_tensor, only: torch_tensor
 
@@ -18,6 +19,7 @@ module ftorch_model
   contains
     procedure :: print_parameters => torch_model_print_parameters
     procedure :: is_training => torch_model_is_training
+    final :: torch_model_delete
   end type torch_model
 
 contains
