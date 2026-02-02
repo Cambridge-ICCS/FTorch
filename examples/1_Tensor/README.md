@@ -59,7 +59,7 @@ You will also likely need to add the location of the dynamic library files
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib
 ```
-or `DYLD_LIBRARY_PATH` on mac:  
+or `DYLD_LIBRARY_PATH` on Mac:  
 ```
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:</path/to/library/installation>/lib
 ```

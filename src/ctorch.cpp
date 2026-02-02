@@ -616,6 +616,18 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
   }
 }
 
+void torch_jit_module_print_parameters(const torch_jit_script_module_t module) {
+  auto m = reinterpret_cast<torch::jit::script::Module *>(module);
+  for (const auto &[key, value] : m->named_parameters()) {
+    std::cout << key << ":\n" << value << std::endl;
+  }
+}
+
+bool torch_jit_module_is_training(const torch_jit_script_module_t module) {
+  auto m = reinterpret_cast<torch::jit::script::Module *>(module);
+  return m->is_training();
+}
+
 void torch_jit_module_delete(torch_jit_script_module_t module) {
   auto m = reinterpret_cast<torch::jit::script::Module *>(module);
   delete m;

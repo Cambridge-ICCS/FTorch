@@ -18,6 +18,9 @@ To cite use of this software please refer to
 [Atkinson et al., (2025) DOI:10.21105/joss.07602](https://doi.org/10.21105/joss.07602). See
 [acknowledgment](#authors-and-acknowledgment) below for more details.
 
+For the latest updates and developments, please
+[join the user mailing list](https://www.jiscmail.ac.uk/cgi-bin/webadmin?A0=ftorch-announce).
+
 
 ## Contents
 - [Description](#description)
@@ -62,7 +65,7 @@ See our [presentations page](https://cambridge-iccs.github.io/FTorch/page/commun
 
 ### Dependencies
 
-* CMake >= 3.15
+* CMake >= 3.18
 * Fortran 2008, C++17, and C compilers
 * [LibTorch](https://pytorch.org/cppdocs/installing.html) or [PyTorch](https://pytorch.org/)
 
@@ -204,5 +207,5 @@ for a full list of contributors.
 
 Multiple projects build on FTorch in their work.
 Those we are aware of are listed on the
-[use cases page](https://cambridge-iccs.github.io/FTorch/community/case_studies.html)
+[use cases page](https://cambridge-iccs.github.io/FTorch/page/community/case_studies.html)
 in the online documentation.
