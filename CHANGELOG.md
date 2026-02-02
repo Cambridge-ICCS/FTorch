@@ -42,6 +42,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Improve FTorch's modularisation under the hood. [#508](https://github.com/Cambridge-ICCS/FTorch/pull/508)
 - Bump the minimum CMake version from 3.15 to 3.18, for consistency with what's
   used in PyTorch. [#491](https://github.com/Cambridge-ICCS/FTorch/pull/491)
 - Significant overhaul of the online FORD documentation and reduction of content in the README
