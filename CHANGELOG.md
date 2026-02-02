@@ -11,6 +11,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Add documentation on FTorch's unit testing approach. [#489](https://github.com/Cambridge-ICCS/FTorch/pull/489)
 - Add subroutine for printing parameters associated with a Torch Model
   [#488](https://github.com/Cambridge-ICCS/FTorch/pull/488)
 - Add unit testing for the Torch Model API [#496](https://github.com/Cambridge-ICCS/FTorch/pull/496)

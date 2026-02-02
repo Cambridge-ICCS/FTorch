@@ -10,7 +10,7 @@ program inference
                       torch_delete
 
    ! Import our tools module for testing utils
-   use ftorch_test_utils, only : assert_allclose
+   use ftorch_test_utils, only : allclose
 
    implicit none
 
@@ -88,7 +88,7 @@ program inference
 
       ! Check output tensor matches expected value
       expected = [(2 * (device_index + i), i = 0, 4)]
-      test_pass = assert_allclose(out_data, expected, test_name="MultiGPU")
+      test_pass = allclose(out_data, expected, test_name="MultiGPU")
 
       ! Cleanup
       call torch_delete(model)

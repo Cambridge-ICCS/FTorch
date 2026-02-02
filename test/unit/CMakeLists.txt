@@ -19,25 +19,30 @@ find_package(PFUNIT REQUIRED)
 add_subdirectory(fixtures)
 
 # Torch Tensor API on CPU
-add_pfunit_ctest(
-  unittest_tensor_constructors_destructors TEST_SOURCES
-  unittest_tensor_constructors_destructors.pf LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(unittest_tensor_constructors_destructors
+                 TEST_SOURCES unittest_tensor_constructors_destructors.pf
+                 LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(unittest_tensor_interrogation
-  TEST_SOURCES unittest_tensor_interrogation.pf LINK_LIBRARIES FTorch::ftorch)
+                 TEST_SOURCES unittest_tensor_interrogation.pf
+                 LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(unittest_tensor_manipulation
-  TEST_SOURCES unittest_tensor_manipulation.pf LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(
-  unittest_operator_overloads TEST_SOURCES unittest_tensor_operator_overloads.pf
-  LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(test_operators
-  TEST_SOURCES test_tensor_operators.pf  LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(test_operators_autograd
-  TEST_SOURCES test_tensor_operators_autograd.pf  LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(
-  unittest_operator_overloads_autograd TEST_SOURCES
-  unittest_tensor_operator_overloads_autograd.pf LINK_LIBRARIES FTorch::ftorch)
+                 TEST_SOURCES unittest_tensor_manipulation.pf
+                 LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(unittest_operator_overloads
+                 TEST_SOURCES unittest_tensor_operator_overloads.pf
+                 LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(unittest_operators
+                 TEST_SOURCES unittest_tensor_operators.pf
+                 LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(unittest_operators_autograd
+                 TEST_SOURCES unittest_tensor_operators_autograd.pf
+                 LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(unittest_operator_overloads_autograd
+                 TEST_SOURCES unittest_tensor_operator_overloads_autograd.pf
+                 LINK_LIBRARIES FTorch::ftorch)
 add_pfunit_ctest(unittest_tensor_autograd
-  TEST_SOURCES unittest_tensor_autograd.pf LINK_LIBRARIES FTorch::ftorch)
+                 TEST_SOURCES unittest_tensor_autograd.pf
+                 LINK_LIBRARIES FTorch::ftorch)
 
 # Torch Model API
 add_pfunit_ctest(unittest_model_constructors_destructors
@@ -68,12 +73,10 @@ if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
       message(WARNING "No HIP support")
     endif()
   endif()
-
-  # Torch Tensor API on CUDA
-  add_pfunit_ctest(
-    unittest_tensor_interrogation_cuda TEST_SOURCES
-    unittest_tensor_interrogation_cuda.pf LINK_LIBRARIES FTorch::ftorch)
-  add_pfunit_ctest(
-    test_tensor_manipulation_cuda TEST_SOURCES
-    test_tensor_manipulation_cuda.pf LINK_LIBRARIES FTorch::ftorch)
+  add_pfunit_ctest(unittest_tensor_interrogation_cuda
+                   TEST_SOURCES unittest_tensor_interrogation_cuda.pf
+                   LINK_LIBRARIES FTorch::ftorch)
+  add_pfunit_ctest(unittest_tensor_manipulation_cuda
+                   TEST_SOURCES unittest_tensor_manipulation_cuda.pf
+                   LINK_LIBRARIES FTorch::ftorch)
 endif()

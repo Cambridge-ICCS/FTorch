@@ -8,7 +8,7 @@ module unittest_tensor_constructors_destructors
   use funit
   use ftorch, only: assignment(=), torch_kFloat32, torch_kCPU, torch_tensor, &
                     torch_tensor_delete, torch_tensor_from_array
-  use ftorch_test_utils, only: assert_allclose
+  use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use iso_c_binding, only: c_associated, c_int64_t
 
@@ -159,10 +159,7 @@ contains
 
     ! Check that the tensor values are all zero
     expected(:,:) = 0.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_zeros")) then
-      print *, "Error :: incorrect output from torch_tensor_zeros subroutine"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_zeros"))
 
   end subroutine test_torch_tensor_zeros
 
@@ -204,10 +201,7 @@ contains
 
     ! Check that the tensor values are all one
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_ones")) then
-      print *, "Error :: incorrect output from torch_tensor_ones subroutine"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_ones"))
 
   end subroutine test_torch_tensor_ones
 
@@ -248,10 +242,7 @@ contains
     tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    if (.not. assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_array")) then
-      print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, in_data, test_name="test_torch_tensor_from_array"))
 
   end subroutine test_torch_from_array_1d
 
@@ -303,10 +294,7 @@ contains
 
     ! Compare the data in the tensor to the (reordered) input data
     expected(:,:) = reshape(in_data, [2,3], order=tensor_layout)
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")) then
-      print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_from_array"))
 
   end subroutine test_torch_from_array_2d
 
@@ -358,10 +346,7 @@ contains
 
     ! Compare the data in the tensor to the (reordered) input data
     expected(:,:,:) = reshape(in_data, [1,2,3], order=tensor_layout)
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_from_array")) then
-      print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_from_array"))
 
   end subroutine test_torch_from_array_3d
 
@@ -402,10 +387,7 @@ contains
     tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    if (.not. assert_allclose(out_data, in_data, test_name="test_torch_tensor_from_blob")) then
-      print *, "Error :: incorrect output from torch_tensor_from_array subroutine"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, in_data, test_name="test_torch_tensor_from_blob"))
 
   end subroutine test_torch_from_blob
 
