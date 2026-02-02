@@ -11,7 +11,9 @@ module ftorch_tensor
 
   use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
   use, intrinsic :: iso_fortran_env, only: int32
-  use ftorch_types, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
+  use ftorch_types, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS, &
+                          torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
+                          torch_kFloat32, torch_kFloat64, ftorch_int
 
   implicit none
 
@@ -40,20 +42,6 @@ module ftorch_tensor
     procedure :: print => torch_tensor_print
     final :: torch_tensor_delete
   end type torch_tensor
-
-  !| Enumerator for Torch data types
-  !  From c_torch.h (torch_data_t)
-  !  Note that 0 `torch_kUInt8` and 5 `torch_kFloat16` are not sypported in Fortran
-  enum, bind(c)
-    enumerator :: torch_kUInt8 = 0  ! not supported in Fortran
-    enumerator :: torch_kInt8 = 1
-    enumerator :: torch_kInt16 = 2
-    enumerator :: torch_kInt32 = 3
-    enumerator :: torch_kInt64 = 4
-    enumerator :: torch_kFloat16 = 5  ! not supported in Fortran
-    enumerator :: torch_kFloat32 = 6
-    enumerator :: torch_kFloat64 = 7
-  end enum
 
   ! ============================================================================
   ! --- Interfaces for core FTorch procedures
