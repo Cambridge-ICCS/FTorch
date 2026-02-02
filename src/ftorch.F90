@@ -388,7 +388,7 @@ contains
   !  This routine will take an (i, j, k) array and return an (k, j, i) tensor.
   subroutine torch_tensor_from_blob(tensor, data, ndims, tensor_shape, layout, dtype, &
                                     device_type, device_index, &
-                                    requires_grad)
+                                    requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     type(c_ptr), intent(in)         :: data       !! Pointer to data
@@ -399,26 +399,14 @@ contains
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in)   :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     integer(c_int)                  :: i                    !! loop index
+    integer(c_int64_t)              :: torch_shape(size(tensor_shape))       !! Shape of the tensor in torch based on `layout`
     integer(c_int64_t)              :: strides(ndims)       !! Strides for accessing data
     integer(c_int)                  :: device_index_value   !! device index used
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
-
-    if (.not. present(requires_grad)) then
-      requires_grad_value = logical(.false., c_bool)
-    else
-      requires_grad_value = requires_grad
-    end if
-
-    strides(:) = 0
-    do i = 1, ndims
-      if (i == 1) then
-        strides(layout(i)) = 1
-      else
-        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
-      end if
-    end do
+    logical                         :: permute_shape_value  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! Process optional arguments
     if (present(device_index)) then
@@ -429,14 +417,47 @@ contains
       device_index_value = 0
     endif
 
-    tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype,    &
+    if (.not. present(requires_grad)) then
+      requires_grad_value = logical(.false., c_bool)
+    else
+      requires_grad_value = requires_grad
+    end if
+
+    if (.not. present(permute_shape)) then
+      permute_shape_value = .false.
+    else
+      permute_shape_value = permute_shape
+    end if
+
+    if (permute_shape_value) then
+      ! Permute shape of torch tensor to match layout requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = tensor_shape(layout(i))
+      end do
+    else
+      ! Keep shape same as fortran despite permuting indices
+      torch_shape = tensor_shape
+    end if
+
+    ! Set strides to populate elements based on torch shape and layout
+    strides(:) = 0
+    do i = 1, ndims
+      if (i == 1) then
+        strides(layout(i)) = 1
+      else
+        strides(layout(i)) = strides(layout(i - 1)) * torch_shape(layout(i - 1))
+      end if
+    end do
+
+    tensor%p = torch_from_blob_c(data, ndims, torch_shape, strides, dtype,    &
                                  device_type, device_index_value,              &
                                  requires_grad_value)
   end subroutine torch_tensor_from_blob
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -449,6 +470,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
@@ -459,13 +481,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int8_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -478,6 +501,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
@@ -488,13 +512,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int8_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -507,6 +532,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
@@ -517,13 +543,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int8_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -536,6 +563,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
@@ -546,13 +574,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int8_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int8`
   subroutine torch_tensor_from_array_int8_5d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
@@ -565,6 +594,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
@@ -575,13 +605,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int8_5d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -594,6 +625,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
@@ -604,13 +636,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int16_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -623,6 +656,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
@@ -633,13 +667,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int16_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -652,6 +687,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
@@ -662,13 +698,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int16_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -681,6 +718,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
@@ -691,13 +729,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int16_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int16`
   subroutine torch_tensor_from_array_int16_5d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
@@ -710,6 +749,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
@@ -720,13 +760,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int16_5d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -739,6 +780,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
@@ -749,13 +791,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int32_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -768,6 +811,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
@@ -778,13 +822,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int32_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -797,6 +842,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
@@ -807,13 +853,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int32_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -826,6 +873,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
@@ -836,13 +884,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int32_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int32`
   subroutine torch_tensor_from_array_int32_5d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
@@ -855,6 +904,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
@@ -865,13 +915,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int32_5d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -884,6 +935,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
@@ -894,13 +946,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int64_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -913,6 +966,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
@@ -923,13 +977,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int64_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -942,6 +997,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
@@ -952,13 +1008,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int64_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -971,6 +1028,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
@@ -981,13 +1039,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int64_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int64`
   subroutine torch_tensor_from_array_int64_5d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
@@ -1000,6 +1059,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
@@ -1010,13 +1070,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int64_5d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1029,6 +1090,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
@@ -1039,13 +1101,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real32_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1058,6 +1121,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
@@ -1068,13 +1132,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real32_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1087,6 +1152,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
@@ -1097,13 +1163,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real32_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1116,6 +1183,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
@@ -1126,13 +1194,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real32_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `real32`
   subroutine torch_tensor_from_array_real32_5d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
@@ -1145,6 +1214,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
@@ -1155,13 +1225,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real32_5d
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_1d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -1174,6 +1245,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
@@ -1184,13 +1256,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real64_1d
 
   !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_2d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -1203,6 +1276,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
@@ -1213,13 +1287,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real64_2d
 
   !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_3d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -1232,6 +1307,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
@@ -1242,13 +1318,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real64_3d
 
   !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_4d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -1261,6 +1338,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
@@ -1271,13 +1349,14 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real64_4d
 
   !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `real64`
   subroutine torch_tensor_from_array_real64_5d(tensor, data_in, layout, &
-                                                        device_type, device_index, requires_grad)
+                                                        device_type, device_index, &
+                                                        requires_grad, permute_shape)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
@@ -1290,6 +1369,7 @@ contains
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: permute_shape  !! Whether to permute the shape ('transpose') to match the `layout`
 
     ! local data
     integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
@@ -1300,7 +1380,7 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
                                 layout, dtype, device_type, device_index, &
-                                requires_grad)
+                                requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real64_5d
 
@@ -1327,14 +1407,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int8_1d_default_layout
 
@@ -1357,14 +1440,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int8_2d_default_layout
 
@@ -1387,14 +1473,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int8_3d_default_layout
 
@@ -1417,14 +1506,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int8_4d_default_layout
 
@@ -1447,14 +1539,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int8_5d_default_layout
 
@@ -1477,14 +1572,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int16_1d_default_layout
 
@@ -1507,14 +1605,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int16_2d_default_layout
 
@@ -1537,14 +1638,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int16_3d_default_layout
 
@@ -1567,14 +1671,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int16_4d_default_layout
 
@@ -1597,14 +1704,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int16_5d_default_layout
 
@@ -1627,14 +1737,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int32_1d_default_layout
 
@@ -1657,14 +1770,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int32_2d_default_layout
 
@@ -1687,14 +1803,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int32_3d_default_layout
 
@@ -1717,14 +1836,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int32_4d_default_layout
 
@@ -1747,14 +1869,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int32_5d_default_layout
 
@@ -1777,14 +1902,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int64_1d_default_layout
 
@@ -1807,14 +1935,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int64_2d_default_layout
 
@@ -1837,14 +1968,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int64_3d_default_layout
 
@@ -1867,14 +2001,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int64_4d_default_layout
 
@@ -1897,14 +2034,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_int64_5d_default_layout
 
@@ -1927,14 +2067,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real32_1d_default_layout
 
@@ -1957,14 +2100,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real32_2d_default_layout
 
@@ -1987,14 +2133,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real32_3d_default_layout
 
@@ -2017,14 +2166,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real32_4d_default_layout
 
@@ -2047,14 +2199,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real32_5d_default_layout
 
@@ -2077,14 +2232,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real64_1d_default_layout
 
@@ -2107,14 +2265,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real64_2d_default_layout
 
@@ -2137,14 +2298,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real64_3d_default_layout
 
@@ -2167,14 +2331,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real64_4d_default_layout
 
@@ -2197,14 +2364,17 @@ contains
     ! local data
     integer(ftorch_int)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    logical, parameter        :: permute_shape = .false.  !! default layout requires option permute_shape false
     integer :: i
 
     ! Set the default tensor layout
+    ! `permute shape` also set as parameter `.false.` for explicit intent
     do i = 1, ndims
       layout(i) = i
     end do
 
-    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, requires_grad)
+    call torch_tensor_from_array(tensor, data_in, layout, device_type, device_index, &
+                                 requires_grad, permute_shape)
 
   end subroutine torch_tensor_from_array_real64_5d_default_layout
 
