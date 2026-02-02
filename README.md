@@ -18,6 +18,9 @@ To cite use of this software please refer to
 [Atkinson et al., (2025) DOI:10.21105/joss.07602](https://doi.org/10.21105/joss.07602). See
 [acknowledgment](#authors-and-acknowledgment) below for more details.
 
+For the latest updates and developments, please
+[join the user mailing list](https://www.jiscmail.ac.uk/cgi-bin/webadmin?A0=ftorch-announce).
+
 
 ## Contents
 - [Description](#description)
