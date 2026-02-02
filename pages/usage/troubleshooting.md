@@ -10,6 +10,7 @@ If you are experiencing problems building or using FTorch please see below for g
 - [Common Errors](#common-errors)
     - [No specific subroutine](#no-specific-subroutine)
     - [Segmentation faults](#segmentation-faults)
+- [Common warnings](#common-warnings)
 
 
 ### Usage
@@ -95,3 +96,22 @@ of an equals sign, the overloaded assignment operator should be triggered.
 As such, if you aren't using the bare `use ftorch` import then you should ensure you
 specify `use ftorch, only: assignment(=)` (as well as any other module members you
 require). See the [tensor documentation](|page|/usage/tensor.html) for more details.
+
+
+### Common warnings
+
+#### Finalizer with Fortran 2008
+
+If you are building FTorch with gfortran and are specifying the Fortran 2008
+standard (e.g., with the compiler flag `-std=f2008` or by default) then you may
+get compiler warnings of the form:
+```
+Warning: The structure constructor at (1) has been finalized. This feature was removed by f08/0011. Use -std=f2018 or -std=gnu to eliminate the finalization.
+```
+These warn that the finalizer of the [[ftorch(module):torch_tensor(type)]]
+derived type is triggered when a tensor goes out of scope, despite the fact that
+this feature was removed from the 2008 standard. That is, the
+[[ftorch(module):torch_tensor_delete(subroutine)]] subroutine is called
+so that the associated memory is automatically freed. This is the behaviour that
+we want so nothing needs to be done. See the
+[tensor documentation](|page|/usage/tensor.html#deallocation) for more details.
