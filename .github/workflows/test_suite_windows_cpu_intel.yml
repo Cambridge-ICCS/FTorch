@@ -71,19 +71,23 @@ jobs:
         shell: cmd
         run: |
           call ftorch\Scripts\activate
-          rem find torch location
-          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
+          rem Find torch location
+          set TORCH_PATH=
+          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
+          rem Set install location
+          set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
           cmake ^
             -Bbuild ^
             -G "NMake Makefiles" ^
             -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
             -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" ^
-            -DCMAKE_PREFIX_PATH=%torch_path% ^
+            -DCMAKE_PREFIX_PATH=%TORCH_PATH% ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DCMAKE_Fortran_COMPILER=ifx ^
             -DCMAKE_C_COMPILER=icx ^
             -DCMAKE_CXX_COMPILER=icx ^
-            -DCMAKE_BUILD_TESTS=TRUE
+            -DCMAKE_BUILD_TESTS=TRUE ^
+            -DCMAKE_INSTALL_PREFIX=%FTORCH_INSTALL_DIR%
           cmake --build build
           cmake --install build
 
@@ -91,9 +95,10 @@ jobs:
         shell: cmd
         run: |
           call ftorch\Scripts\activate
-          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
+          set TORCH_PATH=
+          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
           set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
-          set PATH=%torch_path%\torch\lib;%PATH%
+          set PATH=%TORCH_PATH%\torch\lib;%PATH%
           cd build
           ctest --verbose --tests-regex example1
           ctest --verbose --tests-regex example2
