@@ -1,4 +1,4 @@
-# Example 5 - Looping
+# Example 6 - Looping
 
 So far many of the examples have been somewhat trivial, reading in a net and calling it
 once to demonstrate the inference process.

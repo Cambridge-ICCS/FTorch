@@ -3,30 +3,14 @@ name: Test suite (Windows CPU Intel)
 
 # Controls when the workflow will run
 on:
-  # TODO: Re-enable when fixing the current issue with the Windows CI (see #300).
-  # # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
-  # push:
-  #   branches: [ "main" ]
-  #
-  # # Triggers the workflow on pushes to open pull requests with code changes
-  # pull_request:
-  #   paths:
-  #     # This workflow
-  #     - '.github/workflows/test_suite_windows_cpu_intel.yml'
-  #     # Source files
-  #     - '**.c'
-  #     - '**.cpp'
-  #     - '**.fypp'
-  #     - '**.f90'
-  #     - '**.F90'
-  #     - '**.py'
-  #     # Unit tests
-  #     - '**.pf'
-  #     # Build system
-  #     - '**CMakeLists.txt'
-  #     - '**requirements.txt'
-  #     # Data
-  #     - '**data/*'
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with changes to this workflow
+  pull_request:
+    paths:
+      - '.github/workflows/test_suite_windows_cpu_intel.yml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -78,17 +62,22 @@ jobs:
       - name: Install PyTorch
         shell: cmd
         run: |
+          pip install --upgrade pip
+          python -m venv ftorch
+          call ftorch\Scripts\activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
       - name: Build FTorch
         shell: cmd
         run: |
+          call ftorch\Scripts\activate
           rem find torch location
           for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           cmake ^
             -Bbuild ^
             -G "NMake Makefiles" ^
             -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
+            -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" ^
             -DCMAKE_PREFIX_PATH=%torch_path% ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DCMAKE_Fortran_COMPILER=ifx ^
@@ -101,6 +90,7 @@ jobs:
       - name: Integration tests
         shell: cmd
         run: |
+          call ftorch\Scripts\activate
           for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
           set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
           set PATH=%torch_path%\torch\lib;%PATH%
