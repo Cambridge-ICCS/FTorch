@@ -159,7 +159,10 @@ module ftorch_test_utils
     #:endfor
 
     #:for PREC in PRECISIONS
-    !> Alias for isclose_${PREC}$
+    !| Alias for isclose_${PREC}$
+    !
+    !  This version is deprecated and is only included for backwards compatibility. It will be
+    !  removed in FTorch version 2.0.
     function assert_isclose_${PREC}$(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                      !! Name of the test being run
@@ -180,7 +183,10 @@ module ftorch_test_utils
 
     #:for PREC in PRECISIONS
     #:for RANK in RANKS
-    !> Alias for allclose_${PREC}$_${RANK}$d
+    !| Alias for allclose_${PREC}$_${RANK}$d
+    !
+    !  This version is deprecated and is only included for backwards compatibility. It will be
+    !  removed in FTorch version 2.0.
     function assert_allclose_${PREC}$_${RANK}$d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
