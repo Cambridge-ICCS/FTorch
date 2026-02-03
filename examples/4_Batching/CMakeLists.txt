@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.18...3.31)
 # target_sources is run
 cmake_policy(SET CMP0076 NEW)
 
-set(PROJECT_NAME MultiIONetExample)
+set(PROJECT_NAME BatchingNet)
 
 project(${PROJECT_NAME} LANGUAGES Fortran)
 
@@ -30,16 +30,16 @@ execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
                         ${PROJECT_SOURCE_DIR}/requirements.txt)
 
 # Fortran example
-add_executable(multiionet_infer_fortran multiionet_infer_fortran.f90)
-target_link_libraries(multiionet_infer_fortran PRIVATE FTorch::ftorch)
+add_executable(batchingnet_infer_fortran batchingnet_infer_fortran.f90)
+target_link_libraries(batchingnet_infer_fortran PRIVATE FTorch::ftorch)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME example4_multiionet
-           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/multiionet.py)
+  add_test(NAME example4_batchingnet
+           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/batching_demo.py)
 
   # 2. Check the model is saved to file in the expected location with the
   #   pt2ts.py script
@@ -49,24 +49,16 @@ if(CMAKE_BUILD_TESTS)
             ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-  # 3. Check the model can be loaded from file and run in Python and that its
-  #   outputs meet expectations
+  # 3. Load the model and run in Fortran checking that outputs meet expectations
   add_test(
-    NAME example4_multiionet_infer_python
+    NAME example4_batchingnet_infer_fortran
     COMMAND
-      ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/multiionet_infer_python.py
-      --filepath ${PROJECT_BINARY_DIR}
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-
-  # 4. Check the model can be loaded from file and run in Fortran and that its
-  #   outputs meet expectations
-  add_test(
-    NAME example4_multiionet_infer_fortran
-    COMMAND
-      multiionet_infer_fortran ${PROJECT_BINARY_DIR}/saved_multiio_model_cpu.pt
+      batchingnet_infer_fortran
+      ${PROJECT_BINARY_DIR}/saved_batchingnet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
-    example4_multiionet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-    "MultiIO example ran successfully")
+    example4_batchingnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "BatchingNet Fortran example ran successfully")
 endif()
+

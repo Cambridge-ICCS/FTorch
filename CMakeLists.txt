@@ -12,9 +12,7 @@ project(
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 if(WIN32)
-  message(
-    WARNING "Windows builds are untested, so functionality is not guaranteed")
-  # if building on windows we need to make sure the symbols are exported
+  # If building on Windows we need to make sure the symbols are exported
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif()
 
@@ -133,9 +131,14 @@ add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
 set_target_properties(${LIB_NAME} PROPERTIES PUBLIC_HEADER "src/ctorch.h")
 # cmake-format: on
 # Link TorchScript
-# NOTE: Linking stdc++ for downstream targets fixes ctorch link error
-target_link_libraries(${LIB_NAME}
-  PRIVATE ${TORCH_LIBRARIES} INTERFACE stdc++)
+if(UNIX)
+  # NOTE: Linking stdc++ for downstream targets fixes ctorch link error on
+  #       Unix-like systems
+  target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES} INTERFACE stdc++)
+else()
+  # NOTE: stdc++ is not available on Windows
+  target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES})
+endif()
 # Include the Fortran mod files in the library
 target_include_directories(
   ${LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
