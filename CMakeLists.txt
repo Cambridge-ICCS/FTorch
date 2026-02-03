@@ -177,6 +177,8 @@ if(NOT DEFINED CMAKE_INSTALL_MODULEDIR)
   )
 endif()
 
+install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch.mod"
+        DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
 install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_types.mod"
         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
 install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_tensor.mod"
