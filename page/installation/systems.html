@@ -161,7 +161,8 @@
 <h3 id="windows">Windows</h3>
 <p>If possible we recommend using the <a href="https://learn.microsoft.com/en-us/windows/wsl/">Windows Subsystem for Linux</a> (WSL) to build
 the library. In this case the build process is the same as for a Linux environment.</p>
-<p>To build in native Windows using Visual Studio and the Intel Fortran resources the following additional dependencies are required:</p>
+<p>Building in Windows itself can be done using Visual Studio and the Intel Fortran
+resources. The following additional dependencies are also required:</p>
 <ul>
 <li><a href="https://visualstudio.microsoft.com/">Visual Studio</a> ensuring C++ tools are selected and installed.</li>
 <li><a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html">Intel OneAPI Basetoolkit</a></li>
@@ -189,61 +190,80 @@ with the addition of <code>-G "NMake Makefiles"</code>.</p>
 <p>Note: <em>In a Windows environment administrator privileges are required for the default install location.</em></p>
 </blockquote>
 <p>The following is an example <code>cmd</code> script that installs FTorch and runs the integration tests. It assumes you have already
-installed CMake, git, the Intel compilers, and Visual Studio.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">rem</span><span class="w"> </span><span class="n">disable</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">now</span>
-<span class="n">ECHO</span><span class="w"> </span><span class="n">ON</span>
+installed CMake, git, the Intel compilers, and Visual Studio. There are a few
+places where output is turned on or off using the <code>ECHO</code> command. If you are
+experiencing issues with the install then it may be helpful to set <code>ECHO ON</code>
+throughout.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">rem</span><span class="w"> </span><span class="n">Disable</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">now</span>
+<span class="n">ECHO</span><span class="w"> </span><span class="n">OFF</span>
 
-<span class="n">rem</span><span class="w"> </span><span class="nb">load</span><span class="w"> </span><span class="n">intel</span><span class="w"> </span><span class="n">compilers</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Load</span><span class="w"> </span><span class="n">intel</span><span class="w"> </span><span class="n">compilers</span>
 <span class="n">call</span><span class="w"> </span><span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
 
-<span class="n">rem</span><span class="w"> </span><span class="n">download</span><span class="w"> </span><span class="n">ftorch</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Download</span><span class="w"> </span><span class="n">ftorch</span>
 <span class="n">git</span><span class="w"> </span><span class="n">clone</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Cambridge</span><span class="o">-</span><span class="n">ICCS</span><span class="o">/</span><span class="n">FTorch</span><span class="o">.</span><span class="n">git</span>
 <span class="n">cd</span><span class="w"> </span><span class="n">FTorch</span>
 
-<span class="n">rem</span><span class="w"> </span><span class="n">make</span><span class="w"> </span><span class="n">venv</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Make</span><span class="w"> </span><span class="n">virtual</span><span class="w"> </span><span class="n">environment</span>
 <span class="n">python</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="n">venv</span><span class="w"> </span><span class="o">.</span><span class="n">ftorch</span>
 
-<span class="n">rem</span><span class="w"> </span><span class="n">activate</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">environment</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Activate</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">virtual</span><span class="w"> </span><span class="n">environment</span>
 <span class="n">call</span><span class="w"> </span><span class="o">.</span><span class="n">ftorch</span>\<span class="n">Scripts</span>\<span class="n">activate</span>
 
-<span class="n">rem</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">torch</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Install</span><span class="w"> </span><span class="n">torch</span>
 <span class="n">pip</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">torch</span><span class="w"> </span><span class="n">torchvision</span><span class="w"> </span><span class="n">torchaudio</span>
 
-<span class="n">rem</span><span class="w"> </span><span class="n">enable</span><span class="w"> </span><span class="n">output</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Enable</span><span class="w"> </span><span class="n">output</span>
 <span class="n">ECHO</span><span class="w"> </span><span class="n">ON</span>
 
-<span class="n">rem</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">cmake</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="n">build</span><span class="w"> </span><span class="n">scripts</span>
-<span class="n">rem</span><span class="w"> </span><span class="p">(</span><span class="n">update</span><span class="w"> </span><span class="n">CMAKE_PREFIX_PATH</span><span class="w"> </span><span class="n">depending</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">location</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">ftorch</span><span class="w"> </span><span class="n">venv</span><span class="p">)</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Find</span><span class="w"> </span><span class="n">Torch</span><span class="w"> </span><span class="n">location</span>
+<span class="k">for</span><span class="w"> </span><span class="o">/</span><span class="n">f</span><span class="w"> </span><span class="s2">&quot;tokens=2*&quot;</span><span class="w"> </span><span class="o">%%</span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;pip show torch ^| findstr /R &quot;^Location&quot;&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">torch_path</span><span class="o">=%%</span><span class="n">i</span>
+
+<span class="n">rem</span><span class="w"> </span><span class="n">Run</span><span class="w"> </span><span class="n">CMake</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="n">build</span><span class="w"> </span><span class="n">scripts</span>
+<span class="n">rem</span><span class="w"> </span><span class="p">(</span><span class="n">Update</span><span class="w"> </span><span class="n">CMAKE_PREFIX_PATH</span><span class="w"> </span><span class="n">depending</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">location</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">ftorch</span><span class="w"> </span><span class="n">venv</span><span class="p">)</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">Bbuild</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_FLAGS</span><span class="o">=</span><span class="s2">&quot;/fpscomp:logicals&quot;</span><span class="w"> </span><span class="o">^</span>
-<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\Quickemu\Downloads\FTorch\.ftorch\Lib\site-packages&quot;</span><span class="w"> </span><span class="o">^</span>
+<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;%torch_path%&quot;</span><span class="w"> </span><span class="o">^</span>
 <span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">^</span>
 <span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TESTS</span><span class="o">=</span><span class="n">True</span><span class="w"> </span><span class="o">^</span>
-<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_COMPILER</span><span class="o">=</span><span class="n">ifx</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_C_COMPILER</span><span class="o">=</span><span class="n">icx</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_CXX_COMPILER</span><span class="o">=</span><span class="n">icx</span>
+<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_COMPILER</span><span class="o">=</span><span class="n">ifx</span><span class="w"> </span><span class="o">^</span>
+<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_C_COMPILER</span><span class="o">=</span><span class="n">icx</span><span class="w"> </span><span class="o">^</span>
+<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_CXX_COMPILER</span><span class="o">=</span><span class="n">icx</span>
+<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_FLAGS</span><span class="o">=</span><span class="s2">&quot;/fpscomp:logicals&quot;</span><span class="w"> </span><span class="o">^</span>
+<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_CXX_FLAGS</span><span class="o">=</span><span class="s2">&quot;/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH&quot;</span>
 
-<span class="n">rem</span><span class="w"> </span><span class="n">build</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">ftorch</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Build</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">FTorch</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">build</span><span class="w"> </span><span class="n">build</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">install</span><span class="w"> </span><span class="n">build</span>
 
-<span class="n">rem</span><span class="w"> </span><span class="n">quit</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">raises</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">error</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Quit</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">raises</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">error</span>
 <span class="k">if</span><span class="w"> </span><span class="o">%</span><span class="n">errorlevel</span><span class="o">%</span><span class="w"> </span><span class="n">neq</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">exit</span><span class="w"> </span><span class="o">/</span><span class="n">b</span><span class="w"> </span><span class="o">%</span><span class="n">errorlevel</span><span class="o">%</span>
 
 <span class="n">ECHO</span><span class="w"> </span><span class="n">OFF</span>
-<span class="n">rem</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="n">ftorch</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">pytorch</span><span class="w"> </span><span class="n">libs</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">path</span>
-<span class="n">rem</span><span class="w"> </span><span class="p">(</span><span class="n">update</span><span class="w"> </span><span class="n">these</span><span class="w"> </span><span class="n">depending</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">where</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">installed</span><span class="w"> </span><span class="n">ftorch</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">where</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">created</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">venv</span><span class="p">)</span>
-<span class="n">set</span><span class="w"> </span><span class="n">PATH</span><span class="o">=</span><span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="n">Quickemu</span>\<span class="n">Downloads</span>\<span class="n">FTorch</span>\<span class="o">.</span><span class="n">ftorch</span>\<span class="n">Lib</span>\<span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="p">;</span><span class="o">%</span><span class="n">PATH</span><span class="o">%</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Add</span><span class="w"> </span><span class="n">FTorch</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">PyTorch</span><span class="w"> </span><span class="n">libs</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">path</span>
+<span class="n">rem</span><span class="w"> </span><span class="p">(</span><span class="n">Update</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">depending</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">where</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">installed</span><span class="w"> </span><span class="n">FTorch</span><span class="p">)</span>
 <span class="n">set</span><span class="w"> </span><span class="n">PATH</span><span class="o">=</span><span class="n">C</span><span class="p">:</span>\<span class="n">Program</span><span class="w"> </span><span class="n">Files</span><span class="w"> </span><span class="p">(</span><span class="n">x86</span><span class="p">)</span>\<span class="n">FTorch</span>\<span class="n">bin</span><span class="p">;</span><span class="o">%</span><span class="n">PATH</span><span class="o">%</span>
-<span class="n">set</span><span class="w"> </span><span class="n">PATH</span><span class="o">=</span><span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="n">Quickemu</span>\<span class="n">Downloads</span>\<span class="n">FTorch</span>\<span class="o">.</span><span class="n">ftorch</span>\<span class="n">Lib</span>\<span class="n">site</span><span class="o">-</span><span class="n">packages</span>\<span class="n">torch</span>\<span class="n">lib</span><span class="p">;</span><span class="o">%</span><span class="n">PATH</span><span class="o">%</span>
+<span class="n">set</span><span class="w"> </span><span class="n">PATH</span><span class="o">=%</span><span class="n">torch_path</span><span class="o">%</span><span class="p">;</span><span class="o">%</span><span class="n">PATH</span><span class="o">%</span>
+<span class="n">set</span><span class="w"> </span><span class="n">PATH</span><span class="o">=%</span><span class="n">torch_path</span><span class="o">%</span>\<span class="n">torch</span>\<span class="n">lib</span><span class="p">;</span><span class="o">%</span><span class="n">PATH</span><span class="o">%</span>
 
-<span class="n">cd</span><span class="w"> </span><span class="o">..</span>
-
-<span class="n">rem</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">integration</span><span class="w"> </span><span class="n">tests</span>
+<span class="n">rem</span><span class="w"> </span><span class="n">Run</span><span class="w"> </span><span class="n">integration</span><span class="w"> </span><span class="n">tests</span>
 <span class="n">ECHO</span><span class="w"> </span><span class="n">ON</span>
-<span class="n">run_integration_tests</span><span class="o">.</span><span class="n">bat</span>
+<span class="n">ctest</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="o">--</span><span class="n">tests</span><span class="o">-</span><span class="n">regex</span><span class="w"> </span><span class="n">example1</span>
+<span class="n">ctest</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="o">--</span><span class="n">tests</span><span class="o">-</span><span class="n">regex</span><span class="w"> </span><span class="n">example2</span>
+<span class="n">ctest</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="o">--</span><span class="n">tests</span><span class="o">-</span><span class="n">regex</span><span class="w"> </span><span class="n">example3</span>
+<span class="n">ctest</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="o">--</span><span class="n">tests</span><span class="o">-</span><span class="n">regex</span><span class="w"> </span><span class="n">example4</span>
+<span class="n">ctest</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="o">--</span><span class="n">tests</span><span class="o">-</span><span class="n">regex</span><span class="w"> </span><span class="n">example8</span>
 <span class="k">if</span><span class="w"> </span><span class="o">%</span><span class="n">errorlevel</span><span class="o">%</span><span class="w"> </span><span class="n">neq</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">exit</span><span class="w"> </span><span class="o">/</span><span class="n">b</span><span class="w"> </span><span class="o">%</span><span class="n">errorlevel</span><span class="o">%</span>
 </code></pre></div>
 
-<p>We recommend Windows users review the Windows CI workflow (<code>.github/workflows/test_suite_windows.yml</code>) for more
-information, as this provides another example of how to build and run FTorch and its integration tests.</p>
+<p>Here the <code>/fpscomp:logicals</code> flag is used to ensure Fortran logicals are
+compatible with those used by PyTorch. The
+<code>/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH</code> flag is used to suppress warnings
+related to mismatched compiler versions between the Intel compilers and
+those used to build LibTorch.</p>
+<p>We recommend Windows users review the Windows continuous integration workflow
+(<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_windows_cpu_intel.yml"><code>.github/workflows/test_suite_windows_cpu_intel.yml</code></a>)
+for more information, as this provides another example of how to build and run
+FTorch and its integration tests.</p>
 <p>If using powershell the setvars and build commands become:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">cmd</span><span class="w"> </span><span class="o">/</span><span class="n">k</span><span class="w"> </span><span class="s1">&#39;&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot; &amp;&amp; powershell&#39;</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\&lt;path-to-libtorch-download&gt;\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
