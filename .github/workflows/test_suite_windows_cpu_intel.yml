@@ -97,7 +97,8 @@ jobs:
           call ftorch\Scripts\activate
           set TORCH_PATH=
           for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
-          set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
+          set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
+          set PATH=%FTORCH_INSTALL_DIR%\bin;%PATH%
           set PATH=%TORCH_PATH%\torch\lib;%PATH%
           cd build
           ctest --verbose --tests-regex example1
@@ -105,3 +106,26 @@ jobs:
           ctest --verbose --tests-regex example3
           ctest --verbose --tests-regex example4
           ctest --verbose --tests-regex example8
+
+      - name: Standalone SimpleNet example
+        shell: cmd
+        run: |
+          call ftorch\Scripts\activate
+          set TORCH_PATH=
+          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
+          set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
+          set PATH=%FTORCH_INSTALL_DIR%\bin;%PATH%
+          set PATH=%TORCH_PATH%\torch\lib;%PATH%
+          set EXAMPLE_BUILD_DIR=examples\2_SimpleNet\build
+          if not exist %EXAMPLE_BUILD_DIR% mkdir %EXAMPLE_BUILD_DIR%
+          cd %EXAMPLE_BUILD_DIR%
+          cmake .. ^
+            -G "NMake Makefiles" ^
+            -DCMAKE_Fortran_COMPILER=ifx ^
+            -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
+            -DPython_EXECUTABLE=%python% ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DCMAKE_PREFIX_PATH=%FTORCH_INSTALL_DIR%;%TORCH_PATH% ^
+            -DCMAKE_BUILD_TESTS=TRUE
+          cmake --build .
+          ctest -V
