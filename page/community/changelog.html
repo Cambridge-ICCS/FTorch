@@ -124,6 +124,7 @@
               <a class="nav-link" href="../usage/worked_examples.html">Worked Examples</a>
               <a class="nav-link" href="../usage/tensor.html">Tensor API</a>
               <a class="nav-link" href="../usage/transposing.html">When to transpose data</a>
+              <a class="nav-link" href="../usage/batching.html">Batching</a>
               <a class="nav-link" href="../usage/offline.html">Offline training</a>
               <a class="nav-link" href="../usage/online.html">Online training</a>
               <a class="nav-link" href="../usage/troubleshooting.html">Troubleshooting</a>
@@ -150,7 +151,7 @@
 
     <div class="col-9" id='text'>
       <h1 id="changelog">Changelog</h1>
-<p>All <a href="https://cambridge-iccs.github.io/FTorch/page/developer.html#versioning-and-changelog">notable</a>
+<p>All <a href="https://cambridge-iccs.github.io/FTorch/page/developer/developer.html#versioning-and-changelog">notable</a>
 changes to the project will be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.
@@ -158,6 +159,8 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 <h2 id="unreleased"><a href="https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...HEAD">Unreleased</a></h2>
 <h3 id="added">Added</h3>
 <ul>
+<li>Batching in FTorch documented, including a new worked example, in
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/500">#500</a>.</li>
 <li>Add subroutine for printing parameters associated with a Torch Model
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/488">#488</a></li>
 <li>Add unit testing for the Torch Model API <a href="https://github.com/Cambridge-ICCS/FTorch/pull/496">#496</a></li>
@@ -189,6 +192,9 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 </ul>
 <h3 id="changed">Changed</h3>
 <ul>
+<li>Example numbers were bumped to account for new worked examples in
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/291">#291</a> and
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/500">#500</a>.</li>
 <li>Bump the minimum CMake version from 3.15 to 3.18, for consistency with what's
   used in PyTorch. <a href="https://github.com/Cambridge-ICCS/FTorch/pull/491">#491</a></li>
 <li>Significant overhaul of the online FORD documentation and reduction of content in the README
@@ -201,8 +207,6 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 <li>scalar multiplication/division of tensors reworked to require the scalar to first be mapped to a <code>torch_tensor</code> in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/289">#289</a></li>
 <li>The unit tests for constructing and destroying tensors were separated out in
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/319">#319</a></li>
-<li>Demo numbers were bumped to account for new demo in
-  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/291">#291</a>.</li>
 <li>Use interface for <code>torch_tensor_from_array</code> with default layout in tests and
   examples in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/348">#348</a>.</li>
 <li>Error handling in <code>ctorch.cpp</code> improved in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/347">#347</a>.</li>

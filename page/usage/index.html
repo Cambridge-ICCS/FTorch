@@ -124,6 +124,7 @@
               <a class="nav-link" href="worked_examples.html">Worked Examples</a>
               <a class="nav-link" href="tensor.html">Tensor API</a>
               <a class="nav-link" href="transposing.html">When to transpose data</a>
+              <a class="nav-link" href="batching.html">Batching</a>
               <a class="nav-link" href="offline.html">Offline training</a>
               <a class="nav-link" href="online.html">Online training</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
@@ -161,7 +162,10 @@
 <li><a href="transposing.html">Transposing data</a></li>
 </ul>
 </li>
-<li>Model API (WIP)</li>
+<li>Model API (WIP)<ul>
+<li><a href="batching.html">Batching inference</a></li>
+</ul>
+</li>
 <li>Optimizers API (WIP)</li>
 </ul>
 </li>
@@ -173,11 +177,11 @@
 <li><a href="../installation/troubleshooting.html">Troubleshooting</a></li>
 </ul>
 <h3 id="examples">Examples</h3>
-<p>The <a href="../examples/generic_example.html">Overview &amp; Generic Example</a> page walks
+<p>The <a href="generic_example.html">Overview &amp; Generic Example</a> page walks
 through the process of saving a model from Python and using it within Fortran,
 including how to build and link the code using FTorch to the library.
 This is the best place to start to understand how FTorch works and how to use it.</p>
-<p>The <a href="../examples/worked_examples.html">Worked Examples</a> page summarises the
+<p>The <a href="worked_examples.html">Worked Examples</a> page summarises the
 comprehensive set or practical examples included in the FTorch repository.
 These demonstrate how to use FTorch for model coupling, tensor manipulation, with GPU
 acceleration, with MPI, and more.
@@ -186,7 +190,9 @@ understand how to use FTorch.</p>
 <h3 id="api-documentation">API Documentation</h3>
 <p>These pages contain detailed documentation of the various component APIs included in FTorch.
 Currently there is detail for <a href="tensor.html">Tensors</a>, with Models and
-Optimizers being work in progress.</p>
+Optimizers being work in progress.
+There is also a page explaining how <a href="batching.html">batched inference</a>
+works in FTorch, including key tips.</p>
 <h3 id="training">Training</h3>
 <p>These pages discuss the conceptual ideas around using FTorch for coupling models
 trained <a href="offline.html">offline</a>, and training models

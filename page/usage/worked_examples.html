@@ -85,7 +85,7 @@
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
               <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Joe Wallwork</li>
-              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: January 2026</li>
           </ul>
         </div>
         <div class="col">
@@ -125,6 +125,7 @@
               <a class="nav-link active disabled" href="worked_examples.html">Worked Examples</a>
               <a class="nav-link" href="tensor.html">Tensor API</a>
               <a class="nav-link" href="transposing.html">When to transpose data</a>
+              <a class="nav-link" href="batching.html">Batching</a>
               <a class="nav-link" href="offline.html">Offline training</a>
               <a class="nav-link" href="online.html">Online training</a>
               <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
@@ -177,24 +178,29 @@ using ResNet-18 to classify an image.
 As the input to this model is four-dimensional (batch size, colour, x, y),
 care must be taken dealing with the data array in Python and Fortran.
 See <a href="transposing.html">when to transpose arrays</a> for more details.</p>
-<h4 id="4-multiio">4) MultiIO</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_MultiIO">This worked example</a>
+<h4 id="4-batching">4) Batching</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/4_Batching">This worked example</a>
+demonstrates how to use a PyTorch model trained on 1D vectors to perform inference on
+batched and higher-dimensional data from Fortran. It covers unbatched, batched, and
+multidimensional cases.</p>
+<h4 id="5-multiio">5) MultiIO</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_MultiIO">This worked example</a>
 considers a variant of the SimpleNet demo, which demonstrates how to account for
 multiple input tensors and multiple output tensors.</p>
-<h4 id="5-looping">5) Looping</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/5_Looping">This worked example</a>
-demonstrates best practices for performing inference on the same network with
-different input multiple times in the same workflow.</p>
-<h4 id="6-multigpu">6) MultiGPU</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MultiGPU">This worked example</a>
+<h4 id="6-looping">6) Looping</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_Looping">This worked example</a>
+demonstrates best practices for performing inference on the same network with different
+input multiple times in the same workflow.</p>
+<h4 id="7-multigpu">7) MultiGPU</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_MultiGPU">This worked example</a>
 builds on the SimpleNet demo and shows how to account for the case of sending different
 data to multiple GPU devices.</p>
-<h4 id="7-mpi">7) MPI</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/7_MPI">This worked example</a>
+<h4 id="8-mpi">8) MPI</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_MPI">This worked example</a>
 demonstrates how to run the SimpleNet example in the context of MPI parallelism,
 running the net with different input arrays on each MPI rank.</p>
-<h4 id="8-autograd">8) Autograd</h4>
-<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd">This worked example</a>
+<h4 id="9-autograd">9) Autograd</h4>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/9_Autograd">This worked example</a>
 demonstrates how to perform automatic differentiation of mathematical
 expressions involving Torch tensors in FTorch by leveraging PyTorch's Autograd
 module.</p>
