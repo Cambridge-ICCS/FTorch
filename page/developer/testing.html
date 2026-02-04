@@ -85,7 +85,7 @@
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
               <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Joe Wallwork</li>
-              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: January 2026</li>
           </ul>
         </div>
         <div class="col">
@@ -161,7 +161,11 @@ tests based on a subset of the <a href="../usage/worked_examples.html">worked ex
 <li><a href="#integration-tests">Integration Tests</a></li>
 </ul>
 </li>
-<li><a href="#adding-tests">Adding Tests</a></li>
+<li><a href="#contributing-tests">Contributing Tests</a><ul>
+<li><a href="#contributing-unit-tests">Contributing Unit Tests</a></li>
+<li><a href="#contributing-integration-tests">Contributing Integration Tests</a></li>
+</ul>
+</li>
 </ul>
 <h3 id="building">Building</h3>
 <p>To enable FTorch's test suite, set <code>CMAKE_BUILD_TESTS=TRUE</code> during the build.
@@ -195,48 +199,83 @@ demonstrates 'good' versus 'bad' practice, as opposed to functionality.</p>
 <h3 id="running">Running</h3>
 <p>Ensure that the Python virtual environment used when
 building is active and then run <code>ctest</code> from the build directory to execute all tests.
-Use <a href="https://cmake.org/cmake/help/latest/manual/ctest.1.html">ctest arguments</a>
+Use <a href="https://cmake.org/cmake/help/latest/manual/ctest.1.html">CTest arguments</a>
 for greater control over the testing configuration.</p>
 <p>This will produce a report on which of the requested tests passed, and which, if any,
 failed for your build.</p>
 <h4 id="unit-tests">Unit tests</h4>
 <p>Unit tests may be executed in the following ways:</p>
 <ol>
-<li>To run just the unit tests (tests whose names start with 'unittest') use
-   <code>ctest -R unittest</code>.</li>
-<li>To run a specific unit test use
-   <code>ctest -R unittest_tensor_constructors_destructors</code>, for example.</li>
+<li>To run all unit tests, use <code>ctest -R unittest</code>.<br>
+   (<code>ctest -R</code> accepts a regular expression to search for and this works because
+   all unit tests start with <code>unittest</code>.)</li>
+<li>Use a different regular expression to select a subset of unit tests, e.g.,
+   <code>ctest -R unittest_tensor</code> to run all unit tests related to <code>torch_tensor</code>s.</li>
+<li>To run a specific unit test just use its full name, e.g.
+   <code>ctest -R unittest_tensor_constructors_destructors</code>.</li>
 </ol>
+<p>For a summary of the current unit tests, see the
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/test/README.md">README</a>.</p>
 <h4 id="integration-tests">Integration tests</h4>
 <p>Integration tests may be executed in the following ways:</p>
 <ol>
-<li>To run just the integration tests (tests whose names start with 'example') use
-   <code>ctest -R example</code></li>
+<li>To run just the integration tests, use <code>ctest -R example</code>.<br>
+   (<code>ctest -R</code> accepts a regular expression to search for and this works because
+   all integration tests start with <code>example</code>.)</li>
 <li>To run a specific integration test use <code>ctest -R example2</code>, for example.<br>
    Alternatively navigate to the corresponding example in <code>${BUILD_DIR}/examples</code>
    and call <code>ctest</code>.</li>
 </ol>
-<h3 id="adding-tests">Adding Tests</h3>
-<p>New components should come with unit tests written using the pFUnit framework.</p>
+<h3 id="contributing-tests">Contributing tests</h3>
+<h4 id="contributing-unit-tests">Contributing unit tests</h4>
+<p>New components should come with unit tests written using the
+<a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a> framework.</p>
 <ul>
-<li>New unit tests should be added to the <code>test/unit/</code> directory and start with
-  <code>unittest_</code>.</li>
-<li>New tests need including in the <code>CMakeLists.txt</code> in that directory in order
-  to be built as part of the test suite.</li>
+<li>New unit tests should be added to the <code>test/unit/</code> directory, have names
+  that start with <code>unittest_</code> and use the <code>.pf</code> extension.</li>
+<li>Unit test files should include a <code>module</code> with the same name as the file
+    (minus the extension).</li>
+<li>If MPI parallelism is required for the unit test, use the <code>pfunit</code> module
+    that comes with pFUnit, otherwise its <code>funit</code> module should be sufficient.</li>
+<li>Tests contained within the module should be written as subroutines with the
+    <code>@test</code> decorator and name starting with <code>test_</code>.</li>
+<li>pFUnit's <code>@assertTrue</code>, <code>@assertFalse</code>, and <code>@assertEqual</code> decorators should be
+    used to check expected outcomes.</li>
+<li>In some cases, it can be useful to use parameterisation. This can be
+    achieved by defining a derived type of <code>AbstractTestParameter</code> and giving it
+    the <code>@testParameter</code> decorator. Additionally, define a derived type of
+    <code>ParameterizedTestCase</code> and give it the <code>@testCase</code> decorator. The test case
+    acts as a constructor that determines how to pass the parameters to the
+    tests. Where parameterisation is used, parameter sets should be defined as
+    functons to create instances of the derived test parameter type.
+    Parameterised tests should pass the parameters through the <code>@test</code>
+    decorator. For example,
+    <code>fortran
+    @test(testparameters={get_parameters()})</code>
+    where <code>get_parameters</code> is such a function as mentioned above. See existing
+    unit tests for examples of this.</li>
+<li>New unit tests should be included in <code>test/unit/CMakeLists.txt</code> in order to
+  be built as part of the test suite.</li>
+<li>Don't forget to add a brief summary of the new unit test in the unit test
+  <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/test/README.md">README</a>.</li>
 </ul>
+<h4 id="contributing-integration-tests">Contributing integration tests</h4>
 <p>New functionalities should come with integration tests in the form of worked
 examples.</p>
 <ul>
 <li>These should take the form of a new example in the <code>examples/</code> directory.</li>
+<li>Create a subdirectory named with the next sequential number and a descriptive
+  name, e.g. <code>9_NewFeature</code>.</li>
 <li>In addition to a <code>CMakeLists.txt</code> to build the example code there
   should also be a section at the end setting up running of the example
-  using CTest.<ul>
-<li>Integration test names should start with <code>example_</code></li>
-<li>New examples will also need including in <code>examples/CMakeLists.txt</code></li>
+  using <a href="https://cmake.org/cmake/help/book/mastering-cmake/chapter/Testing%20With%20CMake%20and%20CTest.html">CTest</a>.<ul>
+<li>Integration test names should start with <code>example</code> followed by the example
+  number, e.g. <code>example9</code>.</li>
 </ul>
 </li>
-<li>Ensure the documentation on <a href="../usage/worked_examples.html">worked examples</a> is
-  updated accordingly.</li>
+<li>New examples will also need including in <code>examples/CMakeLists.txt</code></li>
+<li>Ensure the documentation on
+  <a href="../usage/worked_examples.html">worked examples</a> is updated accordingly.</li>
 </ul>
 <div class="footnote">
 <hr>
