@@ -406,14 +406,10 @@ module ftorch_test_utils
     end function allclose_real64_3d
 
 
-<<<<<<< HEAD
-    !> Alias for isclose_real32
-=======
     !| Alias for isclose_real32
     !
     !  This version is deprecated and is only included for backwards compatibility. It will be
     !  removed in FTorch version 2.0.
->>>>>>> main
     function assert_isclose_real32(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                      !! Name of the test being run
@@ -430,14 +426,10 @@ module ftorch_test_utils
 
     end function assert_isclose_real32
 
-<<<<<<< HEAD
-    !> Alias for isclose_real64
-=======
     !| Alias for isclose_real64
     !
     !  This version is deprecated and is only included for backwards compatibility. It will be
     !  removed in FTorch version 2.0.
->>>>>>> main
     function assert_isclose_real64(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                      !! Name of the test being run
@@ -455,14 +447,10 @@ module ftorch_test_utils
     end function assert_isclose_real64
 
 
-<<<<<<< HEAD
-    !> Alias for allclose_real32_1d
-=======
     !| Alias for allclose_real32_1d
     !
     !  This version is deprecated and is only included for backwards compatibility. It will be
     !  removed in FTorch version 2.0.
->>>>>>> main
     function assert_allclose_real32_1d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -479,14 +467,10 @@ module ftorch_test_utils
 
     end function assert_allclose_real32_1d
 
-<<<<<<< HEAD
-    !> Alias for allclose_real32_2d
-=======
     !| Alias for allclose_real32_2d
     !
     !  This version is deprecated and is only included for backwards compatibility. It will be
     !  removed in FTorch version 2.0.
->>>>>>> main
     function assert_allclose_real32_2d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -503,14 +487,10 @@ module ftorch_test_utils
 
     end function assert_allclose_real32_2d
 
-<<<<<<< HEAD
-    !> Alias for allclose_real32_3d
-=======
     !| Alias for allclose_real32_3d
     !
     !  This version is deprecated and is only included for backwards compatibility. It will be
     !  removed in FTorch version 2.0.
->>>>>>> main
     function assert_allclose_real32_3d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -527,14 +507,10 @@ module ftorch_test_utils
 
     end function assert_allclose_real32_3d
 
-<<<<<<< HEAD
-    !> Alias for allclose_real64_1d
-=======
     !| Alias for allclose_real64_1d
     !
     !  This version is deprecated and is only included for backwards compatibility. It will be
     !  removed in FTorch version 2.0.
->>>>>>> main
     function assert_allclose_real64_1d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -551,14 +527,10 @@ module ftorch_test_utils
 
     end function assert_allclose_real64_1d
 
-<<<<<<< HEAD
-    !> Alias for allclose_real64_2d
-=======
     !| Alias for allclose_real64_2d
     !
     !  This version is deprecated and is only included for backwards compatibility. It will be
     !  removed in FTorch version 2.0.
->>>>>>> main
     function assert_allclose_real64_2d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -575,14 +547,10 @@ module ftorch_test_utils
 
     end function assert_allclose_real64_2d
 
-<<<<<<< HEAD
-    !> Alias for allclose_real64_3d
-=======
     !| Alias for allclose_real64_3d
     !
     !  This version is deprecated and is only included for backwards compatibility. It will be
     !  removed in FTorch version 2.0.
->>>>>>> main
     function assert_allclose_real64_3d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
