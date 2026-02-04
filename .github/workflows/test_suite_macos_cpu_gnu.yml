@@ -45,15 +45,14 @@ jobs:
           MATRIX_JSON='
           {
             "std": ["f2008", "f2018"],
-            "compiler": ["clang"],
-            "version": ["system"]
+            "compiler": ["clang"]
           }'
           # Convert json to compact line expected by github action
           MATRIX_JSON=$(echo "$MATRIX_JSON" | jq -c .)
           echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
 
   test-suite:
-    name: test suite (${{ matrix.compiler }}, ${{ matrix.version }}, ${{ matrix.std }})
+    name: test suite (${{ matrix.compiler }}, ${{ matrix.std }})
     needs: setup-matrix
     # The type of runner that the job will run on
     runs-on: macos-latest
