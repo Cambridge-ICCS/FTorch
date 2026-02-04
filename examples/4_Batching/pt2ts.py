@@ -8,7 +8,7 @@ from typing import Optional
 # FTORCH-TODO
 # Add a module import with your model here:
 # This example assumes the model architecture is in an adjacent module `my_ml_model.py`
-import multiionet
+import batchingnet
 import torch
 
 
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     # Insert code here to load your model as `trained_model`.
     # This example assumes my_ml_model has a method `initialize` to load
     # architecture, weights, and place in inference mode
-    trained_model = multiionet.MultiIONet()
+    trained_model = batchingnet.BatchingNet()
 
     # Switch off specific layers/parts of the model that behave
     # differently during training and inference.
@@ -118,7 +118,7 @@ if __name__ == "__main__":
     # FTORCH-TODO
     # Generate a dummy input Tensor `dummy_input` to the model of appropriate size.
     # This example assumes one input of size (5)
-    trained_model_dummy_inputs = (torch.ones(4), torch.ones(4))
+    trained_model_dummy_input = torch.ones(5)
 
     # Transfer the model and inputs to GPU device, if appropriate
     if device_type != "cpu":
@@ -128,13 +128,13 @@ if __name__ == "__main__":
             device = torch.device(device_type)
         trained_model = trained_model.to(device)
         trained_model.eval()
-        trained_model_dummy_inputs = trained_model_dummy_inputs.to(device)
+        trained_model_dummy_input = trained_model_dummy_input.to(device)
 
     # FTORCH-TODO
     # Run model for dummy inputs
     # If something isn't working This will generate an error
     trained_model_dummy_outputs = trained_model(
-        *trained_model_dummy_inputs,
+        trained_model_dummy_input,
     )
 
     # =====================================================
@@ -143,7 +143,7 @@ if __name__ == "__main__":
 
     # FTORCH-TODO
     # Set the name of the file you want to save the torchscript model to:
-    saved_ts_filename = f"saved_multiio_model_{device_type}.pt"
+    saved_ts_filename = f"saved_batchingnet_model_{device_type}.pt"
     # A filepath may also be provided. To do this, pass the filepath as an argument to
     # this script when it is run from the command line, i.e. `./pt2ts.py path/to/model`.
 
@@ -168,16 +168,13 @@ if __name__ == "__main__":
     # =====================================================
 
     # Load torchscript and run model as a test, scaling inputs as above
-    trained_model_dummy_inputs = (
-        2.0 * trained_model_dummy_inputs[0],
-        3.0 * trained_model_dummy_inputs[1],
-    )
+    trained_model_dummy_input = 2.0 * trained_model_dummy_input
     trained_model_testing_outputs = trained_model(
-        *trained_model_dummy_inputs,
+        trained_model_dummy_input,
     )
     ts_model = load_torchscript(filename=saved_ts_filename)
     ts_model_outputs = ts_model(
-        *trained_model_dummy_inputs,
+        trained_model_dummy_input,
     )
 
     if not isinstance(ts_model_outputs, tuple):

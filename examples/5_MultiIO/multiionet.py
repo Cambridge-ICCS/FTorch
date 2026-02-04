@@ -7,21 +7,19 @@ from torch import nn
 class MultiIONet(nn.Module):
     """PyTorch module multiplying two input vectors by 2 and 3, respectively."""
 
-    def __init__(
-        self,
-    ) -> None:
+    def __init__(self) -> None:
         """
         Initialize the MultiIONet model.
 
-        Consists of a single Linear layer with weights predefined to
+        Consists of two Linear layers with weights predefined to
         multiply the inputs by 2 and 3, respectively.
         """
         super().__init__()
-        self._fwd_seq = nn.Sequential(nn.Linear(4, 4, bias=False))
+        self.linear1 = nn.Linear(4, 4, bias=False)
+        self.linear2 = nn.Linear(4, 4, bias=False)
         with torch.inference_mode():
-            self._fwd_seq[0].weight = nn.Parameter(
-                torch.kron(torch.Tensor([[2.0, 0.0], [0.0, 3.0]]), torch.eye(4))
-            )
+            self.linear1.weight = nn.Parameter(2.0 * torch.eye(4))
+            self.linear2.weight = nn.Parameter(3.0 * torch.eye(4))
 
     def forward(self, batch1: torch.Tensor, batch2: torch.Tensor):
         """
@@ -42,8 +40,8 @@ class MultiIONet(nn.Module):
             second batch scaled by 3.
 
         """
-        batch = torch.cat((batch1, batch2), dim=0).flatten()
-        a, b = self._fwd_seq(batch).split(4)
+        a = self.linear1(batch1)
+        b = self.linear2(batch2)
         return a, b
 
 

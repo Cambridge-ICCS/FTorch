@@ -38,14 +38,14 @@ if(CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the Python Autograd script runs successfully
-  add_test(NAME example8_pyautograd COMMAND ${Python_EXECUTABLE}
+  add_test(NAME example9_pyautograd COMMAND ${Python_EXECUTABLE}
                                             ${PROJECT_SOURCE_DIR}/autograd.py)
 
   # 2. Check the Fortran Autograd script runs successfully
   add_test(
-    NAME example8_fautograd
+    NAME example9_fautograd
     COMMAND autograd
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example8_fautograd PROPERTIES PASS_REGULAR_EXPRESSION
+  set_tests_properties(example9_fautograd PROPERTIES PASS_REGULAR_EXPRESSION
                        "Autograd example ran successfully")
 endif()
