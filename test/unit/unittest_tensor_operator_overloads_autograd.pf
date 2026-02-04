@@ -9,7 +9,7 @@ module unittest_tensor_operator_overloads_autograd
   use ftorch, only: assignment(=), ftorch_int, torch_kCPU, torch_kFloat32, &
                     torch_tensor, torch_tensor_backward, torch_tensor_delete, torch_tensor_empty, &
                     torch_tensor_from_array, torch_tensor_ones, torch_tensor_get_gradient
-  use ftorch_test_utils, only: assert_allclose
+  use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
 
@@ -76,6 +76,7 @@ contains
     string = str
   end function toString
 
+  ! Unit test for the derivative of the assignment operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_assign(this)
 
@@ -107,13 +108,14 @@ contains
     ! Check the computed gradient takes the expected value:
     !   Q(a) = a => dQ/da = 1
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_assign")) then
+    if (.not. allclose(out_data, expected, test_name="test_torch_tensor_assign")) then
       print *, "Error :: incorrect gradient for assignment"
       stop 999
     end if
 
   end subroutine test_torch_tensor_assign
 
+  ! Unit test for the derivative of the addition operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_add(this)
     use ftorch, only: operator(+)
@@ -150,21 +152,16 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a + b => dQ/da = 1
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data1, expected, test_name="test_torch_tensor_add1")) then
-      print *, "Error :: incorrect gradient w.r.t. first input for addition"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data1, expected, test_name="test_torch_tensor_add1"))
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a + b => dQ/db = 1
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data2, expected, test_name="test_torch_tensor_add2")) then
-      print *, "Error :: incorrect gradient w.r.t. second input for addition"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data2, expected, test_name="test_torch_tensor_add2"))
 
   end subroutine test_torch_tensor_add
 
+  ! Unit test for the derivative of the negative operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_negative(this)
     use ftorch, only: operator(-)
@@ -197,13 +194,11 @@ contains
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a => dQ/da = -1
     expected(:,:) = -1.0
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_negative")) then
-      print *, "Error :: incorrect gradient for negation"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_negative"))
 
   end subroutine test_torch_tensor_negative
 
+  ! Unit test for the derivative of the subtraction operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_subtract(this)
     use ftorch, only: operator(-)
@@ -240,21 +235,16 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a - b => dQ/da = 1
     expected(:,:) = 1.0
-    if (.not. assert_allclose(out_data1, expected, test_name="test_torch_tensor_subtract1")) then
-      print *, "Error :: incorrect gradient w.r.t. first input for subtraction"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data1, expected, test_name="test_torch_tensor_subtract1"))
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a - b => dQ/db = -1
     expected(:,:) = -1.0
-    if (.not. assert_allclose(out_data2, expected, test_name="test_torch_tensor_subtract2")) then
-      print *, "Error :: incorrect gradient w.r.t. second input for subtraction"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data2, expected, test_name="test_torch_tensor_subtract2"))
 
   end subroutine test_torch_tensor_subtract
 
+  ! Unit test for the derivative of the tensor multiplication operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_multiply(this)
     use ftorch, only: operator(*)
@@ -291,21 +281,16 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a * b => dQ/da = b
     expected(:,:) = in_data2
-    if (.not. assert_allclose(out_data1, expected, test_name="test_torch_tensor_multiply1")) then
-      print *, "Error :: incorrect gradient w.r.t. first input for multiplication"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data1, expected, test_name="test_torch_tensor_multiply1"))
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a * b => dQ/db = a
     expected(:,:) = in_data1
-    if (.not. assert_allclose(out_data2, expected, test_name="test_torch_tensor_multiply2")) then
-      print *, "Error :: incorrect gradient w.r.t. second input for multiplication"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data2, expected, test_name="test_torch_tensor_multiply2"))
 
   end subroutine test_torch_tensor_multiply
 
+  ! Unit test for the derivative of the scalar multiplication operator
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_scalar_multiply(this)
     use ftorch, only: operator(*)
@@ -317,7 +302,6 @@ contains
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -347,14 +331,11 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = scalar * a => dQ/da = scalar
     expected(:,:) = scalar
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply")
-    if (.not. test_pass) then
-      print *, "Error :: incorrect gradient for scalar multiplication"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply"))
 
   end subroutine test_torch_tensor_scalar_multiply
 
+  ! Unit test for the derivative of the tensor division operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_divide(this)
     use ftorch, only: operator(/)
@@ -391,21 +372,16 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a / b => dQ/da = 1 / b
     expected(:,:) = 1.0 / in_data2
-    if (.not. assert_allclose(out_data1, expected, test_name="test_torch_tensor_divide1")) then
-      print *, "Error :: incorrect gradient w.r.t. numerator for division"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data1, expected, test_name="test_torch_tensor_divide1"))
 
     ! Extract Fortran array from the second computed gradient and its data with the expected value:
     !   Q(a,b) = a / b => dQ/db = -a / b^2
     expected(:,:) = -in_data1 / in_data2 ** 2
-    if (.not. assert_allclose(out_data2, expected, test_name="test_torch_tensor_divide2")) then
-      print *, "Error :: incorrect gradient w.r.t. denominator for division"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data2, expected, test_name="test_torch_tensor_divide2"))
 
   end subroutine test_torch_tensor_divide
 
+  ! Unit test for the derivative of the scalar division operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_scalar_divide(this)
     use ftorch, only: operator(/)
@@ -417,7 +393,6 @@ contains
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
-    logical :: test_pass
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -443,14 +418,11 @@ contains
     ! Extract Fortran array from the first computed gradient and its data with the expected value:
     !   Q(a,b) = a / scalar => dQ/da = 1 / scalar
     expected(:,:) = 1.0 / scalar
-    test_pass = assert_allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide")
-    if (.not. test_pass) then
-      print *, "Error :: incorrect gradient for scalar division"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide"))
 
   end subroutine test_torch_tensor_scalar_divide
 
+  ! Unit test for the derivative of the integer exponentiation operator
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_square(this)
     use ftorch, only: operator(**)
@@ -487,13 +459,11 @@ contains
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a^2 => dQ/da = 2 * a
     expected(:,:) = 2.0 * in_data
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_square")) then
-      print *, "Error :: incorrect gradient for square"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_square"))
 
   end subroutine test_torch_tensor_square
 
+  ! Unit test for the derivative of the fractional exponentiation operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_sqrt(this)
     use ftorch, only: operator(**)
@@ -526,10 +496,7 @@ contains
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = a^{1/2} => dQ/da = 0.5 * a^{-1/2})
     expected(:,:) = 0.5 / in_data ** 0.5
-    if (.not. assert_allclose(out_data, expected, test_name="test_torch_tensor_sqrt")) then
-      print *, "Error :: incorrect gradient for square root"
-      stop 999
-    end if
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_sqrt"))
 
   end subroutine test_torch_tensor_sqrt
 

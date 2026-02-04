@@ -9,7 +9,7 @@ program inference
                       torch_model_print_parameters
 
    ! Import our tools module for testing utils
-   use ftorch_test_utils, only : assert_allclose
+   use ftorch_test_utils, only : allclose
 
    implicit none
 
@@ -64,7 +64,7 @@ program inference
 
    ! Check output tensor matches expected value
    expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
-   test_pass = assert_allclose(out_data, expected, test_name="SimpleNet", rtol=1e-5)
+   test_pass = allclose(out_data, expected, test_name="SimpleNet", rtol=1e-5)
 
    ! Cleanup
    call torch_delete(model)

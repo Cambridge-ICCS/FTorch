@@ -259,17 +259,10 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    logical, parameter :: expected = .true.
 
-    ! Create an empty tensor on the CPU with the default device type
-    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, &
-                            requires_grad=expected)
-
-    ! Check that torch_tensor_get_device_type can get the device type
-    if (expected .neqv. tensor%requires_grad()) then
-      print *, "Error :: tensor%requires_grad() returned incorrect value"
-      stop 999
-    end if
+    ! Create an empty tensor on the CPU with the default requires_grad option
+    call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
+    @assertFalse(tensor%requires_grad())
 
   end subroutine test_requires_grad_default
 
@@ -282,16 +275,12 @@ contains
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
     logical :: expected
 
-    ! Create an empty tensor on the CPU with the default device type
+    ! Create an empty tensor on the CPU with the default requires_grad option
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, &
                             requires_grad=this%param%requires_grad)
 
     ! Check that querying requires_grad gives the expected value
-    expected = this%param%requires_grad
-    if (expected .neqv. tensor%requires_grad()) then
-      print *, "Error :: tensor%requires_grad() returned incorrect value"
-      stop 999
-    end if
+    @assertEqual(this%param%requires_grad, tensor%requires_grad())
 
   end subroutine test_requires_grad
 

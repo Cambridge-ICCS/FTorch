@@ -1,6 +1,6 @@
 title: FTorch test suite
 author: Joe Wallwork
-date: Last Updated: October 2025
+date: Last Updated: January 2026
 
 
 ## Testing
@@ -12,7 +12,9 @@ tests based on a subset of the [worked examples](|page|/usage/worked_examples.ht
 - [Running Tests](#running)
     - [Unit Tests](#unit-tests)
     - [Integration Tests](#integration-tests)
-- [Adding Tests](#adding-tests)
+- [Contributing Tests](#contributing-tests)
+    - [Contributing Unit Tests](#contributing-unit-tests)
+    - [Contributing Integration Tests](#contributing-integration-tests)
 
 
 ### Building
@@ -60,7 +62,7 @@ demonstrates 'good' versus 'bad' practice, as opposed to functionality.
 
 Ensure that the Python virtual environment used when
 building is active and then run `ctest` from the build directory to execute all tests.
-Use [ctest arguments](https://cmake.org/cmake/help/latest/manual/ctest.1.html)
+Use [CTest arguments](https://cmake.org/cmake/help/latest/manual/ctest.1.html)
 for greater control over the testing configuration.
 
 This will produce a report on which of the requested tests passed, and which, if any,
@@ -70,39 +72,78 @@ failed for your build.
 
 Unit tests may be executed in the following ways:
 
-1. To run just the unit tests (tests whose names start with 'unittest') use
-   `ctest -R unittest`.
-2. To run a specific unit test use
-   `ctest -R unittest_tensor_constructors_destructors`, for example.
+1. To run all unit tests, use `ctest -R unittest`.<br>
+   (`ctest -R` accepts a regular expression to search for and this works because
+   all unit tests start with `unittest`.)
+2. Use a different regular expression to select a subset of unit tests, e.g.,
+   `ctest -R unittest_tensor` to run all unit tests related to `torch_tensor`s.
+3. To run a specific unit test just use its full name, e.g.
+   `ctest -R unittest_tensor_constructors_destructors`.
+
+For a summary of the current unit tests, see the
+[README](https://github.com/Cambridge-ICCS/FTorch/blob/main/test/README.md).
 
 #### Integration tests
 
 Integration tests may be executed in the following ways:
 
-1. To run just the integration tests (tests whose names start with 'example') use
-   `ctest -R example`
+1. To run just the integration tests, use `ctest -R example`.<br>
+   (`ctest -R` accepts a regular expression to search for and this works because
+   all integration tests start with `example`.)
 2. To run a specific integration test use `ctest -R example2`, for example.<br>
    Alternatively navigate to the corresponding example in `${BUILD_DIR}/examples`
    and call `ctest`.
 
 
-### Adding Tests
+### Contributing tests
 
-New components should come with unit tests written using the pFUnit framework.
+#### Contributing unit tests
 
-- New unit tests should be added to the `test/unit/` directory and start with
-  `unittest_`.
-- New tests need including in the `CMakeLists.txt` in that directory in order
-  to be built as part of the test suite.
+New components should come with unit tests written using the
+[pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit) framework.
+
+- New unit tests should be added to the `test/unit/` directory, have names
+  that start with `unittest_` and use the `.pf` extension.
+  - Unit test files should include a `module` with the same name as the file
+    (minus the extension).
+  - If MPI parallelism is required for the unit test, use the `pfunit` module
+    that comes with pFUnit, otherwise its `funit` module should be sufficient.
+  - Tests contained within the module should be written as subroutines with the
+    `@test` decorator and name starting with `test_`.
+  - pFUnit's `@assertTrue`, `@assertFalse`, and `@assertEqual` decorators should be
+    used to check expected outcomes.
+  - In some cases, it can be useful to use parameterisation. This can be
+    achieved by defining a derived type of `AbstractTestParameter` and giving it
+    the `@testParameter` decorator. Additionally, define a derived type of
+    `ParameterizedTestCase` and give it the `@testCase` decorator. The test case
+    acts as a constructor that determines how to pass the parameters to the
+    tests. Where parameterisation is used, parameter sets should be defined as
+    functons to create instances of the derived test parameter type.
+    Parameterised tests should pass the parameters through the `@test`
+    decorator. For example,
+    ```fortran
+    @test(testparameters={get_parameters()})
+    ```
+    where `get_parameters` is such a function as mentioned above. See existing
+    unit tests for examples of this.
+- New unit tests should be included in `test/unit/CMakeLists.txt` in order to
+  be built as part of the test suite.
+- Don't forget to add a brief summary of the new unit test in the unit test
+  [README](https://github.com/Cambridge-ICCS/FTorch/blob/main/test/README.md).
+
+#### Contributing integration tests
 
 New functionalities should come with integration tests in the form of worked
 examples.
 
 - These should take the form of a new example in the `examples/` directory.
+- Create a subdirectory named with the next sequential number and a descriptive
+  name, e.g. `9_NewFeature`.
 - In addition to a `CMakeLists.txt` to build the example code there
   should also be a section at the end setting up running of the example
-  using CTest.
-    - Integration test names should start with `example_`
-    - New examples will also need including in `examples/CMakeLists.txt`
-- Ensure the documentation on [worked examples](|page|/usage/worked_examples.html) is
-  updated accordingly.
+  using [CTest](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Testing%20With%20CMake%20and%20CTest.html).
+    - Integration test names should start with `example` followed by the example
+      number, e.g. `example9`.
+- New examples will also need including in `examples/CMakeLists.txt`
+- Ensure the documentation on
+  [worked examples](|page|/usage/worked_examples.html) is updated accordingly.
