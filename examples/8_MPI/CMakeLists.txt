@@ -40,13 +40,13 @@ if(CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME example8_simplenet COMMAND ${Python_EXECUTABLE}
+  add_test(NAME example_mpi_simplenet COMMAND ${Python_EXECUTABLE}
                                            ${PROJECT_SOURCE_DIR}/simplenet.py)
 
   # 2. Check the model is saved to file in the expected location with the
   #   pt2ts.py script
   add_test(
-    NAME example8_pt2ts
+    NAME example_mpi_pt2ts
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
             ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
@@ -54,25 +54,25 @@ if(CMAKE_BUILD_TESTS)
   # 3. Check the model can be loaded from file and run with MPI in Python and
   #   that its outputs meet expectations
   add_test(
-    NAME example8_mpi_infer_python
+    NAME example_mpi_mpi_infer_python
     COMMAND
       ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${Python_EXECUTABLE}
       ${PROJECT_SOURCE_DIR}/mpi_infer_python.py --filepath ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
-    example8_mpi_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
+    example_mpi_mpi_infer_python PROPERTIES PASS_REGULAR_EXPRESSION
     "MPI Python example ran successfully")
 
   # 4. Check the model can be loaded from file and run with MPI in Fortran and
   #   that its outputs meet expectations
   add_test(
-    NAME example8_mpi_infer_fortran
+    NAME example_mpi_mpi_infer_fortran
     COMMAND
       ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ./mpi_infer_fortran
       ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
-    example8_mpi_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    example_mpi_mpi_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
     "MPI Fortran example ran successfully")
 endif()
