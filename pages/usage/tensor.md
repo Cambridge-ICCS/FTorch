@@ -97,6 +97,10 @@ finalizer of [[ftorch(module):torch_tensor(type)]] when it goes out of scope. If
 the tensor was declared in a program then the finalizer won't get called, but
 this is not considered to be an issue, in the same way that in Fortran it
 doesn't matter if allocated arrays aren't deallocated at the end of the program.
+Note that if you are building FTorch with gfortran and the 2008 standard then
+you may see a warning related to finalizers - see the
+[common warnings entry](|page|/usage/troubleshooting.html#finalizer-with-fortran-2008)
+for more information.
 
 See the [Fortran-lang page on object-oriented Fortran](https://fortran-lang.org/learn/oop_features_in_fortran/object_based_programming_techniques/#finalization-and-conclusions)
 for further details about finalization.
