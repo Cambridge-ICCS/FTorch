@@ -38,27 +38,27 @@ if(CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME example4_batchingnet
+  add_test(NAME example_batching_batching
            COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/batching_demo.py)
 
   # 2. Check the model is saved to file in the expected location with the
   #   pt2ts.py script
   add_test(
-    NAME example4_pt2ts
+    NAME example_batching_pt2ts
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
             ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 3. Load the model and run in Fortran checking that outputs meet expectations
   add_test(
-    NAME example4_batchingnet_infer_fortran
+    NAME example_batching_batching_infer_fortran
     COMMAND
       batchingnet_infer_fortran
       ${PROJECT_BINARY_DIR}/saved_batchingnet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
-    example4_batchingnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    example_batching_batching_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
     "BatchingNet Fortran example ran successfully")
 endif()
 

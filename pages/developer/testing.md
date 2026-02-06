@@ -90,8 +90,9 @@ Integration tests may be executed in the following ways:
 1. To run just the integration tests, use `ctest -R example`.<br>
    (`ctest -R` accepts a regular expression to search for and this works because
    all integration tests start with `example`.)
-2. To run a specific integration test use `ctest -R example2`, for example.<br>
-   Alternatively navigate to the corresponding example in `${BUILD_DIR}/examples`
+2. To run a specific integration test, use its full name, e.g.,
+   `ctest -R example_simplenet` or `ctest -R example_resnet`.<br>
+   Alternatively, navigate to the corresponding example in `${BUILD_DIR}/examples`
    and call `ctest`.
 
 
@@ -138,12 +139,13 @@ examples.
 
 - These should take the form of a new example in the `examples/` directory.
 - Create a subdirectory named with the next sequential number and a descriptive
-  name, e.g. `9_NewFeature`.
+  name, e.g. `10_NewFeature`.
 - In addition to a `CMakeLists.txt` to build the example code there
   should also be a section at the end setting up running of the example
   using [CTest](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Testing%20With%20CMake%20and%20CTest.html).
-    - Integration test names should start with `example` followed by the example
-      number, e.g. `example9`.
-- New examples will also need including in `examples/CMakeLists.txt`
-- Ensure the documentation on
+    - Integration test names should start with `example_`, followed by the main example
+      name and an optional specifier, e.g. `example_resnet_resnet18`,
+      `example_simplenet_pt2ts`, or `example_tensor_manipulation`.
+- New example directories will also need including in `examples/CMakeLists.txt`
+- Ensure the examples README and documentation on
   [worked examples](|page|/usage/worked_examples.html) is updated accordingly.
