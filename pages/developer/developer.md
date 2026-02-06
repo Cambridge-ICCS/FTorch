@@ -31,7 +31,7 @@ pip install -r requirements-dev.txt
 
 In order to streamline the process of uploading we provide a pre-commit hook in
 [`.githooks/pre-commit`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.githooks/pre-commit).
-This will check that both the `.fypp` and `.F90` files have been updated together in a
+This will check that both the `.fypp` and `.f90` files have been updated together in a
 synchronous fashion before a commmit can take place
 ([see below](#fortran-source-generation-using-fypp)).
 Use of the hook is not automatic and needs to be enabled by the developer
@@ -68,7 +68,7 @@ The following guidelines should be followed whilst writing new routines:
 
 #### Fortran source generation using Fypp
 
-The Fortran source code in `src/ftorch.F90` should not be edited directly
+The Fortran source code in `src/ftorch.f90` should not be edited directly
 but instead generated from `src/ftorch.fypp` by running the
 [Fypp](https://fypp.readthedocs.io/en/stable/index.html) preprocessor.
 This is done to simplify the process of overloading functions for multiple data
@@ -76,7 +76,7 @@ Fypp can be installed with the [developer requirements](#installing-developer-re
 
 To generate the Fortran code run:
 ```sh
-fypp src/ftorch.fypp src/ftorch.F90
+fypp src/ftorch.fypp src/ftorch.f90
 ```
 
 Conformance of these files is checked using GitHub continuous integration and
@@ -237,7 +237,7 @@ Additional pages are contained in `pages/` as markdown files.
 
 Notes:
 
-- We need to define macros for GPU devices that are passed to `ftorch.F90`
+- We need to define macros for GPU devices that are passed to `ftorch.f90`
   via the C preprocessor in `FTorch.md` to match those in the CMakeLists.txt.
 - If building documentation locally you can set the `dbg: true` in `FTorch.md` to allow
   FORD to continue when encountering errors. Note that in this case the documentation
