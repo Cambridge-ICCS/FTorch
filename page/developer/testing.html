@@ -222,8 +222,9 @@ failed for your build.</p>
 <li>To run just the integration tests, use <code>ctest -R example</code>.<br>
    (<code>ctest -R</code> accepts a regular expression to search for and this works because
    all integration tests start with <code>example</code>.)</li>
-<li>To run a specific integration test use <code>ctest -R example2</code>, for example.<br>
-   Alternatively navigate to the corresponding example in <code>${BUILD_DIR}/examples</code>
+<li>To run a specific integration test, use its full name, e.g.,
+   <code>ctest -R example_simplenet</code> or <code>ctest -R example_resnet</code>.<br>
+   Alternatively, navigate to the corresponding example in <code>${BUILD_DIR}/examples</code>
    and call <code>ctest</code>.</li>
 </ol>
 <h3 id="contributing-tests">Contributing tests</h3>
@@ -265,16 +266,17 @@ examples.</p>
 <ul>
 <li>These should take the form of a new example in the <code>examples/</code> directory.</li>
 <li>Create a subdirectory named with the next sequential number and a descriptive
-  name, e.g. <code>9_NewFeature</code>.</li>
+  name, e.g. <code>10_NewFeature</code>.</li>
 <li>In addition to a <code>CMakeLists.txt</code> to build the example code there
   should also be a section at the end setting up running of the example
   using <a href="https://cmake.org/cmake/help/book/mastering-cmake/chapter/Testing%20With%20CMake%20and%20CTest.html">CTest</a>.<ul>
-<li>Integration test names should start with <code>example</code> followed by the example
-  number, e.g. <code>example9</code>.</li>
+<li>Integration test names should start with <code>example_</code>, followed by the main example
+  name and an optional specifier, e.g. <code>example_resnet_resnet18</code>,
+  <code>example_simplenet_pt2ts</code>, or <code>example_tensor_manipulation</code>.</li>
 </ul>
 </li>
-<li>New examples will also need including in <code>examples/CMakeLists.txt</code></li>
-<li>Ensure the documentation on
+<li>New example directories will also need including in <code>examples/CMakeLists.txt</code></li>
+<li>Ensure the examples README and documentation on
   <a href="../usage/worked_examples.html">worked examples</a> is updated accordingly.</li>
 </ul>
 <div class="footnote">
