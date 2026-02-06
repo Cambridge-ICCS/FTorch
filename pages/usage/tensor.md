@@ -89,7 +89,7 @@ the other methods (simply drop the preceding `torch_tensor_`).
 
 We provide a subroutine for deallocating the memory associated with a
 [[ftorch_tensor(module):torch_tensor(type)]] object:
-[[ftorch_tensor(module):torch_tensor_delete(interface)]].
+[[ftorch_tensor(module):torch_tensor_delete(subroutine)]].
 An interface is provided such that this can also be applied to arrays of tensors.
 Calling this subroutine manually is optional as it is called as a destructor
 when a [[ftorch_tensor(module):torch_tensor(type)]] goes out of scope.
