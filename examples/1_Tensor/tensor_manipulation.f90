@@ -81,6 +81,15 @@ program tensor_manipulation
   write(*,*) "Sum of input tensors:"
   write(*,*) out_data
 
+  ! It's also possible to do arithmetic on combinations of tensors and Fortran arrays, provided they
+  ! have consistent dimensions. Let's set in_data to the output of the previous calculation and
+  ! compute its sum with tensor a. Given that tensor a is all ones, we expect all array elements to
+  ! be incremented by one.
+  in_data(:,:) = out_data
+  c = in_data + a
+  write(*,*) "Sum of array and tensor:"
+  write(*,*) out_data
+
   ! Taking the mean of the contents of a tensor
   ! ---------------------------------
   ! In addition to the overloaded mathematical operators, FTorch provides other operators for
