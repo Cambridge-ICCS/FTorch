@@ -98,6 +98,8 @@ the tensor was declared in a program then the finalizer won't get called, but
 this is not considered to be an issue, in the same way that in Fortran it
 doesn't matter if allocated arrays aren't deallocated at the end of the program.
 
+See the [Fortran-lang page on object-oriented Fortran](https://fortran-lang.org/learn/oop_features_in_fortran/object_based_programming_techniques/#finalization-and-conclusions)
+for further details about finalization.
 
 #### Manipulation
 
