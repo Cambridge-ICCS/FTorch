@@ -179,6 +179,16 @@ module ftorch
 
   interface operator (+)
     module procedure torch_tensor_add
+    module procedure torch_tensor_add_array_left_real32_1d
+    module procedure torch_tensor_add_array_left_real32_2d
+    module procedure torch_tensor_add_array_left_real32_3d
+    module procedure torch_tensor_add_array_left_real32_4d
+    module procedure torch_tensor_add_array_left_real32_5d
+    module procedure torch_tensor_add_array_left_real64_1d
+    module procedure torch_tensor_add_array_left_real64_2d
+    module procedure torch_tensor_add_array_left_real64_3d
+    module procedure torch_tensor_add_array_left_real64_4d
+    module procedure torch_tensor_add_array_left_real64_5d
   end interface
 
   interface operator (-)
@@ -2574,6 +2584,287 @@ contains
     end if
     call torch_tensor_add_c(output%p,tensor1%p, tensor2%p)
   end function torch_tensor_add
+
+  !> Overloads addition operator for an array and a tensor of rank 1 containing data of type `real32`
+  function torch_tensor_add_array_left_real32_1d(array, tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : real32
+    real(kind=real32), intent(in), target :: array(:)  !! Array to be added
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(1)   !! Order of indices
+    integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_real32_1d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(intermediate, tensor)
+  end function torch_tensor_add_array_left_real32_1d
+
+  !> Overloads addition operator for an array and a tensor of rank 2 containing data of type `real32`
+  function torch_tensor_add_array_left_real32_2d(array, tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : real32
+    real(kind=real32), intent(in), target :: array(:,:)  !! Array to be added
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(2)   !! Order of indices
+    integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_real32_2d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(intermediate, tensor)
+  end function torch_tensor_add_array_left_real32_2d
+
+  !> Overloads addition operator for an array and a tensor of rank 3 containing data of type `real32`
+  function torch_tensor_add_array_left_real32_3d(array, tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : real32
+    real(kind=real32), intent(in), target :: array(:,:,:)  !! Array to be added
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(3)   !! Order of indices
+    integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_real32_3d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(intermediate, tensor)
+  end function torch_tensor_add_array_left_real32_3d
+
+  !> Overloads addition operator for an array and a tensor of rank 4 containing data of type `real32`
+  function torch_tensor_add_array_left_real32_4d(array, tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : real32
+    real(kind=real32), intent(in), target :: array(:,:,:,:)  !! Array to be added
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(4)   !! Order of indices
+    integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_real32_4d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(intermediate, tensor)
+  end function torch_tensor_add_array_left_real32_4d
+
+  !> Overloads addition operator for an array and a tensor of rank 5 containing data of type `real32`
+  function torch_tensor_add_array_left_real32_5d(array, tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : real32
+    real(kind=real32), intent(in), target :: array(:,:,:,:,:)  !! Array to be added
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(5)   !! Order of indices
+    integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_real32_5d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(intermediate, tensor)
+  end function torch_tensor_add_array_left_real32_5d
+
+  !> Overloads addition operator for an array and a tensor of rank 1 containing data of type `real64`
+  function torch_tensor_add_array_left_real64_1d(array, tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+    real(kind=real64), intent(in), target :: array(:)  !! Array to be added
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(1)   !! Order of indices
+    integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_real64_1d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(intermediate, tensor)
+  end function torch_tensor_add_array_left_real64_1d
+
+  !> Overloads addition operator for an array and a tensor of rank 2 containing data of type `real64`
+  function torch_tensor_add_array_left_real64_2d(array, tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+    real(kind=real64), intent(in), target :: array(:,:)  !! Array to be added
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(2)   !! Order of indices
+    integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_real64_2d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(intermediate, tensor)
+  end function torch_tensor_add_array_left_real64_2d
+
+  !> Overloads addition operator for an array and a tensor of rank 3 containing data of type `real64`
+  function torch_tensor_add_array_left_real64_3d(array, tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+    real(kind=real64), intent(in), target :: array(:,:,:)  !! Array to be added
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(3)   !! Order of indices
+    integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_real64_3d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(intermediate, tensor)
+  end function torch_tensor_add_array_left_real64_3d
+
+  !> Overloads addition operator for an array and a tensor of rank 4 containing data of type `real64`
+  function torch_tensor_add_array_left_real64_4d(array, tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+    real(kind=real64), intent(in), target :: array(:,:,:,:)  !! Array to be added
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(4)   !! Order of indices
+    integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_real64_4d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(intermediate, tensor)
+  end function torch_tensor_add_array_left_real64_4d
+
+  !> Overloads addition operator for an array and a tensor of rank 5 containing data of type `real64`
+  function torch_tensor_add_array_left_real64_5d(array, tensor) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : real64
+    real(kind=real64), intent(in), target :: array(:,:,:,:,:)  !! Array to be added
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(5)   !! Order of indices
+    integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_real64_5d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(intermediate, tensor)
+  end function torch_tensor_add_array_left_real64_5d
+
 
   !> Overloads negative operator for a single tensor.
   function torch_tensor_negative(tensor) result(output)
