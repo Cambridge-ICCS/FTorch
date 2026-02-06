@@ -151,6 +151,7 @@ module ftorch
     #:for PREC in FLOAT_PRECISIONS
     #:for RANK in RANKS
     module procedure torch_tensor_add_array_left_${PREC}$_${RANK}$d
+    module procedure torch_tensor_add_array_right_${PREC}$_${RANK}$d
     #:endfor
     #:endfor
   end interface
@@ -872,6 +873,34 @@ contains
 
     output = torch_tensor_add(intermediate, tensor)
   end function torch_tensor_add_array_left_${PREC}$_${RANK}$d
+
+  !> Overloads addition operator for a tensor and an array of rank ${RANK}$ containing data of type `${PREC}$`
+  function torch_tensor_add_array_right_${PREC}$_${RANK}$d(tensor, array) result(output)
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int
+    use, intrinsic :: iso_fortran_env, only : ${PREC}$
+    type(torch_tensor), intent(in) :: tensor  !! Tensor to be added
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in), target :: array${ranksuffix(RANK)}$  !! Array to be added
+    type(torch_tensor) :: output              !! Tensor to hold the sum
+
+    ! Local data
+    type(torch_tensor) :: intermediate        !! Intermediate tensor
+    integer(ftorch_int) :: layout(${RANK}$)   !! Order of indices
+    integer(c_int), parameter :: ndims = ${RANK}$  !! Number of dimension of input data
+    integer :: i
+
+    ! Set the default tensor layout
+    do i = 1, ndims
+      layout(i) = i
+    end do
+
+    ! Create an intermediate tensor from the array
+    call torch_tensor_from_array_${PREC}$_${RANK}$d(intermediate, array, layout, &
+                                                    tensor%get_device_type(), &
+                                                    device_index=tensor%get_device_index(), &
+                                                    requires_grad=tensor%requires_grad())
+
+    output = torch_tensor_add(tensor, intermediate)
+  end function torch_tensor_add_array_right_${PREC}$_${RANK}$d
 
   #:endfor
   #:endfor
