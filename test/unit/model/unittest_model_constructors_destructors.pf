@@ -16,7 +16,7 @@ module unittest_model_constructors_destructors
   ! All unit tests in this module run on CPU
   integer, parameter :: device_type = torch_kCPU
 
-  character(len=256), parameter :: filename = "test_model.pt"
+  character(len=256), parameter :: filename = "../fixtures/simplenet.pt"
 
 contains
 

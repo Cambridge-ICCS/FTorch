@@ -20,4 +20,4 @@ class SimpleNet(nn.Module):
 
 model = SimpleNet().eval()
 scripted_model = torch.jit.script(model)
-scripted_model.save("test_model.pt")
+scripted_model.save("simplenet.pt")

@@ -103,7 +103,7 @@ Integration tests may be executed in the following ways:
 New components should come with unit tests written using the
 [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit) framework.
 
-- New unit tests should be added to the `test/unit/` directory, have names
+- New unit tests should be added to the `test/unit/` directory and have names
   that start with `unittest_` and use the `.pf` extension.
   - Unit test files should include a `module` with the same name as the file
     (minus the extension).
