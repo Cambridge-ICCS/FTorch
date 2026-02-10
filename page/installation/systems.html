@@ -154,7 +154,7 @@
       <h2 id="system-specific-guidance">System-Specific Guidance</h2>
 <ul>
 <li><a href="#windows">Windows</a></li>
-<li><a href="#apple-silicon">Apple Silicon</a></li>
+<li><a href="#macos-apple-silicon">MacOS (Apple Silicon)</a></li>
 <li><a href="#conda">Conda</a></li>
 <li><a href="#github-codespace">GitHub Codespace</a></li>
 </ul>
@@ -271,11 +271,51 @@ FTorch and its integration tests.</p>
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">install</span><span class="w"> </span><span class="o">.</span>
 </code></pre></div>
 
-<h3 id="apple-silicon">Apple Silicon</h3>
-<p>FTorch can successfully be built on Apple Silicon machines, including utilising the MPS backend,
-following the <a href="general.html">regular CMake instructions</a>.</p>
+<h3 id="macos-apple-silicon">MacOS (Apple Silicon)</h3>
+<p>FTorch can be built on MacOS Apple Silicon machines, including utilising
+the MPS backend, by following the
+<a href="general.html">regular CMake instructions</a> with a few additions as
+detailed below.</p>
 <p>To leverage MPS include the <code>-DGPU_DEVICE=MPS</code>
 <a href="general.html#cmake-build-options">CMake flag</a> at build time.</p>
+<h4 id="dependencies">Dependencies</h4>
+<p>The system clang compilers (<code>clang</code> and <code>clang++</code>) should be used for C and C++.
+This avoids ABI incompatibilities with LibTorch and ensures proper linkage with
+macOS system libraries.</p>
+<p>Apple does not provide a Fortran compiler so users will need to install one.
+We recommend GNU's <code>gfortran</code> which comes with GCC.</p>
+<p>Users will additionally need to install OpenMP (and, for some examples, Open-MPI).
+This can be done e.g. using the <a href="https://brew.sh/">homebrew package manager</a> with:</p>
+<div class="codehilite"><pre><span></span><code>brew install gcc openmpi libomp
+</code></pre></div>
+
+<h4 id="building">Building</h4>
+<p>MacOS requires explicit linking to the C++ standard library and OpenMP support via
+<code>libomp</code>. This can be done through C and C++ flags at compilation time:
+  - <code>-Xpreprocessor -fopenmp</code> which tells clang to use OpenMP, with <code>-Xpreprocessor</code>
+    passing the flag to the preprocessor,
+  - <code>-I&lt;path/to/libomp&gt;/include</code> to find OpenMP headers,
+  - <code>-stdlib=libc++</code> to ensure use of the native MacOS C++ standard library, and
+  - <code>-L&lt;path/to/libomp&gt;/lib -lomp</code> to link against the OpenMP library.</p>
+<p>If using homebrew you can replace <code>&lt;path/to/libomp&gt;</code> with <code>$(brew --prefix libomp)</code>.</p>
+<p>Example CMake command:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DCMAKE_C_COMPILER<span class="o">=</span>clang<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>clang++<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DCMAKE_Fortran_COMPILER<span class="o">=</span>gfortran<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DCMAKE_C_FLAGS<span class="o">=</span><span class="s2">&quot;-Xpreprocessor -fopenmp -I&lt;path/to/libomp&gt;/include&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DCMAKE_CXX_FLAGS<span class="o">=</span><span class="s2">&quot;-stdlib=libc++ -Xpreprocessor -fopenmp -I&lt;path/to/libomp&gt;/include&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DCMAKE_EXE_LINKER_FLAGS<span class="o">=</span><span class="s2">&quot;-L&lt;path/to/libomp&gt;/lib -lomp&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DGPU_DEVICE<span class="o">=</span>MPS
+cmake<span class="w"> </span>--build<span class="w"> </span>.
+cmake<span class="w"> </span>--install<span class="w"> </span>.
+</code></pre></div>
+
+<p>To build without support for Apple Silicon MPS acceleration, remove the <code>-DGPU_DEVICE=MPS</code>.</p>
+<p>We recommend Mac users review the MacOS continuous integration workflow
+(<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_macos_cpu_clang.yml"><code>.github/workflows/test_suite_macos_cpu_clang.yml</code></a>)
+for more information, as this provides another example of how to build and run
+FTorch and its integration tests.</p>
 <h3 id="conda">Conda</h3>
 <p>Conda is not our preferred approach for managing dependencies, but for users who want
 an environment to build FTorch in we provide guidance and environment files in a
