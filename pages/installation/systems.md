@@ -5,7 +5,7 @@ date: Last Updated: October 2025
 ## System-Specific Guidance
 
 - [Windows](#windows)
-- [Apple Silicon](#apple-silicon)
+- [MacOS (Apple Silicon)](#macos-apple-silicon)
 - [Conda](#conda)
 - [GitHub Codespace](#github-codespace)
 
@@ -136,13 +136,63 @@ cmake --install .
 ```
 
 
-### Apple Silicon
+### MacOS (Apple Silicon)
 
-FTorch can successfully be built on Apple Silicon machines, including utilising the MPS backend,
-following the [regular CMake instructions](|page|/installation/general.html).
+FTorch can be built on MacOS Apple Silicon machines, including utilising
+the MPS backend, by following the
+[regular CMake instructions](|page|/installation/general.html) with a few additions as
+detailed below.
 
 To leverage MPS include the `-DGPU_DEVICE=MPS`
 [CMake flag](|page|/installation/general.html#cmake-build-options) at build time.
+
+#### Dependencies
+
+The system clang compilers (`clang` and `clang++`) should be used for C and C++.
+This avoids ABI incompatibilities with LibTorch and ensures proper linkage with
+macOS system libraries.
+
+Apple does not provide a Fortran compiler so users will need to install one.
+We recommend GNU's `gfortran` which comes with GCC.
+
+Users will additionally need to install OpenMP (and, for some examples, Open-MPI).
+This can be done e.g. using the [homebrew package manager](https://brew.sh/) with:
+```
+brew install gcc openmpi libomp
+```
+
+#### Building
+
+MacOS requires explicit linking to the C++ standard library and OpenMP support via
+`libomp`. This can be done through C and C++ flags at compilation time:
+  - `-Xpreprocessor -fopenmp` which tells clang to use OpenMP, with `-Xpreprocessor`
+    passing the flag to the preprocessor,
+  - `-I<path/to/libomp>/include` to find OpenMP headers,
+  - `-stdlib=libc++` to ensure use of the native MacOS C++ standard library, and
+  - `-L<path/to/libomp>/lib -lomp` to link against the OpenMP library.
+
+If using homebrew you can replace `<path/to/libomp>` with `$(brew --prefix libomp)`.
+
+Example CMake command:
+```sh
+cmake .. \
+  -DCMAKE_C_COMPILER=clang \
+  -DCMAKE_CXX_COMPILER=clang++ \
+  -DCMAKE_Fortran_COMPILER=gfortran \
+  -DCMAKE_C_FLAGS="-Xpreprocessor -fopenmp -I<path/to/libomp>/include" \
+  -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Xpreprocessor -fopenmp -I<path/to/libomp>/include" \
+  -DCMAKE_EXE_LINKER_FLAGS="-L<path/to/libomp>/lib -lomp" \
+  -DGPU_DEVICE=MPS
+cmake --build .
+cmake --install .
+```
+
+To build without support for Apple Silicon MPS acceleration, remove the `-DGPU_DEVICE=MPS`.
+
+We recommend Mac users review the MacOS continuous integration workflow
+([`.github/workflows/test_suite_macos_cpu_clang.yml`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_macos_cpu_clang.yml))
+for more information, as this provides another example of how to build and run
+FTorch and its integration tests.
 
 
 ### Conda
