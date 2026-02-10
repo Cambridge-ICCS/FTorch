@@ -1,0 +1,530 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="FTorch - A library for coupling (Py)Torch machine learning models to Fortran codes.Written in modern Fortran (2008) with source code available on GitHub it has been used in multiple scientific projects.The associated JOSS paper can read here.">
+    <meta name="author" content="ICCS Cambridge" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>ftorch_devices &ndash; FTorch</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+      <link href="../css/user.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">FTorch </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">User Guide</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>ftorch_devices
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+            <li class="list-inline-item" id="meta-license"><i class="fa fa-legal"></i> <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a></li>
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.5% of total for modules and submodules.">12 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/ftorch_devices.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/ftorch_devices.f90.html'>ftorch_devices.F90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">ftorch_devices</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#enums-0"
+         aria-expanded="false" aria-controls="enums-0">
+         <h4 class="card-header bg-primary text-white">Enumerations</h4>
+      </a>
+      <div id="enums-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/ftorch_devices.html#enum-__unnamed__"><em>unnamed</em></a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Module for defining FTorch's enumerators for device types.</p>
+<ul>
+<li>License
+   FTorch is released under an MIT license.
+   See the <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE">LICENSE</a>
+   file for details.</li>
+</ul>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~ftorch_devices~~UsesGraph Pages: 1 -->
+<svg id="moduleftorch_devicesUsesGraph" width="227pt" height="32pt"
+ viewBox="0.00 0.00 227.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~ftorch_devices~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>module~~ftorch_devices~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 223,-28 223,4 -4,4"/>
+<!-- module~ftorch_devices -->
+<g id="module~~ftorch_devices~~UsesGraph_node1" class="node">
+<title>module~ftorch_devices</title>
+<polygon fill="none" stroke="black" points="219,-24 130,-24 130,0 219,0 219,-24"/>
+<text text-anchor="middle" x="174.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">ftorch_devices</text>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~ftorch_devices~~UsesGraph_node2" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~ftorch_devices~~UsesGraph_node2"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-24 0,-24 0,0 94,0 94,-24"/>
+<text text-anchor="middle" x="47" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~ftorch_devices&#45;&gt;iso_fortran_env -->
+<g id="module~~ftorch_devices~~UsesGraph_edge1" class="edge">
+<title>module~ftorch_devices&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M129.96,-12C121.61,-12 112.77,-12 104.09,-12"/>
+<polygon fill="#000000" stroke="#000000" points="104.03,-8.5 94.03,-12 104.03,-15.5 104.03,-8.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+          <div class="card">
+      <h3 class="card-header card-title bg-light">Used by</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~ftorch_devices~~UsedByGraph Pages: 1 -->
+<svg id="moduleftorch_devicesUsedByGraph" width="423pt" height="73pt"
+ viewBox="0.00 0.00 423.00 73.21" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~ftorch_devices~~UsedByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 69.21)">
+<title>module~~ftorch_devices~~UsedByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-69.21 419,-69.21 419,4 -4,4"/>
+<!-- module~ftorch_devices -->
+<g id="module~~ftorch_devices~~UsedByGraph_node1" class="node">
+<title>module~ftorch_devices</title>
+<polygon fill="none" stroke="black" points="89,-57.19 0,-57.19 0,-33.19 89,-33.19 89,-57.19"/>
+<text text-anchor="middle" x="44.5" y="-42.79" font-family="Helvetica,sans-Serif" font-size="10.50">ftorch_devices</text>
+</g>
+<!-- module~ftorch -->
+<g id="module~~ftorch_devices~~UsedByGraph_node2" class="node">
+<title>module~ftorch</title>
+<g id="a_module~~ftorch_devices~~UsedByGraph_node2"><a xlink:href="../module/ftorch.html" xlink:title="ftorch">
+<polygon fill="#337ab7" stroke="#337ab7" points="415,-37.19 361,-37.19 361,-13.19 415,-13.19 415,-37.19"/>
+<text text-anchor="middle" x="388" y="-22.79" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ftorch</text>
+</a>
+</g>
+</g>
+<!-- module~ftorch&#45;&gt;module~ftorch_devices -->
+<g id="module~~ftorch_devices~~UsedByGraph_edge1" class="edge">
+<title>module~ftorch&#45;&gt;module~ftorch_devices</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M360.8,-35.4C349.87,-39.31 336.97,-43.47 325,-46.19 256.03,-61.84 237.73,-65.02 167,-65.19"/>
+</g>
+<!-- module~ftorch_model -->
+<g id="module~~ftorch_devices~~UsedByGraph_node3" class="node">
+<title>module~ftorch_model</title>
+<g id="a_module~~ftorch_devices~~UsedByGraph_node3"><a xlink:href="../module/ftorch_model.html" xlink:title="ftorch_model">
+<polygon fill="#337ab7" stroke="#337ab7" points="325,-37.19 243,-37.19 243,-13.19 325,-13.19 325,-37.19"/>
+<text text-anchor="middle" x="284" y="-22.79" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ftorch_model</text>
+</a>
+</g>
+</g>
+<!-- module~ftorch&#45;&gt;module~ftorch_model -->
+<g id="module~~ftorch_devices~~UsedByGraph_edge4" class="edge">
+<title>module~ftorch&#45;&gt;module~ftorch_model</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M361,-25.19C353.19,-25.19 344.35,-25.19 335.52,-25.19"/>
+<polygon fill="#000000" stroke="#000000" points="335.24,-21.69 325.24,-25.19 335.24,-28.69 335.24,-21.69"/>
+</g>
+<!-- module~ftorch_tensor -->
+<g id="module~~ftorch_devices~~UsedByGraph_node4" class="node">
+<title>module~ftorch_tensor</title>
+<g id="a_module~~ftorch_devices~~UsedByGraph_node4"><a xlink:href="../module/ftorch_tensor.html" xlink:title="ftorch_tensor">
+<polygon fill="#337ab7" stroke="#337ab7" points="207,-37.19 125,-37.19 125,-13.19 207,-13.19 207,-37.19"/>
+<text text-anchor="middle" x="166" y="-22.79" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ftorch_tensor</text>
+</a>
+</g>
+</g>
+<!-- module~ftorch&#45;&gt;module~ftorch_tensor -->
+<g id="module~~ftorch_devices~~UsedByGraph_edge5" class="edge">
+<title>module~ftorch&#45;&gt;module~ftorch_tensor</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M360.94,-14.25C350.04,-10.23 337.11,-6.18 325,-4.19 289.04,1.74 279.11,0.71 243,-4.19 233.03,-5.54 222.52,-7.85 212.6,-10.45"/>
+<polygon fill="#000000" stroke="#000000" points="211.63,-7.08 202.92,-13.12 213.49,-13.83 211.63,-7.08"/>
+</g>
+<!-- module~ftorch_model&#45;&gt;module~ftorch_devices -->
+<g id="module~~ftorch_devices~~UsedByGraph_edge2" class="edge">
+<title>module~ftorch_model&#45;&gt;module~ftorch_devices</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M261.52,-37.37C238.8,-49.11 201.51,-65.1 167,-65.19"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M165,-65.19C143.32,-65.24 119.72,-62.01 99.27,-58.12"/>
+<polygon fill="#000000" stroke="#000000" points="99.68,-54.64 89.19,-56.12 98.31,-61.5 99.68,-54.64"/>
+</g>
+<!-- module~ftorch_model&#45;&gt;module~ftorch_tensor -->
+<g id="module~~ftorch_devices~~UsedByGraph_edge6" class="edge">
+<title>module~ftorch_model&#45;&gt;module~ftorch_tensor</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M242.75,-25.19C234.57,-25.19 225.86,-25.19 217.37,-25.19"/>
+<polygon fill="#000000" stroke="#000000" points="217.17,-21.69 207.17,-25.19 217.17,-28.69 217.17,-21.69"/>
+</g>
+<!-- module~ftorch_tensor&#45;&gt;module~ftorch_devices -->
+<g id="module~~ftorch_devices~~UsedByGraph_edge3" class="edge">
+<title>module~ftorch_tensor&#45;&gt;module~ftorch_devices</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M124.88,-31.9C116.59,-33.29 107.74,-34.77 99.06,-36.22"/>
+<polygon fill="#000000" stroke="#000000" points="98.29,-32.8 89.01,-37.91 99.45,-39.71 98.29,-32.8"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsedByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      <br>
+
+
+
+        <section>
+          <h2>Enumerations</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="enum-__unnamed__"></span><h3>enum, bind(c)</h3></div>
+    <div class="card-body">
+      <h4>Enumerators</h4>
+      <table class="table table-striped varlist">
+        <tbody>
+            <tr>
+              <td>enumerator</td><td>::</td>
+              <td><strong>torch_kCPU</strong></td><td> = </td><td>0</td><td></td>
+            </tr>
+            <tr>
+              <td>enumerator</td><td>::</td>
+              <td><strong>torch_kCUDA</strong></td><td> = </td><td>1</td><td></td>
+            </tr>
+            <tr>
+              <td>enumerator</td><td>::</td>
+              <td><strong>torch_kHIP</strong></td><td> = </td><td>1</td><td></td>
+            </tr>
+            <tr>
+              <td>enumerator</td><td>::</td>
+              <td><strong>torch_kXPU</strong></td><td> = </td><td>11</td><td></td>
+            </tr>
+            <tr>
+              <td>enumerator</td><td>::</td>
+              <td><strong>torch_kMPS</strong></td><td> = </td><td>12</td><td></td>
+            </tr>
+        </tbody>
+      </table>
+        <h4>Description</h4>
+        
+        <p>Enumerator for Torch devices
+ From c_torch.h (torch_device_t)
+ NOTE: Defined in main CMakeLists and passed via preprocessor</p>
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              FTorch
+ was developed by ICCS Cambridge<br>              &copy; 2026 <a rel="license" href="https://opensource.org/licenses/MIT">MIT</a>
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

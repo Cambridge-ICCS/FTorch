@@ -163,14 +163,15 @@
 </ul>
 <h3 id="usage">Usage</h3>
 <h5 id="why-are-inputsoutputs-tofrom-torch-models-arrays">Why are inputs/outputs to/from torch models arrays?</h5>
-<p>The reason input and output tensors to/from <a href="../../proc/torch_model_forward.html">torch_model_forward</a>
-are contained in arrays is because it is possible to pass multiple input tensors to
-the <code>forward()</code> method of a torch net, and it is possible for the net to return
-multiple output tensors.</p>
+<p>The reason input and output tensors to/from
+<a href="../../proc/torch_model_forward.html">torch_model_forward</a> are contained in arrays
+is because it is possible to pass multiple input tensors to the <code>forward()</code>
+method of a torch net, and it is possible for the net to return multiple output
+tensors.</p>
 <p>The nature of Fortran means that it is not possible to set an arbitrary number
-of inputs to the <a href="../../proc/torch_model_forward.html">torch_model_forward</a> subroutine,
-so instead we use a single array of input tensors which <em>can</em> have an arbitrary length.
-Similarly, a single array of output tensors is used.</p>
+of inputs to the <a href="../../proc/torch_model_forward.html">torch_model_forward</a>
+subroutine, so instead we use a single array of input tensors which <em>can</em> have
+an arbitrary length. Similarly, a single array of output tensors is used.</p>
 <p>Note that this does not refer to batching data.
 This should be done in the same way as in Torch; by extending the dimensionality of
 the input tensors.</p>
@@ -220,10 +221,11 @@ compile time error like the following:</p>
 <a href="../developer/developer.html">developer documentation</a></em></p>
 <h4 id="segmentation-faults">Segmentation faults</h4>
 <h5 id="missing-import-for-overloaded-assignment-operator">Missing import for overloaded assignment operator</h5>
-<p>Whenever you execute code involving <a href="../../type/torch_tensor.html">torch_tensor</a>s on each side
-of an equals sign, the overloaded assignment operator should be triggered.
-As such, if you aren't using the bare <code>use ftorch</code> import then you should ensure you
-specify <code>use ftorch, only: assignment(=)</code> (as well as any other module members you
+<p>Whenever you execute code involving
+<a href="../../type/torch_tensor.html">torch_tensor</a>s on each side of an equals sign,
+the overloaded assignment operator should be triggered. As such, if you aren't
+using the bare <code>use ftorch</code> import then you should ensure you specify
+<code>use ftorch, only: assignment(=)</code> (as well as any other module members you
 require). See the <a href="tensor.html">tensor documentation</a> for more details.</p>
     </div>
   </div>

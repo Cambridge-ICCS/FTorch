@@ -182,7 +182,7 @@ expected for submissions.</p>
 
 <p>In order to streamline the process of uploading we provide a pre-commit hook in
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/.githooks/pre-commit"><code>.githooks/pre-commit</code></a>.
-This will check that both the <code>.fypp</code> and <code>.F90</code> files have been updated together in a
+This will check that both the <code>.fypp</code> and <code>.f90</code> files have been updated together in a
 synchronous fashion before a commmit can take place
 (<a href="#fortran-source-generation-using-fypp">see below</a>).
 Use of the hook is not automatic and needs to be enabled by the developer
@@ -213,13 +213,13 @@ for details of the available functions.</p>
   printing to screen before exiting cleanly.</li>
 </ul>
 <h4 id="fortran-source-generation-using-fypp">Fortran source generation using Fypp</h4>
-<p>The Fortran source code in <code>src/ftorch.F90</code> should not be edited directly
-but instead generated from <code>src/ftorch.fypp</code> by running the
+<p>The Fortran source code in <code>src/ftorch_tensor.f90</code> should not be edited directly
+but instead generated from <code>src/ftorch_tensor.fypp</code> by running the
 <a href="https://fypp.readthedocs.io/en/stable/index.html">Fypp</a> preprocessor.
 This is done to simplify the process of overloading functions for multiple data
 Fypp can be installed with the <a href="#installing-developer-requirements">developer requirements</a>.</p>
 <p>To generate the Fortran code run:</p>
-<div class="codehilite"><pre><span></span><code>fypp<span class="w"> </span>src/ftorch.fypp<span class="w"> </span>src/ftorch.F90
+<div class="codehilite"><pre><span></span><code>fypp<span class="w"> </span>src/ftorch_tensor.fypp<span class="w"> </span>src/ftorch_tensor.f90
 </code></pre></div>
 
 <p>Conformance of these files is checked using GitHub continuous integration and
@@ -229,8 +229,9 @@ the <a href="#developer-requirements">provided pre-commit hook</a>.</p>
 <p>Generally it would be advisable to provide only the <code>.fypp</code> source code to
 reduce duplication and confusion. However, because it is a relatively small file
 and many of our users wish to <em>"clone-and-go"</em> rather than develop, we provide both.<br>
-Development should only take place in <code>ftorch.fypp</code>, however._</p>
+Development should only take place in <code>ftorch_tensor.fypp</code>, however._</p>
 </div>
+<p>The same applies to <code>ftorch_test_utils.fypp</code> and <code>ftorch_test_utils.f90</code>.</p>
 <h4 id="gpu-device-handling">GPU device handling</h4>
 <p>GPU device-specific code is handled in FTorch using codes defined in the root
 <code>CMakeLists.txt</code> file:</p>
@@ -354,7 +355,7 @@ the project homepage.
 Additional pages are contained in <code>pages/</code> as markdown files.</p>
 <p>Notes:</p>
 <ul>
-<li>We need to define macros for GPU devices that are passed to <code>ftorch.F90</code>
+<li>We need to define macros for GPU devices that are passed to FTorch via the <code>ftorch_devices.F90</code> module.
   via the C preprocessor in <code>FTorch.md</code> to match those in the CMakeLists.txt.</li>
 <li>If building documentation locally you can set the <code>dbg: true</code> in <code>FTorch.md</code> to allow
   FORD to continue when encountering errors. Note that in this case the documentation

@@ -91,20 +91,20 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p>28.6% of total for derived types.</p>Including implementation: 30 statements, 13.2% of total for derived types.">6 statements</a>
+                 title="<p>31.8% of total for derived types.</p>Including implementation: 46 statements, 18.9% of total for derived types.">7 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
-              <a href="../src/ftorch.F90"> Source File</a>
+              <a href="../src/ftorch_model.f90"> Source File</a>
             </li>
         </ul>
       </div>
       <div class="col">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='../sourcefile/ftorch.f90.html'>ftorch.F90</a></li>
-                <li class="breadcrumb-item"><a href='../module/ftorch.html'>ftorch</a></li>
+                <li class="breadcrumb-item"><a href='../sourcefile/ftorch_model.f90.html'>ftorch_model.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/ftorch_model.html'>ftorch_model</a></li>
             <li class="breadcrumb-item active" aria-current="page">torch_model</li>
           </ol>
         </nav>
@@ -133,7 +133,7 @@
       </a>
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../type/torch_model.html#variable-p">p</a>
+            <a class="list-group-item" href="../type/torch_model.html#variable-p~2">p</a>
         </div>
       </div>
     </div>
@@ -152,7 +152,18 @@
   
   
   
-  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#fins-0"
+         aria-expanded="false" aria-controls="fins-0">
+         <h4 class="card-header bg-primary text-white">Finalization Procedures</h4>
+      </a>
+      <div id="fins-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/torch_model.html#finalproc-torch_model_delete">torch_model_delete</a>
+        </div>
+      </div>
+    </div>
+
       <div class="card mb-4">
       <a data-bs-toggle="collapse" href="#boundprocs-0"
          aria-expanded="false" aria-controls="boundprocs-0">
@@ -286,7 +297,7 @@ said component(s).
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-p"></span>
+              <span class="anchor" id="variable-p~2"></span>
               type(c_ptr),
             </td>
               <td>public</td>
@@ -308,6 +319,62 @@ said component(s).
     <br>
     
 
+      <section>
+        <h2>Finalization Procedures</h2>
+            <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="finalproc-torch_model_delete"></span>
+      <h3>final :: <strong>torch_model_delete</strong> </h3>
+    </div>
+    <div class="card-body">
+      
+      
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item">
+            <h3>
+    public  subroutine <a href='../proc/torch_model_delete.html'>torch_model_delete</a>(model)  
+
+    </h3>
+    
+  <p>Deallocates a TorchScript model</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-model~3"></span>
+              type(<a href='torch_model.html'>torch_model</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>model</strong></td>
+            <td>
+<p>Torch Model to deallocate</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+      </li>
+    </ul>
+  </div>
+
+      </section>
+      <br>
 
       <section>
         <h2>Type-Bound Procedures</h2>
@@ -436,6 +503,7 @@ said component(s).
 <span class="w">  </span><span class="k">contains</span>
 <span class="k">    procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">print_parameters</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_model_print_parameters</span>
 <span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_training</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_model_is_training</span>
+<span class="w">    </span><span class="k">final</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">torch_model_delete</span>
 <span class="w">  </span><span class="k">end type </span><span class="n">torch_model</span>
 </pre></div>
 

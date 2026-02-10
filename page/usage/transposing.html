@@ -222,8 +222,9 @@ to our Torch net is correct as we expect.</p>
 <h3 id="what-can-we-do">What can we do?</h3>
 <p>There are a few approaches we can take to address this.
 The first two of these are listed for conceptual purposes, whilst in practice we
-advise handling this using the <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a>
-subroutine described in <a href="#3-use-the-layout-argument-in-torch_tensor_from_array">3) below</a>.</p>
+advise handling this using the
+<a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> subroutine
+described in <a href="#3-use-the-layout-argument-in-torch_tensor_from_array">3) below</a>.</p>
 <h4 id="1-transpose-before-passing">1) Transpose before passing</h4>
 <p>As seen from the above example, writing out from Fortran and reading directly in to
 Torch results in us receiving the transpose.</p>
@@ -268,10 +269,11 @@ the same way by using strided access based on the shape of the array.</p>
 i.e. <code>[1, 2]</code> will read <code>i</code> then <code>j</code>.
 By passing <code>layout = [1, 2]</code> the data will be read into the correct indices by
 Torch. The natural ordering <code>[1, 2, ..., n]</code> (where <code>n</code> is the dimension of the
-array) is the default used by <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a>.
-In cases where your tensors are indexed the same way in both Fortran and Torch, it
-should be sufficient to just use the default value, in which case you don't need
-to pass a <code>layout</code> argument at all.</p>
+array) is the default used by
+<a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a>. In cases where
+your tensors are indexed the same way in both Fortran and Torch, it should be
+sufficient to just use the default value, in which case you don't need to pass
+a <code>layout</code> argument at all.</p>
 <p>The strided access is achieved by wrapping the <code>torch_tensor_from_blob</code> function
 to automatically generate strides, assuming that a straightforward conversion
 between row- and column-major is what should happen.</p>
