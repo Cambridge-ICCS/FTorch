@@ -68,15 +68,15 @@ The following guidelines should be followed whilst writing new routines:
 
 #### Fortran source generation using Fypp
 
-The Fortran source code in `src/ftorch.f90` should not be edited directly
-but instead generated from `src/ftorch.fypp` by running the
+The Fortran source code in `src/ftorch_tensor.f90` should not be edited directly
+but instead generated from `src/ftorch_tensor.fypp` by running the
 [Fypp](https://fypp.readthedocs.io/en/stable/index.html) preprocessor.
 This is done to simplify the process of overloading functions for multiple data
 Fypp can be installed with the [developer requirements](#installing-developer-requirements).
 
 To generate the Fortran code run:
 ```sh
-fypp src/ftorch.fypp src/ftorch.f90
+fypp src/ftorch_tensor.fypp src/ftorch_tensor.f90
 ```
 
 Conformance of these files is checked using GitHub continuous integration and
@@ -86,8 +86,10 @@ the [provided pre-commit hook](#developer-requirements).
 Generally it would be advisable to provide only the `.fypp` source code to
 reduce duplication and confusion. However, because it is a relatively small file
 and many of our users wish to _"clone-and-go"_ rather than develop, we provide both.<br>
-Development should only take place in `ftorch.fypp`, however._
+Development should only take place in `ftorch_tensor.fypp`, however._
 @endnote
+
+The same applies to `ftorch_test_utils.fypp` and `ftorch_test_utils.f90`.
 
 #### GPU device handling
 
