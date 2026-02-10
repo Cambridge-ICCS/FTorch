@@ -24,7 +24,7 @@ for FILENAME in ftorch_tensor ftorch_test_utils; do
   # Check that .f90 is not modified and staged alone.
   git diff --cached --name-only | if grep --quiet "${FILENAME}.f90"; then
     git diff --cached --name-only | if ! grep --quiet "${FILENAME}.fypp"; then
-      cat <<\EOF
+      cat <<EOF
 Error: File ${FILENAME}.f90 has been modified and staged without ${FILENAME}.fypp being changed.
 ${FILENAME}.f90 should be generated from ${FILENAME}.fypp using fypp.
 Please restore ${FILENAME}.f90 and make your modifications to ${FILENAME}.fypp instead.
@@ -38,7 +38,7 @@ EOF
 
     # Check that .f90 is also modified and staged.
     git diff --cached --name-only | if ! grep --quiet "${FILENAME}.f90"; then
-      cat <<\EOF
+      cat <<EOF
 Error: File ${FILENAME}.fypp has been modified and staged, but ${FILENAME}.f90 has not.
 ${FILENAME}.f90 should be generated from ${FILENAME}.fypp and both committed together.
 Please run fypp on ${FILENAME}.fypp to generate ${FILENAME}.f90 and commit together.
@@ -47,8 +47,8 @@ EOF
     else
       # Check fypp available, and raise error and exit if not.
       if ! command -v fypp &>/dev/null; then
-        cat <<\EOF
-echo "Error: Could not find fypp to run on ftorch_tensor.fypp.
+        cat <<EOF
+Error: Could not find fypp to run on ${FILENAME}.fypp.
 Please install fypp using "pip install fypp" and then try committing again.
 EOF
         exit 1
@@ -58,7 +58,7 @@ EOF
       fypp src/${FILENAME}.fypp src/${FILENAME}.f90_tmp
       if ! diff -q "src/${FILENAME}.f90" "src/${FILENAME}.f90_tmp" &>/dev/null; then
         rm src/${FILENAME}.f90_tmp
-        cat <<\EOF
+        cat <<EOF
 Error: The code in ${FILENAME}.f90 does not match that expected from ${FILENAME}.fypp.
 Please re-run fypp on ${FILENAME}.fypp to ensure consistency before committing.
 EOF
