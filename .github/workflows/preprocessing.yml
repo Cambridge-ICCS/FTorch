@@ -1,5 +1,5 @@
 # Workflow to run Fortran pre-processor checks on source
-name: Fypp checks
+name: Preprocessing
 
 on:
   # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
@@ -10,10 +10,8 @@ on:
   pull_request:
     paths:
       - '.github/workflows/fypp_checks.yml'
-      - '**.fypp'
-      - '**.f90'
-      - '**.F90'
-      - '**.pf'
+      - 'ftorch_tensor.f*'
+      - 'ftorch_test_utils.f*'
 
 # Cancel jobs running if new commits are pushed
 concurrency:
@@ -49,12 +47,12 @@ jobs:
       - name: Install fypp, the Fortran pre-processor
         run: pip install fypp
 
-      - name: Check ftorch.fypp matches ftorch.F90
+      - name: Check ftorch_tensor.fypp matches ftorch_tensor.f90
         run: |
-          fypp src/ftorch.fypp src/temp.F90_temp
-          if ! diff -q src/ftorch.F90 src/temp.F90_temp; then
-            echo "Error: The code in ftorch.F90 does not match that expected from ftorch.fypp."
-            echo "Please re-run fypp on ftorch.fypp to ensure consistency and re-commit."
+          fypp src/ftorch_tensor.fypp src/temp.f90_temp
+          if ! diff -q src/ftorch_tensor.f90 src/temp.f90_temp; then
+            echo "Error: The code in ftorch_tensor.f90 does not match that expected from ftorch_tensor.fypp."
+            echo "Please re-run fypp on ftorch_tensor.fypp to ensure consistency and re-commit."
             exit 1
           else
             exit 0

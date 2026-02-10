@@ -6,7 +6,7 @@ date: Last Updated: October 2025
 
 Transposition of data between Fortran and C can lead to a lot of unnecessary confusion.
 The FTorch library looks after this for you with the
-[[ftorch(module):torch_tensor_from_array(interface)]] function which
+[[ftorch_tensor(module):torch_tensor_from_array(interface)]] function which
 allows you to index a tensor in Torch in **exactly the same way** as you would in Fortran.
 
 If you wish to do something different to this then there are more complex functions
@@ -87,8 +87,9 @@ to our Torch net is correct as we expect.
 
 There are a few approaches we can take to address this.
 The first two of these are listed for conceptual purposes, whilst in practice we
-advise handling this using the [[ftorch(module):torch_tensor_from_array(interface)]]
-subroutine described in [3) below](#3-use-the-layout-argument-in-torch_tensor_from_array).
+advise handling this using the
+[[ftorch_tensor(module):torch_tensor_from_array(interface)]] subroutine
+described in [3) below](#3-use-the-layout-argument-in-torch_tensor_from_array).
 
 #### 1) Transpose before passing
 As seen from the above example, writing out from Fortran and reading directly in to
@@ -136,7 +137,7 @@ Not doing so could leave us open to introducing bugs.
 By far the easiest way to deal with the issue is not to worry about it at all!
 
 As described at the top of this page, the
-[[ftorch(module):torch_tensor_from_array(interface)]] function
+[[ftorch_tensor(module):torch_tensor_from_array(interface)]] function
 provides functionality for handling this through its optional `layout` argument.
 This allows us to take data from Fortran and send it to Torch to be indexed in exactly
 the same way by using strided access based on the shape of the array.
@@ -145,10 +146,11 @@ It takes the form of an array specifying which order to read the indices in.
 i.e. `[1, 2]` will read `i` then `j`.
 By passing `layout = [1, 2]` the data will be read into the correct indices by
 Torch. The natural ordering `[1, 2, ..., n]` (where `n` is the dimension of the
-array) is the default used by [[ftorch(module):torch_tensor_from_array(interface)]].
-In cases where your tensors are indexed the same way in both Fortran and Torch, it
-should be sufficient to just use the default value, in which case you don't need
-to pass a `layout` argument at all.
+array) is the default used by
+[[ftorch_tensor(module):torch_tensor_from_array(interface)]]. In cases where
+your tensors are indexed the same way in both Fortran and Torch, it should be
+sufficient to just use the default value, in which case you don't need to pass
+a `layout` argument at all.
 
 The strided access is achieved by wrapping the `torch_tensor_from_blob` function
 to automatically generate strides, assuming that a straightforward conversion
@@ -184,4 +186,4 @@ $$
 
 For more advanced options for manipulating and controlling data access when passing
 between Fortran and Torch see the more powerful but more complex
-[[ftorch(module):torch_tensor_from_blob(subroutine)]] subroutine.
+[[ftorch_tensor(module):torch_tensor_from_blob(subroutine)]] subroutine.

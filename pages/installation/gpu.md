@@ -77,8 +77,8 @@ if device_type != "cpu":
 ```
 
 **3) Specify the target device from FTorch**  
-When calling [[ftorch(module):torch_tensor_from_array(interface)]] and
-[[ftorch(module):torch_model_load(subroutine)]]  in Fortran,
+When calling [[ftorch_tensor(module):torch_tensor_from_array(interface)]] and
+[[ftorch_model(module):torch_model_load(subroutine)]]  in Fortran,
 the device type for the input tensor(s) and model should be set to the appropriate
 device type (`torch_kCUDA`, `torch_kHIP`, `torch_kXPU`, or `torch_kMPS`) rather
 than `torch_kCPU`.
