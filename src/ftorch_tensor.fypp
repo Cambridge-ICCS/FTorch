@@ -29,8 +29,8 @@ $:'integer' if PRECISION[:3] == 'int' else 'real'
 module ftorch_tensor
   use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
   use, intrinsic :: iso_fortran_env, only: int32
-  use ftorch_types, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS, &
-                          torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
+  use ftorch_devices, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
+  use ftorch_types, only: torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
                           torch_kFloat32, torch_kFloat64, ftorch_int
 
   implicit none

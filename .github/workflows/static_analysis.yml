@@ -106,6 +106,7 @@ jobs:
           cd ${{ github.workspace }}
           . ../ftorch_venv/bin/activate
           fortitude check src/ftorch.f90
+          fortitude check src/ftorch_devices.F90
           fortitude check src/ftorch_types.F90
           fortitude check src/ftorch_tensor.f90
           fortitude check src/ftorch_model.f90

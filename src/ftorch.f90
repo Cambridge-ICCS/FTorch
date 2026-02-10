@@ -5,8 +5,8 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module ftorch
-  use ftorch_types, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS, &
-                          torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
+  use ftorch_devices, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
+  use ftorch_types, only: torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
                           torch_kFloat32, torch_kFloat64, ftorch_int
   use ftorch_tensor, only: assignment(=), operator(+), operator(-), operator(*), operator(/), &
                            operator(**), torch_tensor, torch_tensor_empty, torch_tensor_zeros, &

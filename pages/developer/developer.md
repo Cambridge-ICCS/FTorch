@@ -239,7 +239,7 @@ Additional pages are contained in `pages/` as markdown files.
 
 Notes:
 
-- We need to define macros for GPU devices that are passed to FTorch via the `ftorch_types.F90` module.
+- We need to define macros for GPU devices that are passed to FTorch via the `ftorch_devices.F90` module.
   via the C preprocessor in `FTorch.md` to match those in the CMakeLists.txt.
 - If building documentation locally you can set the `dbg: true` in `FTorch.md` to allow
   FORD to continue when encountering errors. Note that in this case the documentation

@@ -6,7 +6,8 @@
 !    file for details.
 module ftorch_model
   use, intrinsic :: iso_c_binding, only : c_null_ptr, c_ptr
-  use ftorch_types, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS, ftorch_int
+  use ftorch_devices, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
+  use ftorch_types, only: ftorch_int
   use ftorch_tensor, only: torch_tensor
 
   implicit none
