@@ -138,7 +138,7 @@ cmake --install .
 
 ### MacOS (Apple Silicon)
 
-FTorch can successfully be built on MacOS Apple Silicon machines, including utilising
+FTorch can be built on MacOS Apple Silicon machines, including utilising
 the MPS backend, by following the
 [regular CMake instructions](|page|/installation/general.html) with a few additions as
 detailed below.
@@ -189,7 +189,7 @@ cmake --install .
 
 To build without support for Apple Silicon MPS acceleration, remove the `-DGPU_DEVICE=MPS`.
 
-We recommend Windows users review the MacOS continuous integration workflow
+We recommend Mac users review the MacOS continuous integration workflow
 ([`.github/workflows/test_suite_macos_cpu_clang.yml`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_macos_cpu_clang.yml))
 for more information, as this provides another example of how to build and run
 FTorch and its integration tests.
