@@ -19,50 +19,54 @@ fi
 
 # ===================================================================
 
-# Check that ftorch.90 is not modified and staged alone.
-git diff --cached --name-only | if grep --quiet "ftorch.f90"; then
-  git diff --cached --name-only | if ! grep --quiet "ftorch.fypp"; then
-    cat <<\EOF
-Error: File ftorch.f90 has been modified and staged without ftorch.fypp being changed.
-ftorch.90 should be generated from ftorch.fypp using fypp.
-Please restore ftorch.f90 and make your modifications to ftorch.fypp instead.
-EOF
-    exit 1
-  fi
-fi
+for FILENAME in ftorch_tensor ftorch_test_utils; do
 
-# Check to see if ftorch.fypp has been modified AND is staged.
-git diff --cached --name-only | if grep --quiet "ftorch.fypp"; then
-
-  # Check that ftorch.90 is also modified and staged.
-  git diff --cached --name-only | if ! grep --quiet "ftorch.f90"; then
-    cat <<\EOF
-Error: File ftorch.fypp has been modified and staged, but ftorch.f90 has not.
-ftorch.90 should be generated from ftorch.fypp and both committed together.
-Please run fypp on ftorch.fypp to generate ftorch.f90 and commit together.
-EOF
-    exit 1
-  else
-    # Check fypp available, and raise error and exit if not.
-    if ! command -v fypp &>/dev/null; then
+  # Check that .f90 is not modified and staged alone.
+  git diff --cached --name-only | if grep --quiet "${FILENAME}.f90"; then
+    git diff --cached --name-only | if ! grep --quiet "${FILENAME}.fypp"; then
       cat <<\EOF
-echo "Error: Could not find fypp to run on ftorch.fypp.
-Please install fypp using "pip install fypp" and then try committing again.
+Error: File ${FILENAME}.f90 has been modified and staged without ${FILENAME}.fypp being changed.
+${FILENAME}.f90 should be generated from ${FILENAME}.fypp using fypp.
+Please restore ${FILENAME}.f90 and make your modifications to ${FILENAME}.fypp instead.
 EOF
       exit 1
     fi
+  fi
 
-    # If fypp is available and both .f90 and .fypp staged, check they match.
-    fypp src/ftorch.fypp src/ftorch.f90_tmp
-    if ! diff -q "src/ftorch.f90" "src/ftorch.f90_tmp" &>/dev/null; then
-      rm src/ftorch.f90_tmp
+  # Check to see if .fypp has been modified AND is staged.
+  git diff --cached --name-only | if grep --quiet "${FILENAME}.fypp"; then
+
+    # Check that .f90 is also modified and staged.
+    git diff --cached --name-only | if ! grep --quiet "${FILENAME}.f90"; then
       cat <<\EOF
-Error: The code in ftorch.f90 does not match that expected from ftorch.fypp.
-Please re-run fypp on ftorch.fypp to ensure consistency before committing.
+Error: File ${FILENAME}.fypp has been modified and staged, but ${FILENAME}.f90 has not.
+${FILENAME}.f90 should be generated from ${FILENAME}.fypp and both committed together.
+Please run fypp on ${FILENAME}.fypp to generate ${FILENAME}.f90 and commit together.
 EOF
       exit 1
     else
-      rm src/ftorch.f90_tmp
+      # Check fypp available, and raise error and exit if not.
+      if ! command -v fypp &>/dev/null; then
+        cat <<\EOF
+echo "Error: Could not find fypp to run on ftorch_tensor.fypp.
+Please install fypp using "pip install fypp" and then try committing again.
+EOF
+        exit 1
+      fi
+
+      # If fypp is available and both .f90 and .fypp staged, check they match.
+      fypp src/${FILENAME}.fypp src/${FILENAME}.f90_tmp
+      if ! diff -q "src/${FILENAME}.f90" "src/${FILENAME}.f90_tmp" &>/dev/null; then
+        rm src/${FILENAME}.f90_tmp
+        cat <<\EOF
+Error: The code in ${FILENAME}.f90 does not match that expected from ${FILENAME}.fypp.
+Please re-run fypp on ${FILENAME}.fypp to ensure consistency before committing.
+EOF
+        exit 1
+      else
+        rm src/${FILENAME}.f90_tmp
+      fi
     fi
   fi
-fi
+
+done
