@@ -6,8 +6,9 @@
 !    file for details.
 module unittest_tensor_constructors_destructors
   use funit
-  use ftorch, only: assignment(=), torch_kFloat32, torch_kCPU, torch_tensor, &
-                    torch_tensor_delete, torch_tensor_from_array
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_delete, torch_tensor_from_array
   use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use iso_c_binding, only: c_associated, c_int64_t
@@ -95,7 +96,7 @@ contains
   ! Unit test for the torch_tensor_empty subroutine
   @test(testparameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_empty(this)
-    use ftorch, only: torch_tensor_empty
+    use ftorch_tensor, only: torch_tensor_empty
 
     implicit none
 
@@ -124,7 +125,7 @@ contains
   ! Unit test for the torch_tensor_zeros subroutine
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_zeros(this)
-    use ftorch, only: torch_tensor_zeros
+    use ftorch_tensor, only: torch_tensor_zeros
 
     implicit none
 
@@ -166,7 +167,7 @@ contains
   ! Unit test for the torch_tensor_ones subroutine
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_tensor_ones(this)
-    use ftorch, only: torch_tensor_ones
+    use ftorch_tensor, only: torch_tensor_ones
 
     implicit none
 
@@ -353,7 +354,7 @@ contains
   ! Unit test for the torch_tensor_from_blob subroutine
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_blob(this)
-    use ftorch, only: torch_tensor_from_blob
+    use ftorch_tensor, only: torch_tensor_from_blob
     use, intrinsic :: iso_c_binding, only : c_loc
 
     implicit none
@@ -395,7 +396,7 @@ contains
   ! torch_tensor's destructor)
   @test(testparameters={get_parameters_destruction()})
   subroutine test_torch_tensor_destruction(this)
-    use ftorch, only: torch_tensor_empty
+    use ftorch_tensor, only: torch_tensor_empty
 
     implicit none
 

@@ -6,7 +6,9 @@
 !    file for details.
 module unittest_tensor_operator_overloads
   use funit
-  use ftorch, only: assignment(=), torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_from_array
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_from_array
   use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use, intrinsic :: iso_c_binding, only : c_int64_t
@@ -109,7 +111,7 @@ contains
   ! Unit test for the addition operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_add(this)
-    use ftorch, only: operator(+)
+    use ftorch_tensor, only: operator(+)
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
@@ -145,7 +147,7 @@ contains
   ! Unit test for the subtraction operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_subtract(this)
-    use ftorch, only: operator(-)
+    use ftorch_tensor, only: operator(-)
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
@@ -182,7 +184,7 @@ contains
   ! Unit test for the negative operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_negative(this)
-    use ftorch, only: operator(-)
+    use ftorch_tensor, only: operator(-)
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
@@ -214,7 +216,7 @@ contains
   ! Unit test for the tensor multiplication operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_multiply(this)
-    use ftorch, only: operator(*)
+    use ftorch_tensor, only: operator(*)
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
@@ -251,7 +253,7 @@ contains
   ! Unit test for the scalar multiplication operator
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_scalar_multiply(this)
-    use ftorch, only: operator(*)
+    use ftorch_tensor, only: operator(*)
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, multiplier
@@ -289,7 +291,7 @@ contains
   ! Unit test for the tensor division operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_divide(this)
-    use ftorch, only: operator(/)
+    use ftorch_tensor, only: operator(/)
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
@@ -325,7 +327,7 @@ contains
   ! Unit test for the scalar division operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_scalar_divide(this)
-    use ftorch, only: operator(/)
+    use ftorch_tensor, only: operator(/)
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, divisor
@@ -365,7 +367,7 @@ contains
   ! Unit test for the integer exponentiation operator
   @test(testParameters={get_parameters_full()})
   subroutine test_torch_tensor_square(this)
-    use ftorch, only: operator(**)
+    use ftorch_tensor, only: operator(**)
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
@@ -402,7 +404,7 @@ contains
   ! Unit test for the fractional exponentiation operator
   @test(testParameters={get_parameters_short()})
   subroutine test_torch_tensor_sqrt(this)
-    use ftorch, only: operator(**)
+    use ftorch_tensor, only: operator(**)
 
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
