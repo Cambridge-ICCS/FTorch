@@ -6,8 +6,10 @@
 !    file for details.
 module unittest_tensor_operators_autograd
   use funit
-  use ftorch, only: torch_kCPU, torch_kFloat32, torch_tensor, torch_tensor_backward, &
-                    torch_tensor_empty, torch_tensor_get_gradient, torch_tensor_from_array
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_tensor, only: torch_tensor, torch_tensor_backward, torch_tensor_empty, &
+                           torch_tensor_get_gradient, torch_tensor_from_array
   use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use, intrinsic :: iso_c_binding, only : c_int64_t
@@ -33,7 +35,7 @@ contains
   ! Unit test for derivative of the summation reduction
   @test
   subroutine test_torch_tensor_sum()
-    use ftorch, only: torch_tensor_sum
+    use ftorch_tensor, only: torch_tensor_sum
 
     type(torch_tensor) :: a, Q, dQda
     real(wp), dimension(2,3), target :: in_data, out_data
@@ -66,7 +68,7 @@ contains
   ! Unit test for the derivative of the mean reduction
   @test
   subroutine test_torch_tensor_mean()
-    use ftorch, only: torch_tensor_mean
+    use ftorch_tensor, only: torch_tensor_mean
 
     type(torch_tensor) :: a, Q, dQda
     real(wp), dimension(2,3), target :: in_data, out_data

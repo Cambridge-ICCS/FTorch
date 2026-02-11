@@ -6,8 +6,10 @@
 !    file for details.
 module unittest_model_forward
   use funit
-  use ftorch, only: torch_kCPU, torch_kFloat32, torch_model, torch_model_load, &
-                    torch_model_forward, torch_tensor
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_model, only: torch_model, torch_model_load, torch_model_forward
+  use ftorch_tensor, only: torch_tensor
   use ftorch_test_utils, only: assert_allclose
   use, intrinsic :: iso_fortran_env, only : sp => real32
   use iso_c_binding, only: c_int64_t
@@ -80,7 +82,7 @@ contains
   ! Unit test for checking values are propagated correctly through the test model
   @test(testparameters={get_parameters_short()})
   subroutine test_torch_model_forward_value(this)
-    use ftorch, only: torch_tensor_from_array
+    use ftorch_tensor, only: torch_tensor_from_array
 
     implicit none
 
@@ -109,7 +111,7 @@ contains
   ! Unit test for checking that requires_grad is correctly propagated through the test model
   @test(testparameters={get_parameters_requires_grad()})
   subroutine test_tensor_requires_grad(this)
-    use ftorch, only: torch_tensor_ones, torch_tensor_empty
+    use ftorch_tensor, only: torch_tensor_ones, torch_tensor_empty
 
     implicit none
 
