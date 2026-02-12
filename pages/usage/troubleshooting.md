@@ -115,3 +115,6 @@ this feature was removed from the 2008 standard. That is, the
 so that the associated memory is automatically freed. This is the behaviour that
 we want so nothing needs to be done. See the
 [tensor documentation](|page|/usage/tensor.html#deallocation) for more details.
+
+For technical details on `f08/0011`, we refer to
+[https://wg5-fortran.org/N2001-N2050/N2006.txt](https://wg5-fortran.org/N2001-N2050/N2006.txt).
