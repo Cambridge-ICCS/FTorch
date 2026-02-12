@@ -10,6 +10,7 @@ If you are experiencing problems building or using FTorch please see below for g
 - [Common Errors](#common-errors)
     - [No specific subroutine](#no-specific-subroutine)
     - [Segmentation faults](#segmentation-faults)
+- [Common warnings](#common-warnings)
 
 
 ### Usage
@@ -97,3 +98,50 @@ the overloaded assignment operator should be triggered. As such, if you aren't
 using the bare `use ftorch` import then you should ensure you specify
 `use ftorch, only: assignment(=)` (as well as any other module members you
 require). See the [tensor documentation](|page|/usage/tensor.html) for more details.
+
+
+### Common warnings
+
+#### Structure constructor finalizer with Fortran 2008
+
+If you are building FTorch with gfortran and are specifying the Fortran 2008
+standard (e.g., with the compiler flag `-std=f2008` or by default) then you may
+get compiler warnings of the form:
+```
+Warning: The structure constructor at (1) has been finalized. This feature was removed by f08/0011. Use -std=f2018 or -std=gnu to eliminate the finalization.
+```
+These warn that the structure finalizer of the
+[[ftorch(module):torch_tensor(type)]] derived type is triggered when a tensor
+goes out of scope, despite the fact that this feature was removed from the 2008
+standard. That is, the [[ftorch(module):torch_tensor_delete(subroutine)]]
+subroutine is called so that the associated memory is automatically freed.
+Firstly, this is the behaviour that we want so we should not be too concerned.
+Secondly, structure finalizers are not used anywhere in FTorch, so we believe
+this warning to be errorneous. Use of the structure constructor for the
+`torch_tensor` type would be something like
+```fortran
+program
+  use, intrinsic :: iso_c_binding, only: c_null_ptr
+  use ftorch
+  implicit none
+  type(torch_tensor) :: tensor
+
+  tensor = torch_tensor(c_null_ptr)
+end program
+```
+While this code would compile successfully, the warning mentioned above would be
+raised.
+
+@warning
+The code snippet above is **not** the intended way to create a tensor. The
+intended way is to use the provided API procedures such as
+[[ftorch(module):torch_tensor_from_array(interface)]] or
+[[ftorch(module):torch_tensor_ones(subroutine)]]. The code snippet above is
+only intended to illustrate the use of the structure constructor and the
+associated warning.
+@endwarning
+
+See the [tensor documentation](|page|/usage/tensor.html#deallocation) for more
+details on the memory management of tensors and the use of the finalizer. For
+technical details on `f08/0011`, we refer to
+[https://wg5-fortran.org/N2001-N2050/N2006.txt](https://wg5-fortran.org/N2001-N2050/N2006.txt).
