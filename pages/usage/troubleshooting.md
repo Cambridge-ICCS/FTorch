@@ -74,10 +74,16 @@ Error: There is no specific subroutine for the generic ‘torch_tensor_from_arra
 That is, the second argument should be a Fortran array with the `target`
 property, not the temporary array `[1.0_wp]`. This kind of thing was possible in
 FTorch at v1.0 but has since been removed because it is errorneous. Similarly
-for expressions involving `torch_tensor`s, e.g.,
+for expressions involving `torch_tensor`s, e.g., products such as
 ```
    34 |   call torch_tensor_from_array(a, 1.0*in_data1, torch_kCPU, requires_grad=.true.)
       |                                                                                 1
+Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+```
+and slices such as
+```
+   36 |   call torch_tensor_from_array(a, in_data1(1,:), torch_kCPU, requires_grad=.true.)
+      |                                                                                  1
 Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
 ```
 
