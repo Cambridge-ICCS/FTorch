@@ -51,7 +51,8 @@ there for more details on how to use the script.
 
 In order to run inference with the trained ML model, you will need to modify
 your Fortran model so that it uses FTorch syntax to set up appropriate
-[[ftorch(module):torch_tensor(type)]] and [[ftorch(module):torch_model(type)]]
-objects and call the [[ftorch(module):torch_model_forward(subroutine)]]
+[[ftorch_tensor(module):torch_tensor(type)]] and
+[[ftorch_model(module):torch_model(type)]] objects and call the
+[[ftorch_model(module):torch_model_forward(subroutine)]]
 subroutine to run the inference. For examples of how to do this, see the
 [examples user guides](|page|/usage/index.html#examples).

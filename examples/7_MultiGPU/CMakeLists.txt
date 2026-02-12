@@ -58,14 +58,14 @@ if(CMAKE_BUILD_TESTS)
   if("${GPU_DEVICE}" STREQUAL "CUDA")
     # 1a. Check the PyTorch model runs on a CUDA device and its outputs meet
     # expectations
-    add_test(NAME example7_simplenet
+    add_test(NAME example_multigpu_simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
                      --device_type cuda)
 
     # 2a. Check the model is saved to file in the expected location with the
     # pt2ts.py script
     add_test(
-      NAME example7_pt2ts
+      NAME example_multigpu_pt2ts
       COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --device_type
               cuda --filepath ${PROJECT_BINARY_DIR}
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
@@ -73,7 +73,7 @@ if(CMAKE_BUILD_TESTS)
     # 3a. Check the model can be loaded from file and run on two CUDA devices in
     # Python and that its outputs meet expectations
     add_test(
-      NAME example7_multigpu_infer_python
+      NAME example_multigpu_multigpu_infer_python
       COMMAND ${Python_EXECUTABLE}
               ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type cuda
               --filepath ${PROJECT_BINARY_DIR}

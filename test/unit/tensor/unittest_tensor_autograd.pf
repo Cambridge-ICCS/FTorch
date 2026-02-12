@@ -6,9 +6,10 @@
 !    file for details.
 module unittest_tensor_autograd
   use funit
-  use ftorch, only: assignment(=), ftorch_int, torch_kCPU, torch_kFloat32, torch_tensor, &
-                    torch_tensor_backward, torch_tensor_empty, torch_tensor_from_array, &
-                    torch_tensor_get_gradient, torch_tensor_ones
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: ftorch_int, torch_kFloat32
+  use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_backward, torch_tensor_empty, &
+                           torch_tensor_from_array, torch_tensor_get_gradient, torch_tensor_ones
   use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
@@ -255,7 +256,7 @@ contains
   ! assignment and a binary operator applied to tensors with the same requires_grad value
   @test(testparameters={get_parameters_binary()})
   subroutine test_requires_grad_binary_same(this)
-    use ftorch, only: operator(+), operator(-), operator(*), operator(/)
+    use ftorch_tensor, only: operator(+), operator(-), operator(*), operator(/)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 1
@@ -293,7 +294,7 @@ contains
   ! assignment and a binary operator applied to tensors with different requires_grad values
   @test(testparameters={get_parameters_binary()})
   subroutine test_requires_grad_binary_different(this)
-    use ftorch, only: operator(+), operator(-), operator(*), operator(/)
+    use ftorch_tensor, only: operator(+), operator(-), operator(*), operator(/)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, tensor3
     integer, parameter :: ndims = 1
@@ -332,7 +333,7 @@ contains
   ! assignment and a unary operator
   @test(testparameters={get_parameters_unary()})
   subroutine test_requires_grad_unary(this)
-    use ftorch, only: operator(-), operator(**)
+    use ftorch_tensor, only: operator(-), operator(**)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1
@@ -367,7 +368,7 @@ contains
   ! assignment and a unary reduction operator
   @test(testparameters={get_parameters_reduction()})
   subroutine test_requires_grad_reduction(this)
-    use ftorch, only: torch_tensor_mean, torch_tensor_sum
+    use ftorch_tensor, only: torch_tensor_mean, torch_tensor_sum
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 1

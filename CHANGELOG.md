@@ -45,6 +45,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Improve FTorch's modularisation under the hood by breaking single Fortran file down into submodules in [#508](https://github.com/Cambridge-ICCS/FTorch/pull/508)
 - Example numbers were bumped to account for new worked examples in
   [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291) and
   [#500](https://github.com/Cambridge-ICCS/FTorch/pull/500).

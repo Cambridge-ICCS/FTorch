@@ -17,15 +17,16 @@ If you are experiencing problems building or using FTorch please see below for g
 
 ##### Why are inputs/outputs to/from torch models arrays?
 
-The reason input and output tensors to/from [[ftorch(module):torch_model_forward(subroutine)]]
-are contained in arrays is because it is possible to pass multiple input tensors to
-the `forward()` method of a torch net, and it is possible for the net to return
-multiple output tensors.
+The reason input and output tensors to/from
+[[ftorch_model(module):torch_model_forward(subroutine)]] are contained in arrays
+is because it is possible to pass multiple input tensors to the `forward()`
+method of a torch net, and it is possible for the net to return multiple output
+tensors.
 
 The nature of Fortran means that it is not possible to set an arbitrary number
-of inputs to the [[ftorch(module):torch_model_forward(subroutine)]] subroutine,
-so instead we use a single array of input tensors which _can_ have an arbitrary length.
-Similarly, a single array of output tensors is used.
+of inputs to the [[ftorch_model(module):torch_model_forward(subroutine)]]
+subroutine, so instead we use a single array of input tensors which _can_ have
+an arbitrary length. Similarly, a single array of output tensors is used.
 
 Note that this does not refer to batching data.
 This should be done in the same way as in Torch; by extending the dimensionality of
@@ -37,8 +38,8 @@ By default we disable gradient calculations for tensors and models and place mod
 evaluation mode for efficiency.
 These can be adjusted using the `requires_grad` and `is_training` optional arguments
 in the Fortran interface. See the [API procedures documentation](|url|/lists/procedures.html)
-for [[ftorch(module):torch_tensor_from_array(interface)]] and
-[[ftorch(module):torch_model_load(subroutine)]] etc. for details.
+for [[ftorch_tensor(module):torch_tensor_from_array(interface)]] and
+[[ftorch_model(module):torch_model_load(subroutine)]] etc. for details.
 
 
 ### Common Errors
@@ -91,10 +92,11 @@ Note: _You will need to re-run `fypp` to regenerate the source files as describe
 
 ##### Missing import for overloaded assignment operator
 
-Whenever you execute code involving [[ftorch(module):torch_tensor(type)]]s on each side
-of an equals sign, the overloaded assignment operator should be triggered.
-As such, if you aren't using the bare `use ftorch` import then you should ensure you
-specify `use ftorch, only: assignment(=)` (as well as any other module members you
+Whenever you execute code involving
+[[ftorch_tensor(module):torch_tensor(type)]]s on each side of an equals sign,
+the overloaded assignment operator should be triggered. As such, if you aren't
+using the bare `use ftorch` import then you should ensure you specify
+`use ftorch, only: assignment(=)` (as well as any other module members you
 require). See the [tensor documentation](|page|/usage/tensor.html) for more details.
 
 
