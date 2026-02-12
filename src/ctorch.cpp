@@ -499,9 +499,9 @@ void torch_tensor_zero_grad(torch_tensor_t tensor) {
   t->mutable_grad().zero_();
 }
 
-void torch_tensor_backward(const torch_tensor_t tensor,
-                           const torch_tensor_t external_gradient,
-                           const bool retain_graph) {
+void torch_tensor_backward_with_external_gradient(
+    const torch_tensor_t tensor, const torch_tensor_t external_gradient,
+    const bool retain_graph) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   auto g = reinterpret_cast<torch::Tensor *const>(external_gradient);
 
@@ -512,6 +512,20 @@ void torch_tensor_backward(const torch_tensor_t tensor,
 
     // Perform backwards step
     t->backward(*g, retain_graph);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_tensor_backward");
+  }
+}
+
+void torch_tensor_backward_without_external_gradient(const torch_tensor_t tensor) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+
+  try {
+    // Check if the tensors are valid and defined
+    validate_tensor(t, "Input tensor");
+
+    // Perform backwards step
+    t->backward();
   } catch (const std::exception &e) {
     ctorch_error(std::string(e.what()) + " in torch_tensor_backward");
   }
