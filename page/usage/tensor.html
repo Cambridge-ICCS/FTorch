@@ -228,11 +228,23 @@ argument (which would be the tensor itself). The naming pattern is similar for
 the other methods (simply drop the preceding <code>torch_tensor_</code>).</p>
 <h4 id="deallocation">Deallocation</h4>
 <p>We provide a subroutine for deallocating the memory associated with a
-<a href="../../type/torch_tensor.html">torch_tensor</a> object:
-<a href="../../proc/torch_tensor_delete.html">torch_tensor_delete</a>.
-An interface is provided such that this can also be applied to arrays of tensors.
-Calling this subroutine manually is optional as it is called as a destructor
-when a <a href="../../type/torch_tensor.html">torch_tensor</a> goes out of scope.</p>
+<a href="../../module/ftorch.html">ftorch</a> object:
+<a href="../../module/ftorch.html">ftorch</a>. An interface
+<a href="../../interface/torch_delete.html">torch_delete</a> is provided such that this can also
+be applied to arrays of tensors.</p>
+<p>Manually deallocating a tensor that you declared and constructed in your code is
+actually optional. If the tensor was declared in a subroutine then
+<a href="../../module/ftorch.html">ftorch</a> will get called as the
+finalizer of <a href="../../module/ftorch.html">ftorch</a> when it goes out of scope. If
+the tensor was declared in a program then the finalizer won't get called, but
+this is not considered to be an issue, in the same way that in Fortran it
+doesn't matter if allocated arrays aren't deallocated at the end of the program.
+Note that if you are building FTorch with gfortran and the 2008 standard then
+you may see a warning related to finalizers - see the
+<a href="troubleshooting.html#finalizer-with-fortran-2008">common warnings entry</a>
+for more information.</p>
+<p>See the <a href="https://fortran-lang.org/learn/oop_features_in_fortran/object_based_programming_techniques/#finalization-and-conclusions">Fortran-lang page on object-oriented Fortran</a>
+for further details about finalization.</p>
 <h4 id="manipulation">Manipulation</h4>
 <p>We provide the following subroutines for manipulating the data values associated
 with a <a href="../../type/torch_tensor.html">torch_tensor</a> object:</p>

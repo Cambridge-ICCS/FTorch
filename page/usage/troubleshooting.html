@@ -160,6 +160,7 @@
 <li><a href="#segmentation-faults">Segmentation faults</a></li>
 </ul>
 </li>
+<li><a href="#common-warnings">Common warnings</a></li>
 </ul>
 <h3 id="usage">Usage</h3>
 <h5 id="why-are-inputsoutputs-tofrom-torch-models-arrays">Why are inputs/outputs to/from torch models arrays?</h5>
@@ -227,6 +228,48 @@ the overloaded assignment operator should be triggered. As such, if you aren't
 using the bare <code>use ftorch</code> import then you should ensure you specify
 <code>use ftorch, only: assignment(=)</code> (as well as any other module members you
 require). See the <a href="tensor.html">tensor documentation</a> for more details.</p>
+<h3 id="common-warnings">Common warnings</h3>
+<h4 id="structure-constructor-finalizer-with-fortran-2008">Structure constructor finalizer with Fortran 2008</h4>
+<p>If you are building FTorch with gfortran and are specifying the Fortran 2008
+standard (e.g., with the compiler flag <code>-std=f2008</code> or by default) then you may
+get compiler warnings of the form:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Warning</span><span class="o">:</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">structure</span><span class="w"> </span><span class="n">constructor</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="o">(</span><span class="mi">1</span><span class="o">)</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="n">been</span><span class="w"> </span><span class="n">finalized</span><span class="o">.</span><span class="w"> </span><span class="n">This</span><span class="w"> </span><span class="n">feature</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">removed</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">f08</span><span class="o">/</span><span class="mi">0011</span><span class="o">.</span><span class="w"> </span><span class="n">Use</span><span class="w"> </span><span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">f2018</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">gnu</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">eliminate</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">finalization</span><span class="o">.</span>
+</code></pre></div>
+
+<p>These warn that the structure finalizer of the
+<a href="../../module/ftorch.html">ftorch</a> derived type is triggered when a tensor
+goes out of scope, despite the fact that this feature was removed from the 2008
+standard. That is, the <a href="../../module/ftorch.html">ftorch</a>
+subroutine is called so that the associated memory is automatically freed.
+Firstly, this is the behaviour that we want so we should not be too concerned.
+Secondly, structure finalizers are not used anywhere in FTorch, so we believe
+this warning to be errorneous. Use of the structure constructor for the
+<code>torch_tensor</code> type would be something like</p>
+<div class="codehilite"><pre><span></span><code><span class="k">program</span>
+<span class="k">  use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="nb">c_null_ptr</span>
+<span class="nb">  </span><span class="k">use </span><span class="n">ftorch</span>
+<span class="w">  </span><span class="k">implicit none</span>
+<span class="k">  type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span>
+
+<span class="w">  </span><span class="n">tensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_tensor</span><span class="p">(</span><span class="nb">c_null_ptr</span><span class="p">)</span>
+<span class="k">end program</span>
+</code></pre></div>
+
+<p>While this code would compile successfully, the warning mentioned above would be
+raised.</p>
+<div class="alert alert-warning">
+<p class="alert-title h4">Warning</p>
+<p>The code snippet above is <strong>not</strong> the intended way to create a tensor. The
+intended way is to use the provided API procedures such as
+<a href="../../module/ftorch.html">ftorch</a> or
+<a href="../../module/ftorch.html">ftorch</a>. The code snippet above is
+only intended to illustrate the use of the structure constructor and the
+associated warning.</p>
+</div>
+<p>See the <a href="tensor.html#deallocation">tensor documentation</a> for more
+details on the memory management of tensors and the use of the finalizer. For
+technical details on <code>f08/0011</code>, we refer to
+<a href="https://wg5-fortran.org/N2001-N2050/N2006.txt">https://wg5-fortran.org/N2001-N2050/N2006.txt</a>.</p>
     </div>
   </div>
       <hr>
