@@ -151,7 +151,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, dQda
+    type(torch_tensor) :: Q, a, dQda, external_gradient
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
@@ -169,9 +169,12 @@ contains
     ! Create another tensor based off an output array for the gradient
     call torch_tensor_from_array(dQda, out_data, device_type)
 
+    ! Create an external gradient filled with ones
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation and retrieve the gradient and check it takes the expected value:
     !   Q(a) = a => dQ/da = 1
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
     call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 1.0
     @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_zero_grad1"))
@@ -191,7 +194,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, dQda
+    type(torch_tensor) :: Q, a, dQda, external_gradient
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
@@ -209,9 +212,12 @@ contains
     ! Create another tensor based off an output array for the gradient
     call torch_tensor_from_array(dQda, out_data, device_type)
 
+    ! Create an external gradient filled with ones
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation and retrieve the gradient and check it takes the expected value:
     !   Q(a) = a => dQ/da = 1
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
     call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 1.0
     @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_retain_graph1"))
@@ -219,7 +225,7 @@ contains
     ! Zero the gradient and then call back-propagation again and check the computed gradient still
     ! takes the expected value
     call a%zero_grad()
-    call torch_tensor_backward(Q, retain_graph=.true.)
+    call torch_tensor_backward(Q, external_gradient, retain_graph=.true.)
     call torch_tensor_get_gradient(dQda, a)
     @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_retain_graph2"))
 
