@@ -1,4 +1,4 @@
-program autograd
+program autograd_tensor_arithmetic
 
   ! Import precision info from iso
   use, intrinsic :: iso_fortran_env, only : sp => real32
@@ -45,7 +45,7 @@ program autograd
 
   ! Check output tensor matches expected value
   expected(:) = [-12.0_wp, 65.0_wp]
-  if (.not. allclose(out_data1, expected, test_name="autograd_Q")) then
+  if (.not. allclose(out_data1, expected, test_name="autograd_tensor_arithmetic_Q")) then
     write(*,*) "Error :: value of Q does not match expected value"
     stop 999
   end if
@@ -55,26 +55,28 @@ program autograd
   ! `grad` property for both of them.
   call torch_tensor_backward(Q)
 
-  ! Create tensors based off output arrays for the gradients and then retrieve them
+  ! Create arrays based of the gradient tensors to hold gradient information
   call torch_tensor_from_array(dQda, out_data2, torch_kCPU)
   call torch_tensor_from_array(dQdb, out_data3, torch_kCPU)
+
+  ! Specify that we want the gradients with respect to a and b
   call torch_tensor_get_gradient(dQda, a)
   call torch_tensor_get_gradient(dQdb, b)
 
   ! Check the gradients take expected values
-  write(*,*) "dQda = 9*a^2 = ", out_data2
+  write(*,*) "dQ/da = 9*a^2 = ", out_data2
   expected(:) = [36.0_wp, 81.0_wp]
-  if (.not. allclose(out_data2, expected, test_name="autograd_dQdb")) then
-    write(*,*) "Error :: value of dQdb does not match expected value"
+  if (.not. allclose(out_data2, expected, test_name="autograd_tensor_arithmetic_dQdb")) then
+    write(*,*) "Error :: value of dQ/db does not match expected value"
     stop 999
   end if
-  write(*,*) "dQdb = - 2*b = ", out_data3
+  write(*,*) "dQ/db = - 2*b = ", out_data3
   expected(:) = [-12.0_wp, -8.0_wp]
-  if (.not. allclose(out_data3, expected, test_name="autograd_dQdb")) then
-    write(*,*) "Error :: value of dQdb does not match expected value"
+  if (.not. allclose(out_data3, expected, test_name="autograd_tensor_arithmetic_dQdb")) then
+    write(*,*) "Error :: value of dQ/db does not match expected value"
     stop 999
   end if
 
-  write (*,*) "Autograd example ran successfully"
+  write (*,*) "Tensor arithmetic Autograd example ran successfully"
 
-end program autograd
+end program autograd_tensor_arithmetic
