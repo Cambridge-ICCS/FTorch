@@ -36,7 +36,8 @@ If you would like to make use of scalar multiplication or scalar division, this
 can be achieved by setting the scalar as a rank-1
 [[ftorch_tensor(module):torch_tensor(type)]] with a single entry. For example:
 ```fortran
-call torch_tensor_from_array(multiplier, [3.0_wp], [1], torch_kCPU)
+multiplier_array(1) = 3.0_wp
+call torch_tensor_from_array(multiplier, multiplier_value, torch_kCPU)
 ```
 
 For a concrete example of how to compute mathematical expressions involving
