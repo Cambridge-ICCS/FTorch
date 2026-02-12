@@ -1023,13 +1023,13 @@ contains
   end subroutine torch_tensor_zero_grad
 
   !> Performs back-propagation on a Torch Tensor, given some external gradient.
-  subroutine torch_tensor_backward(tensor, retain_graph)
+  subroutine torch_tensor_backward(tensor, external_gradient, retain_graph)
     use, intrinsic :: iso_c_binding, only : c_bool
     type(torch_tensor), intent(in) :: tensor       !! Tensor to compute gradients of
+    type(torch_tensor), intent(in) :: external_gradient !! External tensor used as an initial scaling of the gradient calculation
     logical, optional, intent(in)  :: retain_graph !! Should the computational graph be retained?
 
     ! Local arguments
-    type(torch_tensor) :: external_gradient   !! External tensor used as an initial scaling of the gradient calculation
     logical(c_bool) :: retain_graph_value
 
     interface
@@ -1043,12 +1043,6 @@ contains
       end subroutine torch_tensor_backward_c
     end interface
 
-    ! External gradient to provide to the back-propagation consisting of a tensor of ones
-    ! TODO: Accept other external gradients as an optional argument
-    call torch_tensor_ones(external_gradient, tensor%get_rank(), tensor%get_shape(), &
-                           tensor%get_dtype(), tensor%get_device_type(), &
-                           device_index=tensor%get_device_index())
-
     ! Do not retain the graph by default
     if (present(retain_graph)) then
       retain_graph_value = retain_graph
@@ -1058,9 +1052,6 @@ contains
 
     ! Call back-propagation with the provided external gradient
     call torch_tensor_backward_c(tensor%p, external_gradient%p, retain_graph_value)
-
-    ! Delete the external gradient tensor
-    call torch_tensor_delete(external_gradient)
   end subroutine torch_tensor_backward
 
   !> Retrieves the gradient with respect to a Torch Tensor.

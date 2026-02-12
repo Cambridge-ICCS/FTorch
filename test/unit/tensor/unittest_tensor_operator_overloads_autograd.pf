@@ -85,7 +85,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, dQda
+    type(torch_tensor) :: Q, a, dQda, external_gradient
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
@@ -100,8 +100,11 @@ contains
     call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
     Q = a
 
+    ! Create a tensor of ones to use as the external gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
@@ -125,7 +128,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, b, dQda, dQdb
+    type(torch_tensor) :: Q, a, b, dQda, dQdb, external_gradient
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
@@ -142,8 +145,11 @@ contains
     call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
     Q = a + b
 
+    ! Create a tensor of ones to use as the external gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
 
     ! Create tensors based off output arrays for the gradient and then retrieve them
     call torch_tensor_from_array(dQda, out_data1, device_type)
@@ -171,7 +177,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, dQda
+    type(torch_tensor) :: Q, a, dQda, external_gradient
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
@@ -186,8 +192,11 @@ contains
     call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
     Q = -a
 
+    ! Create a tensor of ones to use as the external gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
@@ -208,7 +217,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, b, dQda, dQdb
+    type(torch_tensor) :: Q, a, b, dQda, dQdb, external_gradient
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
@@ -225,8 +234,11 @@ contains
     call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
     Q = a - b
 
+    ! Create a tensor of ones to use as the external gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
 
     ! Create tensors based off output arrays for the gradient and then retrieve them
     call torch_tensor_from_array(dQda, out_data1, device_type)
@@ -254,7 +266,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, b, dQda, dQdb
+    type(torch_tensor) :: Q, a, b, dQda, dQdb, external_gradient
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
@@ -271,8 +283,11 @@ contains
     call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
     Q = a * b
 
+    ! Create a tensor of ones to use as the external gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
 
     ! Create tensors based off output arrays for the gradient and then retrieve them
     call torch_tensor_from_array(dQda, out_data1, device_type)
@@ -300,7 +315,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, dQda, multiplier
+    type(torch_tensor) :: Q, a, dQda, multiplier, external_gradient
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
@@ -323,8 +338,11 @@ contains
       Q = a * multiplier
     end if
 
+    ! Create a tensor of ones to use as the external gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
@@ -345,7 +363,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, b, dQda, dQdb
+    type(torch_tensor) :: Q, a, b, dQda, dQdb, external_gradient
     real(wp), dimension(2,3), target :: in_data1, in_data2, out_data1, out_data2
     real(wp), dimension(2,3) :: expected
 
@@ -362,8 +380,11 @@ contains
     call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
     Q = a / b
 
+    ! Create a tensor of ones to use as the external gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
 
     ! Create tensors based off output arrays for the gradient and then retrieve them
     call torch_tensor_from_array(dQda, out_data1, device_type)
@@ -391,7 +412,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, dQda, divisor
+    type(torch_tensor) :: Q, a, dQda, divisor, external_gradient
     real(wp), parameter :: scalar = 3.14
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
@@ -410,8 +431,11 @@ contains
     call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
     Q = a / divisor
 
+    ! Create a tensor of ones to use as the external gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
@@ -432,7 +456,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, dQda
+    type(torch_tensor) :: Q, a, dQda, external_gradient
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
@@ -451,8 +475,11 @@ contains
       Q = a ** 2
     end if
 
+    ! Create a tensor of ones to use as the external gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
@@ -473,7 +500,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
-    type(torch_tensor) :: Q, a, dQda
+    type(torch_tensor) :: Q, a, dQda, external_gradient
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
 
@@ -488,8 +515,11 @@ contains
     call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
     Q = a ** 0.5
 
+    ! Create a tensor of ones to use as the external gradient
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, dtype, device_type)
+
     ! Apply back-propagation
-    call torch_tensor_backward(Q)
+    call torch_tensor_backward(Q, external_gradient)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
     call torch_tensor_from_array(dQda, out_data, device_type)
