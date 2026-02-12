@@ -6,7 +6,7 @@ program autograd
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only: assignment(=), operator(-), operator(*), operator(/), &
                     operator(**), torch_kCPU, torch_tensor, torch_tensor_backward, &
-                    torch_tensor_from_array, torch_tensor_get_gradient
+                    torch_tensor_from_array, torch_tensor_get_gradient, torch_tensor_ones
 
   ! Import our tools module for testing utils
   use ftorch_test_utils, only : allclose
@@ -22,7 +22,7 @@ program autograd
   real(wp), dimension(n) :: expected
 
   ! Set up Torch data structures
-  type(torch_tensor) :: a, b, Q, multiplier, divisor, dQda, dQdb
+  type(torch_tensor) :: a, b, Q, multiplier, divisor, dQda, dQdb, external_gradient
 
   ! Initialise Torch Tensors from input arrays as in Python example
   call torch_tensor_from_array(a, [2.0_wp, 3.0_wp], torch_kCPU, requires_grad=.true.)
@@ -47,10 +47,15 @@ program autograd
     stop 999
   end if
 
+  ! Create an appropriate external gradient tensor filled with ones
+  ! You can think of this as the direction in which the derivative is computed
+  call torch_tensor_ones(external_gradient, Q%get_rank(), Q%get_shape(), Q%get_dtype(), &
+                         Q%get_device_type())
+
   ! Run the backpropagation operator
   ! This will perform backpropogation on the tensors involved in generating Q (a and b), setting the
   ! `grad` property for both of them.
-  call torch_tensor_backward(Q)
+  call torch_tensor_backward(Q, external_gradient)
 
   ! Create tensors based off output arrays for the gradients and then retrieve them
   call torch_tensor_from_array(dQda, out_data2, torch_kCPU)
