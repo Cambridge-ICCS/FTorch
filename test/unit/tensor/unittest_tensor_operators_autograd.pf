@@ -1,0 +1,101 @@
+!| Unit tests for FTorch's automatic differentiation of non-overloaded operators acting on tensors.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_tensor_operators_autograd
+  use funit
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_tensor, only: torch_tensor, torch_tensor_backward, torch_tensor_empty, &
+                           torch_tensor_get_gradient, torch_tensor_from_array
+  use ftorch_test_utils, only: allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use, intrinsic :: iso_c_binding, only : c_int64_t
+
+  implicit none
+
+  public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  ! All unit tests in this module use 2D arrays with float32 precision
+  integer, parameter :: ndims = 2
+  integer, parameter :: dtype = torch_kFloat32
+
+  integer(c_int64_t), parameter, dimension(1) :: scalar_shape = [1]
+
+contains
+
+  ! Unit test for derivative of the summation reduction
+  @test
+  subroutine test_torch_tensor_sum()
+    use ftorch_tensor, only: torch_tensor_sum
+
+    type(torch_tensor) :: a, Q, dQda
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create two arbitrary input arrays
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create tensors based off the input array
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
+
+    ! Create another empty tensor and assign it to the sum of the first one
+    call torch_tensor_empty(Q, 1, scalar_shape, dtype, device_type)
+    call torch_tensor_sum(Q, a)
+
+    ! Apply back-propagation
+    call torch_tensor_backward(Q)
+
+    ! Create another tensor based off an output array for the gradient and then retrieve it
+    call torch_tensor_from_array(dQda, out_data, device_type)
+    call torch_tensor_get_gradient(dQda, a)
+
+    ! Extract Fortran array from the computed gradient and its data with the expected value:
+    !   Q(a) = \sigma_{i,j} a_{i,j} => dQda = [array of ones]
+    expected(:,:) = 1.0
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_sum"))
+
+  end subroutine test_torch_tensor_sum
+
+  ! Unit test for the derivative of the mean reduction
+  @test
+  subroutine test_torch_tensor_mean()
+    use ftorch_tensor, only: torch_tensor_mean
+
+    type(torch_tensor) :: a, Q, dQda
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create two arbitrary input arrays
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create tensors based off the input array
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
+
+    ! Create another empty tensor and assign it to the mean of the first one
+    call torch_tensor_empty(Q, 1, scalar_shape, dtype, device_type)
+    call torch_tensor_mean(Q, a)
+
+    ! Apply back-propagation
+    call torch_tensor_backward(Q)
+
+    ! Create another tensor based off an output array for the gradient and then retrieve it
+    call torch_tensor_from_array(dQda, out_data, device_type)
+    call torch_tensor_get_gradient(dQda, a)
+
+    ! Extract Fortran array from the computed gradient and its data with the expected value:
+    !   Q(a) = 1/N * \sigma_{i,j} a_{i,j} => dQda = 1/N * [array of ones]
+    expected(:,:) = 1.0 / 6.0
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_mean"))
+
+  end subroutine test_torch_tensor_mean
+
+end module unittest_tensor_operators_autograd

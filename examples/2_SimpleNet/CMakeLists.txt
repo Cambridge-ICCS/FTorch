@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15...3.31)
+cmake_minimum_required(VERSION 3.18...3.31)
 # policy CMP0076 - target_sources source files are relative to file where
 # target_sources is run
 cmake_policy(SET CMP0076 NEW)
@@ -38,13 +38,13 @@ if(CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME example2_simplenet
+  add_test(NAME example_simplenet_simplenet
            COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py)
 
   # 2. Check the model is saved to file in the expected location with the
   #   pt2ts.py script
   add_test(
-    NAME example2_pt2ts
+    NAME example_simplenet_pt2ts
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
             ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
@@ -52,7 +52,7 @@ if(CMAKE_BUILD_TESTS)
   # 3. Check the model can be loaded from file and run in Python and that its
   #   outputs meet expectations
   add_test(
-    NAME example2_simplenet_infer_python
+    NAME example_simplenet_simplenet_infer_python
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet_infer_python.py
             --filepath ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
@@ -60,12 +60,12 @@ if(CMAKE_BUILD_TESTS)
   # 4. Check the model can be loaded from file and run in Fortran and that its
   #   outputs meet expectations
   add_test(
-    NAME example2_simplenet_infer_fortran
+    NAME example_simplenet_simplenet_infer_fortran
     COMMAND
       simplenet_infer_fortran ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
-    example2_simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    example_simplenet_simplenet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
     "SimpleNet example ran successfully")
 endif()

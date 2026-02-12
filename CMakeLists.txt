@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15...3.31)
+cmake_minimum_required(VERSION 3.18...3.31)
 set(PROJECT_NAME FTorch)
 set(LIB_NAME ftorch)
 set(PACKAGE_VERSION 1.0.0)
@@ -12,9 +12,7 @@ project(
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 if(WIN32)
-  message(
-    WARNING "Windows builds are untested, so functionality is not guaranteed")
-  # if building on windows we need to make sure the symbols are exported
+  # If building on Windows we need to make sure the symbols are exported
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif()
 
@@ -113,7 +111,9 @@ if(NOT DEFINED CMAKE_Fortran_MODULE_DIRECTORY)
 endif()
 
 # Library with C and Fortran bindings
-add_library(${LIB_NAME} src/ctorch.cpp src/ftorch.F90 src/ftorch_test_utils.f90)
+add_library(${LIB_NAME} src/ctorch.cpp src/ftorch.f90 src/ftorch_devices.F90
+                        src/ftorch_types.f90 src/ftorch_tensor.f90
+                        src/ftorch_model.f90 src/ftorch_test_utils.f90)
 
 # Define compile definitions, including GPU devices
 target_compile_definitions(
@@ -131,9 +131,14 @@ add_library(${PROJECT_NAME}::${LIB_NAME} ALIAS ${LIB_NAME})
 set_target_properties(${LIB_NAME} PROPERTIES PUBLIC_HEADER "src/ctorch.h")
 # cmake-format: on
 # Link TorchScript
-# NOTE: Linking stdc++ for downstream targets fixes ctorch link error
-target_link_libraries(${LIB_NAME}
-  PRIVATE ${TORCH_LIBRARIES} INTERFACE stdc++)
+if(UNIX)
+  # NOTE: Linking stdc++ for downstream targets fixes ctorch link error on
+  #       Unix-like systems
+  target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES} INTERFACE stdc++)
+else()
+  # NOTE: stdc++ is not available on Windows
+  target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES})
+endif()
 # Include the Fortran mod files in the library
 target_include_directories(
   ${LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
@@ -173,6 +178,14 @@ if(NOT DEFINED CMAKE_INSTALL_MODULEDIR)
 endif()
 
 install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch.mod"
+        DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
+install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_devices.mod"
+        DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
+install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_types.mod"
+        DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
+install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_tensor.mod"
+        DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
+install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_model.mod"
         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
 install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_test_utils.mod"
         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")

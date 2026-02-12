@@ -3,30 +3,14 @@ name: Test suite (Windows CPU Intel)
 
 # Controls when the workflow will run
 on:
-  # TODO: Re-enable when fixing the current issue with the Windows CI (see #300).
-  # # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
-  # push:
-  #   branches: [ "main" ]
-  #
-  # # Triggers the workflow on pushes to open pull requests with code changes
-  # pull_request:
-  #   paths:
-  #     # This workflow
-  #     - '.github/workflows/test_suite_windows_cpu_intel.yml'
-  #     # Source files
-  #     - '**.c'
-  #     - '**.cpp'
-  #     - '**.fypp'
-  #     - '**.f90'
-  #     - '**.F90'
-  #     - '**.py'
-  #     # Unit tests
-  #     - '**.pf'
-  #     # Build system
-  #     - '**CMakeLists.txt'
-  #     - '**requirements.txt'
-  #     # Data
-  #     - '**data/*'
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with changes to this workflow
+  pull_request:
+    paths:
+      - '.github/workflows/test_suite_windows_cpu_intel.yml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -78,35 +62,70 @@ jobs:
       - name: Install PyTorch
         shell: cmd
         run: |
+          pip install --upgrade pip
+          python -m venv ftorch
+          call ftorch\Scripts\activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
       - name: Build FTorch
         shell: cmd
         run: |
-          rem find torch location
-          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
+          call ftorch\Scripts\activate
+          rem Find torch location
+          set TORCH_PATH=
+          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
+          rem Set install location
+          set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
           cmake ^
             -Bbuild ^
             -G "NMake Makefiles" ^
             -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
-            -DCMAKE_PREFIX_PATH=%torch_path% ^
+            -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" ^
+            -DCMAKE_PREFIX_PATH=%TORCH_PATH% ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DCMAKE_Fortran_COMPILER=ifx ^
             -DCMAKE_C_COMPILER=icx ^
             -DCMAKE_CXX_COMPILER=icx ^
-            -DCMAKE_BUILD_TESTS=TRUE
+            -DCMAKE_BUILD_TESTS=TRUE ^
+            -DCMAKE_INSTALL_PREFIX=%FTORCH_INSTALL_DIR%
           cmake --build build
           cmake --install build
 
       - name: Integration tests
         shell: cmd
         run: |
-          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set torch_path=%%i
-          set PATH=C:\Program Files (x86)\FTorch\bin;%PATH%
-          set PATH=%torch_path%\torch\lib;%PATH%
+          call ftorch\Scripts\activate
+          set TORCH_PATH=
+          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
+          set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
+          set PATH=%FTORCH_INSTALL_DIR%\bin;%PATH%
+          set PATH=%TORCH_PATH%\torch\lib;%PATH%
           cd build
           ctest --verbose --tests-regex example1
           ctest --verbose --tests-regex example2
           ctest --verbose --tests-regex example3
           ctest --verbose --tests-regex example4
           ctest --verbose --tests-regex example8
+
+      - name: Standalone SimpleNet example
+        shell: cmd
+        run: |
+          call ftorch\Scripts\activate
+          set TORCH_PATH=
+          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
+          set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
+          set PATH=%FTORCH_INSTALL_DIR%\bin;%PATH%
+          set PATH=%TORCH_PATH%\torch\lib;%PATH%
+          set EXAMPLE_BUILD_DIR=examples\2_SimpleNet\build
+          if not exist %EXAMPLE_BUILD_DIR% mkdir %EXAMPLE_BUILD_DIR%
+          cd %EXAMPLE_BUILD_DIR%
+          cmake .. ^
+            -G "NMake Makefiles" ^
+            -DCMAKE_Fortran_COMPILER=ifx ^
+            -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
+            -DPython_EXECUTABLE=%python% ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DCMAKE_PREFIX_PATH=%FTORCH_INSTALL_DIR%;%TORCH_PATH% ^
+            -DCMAKE_BUILD_TESTS=TRUE
+          cmake --build .
+          ctest -V

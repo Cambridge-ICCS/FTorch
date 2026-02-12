@@ -1,0 +1,437 @@
+!| Unit tests for FTorch's overloaded operators involving tensors.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_tensor_operator_overloads
+  use funit
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_from_array
+  use ftorch_test_utils, only: allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use, intrinsic :: iso_c_binding, only : c_int64_t
+
+  implicit none
+
+  public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  ! All unit tests in this module use 2D arrays with float32 precision
+  integer, parameter :: ndims = 2
+  integer, parameter :: dtype = torch_kFloat32
+
+  ! Typedef holding a set of parameter values
+  @testParameter
+  type, extends(AbstractTestParameter) :: TestParametersType
+    logical :: switch
+  contains
+    procedure :: toString
+  end type TestParametersType
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_constructor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(TestParametersType) :: param
+  end type TestCaseType
+
+contains
+
+  ! A fixture comprised of a full list of parameter sets
+  function get_parameters_full() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.), &
+      TestParametersType(.true.) &
+    ]
+  end function get_parameters_full
+
+  ! A fixture comprised of a short list of parameter sets
+  function get_parameters_short() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [TestParametersType(.false.)]
+  end function get_parameters_short
+
+  ! Constructor for the test case type
+  function test_case_constructor(param)
+    type(TestCaseType) :: test_case_constructor
+    type(TestParametersType), intent(in) :: param
+    test_case_constructor%param = param
+  end function test_case_constructor
+
+  ! Function for representing a parameter set as a string
+  function toString(this) result(string)
+    class(TestParametersType), intent(in) :: this
+    character(:), allocatable :: string
+    character(len=1) :: str
+    write(str,'(l1)') this%switch
+    string = str
+  end function toString
+
+  ! Unit test for the assignment operator
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_assign(this)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    real(wp), dimension(2,3), target :: in_data
+    real(wp), dimension(2,3), target :: out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create an arbitrary input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create a tensor based off an input array
+    call torch_tensor_from_array(tensor1, in_data, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, device_type)
+
+    ! Create another tensor by copying the first using the overloaded assignment operator
+    tensor2 = tensor1
+
+    ! Check input array is unchanged by the assignment
+    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    if (.not. allclose(in_data, expected, test_name="test_torch_tensor_assign")) then
+      print *, "Error :: input array was changed during assignment"
+      stop 999
+    end if
+
+    ! Compare the data in the tensor to the input array
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_assign"))
+
+  end subroutine test_torch_tensor_assign
+
+  ! Unit test for the addition operator
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_add(this)
+    use ftorch_tensor, only: operator(+)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, tensor3
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create two arbitrary input arrays
+    in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
+
+    ! Create tensors based off the two input arrays
+    call torch_tensor_from_array(tensor1, in_data1, device_type)
+    call torch_tensor_from_array(tensor2, in_data2, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor3, out_data, device_type)
+
+    ! Create another tensor as the sum of the first two using the overloaded addition operator
+    tensor3 = tensor1 + tensor2
+
+    ! Check input arrays are unchanged by the addition
+    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    @assertTrue(allclose(in_data1, expected, test_name="test_torch_tensor_add_input1"))
+    expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
+    @assertTrue(allclose(in_data2, expected, test_name="test_torch_tensor_add_input2"))
+
+    ! Compare the data in the tensor to the sum of the input arrays
+    expected(:,:) = in_data1 + in_data2
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_add_output"))
+
+  end subroutine test_torch_tensor_add
+
+  ! Unit test for the subtraction operator
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_subtract(this)
+    use ftorch_tensor, only: operator(-)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, tensor3
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create two arbitrary input arrays
+    in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
+
+    ! Create tensors based off the two input arrays
+    call torch_tensor_from_array(tensor1, in_data1, device_type)
+    call torch_tensor_from_array(tensor2, in_data2, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor3, out_data, device_type)
+
+    ! Create another tensor as the difference of the first two using the overloaded subtraction
+    ! operator
+    tensor3 = tensor1 - tensor2
+
+    ! Check input arrays are unchanged by the subtraction
+    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    @assertTrue(allclose(in_data1, expected, test_name="test_torch_tensor_subtract_input1"))
+    expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
+    @assertTrue(allclose(in_data2, expected, test_name="test_torch_tensor_subtract_input2"))
+
+    ! Compare the data in the tensor to the difference of the input arrays
+    expected(:,:) = in_data1 - in_data2
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_subtract_output"))
+
+  end subroutine test_torch_tensor_subtract
+
+  ! Unit test for the negative operator
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_negative(this)
+    use ftorch_tensor, only: operator(-)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create two arbitrary input arrays
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create tensors based off the input array
+    call torch_tensor_from_array(tensor1, in_data, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, device_type)
+
+    ! Create another tensor as the negative of the first using the overloaded negative operator
+    tensor2 = -tensor1
+
+    ! Check input arrays are unchanged by the negation
+    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    @assertTrue(allclose(in_data, expected, test_name="test_torch_tensor_negative_input"))
+
+    ! Compare the data in the tensor to the negative of the input array
+    expected(:,:) = -in_data
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_negative_output"))
+
+  end subroutine test_torch_tensor_negative
+
+  ! Unit test for the tensor multiplication operator
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_multiply(this)
+    use ftorch_tensor, only: operator(*)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, tensor3
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create two arbitrary input arrays
+    in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
+
+    ! Create tensors based off the two input arrays
+    call torch_tensor_from_array(tensor1, in_data1, device_type)
+    call torch_tensor_from_array(tensor2, in_data2, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor3, out_data, device_type)
+
+    ! Create another tensor as the product of the first two using the overloaded multiplication
+    ! operator
+    tensor3 = tensor1 * tensor2
+
+    ! Check input arrays are unchanged by the multiplication
+    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    @assertTrue(allclose(in_data1, expected, test_name="test_torch_tensor_multiply_input1"))
+    expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
+    @assertTrue(allclose(in_data2, expected, test_name="test_torch_tensor_multiply_input2"))
+
+    ! Compare the data in the tensor to the product of the input arrays
+    expected(:,:) = in_data1 * in_data2
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_multiply_output"))
+
+  end subroutine test_torch_tensor_multiply
+
+  ! Unit test for the scalar multiplication operator
+  @test(testParameters={get_parameters_full()})
+  subroutine test_torch_tensor_scalar_multiply(this)
+    use ftorch_tensor, only: operator(*)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, multiplier
+    real(wp), parameter :: scalar = 3.14
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create an arbitrary input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create a tensor based off the input array
+    call torch_tensor_from_array(tensor1, in_data, device_type)
+
+    ! Create a rank-1 tensor based off the scalar multiplier
+    call torch_tensor_from_array(multiplier, [scalar], [1], device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, device_type)
+    if (this%param%switch) then
+      tensor2 = multiplier * tensor1
+    else
+      tensor2 = tensor1 * multiplier
+    end if
+
+    ! Check input array is unchanged by scalar multiplication
+    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    @assertTrue(allclose(in_data, expected, test_name="test_torch_tensor_scalar_multiply_input"))
+
+    ! Compare the data in the tensors to the scaled input arrays
+    expected(:,:) = scalar * in_data
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_scalar_multiply_output"))
+
+  end subroutine test_torch_tensor_scalar_multiply
+
+  ! Unit test for the tensor division operator
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_divide(this)
+    use ftorch_tensor, only: operator(/)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, tensor3
+    real(wp), dimension(2,3), target :: in_data1, in_data2, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create two arbitrary input arrays
+    in_data1(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    in_data2(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
+
+    ! Create tensors based off the two input arrays
+    call torch_tensor_from_array(tensor1, in_data1, device_type)
+    call torch_tensor_from_array(tensor2, in_data2, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor3, out_data, device_type)
+
+    ! Create another tensor as the quotient of the first two using the overloaded division operator
+    tensor3 = tensor1 / tensor2
+
+    ! Check input arrays are unchanged by the division
+    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    @assertTrue(allclose(in_data1, expected, test_name="test_torch_tensor_divide_input1"))
+    expected(:,:) = reshape([7.0, 8.0, 9.0, 10.0, 11.0, 12.0], [2, 3])
+    @assertTrue(allclose(in_data2, expected, test_name="test_torch_tensor_divide_input2"))
+
+    ! Compare the data in the tensor to the quotient of the input arrays
+    expected(:,:) = in_data1 / in_data2
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_divide_output"))
+
+  end subroutine test_torch_tensor_divide
+
+  ! Unit test for the scalar division operator
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_scalar_divide(this)
+    use ftorch_tensor, only: operator(/)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, divisor
+    real(wp), parameter :: scalar = 3.14
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create an arbitrary input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create a single valued rank-1 tensor based off the scalar
+    call torch_tensor_from_array(divisor, [scalar], [1], device_type)
+
+    ! Create a tensor based off the input array
+    call torch_tensor_from_array(tensor1, in_data, device_type)
+
+    ! Create a rank-1 tensor based off the scalar divisor
+    call torch_tensor_from_array(divisor, [scalar], [1], device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, device_type)
+
+    ! Create another tensor as the quotient of the first tensor and a scalar constant using the
+    ! overloaded division operator
+    tensor2 = tensor1 / divisor
+
+    ! Check input array is unchanged by post-division
+    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    @assertTrue(allclose(in_data, expected, test_name="test_torch_tensor_scalar_divide_input"))
+
+    ! Compare the data in the tensor to the scaled input array
+    expected(:,:) = in_data / scalar
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_scalar_divide_output"))
+
+  end subroutine test_torch_tensor_scalar_divide
+
+  ! Unit test for the integer exponentiation operator
+  @test(testParameters={get_parameters_full()})
+  subroutine test_torch_tensor_square(this)
+    use ftorch_tensor, only: operator(**)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create an arbitrary input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create a tensor based off the input array
+    call torch_tensor_from_array(tensor1, in_data, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, device_type)
+
+    ! Create another tensor as the first tensor to the power of an exponent using the
+    ! overloaded exponentiation operator
+    if (this%param%switch) then
+      tensor2 = tensor1 ** 2
+    else
+      tensor2 = tensor1 ** 2.0
+    end if
+
+    ! Check input array is unchanged by pre-multiplication
+    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    @assertTrue(allclose(in_data, expected, test_name="test_torch_tensor_square_input"))
+
+    ! Compare the data in the tensors to the squared input array
+    expected(:,:) = in_data ** 2
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_square_output"))
+
+  end subroutine test_torch_tensor_square
+
+  ! Unit test for the fractional exponentiation operator
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_sqrt(this)
+    use ftorch_tensor, only: operator(**)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create an arbitrary input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create a tensor based off the input array
+    call torch_tensor_from_array(tensor1, in_data, device_type)
+
+    ! Create another tensor based off an output array
+    call torch_tensor_from_array(tensor2, out_data, device_type)
+
+    ! Create another tensors as the tensor to the power of 0.5 using the overloaded exponentiation
+    ! operator
+    tensor2 = tensor1 ** 0.5
+
+    ! Check input array is unchanged by taking the square root
+    expected(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+    @assertTrue(allclose(in_data, expected, test_name="test_torch_tensor_sqrt_input"))
+
+    ! Compare the data in the tensors to the square root of the input array
+    expected(:,:) = in_data ** 0.5
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_sqrt_output"))
+
+  end subroutine test_torch_tensor_sqrt
+
+end module unittest_tensor_operator_overloads

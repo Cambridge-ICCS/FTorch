@@ -1,6 +1,6 @@
 # Changelog
 
-All [notable](https://cambridge-iccs.github.io/FTorch/page/developer.html#versioning-and-changelog)
+All [notable](https://cambridge-iccs.github.io/FTorch/page/developer/developer.html#versioning-and-changelog)
 changes to the project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
@@ -14,6 +14,12 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 - Provide worked example and documentation on differentiating through calls to
   `torch_model_forward`.
   [#486](https://github.com/Cambridge-ICCS/FTorch/pull/486)
+- Add documentation on FTorch's unit testing approach. [#489](https://github.com/Cambridge-ICCS/FTorch/pull/489)
+- Batching in FTorch documented, including a new worked example, in
+  [#500](https://github.com/Cambridge-ICCS/FTorch/pull/500).
+- Add subroutine for printing parameters associated with a Torch Model
+  [#488](https://github.com/Cambridge-ICCS/FTorch/pull/488)
+- Add unit testing for the Torch Model API [#496](https://github.com/Cambridge-ICCS/FTorch/pull/496)
 - Provide support for using FTorch with pkg-config. [#464](https://github.com/Cambridge-ICCS/FTorch/pull/464)
 - Support building FTorch as a static library. [#448](https://github.com/Cambridge-ICCS/FTorch/pull/448)
 - Intel-ifx and Intel-ifort CI and GCC v9-13 CI. Intel CI builds OpenMPI from source to accomodate MPI integration tests [#438](https://github.com/Cambridge-ICCS/FTorch/pull/438)
@@ -42,6 +48,12 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Improve FTorch's modularisation under the hood by breaking single Fortran file down into submodules in [#508](https://github.com/Cambridge-ICCS/FTorch/pull/508)
+- Example numbers were bumped to account for new worked examples in
+  [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291) and
+  [#500](https://github.com/Cambridge-ICCS/FTorch/pull/500).
+- Bump the minimum CMake version from 3.15 to 3.18, for consistency with what's
+  used in PyTorch. [#491](https://github.com/Cambridge-ICCS/FTorch/pull/491)
 - Significant overhaul of the online FORD documentation and reduction of content in the README
   in [#459](https://github.com/Cambridge-ICCS/FTorch/pull/459)
 - Intel CI now uses Intel oneAPI MPI instead of OpenMPI built with Intel compilers [#449](https://github.com/Cambridge-ICCS/FTorch/pull/449)
@@ -52,8 +64,6 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 - scalar multiplication/division of tensors reworked to require the scalar to first be mapped to a `torch_tensor` in [#289](https://github.com/Cambridge-ICCS/FTorch/pull/289)
 - The unit tests for constructing and destroying tensors were separated out in
   [#319](https://github.com/Cambridge-ICCS/FTorch/pull/319)
-- Demo numbers were bumped to account for new demo in
-  [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291).
 - Use interface for `torch_tensor_from_array` with default layout in tests and
   examples in [#348](https://github.com/Cambridge-ICCS/FTorch/pull/348).
 - Error handling in `ctorch.cpp` improved in [#347](https://github.com/Cambridge-ICCS/FTorch/pull/347).

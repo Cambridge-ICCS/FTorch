@@ -21,7 +21,7 @@ TorchScript model in inference mode.
 
 To run this example requires:
 
-- CMake
+- CMake or Make
 - Fortran compiler
 - FTorch (installed as described in main package)
 - Python 3
@@ -43,7 +43,7 @@ python3 simplenet.py
 ```
 This defines the net and runs it with an input tensor [0.0, 1.0, 2.0, 3.0, 4.0] to produce the result:
 ```
-tensor([[0, 2, 4, 6, 8]])
+Model output: tensor([[0., 2., 4., 6., 8.]])
 ```
 
 To save the SimpleNet model to TorchScript run the modified version of the
@@ -58,10 +58,19 @@ You can check that everything is working by running the `simplenet_infer_python.
 python3 simplenet_infer_python.py
 ```
 This reads the model in from the TorchScript file and runs it with an input tensor
-[0.0, 1.0, 2.0, 3.0, 4.0] to produce the result:
+[0.0, 1.0, 2.0, 3.0, 4.0] to produce the following output:
 ```
-tensor([[0, 2, 4, 6, 8]])
+Model parameters:
+Parameter: _fwd_seq.0.weight
+tensor([[2., 0., 0., 0., 0.],
+        [0., 2., 0., 0., 0.],
+        [0., 0., 2., 0., 0.],
+        [0., 0., 0., 2., 0.],
+        [0., 0., 0., 0., 2.]])
+Model output: tensor([[0., 2., 4., 6., 8.]])
 ```
+First, the model parameters are printed (the weights of the linear layer),
+followed by the output of the model.
 
 At this point we no longer require Python, so can deactivate the virtual environment:
 ```
@@ -87,10 +96,24 @@ executable with an argument of the saved model file:
 ./simplenet_infer_fortran ../saved_simplenet_model_cpu.pt
 ```
 
-This runs the model with the array `[0.0, 1.0, 2.0, 3.0, 4.0]` should produce the output:
+This runs the model with the array `[0.0, 1.0, 2.0, 3.0, 4.0]` should produce
+the following output:
 ```
+ Model parameters:
+_fwd_seq.0.weight:
+ 2  0  0  0  0
+ 0  2  0  0  0
+ 0  0  2  0  0
+ 0  0  0  2  0
+ 0  0  0  0  2
+[ CPUFloatType{5,5} ]
+ Model output:
    0.00000000       2.00000000       4.00000000       6.00000000       8.00000000
 ```
+Again, the model parameters are printed first (the weights of the linear layer),
+followed by the output of the model, which is consistent with the earlier
+Python results. The `CPUFloatType{5,5}` indicates that the weight tensor is a
+5x5 matrix of 32-bit floats stored on the CPU.
 
 Alternatively we can use `make`, instead of CMake, with the included Makefile.
 However, to do this you will need to modify `Makefile` to link to and include your
@@ -105,7 +128,7 @@ You will also likely need to add the location of the dynamic library files
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib
 ```
-or `DYLD_LIBRARY_PATH` on mac:  
+or `DYLD_LIBRARY_PATH` on Mac:  
 ```
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:</path/to/library/installation>/lib
 ```

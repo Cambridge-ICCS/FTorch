@@ -1,0 +1,77 @@
+!| Unit tests for FTorch's tensor manipulation functionality on a CUDA device.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_tensor_manipulation_cuda
+  use funit
+  use ftorch_devices, only: torch_kCPU, torch_kCUDA
+  use ftorch_types, only: torch_kFloat32, torch_kFloat64
+  use ftorch_tensor, only: torch_tensor, torch_tensor_delete, torch_tensor_print, &
+                           torch_tensor_from_array, torch_tensor_empty, torch_tensor_to
+  use ftorch_test_utils, only: allclose
+  use, intrinsic :: iso_c_binding, only : c_int64_t
+
+  implicit none
+
+  public
+
+contains
+
+  ! Unit test for the torch_tensor_to subroutine moving a tensor from the CPU (Float64) to a CUDA
+  ! device (Float32)
+  @test
+  subroutine test_torch_tensor_to()
+    use, intrinsic :: iso_fortran_env, only: sp => real32, dp => real64
+
+    type(torch_tensor) :: cpu_tensor, gpu_tensor, test_tensor
+    real(dp), dimension(2,3,4) :: dp_data
+    real(sp), dimension(2,3,4) :: sp_data_expected, temp_array
+    integer, parameter :: device_type_source = torch_kCPU
+    integer, parameter :: device_type_target = torch_kCUDA
+    integer, parameter :: dtype_source = torch_kFloat64
+    integer, parameter :: dtype_target = torch_kFloat32
+    integer :: i, j, k
+
+    do k = 1, 4
+       do j = 1, 3
+          do i = 1, 2
+             dp_data(i,j,k) = real(100*i + 10*j + k, dp)
+          end do
+       end do
+    end do
+
+    call torch_tensor_from_array(cpu_tensor, dp_data, device_type_source)
+
+    call torch_tensor_empty(gpu_tensor, cpu_tensor%get_rank(), cpu_tensor%get_shape(), &
+                           dtype_target, device_type_target)
+
+    ! Move to target device and dtype
+    call torch_tensor_to(cpu_tensor, gpu_tensor)
+
+    @assertTrue(gpu_tensor%get_device_type() == device_type_target)
+    @assertTrue(gpu_tensor%get_shape() == cpu_tensor%get_shape())
+    @assertTrue(gpu_tensor%get_rank() == cpu_tensor%get_rank())
+
+    ! Temporary torch_tensor for testing created from array to extract underlying values
+    call torch_tensor_from_array(test_tensor, temp_array, device_type_source)
+
+    ! Move back to CPU for comparison
+    call torch_tensor_to(gpu_tensor, test_tensor)
+
+    ! Cast the data cpu_tensor is holding in double precision to single precision to
+    ! do the comparison with the data held by gpu_tensor (via temp_array)
+    sp_data_expected = real(dp_data, sp) 
+    if (.not. allclose(temp_array, sp_data_expected, "test_torch_tensor_to")) then
+      print *, "Error :: incorrect output from torch_tensor_to"
+      print *, "Source Tensor:"
+      call torch_tensor_print(cpu_tensor)
+      print *, "Target Tensor:"
+      call torch_tensor_print(gpu_tensor)
+      stop 999
+    end if
+
+  end subroutine test_torch_tensor_to
+
+end module unittest_tensor_manipulation_cuda

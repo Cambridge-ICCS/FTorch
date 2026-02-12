@@ -1,0 +1,399 @@
+!| Unit tests for FTorch's automatic differentiation functionality.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_tensor_autograd
+  use funit
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: ftorch_int, torch_kFloat32
+  use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_backward, torch_tensor_empty, &
+                           torch_tensor_from_array, torch_tensor_get_gradient, torch_tensor_ones
+  use ftorch_test_utils, only: allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
+
+  implicit none
+
+  public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  ! All unit tests in this module use 2D arrays with the default layout and float32 precision
+  integer, parameter :: ndims = 2
+  integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+  integer, parameter :: dtype = torch_kFloat32
+
+  ! Scalar shape for reduction operators
+  integer(c_int64_t), parameter, dimension(1) :: scalar_shape = [1]
+
+  @testParameter
+  type, extends(AbstractTestParameter) :: TestParametersType
+    logical :: switch
+    integer :: op
+  contains
+    procedure :: toString
+  end type TestParametersType
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_constructor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(TestParametersType) :: param
+  end type TestCaseType
+
+contains
+
+  ! A fixture for varying the requires_grad property and binary operator
+  function get_parameters_binary() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,1), &
+      TestParametersType(.true.,1), &
+      TestParametersType(.false.,2), &
+      TestParametersType(.true.,2), &
+      TestParametersType(.false.,3), &
+      TestParametersType(.true.,3), &
+      TestParametersType(.false.,4), &
+      TestParametersType(.true.,4) &
+    ]
+  end function get_parameters_binary
+
+  ! A fixture for varying the requires_grad property and unary operator
+  function get_parameters_unary() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,5), &
+      TestParametersType(.true.,5), &
+      TestParametersType(.false.,6), &
+      TestParametersType(.true.,6), &
+      TestParametersType(.false.,7), &
+      TestParametersType(.true.,7), &
+      TestParametersType(.false.,8), &
+      TestParametersType(.true.,8) &
+    ]
+  end function get_parameters_unary
+
+  ! A fixture for varying the requires_grad property and unary reduction operator
+  function get_parameters_reduction() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,9), &
+      TestParametersType(.true.,9), &
+      TestParametersType(.false.,10), &
+      TestParametersType(.true.,10) &
+    ]
+  end function get_parameters_reduction
+
+  ! A logical switch fixture
+  function get_parameters_switch() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,0), &
+      TestParametersType(.true.,0) &
+    ]
+  end function get_parameters_switch
+
+  ! A fixture comprised of a short list of parameter sets
+  function get_parameters_short() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [TestParametersType(.false.,0)]
+  end function get_parameters_short
+
+  ! Constructor for the test case type
+  function test_case_constructor(param)
+    type(TestCaseType) :: test_case_constructor
+    type(TestParametersType), intent(in) :: param
+    test_case_constructor%param = param
+  end function test_case_constructor
+
+  ! Function for representing a parameter set as a string
+  function toString(this) result(string)
+    class(TestParametersType), intent(in) :: this
+    character(:), allocatable :: string
+    character(len=10) :: str
+    if (this%op == 0) then
+      write(str,"(l1)") this%switch
+    else if (this%op == 1) then
+      write(str,"(l1,',add')") this%switch
+    else if (this%op == 2) then
+      write(str,"(l1,',subtract')") this%switch
+    else if (this%op == 3) then
+      write(str,"(l1,',multiply')") this%switch
+    else if (this%op == 4) then
+      write(str,"(l1,',divide')") this%switch
+    else if (this%op == 5) then
+      write(str,"(l1,',negative')") this%switch
+    else if (this%op == 6) then
+      write(str,"(l1,',isquare')") this%switch
+    else if (this%op == 7) then
+      write(str,"(l1,',fsquare')") this%switch
+    else if (this%op == 8) then
+      write(str,"(l1,',sqrt')") this%switch
+    else if (this%op == 9) then
+      write(str,"(l1,',sum')") this%switch
+    else if (this%op == 10) then
+      write(str,"(l1,',mean')") this%switch
+    else
+      write(*,*) "Error :: invalid operator code"
+      stop 999
+    end if
+    string = trim(str)
+  end function toString
+
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_zero_grad(this)
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: Q, a, dQda
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create an arbitrary input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create a tensor based off an input array
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
+
+    ! Create another empty tensor and assign it to the first using the overloaded assignment
+    ! operator
+    call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
+    Q = a
+
+    ! Create another tensor based off an output array for the gradient
+    call torch_tensor_from_array(dQda, out_data, device_type)
+
+    ! Apply back-propagation and retrieve the gradient and check it takes the expected value:
+    !   Q(a) = a => dQ/da = 1
+    call torch_tensor_backward(Q)
+    call torch_tensor_get_gradient(dQda, a)
+    expected(:,:) = 1.0
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_zero_grad1"))
+
+    ! Call torch_tensor_zero_grad and check the gradient is indeed reset to zero. Note that we need
+    ! to call torch_tensor_get_gradient again after zeroing out these values.
+    call a%zero_grad()
+    call torch_tensor_get_gradient(dQda, a)
+    expected(:,:) = 0.0
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_zero_grad2"))
+
+  end subroutine test_torch_tensor_zero_grad
+
+  @test(testParameters={get_parameters_short()})
+  subroutine test_torch_tensor_retain_graph(this)
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: Q, a, dQda
+    real(wp), dimension(2,3), target :: in_data, out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Create an arbitrary input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
+
+    ! Create a tensor based off an input array
+    call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
+
+    ! Create another empty tensor and assign it to the first using the overloaded assignment
+    ! operator
+    call torch_tensor_empty(Q, ndims, tensor_shape, dtype, device_type)
+    Q = a
+
+    ! Create another tensor based off an output array for the gradient
+    call torch_tensor_from_array(dQda, out_data, device_type)
+
+    ! Apply back-propagation and retrieve the gradient and check it takes the expected value:
+    !   Q(a) = a => dQ/da = 1
+    call torch_tensor_backward(Q)
+    call torch_tensor_get_gradient(dQda, a)
+    expected(:,:) = 1.0
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_retain_graph1"))
+
+    ! Zero the gradient and then call back-propagation again and check the computed gradient still
+    ! takes the expected value
+    call a%zero_grad()
+    call torch_tensor_backward(Q, retain_graph=.true.)
+    call torch_tensor_get_gradient(dQda, a)
+    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_retain_graph2"))
+
+  end subroutine test_torch_tensor_retain_graph
+ 
+  ! ============================================================================
+  ! --- Unit tests for the requires_grad property
+  ! ============================================================================
+
+  ! Unit test checking the requires_grad property is carried over during assignment
+  @test(testparameters={get_parameters_switch()})
+  subroutine test_requires_grad_assign(this)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+
+    ! Create a tensor of ones with the provided requires_grad value
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
+    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type, &
+                            requires_grad=.not. this%param%switch)
+
+    tensor2 = tensor1
+
+    ! Check that requires_grad is updated correctly
+    @assertEqual(this%param%switch, tensor2%requires_grad())
+
+  end subroutine test_requires_grad_assign
+
+  ! Unit test checking the requires_grad property is carried over during a combination of an
+  ! assignment and a binary operator applied to tensors with the same requires_grad value
+  @test(testparameters={get_parameters_binary()})
+  subroutine test_requires_grad_binary_same(this)
+    use ftorch_tensor, only: operator(+), operator(-), operator(*), operator(/)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, tensor3
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+
+    ! Create two tensors of ones with the provided requires_grad value
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+    call torch_tensor_ones(tensor2, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
+    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type, &
+                            requires_grad=.not. this%param%switch)
+
+    ! Compute the appropriate binary operator
+    if (this%param%op == 1) then
+      tensor3 = tensor1 + tensor2
+    else if (this%param%op == 2) then
+      tensor3 = tensor1 - tensor2
+    else if (this%param%op == 3) then
+      tensor3 = tensor1 * tensor2
+    else if (this%param%op == 4) then
+      tensor3 = tensor1 / tensor2
+    else
+      write(*,*) "Error :: invalid operator code"
+    end if
+
+    ! Check that requires_grad is updated correctly
+    @assertEqual(this%param%switch, tensor3%requires_grad())
+
+  end subroutine test_requires_grad_binary_same
+
+  ! Unit test checking the requires_grad property is carried over during a combination of an
+  ! assignment and a binary operator applied to tensors with different requires_grad values
+  @test(testparameters={get_parameters_binary()})
+  subroutine test_requires_grad_binary_different(this)
+    use ftorch_tensor, only: operator(+), operator(-), operator(*), operator(/)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2, tensor3
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+
+    ! Create two tensors of ones with the provided requires_grad value
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+    call torch_tensor_ones(tensor2, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=.not. this%param%switch)
+
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
+    call torch_tensor_empty(tensor3, ndims, tensor_shape, dtype, device_type)
+    ! NOTE: It's not valid for tensor3 to have requires_grad=.true. as that would give the error
+    !    "a leaf Variable that requires grad is being used in an in-place operation".
+
+    ! Compute the appropriate binary operator
+    if (this%param%op == 1) then
+      tensor3 = tensor1 + tensor2
+    else if (this%param%op == 2) then
+      tensor3 = tensor1 - tensor2
+    else if (this%param%op == 3) then
+      tensor3 = tensor1 * tensor2
+    else if (this%param%op == 4) then
+      tensor3 = tensor1 / tensor2
+    else
+      write(*,*) "Error :: invalid binary operator code"
+    end if
+
+    ! Check that requires_grad is updated correctly
+    @assertTrue(tensor3%requires_grad())
+
+  end subroutine test_requires_grad_binary_different
+
+  ! Unit test checking the requires_grad property is carried over during a combination of an
+  ! assignment and a unary operator
+  @test(testparameters={get_parameters_unary()})
+  subroutine test_requires_grad_unary(this)
+    use ftorch_tensor, only: operator(-), operator(**)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+
+    ! Create a tensor of ones with the provided requires_grad value
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
+    call torch_tensor_empty(tensor2, ndims, tensor_shape, dtype, device_type, &
+                            requires_grad=.not. this%param%switch)
+
+    if (this%param%op == 5) then
+      tensor2 = -tensor1
+    else if (this%param%op == 6) then
+      tensor2 = tensor1 ** 2
+    else if (this%param%op == 7) then
+      tensor2 = tensor1 ** 2.0
+    else if (this%param%op == 8) then
+      tensor2 = tensor1 ** 0.5
+    else
+      write(*,*) "Error :: invalid unary operator code"
+    end if
+
+    ! Check that requires_grad is updated correctly
+    @assertEqual(this%param%switch, tensor2%requires_grad())
+
+  end subroutine test_requires_grad_unary
+
+  ! Unit test checking the requires_grad property is carried over during a combination of an
+  ! assignment and a unary reduction operator
+  @test(testparameters={get_parameters_reduction()})
+  subroutine test_requires_grad_reduction(this)
+    use ftorch_tensor, only: torch_tensor_mean, torch_tensor_sum
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+
+    ! Create a tensor of ones with the provided requires_grad value
+    call torch_tensor_ones(tensor1, ndims, tensor_shape, dtype, device_type, &
+                           requires_grad=this%param%switch)
+
+    ! Create an empty tensor with the same arguments except the opposite requires_grad value
+    call torch_tensor_empty(tensor2, 1, scalar_shape, dtype, device_type)
+    ! NOTE: It's not valid for tensor2 to have requires_grad=.true. as that would give the error
+    !    "a leaf Variable that requires grad is being used in an in-place operation".
+
+    if (this%param%op == 9) then
+      call torch_tensor_sum(tensor2, tensor1)
+    else if (this%param%op == 10) then
+      call torch_tensor_mean(tensor2, tensor1)
+    else
+      write(*,*) "Error :: invalid unary reduction operator code"
+    end if
+
+    ! Check that requires_grad is updated correctly
+    @assertEqual(this%param%switch, tensor2%requires_grad())
+
+  end subroutine test_requires_grad_reduction
+
+end module unittest_tensor_autograd

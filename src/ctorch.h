@@ -362,6 +362,20 @@ EXPORT_C void torch_jit_module_forward(const torch_jit_script_module_t module,
                                        const bool requires_grad);
 
 /**
+ * Function to print out the parameters of a Torch Module
+ *
+ * @param Torch Module to print the parameters of
+ */
+EXPORT_C void torch_jit_module_print_parameters(const torch_jit_script_module_t module);
+
+/**
+ * Function to determine whether a Torch Model is in training mode
+ * @param Torch Model to interrogate
+ * @return whether the Torch Model is in training mode
+ */
+EXPORT_C bool torch_jit_module_is_training(const torch_jit_script_module_t module);
+
+/**
  * Function to delete a Torch Module to clean up
  * @param Torch Module to delete
  */

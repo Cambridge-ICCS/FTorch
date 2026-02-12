@@ -105,6 +105,9 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/build
+          # Install to /tmp/ to ensure independent from the CMake build in standalone check.
+          export INSTALL_DIR=/tmp/ftorch-install
+          mkdir -p ${INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
           mkdir ${BUILD_DIR}
@@ -112,7 +115,7 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
+            -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DGPU_DEVICE=CUDA \
             -DMULTI_GPU=OFF \

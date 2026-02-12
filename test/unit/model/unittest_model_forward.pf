@@ -1,0 +1,140 @@
+!| Unit tests for propagation of tensors through TorchScript models with FTorch.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_model_forward
+  use funit
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_model, only: torch_model, torch_model_load, torch_model_forward
+  use ftorch_tensor, only: torch_tensor
+  use ftorch_test_utils, only: assert_allclose
+  use, intrinsic :: iso_fortran_env, only : sp => real32
+  use iso_c_binding, only: c_int64_t
+
+  implicit none
+
+  public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+  integer, parameter :: device_index = -1
+
+  ! All unit tests in this module use float32 precision
+  integer, parameter :: dtype = torch_kFloat32
+
+  character(len=256), parameter :: filename = "../fixtures/simplenet.pt"
+
+  ! Typedef holding a set of parameter values
+  @testParameter
+  type, extends(AbstractTestParameter) :: TestParametersType
+    logical :: requires_grad  ! Value used for the requires_grad argument
+  contains
+    procedure :: toString
+  end type TestParametersType
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_constructor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(TestParametersType) :: param
+  end type TestCaseType
+
+contains
+
+  ! Constructor for the test case type
+  function test_case_constructor(param)
+    type(TestCaseType) :: test_case_constructor
+    type(TestParametersType), intent(in) :: param
+    test_case_constructor%param = param
+  end function test_case_constructor
+
+  ! A minimal fixture for tests with no parameters
+  function get_parameters_short() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.) &
+    ]
+  end function get_parameters_short
+
+  ! A fixture comprised of parameter sets for varying the requires_grad argument
+  function get_parameters_requires_grad() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.), &
+      TestParametersType(.true.) &
+    ]
+  end function get_parameters_requires_grad
+
+  ! Function for representing a parameter set as a string
+  function toString(this) result(string)
+    class(TestParametersType), intent(in) :: this
+    character(:), allocatable :: string
+    character(len=1) :: str
+    write(str,"(l1)") this%requires_grad
+    string = str
+  end function toString
+
+  ! Unit test for checking values are propagated correctly through the test model
+  @test(testparameters={get_parameters_short()})
+  subroutine test_torch_model_forward_value(this)
+    use ftorch_tensor, only: torch_tensor_from_array
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_model) :: model
+    type(torch_tensor) :: input_tensors(1), output_tensors(1)
+    real(wp), dimension(5), target :: input_array, output_array
+    real(wp), dimension(5) :: expected
+
+    ! Initialise an input tensor and an output tensor
+    input_array = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
+    call torch_tensor_from_array(input_tensors(1), input_array, torch_kCPU)
+    call torch_tensor_from_array(output_tensors(1), output_array, torch_kCPU)
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Propagate the input tensor through the model
+    call torch_model_forward(model, input_tensors, output_tensors)
+
+    expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
+    @assertTrue(assert_allclose(output_array, expected, test_name="test_torch_model_forward_value"))
+
+  end subroutine test_torch_model_forward_value
+
+  ! Unit test for checking that requires_grad is correctly propagated through the test model
+  @test(testparameters={get_parameters_requires_grad()})
+  subroutine test_tensor_requires_grad(this)
+    use ftorch_tensor, only: torch_tensor_ones, torch_tensor_empty
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_model) :: model
+    type(torch_tensor) :: input_tensors(1), output_tensors(1)
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [5]
+
+    ! Create tensor of ones as input and an empty tensor as output
+    call torch_tensor_ones(input_tensors(1), ndims, tensor_shape, dtype, device_type, device_index)
+    call torch_tensor_empty(output_tensors(1), ndims, tensor_shape, dtype, device_type, &
+                            device_index)
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Propagate the input tensor through the model
+    call torch_model_forward(model, input_tensors, output_tensors, this%param%requires_grad)
+
+    ! Check that the output tensor has the correct requires_grad property
+    @assertEqual(this%param%requires_grad, output_tensors(1)%requires_grad())
+
+  end subroutine test_tensor_requires_grad
+
+end module unittest_model_forward
