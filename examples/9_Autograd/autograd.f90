@@ -21,9 +21,6 @@ program autograd
   real(wp), dimension(n), target :: out_data1, out_data2, out_data3
   real(wp), dimension(n) :: expected
 
-  ! Flag for testing
-  logical :: test_pass
-
   ! Set up Torch data structures
   type(torch_tensor) :: a, b, Q, multiplier, divisor, dQda, dQdb, external_gradient
 
