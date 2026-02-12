@@ -56,7 +56,7 @@ Having defined some tensors with the `requires_grad` property set to `.true.`
 and computed another tensor in terms of an expression involving these, we can
 compute gradients of that tensor with respect to those that it depends on. This
 is achieved using the
-[[ftorch_tensor(module):torch_tensor_backward(subroutine)]] subroutine. For
+[[ftorch_tensor(module):torch_tensor_backward(interface)]] subroutine. For
 example, for input tensors `a` and `b` and an output tensor `Q`:
 
 ```fortran
@@ -88,7 +88,7 @@ call torch_tensor_get_gradient(dQdb, b)
 
 If you wish to call the backpropagation operator multiple times then you may
 need to make use of the `retain_graph` argument for
-[[ftorch_tensor(module):torch_tensor_backward(subroutine)]]. This argument
+[[ftorch_tensor(module):torch_tensor_backward(interface)]]. This argument
 accepts logical values and defaults to `.false.`, for consistency with PyTorch
 and LibTorch. According to the
 [PyTorch docs](https://pytorch.org/docs/stable/generated/torch.Tensor.backward.html),
@@ -125,7 +125,7 @@ call torch_tensor_backward(P, retain_graph=.true.)
 
 Note that [[ftorch_tensor(module):torch_tensor_get_gradient(subroutine)]] must
 be called after every call to
-[[ftorch_tensor(module):torch_tensor_backward(subroutine)]] or
+[[ftorch_tensor(module):torch_tensor_backward(interface)]] or
 [[ftorch_tensor(module):torch_tensor_zero_grad(subroutine)]], even if the
 gradient for the same tensor is being extracted into the same array. This is due
 to the way that pointers are handled on the C++ side.
