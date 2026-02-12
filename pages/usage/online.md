@@ -57,7 +57,8 @@ and computed another tensor in terms of an expression involving these, we can
 compute gradients of that tensor with respect to those that it depends on. This
 is achieved using the
 [[ftorch_tensor(module):torch_tensor_backward(interface)]] subroutine. For
-example, for input tensors `a` and `b` and an output tensor `Q`:
+example, suppose we want to multiply two input tensors `a` and `b` to produce an
+output tensor `Q`:
 
 ```fortran
 call torch_tensor_from_array(a, in_data1, tensor_layout, torch_kCPU, &
@@ -67,9 +68,25 @@ call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU, &
 call torch_tensor_from_array(Q, out_data1, tensor_layout, torch_kCPU)
 
 Q = a * b
+```
 
+If the output tensor `Q` is scalar (which is a common case for the output of a
+neural network) then we can simply call
+```
 call torch_tensor_backward(Q)
 ```
+to perform the backpropagation. This will assume that the 'external gradient'
+used to scale the gradient calculation is just `1.0`.
+
+If the output tensor `Q` is not scalar or you wish to provide an external
+gradient other than `1.0`, you need to define this quantity as a
+[[ftorch_tensor(module):torch_tensor(type)]] and pass it as the second argument:
+```
+call torch_tensor_backward(Q, external_gradient)
+```
+You can think of the external gradient as the direction in which we seek to
+compute the derivative. This is why there is no default for non-scalar outputs:
+there is no obvious choice.
 
 Following the example code above, we can extract gradients of `Q` with respect
 to `a` and/or `b`. To do this, we can use the
