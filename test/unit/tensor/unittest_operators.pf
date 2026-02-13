@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module unittest_tensor_operators
+module unittest_operators
   use funit
   use ftorch_devices, only: torch_kCPU
   use ftorch_types, only: torch_kFloat32
@@ -31,7 +31,7 @@ contains
 
   ! Unit test for the summation reduction
   @test
-  subroutine test_torch_tensor_sum()
+  subroutine test_sum()
     use ftorch_tensor, only: torch_tensor_sum
 
     type(torch_tensor) :: in_tensor, out_tensor
@@ -55,17 +55,17 @@ contains
 
     ! Check input arrays are unchanged by the summation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(allclose(in_data, expected2d, test_name="test_torch_tensor_sum_input"))
+    @assertTrue(allclose(in_data, expected2d, test_name="test_sum_input"))
 
     ! Compare the data in the tensor to the negative of the input array
     expected1d(:) = 21.0
-    @assertTrue(allclose(out_data, expected1d, test_name="test_torch_tensor_sum_output"))
+    @assertTrue(allclose(out_data, expected1d, test_name="test_sum_output"))
 
-  end subroutine test_torch_tensor_sum
+  end subroutine test_sum
 
   ! Unit test for the mean reduction
   @test(testParameters={get_parameters_short()})
-  subroutine test_torch_tensor_mean()
+  subroutine test_mean()
     use ftorch_tensor, only: torch_tensor_mean
 
     type(torch_tensor) :: in_tensor, out_tensor
@@ -89,12 +89,12 @@ contains
 
     ! Check input arrays are unchanged by the summation
     expected2d(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
-    @assertTrue(allclose(in_data, expected2d, test_name="test_torch_tensor_mean_input"))
+    @assertTrue(allclose(in_data, expected2d, test_name="test_mean_input"))
 
     ! Compare the data in the tensor to the negative of the input array
     expected1d(:) = 21.0 / 6.0
-    @assertTrue(allclose(out_data, expected1d, test_name="test_torch_tensor_mean_output"))
+    @assertTrue(allclose(out_data, expected1d, test_name="test_mean_output"))
 
-  end subroutine test_torch_tensor_mean
+  end subroutine test_mean
 
-end module unittest_tensor_operators
+end module unittest_operators

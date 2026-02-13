@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module unittest_tensor_autograd
+module unittest_autograd
   use funit
   use ftorch_devices, only: torch_kCPU
   use ftorch_types, only: ftorch_int, torch_kFloat32
@@ -146,7 +146,7 @@ contains
   end function toString
 
   @test(testParameters={get_parameters_short()})
-  subroutine test_torch_tensor_zero_grad(this)
+  subroutine test_zero_grad(this)
 
     implicit none
 
@@ -174,19 +174,19 @@ contains
     call torch_tensor_backward(Q)
     call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 1.0
-    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_zero_grad1"))
+    @assertTrue(allclose(out_data, expected, test_name="test_zero_grad1"))
 
     ! Call torch_tensor_zero_grad and check the gradient is indeed reset to zero. Note that we need
     ! to call torch_tensor_get_gradient again after zeroing out these values.
     call a%zero_grad()
     call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 0.0
-    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_zero_grad2"))
+    @assertTrue(allclose(out_data, expected, test_name="test_zero_grad2"))
 
-  end subroutine test_torch_tensor_zero_grad
+  end subroutine test_zero_grad
 
   @test(testParameters={get_parameters_short()})
-  subroutine test_torch_tensor_retain_graph(this)
+  subroutine test_retain_graph(this)
 
     implicit none
 
@@ -214,16 +214,16 @@ contains
     call torch_tensor_backward(Q)
     call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 1.0
-    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_retain_graph1"))
+    @assertTrue(allclose(out_data, expected, test_name="test_retain_graph1"))
 
     ! Zero the gradient and then call back-propagation again and check the computed gradient still
     ! takes the expected value
     call a%zero_grad()
     call torch_tensor_backward(Q, retain_graph=.true.)
     call torch_tensor_get_gradient(dQda, a)
-    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_retain_graph2"))
+    @assertTrue(allclose(out_data, expected, test_name="test_retain_graph2"))
 
-  end subroutine test_torch_tensor_retain_graph
+  end subroutine test_retain_graph
  
   ! ============================================================================
   ! --- Unit tests for the requires_grad property
@@ -396,4 +396,4 @@ contains
 
   end subroutine test_requires_grad_reduction
 
-end module unittest_tensor_autograd
+end module unittest_autograd

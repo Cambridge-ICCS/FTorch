@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module unittest_tensor_operators_autograd
+module unittest_operators_autograd
   use funit
   use ftorch_devices, only: torch_kCPU
   use ftorch_types, only: torch_kFloat32
@@ -34,7 +34,7 @@ contains
 
   ! Unit test for derivative of the summation reduction
   @test
-  subroutine test_torch_tensor_sum()
+  subroutine test_sum()
     use ftorch_tensor, only: torch_tensor_sum
 
     type(torch_tensor) :: a, Q, dQda
@@ -61,13 +61,13 @@ contains
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = \sigma_{i,j} a_{i,j} => dQda = [array of ones]
     expected(:,:) = 1.0
-    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_sum"))
+    @assertTrue(allclose(out_data, expected, test_name="test_sum"))
 
-  end subroutine test_torch_tensor_sum
+  end subroutine test_sum
 
   ! Unit test for the derivative of the mean reduction
   @test
-  subroutine test_torch_tensor_mean()
+  subroutine test_mean()
     use ftorch_tensor, only: torch_tensor_mean
 
     type(torch_tensor) :: a, Q, dQda
@@ -94,8 +94,8 @@ contains
     ! Extract Fortran array from the computed gradient and its data with the expected value:
     !   Q(a) = 1/N * \sigma_{i,j} a_{i,j} => dQda = 1/N * [array of ones]
     expected(:,:) = 1.0 / 6.0
-    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_mean"))
+    @assertTrue(allclose(out_data, expected, test_name="test_mean"))
 
-  end subroutine test_torch_tensor_mean
+  end subroutine test_mean
 
-end module unittest_tensor_operators_autograd
+end module unittest_operators_autograd

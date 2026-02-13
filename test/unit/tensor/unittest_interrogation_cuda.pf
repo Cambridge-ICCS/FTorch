@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module unittest_tensor_interrogation_cuda
+module unittest_interrogation_cuda
   use funit
   use ftorch_devices, only: torch_kCUDA
   use ftorch_types, only: torch_kFloat32
@@ -25,7 +25,7 @@ contains
 
   ! Unit test for the torch_tensor_get_device_type function applied to a tensor on a CUDA device
   @test
-  subroutine test_torch_tensor_get_device_type()
+  subroutine test_get_device_type()
 
     implicit none
 
@@ -39,12 +39,12 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertEqual(expected, tensor%get_device_type())
 
-  end subroutine test_torch_tensor_get_device_type
+  end subroutine test_get_device_type
 
   ! Unit test for the torch_tensor_get_device_index function applied to a tensor on a CUDA device
   ! Tensor is created without specifying a device_index so should default to device 0
   @test
-  subroutine test_torch_tensor_get_device_index_default()
+  subroutine test_get_device_index_default()
 
     implicit none
 
@@ -58,6 +58,6 @@ contains
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
     @assertEqual(expected, tensor%get_device_index())
 
-  end subroutine test_torch_tensor_get_device_index_default
+  end subroutine test_get_device_index_default
 
-end module unittest_tensor_interrogation_cuda
+end module unittest_interrogation_cuda
