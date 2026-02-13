@@ -1,9 +1,9 @@
-add_pfunit_ctest(unittest_constructors_destructors
-                 TEST_SOURCES unittest_constructors_destructors.pf
+add_pfunit_ctest(unittest_model_constructors_destructors
+                 TEST_SOURCES unittest_model_constructors_destructors.pf
                  LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(unittest_interrogation
-                 TEST_SOURCES unittest_interrogation.pf
+add_pfunit_ctest(unittest_model_interrogation
+                 TEST_SOURCES unittest_model_interrogation.pf
                  LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(unittest_forward
-                 TEST_SOURCES unittest_forward.pf
+add_pfunit_ctest(unittest_model_forward
+                 TEST_SOURCES unittest_model_forward.pf
                  LINK_LIBRARIES FTorch::ftorch)
