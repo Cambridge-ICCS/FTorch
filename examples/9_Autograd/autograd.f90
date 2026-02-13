@@ -41,9 +41,10 @@ program autograd
   ! Scalar multiplication and division are not currently implemented in FTorch. However, you can
   ! achieve the same thing by defining a rank-1 tensor with a single entry, as follows.
   ! NOTE: You must pay close attention to the lifetime and aliasing of the underlying memory. You
-  !  need to specify an array for each scalar value and make sure that the tensor does not outlive
-  !  it. Remember that if you provide the same array to two tensors and one of them modifies it, the
-  !  other will also see the change.
+  !       need to specify an array for each scalar value and make sure that the tensor does not
+  !       outlive it. Remember that if you provide the same array to two tensors and one of them
+  !       modifies it, the other will also see the change.
+  !       In summary: one Fortran array to one tensor, unless you really know what you're doing.
   multiplier_value(1) = 3.0_wp
   call torch_tensor_from_array(multiplier, multiplier_value, torch_kCPU)
   divisor_value(1) = 3.0_wp
