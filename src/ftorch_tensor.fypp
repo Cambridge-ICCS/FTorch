@@ -310,9 +310,10 @@ contains
   !  This routine will take an (i, j, k) array and return an (k, j, i) tensor.
   !
   ! Note that `data` needs to be a pointer to a **contiguous** block of memory!
-  ! It is generally not a case when calling `c_loc` on a Fortran array as these may not be
-  ! contiguous as a result of array slicing. Please consider asserting that the data is contiguous
-  ! with `is_contiguous` implicit procedure before calling this routine.
+  ! This is not generally not the case when calling `c_loc` on a Fortran array as
+  ! array slicing can lead to non-contiguous memory.
+  ! Please consider asserting that the data is contiguous with the `is_contiguous`
+  ! implicit procedure before calling this routine.
   subroutine torch_tensor_from_blob(tensor, data, ndims, tensor_shape, layout, dtype, &
                                     device_type, device_index, &
                                     requires_grad)

@@ -64,7 +64,7 @@ call, and instead attempt to call the specific procedure you expect to use.
 This can often provide more instructive error messages about what you are doing
 incorrectly.
 
-Such errors can occur if you pass a temporary array where the procedure expects
+Such errors can also occur if you pass a temporary array where the procedure expects
 to receive a Fortran array with the `target` property. For example:
 ```
    34 |   call torch_tensor_from_array(a, [1.0_wp], torch_kCPU, requires_grad=.true.)
@@ -73,7 +73,7 @@ Error: There is no specific subroutine for the generic ‘torch_tensor_from_arra
 ```
 That is, the second argument should be a Fortran array with the `target`
 property, not the temporary array `[1.0_wp]`. This kind of thing was possible in
-FTorch at v1.0 but has since been removed because it is errorneous. Similarly
+FTorch at v1.0 but has since been removed because it is erroneous. Similarly
 for expressions involving `torch_tensor`s, e.g., products such as
 ```
    34 |   call torch_tensor_from_array(a, 1.0*in_data1, torch_kCPU, requires_grad=.true.)
