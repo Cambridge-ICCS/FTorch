@@ -64,7 +64,7 @@ call, and instead attempt to call the specific procedure you expect to use.
 This can often provide more instructive error messages about what you are doing
 incorrectly
 
-##### `int64` versions of `ftorch` for large tensors
+#### `int64` versions of `ftorch` for large tensors
 
 An alternative cause of the 'no specific subroutine' error can occur if your tensor
 dimension is larger than FTorch supports by default.
