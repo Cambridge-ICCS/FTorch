@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module unittest_operators
+module unittest_tensor_operators
   use funit
   use ftorch_devices, only: torch_kCPU
   use ftorch_types, only: torch_kFloat32
@@ -97,4 +97,4 @@ contains
 
   end subroutine test_mean
 
-end module unittest_operators
+end module unittest_tensor_operators

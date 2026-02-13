@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module unittest_manipulation_cuda
+module unittest_tensor_manipulation_cuda
   use funit
   use ftorch_devices, only: torch_kCPU, torch_kCUDA
   use ftorch_types, only: torch_kFloat32, torch_kFloat64
@@ -74,4 +74,4 @@ contains
 
   end subroutine test_to
 
-end module unittest_manipulation_cuda
+end module unittest_tensor_manipulation_cuda

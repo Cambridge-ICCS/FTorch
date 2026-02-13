@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module unittest_autograd
+module unittest_tensor_autograd
   use funit
   use ftorch_devices, only: torch_kCPU
   use ftorch_types, only: ftorch_int, torch_kFloat32
@@ -396,4 +396,4 @@ contains
 
   end subroutine test_requires_grad_reduction
 
-end module unittest_autograd
+end module unittest_tensor_autograd

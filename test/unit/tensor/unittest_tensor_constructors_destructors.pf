@@ -4,7 +4,7 @@
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module unittest_constructors_destructors
+module unittest_tensor_constructors_destructors
   use funit
   use ftorch_devices, only: torch_kCPU
   use ftorch_types, only: torch_kFloat32
@@ -429,4 +429,4 @@ contains
 
   end subroutine test_destruction
 
-end module unittest_constructors_destructors
+end module unittest_tensor_constructors_destructors
