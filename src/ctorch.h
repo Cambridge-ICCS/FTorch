@@ -16,6 +16,9 @@
 // Opaque pointer type alias for torch::jit::script::Module class
 typedef void *torch_jit_script_module_t;
 
+// Opaque pointer type alias for torch::jit::Method class
+typedef void *torch_jit_method_t;
+
 // Opaque pointer type alias for at::Tensor
 typedef void *torch_tensor_t;
 
@@ -348,6 +351,16 @@ EXPORT_C torch_jit_script_module_t torch_jit_load(const char *filename,
                                                   const bool is_training);
 
 /**
+ * Function to load in a Torch model from a TorchScript file and store in a
+ * Torch Module
+ * @param module containing the model to get the method from
+ * @param method_name name of the method to get from the module
+ * @return Torch Method loaded from module
+ */
+EXPORT_C torch_jit_method_t torch_jit_get_method(const torch_jit_script_module_t module,
+                                                 const char *method_name);
+
+/**
  * Function to run the `forward` method of a Torch Module
  * @param Torch Module containing the model
  * @param vector of Torch Tensors as inputs to the model
@@ -360,6 +373,20 @@ EXPORT_C void torch_jit_module_forward(const torch_jit_script_module_t module,
                                        const torch_tensor_t *inputs, const int nin,
                                        torch_tensor_t *outputs, const int nout,
                                        const bool requires_grad);
+
+/**
+ * Function to call a Torch Method
+ * @param method containing the model method to be called
+ * @param vector of Torch Tensors as inputs to the method
+ * @param number of input Tensors in the input vector
+ * @param vector of Torch Tensors as outputs from running the method
+ * @param number of output Tensors in the output vector
+ * @param whether gradient is required
+ */
+EXPORT_C void torch_jit_method_call(const torch_jit_script_module_t module,
+                                    const torch_tensor_t *inputs, const int nin,
+                                    torch_tensor_t *outputs, const int nout,
+                                    const bool requires_grad);
 
 /**
  * Function to print out the parameters of a Torch Module
@@ -380,5 +407,11 @@ EXPORT_C bool torch_jit_module_is_training(const torch_jit_script_module_t modul
  * @param Torch Module to delete
  */
 EXPORT_C void torch_jit_module_delete(torch_jit_script_module_t module);
+
+/**
+ * Function to delete a Torch Method to clean up
+ * @param Torch Method to delete
+ */
+EXPORT_C void torch_jit_method_delete(torch_jit_method_t method);
 
 #endif /* C_TORCH_H*/
