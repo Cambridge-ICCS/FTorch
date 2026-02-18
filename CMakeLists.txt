@@ -65,7 +65,8 @@ else()
 endif()
 
 # Cache the device type so that it can be accessed in subdirectories
-set(GPU_DEVICE ${GPU_DEVICE} CACHE STRING "GPU device type")
+set(GPU_DEVICE ${GPU_DEVICE} CACHE STRING "GPU device name")
+set(GPU_DEVICE_CODE ${GPU_DEVICE_CODE} CACHE STRING "GPU device code")
 
 # Other GPU specific setup
 include(CheckLanguage)

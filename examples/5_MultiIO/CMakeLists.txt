@@ -48,10 +48,8 @@ if(CMAKE_BUILD_TESTS)
   endif()
   if("${GPU_DEVICE}" STREQUAL "NONE")
     set(MULTIIO_DEVICE_TYPE "cpu")
-    set(MULTIIO_DEVICE "0")
   else()
     string(TOLOWER "${GPU_DEVICE}" MULTIIO_DEVICE_TYPE)
-    set(MULTIIO_DEVICE "${GPU_DEVICE}")
   endif()
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
@@ -81,7 +79,7 @@ if(CMAKE_BUILD_TESTS)
     NAME example_multiio_multiionet_infer_fortran
     COMMAND
       multiionet_infer_fortran ${PROJECT_BINARY_DIR}/saved_multiio_model_cpu.pt
-      ${MULTIIO_DEVICE}
+      ${GPU_DEVICE_CODE}
       # Command line arguments: model file, device type
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(

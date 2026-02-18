@@ -48,10 +48,8 @@ if(CMAKE_BUILD_TESTS)
   endif()
   if("${GPU_DEVICE}" STREQUAL "NONE")
     set(SIMPLENET_DEVICE_TYPE "cpu")
-    set(SIMPLENET_DEVICE "0")
   else()
     string(TOLOWER "${GPU_DEVICE}" SIMPLENET_DEVICE_TYPE)
-    set(SIMPLENET_DEVICE "${GPU_DEVICE}")
   endif()
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
@@ -82,7 +80,7 @@ if(CMAKE_BUILD_TESTS)
     COMMAND
       simplenet_infer_fortran
       ${PROJECT_BINARY_DIR}/saved_simplenet_model_${SIMPLENET_DEVICE_TYPE}.pt
-      ${SIMPLENET_DEVICE}
+      ${GPU_DEVICE_CODE}
       # Command line arguments: model file, device type
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(

@@ -48,10 +48,8 @@ if(CMAKE_BUILD_TESTS)
   endif()
   if("${GPU_DEVICE}" STREQUAL "NONE")
     set(RESNET_DEVICE_TYPE "cpu")
-    set(RESNET_DEVICE "0")
   else()
     string(TOLOWER "${GPU_DEVICE}" RESNET_DEVICE_TYPE)
-    set(RESNET_DEVICE "${GPU_DEVICE}")
   endif()
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
@@ -75,7 +73,7 @@ if(CMAKE_BUILD_TESTS)
     NAME example_resnet_resnet_infer_fortran
     COMMAND
       resnet_infer_fortran ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt
-      ${PROJECT_SOURCE_DIR}/data ${RESNET_DEVICE}
+      ${PROJECT_SOURCE_DIR}/data ${GPU_DEVICE_CODE}
       # Command line arguments: model file, data directory filepath, device type
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
