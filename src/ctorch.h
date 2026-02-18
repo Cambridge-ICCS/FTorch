@@ -314,17 +314,20 @@ EXPORT_C void torch_tensor_zero_grad(torch_tensor_t tensor);
  * @param Tensor to perform back-propagation on
  * @param whether the computational graph should be retained
  */
-EXPORT_C void torch_tensor_backward_with_external_gradient(const torch_tensor_t tensor,
-                                                           const torch_tensor_t external_gradient,
-                                                           const bool retain_graph);
+EXPORT_C void
+torch_tensor_backward_with_external_gradient(const torch_tensor_t tensor,
+                                             const torch_tensor_t external_gradient,
+                                             const bool retain_graph);
 
 /**
- * Function to perform back-propagation on a Torch Tensor with an assumed external gradient of ones.
- * Note that the Tensor must have the requires_grad attribute set to true.
+ * Function to perform back-propagation on a Torch Tensor with an assumed external
+ * gradient of ones. Note that the Tensor must have the requires_grad attribute set to
+ * true.
  * @param Tensor to perform back-propagation on
  */
-EXPORT_C void torch_tensor_backward_without_external_gradient(const torch_tensor_t tensor,
-                                                              const bool retain_graph);
+EXPORT_C void
+torch_tensor_backward_without_external_gradient(const torch_tensor_t tensor,
+                                                const bool retain_graph);
 
 /**
  * Function to return the grad attribute of a Torch Tensor.
