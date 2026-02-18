@@ -82,7 +82,7 @@ if(CMAKE_BUILD_TESTS)
       multiionet_infer_fortran
       ${PROJECT_BINARY_DIR}/saved_multiio_model_${MULTIIO_DEVICE_TYPE}.pt
       ${GPU_DEVICE_CODE}
-      # Command line arguments: model file, device type
+      # Command line arguments: model file, device code
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     example_multiio_multiionet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION

@@ -82,7 +82,7 @@ if(CMAKE_BUILD_TESTS)
       simplenet_infer_fortran
       ${PROJECT_BINARY_DIR}/saved_simplenet_model_${SIMPLENET_DEVICE_TYPE}.pt
       ${GPU_DEVICE_CODE}
-      # Command line arguments: model file, device type
+      # Command line arguments: model file, device code
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     example_simplenet_simplenet_infer_fortran

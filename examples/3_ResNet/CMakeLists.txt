@@ -76,7 +76,7 @@ if(CMAKE_BUILD_TESTS)
       resnet_infer_fortran
       ${PROJECT_BINARY_DIR}/saved_resnet18_model_${RESNET_DEVICE_TYPE}.pt
       ${PROJECT_SOURCE_DIR}/data ${GPU_DEVICE_CODE}
-      # Command line arguments: model file, data directory filepath, device type
+      # Command line arguments: model file, data directory filepath, device code
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     example_resnet_resnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
