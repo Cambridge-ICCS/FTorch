@@ -18,6 +18,8 @@ program inference
 
    integer :: num_args, ix
    character(len=128), dimension(:), allocatable :: args
+   character(len=128) :: device_type
+   integer :: torch_device
 
    ! Set up Fortran data structures
    real(wp), dimension(5), target :: in_data
@@ -33,22 +35,34 @@ program inference
    ! Flag for testing
    logical :: test_pass
 
-   ! Get TorchScript model file as a command line argument
+   ! Get TorchScript model file (required) and device type (optional) as command line arguments
    num_args = command_argument_count()
    allocate(args(num_args))
    do ix = 1, num_args
        call get_command_argument(ix,args(ix))
    end do
 
+   if (num_args < 1) then
+     write(*,*) "Usage: simplenet_infer_fortran <model_file> <device_type enum>"
+     stop 2
+   end if
+
+   ! Process device type argument, if provided
+   device_type = "cpu"
+   if (num_args > 1) then
+     device_type = adjustl(trim(args(2)))
+   end if
+   read(device_type,"(i1)") torch_device
+
    ! Initialise data
    in_data = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
 
    ! Create Torch input/output tensors from the above arrays
-   call torch_tensor_from_array(in_tensors(1), in_data, torch_kCPU)
+   call torch_tensor_from_array(in_tensors(1), in_data, torch_device)
    call torch_tensor_from_array(out_tensors(1), out_data, torch_kCPU)
 
    ! Load ML model
-   call torch_model_load(model, args(1), torch_kCPU)
+   call torch_model_load(model, args(1), torch_device)
 
    ! Print the parameters associated with the pre-trained model
    ! NOTE: While viewing parameters in this way can be helpful for small toy models, it will produce
