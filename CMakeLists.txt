@@ -64,6 +64,9 @@ else()
   message(SEND_ERROR "GPU_DEVICE '${GPU_DEVICE}' not recognised")
 endif()
 
+# Cache the device type so that it can be accessed in subdirectories
+set(GPU_DEVICE ${GPU_DEVICE} CACHE STRING "GPU device type")
+
 # Other GPU specific setup
 include(CheckLanguage)
 if("${GPU_DEVICE}" STREQUAL "CUDA")
