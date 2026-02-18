@@ -2908,12 +2908,13 @@ contains
 
   !> Performs back-propagation on a Torch Tensor, with an assumed external_gradient of ones.
   subroutine torch_tensor_backward_without_external_gradient(tensor, retain_graph)
-    use, intrinsic :: iso_c_binding, only : c_bool
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int64_t
     type(torch_tensor), intent(in) :: tensor       !! Tensor to compute gradients of
     logical, optional, intent(in)  :: retain_graph !! Should the computational graph be retained?
 
     ! Local arguments
     logical(c_bool) :: retain_graph_value
+    integer(c_int64_t) :: sizes(1)
 
     interface
       subroutine torch_tensor_backward_without_external_gradient_c(tensor_c, retain_graph_c) &
@@ -2924,6 +2925,17 @@ contains
         logical(c_bool), value, intent(in) :: retain_graph_c
       end subroutine torch_tensor_backward_without_external_gradient_c
     end interface
+
+    if (tensor%get_rank() /= 1) then
+      write(*,*) "Error :: external gradient can only be implicitly created for scalar fields"
+      stop 1
+    end if
+
+    sizes(:) = tensor%get_shape()
+    if (sizes(1) /= 1) then
+      write(*,*) "Error :: external gradient can only be implicitly created for scalar fields"
+      stop 1
+    end if
 
     ! Do not retain the graph by default
     if (present(retain_graph)) then
