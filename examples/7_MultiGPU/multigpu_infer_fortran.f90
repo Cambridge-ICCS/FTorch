@@ -4,8 +4,7 @@ program inference
    use, intrinsic :: iso_fortran_env, only : sp => real32, stdout => output_unit
 
    ! Import our library for interfacing with PyTorch
-   use ftorch, only : torch_model, torch_tensor, &
-                      torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS, &
+   use ftorch, only : torch_model, torch_tensor, torch_kCPU, &
                       torch_tensor_from_array, torch_model_load, torch_model_forward, &
                       torch_delete
 
@@ -19,6 +18,10 @@ program inference
 
    integer :: num_args, ix
    character(len=128), dimension(:), allocatable :: args
+   character(len=128) :: device_type
+   character(len=128) :: num_devices_str
+   integer :: torch_device
+   integer :: num_devices
 
    ! Set up Fortran data structures
    real(wp), dimension(5), target :: in_data
@@ -30,9 +33,8 @@ program inference
    type(torch_tensor), dimension(1) :: in_tensors
    type(torch_tensor), dimension(1) :: out_tensors
 
-   ! Variables for multi-GPU setup
-   integer :: num_devices = 2
-   integer :: device_type, device_index, i
+   integer :: device_index
+   integer :: i
 
    ! Flag for testing
    logical :: test_pass
@@ -44,19 +46,25 @@ program inference
    do ix = 1, num_args
       call get_command_argument(ix,args(ix))
    end do
-   if (trim(args(1)) == "cuda") then
-      device_type = torch_kCUDA
-    else if (trim(args(1)) == "hip") then
-      device_type = torch_kHIP
-   else if (trim(args(1)) == "xpu") then
-      device_type = torch_kXPU
-   else if (trim(args(1)) == "mps") then
-      device_type = torch_kMPS
-      num_devices = 1
-   else
-      write (*,*) "Error :: invalid device type", trim(args(1))
-      stop 999
+
+   if (num_args < 1) then
+     write(*,*) "Usage: multigpu_infer_fortran <model_file> <device_type enum> <num_devices>"
+     stop 2
    end if
+
+   ! Process device type argument, if provided
+   device_type = "cpu"
+   if (num_args > 1) then
+     device_type = adjustl(trim(args(2)))
+   end if
+   read(device_type,"(i1)") torch_device
+
+   ! Process num_devices argument, if provided
+   num_devices = 1
+   if (num_args > 2) then
+     num_devices_str = adjustl(trim(args(3)))
+   end if
+   read(num_devices_str,"(i1)") num_devices
 
    do device_index = 0, num_devices-1
 
@@ -68,7 +76,7 @@ program inference
       ! Create Torch input tensor from the above array and assign it to the first (and only)
       ! element in the array of input tensors.
       ! We use the specified GPU device type with the given device index
-      call torch_tensor_from_array(in_tensors(1), in_data, device_type, device_index=device_index)
+      call torch_tensor_from_array(in_tensors(1), in_data, torch_device, device_index=device_index)
 
       ! Create Torch output tensor from the above array.
       ! Here we use the torch_kCPU device type since the tensor is for output only
@@ -77,7 +85,7 @@ program inference
 
       ! Load ML model. Ensure that the same device type and device index are used
       ! as for the input data.
-      call torch_model_load(model, args(2), device_type, device_index=device_index)
+      call torch_model_load(model, args(1), torch_device, device_index=device_index)
 
       ! Infer
       call torch_model_forward(model, in_tensors, out_tensors)

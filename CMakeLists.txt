@@ -210,7 +210,11 @@ if(CMAKE_BUILD_TESTS)
             "No Python virtual environment detected. Please activate one.")
   endif()
 
-  if(NOT "${GPU_DEVICE}" STREQUAL "NONE")
+  if("${GPU_DEVICE}" STREQUAL "MPS")
+    # If the MPS GPU device is passed, we know that only one is available.
+    option(MULTI_GPU "Whether to enable Multi GPU testing (ON, OFF [default])"
+           OFF)
+  elseif(NOT "${GPU_DEVICE}" STREQUAL "NONE")
     # If a GPU device is passed, specify if more than one is available. Set to
     # OFF if only one is available. Used to determine whether to run Multi GPU
     # testing

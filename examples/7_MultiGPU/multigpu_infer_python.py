@@ -79,15 +79,19 @@ if __name__ == "__main__":
         choices=["cpu", "cuda", "hip", "xpu", "mps"],
         default="cuda",
     )
+    parser.add_argument(
+        "--num_devices",
+        help="Number of devices to run the inference on",
+        type=int,
+        default=1,
+    )
     parsed_args = parser.parse_args()
     filepath = parsed_args.filepath
     device_type = parsed_args.device_type
+    num_devices = parsed_args.num_devices
     saved_model_file = os.path.join(filepath, f"saved_multigpu_model_{device_type}.pt")
 
     batch_size_to_run = 1
-
-    # Use 2 devices unless MPS for which there is only one
-    num_devices = 1 if device_type == "mps" else 2
 
     for device_index in range(num_devices):
         device_to_run = f"{device_type}:{device_index}"

@@ -63,6 +63,12 @@ if("${GPU_DEVICE}" STREQUAL "HIP")
   endif()
 endif()
 
+if("${MULTI_GPU}" STREQUAL "ON")
+  set(NUM_DEVICES 2)
+else()
+  set(NUM_DEVICES 1)
+endif()
+
 # Fortran example
 add_executable(multigpu_infer_fortran multigpu_infer_fortran.f90)
 target_link_libraries(multigpu_infer_fortran PRIVATE FTorch::ftorch)
@@ -94,15 +100,17 @@ if(CMAKE_BUILD_TESTS)
             ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py
             --filepath ${PROJECT_BINARY_DIR}
             --device_type ${MULTIGPU_DEVICE_TYPE}
+            --num_devices ${NUM_DEVICES}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 4. Check the model can be loaded from file and run on two CUDA devices in
   # Fortran and that its outputs meet expectations
   add_test(
     NAME example_multigpu_infer_fortran
-    COMMAND multigpu_infer_fortran ${MULTIGPU_DEVICE_TYPE}
+    COMMAND multigpu_infer_fortran
     ${PROJECT_BINARY_DIR}/saved_multigpu_model_${MULTIGPU_DEVICE_TYPE}.pt
-    # Command line arguments for device type and model file
+    ${MULTIGPU_DEVICE_TYPE} ${NUM_DEVICES}
+    # Command line arguments for model file, device type, num devices
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     example_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
