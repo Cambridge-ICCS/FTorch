@@ -81,7 +81,7 @@ jobs:
           sudo apt update
           sudo apt install -y cmake nvidia-cuda-toolkit
 
-        # Currently used by example7_mpi
+        # Currently used by example8_mpi
       - name: Install an MPI distribution
         run: |
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
