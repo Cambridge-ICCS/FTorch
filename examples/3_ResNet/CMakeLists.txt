@@ -37,10 +37,25 @@ target_link_libraries(resnet_infer_fortran PRIVATE FTorch::ftorch)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
+  # Map library build device option (GPU_DEVICE) to runtime strings used by
+  # Python/Fortran test drivers and to select the correct saved model filename.
+  #
+  # * Root CMake uses: NONE | CUDA | HIP | XPU | MPS
+  # * Python scripts expect lowercase: cpu | cuda | hip | xpu | mps
+  # * Fortran program expects corresponding enums
+  if("${GPU_DEVICE}" STREQUAL "NONE")
+    set(RESNET_DEVICE_TYPE "cpu")
+    set(RESNET_DEVICE "0")
+  else()
+    string(TOLOWER "${GPU_DEVICE}" RESNET_DEVICE_TYPE)
+    set(RESNET_DEVICE "${GPU_DEVICE}")
+  endif()
+
   # 1. Check the PyTorch model runs and its outputs meet expectations
   add_test(
     NAME example_resnet_resnet18
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/resnet18.py
+            --device_type ${RESNET_DEVICE_TYPE}
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
   # 2. Check the model is saved to file in the expected location with the
@@ -48,7 +63,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_resnet_pt2ts
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
-            ${PROJECT_BINARY_DIR}
+            ${PROJECT_BINARY_DIR} --device_type ${RESNET_DEVICE_TYPE}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 3. Check the model can be loaded from file and run in Fortran and that its
@@ -57,8 +72,8 @@ if(CMAKE_BUILD_TESTS)
     NAME example_resnet_resnet_infer_fortran
     COMMAND
       resnet_infer_fortran ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt
-      ${PROJECT_SOURCE_DIR}/data
-      # Command line arguments: model file and data directory filepath
+      ${PROJECT_SOURCE_DIR}/data ${RESNET_DEVICE}
+      # Command line arguments: model file, data directory filepath, device type
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     example_resnet_resnet_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION

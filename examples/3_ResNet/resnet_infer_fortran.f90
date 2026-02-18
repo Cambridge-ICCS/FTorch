@@ -21,6 +21,8 @@ contains
 
       integer :: num_args, ix
       character(len=128), dimension(:), allocatable :: args
+      character(len=128) :: device_type
+      integer :: torch_device
 
       ! Set up types of input and output data
       type(torch_model) :: model
@@ -63,6 +65,11 @@ contains
          call get_command_argument(ix,args(ix))
       end do
 
+      if (num_args < 1) then
+        write(*,*) "Usage: resnet_infer_fortran <model_file> <data_file> <device_type enum>"
+        stop 2
+      end if
+
       ! Process data directory argument, if provided
       if (num_args > 1) then
         data_dir = args(2)
@@ -72,6 +79,13 @@ contains
       filename = trim(data_dir)//"/image_tensor.dat"
       filename_cats =  trim(data_dir)//"/categories.txt"
 
+      ! Process device type argument, if provided
+      device_type = "cpu"
+      if (num_args > 2) then
+        device_type = adjustl(trim(args(3)))
+      end if
+      read(device_type,"(i1)") torch_device
+
       ! Allocate one-dimensional input/output arrays, based on multiplication of all input/output dimension sizes
       allocate(in_data(in_shape(1), in_shape(2), in_shape(3), in_shape(4)))
       allocate(out_data(out_shape(1), out_shape(2)))
@@ -80,12 +94,12 @@ contains
       call load_data(filename, tensor_length, in_data)
 
       ! Create input/output tensors from the above arrays
-      call torch_tensor_from_array(in_tensors(1), in_data, torch_kCPU)
+      call torch_tensor_from_array(in_tensors(1), in_data, torch_device)
 
       call torch_tensor_from_array(out_tensors(1), out_data, torch_kCPU)
 
       ! Load ML model (edit this line to use different models)
-      call torch_model_load(model, args(1), torch_kCPU)
+      call torch_model_load(model, args(1), torch_device)
 
       ! Infer
       call torch_model_forward(model, in_tensors, out_tensors)
