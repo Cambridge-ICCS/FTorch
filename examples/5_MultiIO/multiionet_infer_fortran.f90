@@ -18,6 +18,8 @@ program inference
 
    integer :: num_args, ix
    character(len=128), dimension(:), allocatable :: args
+   character(len=128) :: device_type
+   integer :: torch_device
 
    ! Set up Fortran data structures
    real(wp), dimension(4), target :: in_data1
@@ -42,18 +44,30 @@ program inference
        call get_command_argument(ix,args(ix))
    end do
 
+   if (num_args < 1) then
+     write(*,*) "Usage: multiionet_infer_fortran <model_file> <device_type enum>"
+     stop 2
+   end if
+
+   ! Process device type argument, if provided
+   device_type = "cpu"
+   if (num_args > 1) then
+     device_type = adjustl(trim(args(2)))
+   end if
+   read(device_type,"(i1)") torch_device
+
    ! Initialise data
    in_data1(:) = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp]
    in_data2(:) = [0.0_wp, -1.0_wp, -2.0_wp, -3.0_wp]
 
    ! Create Torch input/output tensors from the above arrays
-   call torch_tensor_from_array(in_tensors(1), in_data1, torch_kCPU)
-   call torch_tensor_from_array(in_tensors(2), in_data2, torch_kCPU)
+   call torch_tensor_from_array(in_tensors(1), in_data1, torch_device)
+   call torch_tensor_from_array(in_tensors(2), in_data2, torch_device)
    call torch_tensor_from_array(out_tensors(1), out_data1, torch_kCPU)
    call torch_tensor_from_array(out_tensors(2), out_data2, torch_kCPU)
 
    ! Load ML model
-   call torch_model_load(model, args(1), torch_kCPU)
+   call torch_model_load(model, args(1), torch_device)
 
    ! Infer
    call torch_model_forward(model, in_tensors, out_tensors)

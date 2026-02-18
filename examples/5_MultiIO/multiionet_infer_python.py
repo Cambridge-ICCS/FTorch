@@ -59,21 +59,27 @@ if __name__ == "__main__":
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "--device_type",
+        help="Device type to run the inference on",
+        type=str,
+        choices=["cpu", "cuda", "hip", "xpu", "mps"],
+        default="cpu",
+    )
+    parser.add_argument(
         "--filepath",
         help="Path to the file containing the PyTorch model",
         type=str,
         default=os.path.dirname(__file__),
     )
     parsed_args = parser.parse_args()
+    device_type = parsed_args.device_type
     filepath = parsed_args.filepath
-    saved_model_file = os.path.join(filepath, "saved_multiio_model_cpu.pt")
-
-    device_to_run = "cpu"
+    saved_model_file = os.path.join(filepath, f"saved_multiio_model_{device_type}.pt")
 
     batch_size_to_run = 1
 
     with torch.inference_mode():
-        result = deploy(saved_model_file, device_to_run, batch_size_to_run)
+        result = deploy(saved_model_file, device_type, batch_size_to_run)
 
     print(result)
 
