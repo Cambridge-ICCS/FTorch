@@ -42,9 +42,10 @@ if(CMAKE_BUILD_TESTS)
   #
   # * Root CMake uses: NONE | CUDA | HIP | XPU | MPS
   # * Python scripts expect lowercase: cpu | cuda | hip | xpu | mps
-  # * Fortran program expects corresponding enums
+  # * Fortran program expects corresponding enums, i.e., GPU_DEVICE_CODE
   if("${GPU_DEVICE}" STREQUAL "")
     set(GPU_DEVICE "NONE")
+    set(GPU_DEVICE_CODE "0")
   endif()
   if("${GPU_DEVICE}" STREQUAL "NONE")
     set(SIMPLENET_DEVICE_TYPE "cpu")
