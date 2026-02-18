@@ -73,7 +73,8 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_resnet_resnet_infer_fortran
     COMMAND
-      resnet_infer_fortran ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt
+      resnet_infer_fortran
+      ${PROJECT_BINARY_DIR}/saved_resnet18_model_${RESNET_DEVICE_TYPE}.pt
       ${PROJECT_SOURCE_DIR}/data ${GPU_DEVICE_CODE}
       # Command line arguments: model file, data directory filepath, device type
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})

@@ -79,7 +79,8 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_multiio_multiionet_infer_fortran
     COMMAND
-      multiionet_infer_fortran ${PROJECT_BINARY_DIR}/saved_multiio_model_cpu.pt
+      multiionet_infer_fortran
+      ${PROJECT_BINARY_DIR}/saved_multiio_model_${MULTIIO_DEVICE_TYPE}.pt
       ${GPU_DEVICE_CODE}
       # Command line arguments: model file, device type
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
