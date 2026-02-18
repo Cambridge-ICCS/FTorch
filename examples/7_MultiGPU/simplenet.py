@@ -20,7 +20,7 @@ class SimpleNet(nn.Module):
         self._fwd_seq = nn.Sequential(
             nn.Linear(5, 5, bias=False),
         )
-        with torch.inference_mode():
+        with torch.no_grad():
             self._fwd_seq[0].weight = nn.Parameter(2.0 * torch.eye(5))
 
     def forward(self, batch: torch.Tensor) -> torch.Tensor:
@@ -67,7 +67,7 @@ if __name__ == "__main__":
         f"SimpleNet forward pass on {device_type.capitalize()} device"
         f" {input_tensor_gpu.get_device()}"
     )
-    with torch.inference_mode():
+    with torch.no_grad():
         output_tensor = model(input_tensor_gpu).to("cpu")
 
     print(output_tensor)
