@@ -50,7 +50,12 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291) and
   [#500](https://github.com/Cambridge-ICCS/FTorch/pull/500).
 - Make input array for `torch_tensor_from_array` have the `pointer, contiguous`
-  properties rather than `target` [#418](https://github.com/Cambridge-ICCS/FTorch/pull/418)
+  properties rather than `target`
+  [#530](https://github.com/Cambridge-ICCS/FTorch/pull/530). This change
+  technically breaks the API because it becomes no longer possible to pass
+  temporary Fortran arrays to the second argument of `torch_tensor_from_array`.
+  However, that was a bug rather than a feature, so any workflow crashes due to
+  this change will provide the user with information on how to remove the error.
 - Bump the minimum CMake version from 3.15 to 3.18, for consistency with what's
   used in PyTorch. [#491](https://github.com/Cambridge-ICCS/FTorch/pull/491)
 - Significant overhaul of the online FORD documentation and reduction of content in the README
