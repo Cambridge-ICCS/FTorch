@@ -20,7 +20,7 @@ class SimpleNet(nn.Module):
         self._fwd_seq = nn.Sequential(
             nn.Linear(5, 5, bias=False),
         )
-        with torch.inference_mode():
+        with torch.no_grad():
             self._fwd_seq[0].weight = nn.Parameter(2.0 * torch.eye(5))
 
     def forward(self, batch: torch.Tensor) -> torch.Tensor:

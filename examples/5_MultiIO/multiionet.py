@@ -17,7 +17,7 @@ class MultiIONet(nn.Module):
         super().__init__()
         self.linear1 = nn.Linear(4, 4, bias=False)
         self.linear2 = nn.Linear(4, 4, bias=False)
-        with torch.inference_mode():
+        with torch.no_grad():
             self.linear1.weight = nn.Parameter(2.0 * torch.eye(4))
             self.linear2.weight = nn.Parameter(3.0 * torch.eye(4))
 
