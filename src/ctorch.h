@@ -323,7 +323,8 @@ EXPORT_C void torch_tensor_backward_with_external_gradient(const torch_tensor_t 
  * Note that the Tensor must have the requires_grad attribute set to true.
  * @param Tensor to perform back-propagation on
  */
-EXPORT_C void torch_tensor_backward_without_external_gradient(const torch_tensor_t tensor);
+EXPORT_C void torch_tensor_backward_without_external_gradient(const torch_tensor_t tensor,
+                                                              const bool retain_graph);
 
 /**
  * Function to return the grad attribute of a Torch Tensor.
