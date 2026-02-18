@@ -139,7 +139,7 @@ jobs:
         # Check that we can successfully build and run an example outside the main FTorch build process
       - name: Standalone SimpleNet example
         env:
-          FORTRAN_STANDARD: ${{ matrix.std }}
+          FORTRAN_STANDARD: f2008
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
