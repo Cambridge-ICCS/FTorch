@@ -109,7 +109,7 @@ if(CMAKE_BUILD_TESTS)
     NAME example_multigpu_infer_fortran
     COMMAND multigpu_infer_fortran
     ${PROJECT_BINARY_DIR}/saved_multigpu_model_${MULTIGPU_DEVICE_TYPE}.pt
-    ${MULTIGPU_DEVICE_TYPE} ${NUM_DEVICES}
+    ${GPU_DEVICE_CODE} ${NUM_DEVICES}
     # Command line arguments for model file, device type, num devices
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
