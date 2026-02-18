@@ -275,7 +275,6 @@ contains
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
-    logical :: expected
 
     ! Create an empty tensor on the CPU with the default requires_grad option
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, &

@@ -183,6 +183,11 @@ destroyed because the call will have the form
 a = func()
 ```
 
+@note
+For a concrete example of how to compute mathematical expressions involving Torch
+tensors, see the [autograd worked example](|page|/usage/worked_examples.html).
+@endnote
+
 #### Other operators acting on tensors
 
 We have also exposed the operators for taking the sum or mean over the entries
@@ -190,7 +195,6 @@ in a tensor, which can be achieved with the subroutines
 [[ftorch_tensor(module):torch_tensor_sum(subroutine)]] and
 [[ftorch_tensor(module):torch_tensor_mean(subroutine)]], respectively.
 
-@note
-For a concrete example of how to compute mathematical expressions involving Torch
-tensors, see the [autograd worked example](|page|/usage/worked_examples.html).
-@endnote
+For details related to backpropagation using
+[[ftorch_tensor(module):torch_tensor_backward(interface)]], see the
+[online training](|page|/usage/online.html) documentation page.

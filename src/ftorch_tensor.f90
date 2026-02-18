@@ -181,6 +181,15 @@ module ftorch_tensor
     module procedure torch_tensor_power_real64
   end interface
 
+  ! ============================================================================
+  ! --- Interfaces related to automatic differentation functionality for tensors
+  ! ============================================================================
+
+  interface torch_tensor_backward
+    module procedure torch_tensor_backward_with_external_gradient
+    module procedure torch_tensor_backward_without_external_gradient
+  end interface
+
 contains
 
   ! ============================================================================
@@ -2864,31 +2873,26 @@ contains
   end subroutine torch_tensor_zero_grad
 
   !> Performs back-propagation on a Torch Tensor, given some external gradient.
-  subroutine torch_tensor_backward(tensor, retain_graph)
+  subroutine torch_tensor_backward_with_external_gradient(tensor, external_gradient, retain_graph)
     use, intrinsic :: iso_c_binding, only : c_bool
-    type(torch_tensor), intent(in) :: tensor       !! Tensor to compute gradients of
-    logical, optional, intent(in)  :: retain_graph !! Should the computational graph be retained?
+    type(torch_tensor), intent(in) :: tensor             !! Tensor to compute gradients of
+    type(torch_tensor), intent(in) :: external_gradient  !! External tensor used as an initial scaling of the gradient calculation
+    logical, optional, intent(in)  :: retain_graph       !! Should the computational graph be retained?
 
     ! Local arguments
-    type(torch_tensor) :: external_gradient   !! External tensor used as an initial scaling of the gradient calculation
     logical(c_bool) :: retain_graph_value
 
     interface
-      subroutine torch_tensor_backward_c(tensor_c, external_gradient_c, retain_graph_c) &
-          bind(c, name = 'torch_tensor_backward')
+      subroutine torch_tensor_backward_with_external_gradient_c(tensor_c, external_gradient_c, &
+                                                                retain_graph_c) &
+          bind(c, name = 'torch_tensor_backward_with_external_gradient')
         use, intrinsic :: iso_c_binding, only : c_bool, c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr), value, intent(in) :: external_gradient_c
         logical(c_bool), value, intent(in) :: retain_graph_c
-      end subroutine torch_tensor_backward_c
+      end subroutine torch_tensor_backward_with_external_gradient_c
     end interface
-
-    ! External gradient to provide to the back-propagation consisting of a tensor of ones
-    ! TODO: Accept other external gradients as an optional argument
-    call torch_tensor_ones(external_gradient, tensor%get_rank(), tensor%get_shape(), &
-                           tensor%get_dtype(), tensor%get_device_type(), &
-                           device_index=tensor%get_device_index())
 
     ! Do not retain the graph by default
     if (present(retain_graph)) then
@@ -2898,11 +2902,51 @@ contains
     end if
 
     ! Call back-propagation with the provided external gradient
-    call torch_tensor_backward_c(tensor%p, external_gradient%p, retain_graph_value)
+    call torch_tensor_backward_with_external_gradient_c(tensor%p, external_gradient%p, &
+                                                        retain_graph_value)
+  end subroutine torch_tensor_backward_with_external_gradient
 
-    ! Delete the external gradient tensor
-    call torch_tensor_delete(external_gradient)
-  end subroutine torch_tensor_backward
+  !> Performs back-propagation on a Torch Tensor, with an assumed external_gradient of ones.
+  subroutine torch_tensor_backward_without_external_gradient(tensor, retain_graph)
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int64_t
+    type(torch_tensor), intent(in) :: tensor       !! Tensor to compute gradients of
+    logical, optional, intent(in)  :: retain_graph !! Should the computational graph be retained?
+
+    ! Local arguments
+    logical(c_bool) :: retain_graph_value
+    integer(c_int64_t) :: sizes(1)
+
+    interface
+      subroutine torch_tensor_backward_without_external_gradient_c(tensor_c, retain_graph_c) &
+          bind(c, name = 'torch_tensor_backward_without_external_gradient')
+        use, intrinsic :: iso_c_binding, only : c_bool, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: tensor_c
+        logical(c_bool), value, intent(in) :: retain_graph_c
+      end subroutine torch_tensor_backward_without_external_gradient_c
+    end interface
+
+    if (tensor%get_rank() /= 1) then
+      write(*,*) "Error :: external gradient can only be implicitly created for scalar fields"
+      stop 1
+    end if
+
+    sizes(:) = tensor%get_shape()
+    if (sizes(1) /= 1) then
+      write(*,*) "Error :: external gradient can only be implicitly created for scalar fields"
+      stop 1
+    end if
+
+    ! Do not retain the graph by default
+    if (present(retain_graph)) then
+      retain_graph_value = retain_graph
+    else
+      retain_graph_value = .false.
+    end if
+
+    ! Call back-propagation
+    call torch_tensor_backward_without_external_gradient_c(tensor%p, retain_graph_value)
+  end subroutine torch_tensor_backward_without_external_gradient
 
   !> Retrieves the gradient with respect to a Torch Tensor.
   subroutine torch_tensor_get_gradient(gradient, tensor)
