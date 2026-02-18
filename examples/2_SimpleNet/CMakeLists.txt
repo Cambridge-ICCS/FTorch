@@ -29,6 +29,40 @@ endif()
 execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
                         ${PROJECT_SOURCE_DIR}/requirements.txt)
 
+# Map library build device option (GPU_DEVICE) to runtime strings used by
+# Python/Fortran test drivers and to select the correct saved model filename.
+#
+# * Root CMake uses: NONE | CUDA | HIP | XPU | MPS
+# * Python scripts expect lowercase: cpu | cuda | hip | xpu | mps
+# * Fortran program expects corresponding enums, i.e., GPU_DEVICE_CODE
+if("${GPU_DEVICE}" STREQUAL "")
+  set(GPU_DEVICE "NONE")
+  set(GPU_DEVICE_CODE "0")
+endif()
+if("${GPU_DEVICE}" STREQUAL "NONE")
+  set(SIMPLENET_DEVICE_TYPE "cpu")
+else()
+  string(TOLOWER "${GPU_DEVICE}" SIMPLENET_DEVICE_TYPE)
+endif()
+
+include(CheckLanguage)
+if("${GPU_DEVICE}" STREQUAL "CUDA")
+  check_language(CUDA)
+  if(CMAKE_CUDA_COMPILER)
+    enable_language(CUDA)
+  else()
+    message(ERROR "No CUDA support")
+  endif()
+endif()
+if("${GPU_DEVICE}" STREQUAL "HIP")
+  check_language(HIP)
+  if(CMAKE_HIP_COMPILER)
+    enable_language(HIP)
+  else()
+    message(WARNING "No HIP support")
+  endif()
+endif()
+
 # Fortran example
 add_executable(simplenet_infer_fortran simplenet_infer_fortran.f90)
 target_link_libraries(simplenet_infer_fortran PRIVATE FTorch::ftorch)
@@ -36,22 +70,6 @@ target_link_libraries(simplenet_infer_fortran PRIVATE FTorch::ftorch)
 # Integration testing
 if(CMAKE_BUILD_TESTS)
   include(CTest)
-
-  # Map library build device option (GPU_DEVICE) to runtime strings used by
-  # Python/Fortran test drivers and to select the correct saved model filename.
-  #
-  # * Root CMake uses: NONE | CUDA | HIP | XPU | MPS
-  # * Python scripts expect lowercase: cpu | cuda | hip | xpu | mps
-  # * Fortran program expects corresponding enums, i.e., GPU_DEVICE_CODE
-  if("${GPU_DEVICE}" STREQUAL "")
-    set(GPU_DEVICE "NONE")
-    set(GPU_DEVICE_CODE "0")
-  endif()
-  if("${GPU_DEVICE}" STREQUAL "NONE")
-    set(SIMPLENET_DEVICE_TYPE "cpu")
-  else()
-    string(TOLOWER "${GPU_DEVICE}" SIMPLENET_DEVICE_TYPE)
-  endif()
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
   add_test(NAME example_simplenet_simplenet

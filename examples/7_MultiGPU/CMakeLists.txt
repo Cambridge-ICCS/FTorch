@@ -29,6 +29,22 @@ endif()
 execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
                         ${PROJECT_SOURCE_DIR}/requirements.txt)
 
+# Map library build device option (GPU_DEVICE) to runtime strings used by
+# Python/Fortran test drivers and to select the correct saved model filename.
+#
+# * Root CMake uses: NONE | CUDA | HIP | XPU | MPS
+# * Python scripts expect lowercase: cpu | cuda | hip | xpu | mps
+# * Fortran program expects corresponding enums, i.e., GPU_DEVICE_CODE
+if("${GPU_DEVICE}" STREQUAL "")
+  set(GPU_DEVICE "NONE")
+  set(GPU_DEVICE_CODE "0")
+endif()
+if("${GPU_DEVICE}" STREQUAL "NONE")
+  set(MULTIGPU_DEVICE_TYPE "cpu")
+else()
+  string(TOLOWER "${GPU_DEVICE}" MULTIGPU_DEVICE_TYPE)
+endif()
+
 include(CheckLanguage)
 if("${GPU_DEVICE}" STREQUAL "CUDA")
   check_language(CUDA)
@@ -54,22 +70,6 @@ target_link_libraries(multigpu_infer_fortran PRIVATE FTorch::ftorch)
 # Integration testing
 if(CMAKE_BUILD_TESTS)
   include(CTest)
-
-  # Map library build device option (GPU_DEVICE) to runtime strings used by
-  # Python/Fortran test drivers and to select the correct saved model filename.
-  #
-  # * Root CMake uses: NONE | CUDA | HIP | XPU | MPS
-  # * Python scripts expect lowercase: cpu | cuda | hip | xpu | mps
-  # * Fortran program expects corresponding enums, i.e., GPU_DEVICE_CODE
-  if("${GPU_DEVICE}" STREQUAL "")
-    set(GPU_DEVICE "NONE")
-    set(GPU_DEVICE_CODE "0")
-  endif()
-  if("${GPU_DEVICE}" STREQUAL "NONE")
-    set(MULTIGPU_DEVICE_TYPE "cpu")
-  else()
-    string(TOLOWER "${GPU_DEVICE}" MULTIGPU_DEVICE_TYPE)
-  endif()
 
   # 1. Check the PyTorch model runs on a CUDA device and its outputs meet
   # expectations
