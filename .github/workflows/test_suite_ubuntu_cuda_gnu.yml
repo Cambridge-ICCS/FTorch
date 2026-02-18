@@ -128,7 +128,7 @@ jobs:
         run: |
           . ftorch/bin/activate
           cd build
-          ctest --verbose --tests-regex unit
+          ctest --verbose --tests-regex cuda
 
       - name: Run integration tests
         run: |
