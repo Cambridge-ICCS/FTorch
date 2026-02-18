@@ -153,6 +153,9 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
+            -DGPU_DEVICE=CUDA \
+            -DGPU_DEVICE_CODE=1 \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+          # TODO: Avoid passing GPU device and code again
           cmake --build .
           ctest -V
