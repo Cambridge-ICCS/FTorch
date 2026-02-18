@@ -21,7 +21,7 @@ contains
 
       integer :: num_args, ix
       character(len=128), dimension(:), allocatable :: args
-      character(len=128) :: device_type
+      character(len=128) :: device_code
       integer :: torch_device
 
       ! Set up types of input and output data
@@ -66,7 +66,7 @@ contains
       end do
 
       if (num_args < 1) then
-        write(*,*) "Usage: resnet_infer_fortran <model_file> <data_file> <device_type enum>"
+        write(*,*) "Usage: resnet_infer_fortran <model_file> <data_file> <device_code>"
         stop 2
       end if
 
@@ -80,11 +80,11 @@ contains
       filename_cats =  trim(data_dir)//"/categories.txt"
 
       ! Process device type argument, if provided
-      device_type = "cpu"
+      device_code = "cpu"
       if (num_args > 2) then
-        device_type = adjustl(trim(args(3)))
+        device_code = adjustl(trim(args(3)))
       end if
-      read(device_type,"(i1)") torch_device
+      read(device_code,"(i1)") torch_device
 
       ! Allocate one-dimensional input/output arrays, based on multiplication of all input/output dimension sizes
       allocate(in_data(in_shape(1), in_shape(2), in_shape(3), in_shape(4)))

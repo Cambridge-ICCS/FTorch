@@ -18,7 +18,7 @@ program inference
 
    integer :: num_args, ix
    character(len=128), dimension(:), allocatable :: args
-   character(len=128) :: device_type
+   character(len=128) :: device_code
    character(len=128) :: num_devices_str
    integer :: torch_device
    integer :: num_devices
@@ -48,19 +48,19 @@ program inference
    end do
 
    if (num_args < 1) then
-     write(*,*) "Usage: multigpu_infer_fortran <model_file> <device_type enum> <num_devices>"
+     write(*,*) "Usage: multigpu_infer_fortran <model_file> <device_code> <num_devices>"
      stop 2
    end if
 
    ! Process device type argument, if provided
-   device_type = "cpu"
+   device_code = "cpu"
    if (num_args > 1) then
-     device_type = adjustl(trim(args(2)))
+     device_code = adjustl(trim(args(2)))
    end if
-   read(device_type,"(i1)") torch_device
+   read(device_code,"(i1)") torch_device
 
    ! Process num_devices argument, if provided
-   num_devices = 1
+   num_devices_str = "1"
    if (num_args > 2) then
      num_devices_str = adjustl(trim(args(3)))
    end if

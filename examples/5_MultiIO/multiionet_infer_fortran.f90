@@ -18,7 +18,7 @@ program inference
 
    integer :: num_args, ix
    character(len=128), dimension(:), allocatable :: args
-   character(len=128) :: device_type
+   character(len=128) :: device_code
    integer :: torch_device
 
    ! Set up Fortran data structures
@@ -45,16 +45,16 @@ program inference
    end do
 
    if (num_args < 1) then
-     write(*,*) "Usage: multiionet_infer_fortran <model_file> <device_type enum>"
+     write(*,*) "Usage: multiionet_infer_fortran <model_file> <device_code>"
      stop 2
    end if
 
    ! Process device type argument, if provided
-   device_type = "cpu"
+   device_code = "cpu"
    if (num_args > 1) then
-     device_type = adjustl(trim(args(2)))
+     device_code = adjustl(trim(args(2)))
    end if
-   read(device_type,"(i1)") torch_device
+   read(device_code,"(i1)") torch_device
 
    ! Initialise data
    in_data1(:) = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp]
