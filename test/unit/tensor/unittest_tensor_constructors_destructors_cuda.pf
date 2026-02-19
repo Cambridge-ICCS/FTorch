@@ -148,7 +148,7 @@ contains
     @assertEqual(device_index, gpu_tensor%get_device_index())
 
     ! Create a tensor based off an output array on the CPU host
-    call torch_tensor_from_array(cpu_tensor, out_data, host_type, device_index)
+    call torch_tensor_from_array(cpu_tensor, out_data, host_type)
 
     ! Transfer data from the device to the host
     call torch_tensor_to(gpu_tensor, cpu_tensor)
@@ -191,7 +191,7 @@ contains
     @assertEqual(device_index, gpu_tensor%get_device_index())
 
     ! Create a tensor based off an output array on the CPU host
-    call torch_tensor_from_array(cpu_tensor, out_data, host_type, device_index)
+    call torch_tensor_from_array(cpu_tensor, out_data, host_type)
 
     ! Transfer data from the device to the host
     call torch_tensor_to(gpu_tensor, cpu_tensor)
