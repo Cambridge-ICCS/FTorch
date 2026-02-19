@@ -13,7 +13,7 @@ module ftorch
                            torch_tensor_ones, torch_tensor_from_array, torch_tensor_from_blob, &
                            torch_tensor_to, torch_tensor_sum, torch_tensor_mean, &
                            torch_tensor_backward, torch_tensor_get_gradient, torch_tensor_delete, &
-                           torch_tensor_array_delete, torch_tensor_get_rank, &
+                           torch_tensor_get_rank, &
                            torch_tensor_get_shape, torch_tensor_get_stride, &
                            torch_tensor_get_dtype, torch_tensor_get_device_type, &
                            torch_tensor_get_device_index, torch_tensor_requires_grad, &
@@ -27,9 +27,8 @@ module ftorch
 
   !> Interface for deleting generic torch objects
   interface torch_delete
-    module procedure torch_model_delete
     module procedure torch_tensor_delete
-    module procedure torch_tensor_array_delete
+    module procedure torch_model_delete
   end interface
 
 end module ftorch
