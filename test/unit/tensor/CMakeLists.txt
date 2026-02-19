@@ -42,6 +42,9 @@ if("${GPU_DEVICE}" STREQUAL "CUDA" OR "${GPU_DEVICE}" STREQUAL "HIP")
       message(WARNING "No HIP support")
     endif()
   endif()
+  add_pfunit_ctest(unittest_tensor_constructors_destructors_cuda
+                  TEST_SOURCES unittest_tensor_constructors_destructors_cuda.pf
+                  LINK_LIBRARIES FTorch::ftorch)
   add_pfunit_ctest(unittest_tensor_interrogation_cuda
                    TEST_SOURCES unittest_tensor_interrogation_cuda.pf
                    LINK_LIBRARIES FTorch::ftorch)
