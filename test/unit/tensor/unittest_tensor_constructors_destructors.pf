@@ -54,6 +54,14 @@ contains
     test_case_constructor%param = param
   end function test_case_constructor
 
+  ! A simple single parameter set for tests that do not need parameterisation
+  function get_parameters_simple() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,.false.,.false.,0) &
+    ]
+  end function get_parameters_simple
+
   ! A fixture comprised of parameter sets for destructor tests
   function get_parameters_destruction() result(params)
     type(TestParametersType), allocatable :: params(:)
@@ -82,6 +90,16 @@ contains
       TestParametersType(.false.,.false.,.true.,1) &
     ]
   end function get_parameters_reordered
+
+  ! A fixture comprised of parameter sets for elemental (array) deletion tests
+  function get_parameters_elemental() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,.false.,.false.,1), & ! Basic case
+      TestParametersType(.true.,.false.,.false.,3), &   ! With requires_grad
+      TestParametersType(.false.,.true.,.false.,1) &  ! Autodelete
+    ]
+  end function get_parameters_elemental
 
   ! Function for representing a parameter set as a string
   function toString(this) result(string)
@@ -395,7 +413,7 @@ contains
   ! Unit test for destroying tensors, both manually with torch_tensor_delete and automatically (via
   ! torch_tensor's destructor)
   @test(testparameters={get_parameters_destruction()})
-  subroutine test_destruction(this)
+  subroutine test_scalar_destruction(this)
     use ftorch_tensor, only: torch_tensor_empty
 
     implicit none
@@ -427,6 +445,96 @@ contains
 
     end do
 
-  end subroutine test_destruction
+  end subroutine test_scalar_destruction
+
+  ! Unit test for destroying arrays of tensors, both manually with torch_tensor_delete
+  ! and automatically (via torch_tensor's finalizer)
+  @test(testParameters={get_parameters_elemental()})
+  subroutine test_array_destruction(this)
+    use ftorch_tensor, only: torch_tensor_empty
+
+    class(TestCaseType), intent(inout) :: this
+    integer :: i
+    integer, parameter :: ndims = 2
+    integer, parameter :: n_tensors = 5
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    type(torch_tensor) :: tensor_array(n_tensors)
+
+    ! Create array of tensors and confirm all pointers associated
+    do i = 1, n_tensors
+      call torch_tensor_empty(tensor_array(i), ndims, tensor_shape, dtype, &
+                              device_type, device_index, &
+                              this%param%requires_grad)
+      @assertTrue(c_associated(tensor_array(i)%p))
+    end do
+
+    if (.not. this%param%auto_delete) then
+      ! Test elemental deletion
+      call torch_tensor_delete(tensor_array)
+
+      ! Verify all are properly deleted
+      do i = 1, n_tensors
+        @assertFalse(c_associated(tensor_array(i)%p))
+      end do
+    end if
+
+  end subroutine test_array_destruction
+
+  ! Unit test for array deletion edge cases
+  ! Empty array
+  @test(testParameters={get_parameters_simple()})
+  subroutine test_empty_array_destruct(this)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: empty_array(0)
+
+    ! Test empty array doesn't raise errors
+    call torch_tensor_delete(empty_array)
+
+  end subroutine test_empty_array_destruct
+
+  ! Single element array
+  @test(testParameters={get_parameters_simple()})
+  subroutine test_single_array_destruct(this)
+    use ftorch_tensor, only: torch_tensor_zeros
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: single_array(1)
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+
+    call torch_tensor_zeros(single_array(1), ndims, tensor_shape, dtype, device_type, device_index)
+    @assertTrue(c_associated(single_array(1)%p))
+
+    call torch_tensor_delete(single_array)
+    @assertFalse(c_associated(single_array(1)%p))
+
+  end subroutine test_single_array_destruct
+
+  ! Array of partially associated and unassociated tensors
+  @test(testParameters={get_parameters_simple()})
+  subroutine test_partial_array_destruct(this)
+    use ftorch_tensor, only: torch_tensor_zeros
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: mixed_array(3)
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+
+    ! Allocate elements 1 and 3, mixed_array(2) remains unallocated
+    call torch_tensor_zeros(mixed_array(1), ndims, tensor_shape, dtype, device_type, device_index)
+    call torch_tensor_zeros(mixed_array(3), ndims, tensor_shape, dtype, device_type, device_index)
+
+    @assertTrue(c_associated(mixed_array(1)%p))
+    @assertFalse(c_associated(mixed_array(2)%p))
+    @assertTrue(c_associated(mixed_array(3)%p))
+
+    call torch_tensor_delete(mixed_array)
+
+    @assertFalse(c_associated(mixed_array(1)%p))
+    @assertFalse(c_associated(mixed_array(2)%p))
+    @assertFalse(c_associated(mixed_array(3)%p))
+
+  end subroutine test_partial_array_destruct
 
 end module unittest_tensor_constructors_destructors
