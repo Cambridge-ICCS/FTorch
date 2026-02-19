@@ -95,7 +95,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
   switch (device_type) {
   case torch_kCPU:
     if (device_index != -1) {
-      ctorch_warn("device index unused for CPU-only runs");
+      ctorch_warn("device index unused for tensors on CPUs");
     }
     return torch::Device(torch::kCPU);
 #if (GPU_DEVICE == GPU_DEVICE_CUDA) || (GPU_DEVICE == GPU_DEVICE_HIP)
