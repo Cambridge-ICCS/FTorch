@@ -18,7 +18,7 @@ on:
       - 'src/*.cpp'
       - 'src/*.h'
       # Unit tests
-      - 'test/unit/*.pf'
+      - 'test/unit/**/*.pf'
       # Integration tests
       - 'examples/**/*.py'
       - 'examples/**/*.f90'
