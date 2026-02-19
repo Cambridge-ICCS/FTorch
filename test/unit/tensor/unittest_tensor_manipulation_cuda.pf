@@ -22,10 +22,10 @@ contains
   ! Unit test for the torch_tensor_to subroutine moving a tensor from the CPU (Float64) to a CUDA
   ! device (Float32)
   @test
-  subroutine test_torch_tensor_to()
+  subroutine test_to()
     use, intrinsic :: iso_fortran_env, only: sp => real32, dp => real64
 
-    type(torch_tensor) :: cpu_tensor, gpu_tensor, test_tensor
+    type(torch_tensor) :: cpu_tensor, gpu_tensor, temp
     real(dp), dimension(2,3,4) :: dp_data
     real(sp), dimension(2,3,4) :: sp_data_expected, temp_array
     integer, parameter :: device_type_source = torch_kCPU
@@ -55,15 +55,15 @@ contains
     @assertTrue(gpu_tensor%get_rank() == cpu_tensor%get_rank())
 
     ! Temporary torch_tensor for testing created from array to extract underlying values
-    call torch_tensor_from_array(test_tensor, temp_array, device_type_source)
+    call torch_tensor_from_array(temp, temp_array, device_type_source)
 
     ! Move back to CPU for comparison
-    call torch_tensor_to(gpu_tensor, test_tensor)
+    call torch_tensor_to(gpu_tensor, temp)
 
     ! Cast the data cpu_tensor is holding in double precision to single precision to
     ! do the comparison with the data held by gpu_tensor (via temp_array)
-    sp_data_expected = real(dp_data, sp) 
-    if (.not. allclose(temp_array, sp_data_expected, "test_torch_tensor_to")) then
+    sp_data_expected = real(dp_data, sp)
+    if (.not. allclose(temp_array, sp_data_expected, "test_to")) then
       print *, "Error :: incorrect output from torch_tensor_to"
       print *, "Source Tensor:"
       call torch_tensor_print(cpu_tensor)
@@ -72,6 +72,6 @@ contains
       stop 999
     end if
 
-  end subroutine test_torch_tensor_to
+  end subroutine test_to
 
 end module unittest_tensor_manipulation_cuda

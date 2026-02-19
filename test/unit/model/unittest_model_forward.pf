@@ -81,7 +81,7 @@ contains
 
   ! Unit test for checking values are propagated correctly through the test model
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_model_forward_value(this)
+  subroutine test_forward_value(this)
     use ftorch_tensor, only: torch_tensor_from_array
 
     implicit none
@@ -104,13 +104,13 @@ contains
     call torch_model_forward(model, input_tensors, output_tensors)
 
     expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
-    @assertTrue(assert_allclose(output_array, expected, test_name="test_torch_model_forward_value"))
+    @assertTrue(assert_allclose(output_array, expected, test_name="test_forward_value"))
 
-  end subroutine test_torch_model_forward_value
+  end subroutine test_forward_value
 
   ! Unit test for checking that requires_grad is correctly propagated through the test model
   @test(testparameters={get_parameters_requires_grad()})
-  subroutine test_tensor_requires_grad(this)
+  subroutine test_output_requires_grad(this)
     use ftorch_tensor, only: torch_tensor_ones, torch_tensor_empty
 
     implicit none
@@ -135,6 +135,6 @@ contains
     ! Check that the output tensor has the correct requires_grad property
     @assertEqual(this%param%requires_grad, output_tensors(1)%requires_grad())
 
-  end subroutine test_tensor_requires_grad
+  end subroutine test_output_requires_grad
 
 end module unittest_model_forward
