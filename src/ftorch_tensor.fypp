@@ -627,21 +627,10 @@ contains
   ! --- Procedures for deallocating tensors
   ! ============================================================================
 
-  !> Deallocates an array of tensors.
-  subroutine torch_tensor_array_delete(tensor_array)
-    type(torch_tensor), dimension(:), intent(inout) :: tensor_array  !! Array of tensors to deallocate
-
-    ! Local data
-    integer(ftorch_int) :: i
-
-    ! use bounds rather than (1, N) because it's safer
-    do i = lbound(tensor_array, dim=1), ubound(tensor_array, dim=1)
-      call torch_tensor_delete(tensor_array(i))
-    end do
-  end subroutine torch_tensor_array_delete
-
-  !> Deallocates a tensor.
-  subroutine torch_tensor_delete(tensor)
+  !> Deallocates a tensor (elemental).
+  !> Note: Marked as impure due to C interoperability, though the operation is
+  !> conceptally pure (deletion of a specific C++ Tensor object).
+  impure elemental subroutine torch_tensor_delete(tensor)
     use, intrinsic :: iso_c_binding, only : c_associated, c_null_ptr
     type(torch_tensor), intent(inout) :: tensor  !! Tensor to deallocate
 
