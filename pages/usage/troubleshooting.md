@@ -87,7 +87,7 @@ and slices such as
 Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
 ```
 
-##### `int64` versions of `ftorch` for large tensors
+#### `int64` versions of `ftorch` for large tensors
 
 An alternative cause of the 'no specific subroutine' error can occur if your tensor
 dimension is larger than FTorch supports by default.

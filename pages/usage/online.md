@@ -13,6 +13,24 @@ functionalities of PyTorch/LibTorch.
 In the following, we document a workplan of the related functionality. Each step
 below will be updated upon completion.
 
+### Defining as much as possible in the model
+
+The first thing to note is that it's best to define as much as possible in the
+PyTorch model before writing it to file. As well as layers, activation
+functions, and loss functions, PyTorch models can also contain expressions
+involving tensors, e.g., mathematical operations. If you intend to include such
+expressions in your code then it is best to do this in the model definition, if
+possible. This ensures that such operations are handled by LibTorch, meaning
+there can be no overheads related to the coupling with Fortran.
+
+If you have developed a custom loss function, for example, see if you can define
+it in PyTorch. Some functionality for handling tensor operations has been
+exposed in FTorch - as detailed below - but you will have the most functionality
+available to you if you write such code into your PyTorch model.
+
+Reasons that it might not be possible to write all of your operations into your
+PyTorch model include scripting errors for certain operations and advanced
+custom loss functions that involve downstream Fortran code.
 
 ### Operator overloading
 
