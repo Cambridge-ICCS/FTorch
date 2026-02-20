@@ -283,9 +283,10 @@ modules which it uses.
     <p>Exposes the given data as a tensor without taking ownership of the original data.
  This routine will take an (i, j, k) array and return an (k, j, i) tensor.</p>
 <p>Note that <code>data</code> needs to be a pointer to a <strong>contiguous</strong> block of memory!
-It is generally not a case when calling <code>c_loc</code> on a Fortran array as these may not be
-contiguous as a result of array slicing. Please consider asserting that the data is contiguous
-with <code>is_contiguous</code> implicit procedure before calling this routine.</p>
+This is not generally not the case when calling <code>c_loc</code> on a Fortran array as
+array slicing can lead to non-contiguous memory.
+Please consider asserting that the data is contiguous with the <code>is_contiguous</code>
+implicit procedure before calling this routine.</p>
 
 
     <h3>Arguments</h3>
