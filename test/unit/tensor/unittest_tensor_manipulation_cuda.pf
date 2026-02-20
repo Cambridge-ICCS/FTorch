@@ -26,8 +26,9 @@ contains
     use, intrinsic :: iso_fortran_env, only: sp => real32, dp => real64
 
     type(torch_tensor) :: cpu_tensor, gpu_tensor, temp
-    real(dp), dimension(2,3,4) :: dp_data
-    real(sp), dimension(2,3,4) :: sp_data_expected, temp_array
+    real(dp), dimension(2,3,4), target :: dp_data
+    real(sp), dimension(2,3,4), target :: temp_array
+    real(sp), dimension(2,3,4) :: sp_data_expected
     integer, parameter :: device_type_source = torch_kCPU
     integer, parameter :: device_type_target = torch_kCUDA
     integer, parameter :: dtype_source = torch_kFloat64

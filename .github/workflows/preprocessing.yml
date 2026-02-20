@@ -9,7 +9,7 @@ on:
   # Triggers the workflow on pushes to open pull requests with Fortran changes
   pull_request:
     paths:
-      - '.github/workflows/fypp_checks.yml'
+      - '.github/workflows/preprocessing.yml'
       - 'ftorch_tensor.f*'
       - 'ftorch_test_utils.f*'
 
