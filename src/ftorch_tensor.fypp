@@ -308,6 +308,12 @@ contains
 
   !| Exposes the given data as a tensor without taking ownership of the original data.
   !  This routine will take an (i, j, k) array and return an (k, j, i) tensor.
+  !
+  ! Note that `data` needs to be a pointer to a **contiguous** block of memory!
+  ! This is not generally not the case when calling `c_loc` on a Fortran array as
+  ! array slicing can lead to non-contiguous memory.
+  ! Please consider asserting that the data is contiguous with the `is_contiguous`
+  ! implicit procedure before calling this routine.
   subroutine torch_tensor_from_blob(tensor, data, ndims, tensor_shape, layout, dtype, &
                                     device_type, device_index, &
                                     requires_grad)
@@ -368,7 +374,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    ${f_type(PREC)}$(kind=${PREC}$), intent(in), target :: data_in${ranksuffix(RANK)}$  !! Input data that tensor will point at
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in), pointer, contiguous :: data_in${ranksuffix(RANK)}$  !! Input data that tensor will point at
     integer(ftorch_int), intent(in) :: layout(${RANK}$)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
@@ -406,7 +412,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    ${f_type(PREC)}$(kind=${PREC}$), intent(in), target :: data_in${ranksuffix(RANK)}$  !! Input data that tensor will point at
+    ${f_type(PREC)}$(kind=${PREC}$), intent(in), pointer, contiguous :: data_in${ranksuffix(RANK)}$  !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor

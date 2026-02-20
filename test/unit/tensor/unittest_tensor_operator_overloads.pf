@@ -258,8 +258,11 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, multiplier
     real(wp), parameter :: scalar = 3.14
+    real(wp), target :: scalar_array(1)
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
+
+    scalar_array(1) = scalar
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -268,7 +271,7 @@ contains
     call torch_tensor_from_array(tensor1, in_data, device_type)
 
     ! Create a rank-1 tensor based off the scalar multiplier
-    call torch_tensor_from_array(multiplier, [scalar], [1], device_type)
+    call torch_tensor_from_array(multiplier, scalar_array, [1], device_type)
 
     ! Create another tensor based off an output array
     call torch_tensor_from_array(tensor2, out_data, device_type)
@@ -332,20 +335,23 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2, divisor
     real(wp), parameter :: scalar = 3.14
+    real(wp), target :: scalar_array(1)
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
+
+    scalar_array(1) = scalar
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
 
     ! Create a single valued rank-1 tensor based off the scalar
-    call torch_tensor_from_array(divisor, [scalar], [1], device_type)
+    call torch_tensor_from_array(divisor, scalar_array, [1], device_type)
 
     ! Create a tensor based off the input array
     call torch_tensor_from_array(tensor1, in_data, device_type)
 
     ! Create a rank-1 tensor based off the scalar divisor
-    call torch_tensor_from_array(divisor, [scalar], [1], device_type)
+    call torch_tensor_from_array(divisor, scalar_array, [1], device_type)
 
     ! Create another tensor based off an output array
     call torch_tensor_from_array(tensor2, out_data, device_type)

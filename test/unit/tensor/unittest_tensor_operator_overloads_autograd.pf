@@ -302,8 +302,11 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda, multiplier
     real(wp), parameter :: scalar = 3.14
+    real(wp), target :: scalar_array(1)
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
+
+    scalar_array(1) = scalar
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -312,7 +315,7 @@ contains
     call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create rank-1 tensor based off scalar
-    call torch_tensor_from_array(multiplier, [scalar], device_type)
+    call torch_tensor_from_array(multiplier, scalar_array, device_type)
 
     ! Create another empty tensors and assign it to the product of a scalar constant and the first
     ! tensor using the overloaded multiplication operator
@@ -393,8 +396,11 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: Q, a, dQda, divisor
     real(wp), parameter :: scalar = 3.14
+    real(wp), dimension(1), target :: scalar_array
     real(wp), dimension(2,3), target :: in_data, out_data
     real(wp), dimension(2,3) :: expected
+
+    scalar_array(1) = scalar
 
     ! Create an arbitrary input array
     in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2, 3])
@@ -403,7 +409,7 @@ contains
     call torch_tensor_from_array(a, in_data, device_type, requires_grad=.true.)
 
     ! Create rank-1 tensor based off scalar
-    call torch_tensor_from_array(divisor, [scalar], device_type)
+    call torch_tensor_from_array(divisor, scalar_array, device_type)
 
     ! Create another empty tensors and assign it to the product of a scalar constant and the first
     ! tensor using the overloaded multiplication operator

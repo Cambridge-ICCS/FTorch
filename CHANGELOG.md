@@ -69,6 +69,16 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 - Windows CI disabled until GitHub runner issues resolved in [50ea6d7](https://github.com/Cambridge-ICCS/FTorch/commit/50ea6d78d79ebe638ebe597e745c015549f12a61)
 
+### Fixed
+
+- Make input array for `torch_tensor_from_array` have the `pointer, contiguous`
+  properties rather than `target`
+  [#530](https://github.com/Cambridge-ICCS/FTorch/pull/530). This change
+  technically breaks the API because it becomes no longer possible to pass
+  temporary Fortran arrays to the second argument of `torch_tensor_from_array`.
+  However, that was a bug rather than a feature, so any workflow crashes due to
+  this change will provide the user with information on how to remove the error.
+
 ### Patch Releases
 
 
