@@ -550,6 +550,25 @@ void set_is_training(torch_jit_script_module_t module, const bool is_training = 
   }
 }
 
+std::vector<torch::jit::IValue> tensors_to_ivalue_vec(const torch_tensor_t *tensors, const int ntensors) {
+  // Local IValue for checking we are passed types
+  torch::jit::IValue LocalTensor;
+  // Generate a vector of IValues (placeholders for various Torch types)
+  std::vector<torch::jit::IValue> ivalue_vec;
+  ivalue_vec.reserve(ntensors);
+  // Populate with Tensors pointed at by pointers
+  // For each IValue check it is of Tensor type
+  for (int i = 0; i < ntensors; ++i) {
+    LocalTensor = *(tensors[i]);
+    if (LocalTensor.isTensor()) {
+      ivalue_vec.push_back(LocalTensor);
+    } else {
+      ctorch_error("One of the inputs to tensors_to_ivalue_vec is not a Tensor");
+    }
+  }
+  return ivalue_vec;
+}
+
 torch_jit_script_module_t torch_jit_load(const char *filename,
                                          const torch_device_t device_type = torch_kCPU,
                                          const int device_index = -1,
@@ -571,6 +590,20 @@ torch_jit_script_module_t torch_jit_load(const char *filename,
   return module;
 }
 
+torch_jit_method_t torch_jit_get_method(const torch_jit_script_module_t module, const char *method_name) {
+  torch::jit::Method *method = nullptr;
+  auto m = static_cast<torch::jit::script::Module *>(module);
+  try {
+    method = new torch::jit::Method(m->get_method(method_name));
+  } catch (const torch::Error &e) {
+    ctorch_error(e.msg(), [&]() { delete method; });
+  } catch (const std::exception &e) {
+    ctorch_error(e.what(), [&]() { delete method; });
+  }
+
+  return method;
+}
+
 void torch_jit_module_forward(const torch_jit_script_module_t module,
                               const torch_tensor_t *inputs, const int nin,
                               torch_tensor_t *outputs, const int nout,
@@ -580,20 +613,8 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
   auto model = static_cast<torch::jit::script::Module *>(module);
   auto in = reinterpret_cast<torch::Tensor *const *>(inputs);
   auto out = reinterpret_cast<torch::Tensor **>(outputs);
-  // Local IValue for checking we are passed types
-  torch::jit::IValue LocalTensor;
   // Generate a vector of IValues (placeholders for various Torch types)
-  std::vector<torch::jit::IValue> inputs_vec;
-  // Populate with Tensors pointed at by pointers
-  // For each IValue check it is of Tensor type
-  for (int i = 0; i < nin; ++i) {
-    LocalTensor = *(in[i]);
-    if (LocalTensor.isTensor()) {
-      inputs_vec.push_back(LocalTensor);
-    } else {
-      ctorch_error("One of the inputs to torch_jit_module_forward is not a Tensor");
-    }
-  }
+  auto inputs_vec = tensors_to_ivalue_vec(inputs, nin);
   try {
     auto model_out = model->forward(inputs_vec);
     if (model_out.isTensor()) {
@@ -616,6 +637,39 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
   }
 }
 
+void torch_jit_method_call(const torch_jit_method_t method,
+                           const torch_tensor_t *inputs, const int nin,
+                           torch_tensor_t *outputs, const int nout,
+                           const bool requires_grad = false) {
+  torch::AutoGradMode enable_grad(requires_grad);
+  // Here we cast the pointers we recieved in to Tensor objects
+  auto method = static_cast<torch::jit::Method *>(method);
+  auto in = reinterpret_cast<torch::Tensor *const *>(inputs);
+  auto out = reinterpret_cast<torch::Tensor **>(outputs);
+  // Generate a vector of IValues (placeholders for various Torch types)
+  auto inputs_vec = tensors_to_ivalue_vec(inputs, nin);
+  try {
+    auto method_out = method(inputs_vec);
+    if (method_out.isTensor()) {
+      // Single output models will return a tensor directly.
+      std::move(*out[0]) = method_out.toTensor();
+    } else if (method_out.isTuple()) {
+      // Multiple output models will return a tuple => cast to tensors.
+      for (int i = 0; i < nout; ++i) {
+        std::move(*out[i]) = method_out.toTuple()->elements()[i].toTensor();
+      }
+    } else {
+      // If for some reason the forward method does not return a Tensor it
+      // should raise an error when trying to cast to a Tensor type
+      ctorch_error("Method Output is neither Tensor nor Tuple");
+    }
+  } catch (const torch::Error &e) {
+    ctorch_error(e.msg());
+  } catch (const std::exception &e) {
+    ctorch_error(e.what());
+  }
+}
+
 void torch_jit_module_print_parameters(const torch_jit_script_module_t module) {
   auto m = reinterpret_cast<torch::jit::script::Module *>(module);
   for (const auto &[key, value] : m->named_parameters()) {
@@ -630,5 +684,10 @@ bool torch_jit_module_is_training(const torch_jit_script_module_t module) {
 
 void torch_jit_module_delete(torch_jit_script_module_t module) {
   auto m = reinterpret_cast<torch::jit::script::Module *>(module);
+  delete m;
+}
+
+void torch_jit_method_delete(torch_jit_method_t method) {
+  auto m = reinterpret_cast<torch::jit::Method *>(method);
   delete m;
 }

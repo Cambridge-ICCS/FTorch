@@ -113,7 +113,8 @@ endif()
 # Library with C and Fortran bindings
 add_library(${LIB_NAME} src/ctorch.cpp src/ftorch.f90 src/ftorch_devices.F90
                         src/ftorch_types.f90 src/ftorch_tensor.f90
-                        src/ftorch_model.f90 src/ftorch_test_utils.f90)
+                        src/ftorch_model.f90 src/ftorch_method.f90
+                        src/ftorch_test_utils.f90)
 
 # Define compile definitions, including GPU devices
 target_compile_definitions(
@@ -186,6 +187,8 @@ install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_types.mod"
 install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_tensor.mod"
         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
 install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_model.mod"
+        DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
+install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_method.mod"
         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
 install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_test_utils.mod"
         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
