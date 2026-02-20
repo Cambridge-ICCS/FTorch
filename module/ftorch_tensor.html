@@ -310,10 +310,10 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
                   <li class="list-inline-item"><a href='ftorch_devices.html'>ftorch_devices</a></li>
-                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
                   <li class="list-inline-item"><a href='ftorch_types.html'>ftorch_types</a></li>
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -1660,7 +1660,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -1774,7 +1774,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -1888,7 +1888,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -2002,7 +2002,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -2116,7 +2116,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -2230,7 +2230,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -2344,7 +2344,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -2458,7 +2458,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -2572,7 +2572,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -2686,7 +2686,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -2800,7 +2800,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -2914,7 +2914,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -3028,7 +3028,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -3142,7 +3142,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -3256,7 +3256,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -3370,7 +3370,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -3484,7 +3484,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -3598,7 +3598,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -3712,7 +3712,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -3826,7 +3826,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -3940,7 +3940,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -4054,7 +4054,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -4168,7 +4168,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -4282,7 +4282,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -4396,7 +4396,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -4510,7 +4510,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -4624,7 +4624,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -4738,7 +4738,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -4852,7 +4852,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -4966,7 +4966,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -5080,7 +5080,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -5179,7 +5179,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -5278,7 +5278,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -5377,7 +5377,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -5476,7 +5476,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -5575,7 +5575,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -5674,7 +5674,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -5773,7 +5773,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -5872,7 +5872,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -5971,7 +5971,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -6070,7 +6070,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -6169,7 +6169,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -6268,7 +6268,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -6367,7 +6367,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -6466,7 +6466,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -6565,7 +6565,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -6664,7 +6664,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -6763,7 +6763,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -6862,7 +6862,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -6961,7 +6961,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -7060,7 +7060,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -7159,7 +7159,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -7258,7 +7258,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -7357,7 +7357,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -7456,7 +7456,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -7555,7 +7555,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -7654,7 +7654,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -7753,7 +7753,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -7852,7 +7852,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -7951,7 +7951,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -9539,7 +9539,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -9654,7 +9654,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -9754,7 +9754,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -9869,7 +9869,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -9969,7 +9969,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -10084,7 +10084,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -10184,7 +10184,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -10299,7 +10299,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -10399,7 +10399,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -10514,7 +10514,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -10614,7 +10614,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -10729,7 +10729,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -10829,7 +10829,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -10944,7 +10944,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -11044,7 +11044,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -11159,7 +11159,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -11259,7 +11259,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -11374,7 +11374,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -11474,7 +11474,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -11589,7 +11589,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -11689,7 +11689,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -11804,7 +11804,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -11904,7 +11904,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -12019,7 +12019,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -12119,7 +12119,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -12234,7 +12234,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -12334,7 +12334,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -12449,7 +12449,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -12549,7 +12549,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -12664,7 +12664,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -12764,7 +12764,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -12879,7 +12879,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -12979,7 +12979,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -13094,7 +13094,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -13194,7 +13194,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -13309,7 +13309,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -13409,7 +13409,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -13524,7 +13524,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -13624,7 +13624,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -13739,7 +13739,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -13839,7 +13839,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -13954,7 +13954,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -14054,7 +14054,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -14169,7 +14169,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -14269,7 +14269,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -14384,7 +14384,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -14484,7 +14484,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -14599,7 +14599,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -14699,7 +14699,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -14814,7 +14814,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -14914,7 +14914,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -15029,7 +15029,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:)</td>
@@ -15129,7 +15129,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -15244,7 +15244,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:)</td>
@@ -15344,7 +15344,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -15459,7 +15459,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:)</td>
@@ -15559,7 +15559,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -15674,7 +15674,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:)</td>
@@ -15774,7 +15774,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -15889,7 +15889,7 @@ modules which it uses.
             </td>
 <td>intent(in),</td>
               <td></td>            <td>
-              target
+              pointer, contiguous
             </td>
             <td>::</td>
             <td><strong>data_in</strong>(:,:,:,:,:)</td>
@@ -15955,7 +15955,7 @@ modules which it uses.
     <div class="card-body">
           
   <p>Exposes the given data as a tensor without taking ownership of the original data.
- This routine will take an (i, j, k) array and return an (k, j, i) tensor.</p>
+ This routine will take an (i, j, k) array and return an (k, j, i) tensor.</p><a href="../proc/torch_tensor_from_blob.html" class="pull-right"><emph>Read more&hellip;</emph></a>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">

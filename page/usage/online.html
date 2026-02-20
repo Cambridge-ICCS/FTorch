@@ -177,7 +177,8 @@ notation:</p>
 <p>If you would like to make use of scalar multiplication or scalar division, this
 can be achieved by setting the scalar as a rank-1
 <a href="../../type/torch_tensor.html">torch_tensor</a> with a single entry. For example:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">multiplier</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">3.0_wp</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><code><span class="n">multiplier_array</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.0_wp</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">multiplier</span><span class="p">,</span><span class="w"> </span><span class="n">multiplier_value</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 </code></pre></div>
 
 <p>For a concrete example of how to compute mathematical expressions involving

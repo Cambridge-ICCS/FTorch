@@ -217,6 +217,16 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 <ul>
 <li>Windows CI disabled until GitHub runner issues resolved in <a href="https://github.com/Cambridge-ICCS/FTorch/commit/50ea6d78d79ebe638ebe597e745c015549f12a61">50ea6d7</a></li>
 </ul>
+<h3 id="fixed">Fixed</h3>
+<ul>
+<li>Make input array for <code>torch_tensor_from_array</code> have the <code>pointer, contiguous</code>
+  properties rather than <code>target</code>
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/530">#530</a>. This change
+  technically breaks the API because it becomes no longer possible to pass
+  temporary Fortran arrays to the second argument of <code>torch_tensor_from_array</code>.
+  However, that was a bug rather than a feature, so any workflow crashes due to
+  this change will provide the user with information on how to remove the error.</li>
+</ul>
 <h3 id="patch-releases">Patch Releases</h3>
 <h2 id="100-2025-03-05"><a href="https://github.com/Cambridge-ICCS/FTorch/releases/tag/v1.0.0">1.0.0</a> - 2025-03-05</h2>
 <h3 id="added_1">Added</h3>
