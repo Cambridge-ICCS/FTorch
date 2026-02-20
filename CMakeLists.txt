@@ -11,6 +11,30 @@ project(
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
+# Test selection
+set(_ftorch_tests_default OFF)
+if(CMAKE_BUILD_TESTS)
+  set(_ftorch_tests_default ON)
+endif()
+option(BUILD_UNIT_TESTS "Build pFUnit-based unit tests"
+       ${_ftorch_tests_default})
+option(BUILD_INTEGRATION_TESTS "Build integration tests from examples/"
+       ${_ftorch_tests_default})
+
+set(_ftorch_enable_tests OFF)
+if(CMAKE_BUILD_TESTS OR BUILD_UNIT_TESTS OR BUILD_INTEGRATION_TESTS)
+  set(_ftorch_enable_tests ON)
+endif()
+
+if(CMAKE_BUILD_TESTS AND NOT BUILD_UNIT_TESTS AND NOT BUILD_INTEGRATION_TESTS)
+  message(FATAL_ERROR
+          "CMAKE_BUILD_TESTS=ON requires at least one of BUILD_UNIT_TESTS or BUILD_INTEGRATION_TESTS to be ON.")
+endif()
+
+if(_ftorch_enable_tests)
+  set(CMAKE_BUILD_TESTS ON)
+endif()
+
 if(WIN32)
   # If building on Windows we need to make sure the symbols are exported
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
@@ -190,7 +214,7 @@ install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_model.mod"
 install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_test_utils.mod"
         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
 
-# Build integration tests
+# Build tests
 if(CMAKE_BUILD_TESTS)
 
   set(Python_FIND_VIRTUALENV FIRST) # cmake-lint: disable=C0103
@@ -219,12 +243,14 @@ if(CMAKE_BUILD_TESTS)
 
   # Unit tests
   # NOTE: We do not currently support unit testing on Windows
-  if(UNIX)
+  if(BUILD_UNIT_TESTS AND UNIX)
     add_subdirectory(test/unit)
   endif()
 
   # Integration tests
-  add_subdirectory(examples)
+  if(BUILD_INTEGRATION_TESTS)
+    add_subdirectory(examples)
+  endif()
 endif()
 
 # Setup and install configuration files
