@@ -88,15 +88,15 @@ the other methods (simply drop the preceding `torch_tensor_`).
 #### Deallocation
 
 We provide a subroutine for deallocating the memory associated with a
-[[ftorch(module):torch_tensor(type)]] object:
-[[ftorch(module):torch_tensor_delete(subroutine)]]. An interface
+[[ftorch_tensor(module):torch_tensor(type)]] object:
+[[ftorch_tensor(module):torch_tensor_delete(subroutine)]]. An interface
 [[ftorch(module):torch_delete(interface)]] is provided such that this can also
 be applied to arrays of tensors.
 
 Manually deallocating a tensor that you declared and constructed in your code is
 actually optional. If the tensor was declared in a subroutine then
-[[ftorch(module):torch_tensor_delete(subroutine)]] will get called as the
-finalizer of [[ftorch(module):torch_tensor(type)]] when it goes out of scope. If
+[[ftorch_tensor(module):torch_tensor_delete(subroutine)]] will get called as the
+finalizer of [[ftorch_tensor(module):torch_tensor(type)]] when it goes out of scope. If
 the tensor was declared in a program then the finalizer won't get called, but
 this is not considered to be an issue, in the same way that in Fortran it
 doesn't matter if allocated arrays aren't deallocated at the end of the program.

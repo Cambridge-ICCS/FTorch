@@ -134,9 +134,9 @@ get compiler warnings of the form:
 Warning: The structure constructor at (1) has been finalized. This feature was removed by f08/0011. Use -std=f2018 or -std=gnu to eliminate the finalization.
 ```
 These warn that the structure finalizer of the
-[[ftorch(module):torch_tensor(type)]] derived type is triggered when a tensor
+[[ftorch_tensor(module):torch_tensor(type)]] derived type is triggered when a tensor
 goes out of scope, despite the fact that this feature was removed from the 2008
-standard. That is, the [[ftorch(module):torch_tensor_delete(subroutine)]]
+standard. That is, the [[ftorch_tensor(module):torch_tensor_delete(subroutine)]]
 subroutine is called so that the associated memory is automatically freed.
 Firstly, this is the behaviour that we want so we should not be too concerned.
 Secondly, structure finalizers are not used anywhere in FTorch, so we believe
@@ -158,8 +158,8 @@ raised.
 @warning
 The code snippet above is **not** the intended way to create a tensor. The
 intended way is to use the provided API procedures such as
-[[ftorch(module):torch_tensor_from_array(interface)]] or
-[[ftorch(module):torch_tensor_ones(subroutine)]]. The code snippet above is
+[[ftorch_tensor(module):torch_tensor_from_array(interface)]] or
+[[ftorch_tensor(module):torch_tensor_ones(subroutine)]]. The code snippet above is
 only intended to illustrate the use of the structure constructor and the
 associated warning.
 @endwarning
