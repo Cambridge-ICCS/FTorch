@@ -143,6 +143,7 @@
                 <nav class="nav nav-pills flex-column">
                                 <a class="nav-link" href="../developer/developer.html">Developer Guide</a>
               <a class="nav-link" href="../developer/testing.html">FTorch test suite</a>
+              <a class="nav-link" href="../developer/release_checklist.html">Release Checklist</a>
 
                 </nav>
               <a class="nav-link" href="../LICENSE.html">FTorch License</a>
@@ -259,9 +260,9 @@ get compiler warnings of the form:</p>
 </code></pre></div>
 
 <p>These warn that the structure finalizer of the
-<a href="../../module/ftorch.html">ftorch</a> derived type is triggered when a tensor
+<a href="../../type/torch_tensor.html">torch_tensor</a> derived type is triggered when a tensor
 goes out of scope, despite the fact that this feature was removed from the 2008
-standard. That is, the <a href="../../module/ftorch.html">ftorch</a>
+standard. That is, the <a href="../../proc/torch_tensor_delete.html">torch_tensor_delete</a>
 subroutine is called so that the associated memory is automatically freed.
 Firstly, this is the behaviour that we want so we should not be too concerned.
 Secondly, structure finalizers are not used anywhere in FTorch, so we believe
@@ -283,8 +284,8 @@ raised.</p>
 <p class="alert-title h4">Warning</p>
 <p>The code snippet above is <strong>not</strong> the intended way to create a tensor. The
 intended way is to use the provided API procedures such as
-<a href="../../module/ftorch.html">ftorch</a> or
-<a href="../../module/ftorch.html">ftorch</a>. The code snippet above is
+<a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> or
+<a href="../../proc/torch_tensor_ones.html">torch_tensor_ones</a>. The code snippet above is
 only intended to illustrate the use of the structure constructor and the
 associated warning.</p>
 </div>
