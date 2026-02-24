@@ -11,6 +11,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Add documentation for release preparation of FTorch. [#552](https://github.com/Cambridge-ICCS/FTorch/pull/552)
 - Add documentation on FTorch's unit testing approach. [#489](https://github.com/Cambridge-ICCS/FTorch/pull/489)
 - Batching in FTorch documented, including a new worked example, in
   [#500](https://github.com/Cambridge-ICCS/FTorch/pull/500).
