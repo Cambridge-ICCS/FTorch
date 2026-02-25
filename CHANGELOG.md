@@ -7,7 +7,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For specific details see the [FTorch online documentation](https://cambridge-iccs.github.io/FTorch/page/developer.html#versioning-and-changelog).
 
-## [Unreleased](https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...HEAD)
+## [Unreleased](https://github.com/Cambridge-ICCS/FTorch/compare/v1.1.0...HEAD)
+
+### Added
+
+### Changed
+
+### Removed
+
+### Removed
+
+### Fixed
+
+### Patch Releases
+
+
+## [1.1.0](https://github.com/Cambridge-ICCS/FTorch/releases/tag/v1.1.0) - 2026-02-26
+
+[GitHub diff with v1.0.0](https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...v1.1.0)
 
 ### Added
 
@@ -74,7 +91,6 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   `torch_tensor_delete` instead in [#545](https://github.com/Cambridge-ICCS/FTorch/pull/545).
   Users should be using the `torch_delete` interface so not be impacted and thus this
   is not considered a breaking change.
-- Windows CI disabled until GitHub runner issues resolved in [50ea6d7](https://github.com/Cambridge-ICCS/FTorch/commit/50ea6d78d79ebe638ebe597e745c015549f12a61)
 
 ### Fixed
 
