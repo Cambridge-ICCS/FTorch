@@ -10,7 +10,7 @@ module unittest_model_forward
   use ftorch_types, only: torch_kFloat32
   use ftorch_model, only: torch_model, torch_model_load, torch_model_forward
   use ftorch_tensor, only: torch_tensor
-  use ftorch_test_utils, only: assert_allclose
+  use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only : sp => real32
   use iso_c_binding, only: c_int64_t
 
@@ -27,8 +27,6 @@ module unittest_model_forward
 
   ! All unit tests in this module use float32 precision
   integer, parameter :: dtype = torch_kFloat32
-
-  character(len=256), parameter :: filename = "../fixtures/simplenet.pt"
 
   ! Typedef holding a set of parameter values
   @testParameter
@@ -87,6 +85,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
+    character(len=256), parameter :: filename = "../fixtures/simplenet.pt"
     type(torch_model) :: model
     type(torch_tensor) :: input_tensors(1), output_tensors(1)
     real(wp), dimension(5), target :: input_array, output_array
@@ -104,7 +103,7 @@ contains
     call torch_model_forward(model, input_tensors, output_tensors)
 
     expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
-    @assertTrue(assert_allclose(output_array, expected, test_name="test_forward_value"))
+    @assertTrue(allclose(output_array, expected, test_name="test_forward_value"))
 
   end subroutine test_forward_value
 
@@ -116,6 +115,7 @@ contains
     implicit none
 
     class(TestCaseType), intent(inout) :: this
+    character(len=256), parameter :: filename = "../fixtures/simplenet.pt"
     type(torch_model) :: model
     type(torch_tensor) :: input_tensors(1), output_tensors(1)
     integer, parameter :: ndims = 1
@@ -136,5 +136,42 @@ contains
     @assertEqual(this%param%requires_grad, output_tensors(1)%requires_grad())
 
   end subroutine test_output_requires_grad
+
+  ! Unit test for checking multiple inputs and outputs are propagated correctly through
+  ! a test model. Uses MultiIONet.
+  @test(testparameters={get_parameters_short()})
+  subroutine test_multi_io(this)
+    use ftorch_tensor, only: torch_tensor_from_array
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    character(len=256), parameter :: filename = "../fixtures/multiionet.pt"
+    type(torch_model) :: model
+    type(torch_tensor) :: input_tensors(2), output_tensors(2)
+    real(wp), dimension(4), target :: input_array_1, input_array_2, &
+                                      output_array_1, output_array_2
+    real(wp), dimension(4) :: expected_1, expected_2
+
+    ! Initialise an input tensor and an output tensor
+    input_array_1 = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp]
+    input_array_2 = [0.0_wp, -1.0_wp, -2.0_wp, -3.0_wp]
+    call torch_tensor_from_array(input_tensors(1), input_array_1, torch_kCPU)
+    call torch_tensor_from_array(input_tensors(2), input_array_2, torch_kCPU)
+    call torch_tensor_from_array(output_tensors(1), output_array_1, torch_kCPU)
+    call torch_tensor_from_array(output_tensors(2), output_array_2, torch_kCPU)
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Propagate the input tensor through the model
+    call torch_model_forward(model, input_tensors, output_tensors)
+
+    expected_1 = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp]
+    expected_2 = [0.0_wp, -3.0_wp, -6.0_wp, -9.0_wp]
+    @assertTrue(allclose(output_array_1, expected_1, test_name="test_multi_io t1"))
+    @assertTrue(allclose(output_array_2, expected_2, test_name="test_multi_io t2"))
+
+  end subroutine test_multi_io
 
 end module unittest_model_forward
