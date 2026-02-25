@@ -217,10 +217,20 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 </ul>
 <h3 id="removed">Removed</h3>
 <ul>
+<li><code>torch_tensor_array_delete</code> was removed in favour of using elemental
+  <code>torch_tensor_delete</code> instead in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/545">#545</a>.
+  Users should be using the <code>torch_delete</code> interface so not be impacted and thus this
+  is not considered a breaking change.</li>
 <li>Windows CI disabled until GitHub runner issues resolved in <a href="https://github.com/Cambridge-ICCS/FTorch/commit/50ea6d78d79ebe638ebe597e745c015549f12a61">50ea6d7</a></li>
 </ul>
 <h3 id="fixed">Fixed</h3>
 <ul>
+<li>Finalizer for <code>torch_tensor</code>s (<code>torch_tensor_delete</code>) was made elemental in
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/545">#545</a>. This fixes a possible
+  issue whereby users could experience a memory leak if not explicitly deleting arrays
+  of tensors. Now, being elemental, the finalizer will get called on both single tensors
+  and arrays of tensors when they go out of scope. As such <code>torch_tensor_array_delete</code>
+  was removed (use <code>torch_tensor_delete</code> instead).</li>
 <li>Make input array for <code>torch_tensor_from_array</code> have the <code>pointer, contiguous</code>
   properties rather than <code>target</code>
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/530">#530</a>. This change

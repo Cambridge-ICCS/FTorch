@@ -341,11 +341,13 @@ said component(s).
     <ul class="list-group">
       <li class="list-group-item">
             <h3>
-    public  subroutine <a href='../proc/torch_tensor_delete.html'>torch_tensor_delete</a>(tensor)  
+    public impure elemental subroutine <a href='../proc/torch_tensor_delete.html'>torch_tensor_delete</a>(tensor)  
 
     </h3>
     
-  <p>Deallocates a tensor.</p>
+  <p>Deallocates a tensor (elemental).
+Note: Marked as impure due to C interoperability, though the operation is
+conceptally pure (deletion of a specific C++ Tensor object).</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">

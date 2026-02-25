@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="76.2% of total for modules and submodules.">1761 statements</a>
+                 title="76.2% of total for modules and submodules.">1754 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -202,7 +202,6 @@
       </a>
       <div id="subs-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../module/ftorch_tensor.html#proc-torch_tensor_array_delete">torch_tensor_array_delete</a>
             <a class="list-group-item" href="../module/ftorch_tensor.html#proc-torch_tensor_assign">torch_tensor_assign</a>
             <a class="list-group-item" href="../module/ftorch_tensor.html#proc-torch_tensor_backward">torch_tensor_backward</a>
             <a class="list-group-item" href="../module/ftorch_tensor.html#proc-torch_tensor_delete">torch_tensor_delete</a>
@@ -312,8 +311,8 @@
               <ul class="list-inline">
                   <li class="list-inline-item"><a href='ftorch_types.html'>ftorch_types</a></li>
                   <li class="list-inline-item"><a href='ftorch_devices.html'>ftorch_devices</a></li>
-                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -9180,46 +9179,6 @@ modules which it uses.
         <section>
           <h2>Subroutines</h2>
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_array_delete"></span> <h3>public  subroutine <a href='../proc/torch_tensor_array_delete.html'>torch_tensor_array_delete</a>(tensor_array)  
-</h3></div>
-    <div class="card-body">
-          
-  <p>Deallocates an array of tensors.</p>
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-tensor_array"></span>
-              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
-            </td>
-<td>intent(inout),</td>
-              <td></td>            <td>
-              dimension(:)
-            </td>
-            <td>::</td>
-            <td><strong>tensor_array</strong></td>
-            <td>
-<p>Array of tensors to deallocate</p>
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-
-    </div>
-  </div>
-
-              <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_assign"></span> <h3>public  subroutine <a href='../proc/torch_tensor_assign.html'>torch_tensor_assign</a>(output, input)  
 </h3></div>
     <div class="card-body">
@@ -9330,11 +9289,13 @@ modules which it uses.
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_delete"></span> <h3>public  subroutine <a href='../proc/torch_tensor_delete.html'>torch_tensor_delete</a>(tensor)  
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_tensor_delete"></span> <h3>public impure elemental subroutine <a href='../proc/torch_tensor_delete.html'>torch_tensor_delete</a>(tensor)  
 </h3></div>
     <div class="card-body">
           
-  <p>Deallocates a tensor.</p>
+  <p>Deallocates a tensor (elemental).
+Note: Marked as impure due to C interoperability, though the operation is
+conceptally pure (deletion of a specific C++ Tensor object).</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
