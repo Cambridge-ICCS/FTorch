@@ -3,6 +3,7 @@
 
 import argparse
 import os
+from warnings import warn
 
 import torch
 
@@ -60,26 +61,26 @@ if __name__ == "__main__":
 
     # Process output model file name
     if output_model_file is None:
-        output_model_file = input_model_root + ".ts"
+        output_model_file = input_model_file
     _, output_model_ext = os.path.splitext(output_model_file)[1]
-    if ext not in (".ts", ".pt"):
+    if output_model_ext != ".pt":
         value_error = (
             f"TorchScript output file name '{output_model_file}' has extension"
-            f" {output_model_ext} but .ts (recommended) or .pt (legacy) was expected."
+            f" {output_model_ext} but .pt was expected."
         )
         raise ValueError(value_error)
     if input_model_file == output_model_file:
-        value_error = (
+        warning = (
             f"Output TorchScript file name '{output_model_file}' coincides with input"
-            f" PyTorch file name '{input_model_file}' and would overwrite it."
+            f" PyTorch file name '{input_model_file}'. It will be overwritten."
         )
-        raise ValueError(value_error)
-    if os.path.exists(output_model_file):
-        value_error = (
+        warn(warning)
+    elif os.path.exists(output_model_file):
+        warning = (
             "A file already exists with output TorchScript file name"
-            f" '{output_model_file}' and would be overwritten."
+            f" '{output_model_file}'. It will be overwritten."
         )
-        raise ValueError(value_error)
+        warn(warning)
 
     # Load the input PyTorch model
     model = torch.load(input_model_file)
