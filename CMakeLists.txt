@@ -253,3 +253,6 @@ install(
   "${PROJECT_BINARY_DIR}/${LIB_NAME}.pc"
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
 )
+
+# CPack stuff
+include("${PROJECT_SOURCE_DIR}/cmake/FTorchPackaging.cmake")
