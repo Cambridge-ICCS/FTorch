@@ -76,9 +76,6 @@ jobs:
           # Check this is <= what GPU-runner has installed (backwards compatible)
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cu129
 
-      - name: Install ftorch_utils
-        run: python -m pip install .
-
       - name: Install cmake and NVIDIA dev toolkit
         run: |
           sudo apt update

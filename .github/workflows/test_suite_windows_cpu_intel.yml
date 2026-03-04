@@ -67,9 +67,6 @@ jobs:
           call ftorch\Scripts\activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
-      - name: Install ftorch_utils
-        run: python -m pip install .
-
       - name: Build FTorch
         shell: cmd
         run: |
