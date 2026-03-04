@@ -37,6 +37,9 @@ def main_cli():
         help="Name of the PyTorch model",
         type=str,
     )
+    # TODO: Accept pre-trained model name (needed for ResNet)
+    #       Perhaps make model_definition_file optional? Need to allow weights
+    #       specification, too
     parser.add_argument(
         "input_model_file",
         help="Filename for the model saved in PyTorch format, including path",
