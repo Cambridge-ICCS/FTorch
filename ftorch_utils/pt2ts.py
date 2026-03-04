@@ -7,7 +7,11 @@ from warnings import warn
 
 import torch
 
-from ftorch_utils.torchscript import script_to_torchscript, trace_to_torchscript
+from ftorch_utils.torchscript import (
+    load_pytorch,
+    script_to_torchscript,
+    trace_to_torchscript,
+)
 
 if __name__ == "__main__":
     # Parse user input
@@ -15,6 +19,16 @@ if __name__ == "__main__":
         prog="pt2ts.py",
         description="Convert a PyTorch model file to TorchScript format.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "model_definition_file",
+        help="Filename for the definition of the PyTorch model, including path",
+        type=str,
+    )
+    parser.add_argument(
+        "model_name",
+        help="Name of the PyTorch model",
+        type=str,
     )
     parser.add_argument(
         "input_model_file",
@@ -42,14 +56,16 @@ if __name__ == "__main__":
         type=str,
     )
     parsed_args = parser.parse_args()
+    model_definition_file = parsed_args.model_definition_file
+    model_name = parsed_args.model_name
     input_model_file = parsed_args.input_model_file
     output_model_file = parsed_args.output_model_file
     trace = parsed_args.trace
     input_tensor_file = parsed_args.input_tensor_file
 
     # Process input model file name
-    input_model_root, input_model_ext = os.path.splitext(input_model_file)[1]
-    if ext != ".pt":
+    input_model_root, input_model_ext = os.path.splitext(input_model_file)
+    if input_model_ext != ".pt":
         value_error = (
             f"PyTorch input file '{input_model_file}' has extension {input_model_ext}"
             " but .pt was expected."
@@ -62,7 +78,7 @@ if __name__ == "__main__":
     # Process output model file name
     if output_model_file is None:
         output_model_file = input_model_file
-    _, output_model_ext = os.path.splitext(output_model_file)[1]
+    _, output_model_ext = os.path.splitext(output_model_file)
     if output_model_ext != ".pt":
         value_error = (
             f"TorchScript output file name '{output_model_file}' has extension"
@@ -74,16 +90,16 @@ if __name__ == "__main__":
             f"Output TorchScript file name '{output_model_file}' coincides with input"
             f" PyTorch file name '{input_model_file}'. It will be overwritten."
         )
-        warn(warning)
+        warn(warning, stacklevel=2)
     elif os.path.exists(output_model_file):
         warning = (
             "A file already exists with output TorchScript file name"
             f" '{output_model_file}'. It will be overwritten."
         )
-        warn(warning)
+        warn(warning, stacklevel=2)
 
     # Load the input PyTorch model
-    model = torch.load(input_model_file)
+    model = load_pytorch(model_definition_file, model_name, input_model_file)
 
     # Apply scripting or tracing as requested, writing out to file
     if trace:
