@@ -11,66 +11,11 @@ from typing import Optional
 import simplenet
 import torch
 
-
-def script_to_torchscript(
-    model: torch.nn.Module, filename: Optional[str] = "scripted_model.pt"
-) -> None:
-    """
-    Save PyTorch model to TorchScript using scripting.
-
-    Parameters
-    ----------
-    model : torch.NN.Module
-        a PyTorch model
-    filename : str
-        name of file to save to
-    """
-    print("Saving model using scripting...", end="")
-    scripted_model = torch.jit.script(model)
-    # print(scripted_model.code)
-    scripted_model.save(filename)
-    print("done.")
-
-
-def trace_to_torchscript(
-    model: torch.nn.Module,
-    dummy_input: torch.Tensor,
-    filename: Optional[str] = "traced_model.pt",
-) -> None:
-    """
-    Save PyTorch model to TorchScript using tracing.
-
-    Parameters
-    ----------
-    model : torch.NN.Module
-        a PyTorch model
-    dummy_input : torch.Tensor
-        appropriate size Tensor to act as input to model
-    filename : str
-        name of file to save to
-    """
-    print("Saving model using tracing...", end="")
-    traced_model = torch.jit.trace(model, dummy_input)
-    frozen_model = torch.jit.freeze(traced_model)
-    ## print(frozen_model.graph)
-    ## print(frozen_model.code)
-    frozen_model.save(filename)
-    print("done.")
-
-
-def load_torchscript(filename: Optional[str] = "saved_model.pt") -> torch.nn.Module:
-    """
-    Load a TorchScript from file.
-
-    Parameters
-    ----------
-    filename : str
-        name of file containing TorchScript model
-    """
-    model = torch.jit.load(filename)
-
-    return model
-
+from ftorch_utils.torchscript import (
+    load_torchscript,
+    script_to_torchscript,
+    trace_to_torchscript,
+)
 
 if __name__ == "__main__":
     import argparse
