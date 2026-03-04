@@ -1,5 +1,9 @@
 """Module containing utilities for handling TorchScript files."""
 
+import importlib.util
+import os
+import sys
+
 import torch
 
 
@@ -46,6 +50,44 @@ def trace_to_torchscript(
     ## print(frozen_model.graph)
     ## print(frozen_model.code)
     frozen_model.save(filename)
+
+
+def load_pytorch(
+    model_definition_file: str, model_name: str, saved_model_file: str
+) -> torch.nn.Module:
+    """
+    Load a PyTorch model from file.
+
+    Parameters
+    ----------
+    model_definition_file : str
+        name of file containing PyTorch model definition
+    model_name : str
+        name of the PyTorch model
+    saved_model_file : str
+        name of file containing saved PyTorch model
+
+    Returns
+    -------
+    model : torch.NN.Module
+        a PyTorch model
+    """
+    # Import the module containing the model definition
+    module_name, _ = os.path.splitext(os.path.basename(model_definition_file))
+    module_spec = importlib.util.spec_from_file_location(
+        module_name, model_definition_file
+    )
+    module = importlib.util.module_from_spec(module_spec)
+    sys.modules[module_name] = module
+    module_spec.loader.exec_module(module)
+
+    # Construct the PyTorch model and load its weights from file
+    cls = getattr(module, model_name)
+    model = cls()
+    with torch.inference_mode():
+        model.load_state_dict(torch.load(saved_model_file, weights_only=True))
+    model.eval()
+    return model
 
 
 def load_torchscript(filename: str) -> torch.nn.Module:
