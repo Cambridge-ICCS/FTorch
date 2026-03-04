@@ -67,6 +67,9 @@ jobs:
           . ftorch/bin/activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
+      - name: Install ftorch_utils
+        run: python -m pip install .
+
       - name: Install Intel tools
         uses: rscohn2/setup-oneapi@2ad0cf6b74bc2426bdcee825cf88f9db719dd727 # v0.1.0
         with:

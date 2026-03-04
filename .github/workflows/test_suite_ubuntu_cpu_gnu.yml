@@ -124,6 +124,9 @@ jobs:
           . ftorch/bin/activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
+      - name: Install ftorch_utils
+        run: python -m pip install .
+
       - name: Install OpenMPI
         run: |
           sudo apt update

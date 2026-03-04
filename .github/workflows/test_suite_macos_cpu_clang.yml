@@ -83,6 +83,9 @@ jobs:
           . ftorch/bin/activate
           pip install torch torchvision
 
+      - name: Install ftorch_utils
+        run: python -m pip install .
+
       - name: Install gfortran and OpenMPI
         # Install from source to avoid compiler mismatch between gfortran versions
         # between open-mpi installation and when building FTorch.
