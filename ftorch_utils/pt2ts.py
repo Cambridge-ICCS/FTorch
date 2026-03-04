@@ -48,16 +48,19 @@ def main_cli():
     )
     parser.add_argument(
         "--trace",
-        help="Apply tracing rather than scripting",
-        type=bool,
-        default=False,
+        help=(
+            "Apply tracing rather than scripting.\n\n"
+            "If used then --input_tensor_file must also be provided."
+        ),
+        action="store_true",
     )
     parser.add_argument(
         "--input_tensor_file",
         help=(
             "Filename for the tensor saved in PyTorch format, including path (only"
             " required if running with --trace). The tensor is used to determine the"
-            " dimensionality of the inputs so its values are ignored."
+            " dimensionality of the inputs so its values are ignored.\n\n"
+            "Implies --trace."
         ),
         type=str,
     )
@@ -110,7 +113,7 @@ def main_cli():
     # Apply scripting or tracing as requested, writing out to file
     if trace:
         # Process input tensor file name
-        _, input_tensor_ext = os.path.splitext(input_model_file)[1]
+        _, input_tensor_ext = os.path.splitext(input_tensor_file)
         if input_tensor_ext != ".pt":
             value_error = (
                 f"PyTorch input tensor file '{input_tensor_file}' has extension"
