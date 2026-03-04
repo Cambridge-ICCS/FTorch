@@ -47,6 +47,9 @@ dev = [
   "ruff==0.7.3",
 ]
 
+[project.scripts]
+pt2ts = "ftorch_utils.pt2ts:main_cli"
+
 [project.urls]
 Repository = "https://github.com/Cambridge-ICCS/FTorch"
 

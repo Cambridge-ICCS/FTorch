@@ -13,7 +13,13 @@ from ftorch_utils.torchscript import (
     trace_to_torchscript,
 )
 
-if __name__ == "__main__":
+
+def main_cli():
+    """Driver for command line interface to the `pt2ts` script.
+
+    This function is required for the version that gets installed into the Python
+    environment's `bin` subdirectory.
+    """
     # Parse user input
     parser = argparse.ArgumentParser(
         prog="pt2ts.py",
@@ -123,3 +129,7 @@ if __name__ == "__main__":
         trace_to_torchscript(model, input_tensor, output_model_file)
     else:
         script_to_torchscript(model, output_model_file)
+
+
+if __name__ == "__main__":
+    main()
