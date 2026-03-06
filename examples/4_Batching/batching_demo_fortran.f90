@@ -4,7 +4,7 @@ program batchingnet_infer
   use, intrinsic :: iso_fortran_env, only : sp => real32
   use ftorch, only : torch_model, torch_tensor, torch_kCPU, torch_delete, &
                      torch_tensor_from_array, torch_model_load, torch_model_forward
-  use ftorch_test_utils, only : assert_allclose
+  use ftorch_test_utils, only : allclose
 
   implicit none
   integer, parameter :: wp = sp
@@ -57,8 +57,8 @@ program batchingnet_infer
   write (*,*)
 
   expected_single = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
-  test_pass_single = assert_allclose(out_data_single, expected_single, &
-                                    test_name="BatchingNet single", rtol=1e-5)
+  test_pass_single = allclose(out_data_single, expected_single, &
+                              test_name="BatchingNet single", rtol=1e-5)
 
   call torch_delete(in_tensors_single)
   call torch_delete(out_tensors_single)
@@ -80,8 +80,8 @@ program batchingnet_infer
 
   expected_batch(1,:) = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
   expected_batch(2,:) = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
-  test_pass_batch = assert_allclose(out_data_batch, expected_batch, &
-                                   test_name="BatchingNet batch", rtol=1e-5)
+  test_pass_batch = allclose(out_data_batch, expected_batch, &
+                             test_name="BatchingNet batch", rtol=1e-5)
 
   call torch_delete(in_tensors_batch)
   call torch_delete(out_tensors_batch)
@@ -113,8 +113,8 @@ program batchingnet_infer
   expected_multi(2,1,:) = [0.0_wp, 10.0_wp, 20.0_wp, 30.0_wp, 40.0_wp]
   expected_multi(2,2,:) = [0.0_wp, 20.0_wp, 40.0_wp, 60.0_wp, 80.0_wp]
   expected_multi(2,3,:) = [0.0_wp, 30.0_wp, 60.0_wp, 90.0_wp, 120.0_wp]
-  test_pass_multi = assert_allclose(out_data_multi, expected_multi, &
-                                   test_name="BatchingNet multidim batch", rtol=1e-5)
+  test_pass_multi = allclose(out_data_multi, expected_multi, &
+                             test_name="BatchingNet multidim batch", rtol=1e-5)
 
   call torch_delete(in_tensors_multi)
   call torch_delete(out_tensors_multi)
