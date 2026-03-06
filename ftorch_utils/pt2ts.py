@@ -106,7 +106,7 @@ def validate_input_model_file(input_model_file):
         raise FileNotFoundError(input_file_error)
 
 
-def validate_output_model_file(output_model_file):
+def validate_output_model_file(output_model_file, input_model_file):
     """Check the output model file has the correct file extension.
 
     Also raise a warning if it would overwrite an existing file.
@@ -115,6 +115,8 @@ def validate_output_model_file(output_model_file):
     ----------
     output_model_file : str
         Name of the output model file
+    input_model_file : str
+        Name of the input model file
     """
     if output_model_file is None:
         output_model_file = input_model_file
@@ -174,8 +176,8 @@ def main_cli():
     test = parsed_args.test
     input_tensor_file = parsed_args.input_tensor_file
 
-    validate_input_model_file(input_tensor_file)
-    validate_ouput_model_file(output_tensor_file)
+    validate_input_model_file(input_model_file)
+    validate_output_model_file(output_model_file, input_model_file)
 
     # Load the input PyTorch model
     model = load_pytorch(model_definition_file, model_name, input_model_file)
