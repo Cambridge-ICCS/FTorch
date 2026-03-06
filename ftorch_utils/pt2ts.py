@@ -145,6 +145,8 @@ def main_cli():
 
         # Load the input tensor
         input_tensors = torch.load(input_tensor_file)
+        if not isinstance(input_tensors, tuple):
+            input_tensors = (input_tensors,)
 
     if test:
         # Propagate the input tensor through the model
