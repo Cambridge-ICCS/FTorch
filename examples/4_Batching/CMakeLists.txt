@@ -30,35 +30,48 @@ execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
                         ${PROJECT_SOURCE_DIR}/requirements.txt)
 
 # Fortran example
-add_executable(batchingnet_infer_fortran batchingnet_infer_fortran.f90)
-target_link_libraries(batchingnet_infer_fortran PRIVATE FTorch::ftorch)
+add_executable(batching_demo_fortran batching_demo_fortran.f90)
+target_link_libraries(batching_demo_fortran PRIVATE FTorch::ftorch)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
   # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME example_batching_batching
-           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/batching_demo.py)
+  add_test(
+    NAME example_batching_batchingnet
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/batchingnet.py
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
-  # 2. Check the model is saved to file in the expected location with the
-  #   pt2ts.py script
+  # 2. Run the pt2ts script to convert the model file to TorchScript format
+  #    and run basic checks
   add_test(
     NAME example_batching_pt2ts
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
-            ${PROJECT_BINARY_DIR}
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    COMMAND pt2ts ${PROJECT_SOURCE_DIR}/batchingnet.py
+                  BatchingNet
+                  ${PROJECT_SOURCE_DIR}/saved_batchingnet_model_cpu.pt
+                  --input_tensor_file
+                  ${PROJECT_SOURCE_DIR}/saved_batchingnet_input_tensor_cpu.pt
+                  --output_model_file
+                  ${PROJECT_BINARY_DIR}/saved_batchingnet_model_cpu.pt
+                  --test)
 
-  # 3. Load the model and run in Fortran checking that outputs meet expectations
+  # 3. Load the model and run in Python checking that outputs meet expectations
   add_test(
-    NAME example_batching_batching_infer_fortran
+    NAME example_batching_demo_python
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/batching_demo_python.py
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+  # 4. Load the model and run in Fortran checking that outputs meet expectations
+  add_test(
+    NAME example_batching_demo_fortran
     COMMAND
-      batchingnet_infer_fortran
+      batching_demo_fortran
       ${PROJECT_BINARY_DIR}/saved_batchingnet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
-    example_batching_batching_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    example_batching_demo_fortran PROPERTIES PASS_REGULAR_EXPRESSION
     "BatchingNet Fortran example ran successfully")
 endif()
 

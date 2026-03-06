@@ -8,7 +8,7 @@ show how to handle more complex cases, such as time series or multi-dimensional 
 A Python file `batchingnet.py` is provided that defines a simple PyTorch 'BatchingNet'
 that takes an input vector of length 5 and applies a single `Linear` layer to multiply
 each input feature by a different value (0, 1, 2, 3, 4). The demo script
-`batching_demo.py` shows how to use this model for unbatched, batched, and
+`batching_demo_python.py` shows how to use this model for unbatched, batched, and
 higher-dimensional inference, illustrating the effect of batching and the location of
 the batch dimension. All outputs are as described in the "Why Batching?" section below.
 
@@ -140,7 +140,7 @@ pip install -r requirements.txt
 You can see how you would perform batching in PyTorch by running the Python batching
 demo:
 ```
-python3 batching_demo.py
+python3 batching_demo_python.py
 ```
 This will run the BatchingNet model with various inputs and print the expected outputs
 as described above.
@@ -157,7 +157,7 @@ deactivate
 ```
 
 To call the saved BatchingNet model from Fortran, repeating the different batching
-approaches in the Python demo compile the `batchingnet_infer_fortran.f90` file.
+approaches in the Python demo compile the `batching_demo_fortran.f90` file.
 This can be done using the included `CMakeLists.txt` as follows:
 ```
 mkdir build
@@ -169,7 +169,7 @@ cmake --build .
 
 To run the compiled code calling the saved BatchingNet TorchScript from Fortran, run the executable with an argument of the saved model file:
 ```
-./batchingnet_infer_fortran ../saved_batchingnet_model_cpu.pt
+./batching_demo_fortran ../saved_batchingnet_model_cpu.pt
 ```
 
 This runs the model with single, batched, and multidimensional batched input arrays and should produce the output:
