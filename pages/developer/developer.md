@@ -24,9 +24,9 @@ expected for submissions.
 
 Development tools for [pre-processing](#fortran-source-and-fypp),
 [code styling](#code-style) etc. are pip-installable using the
-[requirements-dev file](https://github.com/Cambridge-ICCS/FTorch/blob/main/requirements-dev.txt):
+[pyproject.toml file](https://github.com/Cambridge-ICCS/FTorch/blob/main/pyproject.toml):
 ```sh
-pip install -r requirements-dev.txt
+pip install -e .[dev]
 ```
 
 In order to streamline the process of uploading we provide a pre-commit hook in
