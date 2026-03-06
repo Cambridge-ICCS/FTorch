@@ -53,7 +53,7 @@ def main_cli():
     parser.add_argument(
         "--input_tensor_file",
         help=(
-            "Filename for the tensor saved in PyTorch format, including path (only"
+            "Filename for the tensor(s) saved in PyTorch format, including path (only"
             " required if running with --trace or --test). The tensor is used to"
             " determine the dimensionality of the inputs so its values are ignored."
         ),
@@ -144,16 +144,16 @@ def main_cli():
             raise FileNotFoundError(input_file_error)
 
         # Load the input tensor
-        input_tensor = torch.load(input_tensor_file)
+        input_tensors = torch.load(input_tensor_file)
 
     if test:
         # Propagate the input tensor through the model
         # If something isn't working This will generate an error
-        pt_model_outputs = model(input_tensor)
+        pt_model_outputs = model(*input_tensors)
 
     # Apply scripting or tracing as requested, writing out to file
     if trace:
-        trace_to_torchscript(model, input_tensor, output_model_file)
+        trace_to_torchscript(model, input_tensors, output_model_file)
     else:
         script_to_torchscript(model, output_model_file)
     print(f"Saved model to TorchScript in '{output_model_file}'.")
@@ -168,7 +168,7 @@ def main_cli():
 
         # Load the TorchScript model and propagate the same input tensor
         ts_model = load_torchscript(output_model_file)
-        ts_model_outputs = ts_model(input_tensor)
+        ts_model_outputs = ts_model(*input_tensors)
         if not isinstance(ts_model_outputs, tuple):
             ts_model_outputs = (ts_model_outputs,)
         if not isinstance(pt_model_outputs, tuple):
