@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18...3.31)
 set(PROJECT_NAME FTorch)
 set(LIB_NAME ftorch)
-set(PACKAGE_VERSION 1.0.0)
+set(PACKAGE_VERSION 1.1.0)
 
 project(
   ${PROJECT_NAME}
