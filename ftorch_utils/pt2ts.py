@@ -15,13 +15,14 @@ from ftorch_utils.torchscript import (
 )
 
 
-def main_cli():
-    """Driver for command line interface to the `pt2ts` script.
+def parse_user_input():
+    """Retrieve command line options.
 
-    This function is required for the version that gets installed into the Python
-    environment's `bin` subdirectory.
+    Returns
+    -------
+    Namespace
+        namespace containing known input arguments
     """
-    # Parse user input
     parser = argparse.ArgumentParser(
         prog="pt2ts.py",
         description="Convert a PyTorch model file to TorchScript format.",
@@ -76,21 +77,23 @@ def main_cli():
         action="store_true",
     )
     parsed_args = parser.parse_args()
-    model_definition_file = parsed_args.model_definition_file
-    model_name = parsed_args.model_name
-    input_model_file = parsed_args.input_model_file
-    output_model_file = parsed_args.output_model_file
-    trace = parsed_args.trace
-    test = parsed_args.test
-    input_tensor_file = parsed_args.input_tensor_file
-    if input_tensor_file is None and trace:
+    if parsed_args.input_tensor_file is None and parsed_args.trace:
         value_error = "An input tensor must be provided to use --trace."
         raise ValueError(value_error)
-    if input_tensor_file is None and test:
+    if parsed_args.input_tensor_file is None and parsed_args.test:
         value_error = "An input tensor must be provided to use --test."
         raise ValueError(value_error)
+    return parsed_args
 
-    # Process input model file name
+
+def validate_input_model_file(input_model_file):
+    """Check the input model file exists and has the correct extension.
+
+    Parameters
+    ----------
+    input_model_file : str
+        Name of the input model file
+    """
     input_model_root, input_model_ext = os.path.splitext(input_model_file)
     if input_model_ext != ".pt":
         value_error = (
@@ -102,7 +105,17 @@ def main_cli():
         input_file_error = f"PyTorch model file '{input_model_file}' cannot be found."
         raise FileNotFoundError(input_file_error)
 
-    # Process output model file name
+
+def validate_output_model_file(output_model_file):
+    """Check the output model file has the correct file extension.
+
+    Also raise a warning if it would overwrite an existing file.
+
+    Parameters
+    ----------
+    output_model_file : str
+        Name of the output model file
+    """
     if output_model_file is None:
         output_model_file = input_model_file
     _, output_model_ext = os.path.splitext(output_model_file)
@@ -125,23 +138,50 @@ def main_cli():
         )
         warn(warning, stacklevel=2)
 
+
+def validate_input_tensor_file(input_tensor_file):
+    """Check the input tensor file exists and has the correct extension.
+
+    Parameters
+    ----------
+    input_tensor_file : str
+        Name of the input model file
+    """
+    _, input_tensor_ext = os.path.splitext(input_tensor_file)
+    if input_tensor_ext != ".pt":
+        value_error = (
+            f"PyTorch input tensor file '{input_tensor_file}' has extension"
+            f" {input_tensor_ext} but .pt was expected."
+        )
+        raise ValueError(value_error)
+    if not os.path.exists(input_tensor_file):
+        input_file_error = f"PyTorch tensor file '{input_tensor_file}' cannot be found."
+        raise FileNotFoundError(input_file_error)
+
+
+def main_cli():
+    """Driver for command line interface to the `pt2ts` script.
+
+    This function is required for the version that gets installed into the Python
+    environment's `bin` subdirectory.
+    """
+    parsed_args = parse_user_input()
+    model_definition_file = parsed_args.model_definition_file
+    model_name = parsed_args.model_name
+    input_model_file = parsed_args.input_model_file
+    output_model_file = parsed_args.output_model_file
+    trace = parsed_args.trace
+    test = parsed_args.test
+    input_tensor_file = parsed_args.input_tensor_file
+
+    validate_input_model_file(input_tensor_file)
+    validate_ouput_model_file(output_tensor_file)
+
     # Load the input PyTorch model
     model = load_pytorch(model_definition_file, model_name, input_model_file)
 
     if test or trace:
-        # Process input tensor file name
-        _, input_tensor_ext = os.path.splitext(input_tensor_file)
-        if input_tensor_ext != ".pt":
-            value_error = (
-                f"PyTorch input tensor file '{input_tensor_file}' has extension"
-                f" {input_tensor_ext} but .pt was expected."
-            )
-            raise ValueError(value_error)
-        if not os.path.exists(input_tensor_file):
-            input_file_error = (
-                f"PyTorch tensor file '{input_tensor_file}' cannot be found."
-            )
-            raise FileNotFoundError(input_file_error)
+        validate_input_tensor_file(input_tensor_file)
 
         # Load the input tensor
         input_tensors = torch.load(input_tensor_file)
