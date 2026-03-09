@@ -1,16 +1,47 @@
 # Changelog
 
-All [notable](https://cambridge-iccs.github.io/FTorch/page/developer.html#versioning-and-changelog)
+All [notable](https://cambridge-iccs.github.io/FTorch/page/developer/developer.html#versioning-and-changelog)
 changes to the project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For specific details see the [FTorch online documentation](https://cambridge-iccs.github.io/FTorch/page/developer.html#versioning-and-changelog).
 
-## [Unreleased](https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...HEAD)
+## [Unreleased](https://github.com/Cambridge-ICCS/FTorch/compare/v1.1.0...HEAD)
 
 ### Added
 
+### Changed
+
+### Removed
+
+### Removed
+
+### Fixed
+
+### Patch Releases
+
+
+## [1.1.0](https://github.com/Cambridge-ICCS/FTorch/releases/tag/v1.1.0) - 2026-02-26
+
+[GitHub diff with v1.0.0](https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...v1.1.0)
+
+### Added
+
+- Add unit testing for the Torch Model with multiple input/output tensors and batching
+  capabilities. [#559](https://github.com/Cambridge-ICCS/FTorch/pull/559)
+- Add documentation for release preparation of FTorch. [#552](https://github.com/Cambridge-ICCS/FTorch/pull/552)
+- Add documentation on FTorch's unit testing approach. [#489](https://github.com/Cambridge-ICCS/FTorch/pull/489)
+- Batching in FTorch documented, including a new worked example, in
+  [#500](https://github.com/Cambridge-ICCS/FTorch/pull/500).
+- Add subroutine for printing parameters associated with a Torch Model
+  [#488](https://github.com/Cambridge-ICCS/FTorch/pull/488)
+- Add unit testing for the Torch Model API [#496](https://github.com/Cambridge-ICCS/FTorch/pull/496)
+- Provide support for using FTorch with pkg-config. [#464](https://github.com/Cambridge-ICCS/FTorch/pull/464)
+- Support building FTorch as a static library. [#448](https://github.com/Cambridge-ICCS/FTorch/pull/448)
+- Intel-ifx and Intel-ifort CI and GCC v9-13 CI. Intel CI builds OpenMPI from source to accomodate MPI integration tests [#438](https://github.com/Cambridge-ICCS/FTorch/pull/438)
+- Expose tensor strides via `get_stride` method [#416](https://github.com/Cambridge-ICCS/FTorch/pull/416)
+- Remove `UNIX` preprocessor variable that selected the  right C-integer type for 64bit int. Use `int64_t` instead [#416](https://github.com/Cambridge-ICCS/FTorch/pull/416)
 - A new cmake option `MULTI_GPU` to control the build of multi GPU integration tests in [#410](https://github.com/Cambridge-ICCS/FTorch/pull/410)
 - Support for AMD GPU backends (HIP) provided in
   [#385](https://github.com/Cambridge-ICCS/FTorch/pull/385) and
@@ -34,20 +65,48 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Improve FTorch's modularisation under the hood by breaking single Fortran file down into submodules in [#508](https://github.com/Cambridge-ICCS/FTorch/pull/508)
+- Example numbers were bumped to account for new worked examples in
+  [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291) and
+  [#500](https://github.com/Cambridge-ICCS/FTorch/pull/500).
+- Bump the minimum CMake version from 3.15 to 3.18, for consistency with what's
+  used in PyTorch. [#491](https://github.com/Cambridge-ICCS/FTorch/pull/491)
+- Significant overhaul of the online FORD documentation and reduction of content in the README
+  in [#459](https://github.com/Cambridge-ICCS/FTorch/pull/459)
+- Intel CI now uses Intel oneAPI MPI instead of OpenMPI built with Intel compilers [#449](https://github.com/Cambridge-ICCS/FTorch/pull/449)
+- FTorch library (`libftorch.so`) produced by cmake installation now has `RUNPATH` that contains path to Torch library directory. Downstream targets linking against FTorch can now find the Torch dependency automatically and will compile successfully [#437](https://github.com/Cambridge-ICCS/FTorch/pull/437).
+- In all `CMakeLists.txt` where `find_package(FTorch)` was present, now using `REQUIRE` if not building tests to stop the cmake configuation process early for users who only wish to build examples in [#434](https://github.com/Cambridge-ICCS/FTorch/pull/434)
 - fortitude dependency version increased to 0.7.0
 - Examples reordered to be more logical in [#317](https://github.com/Cambridge-ICCS/FTorch/pull/317)
 - scalar multiplication/division of tensors reworked to require the scalar to first be mapped to a `torch_tensor` in [#289](https://github.com/Cambridge-ICCS/FTorch/pull/289)
 - The unit tests for constructing and destroying tensors were separated out in
   [#319](https://github.com/Cambridge-ICCS/FTorch/pull/319)
-- Demo numbers were bumped to account for new demo in
-  [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291).
 - Use interface for `torch_tensor_from_array` with default layout in tests and
   examples in [#348](https://github.com/Cambridge-ICCS/FTorch/pull/348).
 - Error handling in `ctorch.cpp` improved in [#347](https://github.com/Cambridge-ICCS/FTorch/pull/347).
 
 ### Removed
 
-- Windows CI disabled until GitHub runner issues resolved in [50ea6d7](https://github.com/Cambridge-ICCS/FTorch/commit/50ea6d78d79ebe638ebe597e745c015549f12a61)
+- `torch_tensor_array_delete` was removed in favour of using elemental
+  `torch_tensor_delete` instead in [#545](https://github.com/Cambridge-ICCS/FTorch/pull/545).
+  Users should be using the `torch_delete` interface so not be impacted and thus this
+  is not considered a breaking change.
+
+### Fixed
+
+- Finalizer for `torch_tensor`s (`torch_tensor_delete`) was made elemental in
+  [#545](https://github.com/Cambridge-ICCS/FTorch/pull/545). This fixes a possible
+  issue whereby users could experience a memory leak if not explicitly deleting arrays
+  of tensors. Now, being elemental, the finalizer will get called on both single tensors
+  and arrays of tensors when they go out of scope. As such `torch_tensor_array_delete`
+  was removed (use `torch_tensor_delete` instead).
+- Make input array for `torch_tensor_from_array` have the `pointer, contiguous`
+  properties rather than `target`
+  [#530](https://github.com/Cambridge-ICCS/FTorch/pull/530). This change
+  technically breaks the API because it becomes no longer possible to pass
+  temporary Fortran arrays to the second argument of `torch_tensor_from_array`.
+  However, that was a bug rather than a feature, so any workflow crashes due to
+  this change will provide the user with information on how to remove the error.
 
 ### Patch Releases
 

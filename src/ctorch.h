@@ -28,6 +28,15 @@ typedef void *torch_int_t;
 // Opaque pointer type alias for float scalars
 typedef void *torch_float_t;
 
+// Type that represents size, strides and indexing on tensors
+// (like std::size_t for standard containers)
+//
+// Torch is using internally int64_t [i.e. signed 64bit integer]
+// We can as well to avoid portability problems
+// (i.e. 64bit integer beeing long long on Windows)
+//
+typedef int64_t torch_size_t;
+
 // Data types
 typedef enum {
   torch_kUInt8,
@@ -60,7 +69,7 @@ typedef enum {
  * @param shape of the Tensor
  * @param data type of the elements of the Tensor
  * @param device type used (cpu, CUDA, etc.)
- * @param device index for the CUDA case
+ * @param device index for GPU devices
  * @param whether gradient is required
  */
 EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
@@ -73,7 +82,7 @@ EXPORT_C torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t
  * @param shape of the Tensor
  * @param data type of the elements of the Tensor
  * @param device type used (cpu, CUDA, etc.)
- * @param device index for the CUDA case
+ * @param device index for GPU devices
  * @param whether gradient is required
  */
 EXPORT_C torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
@@ -86,7 +95,7 @@ EXPORT_C torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t
  * @param shape of the Tensor
  * @param data type of the elements of the Tensor
  * @param device type used (cpu, CUDA, etc.)
- * @param device index for the CUDA case
+ * @param device index for GPU devices
  * @param whether gradient is required
  */
 EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
@@ -102,7 +111,7 @@ EXPORT_C torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t 
  * @param strides to take through data
  * @param data type of the elements of the Tensor
  * @param device type used (cpu, CUDA, etc.)
- * @param device index for the CUDA case
+ * @param device index for GPU devices
  * @param whether gradient is required
  * @return Torch Tensor interpretation of the data pointed at
  */
@@ -133,11 +142,14 @@ EXPORT_C int torch_tensor_get_rank(const torch_tensor_t tensor);
  * @param Torch Tensor to determine the rank of
  * @return pointer to the sizes array of the Torch Tensor
  */
-#ifdef UNIX
-EXPORT_C const long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
-#else
-EXPORT_C const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor);
-#endif
+EXPORT_C const torch_size_t *torch_tensor_get_sizes(const torch_tensor_t tensor);
+
+/**
+ * Function to determine the strides of a Torch Tensor
+ * @param tensor Torch tensor
+ * @return pointer to the strides array of the tensor
+ */
+EXPORT_C const torch_size_t *torch_tensor_get_stride(const torch_tensor_t tensor);
 
 /**
  * Function to determine the data type of a Torch Tensor
@@ -393,7 +405,7 @@ EXPORT_C void torch_optim_delete(torch_optim_t optim);
  * Torch Module
  * @param filename where TorchScript description of model is stored
  * @param device type used (cpu, CUDA, etc.)
- * @param device index for the CUDA case
+ * @param device index for GPU devices
  * @param whether gradient is required
  * @param whether model is being trained
  * @return Torch Module loaded in from file
@@ -417,6 +429,20 @@ EXPORT_C void torch_jit_module_forward(const torch_jit_script_module_t module,
                                        const torch_tensor_t *inputs, const int nin,
                                        torch_tensor_t *outputs, const int nout,
                                        const bool requires_grad);
+
+/**
+ * Function to print out the parameters of a Torch Module
+ *
+ * @param Torch Module to print the parameters of
+ */
+EXPORT_C void torch_jit_module_print_parameters(const torch_jit_script_module_t module);
+
+/**
+ * Function to determine whether a Torch Model is in training mode
+ * @param Torch Model to interrogate
+ * @return whether the Torch Model is in training mode
+ */
+EXPORT_C bool torch_jit_module_is_training(const torch_jit_script_module_t module);
 
 /**
  * Function to delete a Torch Module to clean up

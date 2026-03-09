@@ -95,7 +95,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
   switch (device_type) {
   case torch_kCPU:
     if (device_index != -1) {
-      ctorch_warn("device index unused for CPU-only runs");
+      ctorch_warn("device index unused for tensors on CPUs");
     }
     return torch::Device(torch::kCPU);
 #if (GPU_DEVICE == GPU_DEVICE_CUDA) || (GPU_DEVICE == GPU_DEVICE_HIP)
@@ -306,17 +306,15 @@ int torch_tensor_get_rank(const torch_tensor_t tensor) {
   return t->sizes().size();
 }
 
-#ifdef UNIX
-const long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
+const torch_size_t *torch_tensor_get_sizes(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   return t->sizes().data();
 }
-#else
-const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
+
+const torch_size_t *torch_tensor_get_stride(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
-  return t->sizes().data();
+  return t->strides().data();
 }
-#endif
 
 torch_data_t torch_tensor_get_dtype(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
@@ -752,6 +750,18 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
   } catch (const std::exception &e) {
     ctorch_error(e.what());
   }
+}
+
+void torch_jit_module_print_parameters(const torch_jit_script_module_t module) {
+  auto m = reinterpret_cast<torch::jit::script::Module *>(module);
+  for (const auto &[key, value] : m->named_parameters()) {
+    std::cout << key << ":\n" << value << std::endl;
+  }
+}
+
+bool torch_jit_module_is_training(const torch_jit_script_module_t module) {
+  auto m = reinterpret_cast<torch::jit::script::Module *>(module);
+  return m->is_training();
 }
 
 void torch_jit_module_delete(torch_jit_script_module_t module) {

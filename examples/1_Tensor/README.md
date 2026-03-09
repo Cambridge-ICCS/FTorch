@@ -1,4 +1,4 @@
-# Example 0 - Tensor manipulation
+# Example 1 - Tensor manipulation
 
 This example provides a simple demonstration of how to create, manipulate,
 interrogate, and destroy instances of the `torch_tensor` derived type. This is
@@ -59,7 +59,7 @@ You will also likely need to add the location of the dynamic library files
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib
 ```
-or `DYLD_LIBRARY_PATH` on mac:  
+or `DYLD_LIBRARY_PATH` on Mac:  
 ```
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:</path/to/library/installation>/lib
 ```

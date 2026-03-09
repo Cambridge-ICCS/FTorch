@@ -88,7 +88,7 @@ def run_model(model: torch.nn.Module, precision: type) -> None:
     print("done.")
 
     print("Running ResNet-18 model for input...", end="")
-    with torch.no_grad():
+    with torch.inference_mode():
         output = model(input_batch)
     print("done.")
 

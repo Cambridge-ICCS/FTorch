@@ -1,4 +1,4 @@
-# Example 2 - ResNet-18
+# Example 3 - ResNet-18
 
 This example provides a more realistic demonstration of how to use the library, using ResNet-18 to classify an image.
 
@@ -19,7 +19,7 @@ TorchScript ResNet-18 model in inference mode.
 
 To run this example requires:
 
-- CMake
+- CMake or Make
 - Fortran compiler
 - FTorch (installed as described in main package)
 - Python 3

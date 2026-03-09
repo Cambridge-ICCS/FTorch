@@ -20,7 +20,7 @@ class SimpleNet(nn.Module):
         self._fwd_seq = nn.Sequential(
             nn.Linear(5, 5, bias=False),
         )
-        with torch.no_grad():
+        with torch.inference_mode():
             self._fwd_seq[0].weight = nn.Parameter(2.0 * torch.eye(5))
 
     def forward(self, batch: torch.Tensor) -> torch.Tensor:
@@ -46,10 +46,11 @@ if __name__ == "__main__":
     model.eval()
 
     input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0])
-    with torch.no_grad():
+    with torch.inference_mode():
         output_tensor = model(input_tensor)
 
-    print(output_tensor)
+    print(f"Model output: {output_tensor}")
+
     if not torch.allclose(output_tensor, 2 * input_tensor):
         result_error = (
             f"result:\n{output_tensor}\ndoes not match expected value:\n"

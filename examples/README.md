@@ -14,23 +14,27 @@ This directory contains a number of examples of how to use the library:
     - More complex example demonstrating how to use the library with a multidimensional input.
     - Convert a pre-trained model to TorchScript and call from Fortran.
 
-4. MultiIO
+4. Batching
+    - Demonstrates how to use a PyTorch model trained on 1D vectors to perform inference
+      on batched and higher-dimensional data from Fortran.
+
+5. MultiIO
     - Considers a variant of the SimpleNet example which has multiple input
       tensors and multiple output tensors.
 
-5. Looping
+6. Looping
     - In most applications we do not just call a net once, but many times.
       To do this in a computationally efficient manner requires some thought.
       This example demonstrates how to structure code in these cases, separating reading
       in of a net from the call to the forward pass.
 
-6. MultiGPU
+7. MultiGPU
     - Revisits the SimpleNet example but considering multiple GPUs.
 
-7. MPI
+8. MPI
    - Demonstrates how to use FTorch in the context of an MPI program.
 
-8. Autograd
+9. Autograd
     - **This example is currently under development.** Eventually, it will
       demonstrate automatic differentiation in FTorch by leveraging PyTorch's
       Autograd module.

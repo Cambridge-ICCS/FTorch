@@ -28,6 +28,13 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     if device == "cpu":
         # Load saved TorchScript model
         model = torch.jit.load(saved_model)
+
+        # Print the parameters associated with the pre-trained model
+        print("Model parameters:")
+        for name, tensor in model.state_dict().items():
+            print(f"Parameter: {name}")
+            print(tensor)
+
         # Inference
         output = model.forward(input_tensor)
 
@@ -67,10 +74,10 @@ if __name__ == "__main__":
 
     batch_size_to_run = 1
 
-    with torch.no_grad():
+    with torch.inference_mode():
         result = deploy(saved_model_file, device_to_run, batch_size_to_run)
 
-    print(result)
+    print(f"Model output: {result}")
 
     if not torch.allclose(result, torch.Tensor([0.0, 2.0, 4.0, 6.0, 8.0])):
         result_error = (

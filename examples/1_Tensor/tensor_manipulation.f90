@@ -35,6 +35,11 @@ program tensor_manipulation
   ! to the list of imports and switching out the following subroutine call.
   call torch_tensor_ones(a, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
 
+  ! Note that the tensor had memory allocated on the Torch side hence it is represented
+  ! in row-major order.
+  write(*,*) "Shape of the ones tensor:", a % get_shape()
+  write(*,*) "Stride of the ones tensor:", a % get_stride()
+
   ! Print the contents of the tensor
   ! --------------------------------
   ! This will show the tensor data as well as its device type, data type, and shape.
@@ -48,9 +53,16 @@ program tensor_manipulation
   ! need to be specified.
   in_data(:,:) = reshape([1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp], [2,3])
   call torch_tensor_from_array(b, in_data, torch_kCPU)
-  ! Another way of viewing the contents of a tensor is to print the array used as its input.
+  ! The torch_tensor_print subroutine can also be called as a module procedure
   write(*,*) "Contents of second input tensor:"
-  write(*,*) in_data
+  call b%print()
+
+  ! For a tensor build on top of a Fortran array, the underlying data is in column-major order
+  ! Since FTorch performs no copies, the strides of the tensor will also correspond to column-major
+  ! order. This is different from the default behaviour of Torch which builds tensors with row-major
+  ! order by default.
+  write(*,*) "Shape of the tensor from Fortran array:", b % get_shape()   ! Expected: 2 3
+  write(*,*) "Stride of the tensor from Fortran array:", b % get_stride() ! Expected: 1 2
 
   ! Extract data from the tensor as a Fortran array
   ! -----------------------------------------------
@@ -63,6 +75,8 @@ program tensor_manipulation
   ! Note that if the output tensor hasn't been constructed as above then it will be automatically
   ! constructed using `torch_tensor_empty` but it won't be possible to extract its data into an
   ! array.
+  !
+  ! Another way of viewing the contents of a tensor is to print the array associated with it.
   c = a + b
   write(*,*) "Sum of input tensors:"
   write(*,*) out_data
