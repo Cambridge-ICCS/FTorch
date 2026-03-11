@@ -44,6 +44,7 @@ class SimpleNet(nn.Module):
 if __name__ == "__main__":
     import argparse
 
+    # Parse user input
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
@@ -51,26 +52,33 @@ if __name__ == "__main__":
         "--device_type",
         help="Device type to run the inference on",
         type=str,
-        choices=["cpu", "cuda", "xpu", "mps"],
+        choices=["cpu", "cuda", "hip", "xpu", "mps"],
         default="cuda",
     )
     parsed_args = parser.parse_args()
     device_type = parsed_args.device_type
 
-    model = SimpleNet().to(torch.device(device_type))
+    # Construct an instance of the SimpleNet model on the specified device
+    model = SimpleNet().to(device_type)
     model.eval()
 
-    input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0])
-    input_tensor_gpu = input_tensor.to(torch.device(device_type))
+    # Save the model in PyTorch format
+    torch.save(model.state_dict(), f"saved_simplenet_model_{device_type}.pt")
 
+    # Create an arbitrary input tensor and save it in PyTorch format
+    input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0]).to(device_type)
+    torch.save(input_tensor, f"saved_simplenet_input_tensor_{device_type}.pt")
+
+    # Propagate the input tensor through the model
     print(
         f"SimpleNet forward pass on {device_type.capitalize()} device"
         f" {input_tensor_gpu.get_device()}"
     )
     with torch.inference_mode():
-        output_tensor = model(input_tensor_gpu).to("cpu")
+        output_tensor = model(input_tensor).to("cpu")
+    print(f"Model output: {output_tensor}")
 
-    print(output_tensor)
+    # Perform a basic check of the model output
     if not torch.allclose(output_tensor, 2 * input_tensor):
         result_error = (
             f"result:\n{output_tensor}\ndoes not match expected value:\n"
