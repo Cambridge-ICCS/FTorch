@@ -31,9 +31,9 @@ or
 functionalities from within Python.
 
 If you are not familiar with these we provide a tool
-[`pt2ts.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py)
-as part of FTorch which contains an easily adaptable script to save your
-PyTorch model as TorchScript.
+[`pt2ts`](https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/pt2ts.py)
+as part of FTorch which allows to convert a model in PyTorch file format into
+one using the TorchScript format.
 
 
 #### 2. Using the model from Fortran

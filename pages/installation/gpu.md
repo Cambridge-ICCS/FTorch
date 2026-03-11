@@ -60,23 +60,29 @@ cmake .. -DGPU_DEVICE=NONE
 ```
 i.e., CPU-only.
 
-**2) Save TorchScript models on the target device**  
-When saving a TorchScript model, ensure that it is on the GPU.
-For example, when using
-[`pt2ts.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py),
+**2) Save PyTorch models on the target device**  
+When saving a model in PyTorch format, ensure that it has the desired GPU device
+type. For example, for the model definition in
+[`examples/2_SimpleNet.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/examples/2_SimpleNet/simplenet.py),
 this can be done by passing the `--device_type <cpu/cuda/hip/xpu/mps>` argument. This
 sets the `device_type` variable, which has the effect of transferring the model
 (and any input arrays used in tracing/testing) to the specified GPU device in the
 following lines:
 ```python
-if device_type != "cpu":
-    trained_model = trained_model.to(device_type)
-    trained_model.eval()
-    trained_model_dummy_input_1 = trained_model_dummy_input_1.to(device_type)
-    trained_model_dummy_input_2 = trained_model_dummy_input_2.to(device_type)
+    model = SimpleNet().to(device_type)
+```
+and
+```python
+    input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0]).to(device_type)
 ```
 
-**3) Specify the target device from FTorch**  
+**3) Convert PyTorch model to TorchScript model**  
+When converting a PyTorch model to a TorchScript model using the `pt2ts` script,
+the device type will be inherited. As such, if the PyTorch model is saved using
+a particular device type then this will be preserved in the resulting
+TorchScript model.
+
+**4) Specify the target device from FTorch**  
 When calling [[ftorch_tensor(module):torch_tensor_from_array(interface)]] and
 [[ftorch_model(module):torch_model_load(subroutine)]]  in Fortran,
 the device type for the input tensor(s) and model should be set to the appropriate
