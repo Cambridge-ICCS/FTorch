@@ -4,11 +4,13 @@ import os
 import warnings
 
 import pytest
+import torch
 
 from ftorch_utils.validation import (
     validate_input_model_file,
     validate_input_tensor_file,
     validate_output_model_file,
+    validate_output_tensors,
 )
 
 
@@ -56,8 +58,14 @@ def test_output_model_matching_file():
 
 
 def test_output_model_file_exists_warning():
+    if os.path.exists("tmp.pt"):
+        os.remove("tmp.pt")
+
+    # Create a fake model file
     with open("tmp.pt", "w+") as f:
         f.write("TEST FILE")
+
+    # Check that the expected warning is raised
     expected = (
         "A file already exists with TorchScript output model file name 'tmp.pt'. It"
         " will be overwritten."
@@ -68,4 +76,47 @@ def test_output_model_file_exists_warning():
         assert len(warning_list) == 1
         assert issubclass(warning_list[0].category, UserWarning)
         assert str(warning_list[0].message) == expected
+
+    # Remove the fake model file
     os.remove("tmp.pt")
+    assert not os.path.exists("tmp.pt")
+
+
+def test_validate_output_tensors_matching():
+    try:
+        validate_output_tensors(
+            torch.tensor([1.0, 2.0, 3.0]), torch.tensor([1.0, 2.0, 3.0])
+        )
+    except RuntimeError:
+        pytest.fail("validate_output_tensors raised RuntimeError unexpectedly!")
+
+
+def test_validate_output_tensors_mismatching():
+    expected = (
+        "Saved Torchscript model is not performing as expected.\n"
+        "Consider using scripting if you used tracing, or investigate further."
+    )
+    with pytest.raises(RuntimeError, match=expected):
+        validate_output_tensors(
+            torch.tensor([1.0, 2.0, 3.0]), torch.tensor([1.0, 2.1, 3.0])
+        )
+
+
+def test_validate_output_tensors_tuple_matching():
+    try:
+        validate_output_tensors(
+            (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
+            (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
+        )
+    except RuntimeError:
+        pytest.fail("validate_output_tensors raised RuntimeError unexpectedly!")
+
+
+def test_validate_output_tensors_tuple_mismatching():
+    with pytest.raises(
+        RuntimeError, match="Saved Torchscript model is not performing as expected."
+    ):
+        validate_output_tensors(
+            (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
+            (torch.tensor([1.0, 2.0]), torch.tensor([3.1, 4.0])),
+        )
