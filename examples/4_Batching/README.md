@@ -137,6 +137,22 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+A Python file `batchingnet.py` is provided that defines the simple PyTorch
+'net'. Running this file as a script will write the model out in PyTorch's
+`.pt` file format.
+```
+python3 batchingnet.py
+```
+You should find that a PyTorch model file `saved_batchingnet_model_cpu.pt` is
+created.
+
+To convert the BatchingNet model to TorchScript for use in Fortran, run:
+```
+pt2ts.py batchingnet.py BatchingNet saved_batchingnet_model_cpu.pt
+```
+Without any further arguments, this will overwrite the
+`saved_batchingnet_model_cpu.pt` model file so you will receive a warning.
+
 You can see how you would perform batching in PyTorch by running the Python batching
 demo:
 ```
@@ -144,12 +160,6 @@ python3 batching_demo_python.py
 ```
 This will run the BatchingNet model with various inputs and print the expected outputs
 as described above.
-
-To save the BatchingNet model to TorchScript for use in Fortran, run:
-```
-python3 pt2ts.py
-```
-This will generate `saved_batchingnet_model_cpu.pt` in the current directory.
 
 At this point you no longer require Python, so can deactivate the virtual environment:
 ```
