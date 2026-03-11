@@ -42,16 +42,17 @@ python3 simplenet.py
 As before, this defines the network and runs it with an input tensor
 [0.0, 1.0, 2.0, 3.0, 4.0] to produce the result:
 ```
-tensor([[0, 2, 4, 6, 8]])
+Model output: tensor([[0, 2, 4, 6, 8]])
 ```
+You should find that a PyTorch model file `saved_simplenet_model_cpu.pt` is
+created.
 
-To save the `SimpleNet`` model to TorchScript run the modified version of the
-`pt2ts.py` tool:
+To convert the SimpleNet model to TorchScript run the `pt2ts` script:
 ```
-python3 pt2ts.py
+pt2ts simplenet.py SimpleNet saved_simplenet_model_cpu.pt
 ```
-which will generate `saved_simplenet_model_cpu.pt` - the TorchScript instance
-of the network.
+Without any further arguments, this will overwrite the
+`saved_simplenet_model_cpu.pt` model file so you will receive a warning.
 
 You can check that everything is working by running the `mpi_infer_python.py`
 script. It's set up with MPI such that a different GPU device is associated

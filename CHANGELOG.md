@@ -11,11 +11,18 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Introduced a central, installable `pt2ts` script
+  [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
+
 ### Changed
 
-### Removed
+- Renamed `utils` as `ftorch_utils` and made it a proper Python module
+  [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 
 ### Removed
+
+- Removed `pt2ts.py` scripts from `utils` and all examples
+  [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 
 ### Fixed
 

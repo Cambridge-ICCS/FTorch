@@ -32,7 +32,7 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         # Inference
         return model.forward(input_tensor)
 
-    if device.startswith("cuda") or device.startswith("hip"):
+    if device.startswith(("cuda", "hip")):
         pass
     elif device.startswith("xpu"):
         # XPU devices need to be initialised before use

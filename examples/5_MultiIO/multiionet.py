@@ -46,19 +46,42 @@ class MultiIONet(nn.Module):
 
 
 if __name__ == "__main__":
-    model = MultiIONet()
+    import argparse
+
+    # Parse user input
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--device_type",
+        help="Device type to run the inference on",
+        type=str,
+        choices=["cpu", "cuda", "hip", "xpu", "mps"],
+        default="cpu",
+    )
+    parsed_args = parser.parse_args()
+    device_type = parsed_args.device_type
+
+    # Construct an instance of the SimpleNet model on the specified device
+    model = MultiIONet().to(device_type)
     model.eval()
 
-    input_tensors = (
-        torch.Tensor([0.0, 1.0, 2.0, 3.0]),
-        torch.Tensor([-0.0, -1.0, -2.0, -3.0]),
-    )
+    # Save the model in PyTorch format
+    torch.save(model.state_dict(), f"saved_multiio_model_{device_type}.pt")
 
+    # Create an arbitrary input tensor and save it in PyTorch format
+    input_tensors = (
+        torch.Tensor([0.0, 1.0, 2.0, 3.0]).to(device_type),
+        torch.Tensor([-0.0, -1.0, -2.0, -3.0]).to(device_type),
+    )
+    torch.save(input_tensors, f"saved_multiio_input_tensor_{device_type}.pt")
+
+    # Propagate the input tensor through the model
     with torch.inference_mode():
         output_tensors = model(*input_tensors)
+    print(f"Model output: {output_tensors}")
 
-    print(output_tensors)
-
+    # Perform a basic check of the model output
     for output_i, input_i, scale_factor in zip(output_tensors, input_tensors, (2, 3)):
         if not torch.allclose(output_i, scale_factor * input_i):
             result_error = (

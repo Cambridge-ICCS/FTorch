@@ -52,14 +52,15 @@ This defines the network and runs it with input tensors [0.0, 1.0, 2.0, 3.0] and
 ```
 (tensor([0., 2., 4., 6.]), tensor([ 0., -3., -6., -9.]))
 ```
+You should find that a PyTorch model file `saved_multiio_model_cpu.pt` is
+created.
 
-To save the MultiIONet model to TorchScript, run the modified version of the
-`pt2ts.py` tool:
+To convert the MultiIONet model to TorchScript, run the `pt2ts` script:
 ```
-python3 pt2ts.py
+pt2ts multiionet.py MultiIONet saved_multiio_model_cpu.pt
 ```
-which will generate `saved_multiio_model_cpu.pt` - the TorchScript instance of
-the network.
+Without any further arguments, this will overwrite the
+`saved_multiio_model_cpu.pt` model file so you will receive a warning.
 
 You can check everything is working by running the `multiionet_infer_python.py`
 script. This reads the model in from the TorchScript file and runs it with the

@@ -9,10 +9,12 @@ covered in later examples.
 
 ## Description
 
-A Python file `simplenet.py` is provided that defines a very simple PyTorch 'net' that takes an input
-vector of length 5 and applies a single `Linear` layer to multiply it by 2.
+A Python file `simplenet.py` is provided that defines a very simple PyTorch
+'net' that takes an input vector of length 5 and applies a single `Linear` layer
+to multiply it by 2. Running this file as a script will write the model out in
+PyTorch's `.pt` file format.
 
-A modified version of the `pt2ts.py` tool saves this simple net to TorchScript.
+The `pt2ts` tool is used to convert the model file to the TorchScript format.
 
 A series of files `simplenet_infer_<LANG>` then bind from other languages to run the
 TorchScript model in inference mode.
@@ -45,13 +47,15 @@ This defines the net and runs it with an input tensor [0.0, 1.0, 2.0, 3.0, 4.0] 
 ```
 Model output: tensor([[0., 2., 4., 6., 8.]])
 ```
+You should find that a PyTorch model file `saved_simplenet_model_cpu.pt` is
+created.
 
-To save the SimpleNet model to TorchScript run the modified version of the
-`pt2ts.py` tool:
+To convert the SimpleNet model to TorchScript run the `pt2ts` script:
 ```
-python3 pt2ts.py
+pt2ts simplenet.py SimpleNet saved_simplenet_model_cpu.pt
 ```
-which will generate `saved_simplenet_model_cpu.pt` - the TorchScript instance of the net.
+Without any further arguments, this will overwrite the
+`saved_simplenet_model_cpu.pt` model file so you will receive a warning.
 
 You can check that everything is working by running the `simplenet_infer_python.py` script:
 ```
