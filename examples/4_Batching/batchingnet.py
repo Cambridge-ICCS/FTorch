@@ -5,8 +5,6 @@ This net multiplies each input feature by a different value, making the effect o
 batching and the network operation obvious in the outputs.
 """
 
-import argparse
-
 import torch
 from torch import nn
 
@@ -53,6 +51,8 @@ class BatchingNet(nn.Module):
 
 
 if __name__ == "__main__":
+    import argparse
+
     # Parse user input
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,

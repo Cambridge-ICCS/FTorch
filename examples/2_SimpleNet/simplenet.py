@@ -1,7 +1,5 @@
 """Module defining a simple PyTorch 'Net' for coupling to Fortran."""
 
-import argparse
-
 import torch
 from torch import nn
 
@@ -44,6 +42,8 @@ class SimpleNet(nn.Module):
 
 
 if __name__ == "__main__":
+    import argparse
+
     # Parse user input
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
