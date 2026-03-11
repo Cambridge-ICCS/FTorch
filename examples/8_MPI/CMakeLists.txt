@@ -39,20 +39,28 @@ target_link_libraries(mpi_infer_fortran PRIVATE MPI::MPI_Fortran)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
-  # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME example_mpi_simplenet COMMAND ${Python_EXECUTABLE}
-                                           ${PROJECT_SOURCE_DIR}/simplenet.py)
+  # 1. Write the PyTorch model out and check it runs and its outputs meet
+  #    expectations
+  add_test(
+    NAME example_mpi_simplenet
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
-  # 2. Check the model is saved to file in the expected location with the
-  #   pt2ts.py script
+  # 2. Run the pt2ts script to convert the model file to TorchScript format
+  #    and run basic checks
   add_test(
     NAME example_mpi_pt2ts
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
-            ${PROJECT_BINARY_DIR}
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
+                  SimpleNet
+                  ${PROJECT_SOURCE_DIR}/saved_simplenet_model_cpu.pt
+                  --input_tensor_file
+                  ${PROJECT_SOURCE_DIR}/saved_simplenet_input_tensor_cpu.pt
+                  --output_model_file
+                  ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
+                  --test)
 
   # 3. Check the model can be loaded from file and run with MPI in Python and
-  #   that its outputs meet expectations
+  #    that its outputs meet expectations
   add_test(
     NAME example_mpi_mpi_infer_python
     COMMAND
@@ -64,7 +72,7 @@ if(CMAKE_BUILD_TESTS)
     "MPI Python example ran successfully")
 
   # 4. Check the model can be loaded from file and run with MPI in Fortran and
-  #   that its outputs meet expectations
+  #    that its outputs meet expectations
   add_test(
     NAME example_mpi_mpi_infer_fortran
     COMMAND
