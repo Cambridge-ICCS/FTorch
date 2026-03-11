@@ -4,10 +4,13 @@ import os
 import sys
 import warnings
 
+import torch
+
 __all__ = [
     "validate_input_model_file",
     "validate_input_tensor_file",
     "validate_output_model_file",
+    "validate_output_tensors",
 ]
 
 
@@ -86,3 +89,29 @@ def validate_output_model_file(output_model_file, input_model_file):
             f" '{output_model_file}'. It will be overwritten."
         )
         warnings.warn(warning, stacklevel=2)
+
+
+def validate_output_tensors(expected_tensor, result_tensor):
+    """Check the output tensors from the TorchScript model match the expected tensors.
+
+    Parameters
+    ----------
+    expected_tensor : torch.Tensor or tuple of torch.Tensor
+        The expected output tensor(s) from the TorchScript model, as obtained by running
+        the original PyTorch model on the input tensors.
+
+    result_tensor : torch.Tensor or tuple of torch.Tensor
+        The output tensor(s) from the TorchScript model, as obtained by running the
+        TorchScript model on the input tensors.
+    """
+    if not isinstance(result_tensor, tuple):
+        result_tensor = (result_tensor,)
+    if not isinstance(expected_tensor, tuple):
+        expected_tensor = (expected_tensor,)
+    for result, expected in zip(result_tensor, expected_tensor):
+        if not torch.all(result.eq(expected)):
+            model_error = (
+                "Saved Torchscript model is not performing as expected.\n"
+                "Consider using scripting if you used tracing, or investigate further."
+            )
+            raise RuntimeError(model_error)

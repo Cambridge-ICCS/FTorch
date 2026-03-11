@@ -17,6 +17,7 @@ from ftorch_utils.validation import (
     validate_input_model_file,
     validate_input_tensor_file,
     validate_output_model_file,
+    validate_output_tensors,
 )
 
 
@@ -145,17 +146,7 @@ def main_cli():
         # Load the TorchScript model and propagate the same input tensor
         ts_model = load_torchscript(output_model_file)
         ts_model_outputs = ts_model(*input_tensors)
-        if not isinstance(ts_model_outputs, tuple):
-            ts_model_outputs = (ts_model_outputs,)
-        if not isinstance(pt_model_outputs, tuple):
-            pt_model_outputs = (pt_model_outputs,)
-        for ts_output, pt_output in zip(ts_model_outputs, pt_model_outputs):
-            if not torch.all(ts_output.eq(pt_output)):
-                model_error = (
-                    "Saved Torchscript model is not performing as expected.\n"
-                    "Consider using scripting if you used tracing, or investigate further."
-                )
-                raise RuntimeError(model_error)
+        validate_output_tensors(pt_model_outputs, ts_model_outputs)
         print("Saved TorchScript model working as expected in a basic test.")
         print("Users should perform further validation as appropriate.")
 
