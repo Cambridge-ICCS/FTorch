@@ -107,6 +107,8 @@ def main_cli():
     input_tensor_file = parsed_args.input_tensor_file
 
     validate_input_model_file(input_model_file)
+    if output_model_file is None:
+        output_model_file = input_model_file
     validate_output_model_file(output_model_file, input_model_file)
 
     # Load the input PyTorch model
