@@ -5,8 +5,8 @@ import sys
 
 __all__ = [
     "validate_input_model_file",
-    "validate_output_model_file",
     "validate_input_tensor_file",
+    "validate_output_model_file",
 ]
 
 
@@ -28,6 +28,28 @@ def validate_input_model_file(input_model_file):
     if not os.path.exists(input_model_file):
         input_file_error = (
             f"PyTorch input model file '{input_model_file}' cannot be found."
+        )
+        raise FileNotFoundError(input_file_error)
+
+
+def validate_input_tensor_file(input_tensor_file):
+    """Check the input tensor file exists and has the correct extension.
+
+    Parameters
+    ----------
+    input_tensor_file : str
+        Name of the input model file
+    """
+    _, input_tensor_ext = os.path.splitext(input_tensor_file)
+    if input_tensor_ext != ".pt":
+        value_error = (
+            f"PyTorch input tensor file '{input_tensor_file}' has extension"
+            f" {input_tensor_ext} but .pt was expected."
+        )
+        raise ValueError(value_error)
+    if not os.path.exists(input_tensor_file):
+        input_file_error = (
+            f"PyTorch input tensor file '{input_tensor_file}' cannot be found."
         )
         raise FileNotFoundError(input_file_error)
 
@@ -65,25 +87,3 @@ def validate_output_model_file(output_model_file, input_model_file):
             f" '{output_model_file}'. It will be overwritten."
         )
         warn(warning, stacklevel=2)
-
-
-def validate_input_tensor_file(input_tensor_file):
-    """Check the input tensor file exists and has the correct extension.
-
-    Parameters
-    ----------
-    input_tensor_file : str
-        Name of the input model file
-    """
-    _, input_tensor_ext = os.path.splitext(input_tensor_file)
-    if input_tensor_ext != ".pt":
-        value_error = (
-            f"PyTorch input tensor file '{input_tensor_file}' has extension"
-            f" {input_tensor_ext} but .pt was expected."
-        )
-        raise ValueError(value_error)
-    if not os.path.exists(input_tensor_file):
-        input_file_error = (
-            f"PyTorch input tensor file '{input_tensor_file}' cannot be found."
-        )
-        raise FileNotFoundError(input_file_error)
