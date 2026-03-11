@@ -21,12 +21,14 @@ def validate_input_model_file(input_model_file):
     input_model_root, input_model_ext = os.path.splitext(input_model_file)
     if input_model_ext != ".pt":
         value_error = (
-            f"PyTorch input file '{input_model_file}' has extension {input_model_ext}"
-            " but .pt was expected."
+            f"PyTorch input model file '{input_model_file}' has extension"
+            f" {input_model_ext} but .pt was expected."
         )
         raise ValueError(value_error)
     if not os.path.exists(input_model_file):
-        input_file_error = f"PyTorch model file '{input_model_file}' cannot be found."
+        input_file_error = (
+            f"PyTorch input model file '{input_model_file}' cannot be found."
+        )
         raise FileNotFoundError(input_file_error)
 
 
@@ -81,5 +83,7 @@ def validate_input_tensor_file(input_tensor_file):
         )
         raise ValueError(value_error)
     if not os.path.exists(input_tensor_file):
-        input_file_error = f"PyTorch tensor file '{input_tensor_file}' cannot be found."
+        input_file_error = (
+            f"PyTorch input tensor file '{input_tensor_file}' cannot be found."
+        )
         raise FileNotFoundError(input_file_error)
