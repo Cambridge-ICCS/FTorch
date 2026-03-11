@@ -2,6 +2,7 @@
 
 import os
 import sys
+import warnings
 
 __all__ = [
     "validate_input_model_file",
@@ -66,24 +67,23 @@ def validate_output_model_file(output_model_file, input_model_file):
     input_model_file : str
         Name of the input model file
     """
-    if output_model_file is None:
-        output_model_file = input_model_file
     _, output_model_ext = os.path.splitext(output_model_file)
     if output_model_ext != ".pt":
         value_error = (
-            f"TorchScript output file name '{output_model_file}' has extension"
+            f"TorchScript output model file '{output_model_file}' has extension"
             f" {output_model_ext} but .pt was expected."
         )
         raise ValueError(value_error)
     if input_model_file == output_model_file:
         value_err = (
-            f"Output TorchScript file name '{output_model_file}' coincides with input"
-            f" PyTorch file name '{input_model_file}'. It would be overwritten."
+            f"TorchScript output model file name '{output_model_file}' coincides with"
+            f" PyTorch input model file name '{input_model_file}'. It would be"
+            " overwritten."
         )
         raise ValueError(value_err)
     if os.path.exists(output_model_file):
         warning = (
-            "A file already exists with output TorchScript file name"
+            "A file already exists with TorchScript output model file name"
             f" '{output_model_file}'. It will be overwritten."
         )
-        warn(warning, stacklevel=2)
+        warnings.warn(warning, stacklevel=2)
