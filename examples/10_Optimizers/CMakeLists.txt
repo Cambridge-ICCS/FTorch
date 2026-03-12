@@ -14,8 +14,20 @@ if(NOT CMAKE_BUILD_TYPE)
       CACHE STRING "" FORCE)
 endif()
 
-find_package(FTorch)
+if(CMAKE_BUILD_TESTS)
+  find_package(FTorch QUIET)
+else()
+  find_package(FTorch REQUIRED)
+endif()
 message(STATUS "Building with Fortran PyTorch coupling")
+
+# Install Python dependencies
+find_package(Python COMPONENTS Interpreter REQUIRED)
+if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
+  message(FATAL_ERROR "Please activate your virtualenv or conda environment")
+endif()
+execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
+                        ${PROJECT_SOURCE_DIR}/requirements.txt)
 
 # Fortran example
 add_executable(optimizers optimizers.f90)
@@ -27,23 +39,23 @@ if(CMAKE_BUILD_TESTS)
 
   # 1. Check the Python Optimizers script runs successfully
   add_test(
-    NAME pyoptim
+    NAME example_pyoptim
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/optimizers.py
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(pyoptim PROPERTIES PASS_REGULAR_EXPRESSION
+  set_tests_properties(example_pyoptim PROPERTIES PASS_REGULAR_EXPRESSION
                        "Python optimizers example ran successfully")
 
   # 2. Check the Fortran Optimizers script runs successfully
   add_test(
-    NAME foptim
+    NAME example_foptim
     COMMAND optimizers
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(foptim PROPERTIES PASS_REGULAR_EXPRESSION
+  set_tests_properties(example_foptim PROPERTIES PASS_REGULAR_EXPRESSION
                        "Fortran optimizers example ran successfully")
 
   # 3. Check the plotting script runs successfully
   add_test(
-    NAME plot
+    NAME example_plot
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/plot_losses.py &&
             ${CMAKE_COMMAND} -E test_file ${PROJECT_BINARY_DIR}/losses.png
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
