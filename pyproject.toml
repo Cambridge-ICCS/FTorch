@@ -43,6 +43,7 @@ dev = [
   "ford>=7.0.13",
   "fortitude-lint==0.7.0",
   "fypp==3.2",
+  "pytest",
   "ruff==0.7.3",
 ]
 
