@@ -117,7 +117,7 @@ def validate_output_tensors(expected_tensor, result_tensor):
         result_tensor = (result_tensor,)
     if not isinstance(expected_tensor, tuple):
         expected_tensor = (expected_tensor,)
-    for result, expected in zip(result_tensor, expected_tensor):
+    for result, expected in zip(result_tensor, expected_tensor, strict=True):
         if not torch.all(result.eq(expected)):
             model_error = (
                 "Saved Torchscript model is not performing as expected.\n"

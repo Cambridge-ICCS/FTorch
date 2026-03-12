@@ -119,6 +119,15 @@ def test_validate_output_tensors_mismatching():
         )
 
 
+def test_validate_output_tensors_mismatching_number():
+    """Check that mismatching numbers of tensors are rejected."""
+    expected = "argument 2 is shorter than argument 1"
+    with pytest.raises(ValueError, match=expected):
+        validate_output_tensors(
+            torch.tensor([1.0]), (torch.tensor([1.0]), torch.tensor([1.0]))
+        )
+
+
 def test_validate_output_tensors_tuple_matching():
     """Check that matching tuples of tensors are accepted."""
     try:
@@ -132,9 +141,11 @@ def test_validate_output_tensors_tuple_matching():
 
 def test_validate_output_tensors_tuple_mismatching():
     """Check that mismatching tuples of tensors are rejected."""
-    with pytest.raises(
-        RuntimeError, match="Saved Torchscript model is not performing as expected."
-    ):
+    expected = (
+        "Saved Torchscript model is not performing as expected.\n"
+        "Consider using scripting if you used tracing, or investigate further."
+    )
+    with pytest.raises(RuntimeError, match=expected):
         validate_output_tensors(
             (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
             (torch.tensor([1.0, 2.0]), torch.tensor([3.1, 4.0])),
