@@ -538,6 +538,142 @@ void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradi
 }
 
 // =============================================================================
+// --- Torch optimisers API
+// =============================================================================
+
+// Check if an optimizer is valid
+void validate_optimizer(const torch_optim_t optim, const std::string &name) {
+  if (!optim) {
+    throw std::invalid_argument(name + " is null.");
+  }
+}
+
+// Function to create an SGD optimizer and return a pointer to it
+// TODO: Wrap additional Options beyond learning rate and momentum
+torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
+                              const double learning_rate, const double momentum = 0.0,
+                              const double weight_decay = 0.0) {
+  try {
+    // Cast the parameters pointer into Tensor objects
+    auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
+
+    // Generate a vector of Tensors populated from parameters
+    std::vector<torch::Tensor> parameters_vec;
+    for (int i = 0; i < npar; ++i) {
+      validate_tensor(params[i],
+                      "Parameter at index " + std::to_string(i) + "in torch_optim_SGD");
+      parameters_vec.push_back(*(params[i]));
+    }
+
+    // Set up options
+    auto options = torch::optim::SGDOptions(learning_rate)
+                       .momentum(momentum)
+                       .weight_decay(weight_decay);
+
+    // Create the optimizer and cast to torch_optim_t to return
+    auto optimizer_SGD = new torch::optim::SGD(parameters_vec, options);
+    return static_cast<torch_optim_t>(optimizer_SGD);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_SGD");
+  }
+  return nullptr; // Return null in case of error
+}
+
+// Function to create an Adam optimizer and return a pointer to it
+// TODO: Wrap additional Options beyond learning rate
+torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
+                               const double learning_rate, const double beta_1 = 0.9,
+                               const double beta_2 = 0.999,
+                               const double weight_decay = 0.0) {
+  try {
+    // Cast the parameters pointer into Tensor objects
+    auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
+
+    // Generate a vector of Tensors populated from parameters
+    std::vector<torch::Tensor> parameters_vec;
+    for (int i = 0; i < npar; ++i) {
+      validate_tensor(params[i], "Parameter at index " + std::to_string(i) +
+                                     "in torch_optim_Adam");
+      parameters_vec.push_back(*(params[i]));
+    }
+
+    // Set up options
+    auto betas_tup = std::make_tuple(beta_1, beta_2);
+    auto options = torch::optim::AdamOptions(learning_rate)
+                       .betas(betas_tup)
+                       .weight_decay(weight_decay);
+
+    // Create the optimizer and cast to torch_optim_t to return
+    auto optimizer_Adam = new torch::optim::Adam(parameters_vec, options);
+    return static_cast<torch_optim_t>(optimizer_Adam);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_Adam");
+  }
+  return nullptr; // Return null in case of error
+}
+
+// Function to create an AdamW optimizer and return a pointer to it
+// TODO: Wrap additional Options beyond learning rate
+torch_optim_t torch_optim_AdamW(const torch_tensor_t *parameters, const int npar,
+                                const double learning_rate, const double beta_1 = 0.9,
+                                const double beta_2 = 0.999,
+                                const double weight_decay = 0.01) {
+  try {
+    // Cast the parameters pointer into Tensor objects
+    auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
+
+    // Generate a vector of Tensors populated from parameters
+    std::vector<torch::Tensor> parameters_vec;
+    for (int i = 0; i < npar; ++i) {
+      validate_tensor(params[i], "Parameter at index " + std::to_string(i) +
+                                     "in torch_optim_AdamW");
+      parameters_vec.push_back(*(params[i]));
+    }
+
+    // Set up options
+    auto betas_tup = std::make_tuple(beta_1, beta_2);
+    auto options = torch::optim::AdamWOptions(learning_rate)
+                       .betas(betas_tup)
+                       .weight_decay(weight_decay);
+
+    // Create the optimizer and cast to torch_optim_t to return
+    auto optimizer_AdamW = new torch::optim::AdamW(parameters_vec, options);
+    return static_cast<torch_optim_t>(optimizer_AdamW);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_AdamW");
+  }
+  return nullptr; // Return null in case of error
+}
+
+// Function to zero gradients for an optimizer
+void torch_optim_zero_grad(torch_optim_t optim) {
+  try {
+    auto optimizer = static_cast<torch::optim::Optimizer *>(optim);
+    validate_optimizer(optimizer, "Optimizer in torch_optim_zero_grad");
+    optimizer->zero_grad();
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_zero_grad");
+  }
+}
+
+// Function to step an optimizer
+void torch_optim_step(torch_optim_t optim) {
+  try {
+    auto optimizer = static_cast<torch::optim::Optimizer *>(optim);
+    validate_optimizer(optimizer, "Optimizer in torch_optim_step");
+    optimizer->step();
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_step");
+  }
+}
+
+// Function to delete an optimizer
+void torch_optim_delete(torch_optim_t optim) {
+  auto opt = reinterpret_cast<torch::optim::Optimizer *>(optim);
+  delete opt;
+}
+
+// =============================================================================
 // --- Torch model API
 // =============================================================================
 
