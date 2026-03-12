@@ -17,7 +17,7 @@ program foptimizer
   use ftorch_optim, only: torch_optim, torch_optim_SGD
 
   ! Import our tools module for testing utils
-  use ftorch_test_utils, only : assert_allclose
+  use ftorch_test_utils, only : allclose
 
   implicit none
 
@@ -29,8 +29,6 @@ program foptimizer
   integer, parameter :: n=4
   real(wp), dimension(n), target :: input_data, output_data, target_data, scaling_data
   real(wp), dimension(1), target :: loss_data
-  integer, parameter :: scalar_layout(1) = [1]
-  integer, parameter :: tensor_layout(ndims) = [1]
 
   ! Set up Torch data structures
   integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
@@ -45,13 +43,12 @@ program foptimizer
   ! Initialise Torch Tensors from input/target arrays as in Python example
   input_data = [1.0_wp, 1.0_wp, 1.0_wp, 1.0_wp]
   target_data = [1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
-  call torch_tensor_from_array(input_vec, input_data, tensor_layout, torch_kCPU)
-  call torch_tensor_from_array(target_vec, target_data, tensor_layout, torch_kCPU)
+  call torch_tensor_from_array(input_vec, input_data, torch_kCPU)
+  call torch_tensor_from_array(target_vec, target_data, torch_kCPU)
 
   ! Initialise Scaling tensor as ones as in Python example and a tensor for its gradient
   scaling_data(:) = 1.0_wp
-  call torch_tensor_from_array(scaling_tensor, scaling_data, tensor_layout, torch_kCPU, &
-                               requires_grad=.true.)
+  call torch_tensor_from_array(scaling_tensor, scaling_data, torch_kCPU, requires_grad=.true.)
   call torch_tensor_empty(scaling_grad, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
 
   ! Initialise an optimizer and apply it to scaling_tensor
@@ -70,14 +67,14 @@ program foptimizer
     ! Create a tensor to extract the output of the operation we wish to optimize
     ! NOTE: We need to reconstruct the output tensor at each iteration to capture a new graph
     !       associated with it, as it will be detached after a backward call.
-    call torch_tensor_from_array(output_vec, output_data, tensor_layout, torch_kCPU)
+    call torch_tensor_from_array(output_vec, output_data, torch_kCPU)
     output_vec = input_vec * scaling_tensor
 
     ! Evaluate the loss function as computed mean square error (MSE) between target and input, then
     ! log its value
     ! NOTE: We need to reconstruct the loss tensor at each iteration to capture a new graph
-    !       associated with it, as it will be detached after a backward call.
-    call torch_tensor_from_array(loss, loss_data, scalar_layout, torch_kCPU)
+    !       associated with it as it will be detached after the backward call.
+    call torch_tensor_from_array(loss, loss_data, torch_kCPU)
     call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
     write(unit=10, fmt="(e9.4)") loss_data(1)
 

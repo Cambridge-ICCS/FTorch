@@ -1,4 +1,4 @@
-# Example n - Optimizers
+# Example 10 - Optimizers
 
 **This example is currently under development.** Eventually, it will demonstrate
 the use of optimizers in FTorch by leveraging PyTorch's optim module.
