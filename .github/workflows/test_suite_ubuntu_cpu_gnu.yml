@@ -127,7 +127,7 @@ jobs:
       - name: Install ftorch_utils
         run: |
           . ftorch/bin/activate
-          python -m pip install .
+          python -m pip install .[dev]
 
       - name: Install OpenMPI
         run: |
@@ -214,11 +214,16 @@ jobs:
               exit 1
           fi
 
-      - name: Run unit tests
+      - name: Run Fortran unit tests
         run: |
           . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex unit
+
+      - name: Run Python unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/python
 
       - name: Run integration tests
         run: |
