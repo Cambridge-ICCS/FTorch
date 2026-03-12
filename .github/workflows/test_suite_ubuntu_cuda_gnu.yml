@@ -76,6 +76,11 @@ jobs:
           # Check this is <= what GPU-runner has installed (backwards compatible)
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cu129
 
+      - name: Install ftorch_utils
+        run: |
+          . ftorch/bin/activate
+          python -m pip install .[dev]
+
       - name: Install cmake and NVIDIA dev toolkit
         run: |
           sudo apt update
@@ -110,7 +115,7 @@ jobs:
           mkdir -p ${INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
-          mkdir ${BUILD_DIR}
+          mkdir -p ${BUILD_DIR}
           cd ${BUILD_DIR}
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \

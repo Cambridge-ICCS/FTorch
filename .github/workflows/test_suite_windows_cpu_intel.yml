@@ -67,6 +67,12 @@ jobs:
           call ftorch\Scripts\activate
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
+      - name: Install ftorch_utils
+        shell: cmd
+        run: |
+          . ftorch/bin/activate
+          python -m pip install .[dev]
+
       - name: Build FTorch
         shell: cmd
         run: |
@@ -90,6 +96,12 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=%FTORCH_INSTALL_DIR%
           cmake --build build
           cmake --install build
+
+      - name: Run Python unit tests
+        shell: cmd
+        run: |
+          call ftorch\Scripts\activate
+          pytest --verbose test/python
 
       - name: Integration tests
         shell: cmd
