@@ -5,9 +5,9 @@ if(CMAKE_BUILD_TESTS)
   add_subdirectory(04_Batching)
   add_subdirectory(05_MultiIO)
   add_subdirectory(06_Looping)
-  # NOTE: Example 6_Looping is built here but not run as part of the integration
-  #       test suite. This is because it demonstrates 'good' versus 'bad'
-  #       practice, as opposed to functionality.
+  # NOTE: Example 06_Looping is built here but not run as part of the
+  #       integration test suite. This is because it demonstrates
+  #       'good' versus 'bad' practice, as opposed to functionality.
   if(NOT "${GPU_DEVICE}" STREQUAL "NONE" AND MULTI_GPU)
     add_subdirectory(07_MultiGPU)
   else()

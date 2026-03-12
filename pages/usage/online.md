@@ -62,7 +62,7 @@ and uses FTorch syntax to set up appropriate `torch_tensor` and `torch_model`
 objects and call the [[ftorch_model(module):torch_model_forward(subroutine)]]
 subroutine to run the inference. For
 examples of how to do this, see the
-[optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/n_Optimizers).
+[optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers).
 
 ### Defining as much as possible in the model
 
@@ -215,7 +215,7 @@ follows:
 * `torch_optim%step` ([[ftorch_optim(module):torch_optim_step(subroutine)]]),
   which takes an iteration of the optimization method.
 
-The [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/n_Optimizers)
+The [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers)
 is probably the best place to get started to see how to use the functionality.
 
 
@@ -227,6 +227,6 @@ in FTorch. However, the [[ftorch_tensor(module):torch_tensor_sum(subroutine)]] a
 operators have been provided, which should be sufficient for simple loss
 functions such as the mean-square-error (MSE).
 
-See the [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/n_Optimizers)
+See the [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers)
 for an example of how to use [[ftorch_tensor(module):torch_tensor_mean(subroutine)]]
 to define a MSE loss function.
