@@ -14,6 +14,7 @@ from ftorch_utils.torchscript import (
     trace_to_torchscript,
 )
 from ftorch_utils.validation import (
+    validate_file_exists,
     validate_input_model_file,
     validate_input_tensor_file,
     validate_output_model_file,
@@ -136,14 +137,10 @@ def main_cli():
     print(f"Saved model to TorchScript in '{output_model_file}'.")
 
     if test:
-        # Check that the model file is created
-        if not os.path.exists(output_model_file):
-            torchscript_file_error = (
-                f"Saved TorchScript file '{output_model_file}' cannot be found."
-            )
-            raise FileNotFoundError(torchscript_file_error)
+        validate_file_exists(output_model_file, "Saved TorchScript output model")
 
-        # Load the TorchScript model and propagate the same input tensor
+        # Load the TorchScript model, propagate the same input tensor, and check the
+        # results match
         ts_model = load_torchscript(output_model_file)
         ts_model_outputs = ts_model(*input_tensors)
         validate_output_tensors(pt_model_outputs, ts_model_outputs)

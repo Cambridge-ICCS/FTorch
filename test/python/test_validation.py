@@ -23,6 +23,8 @@ def test_input_model_extension():
 
 
 def test_input_model_exists():
+    if os.path.exists("model.pt"):
+        os.remove("model.pt")
     expected = "PyTorch input model file 'model.pt' cannot be found."
     with pytest.raises(FileNotFoundError, match=expected):
         validate_input_model_file("model.pt")
@@ -37,6 +39,8 @@ def test_input_tensor_extension():
 
 
 def test_input_tensor_exists():
+    if os.path.exists("tensor.pt"):
+        os.remove("tensor.pt")
     expected = "PyTorch input tensor file 'tensor.pt' cannot be found."
     with pytest.raises(FileNotFoundError, match=expected):
         validate_input_tensor_file("tensor.pt")

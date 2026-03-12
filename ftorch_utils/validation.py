@@ -7,11 +7,27 @@ import warnings
 import torch
 
 __all__ = [
+    "validate_file_exists",
     "validate_input_model_file",
     "validate_input_tensor_file",
     "validate_output_model_file",
     "validate_output_tensors",
 ]
+
+
+def validate_file_exists(filename, description):
+    """Check a file exists.
+
+    Parameters
+    ----------
+    filename : str
+        Name of the file
+    description : str
+        Brief description of the file contents
+    """
+    if not os.path.exists(filename):
+        input_file_error = f"{description} file '{filename}' cannot be found."
+        raise FileNotFoundError(input_file_error)
 
 
 def validate_input_model_file(input_model_file):
@@ -29,11 +45,7 @@ def validate_input_model_file(input_model_file):
             f" {input_model_ext} but .pt was expected."
         )
         raise ValueError(value_error)
-    if not os.path.exists(input_model_file):
-        input_file_error = (
-            f"PyTorch input model file '{input_model_file}' cannot be found."
-        )
-        raise FileNotFoundError(input_file_error)
+    validate_file_exists(input_model_file, "PyTorch input model")
 
 
 def validate_input_tensor_file(input_tensor_file):
@@ -51,11 +63,7 @@ def validate_input_tensor_file(input_tensor_file):
             f" {input_tensor_ext} but .pt was expected."
         )
         raise ValueError(value_error)
-    if not os.path.exists(input_tensor_file):
-        input_file_error = (
-            f"PyTorch input tensor file '{input_tensor_file}' cannot be found."
-        )
-        raise FileNotFoundError(input_file_error)
+    validate_file_exists(input_tensor_file, "PyTorch input tensor")
 
 
 def validate_output_model_file(output_model_file, input_model_file):
