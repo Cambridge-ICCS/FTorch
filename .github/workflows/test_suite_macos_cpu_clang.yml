@@ -83,6 +83,11 @@ jobs:
           . ftorch/bin/activate
           pip install torch torchvision
 
+      - name: Install ftorch_utils
+        run: |
+          . ftorch/bin/activate
+          python -m pip install .[dev]
+
       - name: Install gfortran and OpenMPI
         # Install from source to avoid compiler mismatch between gfortran versions
         # between open-mpi installation and when building FTorch.
@@ -194,7 +199,7 @@ jobs:
               exit 1
           fi
 
-      - name: Run unit tests
+      - name: Run Fortran unit tests
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
@@ -203,6 +208,11 @@ jobs:
           export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${Torch_DIR}/torch/lib:${FTORCH_BUILD_DIR}/lib
           cd build
           ctest --verbose --tests-regex unit
+
+      - name: Run Python unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/python
 
       - name: Run integration tests
         run: |
