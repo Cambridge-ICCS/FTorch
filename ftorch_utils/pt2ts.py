@@ -55,7 +55,10 @@ def parse_user_input():
     )
     parser.add_argument(
         "--output_model_file",
-        help="Filename for the model to be saved in TorchScript format, including path",
+        help=(
+            "Filename for the model to be saved in TorchScript format, including path"
+            " (defaults to match the input_model_file)"
+        ),
         type=str,
     )
     parser.add_argument(
@@ -103,31 +106,23 @@ def main_cli():
     model_definition_file = parsed_args.model_definition_file
     model_name = parsed_args.model_name
     input_model_file = parsed_args.input_model_file
-    output_model_file = parsed_args.output_model_file
+    validate_input_model_file(input_model_file)
+    output_model_file = parsed_args.output_model_file or input_model_file
+    validate_output_model_file(output_model_file, input_model_file)
     trace = parsed_args.trace
     test = parsed_args.test
     input_tensor_file = parsed_args.input_tensor_file
-
-    validate_input_model_file(input_model_file)
-    if output_model_file is None:
-        output_model_file = input_model_file
-    validate_output_model_file(output_model_file, input_model_file)
+    if input_tensor_file is not None:
+        validate_input_tensor_file(input_tensor_file)
 
     # Load the input PyTorch model
     model = load_pytorch(model_definition_file, model_name, input_model_file)
 
     if test or trace:
-        validate_input_tensor_file(input_tensor_file)
-
         # Load the input tensor
         input_tensors = torch.load(input_tensor_file)
         if not isinstance(input_tensors, tuple):
             input_tensors = (input_tensors,)
-
-    if test:
-        # Propagate the input tensor through the model
-        # If something isn't working This will generate an error
-        pt_model_outputs = model(*input_tensors)
 
     # Apply scripting or tracing as requested, writing out to file
     if trace:
@@ -138,6 +133,10 @@ def main_cli():
 
     if test:
         validate_file_exists(output_model_file, "Saved TorchScript output model")
+
+        # Propagate the input tensor through the PyTorch model
+        # If something isn't working then this will generate an error
+        pt_model_outputs = model(*input_tensors)
 
         # Load the TorchScript model, propagate the same input tensor, and check the
         # results match
