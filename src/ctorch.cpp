@@ -552,7 +552,8 @@ void validate_optimizer(const torch_optim_t optim, const std::string &name) {
 // TODO: Wrap additional Options beyond learning rate and momentum
 torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
                               const double learning_rate, const double momentum = 0.0,
-                              const double weight_decay = 0.0) {
+                              const double dampening = 0.0, const double weight_decay = 0.0,
+                              const bool nesterov = false) {
   try {
     // Cast the parameters pointer into Tensor objects
     auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
@@ -568,7 +569,9 @@ torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
     // Set up options
     auto options = torch::optim::SGDOptions(learning_rate)
                        .momentum(momentum)
-                       .weight_decay(weight_decay);
+                       .dampening(dampening)
+                       .weight_decay(weight_decay)
+                       .nesterov(nesterov);
 
     // Create the optimizer and cast to torch_optim_t to return
     auto optimizer_SGD = new torch::optim::SGD(parameters_vec, options);

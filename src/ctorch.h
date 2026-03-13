@@ -341,12 +341,16 @@ EXPORT_C void torch_tensor_get_gradient(const torch_tensor_t tensor,
  * @param number of parameter Tensors in the parameters vector
  * @param learning rate for the optimizer
  * @param momentum for the optimizer
+ * @param dampening of momentum for the optimizer
  * @param weight decay for the optimizer
+ * @param whether to enable Nesterov momentum for the optimizer
  */
 EXPORT_C torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int nin,
                                        const double learning_rate,
                                        const double momentum,
-                                       const double weight_decay);
+                                       const double dampening,
+                                       const double weight_decay,
+                                       const bool nesterov);
 
 /**
  * Function to create an Adam optimizer over a set of parameters

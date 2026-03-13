@@ -91,8 +91,9 @@ contains
   ! ============================================================================
 
   !> Create an SGD optimizer
-  subroutine torch_optim_SGD(optim, parameters, learning_rate, momentum, weight_decay)
-    use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_loc
+  subroutine torch_optim_SGD(optim, parameters, learning_rate, momentum, weight_decay, &
+                             dampening, nesterov)
+    use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_loc, c_bool
     use, intrinsic :: iso_fortran_env, only : real64
     type(torch_optim), intent(out) :: optim  !! Optimizer we are creating
     type(torch_tensor), intent(in), dimension(:) :: parameters  !! Array of parameter tensors
@@ -100,8 +101,12 @@ contains
     real(kind=real64) :: learning_rate_value  !! learning rate for the optimization algorithm
     real(kind=real64), optional, intent(in) :: momentum  !! momentum for the optimization algorithm
     real(kind=real64) :: momentum_value  !! momentum for the optimization algorithm
+    real(kind=real64), optional, intent(in) :: dampening  !! dampening for the optimization algorithm
+    real(kind=real64) :: dampening_value  !! dampening for the optimization algorithm
     real(kind=real64), optional, intent(in) :: weight_decay  !! weight_decay for the optimization algorithm
     real(kind=real64) :: weight_decay_value  !! weight_decay for the optimization algorithm
+    logical, optional, intent(in) :: nesterov  !! enable Nesterov momentum. Only applicable when momentum is non-zero.
+    logical :: nesterov_value  !! enable Nesterov momentum. Only applicable when momentum is non-zero.
 
     integer(ftorch_int) :: i
     integer(c_int)      :: n_params
@@ -109,13 +114,15 @@ contains
 
     interface
       function torch_optim_SGD_c(parameters_c, n_params_c, learning_rate_c, momentum_c, &
-                                 weight_decay_c) &
+                                 dampening_c, weight_decay_c, nesterov_c) &
           result(optim_c) bind(c, name = 'torch_optim_SGD')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double
+        use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int, c_double
         implicit none
         type(c_ptr), value, intent(in) :: parameters_c
         integer(c_int), value, intent(in) :: n_params_c
-        real(c_double), value, intent(in) :: learning_rate_c, momentum_c, weight_decay_c
+        real(c_double), value, intent(in) :: learning_rate_c, momentum_c, dampening_c, &
+                                             weight_decay_c
+        logical(c_bool), value, intent(in) :: nesterov_c
         type(c_ptr) :: optim_c
       end function torch_optim_SGD_c
     end interface
@@ -134,10 +141,22 @@ contains
       momentum_value = momentum
     end if
 
+    if (.not. present(dampening)) then
+      dampening_value = 0.0_real64
+    else
+      dampening_value = dampening
+    end if
+
     if (.not. present(weight_decay)) then
       weight_decay_value = 0.0_real64
     else
       weight_decay_value = weight_decay
+    end if
+
+    if (.not. present(nesterov)) then
+      nesterov_value = .false.
+    else
+      nesterov_value = nesterov
     end if
 
     ! Assign array of pointers to the parameters
@@ -146,7 +165,8 @@ contains
     end do
 
     optim%p = torch_optim_SGD_c(c_loc(parameter_ptrs), n_params, &
-      learning_rate_value, momentum_value, weight_decay_value)
+                                learning_rate_value, momentum_value, dampening_value, &
+                                weight_decay_value, logical(nesterov_value, c_bool))
   end subroutine torch_optim_SGD
 
   !> Create an Adam optimizer
