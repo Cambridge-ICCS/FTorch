@@ -13,7 +13,7 @@ module unittest_optim
   use ftorch_optim, only: torch_optim, torch_optim_zero_grad, torch_optim_step, &
                           torch_optim_delete, torch_optim_SGD, torch_optim_Adam, &
                           torch_optim_AdamW
-  use ftorch_test_utils, only: assert_allclose
+  use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_c_binding, only: c_associated, c_int64_t
   use, intrinsic :: iso_fortran_env, only : sp => real32
 
@@ -22,40 +22,40 @@ module unittest_optim
   public
 
   @testParameter
-  type, extends(AbstractTestParameter) :: OptimizerTestParameters
+  type, extends(AbstractTestParameter) :: OptimizerTypes
     character(len=:), allocatable :: optimizer_type
    contains
-    procedure :: toString
-  end type OptimizerTestParameters
+    procedure :: toString => toStringTypes
+  end type OptimizerTypes
 
   ! Typedef for a test case with a particular set of parameters
-  @testCase(constructor=test_case_constructor)
-  type, extends (ParameterizedTestCase) :: TestCaseType
-    type(OptimizerTestParameters) :: param
-  end type TestCaseType
+  @testCase(constructor=test_case_types_constructor)
+  type, extends (ParameterizedTestCase) :: TestCaseTypes
+    type(OptimizerTypes) :: param
+  end type TestCaseTypes
 
 contains
 
   ! Constructor for the test case type
-  function test_case_constructor(param)
-    type(TestCaseType) :: test_case_constructor
-    type(OptimizerTestParameters), intent(in) :: param
-    test_case_constructor%param = param
-  end function test_case_constructor
+  function test_case_types_constructor(param)
+    type(TestCaseTypes) :: test_case_types_constructor
+    type(OptimizerTypes), intent(in) :: param
+    test_case_types_constructor%param = param
+  end function test_case_types_constructor
 
   ! A fixture for varying the optimizer type
-  function get_optimizer_parameters() result(params)
-    type(OptimizerTestParameters), allocatable :: params(:)
+  function get_optimizer_types_parameters() result(params)
+    type(OptimizerTypes), allocatable :: params(:)
     params = [ &
-      OptimizerTestParameters("SGD"), &
-      OptimizerTestParameters("Adam"), &
-      OptimizerTestParameters("AdamW") &
+      OptimizerTypes("SGD"), &
+      OptimizerTypes("Adam"), &
+      OptimizerTypes("AdamW") &
     ]
-  end function get_optimizer_parameters
+  end function get_optimizer_types_parameters
 
   ! A fixture for writing out information about the specific parameters a test uses
-function toString(this) result(string)
-  class(OptimizerTestParameters), intent(in) :: this
+function toStringTypes(this) result(string)
+  class(OptimizerTypes), intent(in) :: this
   character(:), allocatable :: string
 
   if (allocated(this%optimizer_type)) then
@@ -63,16 +63,16 @@ function toString(this) result(string)
   else
     string = "UNDEFINED"
   end if
-end function toString
+end function toStringTypes
 
   ! Unit test for deleting an optimizer by calling torch_optim_delete manually
-  @test(testParameters={get_optimizer_parameters()})
+  @test(testParameters={get_optimizer_types_parameters()})
   subroutine test_optim_delete(this)
     use ftorch, only: torch_tensor_ones
 
     implicit none
 
-    class(TestCaseType), intent(inout) :: this
+    class(TestCaseTypes), intent(inout) :: this
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
@@ -111,12 +111,12 @@ end function toString
 
 
   ! Unit test for zeroing gradients using torch_optim_zero_grad
-  @test(testParameters={get_optimizer_parameters()})
+  @test(testParameters={get_optimizer_types_parameters()})
   subroutine test_optim_zero_grad(this)
     use ftorch, only: torch_tensor_ones
     implicit none
 
-    class(TestCaseType), intent(inout) :: this
+    class(TestCaseTypes), intent(inout) :: this
 
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor, tensor_sq, grad
@@ -161,13 +161,13 @@ end function toString
 
     ! Check gradients are non-zero (2*tensor)
     call torch_tensor_get_gradient(grad, tensor)
-    @assertTrue(assert_allclose(grad_data, 2.0*tensor_data, test_name="test_torch_optim_zero_grad_1"))
+    @assertTrue(allclose(grad_data, 2.0*tensor_data, test_name="test_torch_optim_zero_grad_1"))
 
     ! Repeat, and check that the gradients stack (2*2*tensor)
     tensor_sq = tensor ** 2
     call torch_tensor_backward(tensor_sq, retain_graph=.true.)
     call torch_tensor_get_gradient(grad, tensor)
-    @assertTrue(assert_allclose(grad_data, 4.0*tensor_data, test_name="test_torch_optim_zero_grad_2"))
+    @assertTrue(allclose(grad_data, 4.0*tensor_data, test_name="test_torch_optim_zero_grad_2"))
 
     ! Zero the gradients
     call optimizer%zero_grad()
@@ -176,7 +176,7 @@ end function toString
     tensor_sq = tensor ** 2
     call torch_tensor_backward(tensor_sq, retain_graph=.true.)
     call torch_tensor_get_gradient(grad, tensor)
-    @assertTrue(assert_allclose(grad_data, 2.0*tensor_data, test_name="test_torch_optim_zero_grad_3"))
+    @assertTrue(allclose(grad_data, 2.0*tensor_data, test_name="test_torch_optim_zero_grad_3"))
 
     ! Clean up
     call torch_delete(tensor)
@@ -190,12 +190,12 @@ end function toString
   ! Uses an optimizer with a learning rate of 1.0 such that a single step with gradients
   ! taken from a MSE loss should take us directly to the target
   ! See accompanying test_optim.py for PyTorch code.
-  @test(testParameters={get_optimizer_parameters()})
+  @test(testParameters={get_optimizer_types_parameters()})
   subroutine test_optim_step(this)
     use ftorch, only: torch_tensor_ones, torch_tensor_mean
     implicit none
 
-    class(TestCaseType), intent(inout) :: this
+    class(TestCaseTypes), intent(inout) :: this
 
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor, target_tensor, loss, grad
@@ -241,7 +241,7 @@ end function toString
     call optimizer%step()
 
     ! Check if the tensor values are updated correctly
-    if (.not. assert_allclose(tensor_data, expected, test_name="test_torch_optim_step ["//this%param%optimizer_type//"]")) then
+    if (.not. allclose(tensor_data, expected, test_name="test_torch_optim_step ["//this%param%optimizer_type//"]")) then
       print *, "Error :: Incorrect value after applying optimizer step."
       print *, "Expected: ", expected
       print *, "     Got: ", tensor_data
@@ -260,12 +260,12 @@ end function toString
   ! Sets additional parameters and then compares the result of a single step to the
   ! values obtained for the same process through the PyTorch interface
   ! See accompanying test_optim.py for PyTorch code.
-  @test(testParameters={get_optimizer_parameters()})
+  @test(testParameters={get_optimizer_types_parameters()})
   subroutine test_optim_params(this)
     use ftorch, only: torch_tensor_ones, torch_tensor_mean
     implicit none
 
-    class(TestCaseType), intent(inout) :: this
+    class(TestCaseTypes), intent(inout) :: this
 
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor, target_tensor, loss, grad
@@ -320,7 +320,7 @@ end function toString
     end do
 
     ! Check if the tensor values are updated correctly
-    if (.not. assert_allclose(tensor_data, expected, test_name="test_torch_optim_params ["//this%param%optimizer_type//"]")) then
+    if (.not. allclose(tensor_data, expected, test_name="test_torch_optim_params ["//this%param%optimizer_type//"]")) then
       print *, "Error :: Incorrect value after optimizer loop."
       print *, "Expected: ", expected
       print *, "     Got: ", tensor_data
@@ -333,5 +333,7 @@ end function toString
     call torch_delete(grad)
     call torch_optim_delete(optimizer)
   end subroutine test_optim_params
+
+
 
 end module unittest_optim
