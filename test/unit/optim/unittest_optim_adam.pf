@@ -1,17 +1,17 @@
-!| Unit tests for FTorch SGD optimizer with parameters.
-!
+!| Unit tests for FTorch Adam optimizer parameters.
+! 
 !  * License
 !    FTorch is released under an MIT license.
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
-module unittest_optim_sgd
+module unittest_optim_adam
   use funit
   use ftorch, only: assignment(=), operator(-), operator(*), operator(**), &
                     torch_kFloat32, torch_kCPU, torch_tensor, &
                     torch_delete, torch_tensor_from_array, torch_tensor_empty, &
                     torch_tensor_backward, torch_tensor_get_gradient
   use ftorch_optim, only: torch_optim, torch_optim_zero_grad, torch_optim_step, &
-                          torch_optim_delete, torch_optim_SGD
+                          torch_optim_delete, torch_optim_Adam
   use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_c_binding, only: c_associated, c_int64_t
   use, intrinsic :: iso_fortran_env, only :  dp => real64, sp => real32
@@ -20,81 +20,82 @@ module unittest_optim_sgd
 
   public
 
-  ! Parameter type for SGD-specific tests
+  ! Parameter type for Adam-specific tests
   @testParameter
-  type, extends(AbstractTestParameter) :: SGDParams
+  type, extends(AbstractTestParameter) :: AdamParams
     real(kind=dp) :: learning_rate
-    real(kind=dp) :: momentum
-    real(kind=dp) :: dampening
+    real(kind=dp) :: beta_1
+    real(kind=dp) :: beta_2
+    real(kind=dp) :: eps
     real(kind=dp) :: weight_decay
-    logical :: nesterov
+    logical :: amsgrad
     real(kind=dp), dimension(4) :: expected
     character(len=:), allocatable :: desc
    contains
-    procedure :: toString => toStringSGD
-  end type SGDParams
+    procedure :: toString => toStringAdam
+  end type AdamParams
 
-  ! Test case type for SGD parameter tests
-  @testCase(constructor=test_case_constructor_sgd)
-  type, extends (ParameterizedTestCase) :: TestCaseSGD
-    type(SGDParams) :: param
-  end type TestCaseSGD
+  ! Test case type for Adam parameter tests
+  @testCase(constructor=test_case_constructor_adam)
+  type, extends (ParameterizedTestCase) :: TestCaseAdam
+    type(AdamParams) :: param
+  end type TestCaseAdam
 
 contains
 
   ! Constructor for the test case type
-  function test_case_constructor_sgd(param)
-    type(TestCaseSGD) :: test_case_constructor_sgd
-    type(SGDParams), intent(in) :: param
-    test_case_constructor_sgd%param = param
-  end function test_case_constructor_sgd
+  function test_case_constructor_adam(param)
+    type(TestCaseAdam) :: test_case_constructor_adam
+    type(AdamParams), intent(in) :: param
+    test_case_constructor_adam%param = param
+  end function test_case_constructor_adam
 
-  ! A fixture for varying SGD parameters
-  function get_parameters_sgd() result(params)
-    type(SGDParams), allocatable :: params(:)
+  ! A fixture for varying Adam parameters
+  function get_parameters_adam() result(params)
+    type(AdamParams), allocatable :: params(:)
     params = [ &
       ! Baseline cases
-      SGDParams(0.1D0, 0.0D0, 0.0D0, 0.000D0, .false., &
-               [1.000000D0, 1.185494D0, 1.370988D0, 1.556481D0], "Basic SGD"), &
-      SGDParams(0.1D0, 0.9D0, 0.0D0, 0.025D0, .false., &
-               [0.979147D0, 1.396209D0, 1.813271D0, 2.230334D0], "SGD with momentum"), &
-      SGDParams(0.1D0, 0.9D0, 0.1D0, 0.025D0, .false., &
-               [0.980320D0, 1.373912D0, 1.767504D0, 2.161097D0], "SGD with dampening"), &
-      SGDParams(0.1D0, 0.9D0, 0.0D0, 0.025D0, .true., &
-               [0.973899D0, 1.495909D0, 2.017919D0, 2.539929D0], "SGD with nesterov"), &
+      AdamParams(0.001D0, 0.9D0, 0.999D0, 1.0D-8, 0.000D0, .false., &
+               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "Default Adam"), &
+      AdamParams(0.01D0, 0.9D0, 0.999D0, 1.0D-8, 0.010D0, .false., &
+               [0.969523D0, 1.039975D0, 1.039988D0, 1.039992D0], "Higher LR, with weight decay"), &
+      AdamParams(0.001D0, 0.8D0, 0.990D0, 1.0D-7, 0.000D0, .false., &
+               [1.000000D0, 1.003999D0, 1.004000D0, 1.004000D0], "Different betas, different eps"), &
+      AdamParams(0.001D0, 0.9D0, 0.999D0, 1.0D-8, 0.000D0, .true., &
+               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "With AMSGrad"), &
 
       ! Edge cases and additional combinations
-      SGDParams(0.1D0, 0.9D0, 0.9D0, 0.025D0, .false., &
-               [0.990124D0, 1.187636D0, 1.385148D0, 1.582659D0], "Full dampening"), &
-      SGDParams(0.01D0, 0.99D0, 0.0D0, 0.000D0, .true., &
-               [1.000000D0, 1.068006D0, 1.136011D0, 1.204017D0], "Small LR, High momentum, Nesterov"), &
-      SGDParams(0.5D0, 0.5D0, 0.25D0, 0.1D0, .false., &
-               [0.832593D0, 1.669628D0, 2.506663D0, 3.343699D0], "Aggressive parameters") &
+      AdamParams(0.002D0, 0.9D0, 0.999D0, 1.0D-8, 0.001D0, .false., &
+               [0.997029D0, 1.007999D0, 1.008000D0, 1.008000D0], "Higher LR, small weight decay"), &
+      AdamParams(0.001D0, 0.95D0, 0.999D0, 1.0D-8, 0.000D0, .false., &
+               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "Different beta1"), &
+      AdamParams(0.001D0, 0.9D0, 0.9995D0, 1.0D-8, 0.000D0, .false., &
+               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "Different beta2") &
     ]
-  end function get_parameters_sgd
+  end function get_parameters_adam
 
   ! A fixture for writing out information about the specific parameters a test uses
-  function toStringSGD(this) result(string)
-    class(SGDParams), intent(in) :: this
+  function toStringAdam(this) result(string)
+    class(AdamParams), intent(in) :: this
     character(:), allocatable :: string
-   
+    
     if (allocated(this%desc)) then
       string = trim(this%desc)
     else
       string = "UNDEFINED"
     end if
-  end function toStringSGD
+  end function toStringAdam
 
-  ! Unit tests for SGD optimizer with parameters
-  ! Sets parameters and then compares the result of a single step to the
+  ! Unit tests for Adam optimizer
+  ! Sets additional parameters and then compares the result of a single step to the
   ! values obtained for the same process through the PyTorch interface
-  ! See accompanying test_optim_sgd.py for PyTorch code.
-  @test(testParameters={get_parameters_sgd()})
-  subroutine test_sgd_params(this)
+  ! See accompanying test_optim_adam.py for PyTorch code.
+  @test(testParameters={get_parameters_adam()})
+  subroutine test_adam_params(this)
     use ftorch, only: torch_tensor_ones, torch_tensor_mean
     implicit none
 
-    class(TestCaseSGD), intent(inout) :: this
+    class(TestCaseAdam), intent(inout) :: this
 
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor, target_tensor, loss, grad
@@ -115,11 +116,12 @@ contains
     call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
                             requires_grad=.true.)
 
-    ! Create an optimizer based on the parameters including new SGD parameters
+    ! Create an optimizer based on the parameters including new Adam parameters
     ! Also set the expected value of the optimizer step
-    call torch_optim_SGD(optimizer, [tensor], learning_rate=this%param%learning_rate, &
-                         momentum=this%param%momentum, dampening = this%param%dampening, &
-                         weight_decay=this%param%weight_decay, nesterov = this%param%nesterov)
+    call torch_optim_Adam(optimizer, [tensor], learning_rate=this%param%learning_rate, &
+                         beta_1=this%param%beta_1, beta_2=this%param%beta_2, &
+                         eps=this%param%eps, weight_decay=this%param%weight_decay, &
+                         amsgrad=this%param%amsgrad)
     expected = this%param%expected
 
     ! Run a loop of 4 iterations to capture aspects such as momentum
@@ -137,7 +139,7 @@ contains
     end do
 
     ! Check if the tensor values are updated correctly
-    if (.not. allclose(tensor_data, expected, test_name="test_sgd_params ["//this%param%desc//"]")) then
+    if (.not. allclose(tensor_data, expected, test_name="test_adam_params ["//this%param%desc//"]")) then
       print *, "Error :: Incorrect value after optimizer loop."
       print *, "Expected: ", expected
       print *, "     Got: ", tensor_data
@@ -149,6 +151,6 @@ contains
     call torch_delete(target_tensor)
     call torch_delete(grad)
     call torch_optim_delete(optimizer)
-  end subroutine test_sgd_params
+  end subroutine test_adam_params
 
-end module unittest_optim_sgd
+end module unittest_optim_adam
