@@ -54,16 +54,17 @@ contains
   end function get_optimizer_types_parameters
 
   ! A fixture for writing out information about the specific parameters a test uses
-function toStringTypes(this) result(string)
-  class(OptimizerTypes), intent(in) :: this
-  character(:), allocatable :: string
+  function toStringTypes(this) result(string)
+    class(OptimizerTypes), intent(in) :: this
+    character(:), allocatable :: string
 
-  if (allocated(this%optimizer_type)) then
-    string = trim(this%optimizer_type)
-  else
-    string = "UNDEFINED"
-  end if
-end function toStringTypes
+    if (allocated(this%optimizer_type)) then
+      string = trim(this%optimizer_type)
+    else
+      string = "UNDEFINED"
+    end if
+  end function toStringTypes
+
 
   ! Unit test for deleting an optimizer by calling torch_optim_delete manually
   @test(testParameters={get_optimizer_types_parameters()})
@@ -333,7 +334,5 @@ end function toStringTypes
     call torch_delete(grad)
     call torch_optim_delete(optimizer)
   end subroutine test_optim_params
-
-
 
 end module unittest_optim
