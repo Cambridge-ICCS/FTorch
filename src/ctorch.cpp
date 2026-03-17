@@ -549,7 +549,6 @@ void validate_optimizer(const torch_optim_t optim, const std::string &name) {
 }
 
 // Function to create an SGD optimizer and return a pointer to it
-// TODO: Wrap additional Options beyond learning rate and momentum
 torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
                               const double learning_rate, const double momentum = 0.0,
                               const double dampening = 0.0,
@@ -584,7 +583,6 @@ torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
 }
 
 // Function to create an Adam optimizer and return a pointer to it
-// TODO: Wrap additional Options beyond learning rate
 torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
                                const double learning_rate, const double beta_1 = 0.9,
                                const double beta_2 = 0.999, const double eps = 1e-8,
@@ -620,7 +618,6 @@ torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
 }
 
 // Function to create an AdamW optimizer and return a pointer to it
-// TODO: Wrap additional Options beyond learning rate
 torch_optim_t torch_optim_AdamW(const torch_tensor_t *parameters, const int npar,
                                 const double learning_rate, const double beta_1 = 0.9,
                                 const double beta_2 = 0.999, const double eps = 1e-8,
