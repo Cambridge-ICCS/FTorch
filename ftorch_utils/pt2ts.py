@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/bin/env python3
 """Convert a PyTorch model file to TorchScript format."""
 
 import argparse
@@ -229,4 +229,4 @@ def main_cli():
 
 
 if __name__ == "__main__":
-    main()
+    main_cli()

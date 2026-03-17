@@ -26,7 +26,7 @@ Development tools for [pre-processing](#fortran-source-and-fypp),
 [code styling](#code-style) etc. are pip-installable using the
 [pyproject.toml file](https://github.com/Cambridge-ICCS/FTorch/blob/main/pyproject.toml):
 ```sh
-pip install -e .[dev]
+pip install .[dev]
 ```
 
 In order to streamline the process of uploading we provide a pre-commit hook in
