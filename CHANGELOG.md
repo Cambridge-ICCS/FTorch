@@ -18,6 +18,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 - Renamed `utils` as `ftorch_utils` and made it a proper Python module
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
+- Changed process for saving TorchScript models
+  [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 
 ### Removed
 
