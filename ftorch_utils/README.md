@@ -4,7 +4,7 @@ This directory contains useful Python utilities for users of the library.
 
 ## `pt2ts.py`
 
-This is a python script that can take a PyTorch model and convert it to
+This is a Python script that can take a PyTorch model and convert it to
 TorchScript.
 It provides the user with the option to [jit.script](https://pytorch.org/docs/stable/generated/torch.jit.script.html#torch.jit.script) or [jit.trace](https://pytorch.org/docs/stable/generated/torch.jit.trace.html#torch.jit.trace).
 
@@ -13,13 +13,15 @@ Dependencies:
 
 ### Usage
 
-1. Create and activate a virtual environment with PyTorch and any dependencies
-   for your model.
-2. Place the `pt2ts.py` script in the same folder as your model files.
-3. Run with `python3 pt2ts.py` or `./pt2ts.py`.
+1. Create and activate a virtual environment.
+2. Install `ftorch_utils` and its dependencies, if they aren't already
+   installed. This can be achieved by running `pip install .` in the root
+   directory of FTorch. It will install the `pt2ts` script into your Python
+   environment.
+3. Run with `python3 -m pt2ts <arguments>` or simply `pt2ts <arguments>`.
+   Run `pt2ts --help` (or below) to see the usage instructions for the script.
 
-The Torchscript model will be saved locally in the same location from which the `pt2ts.py`
-script is being run.
+The Torchscript model will be saved locally in the specified location.
 
 #### Command line arguments
 
@@ -27,9 +29,13 @@ The `pt2ts.py` script is set up with the `argparse` Python module such that it
 accepts several command line arguments:
 * `input_model_file </path/to/saved/model>`, which is required to specify the
   path to the directory in which the PyTorch model is saved.
+* `model_name <model_name>`, which is required to specify the name of the model
+  class (e.g. `SimpleNet`).
 * `--output_model_file </path/to/save/model>`, which allows you to specify the
   path to the directory in which the TorchScript model should be saved.
 * `--trace`, which allows you to switch from scripting to tracing.
+* `--test`, which allows you to run basic tests to check things are working as
+  expected.
 * `--input_tensor_file </path/to/saved/tensor>`, which is required (if `--trace`
-  was passed) to specify the path to the directory in which a PyTorch tensor of
-  appropriate input dimensions is saved.
+  or `--test` was passed) to specify the path to the directory in which a
+  PyTorch tensor of appropriate input dimensions is saved.
