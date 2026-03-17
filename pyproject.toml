@@ -31,6 +31,9 @@ classifiers = [
 	"Programming Language :: Fortran",
 	"Programming Language :: Python",
 ]
+dependencies = [
+  "torch",
+]
 
 [project.optional-dependencies]
 dev = [
