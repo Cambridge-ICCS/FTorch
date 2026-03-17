@@ -19,8 +19,14 @@ In order to use FTorch users will typically need to follow these steps:
 
 These are outlined in detail below.
 
+#### 1. Saving the model in PyTorch format
 
-#### 1. Saving the model as TorchScript
+The PyTorch model should be written out in the usual way using
+[`torch.save`](https://docs.pytorch.org/docs/stable/generated/torch.save.html).
+That is, using the pickle file format commonly used for PyTorch objects such as
+models and tensors. The `.pt` file extension should be used.
+
+#### 2. Saving the model as TorchScript
 
 The trained PyTorch model needs to be exported to
 [TorchScript](https://pytorch.org/docs/stable/jit.html).
@@ -33,10 +39,17 @@ functionalities from within Python.
 If you are not familiar with these we provide a tool
 [`pt2ts`](https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/pt2ts.py)
 as part of FTorch which allows to convert a model in PyTorch file format into
-one using the TorchScript format.
+one using the TorchScript format. To make use of this tool, install the
+`ftorch-utils` Python package and its dependencies by running
+```sh
+pip install .
+```
+in FTorch's root directory. This will install the `pt2ts` scrip into your Python
+environment. For usage instructions, call `pt2ts --help` or read the
+[ftorch-utils README](https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils/README.md).
 
 
-#### 2. Using the model from Fortran
+#### 3. Using the model from Fortran
 
 To use the trained Torch model from within Fortran we need to import the `ftorch`
 module and use the binding routines to load the model, convert the data,
@@ -97,7 +110,7 @@ call torch_delete(model_output_arr)
 ```
 
 
-#### 3. Building the code
+#### 4. Building the code
 
 The code now needs to be compiled and linked against our installed library.
 Here we describe how to do this for two build systems, CMake and make.
