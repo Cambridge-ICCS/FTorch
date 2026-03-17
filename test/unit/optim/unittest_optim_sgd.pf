@@ -53,9 +53,23 @@ contains
   function get_parameters_sgd() result(params)
     type(SGDParams), allocatable :: params(:)
     params = [ &
-      SGDParams(0.1D0, 0.9D0, 0.0D0, 0.025D0, .false., [0.979859D0, 1.840596D0, 2.701334D0, 3.562072D0], "SGD Baseline"), &
-      SGDParams(0.1D0, 0.9D0, 0.1D0, 0.025D0, .false., [0.980951D0, 1.775624D0, 2.570297D0, 3.364970D0], "SGD with dampening"), &
-      SGDParams(0.1D0, 0.9D0, 0.0D0, 0.025D0, .true.,  [0.975999D0, 2.129900D0, 3.283801D0, 4.437702D0], "SGD with nesterov") &
+      ! Baseline cases
+      SGDParams(0.1D0, 0.0D0, 0.0D0, 0.000D0, .false., &
+               [1.000000D0, 1.185494D0, 1.370988D0, 1.556481D0], "Basic SGD"), &
+      SGDParams(0.1D0, 0.9D0, 0.0D0, 0.025D0, .false., &
+               [0.979147D0, 1.396209D0, 1.813271D0, 2.230334D0], "SGD with momentum"), &
+      SGDParams(0.1D0, 0.9D0, 0.1D0, 0.025D0, .false., &
+               [0.980320D0, 1.373912D0, 1.767504D0, 2.161097D0], "SGD with dampening"), &
+      SGDParams(0.1D0, 0.9D0, 0.0D0, 0.025D0, .true., &
+               [0.973899D0, 1.495909D0, 2.017919D0, 2.539929D0], "SGD with nesterov"), &
+
+      ! Edge cases and additional combinations
+      SGDParams(0.1D0, 0.9D0, 0.9D0, 0.025D0, .false., &
+               [0.990124D0, 1.187636D0, 1.385148D0, 1.582659D0], "Full dampening"), &
+      SGDParams(0.01D0, 0.99D0, 0.0D0, 0.000D0, .true., &
+               [1.000000D0, 1.068006D0, 1.136011D0, 1.204017D0], "Small LR, High momentum, Nesterov"), &
+      SGDParams(0.5D0, 0.5D0, 0.25D0, 0.1D0, .false., &
+               [0.832593D0, 1.669628D0, 2.506663D0, 3.343699D0], "Aggressive parameters") &
     ]
   end function get_parameters_sgd
 
@@ -117,6 +131,7 @@ contains
 
       ! Perform an optimizer step
       call optimizer%step()
+      call optimizer%zero_grad()  ! Clear gradients after each step
 
       call torch_delete(loss)
     end do
