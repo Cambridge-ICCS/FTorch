@@ -170,8 +170,9 @@ contains
   end subroutine torch_optim_SGD
 
   !> Create an Adam optimizer
-  subroutine torch_optim_Adam(optim, parameters, learning_rate, beta_1, beta_2, weight_decay)
-    use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_loc
+  subroutine torch_optim_Adam(optim, parameters, learning_rate, beta_1, beta_2, &
+                              eps, weight_decay, amsgrad)
+    use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_loc, c_bool
     use, intrinsic :: iso_fortran_env, only : real64
     type(torch_optim), intent(out) :: optim  !! Optimizer we are creating
     type(torch_tensor), intent(in), dimension(:) :: parameters  !! Array of parameter tensors
@@ -181,8 +182,12 @@ contains
     real(kind=real64) :: learning_rate_value  !! learning rate for the optimization algorithm
     real(kind=real64) :: beta_1_value  !! beta 1 for the optimization algorithm
     real(kind=real64) :: beta_2_value  !! beta 2 for the optimization algorithm
+    real(kind=real64), optional, intent(in) :: eps  !! eps for the optimization algorithm
+    real(kind=real64) :: eps_value  !! eps for the optimization algorithm
     real(kind=real64), optional, intent(in) :: weight_decay  !! weight_decay for the optimization algorithm
     real(kind=real64) :: weight_decay_value  !! weight_decay for the optimization algorithm
+    logical, optional, intent(in) :: amsgrad  !! enable AMSGrad variant
+    logical :: amsgrad_value  !! enable AMSGrad variant
 
     integer(ftorch_int) :: i
     integer(c_int)      :: n_params
@@ -190,13 +195,15 @@ contains
 
     interface
       function torch_optim_Adam_c(parameters_c, n_params_c, learning_rate_c, &
-                                  beta_1_c, beta_2_c, weight_decay_c) &
+                                  beta_1_c, beta_2_c, eps_c, weight_decay_c, amsgrad_c) &
           result(optim_c) bind(c, name = 'torch_optim_Adam')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_bool
         implicit none
         type(c_ptr), value, intent(in) :: parameters_c
         integer(c_int), value, intent(in) :: n_params_c
-        real(c_double), value, intent(in) :: learning_rate_c, beta_1_c, beta_2_c, weight_decay_c
+        real(c_double), value, intent(in) :: learning_rate_c, beta_1_c, beta_2_c, &
+                                             eps_c, weight_decay_c
+        logical(c_bool), value, intent(in) :: amsgrad_c
         type(c_ptr) :: optim_c
       end function torch_optim_Adam_c
     end interface
@@ -221,10 +228,22 @@ contains
       beta_2_value = beta_2
     end if
 
+    if (.not. present(eps)) then
+      eps_value = 1.0e-8_real64
+    else
+      eps_value = eps
+    end if
+
     if (.not. present(weight_decay)) then
       weight_decay_value = 0.0_real64
     else
       weight_decay_value = weight_decay
+    end if
+
+    if (.not. present(amsgrad)) then
+      amsgrad_value = .false.
+    else
+      amsgrad_value = amsgrad
     end if
 
     ! Assign array of pointers to the parameters
@@ -233,12 +252,14 @@ contains
     end do
 
     optim%p = torch_optim_Adam_c(c_loc(parameter_ptrs), n_params, learning_rate_value, &
-                                 beta_1_value, beta_2_value, weight_decay_value)
+                                 beta_1_value, beta_2_value, eps_value, &
+                                 weight_decay_value, logical(amsgrad_value, c_bool))
   end subroutine torch_optim_Adam
 
   !> Create an AdamW optimizer
-  subroutine torch_optim_AdamW(optim, parameters, learning_rate, beta_1, beta_2, weight_decay)
-    use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_loc
+  subroutine torch_optim_AdamW(optim, parameters, learning_rate, beta_1, beta_2, &
+                               eps, weight_decay, amsgrad)
+    use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_loc, c_bool
     use, intrinsic :: iso_fortran_env, only : real64
     type(torch_optim), intent(out) :: optim  !! Optimizer we are creating
     type(torch_tensor), intent(in), dimension(:) :: parameters  !! Array of parameter tensors
@@ -248,8 +269,12 @@ contains
     real(kind=real64) :: learning_rate_value  !! learning rate for the optimization algorithm
     real(kind=real64) :: beta_1_value  !! beta 1 for the optimization algorithm
     real(kind=real64) :: beta_2_value  !! beta 2 for the optimization algorithm
+    real(kind=real64), optional, intent(in) :: eps  !! eps for the optimization algorithm
+    real(kind=real64) :: eps_value  !! eps for the optimization algorithm
     real(kind=real64), optional, intent(in) :: weight_decay  !! weight_decay for the optimization algorithm
     real(kind=real64) :: weight_decay_value  !! weight_decay for the optimization algorithm
+    logical, optional, intent(in) :: amsgrad  !! enable AMSGrad variant
+    logical :: amsgrad_value  !! enable AMSGrad variant
 
     integer(ftorch_int) :: i
     integer(c_int)      :: n_params
@@ -257,13 +282,15 @@ contains
 
     interface
       function torch_optim_AdamW_c(parameters_c, n_params_c, learning_rate_c, &
-                                   beta_1_c, beta_2_c, weight_decay_c) &
+                                   beta_1_c, beta_2_c, weight_decay_c, eps_c, amsgrad_c) &
           result(optim_c) bind(c, name = 'torch_optim_AdamW')
-        use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double
+        use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_bool
         implicit none
         type(c_ptr), value, intent(in) :: parameters_c
         integer(c_int), value, intent(in) :: n_params_c
-        real(c_double), value, intent(in) :: learning_rate_c, beta_1_c, beta_2_c, weight_decay_c
+        real(c_double), value, intent(in) :: learning_rate_c, beta_1_c, beta_2_c, &
+                                             eps_c, weight_decay_c
+        logical(c_bool), value, intent(in) :: amsgrad_c
         type(c_ptr) :: optim_c
       end function torch_optim_AdamW_c
     end interface
@@ -288,10 +315,22 @@ contains
       beta_2_value = beta_2
     end if
 
+    if (.not. present(eps)) then
+      eps_value = 1.0e-8_real64
+    else
+      eps_value = eps
+    end if
+
     if (.not. present(weight_decay)) then
-      weight_decay_value = 0.01_real64
+      weight_decay_value = 0.01_real64  ! Different default for AdamW to Adam!
     else
       weight_decay_value = weight_decay
+    end if
+
+    if (.not. present(amsgrad)) then
+      amsgrad_value = .false.
+    else
+      amsgrad_value = amsgrad
     end if
 
     ! Assign array of pointers to the parameters
@@ -299,8 +338,9 @@ contains
       parameter_ptrs(i) = parameters(i)%p
     end do
 
-    optim%p = torch_optim_AdamW_c(c_loc(parameter_ptrs), n_params, learning_rate_value, &
-                                  beta_1_value, beta_2_value, weight_decay_value)
+     optim%p = torch_optim_AdamW_c(c_loc(parameter_ptrs), n_params, learning_rate_value, &
+                                    beta_1_value, beta_2_value, eps_value, &
+                                    weight_decay_value, logical(amsgrad_value, c_bool))
   end subroutine torch_optim_AdamW
 
 end module ftorch_optim
