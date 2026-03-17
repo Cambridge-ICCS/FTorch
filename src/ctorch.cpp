@@ -587,8 +587,8 @@ torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
 // TODO: Wrap additional Options beyond learning rate
 torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
                                const double learning_rate, const double beta_1 = 0.9,
-                               const double beta_2 = 0.999,
-                               const double eps = 1e-8, const double weight_decay = 0.0,
+                               const double beta_2 = 0.999, const double eps = 1e-8,
+                               const double weight_decay = 0.0,
                                const bool amsgrad = false) {
   try {
     // Cast the parameters pointer into Tensor objects
@@ -623,9 +623,9 @@ torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
 // TODO: Wrap additional Options beyond learning rate
 torch_optim_t torch_optim_AdamW(const torch_tensor_t *parameters, const int npar,
                                 const double learning_rate, const double beta_1 = 0.9,
-                                const double beta_2 = 0.999,
-                                const double eps = 1e-8,
-                                const double weight_decay = 0.01, const bool amsgrad = false) {
+                                const double beta_2 = 0.999, const double eps = 1e-8,
+                                const double weight_decay = 0.01,
+                                const bool amsgrad = false) {
   try {
     // Cast the parameters pointer into Tensor objects
     auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
