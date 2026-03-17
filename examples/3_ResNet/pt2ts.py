@@ -1,4 +1,10 @@
 """Load a PyTorch model and convert it to TorchScript."""
+# NOTE: This script uses the old pt2ts approach of providing a template for users to
+#       modify for their use case. We are currently migrating to a more general approach
+#       using a centralised script. See
+#       https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/README.md
+#       for details. This example will be updated soon.
+#
 # Throughout this script there are various `FTORCH-TODO` comments indicating where
 # the user needs to modify as appropriate for their model
 
