@@ -80,7 +80,9 @@ and
 When converting a PyTorch model to a TorchScript model using the `pt2ts` script,
 the device type will be inherited. As such, if the PyTorch model is saved using
 a particular device type then this will be preserved in the resulting
-TorchScript model.
+TorchScript model. For further details on the `pt2ts` script, call
+`pt2ts --help` or read the
+[ftorch-utils README](https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils/README.md).
 
 **4) Specify the target device from FTorch**  
 When calling [[ftorch_tensor(module):torch_tensor_from_array(interface)]] and
