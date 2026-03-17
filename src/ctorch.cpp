@@ -538,7 +538,7 @@ void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradi
 }
 
 // =============================================================================
-// --- Torch optimisers API
+// --- Torch optimizers API
 // =============================================================================
 
 // Check if an optimizer is valid
