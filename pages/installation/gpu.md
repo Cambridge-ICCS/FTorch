@@ -62,18 +62,26 @@ i.e., CPU-only.
 
 **2) Save PyTorch models on the target device**  
 When saving a model in PyTorch format, ensure that it has the desired GPU device
-type. For example, for the model definition in
-[`examples/2_SimpleNet.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/examples/2_SimpleNet/simplenet.py),
-this can be done by passing the `--device_type <cpu/cuda/hip/xpu/mps>` argument. This
-sets the `device_type` variable, which has the effect of transferring the model
-(and any input arrays used in tracing/testing) to the specified GPU device in the
-following lines:
+type. For example, in
+[`examples/2_SimpleNet/simplenet.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/examples/2_SimpleNet/simplenet.py),
+this is done in the following lines:
 ```python
     model = SimpleNet().to(device_type)
 ```
 and
 ```python
     input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0]).to(device_type)
+```
+The first line transfers the model to the specified GPU device, while the second
+line does the same for any input arrays used in tracing or testing. Having
+transferred the model and any input tensors to the GPU device, write them out
+using `torch.save`. In the SimpleNet example above, this is done with
+```python
+    torch.save(model.state_dict(), f"saved_simplenet_model_{device_type}.pt")
+```
+and
+```python
+    torch.save(input_tensor, f"saved_simplenet_input_tensor_{device_type}.pt")
 ```
 
 **3) Convert PyTorch model to TorchScript model**  
