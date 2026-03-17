@@ -61,8 +61,7 @@ def run_higher_dim_batch(model: torch.nn.Module) -> None:
         The model to use for inference.
     """
     print("\n--- Higher-Dimensional Batch Inference ---")
-    # Create a tensor with shape [batch=2, time=3, features=5] with fixed values for
-    # reproducibility
+    # Create a tensor with shape [batch=2, time=3, features=5] with fixed values for reproducibility
     input_tensor = torch.stack(
         [
             torch.stack(
