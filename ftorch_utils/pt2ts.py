@@ -128,12 +128,12 @@ def validate_output_model_file(output_model_file, input_model_file):
         )
         raise ValueError(value_error)
     if input_model_file == output_model_file:
-        warning = (
+        value_err = (
             f"Output TorchScript file name '{output_model_file}' coincides with input"
-            f" PyTorch file name '{input_model_file}'. It will be overwritten."
+            f" PyTorch file name '{input_model_file}'. It would be overwritten."
         )
-        warn(warning, stacklevel=2)
-    elif os.path.exists(output_model_file):
+        raise ValueError(value_err)
+    if os.path.exists(output_model_file):
         warning = (
             "A file already exists with output TorchScript file name"
             f" '{output_model_file}'. It will be overwritten."
