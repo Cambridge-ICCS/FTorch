@@ -6,8 +6,8 @@ from .torchscript import (
 )
 from .validation import (
     validate_input_model_file,
-    validate_output_model_file,
     validate_input_tensor_file,
+    validate_output_model_file,
 )
 
 __all__ = [
