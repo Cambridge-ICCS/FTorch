@@ -75,6 +75,11 @@ def parse_user_input():
         type=str,
     )
     parser.add_argument(
+        "--model_weights",
+        help="Name of the model weights if loading a pre-trained model.",
+        type=str,
+    )
+    parser.add_argument(
         "--trace",
         help=(
             "Apply tracing rather than scripting.\n\n"
@@ -118,9 +123,12 @@ def main_cli():
     input_tensor_file = parsed_args.input_tensor_file
     if input_tensor_file is not None:
         validate_input_tensor_file(input_tensor_file)
+    model_weights = parsed_args.model_weights
 
     # Load the input PyTorch model
-    model = load_pytorch(model_name, input_model_file, model_definition_file)
+    model = load_pytorch(
+        model_name, input_model_file, model_definition_file, model_weights
+    )
 
     if test or trace:
         # Load the input tensor

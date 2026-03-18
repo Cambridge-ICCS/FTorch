@@ -54,7 +54,10 @@ def trace_to_torchscript(
 
 
 def load_pytorch(
-    model_name: str, saved_model_file: str, model_definition_file: Optional[str] = None
+    model_name: str,
+    saved_model_file: str,
+    model_definition_file: Optional[str] = None,
+    model_weights: Optional[str] = None,
 ) -> torch.nn.Module:
     """
     Load a PyTorch model from file.
@@ -66,7 +69,10 @@ def load_pytorch(
     saved_model_file : str
         name of file containing saved PyTorch model
     model_definition_file : str
-        name of file containing PyTorch model definition
+        name of file containing PyTorch model definition if not loading a pre-trained
+        model
+    model_weights : str
+        name of model weights if loading a pretrained model
 
     Returns
     -------
@@ -91,11 +97,14 @@ def load_pytorch(
 
     # Construct the PyTorch model and load its weights from file
     cls = getattr(module, model_name)
-    model = cls()
+    if model_weights is None:
+        model = cls()
+        with torch.inference_mode():
+            model.load_state_dict(torch.load(saved_model_file, weights_only=True))
+    else:
+        model = cls(weights=model_weights)
     if pretrained:
         print("done.")
-    with torch.inference_mode():
-        model.load_state_dict(torch.load(saved_model_file, weights_only=True))
 
     # Switch-off some specific layers/parts of the model that behave
     # differently during training and inference
