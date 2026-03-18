@@ -69,7 +69,7 @@ contains
 
   ! Unit test for printing the parameters associated with a TorchScript model
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_model_print_parameters(this)
+  subroutine test_print_parameters(this)
     use ftorch_model, only: torch_model_print_parameters
     class(TestCaseType), intent(inout) :: this
     type(torch_model) :: model
@@ -80,11 +80,11 @@ contains
     ! Check that printing the model parameters doesn't raise an error
     call torch_model_print_parameters(model)
 
-  end subroutine test_torch_model_print_parameters
+  end subroutine test_print_parameters
 
   ! Unit test for checking the default of whether a Torch Model is in training mode
   @test(testparameters={get_parameters_short()})
-  subroutine test_torch_model_is_training_default(this)
+  subroutine test_is_training_default(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_model) :: model
 
@@ -94,11 +94,11 @@ contains
     ! Check that printing the model parameters doesn't raise an error
     @assertFalse(model%is_training())
 
-  end subroutine test_torch_model_is_training_default
+  end subroutine test_is_training_default
 
   ! Unit test for checking whether a Torch Model is in training mode
   @test(testparameters={get_parameters_is_training()})
-  subroutine test_torch_model_is_training(this)
+  subroutine test_is_training(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_model) :: model
 
@@ -108,6 +108,6 @@ contains
     ! Check that printing the model parameters doesn't raise an error
     @assertEqual(this%param%is_training, model%is_training())
 
-  end subroutine test_torch_model_is_training
+  end subroutine test_is_training
 
 end module unittest_model_interrogation

@@ -7,13 +7,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For specific details see the [FTorch online documentation](https://cambridge-iccs.github.io/FTorch/page/developer.html#versioning-and-changelog).
 
-## [Unreleased](https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...HEAD)
+## [Unreleased](https://github.com/Cambridge-ICCS/FTorch/compare/v1.1.0...HEAD)
 
 ### Added
 
 - Provide worked example and documentation on differentiating through calls to
   `torch_model_forward`.
   [#486](https://github.com/Cambridge-ICCS/FTorch/pull/486)
+
+### Changed
+
+### Removed
+
+### Fixed
+
+### Patch Releases
+
+
+## [1.1.0](https://github.com/Cambridge-ICCS/FTorch/releases/tag/v1.1.0) - 2026-02-26
+
+[GitHub diff with v1.0.0](https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...v1.1.0)
+
+### Added
+
+- Add unit testing for the Torch Model with multiple input/output tensors and batching
+  capabilities. [#559](https://github.com/Cambridge-ICCS/FTorch/pull/559)
+- Add documentation for release preparation of FTorch. [#552](https://github.com/Cambridge-ICCS/FTorch/pull/552)
 - Add documentation on FTorch's unit testing approach. [#489](https://github.com/Cambridge-ICCS/FTorch/pull/489)
 - Batching in FTorch documented, including a new worked example, in
   [#500](https://github.com/Cambridge-ICCS/FTorch/pull/500).
@@ -70,7 +89,26 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Removed
 
-- Windows CI disabled until GitHub runner issues resolved in [50ea6d7](https://github.com/Cambridge-ICCS/FTorch/commit/50ea6d78d79ebe638ebe597e745c015549f12a61)
+- `torch_tensor_array_delete` was removed in favour of using elemental
+  `torch_tensor_delete` instead in [#545](https://github.com/Cambridge-ICCS/FTorch/pull/545).
+  Users should be using the `torch_delete` interface so not be impacted and thus this
+  is not considered a breaking change.
+
+### Fixed
+
+- Finalizer for `torch_tensor`s (`torch_tensor_delete`) was made elemental in
+  [#545](https://github.com/Cambridge-ICCS/FTorch/pull/545). This fixes a possible
+  issue whereby users could experience a memory leak if not explicitly deleting arrays
+  of tensors. Now, being elemental, the finalizer will get called on both single tensors
+  and arrays of tensors when they go out of scope. As such `torch_tensor_array_delete`
+  was removed (use `torch_tensor_delete` instead).
+- Make input array for `torch_tensor_from_array` have the `pointer, contiguous`
+  properties rather than `target`
+  [#530](https://github.com/Cambridge-ICCS/FTorch/pull/530). This change
+  technically breaks the API because it becomes no longer possible to pass
+  temporary Fortran arrays to the second argument of `torch_tensor_from_array`.
+  However, that was a bug rather than a feature, so any workflow crashes due to
+  this change will provide the user with information on how to remove the error.
 
 ### Patch Releases
 

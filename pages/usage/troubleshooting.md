@@ -10,6 +10,7 @@ If you are experiencing problems building or using FTorch please see below for g
 - [Common Errors](#common-errors)
     - [No specific subroutine](#no-specific-subroutine)
     - [Segmentation faults](#segmentation-faults)
+- [Common warnings](#common-warnings)
 
 
 ### Usage
@@ -61,9 +62,32 @@ Error: There is no specific subroutine for the generic ‘torch_tensor_from_arra
 The first thing to do in this instance is to inspect the interface you are trying to
 call, and instead attempt to call the specific procedure you expect to use.
 This can often provide more instructive error messages about what you are doing
-incorrectly
+incorrectly.
 
-##### `int64` versions of `ftorch` for large tensors
+Such errors can also occur if you pass a temporary array where the procedure expects
+to receive a Fortran array with the `target` property. For example:
+```
+   34 |   call torch_tensor_from_array(a, [1.0_wp], torch_kCPU, requires_grad=.true.)
+      |                                                                             1
+Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+```
+That is, the second argument should be a Fortran array with the `target`
+property, not the temporary array `[1.0_wp]`. This kind of thing was possible in
+FTorch at v1.0 but has since been removed because it is erroneous. Similarly
+for expressions involving `torch_tensor`s, e.g., products such as
+```
+   34 |   call torch_tensor_from_array(a, 1.0*in_data1, torch_kCPU, requires_grad=.true.)
+      |                                                                                 1
+Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+```
+and slices such as
+```
+   36 |   call torch_tensor_from_array(a, in_data1(1,:), torch_kCPU, requires_grad=.true.)
+      |                                                                                  1
+Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+```
+
+#### `int64` versions of `ftorch` for large tensors
 
 An alternative cause of the 'no specific subroutine' error can occur if your tensor
 dimension is larger than FTorch supports by default.
@@ -97,3 +121,50 @@ the overloaded assignment operator should be triggered. As such, if you aren't
 using the bare `use ftorch` import then you should ensure you specify
 `use ftorch, only: assignment(=)` (as well as any other module members you
 require). See the [tensor documentation](|page|/usage/tensor.html) for more details.
+
+
+### Common warnings
+
+#### Structure constructor finalizer with Fortran 2008
+
+If you are building FTorch with gfortran and are specifying the Fortran 2008
+standard (e.g., with the compiler flag `-std=f2008` or by default) then you may
+get compiler warnings of the form:
+```
+Warning: The structure constructor at (1) has been finalized. This feature was removed by f08/0011. Use -std=f2018 or -std=gnu to eliminate the finalization.
+```
+These warn that the structure finalizer of the
+[[ftorch_tensor(module):torch_tensor(type)]] derived type is triggered when a tensor
+goes out of scope, despite the fact that this feature was removed from the 2008
+standard. That is, the [[ftorch_tensor(module):torch_tensor_delete(subroutine)]]
+subroutine is called so that the associated memory is automatically freed.
+Firstly, this is the behaviour that we want so we should not be too concerned.
+Secondly, structure finalizers are not used anywhere in FTorch, so we believe
+this warning to be errorneous. Use of the structure constructor for the
+`torch_tensor` type would be something like
+```fortran
+program
+  use, intrinsic :: iso_c_binding, only: c_null_ptr
+  use ftorch
+  implicit none
+  type(torch_tensor) :: tensor
+
+  tensor = torch_tensor(c_null_ptr)
+end program
+```
+While this code would compile successfully, the warning mentioned above would be
+raised.
+
+@warning
+The code snippet above is **not** the intended way to create a tensor. The
+intended way is to use the provided API procedures such as
+[[ftorch_tensor(module):torch_tensor_from_array(interface)]] or
+[[ftorch_tensor(module):torch_tensor_ones(subroutine)]]. The code snippet above is
+only intended to illustrate the use of the structure constructor and the
+associated warning.
+@endwarning
+
+See the [tensor documentation](|page|/usage/tensor.html#deallocation) for more
+details on the memory management of tensors and the use of the finalizer. For
+technical details on `f08/0011`, we refer to
+[https://wg5-fortran.org/N2001-N2050/N2006.txt](https://wg5-fortran.org/N2001-N2050/N2006.txt).

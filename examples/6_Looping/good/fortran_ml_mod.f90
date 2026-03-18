@@ -47,12 +47,18 @@ module ml_mod
     ! Infer
     call torch_model_forward(torch_net, input_tensors, output_tensors)
 
+    ! Clean up the tensors ready for next iteration
+    ! Note: This does not "delete" the Fortran `torch_tensor`s, but rather cleans up
+    ! any pointers in C++ and Fortran now we are done with them before creating new
+    ! ones with subsequent calls to `torch_tensor_from_array`.
+    ! The naming is consistent with C++ deletion.
+    call torch_delete(input_tensors)
+    call torch_delete(output_tensors)
+
   end subroutine ml_routine
 
   subroutine ml_final()
-    ! Cleanup
-    call torch_delete(input_tensors)
-    call torch_delete(output_tensors)
+    ! Cleanup model
     call torch_delete(torch_net)
 
   end subroutine ml_final
