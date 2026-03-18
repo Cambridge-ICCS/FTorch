@@ -27,10 +27,12 @@ The Torchscript model will be saved locally in the specified location.
 
 The `pt2ts.py` script is set up with the `argparse` Python module such that it
 accepts several command line arguments:
-* `input_model_file </path/to/saved/model>`, which is required to specify the
-  path to the directory in which the PyTorch model is saved.
+* `model_definition_file </path/to/model/def>`, which specifies the path of
+  the local file in which a PyTorch model is defined.
 * `model_name <model_name>`, which is required to specify the name of the model
   class (e.g. `SimpleNet`).
+* `input_model_file </path/to/saved/model>`, which is required to specify the
+  path to the directory in which the PyTorch model is saved.
 * `--output_model_file </path/to/save/model>`, which allows you to specify the
   path to the directory in which the TorchScript model should be saved.
 * `--trace`, which allows you to switch from scripting to tracing.
