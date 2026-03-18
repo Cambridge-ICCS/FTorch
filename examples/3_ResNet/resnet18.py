@@ -1,6 +1,7 @@
 """Load and run pretrained ResNet-18 from TorchVision."""
 
 import os
+from math import isclose
 
 import numpy as np
 import torch
@@ -77,6 +78,26 @@ def print_top_results(output: torch.Tensor, data_dir: str) -> None:
         result_error = (
             f"Predicted top 5 probabilities:\n{top5_prob}\ndo not match the expected"
             f" values:\n{expected_prob}"
+        )
+        raise ValueError(result_error)
+
+
+def check_results(output: torch.Tensor) -> None:
+    """
+    Compare top model output to expected result.
+
+    Parameters
+    ----------
+    output: torch.Tensor
+        Output from ResNet-18.
+    """
+    #  Run a softmax to get probabilities
+    predicted_prob = torch.max(torch.nn.functional.softmax(output[0], dim=0))
+    expected_prob = 0.8846225142478943
+    if not isclose(predicted_prob, expected_prob, abs_tol=1e-5):
+        result_error = (
+            f"Predicted probability: {predicted_prob} does not match the expected"
+            f" value: {expected_prob}."
         )
         raise ValueError(result_error)
 
@@ -170,3 +191,4 @@ if __name__ == "__main__":
         output = model(input_batch)
     print("done.")
     print_top_results(output, data_dir)
+    check_results(output)

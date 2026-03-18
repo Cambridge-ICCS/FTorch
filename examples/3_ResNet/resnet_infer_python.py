@@ -1,11 +1,10 @@
 """Load ResNet-18 saved to TorchScript and run inference with an example image."""
 
 import os
-from math import isclose
 
 import numpy as np
 import torch
-from resnet18 import print_top_results
+from resnet18 import check_results, print_top_results
 
 
 def deploy(
@@ -58,26 +57,6 @@ def deploy(
         raise ValueError(device_error)
 
     return output
-
-
-def check_results(output: torch.Tensor) -> None:
-    """
-    Compare top model output to expected result.
-
-    Parameters
-    ----------
-    output: torch.Tensor
-        Output from ResNet-18.
-    """
-    #  Run a softmax to get probabilities
-    predicted_prob = torch.max(torch.nn.functional.softmax(output[0], dim=0))
-    expected_prob = 0.8846225142478943
-    if not isclose(predicted_prob, expected_prob, abs_tol=1e-5):
-        result_error = (
-            f"Predicted probability: {predicted_prob} does not match the expected"
-            f" value: {expected_prob}."
-        )
-        raise ValueError(result_error)
 
 
 if __name__ == "__main__":
