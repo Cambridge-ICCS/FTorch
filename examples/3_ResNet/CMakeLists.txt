@@ -42,6 +42,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_resnet_resnet18
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/resnet18.py
+            --data_dir ${PROJECT_SOURCE_DIR}/data
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
   # 2. Run the pt2ts script to convert the model file to TorchScript format
@@ -50,9 +51,11 @@ if(CMAKE_BUILD_TESTS)
     NAME example_resnet_pt2ts
     COMMAND pt2ts resnet18
                   --input_tensor_file
-                  ${PROJECT_SOURCE_DIR}/saved_simplenet_input_tensor_cpu.pt
+                  ${PROJECT_SOURCE_DIR}/saved_resnet18_input_tensor_cpu.pt
                   --output_model_file
-                  ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
+                  ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt
+                  --model_weights IMAGENET1K_V1
+                  --precision float32
                   --test)
 
   # 3. Check the model can be loaded from file and run in Python and that its
@@ -61,6 +64,7 @@ if(CMAKE_BUILD_TESTS)
     NAME example_resnet_resnet_infer_python
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/resnet_infer_python.py
             --filepath ${PROJECT_BINARY_DIR}
+            --data_dir ${PROJECT_SOURCE_DIR}/data
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 4. Check the model can be loaded from file and run in Fortran and that its

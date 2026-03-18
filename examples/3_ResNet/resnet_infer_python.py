@@ -8,7 +8,9 @@ import torch
 from resnet18 import print_top_results
 
 
-def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
+def deploy(
+    saved_model: str, device: str, data_dir: str, batch_size: int = 1
+) -> torch.Tensor:
     """
     Load TorchScript ResNet-18 and run inference with Tensor from example image.
 
@@ -18,6 +20,8 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
         location of ResNet-18 saved to Torchscript
     device : str
         Torch device to run model on, 'cpu' or 'cuda'
+    data_dir : str
+        Path to data directory
     batch_size : int
         batch size to run (default 1)
 
@@ -29,7 +33,7 @@ def deploy(saved_model: str, device: str, batch_size: int = 1) -> torch.Tensor:
     transposed_shape = [224, 224, 3, batch_size]
     precision = np.float32
 
-    np_data = np.fromfile("data/image_tensor.dat", dtype=precision)
+    np_data = np.fromfile(os.path.join(data_dir, "image_tensor.dat"), dtype=precision)
     np_data = np_data.reshape(transposed_shape)
     np_data = np_data.transpose()
     input_tensor = torch.from_numpy(np_data)
@@ -70,8 +74,8 @@ def check_results(output: torch.Tensor) -> None:
     expected_prob = 0.8846225142478943
     if not isclose(predicted_prob, expected_prob, abs_tol=1e-5):
         result_error = (
-            f"Predicted probability: {predicted_prob} does not match the"
-            "expected value: {expected_prob}."
+            f"Predicted probability: {predicted_prob} does not match the expected"
+            f" value: {expected_prob}."
         )
         raise ValueError(result_error)
 
@@ -88,15 +92,21 @@ if __name__ == "__main__":
         type=str,
         default=os.path.dirname(__file__),
     )
+    parser.add_argument(
+        "--data_dir",
+        help="Path to the directory containing the input data",
+        type=str,
+        default=os.path.join(os.path.dirname(__file__), "data"),
+    )
     parsed_args = parser.parse_args()
-    filepath = parsed_args.filepath
-    saved_model_file = os.path.join(filepath, "saved_resnet18_model_cpu.pt")
+    saved_model_file = os.path.join(parsed_args.filepath, "saved_resnet18_model_cpu.pt")
+    data_dir = parsed_args.data_dir
 
     device_to_run = "cpu"
 
     batch_size_to_run = 1
 
     with torch.inference_mode():
-        result = deploy(saved_model_file, device_to_run, batch_size_to_run)
-    print_top_results(result)
+        result = deploy(saved_model_file, device_to_run, data_dir, batch_size_to_run)
+    print_top_results(result, data_dir)
     check_results(result)

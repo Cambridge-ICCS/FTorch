@@ -1,5 +1,7 @@
 """Load and run pretrained ResNet-18 from TorchVision."""
 
+import os
+
 import numpy as np
 import torch
 import torchvision
@@ -38,19 +40,21 @@ def initialize(precision: torch.dtype) -> torch.nn.Module:
     return model
 
 
-def print_top_results(output: torch.Tensor) -> None:
+def print_top_results(output: torch.Tensor, data_dir: str) -> None:
     """Print top 5 results.
 
     Parameters
     ----------
     output: torch.Tensor
         Output from ResNet-18.
+    data_dir : str
+        Path to data directory
     """
     #  Run a softmax to get probabilities
     probabilities = torch.nn.functional.softmax(output[0], dim=0)
 
     # Read ImageNet labels from text file
-    cats_filename = "data/categories.txt"
+    cats_filename = os.path.join(data_dir, "categories.txt")
     categories = np.genfromtxt(cats_filename, dtype=str, delimiter="\n")
 
     # Show top categories per image
@@ -71,8 +75,8 @@ def print_top_results(output: torch.Tensor) -> None:
     ]
     if not np.allclose(top5_prob, expected_prob, rtol=1e-5):
         result_error = (
-            f"Predicted top 5 probabilities:\n{top5_prob}\ndo not match the"
-            "expected values:\n{expected_prob}"
+            f"Predicted top 5 probabilities:\n{top5_prob}\ndo not match the expected"
+            f" values:\n{expected_prob}"
         )
         raise ValueError(result_error)
 
@@ -91,8 +95,16 @@ if __name__ == "__main__":
         choices=["cpu", "cuda", "hip", "xpu", "mps"],
         default="cpu",
     )
+    parser.add_argument(
+        "--data_dir",
+        help="Path to the directory containing the input data",
+        type=str,
+        default=os.path.join(os.path.dirname(__file__), "data"),
+    )
+    parsed_args = parser.parse_args()
     parsed_args = parser.parse_args()
     device_type = parsed_args.device_type
+    data_dir = parsed_args.data_dir
 
     # Specify working precision
     np_precision = np.float32
@@ -110,7 +122,7 @@ if __name__ == "__main__":
     # Transform image into the form expected by the pre-trained model, using the mean
     # and standard deviation from the ImageNet dataset
     # See: https://pytorch.org/vision/0.8/models.html
-    image_filename = "data/dog.jpg"
+    image_filename = os.path.join(data_dir, "dog.jpg")
     input_image = Image.open(image_filename)
     preprocess = torchvision.transforms.Compose(
         [
@@ -130,10 +142,11 @@ if __name__ == "__main__":
     np_input = np.array(input_batch.numpy().transpose().flatten(), dtype=np_precision)  # type: np.typing.NDArray
 
     # Save data as binary
-    np_input.tofile("data/image_tensor.dat")
+    tensor_filename = os.path.join(data_dir, "image_tensor.dat")
+    np_input.tofile(tensor_filename)
 
     # Load saved data to check it was saved correctly
-    np_data = np.fromfile("data/image_tensor.dat", dtype=np_precision)  # type: np.typing.NDArray
+    np_data = np.fromfile(tensor_filename, dtype=np_precision)  # type: np.typing.NDArray
 
     # Reshape to original tensor shape
     tensor_shape = np.array(input_batch.numpy()).transpose().shape
@@ -141,8 +154,8 @@ if __name__ == "__main__":
     np_data = np_data.transpose()
     if not np.array_equal(np_data, input_batch.numpy()):
         result_error = (
-            "Image read from saved file (data/image_tensor.dat) does not match"
-            "processed data read from data/dog.jpg expected value."
+            f"Image read from saved file ({tensor_filename}) does not match processed"
+            f" data read from {data_dir}/dog.jpg expected value."
         )
         raise ValueError(result_error)
     print("done.")
@@ -156,4 +169,4 @@ if __name__ == "__main__":
     with torch.inference_mode():
         output = model(input_batch)
     print("done.")
-    print_top_results(output)
+    print_top_results(output, data_dir)
