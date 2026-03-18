@@ -54,6 +54,14 @@ contains
     test_case_constructor%param = param
   end function test_case_constructor
 
+  ! A simple single parameter set for tests that do not need parameterisation
+  function get_parameters_simple() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,.false.,.false.,0) &
+    ]
+  end function get_parameters_simple
+
   ! A fixture comprised of parameter sets for destructor tests
   function get_parameters_destruction() result(params)
     type(TestParametersType), allocatable :: params(:)
@@ -83,6 +91,16 @@ contains
     ]
   end function get_parameters_reordered
 
+  ! A fixture comprised of parameter sets for elemental (array) deletion tests
+  function get_parameters_elemental() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,.false.,.false.,1), & ! Basic case
+      TestParametersType(.true.,.false.,.false.,3), &   ! With requires_grad
+      TestParametersType(.false.,.true.,.false.,1) &  ! Autodelete
+    ]
+  end function get_parameters_elemental
+
   ! Function for representing a parameter set as a string
   function toString(this) result(string)
     class(TestParametersType), intent(in) :: this
@@ -95,7 +113,7 @@ contains
 
   ! Unit test for the torch_tensor_empty subroutine
   @test(testparameters={get_parameters_requires_grad()})
-  subroutine test_torch_tensor_empty(this)
+  subroutine test_empty(this)
     use ftorch_tensor, only: torch_tensor_empty
 
     implicit none
@@ -120,11 +138,11 @@ contains
     @assertEqual(expected_stride, tensor % get_stride())
     @assertEqual(tensor_shape, tensor % get_shape())
 
-  end subroutine test_torch_tensor_empty
+  end subroutine test_empty
 
   ! Unit test for the torch_tensor_zeros subroutine
   @test(testParameters={get_parameters_requires_grad()})
-  subroutine test_torch_tensor_zeros(this)
+  subroutine test_zeros(this)
     use ftorch_tensor, only: torch_tensor_zeros
 
     implicit none
@@ -160,13 +178,13 @@ contains
 
     ! Check that the tensor values are all zero
     expected(:,:) = 0.0
-    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_zeros"))
+    @assertTrue(allclose(out_data, expected, test_name="test_zeros"))
 
-  end subroutine test_torch_tensor_zeros
+  end subroutine test_zeros
 
   ! Unit test for the torch_tensor_ones subroutine
   @test(testParameters={get_parameters_requires_grad()})
-  subroutine test_torch_tensor_ones(this)
+  subroutine test_ones(this)
     use ftorch_tensor, only: torch_tensor_ones
 
     implicit none
@@ -202,9 +220,9 @@ contains
 
     ! Check that the tensor values are all one
     expected(:,:) = 1.0
-    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_ones"))
+    @assertTrue(allclose(out_data, expected, test_name="test_ones"))
 
-  end subroutine test_torch_tensor_ones
+  end subroutine test_ones
 
   ! Unit test for the torch_tensor_from_array subroutine in the 1D case
   @test(testParameters={get_parameters_requires_grad()})
@@ -243,7 +261,7 @@ contains
     tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    @assertTrue(allclose(out_data, in_data, test_name="test_torch_tensor_from_array"))
+    @assertTrue(allclose(out_data, in_data, test_name="test_from_array"))
 
   end subroutine test_torch_from_array_1d
 
@@ -295,7 +313,7 @@ contains
 
     ! Compare the data in the tensor to the (reordered) input data
     expected(:,:) = reshape(in_data, [2,3], order=tensor_layout)
-    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_from_array"))
+    @assertTrue(allclose(out_data, expected, test_name="test_from_array"))
 
   end subroutine test_torch_from_array_2d
 
@@ -347,7 +365,7 @@ contains
 
     ! Compare the data in the tensor to the (reordered) input data
     expected(:,:,:) = reshape(in_data, [1,2,3], order=tensor_layout)
-    @assertTrue(allclose(out_data, expected, test_name="test_torch_tensor_from_array"))
+    @assertTrue(allclose(out_data, expected, test_name="test_from_array"))
 
   end subroutine test_torch_from_array_3d
 
@@ -388,14 +406,14 @@ contains
     tensor2 = tensor1
 
     ! Compare the data in the tensor to the input data
-    @assertTrue(allclose(out_data, in_data, test_name="test_torch_tensor_from_blob"))
+    @assertTrue(allclose(out_data, in_data, test_name="test_from_blob"))
 
   end subroutine test_torch_from_blob
 
   ! Unit test for destroying tensors, both manually with torch_tensor_delete and automatically (via
   ! torch_tensor's destructor)
   @test(testparameters={get_parameters_destruction()})
-  subroutine test_torch_tensor_destruction(this)
+  subroutine test_scalar_destruction(this)
     use ftorch_tensor, only: torch_tensor_empty
 
     implicit none
@@ -427,6 +445,96 @@ contains
 
     end do
 
-  end subroutine test_torch_tensor_destruction
+  end subroutine test_scalar_destruction
+
+  ! Unit test for destroying arrays of tensors, both manually with torch_tensor_delete
+  ! and automatically (via torch_tensor's finalizer)
+  @test(testParameters={get_parameters_elemental()})
+  subroutine test_array_destruction(this)
+    use ftorch_tensor, only: torch_tensor_empty
+
+    class(TestCaseType), intent(inout) :: this
+    integer :: i
+    integer, parameter :: ndims = 2
+    integer, parameter :: n_tensors = 5
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    type(torch_tensor) :: tensor_array(n_tensors)
+
+    ! Create array of tensors and confirm all pointers associated
+    do i = 1, n_tensors
+      call torch_tensor_empty(tensor_array(i), ndims, tensor_shape, dtype, &
+                              device_type, device_index, &
+                              this%param%requires_grad)
+      @assertTrue(c_associated(tensor_array(i)%p))
+    end do
+
+    if (.not. this%param%auto_delete) then
+      ! Test elemental deletion
+      call torch_tensor_delete(tensor_array)
+
+      ! Verify all are properly deleted
+      do i = 1, n_tensors
+        @assertFalse(c_associated(tensor_array(i)%p))
+      end do
+    end if
+
+  end subroutine test_array_destruction
+
+  ! Unit test for array deletion edge cases
+  ! Empty array
+  @test(testParameters={get_parameters_simple()})
+  subroutine test_empty_array_destruct(this)
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: empty_array(0)
+
+    ! Test empty array doesn't raise errors
+    call torch_tensor_delete(empty_array)
+
+  end subroutine test_empty_array_destruct
+
+  ! Single element array
+  @test(testParameters={get_parameters_simple()})
+  subroutine test_single_array_destruct(this)
+    use ftorch_tensor, only: torch_tensor_zeros
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: single_array(1)
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+
+    call torch_tensor_zeros(single_array(1), ndims, tensor_shape, dtype, device_type, device_index)
+    @assertTrue(c_associated(single_array(1)%p))
+
+    call torch_tensor_delete(single_array)
+    @assertFalse(c_associated(single_array(1)%p))
+
+  end subroutine test_single_array_destruct
+
+  ! Array of partially associated and unassociated tensors
+  @test(testParameters={get_parameters_simple()})
+  subroutine test_partial_array_destruct(this)
+    use ftorch_tensor, only: torch_tensor_zeros
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: mixed_array(3)
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+
+    ! Allocate elements 1 and 3, mixed_array(2) remains unallocated
+    call torch_tensor_zeros(mixed_array(1), ndims, tensor_shape, dtype, device_type, device_index)
+    call torch_tensor_zeros(mixed_array(3), ndims, tensor_shape, dtype, device_type, device_index)
+
+    @assertTrue(c_associated(mixed_array(1)%p))
+    @assertFalse(c_associated(mixed_array(2)%p))
+    @assertTrue(c_associated(mixed_array(3)%p))
+
+    call torch_tensor_delete(mixed_array)
+
+    @assertFalse(c_associated(mixed_array(1)%p))
+    @assertFalse(c_associated(mixed_array(2)%p))
+    @assertFalse(c_associated(mixed_array(3)%p))
+
+  end subroutine test_partial_array_destruct
 
 end module unittest_tensor_constructors_destructors

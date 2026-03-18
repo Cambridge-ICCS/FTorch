@@ -3,6 +3,7 @@ author: Jack Atkinson
 date: Last Updated: October 2025
 ordered_subpage: developer.md
 ordered_subpage: testing.md
+ordered_subpage: release_checklist.md
 
 
 ## FTorch Developer Guide
@@ -12,6 +13,7 @@ This section provides guidance for developers, including API extension, testing,
 
 - [Developer Documentation](|page|/developer/developer.html)
 - [Testing Suite](|page|/developer/testing.html)
+- [Release Checklist](|page|/developer/release_checklist.html)
 
 
 ### Getting involved
