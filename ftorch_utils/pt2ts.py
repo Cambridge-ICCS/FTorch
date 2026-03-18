@@ -36,11 +36,6 @@ def parse_user_input():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "model_definition_file",
-        help="Filename for the definition of the PyTorch model, including path",
-        type=str,
-    )
-    parser.add_argument(
         "model_name",
         help="Name of the PyTorch model",
         type=str,
@@ -58,6 +53,15 @@ def parse_user_input():
         help=(
             "Filename for the model to be saved in TorchScript format, including path"
             " (defaults to match the input_model_file)"
+        ),
+        type=str,
+    )
+    parser.add_argument(
+        "--model_definition_file",
+        help=(
+            "Filename for the definition of the PyTorch model, including path. If not"
+            " provided, an attempt will be made to load the model from TorchVision's"
+            " pre-trained models."
         ),
         type=str,
     )
@@ -116,7 +120,7 @@ def main_cli():
         validate_input_tensor_file(input_tensor_file)
 
     # Load the input PyTorch model
-    model = load_pytorch(model_definition_file, model_name, input_model_file)
+    model = load_pytorch(model_name, input_model_file, model_definition_file)
 
     if test or trace:
         # Load the input tensor

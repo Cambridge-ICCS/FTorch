@@ -48,8 +48,8 @@ if(CMAKE_BUILD_TESTS)
   #    and run basic checks
   add_test(
     NAME example_simplenet_pt2ts
-    COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
-                  SimpleNet
+    COMMAND pt2ts SimpleNet
+                  --model_definition_file ${PROJECT_SOURCE_DIR}/simplenet.py
                   ${PROJECT_SOURCE_DIR}/saved_simplenet_model_cpu.pt
                   --input_tensor_file
                   ${PROJECT_SOURCE_DIR}/saved_simplenet_input_tensor_cpu.pt
