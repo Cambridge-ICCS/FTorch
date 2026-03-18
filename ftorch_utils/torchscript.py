@@ -109,7 +109,7 @@ def load_pytorch(
         model = cls(weights=model_weights)
     if pretrained:
         print("done.")
-    else:
+    elif model_weights is None:
         with torch.inference_mode():
             model.load_state_dict(torch.load(saved_model_file, weights_only=True))
 
