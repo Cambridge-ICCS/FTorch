@@ -11,9 +11,11 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
-### Changed
+- Provide worked example and documentation on differentiating through calls to
+  `torch_model_forward`.
+  [#486](https://github.com/Cambridge-ICCS/FTorch/pull/486)
 
-### Removed
+### Changed
 
 ### Removed
 

@@ -29,25 +29,40 @@ endif()
 execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
                         ${PROJECT_SOURCE_DIR}/requirements.txt)
 
-# Fortran example
-add_executable(autograd autograd.f90)
-target_link_libraries(autograd PRIVATE FTorch::ftorch)
+# Fortran examples
+add_executable(tensor_arithmetic tensor_arithmetic.f90)
+target_link_libraries(tensor_arithmetic PRIVATE FTorch::ftorch)
+add_executable(simplenet simplenet.f90)
+target_link_libraries(simplenet PRIVATE FTorch::ftorch)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
-  # 1. Check the Python Autograd script runs successfully
-  add_test(NAME example_autograd_pyautograd
-         COMMAND ${Python_EXECUTABLE}
-         ${PROJECT_SOURCE_DIR}/autograd.py)
+  # 1. Check the Python tensor_arithmetic script runs successfully
+  add_test(NAME example_autograd_tensor_arithmetic_python
+           COMMAND ${Python_EXECUTABLE}
+                   ${PROJECT_SOURCE_DIR}/tensor_arithmetic.py)
 
-  # 2. Check the Fortran Autograd script runs successfully
+  # 2. Check the Fortran tensor_arithmetic script runs successfully
   add_test(
-    NAME example_autograd_fautograd
-    COMMAND autograd
+    NAME example_autograd_tensor_arithmetic_fortran
+    COMMAND tensor_arithmetic
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_autograd_fautograd
+  set_tests_properties(example_autograd_tensor_arithmetic_fortran
                        PROPERTIES PASS_REGULAR_EXPRESSION
-                       "Autograd example ran successfully")
+                       "Tensor arithmetic Autograd example ran successfully")
+
+  # 3. Check the Python SimpleNet Autograd script runs successfully
+  add_test(NAME example_autograd_simplenet_python
+           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py)
+
+  # 4. Check the Fortran SimpleNet Autograd script runs successfully
+  add_test(
+    NAME example_autograd_simplenet_fortran
+    COMMAND simplenet
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_tests_properties(example_autograd_simplenet_fortran
+                       PROPERTIES PASS_REGULAR_EXPRESSION
+                       "SimpleNet Autograd example ran successfully")
 endif()
