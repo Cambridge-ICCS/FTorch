@@ -60,7 +60,7 @@ def load_pytorch(
     model_weights: Optional[str] = None,
 ) -> torch.nn.Module:
     """
-    Load a PyTorch model from file.
+    Load a PyTorch model from file or from TorchVision's pre-trained models.
 
     Parameters
     ----------
