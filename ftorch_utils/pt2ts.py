@@ -77,7 +77,11 @@ def parse_user_input():
     )
     parser.add_argument(
         "--model_weights",
-        help="Name of the model weights if loading a pre-trained model.",
+        help=(
+            "Name of the model weights if loading a pre-trained model. This can also"
+            " be used for models defined in a local file provided their `__init__`"
+            " method accepts a `model_weights` keyword argument."
+        ),
         type=str,
     )
     parser.add_argument(
