@@ -96,6 +96,12 @@ def parse_user_input():
         ),
         action="store_true",
     )
+    parser.add_argument(
+        "--precision",
+        help="Set the working precision of the model.",
+        type=torch.dtype,
+        default=torch.float32,
+    )
     parsed_args = parser.parse_args()
     if parsed_args.input_tensor_file is None and parsed_args.trace:
         value_error = "An input tensor must be provided to use --trace."
@@ -127,6 +133,10 @@ def main_cli():
     if input_tensor_file is not None:
         validate_input_tensor_file(input_tensor_file)
     model_weights = parsed_args.model_weights
+    precision = parsed_args.precision
+
+    # Set working precision
+    torch.set_default_dtype(precision)
 
     # Load the input PyTorch model
     model = load_pytorch(
