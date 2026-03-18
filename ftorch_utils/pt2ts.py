@@ -140,7 +140,7 @@ def main_cli():
 
     # Load the input PyTorch model
     model = load_pytorch(
-        model_name, input_model_file, model_definition_file, model_weights
+        model_name, model_definition_file, input_model_file, model_weights
     )
 
     if test or trace:

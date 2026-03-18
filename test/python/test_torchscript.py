@@ -59,7 +59,7 @@ def test_trace_to_torchscript_creates_file(filename):
 def test_load_pytorch(filename):
     """Check that `load_pytorch` is able to load a file in PyTorch pickled format."""
     torch.save(SimpleNet().state_dict(), filename)
-    model = load_pytorch(os.path.abspath(__file__), "SimpleNet", filename)
+    model = load_pytorch("SimpleNet", os.path.abspath(__file__), filename)
     assert isinstance(model, torch.nn.Module)
 
 

@@ -55,8 +55,8 @@ def trace_to_torchscript(
 
 def load_pytorch(
     model_name: str,
-    saved_model_file: Optional[str] = None,
     model_definition_file: Optional[str] = None,
+    saved_model_file: Optional[str] = None,
     model_weights: Optional[str] = None,
 ) -> torch.nn.Module:
     """
@@ -66,11 +66,11 @@ def load_pytorch(
     ----------
     model_name : str
         name of the PyTorch model
-    saved_model_file : str
-        name of file containing saved PyTorch model if not loading a pre-trained model
     model_definition_file : str
         name of file containing PyTorch model definition if not loading a pre-trained
         model
+    saved_model_file : str
+        name of file containing saved PyTorch model if not loading a pre-trained model
     model_weights : str
         name of model weights if loading a pretrained model
 
