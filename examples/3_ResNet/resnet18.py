@@ -6,10 +6,12 @@ import torchvision
 from PIL import Image
 
 
-# Initialize everything
 def initialize(precision: torch.dtype) -> torch.nn.Module:
     """
     Download pre-trained ResNet-18 model and prepare for inference.
+
+    These steps duplicate the process for loading pre-trained models in the pt2ts
+    script.
 
     Parameters
     ----------
@@ -34,65 +36,6 @@ def initialize(precision: torch.dtype) -> torch.nn.Module:
     model.eval()
 
     return model
-
-
-def run_model(model: torch.nn.Module, precision: type) -> None:
-    """
-    Run the pre-trained ResNet-18 with an example image of a dog.
-
-    Parameters
-    ----------
-    model: torch.nn.Module
-        Pretrained model to run.
-    precision: type
-        NumPy data type to save input tensor.
-    """
-    # Transform image into the form expected by the pre-trained model, using the mean
-    # and standard deviation from the ImageNet dataset
-    # See: https://pytorch.org/vision/0.8/models.html
-    image_filename = "data/dog.jpg"
-    input_image = Image.open(image_filename)
-    preprocess = torchvision.transforms.Compose(
-        [
-            torchvision.transforms.Resize(256),
-            torchvision.transforms.CenterCrop(224),
-            torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(
-                mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-            ),
-        ]
-    )
-    input_tensor = preprocess(input_image)
-    input_batch = input_tensor.unsqueeze(0)
-
-    print("Saving input batch...", end="")
-    # Transpose input before saving so order consistent with Fortran
-    np_input = np.array(input_batch.numpy().transpose().flatten(), dtype=precision)  # type: np.typing.NDArray
-
-    # Save data as binary
-    np_input.tofile("data/image_tensor.dat")
-
-    # Load saved data to check it was saved correctly
-    np_data = np.fromfile("data/image_tensor.dat", dtype=precision)  # type: np.typing.NDArray
-
-    # Reshape to original tensor shape
-    tensor_shape = np.array(input_batch.numpy()).transpose().shape
-    np_data = np_data.reshape(tensor_shape)
-    np_data = np_data.transpose()
-    if not np.array_equal(np_data, input_batch.numpy()):
-        result_error = (
-            "Image read from saved file (data/image_tensor.dat) does not match"
-            "processed data read from data/dog.jpg expected value."
-        )
-        raise ValueError(result_error)
-    print("done.")
-
-    print("Running ResNet-18 model for input...", end="")
-    with torch.inference_mode():
-        output = model(input_batch)
-    print("done.")
-
-    print_top_results(output)
 
 
 def print_top_results(output: torch.Tensor) -> None:
@@ -135,8 +78,24 @@ def print_top_results(output: torch.Tensor) -> None:
 
 
 if __name__ == "__main__":
-    np_precision = np.float32
+    import argparse
 
+    # Parse user input
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--device_type",
+        help="Device type to run the inference on",
+        type=str,
+        choices=["cpu", "cuda", "hip", "xpu", "mps"],
+        default="cpu",
+    )
+    parsed_args = parser.parse_args()
+    device_type = parsed_args.device_type
+
+    # Specify working precision
+    np_precision = np.float32
     if np_precision == np.float32:
         torch_precision = torch.float32
     elif np_precision == np.float64:
@@ -145,5 +104,56 @@ if __name__ == "__main__":
         precision_mismatch = "`np_precision` must be type `np.float32` or `np.float64`"
         raise ValueError(precision_mismatch)
 
-    rn_model = initialize(torch_precision)
-    run_model(rn_model, np_precision)
+    # Initialize model on the specified device
+    model = initialize(torch_precision).to(device_type)
+
+    # Transform image into the form expected by the pre-trained model, using the mean
+    # and standard deviation from the ImageNet dataset
+    # See: https://pytorch.org/vision/0.8/models.html
+    image_filename = "data/dog.jpg"
+    input_image = Image.open(image_filename)
+    preprocess = torchvision.transforms.Compose(
+        [
+            torchvision.transforms.Resize(256),
+            torchvision.transforms.CenterCrop(224),
+            torchvision.transforms.ToTensor(),
+            torchvision.transforms.Normalize(
+                mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+            ),
+        ]
+    )
+    input_tensor = preprocess(input_image)
+    input_batch = input_tensor.unsqueeze(0)
+
+    print("Saving input batch...", end="")
+    # Transpose input before saving so order consistent with Fortran
+    np_input = np.array(input_batch.numpy().transpose().flatten(), dtype=np_precision)  # type: np.typing.NDArray
+
+    # Save data as binary
+    np_input.tofile("data/image_tensor.dat")
+
+    # Load saved data to check it was saved correctly
+    np_data = np.fromfile("data/image_tensor.dat", dtype=np_precision)  # type: np.typing.NDArray
+
+    # Reshape to original tensor shape
+    tensor_shape = np.array(input_batch.numpy()).transpose().shape
+    np_data = np_data.reshape(tensor_shape)
+    np_data = np_data.transpose()
+    if not np.array_equal(np_data, input_batch.numpy()):
+        result_error = (
+            "Image read from saved file (data/image_tensor.dat) does not match"
+            "processed data read from data/dog.jpg expected value."
+        )
+        raise ValueError(result_error)
+    print("done.")
+
+    # Save the input tensor in PyTorch format
+    input_batch = input_batch.to(device_type)
+    torch.save(input_batch, f"saved_resnet18_input_tensor_{device_type}.pt")
+
+    # Run the model
+    print("Running ResNet-18 model for input...", end="")
+    with torch.inference_mode():
+        output = model(input_batch)
+    print("done.")
+    print_top_results(output)
