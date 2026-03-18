@@ -55,7 +55,7 @@ def trace_to_torchscript(
 
 def load_pytorch(
     model_name: str,
-    saved_model_file: str,
+    saved_model_file: Optional[str] = None,
     model_definition_file: Optional[str] = None,
     model_weights: Optional[str] = None,
 ) -> torch.nn.Module:
@@ -67,7 +67,7 @@ def load_pytorch(
     model_name : str
         name of the PyTorch model
     saved_model_file : str
-        name of file containing saved PyTorch model
+        name of file containing saved PyTorch model if not loading a pre-trained model
     model_definition_file : str
         name of file containing PyTorch model definition if not loading a pre-trained
         model
@@ -79,12 +79,18 @@ def load_pytorch(
     model : torch.NN.Module
         a PyTorch model
     """
-    pretrained = model_definition_file is None
+    pretrained = model_definition_file is None and saved_model_file is None
     if pretrained:
         import torchvision
 
         print(f"Loading pre-trained {model_name} model...", end="")
         module = torchvision.models
+    elif model_definition_file is None or saved_model_file is None:
+        raise ValueError(
+            "Model definition file and input model file must either both be provided"
+            " (to load a model from file) or both be skipped (to load a pre-trained"
+            " model)."
+        )
     else:
         # Import the module containing the model definition
         module_name, _ = os.path.splitext(os.path.basename(model_definition_file))
@@ -99,12 +105,13 @@ def load_pytorch(
     cls = getattr(module, model_name)
     if model_weights is None:
         model = cls()
-        with torch.inference_mode():
-            model.load_state_dict(torch.load(saved_model_file, weights_only=True))
     else:
         model = cls(weights=model_weights)
     if pretrained:
         print("done.")
+    else:
+        with torch.inference_mode():
+            model.load_state_dict(torch.load(saved_model_file, weights_only=True))
 
     # Switch-off some specific layers/parts of the model that behave
     # differently during training and inference

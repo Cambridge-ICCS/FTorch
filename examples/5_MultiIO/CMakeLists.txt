@@ -48,7 +48,9 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_multiio_pt2ts
     COMMAND pt2ts MultiIONet
-                  --model_definition_file ${PROJECT_SOURCE_DIR}/multiionet.py
+                  --model_definition_file
+                  ${PROJECT_SOURCE_DIR}/multiionet.py
+                  --input_model_file
                   ${PROJECT_SOURCE_DIR}/saved_multiio_model_cpu.pt
                   --input_tensor_file
                   ${PROJECT_SOURCE_DIR}/saved_multiio_input_tensor_cpu.pt

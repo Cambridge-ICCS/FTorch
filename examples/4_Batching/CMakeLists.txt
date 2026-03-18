@@ -48,7 +48,9 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_batching_pt2ts
     COMMAND pt2ts BatchingNet
-                  --model_definition_file ${PROJECT_SOURCE_DIR}/batchingnet.py
+                  --model_definition_file
+                  ${PROJECT_SOURCE_DIR}/batchingnet.py
+                  --input_model_file
                   ${PROJECT_SOURCE_DIR}/saved_batchingnet_model_cpu.pt
                   --input_tensor_file
                   ${PROJECT_SOURCE_DIR}/saved_batchingnet_input_tensor_cpu.pt

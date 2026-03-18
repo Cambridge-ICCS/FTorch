@@ -40,12 +40,22 @@ def parse_user_input():
         help="Name of the PyTorch model",
         type=str,
     )
-    # TODO: Accept pre-trained model name (needed for ResNet)
-    #       Perhaps make model_definition_file optional? Need to allow weights
-    #       specification, too
     parser.add_argument(
-        "input_model_file",
-        help="Filename for the model saved in PyTorch format, including path",
+        "--model_definition_file",
+        help=(
+            "Filename for the definition of the PyTorch model, including path. If not"
+            " provided, an attempt will be made to load the model from TorchVision's"
+            " pre-trained models."
+        ),
+        type=str,
+    )
+    parser.add_argument(
+        "--input_model_file",
+        help=(
+            "Filename for the model saved in PyTorch format, including path. If not"
+            " provided, an attempt will be made to load the model from TorchVision's"
+            " pre-trained models."
+        ),
         type=str,
     )
     parser.add_argument(
@@ -53,15 +63,6 @@ def parse_user_input():
         help=(
             "Filename for the model to be saved in TorchScript format, including path"
             " (defaults to match the input_model_file)"
-        ),
-        type=str,
-    )
-    parser.add_argument(
-        "--model_definition_file",
-        help=(
-            "Filename for the definition of the PyTorch model, including path. If not"
-            " provided, an attempt will be made to load the model from TorchVision's"
-            " pre-trained models."
         ),
         type=str,
     )
@@ -115,9 +116,11 @@ def main_cli():
     model_definition_file = parsed_args.model_definition_file
     model_name = parsed_args.model_name
     input_model_file = parsed_args.input_model_file
-    validate_input_model_file(input_model_file)
+    if input_model_file is not None:
+        validate_input_model_file(input_model_file)
     output_model_file = parsed_args.output_model_file or input_model_file
-    validate_output_model_file(output_model_file, input_model_file)
+    if output_model_file is not None:
+        validate_output_model_file(output_model_file, input_model_file)
     trace = parsed_args.trace
     test = parsed_args.test
     input_tensor_file = parsed_args.input_tensor_file
