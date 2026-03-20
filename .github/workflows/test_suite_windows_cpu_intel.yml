@@ -101,11 +101,11 @@ jobs:
           set PATH=%FTORCH_INSTALL_DIR%\bin;%PATH%
           set PATH=%TORCH_PATH%\torch\lib;%PATH%
           cd build
-          ctest --verbose --tests-regex example1
-          ctest --verbose --tests-regex example2
-          ctest --verbose --tests-regex example3
-          ctest --verbose --tests-regex example4
-          ctest --verbose --tests-regex example8
+          ctest --verbose --tests-regex example_tensor
+          ctest --verbose --tests-regex example_simplenet
+          ctest --verbose --tests-regex example_resnet
+          ctest --verbose --tests-regex example_multiio
+          ctest --verbose --tests-regex example_autograd
 
       - name: Standalone SimpleNet example
         shell: cmd
