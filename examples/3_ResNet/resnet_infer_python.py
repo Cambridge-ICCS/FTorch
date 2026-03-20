@@ -78,8 +78,9 @@ if __name__ == "__main__":
         default=os.path.join(os.path.dirname(__file__), "data"),
     )
     parsed_args = parser.parse_args()
-    saved_model_file = os.path.join(parsed_args.filepath, "saved_resnet18_model_cpu.pt")
+    filepath = parsed_args.filepath
     data_dir = parsed_args.data_dir
+    saved_model_file = os.path.join(filepath, "torchscript_resnet18_model_cpu.pt")
 
     device_to_run = "cpu"
 

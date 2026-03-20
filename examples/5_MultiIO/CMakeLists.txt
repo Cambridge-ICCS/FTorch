@@ -21,13 +21,11 @@ else()
 endif()
 message(STATUS "Building with Fortran PyTorch coupling")
 
-# Install Python dependencies
+# Check Python virtual environment is active
 find_package(Python COMPONENTS Interpreter REQUIRED)
 if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
   message(FATAL_ERROR "Please activate your virtualenv or conda environment")
 endif()
-execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
-                        ${PROJECT_SOURCE_DIR}/requirements.txt)
 
 # Fortran example
 add_executable(multiionet_infer_fortran multiionet_infer_fortran.f90)
@@ -41,7 +39,7 @@ if(CMAKE_BUILD_TESTS)
   #    expectations
   add_test(NAME example_multiio_multiionet
            COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/multiionet.py
-           WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+           WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 2. Run the pt2ts script to convert the model file to TorchScript format
   #    and run basic checks
@@ -51,11 +49,11 @@ if(CMAKE_BUILD_TESTS)
                   --model_definition_file
                   ${PROJECT_SOURCE_DIR}/multiionet.py
                   --input_model_file
-                  ${PROJECT_SOURCE_DIR}/saved_multiio_model_cpu.pt
+                  ${PROJECT_BINARY_DIR}/pytorch_multiio_model_cpu.pt
                   --input_tensor_file
-                  ${PROJECT_SOURCE_DIR}/saved_multiio_input_tensor_cpu.pt
+                  ${PROJECT_BINARY_DIR}/pytorch_multiio_input_tensor_cpu.pt
                   --output_model_file
-                  ${PROJECT_BINARY_DIR}/saved_multiio_model_cpu.pt
+                  ${PROJECT_BINARY_DIR}/torchscript_multiio_model_cpu.pt
                   --test)
 
   # 3. Check the model can be loaded from file and run in Python and that its
@@ -72,7 +70,8 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_multiio_multiionet_infer_fortran
     COMMAND
-      multiionet_infer_fortran ${PROJECT_BINARY_DIR}/saved_multiio_model_cpu.pt
+      multiionet_infer_fortran
+      ${PROJECT_BINARY_DIR}/torchscript_multiio_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(

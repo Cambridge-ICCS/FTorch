@@ -123,8 +123,14 @@ def main_cli():
     environment's `bin` subdirectory.
     """
     parsed_args = parse_user_input()
-    model_definition_file = parsed_args.model_definition_file
     model_name = parsed_args.model_name
+    model_definition_file = parsed_args.model_definition_file
+    if model_definition_file is None:
+        value_error = (
+            "pt2ts does not yet support pre-trained models and so currently requires a"
+            " model definition file."
+        )
+        raise ValueError(value_error)
     input_model_file = parsed_args.input_model_file
     if input_model_file is not None:
         validate_input_model_file(input_model_file)

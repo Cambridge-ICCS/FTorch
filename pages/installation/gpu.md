@@ -29,13 +29,14 @@ HIP with a LibTorch binary.
 #### Installation using pip
 
 If installing using pip the appropriate version for the hardware can be specified by
-using the `--index-url` option during `pip install`.
+using the `--extra-index-url` option when calling `pip install .`.
 
 Instructions for CPU, CUDA, and HIP/ROCm can be found in the installation matrix on
 [pytorch.org](https://pytorch.org/).
 
-For XPU use `--index-url https://download.pytorch.org/whl/test/xpu`, whilst for MPS
-pip should automatically detect the hardware and install the appropriate version.
+For XPU use `--extra-index-url https://download.pytorch.org/whl/test/xpu`,
+whilst for MPS pip should automatically detect the hardware and install the
+appropriate version.
 
 #### LibTorch binary
 

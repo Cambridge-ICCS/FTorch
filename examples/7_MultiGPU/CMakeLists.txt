@@ -21,13 +21,11 @@ else()
 endif()
 message(STATUS "Building with Fortran PyTorch coupling")
 
-# Install Python dependencies
+# Check Python virtual environment is active
 find_package(Python COMPONENTS Interpreter REQUIRED)
 if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
   message(FATAL_ERROR "Please activate your virtualenv or conda environment")
 endif()
-execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
-                        ${PROJECT_SOURCE_DIR}/requirements.txt)
 
 include(CheckLanguage)
 if("${GPU_DEVICE}" STREQUAL "CUDA")
@@ -60,7 +58,8 @@ if(CMAKE_BUILD_TESTS)
     #     runs on a CUDA device and its outputs meet expectations
     add_test(NAME example_multigpu_simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type cuda)
+                     --device_type cuda
+             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
     # 2a. Run the pt2ts script to convert the model file to TorchScript format
     #     and run basic checks
@@ -70,11 +69,11 @@ if(CMAKE_BUILD_TESTS)
                     --model_definition_file
                     ${PROJECT_SOURCE_DIR}/simplenet.py
                     --input_model_file
-                    ${PROJECT_SOURCE_DIR}/saved_simplenet_model_cuda.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_cuda.pt
                     --input_tensor_file
-                    ${PROJECT_SOURCE_DIR}/saved_simplenet_input_tensor_cuda.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_cuda.pt
                     --output_model_file
-                    ${PROJECT_BINARY_DIR}/saved_simplenet_model_cuda.pt
+                    ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_cuda.pt
                     --test)
 
     # 3a. Check the model can be loaded from file and run on two CUDA devices in
@@ -91,7 +90,7 @@ if(CMAKE_BUILD_TESTS)
     add_test(
       NAME example_multigpu_infer_fortran
       COMMAND multigpu_infer_fortran cuda
-              ${PROJECT_BINARY_DIR}/saved_multigpu_model_cuda.pt
+              ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_cuda.pt
       # Command line arguments for device type and model file
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
     set_tests_properties(
@@ -104,7 +103,8 @@ if(CMAKE_BUILD_TESTS)
     #     runs on a HIP device and its outputs meet expectations
     add_test(NAME simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type hip)
+                     --device_type hip
+             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
     # 2b. Run the pt2ts script to convert the model file to TorchScript format
     #     and run basic checks
@@ -112,11 +112,11 @@ if(CMAKE_BUILD_TESTS)
       NAME example_multigpu_pt2ts
       COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
                     SimpleNet
-                    ${PROJECT_SOURCE_DIR}/saved_simplenet_model_hip.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_hip.pt
                     --input_tensor_file
-                    ${PROJECT_SOURCE_DIR}/saved_simplenet_input_tensor_hip.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_hip.pt
                     --output_model_file
-                    ${PROJECT_BINARY_DIR}/saved_simplenet_model_hip.pt
+                    ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_hip.pt
                     --test)
 
     # 3b. Check the model can be loaded from file and run on two HIP devices in
@@ -133,7 +133,7 @@ if(CMAKE_BUILD_TESTS)
     add_test(
       NAME multigpu_infer_fortran
       COMMAND multigpu_infer_fortran hip
-              ${PROJECT_BINARY_DIR}/saved_multigpu_model_hip.pt
+              ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_hip.pt
       # Command line arguments for device type and model file
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
     set_tests_properties(
@@ -146,7 +146,8 @@ if(CMAKE_BUILD_TESTS)
     #     runs on a XPU device and its outputs meet expectations
     add_test(NAME example_multigpu_simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type xpu)
+                     --device_type xpu
+             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
     # 2c. Run the pt2ts script to convert the model file to TorchScript format
     #     and run basic checks
@@ -154,11 +155,11 @@ if(CMAKE_BUILD_TESTS)
       NAME example_multigpu_pt2ts
       COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
                     SimpleNet
-                    ${PROJECT_SOURCE_DIR}/saved_simplenet_model_xpu.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_xpu.pt
                     --input_tensor_file
-                    ${PROJECT_SOURCE_DIR}/saved_simplenet_input_tensor_xpu.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_xpu.pt
                     --output_model_file
-                    ${PROJECT_BINARY_DIR}/saved_simplenet_model_xpu.pt
+                    ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_xpu.pt
                     --test)
 
     # 3c. Check the model can be loaded from file and run on two XPU devices in
@@ -175,7 +176,7 @@ if(CMAKE_BUILD_TESTS)
     add_test(
       NAME example_multigpu_infer_fortran
       COMMAND multigpu_infer_fortran xpu
-              ${PROJECT_BINARY_DIR}/saved_multigpu_model_xpu.pt
+              ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_xpu.pt
       # Command line arguments for device type and model file
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
     set_tests_properties(
@@ -188,19 +189,22 @@ if(CMAKE_BUILD_TESTS)
     #     runs on a MPS device and its outputs meet expectations
     add_test(NAME example_multigpu_simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type mps)
+                     --device_type mps
+             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
     # 2d. Run the pt2ts script to convert the model file to TorchScript format
     #     and run basic checks
     add_test(
       NAME example_multigpu_pt2ts
-      COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
-                    SimpleNet
-                    ${PROJECT_SOURCE_DIR}/saved_simplenet_model_mps.pt
+      COMMAND pt2ts SimpleNet
+                    --model_definition_file
+                    ${PROJECT_SOURCE_DIR}/simplenet.py
+                    --input_model_file
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_mps.pt
                     --input_tensor_file
-                    ${PROJECT_SOURCE_DIR}/saved_simplenet_input_tensor_mps.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_mps.pt
                     --output_model_file
-                    ${PROJECT_BINARY_DIR}/saved_simplenet_model_mps.pt
+                    ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_mps.pt
                     --test)
 
     # 3d. Check the model can be loaded from file and run on one MPS device in
@@ -217,7 +221,7 @@ if(CMAKE_BUILD_TESTS)
     add_test(
       NAME example_multigpu_infer_fortran
       COMMAND multigpu_infer_fortran mps
-              ${PROJECT_BINARY_DIR}/saved_multigpu_model_mps.pt
+              ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_mps.pt
       # Command line arguments for device type and model file
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
     set_tests_properties(

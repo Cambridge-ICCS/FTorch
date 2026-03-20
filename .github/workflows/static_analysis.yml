@@ -65,8 +65,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m venv ../ftorch_venv
           . ../ftorch_venv/bin/activate
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install .[dev]
+          pip install .[dev] --extra-index-url https://download.pytorch.org/whl/cpu
 
       # Run CMake build to get compile commands for clang
       - name: FTorch CMake
