@@ -1,0 +1,156 @@
+!| Unit tests for FTorch Adam optimizer parameters.
+! 
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_optim_adam
+  use funit
+  use ftorch, only: assignment(=), operator(-), operator(*), operator(**), &
+                    torch_kFloat32, torch_kCPU, torch_tensor, &
+                    torch_delete, torch_tensor_from_array, torch_tensor_empty, &
+                    torch_tensor_backward, torch_tensor_get_gradient
+  use ftorch_optim, only: torch_optim, torch_optim_zero_grad, torch_optim_step, &
+                          torch_optim_delete, torch_optim_Adam
+  use ftorch_test_utils, only: allclose
+  use, intrinsic :: iso_c_binding, only: c_associated, c_int64_t
+  use, intrinsic :: iso_fortran_env, only :  dp => real64, sp => real32
+
+  implicit none
+
+  public
+
+  ! Parameter type for Adam-specific tests
+  @testParameter
+  type, extends(AbstractTestParameter) :: AdamParams
+    real(kind=dp) :: learning_rate
+    real(kind=dp) :: beta_1
+    real(kind=dp) :: beta_2
+    real(kind=dp) :: eps
+    real(kind=dp) :: weight_decay
+    logical :: amsgrad
+    real(kind=dp), dimension(4) :: expected
+    character(len=:), allocatable :: desc
+   contains
+    procedure :: toString => toStringAdam
+  end type AdamParams
+
+  ! Test case type for Adam parameter tests
+  @testCase(constructor=test_case_constructor_adam)
+  type, extends (ParameterizedTestCase) :: TestCaseAdam
+    type(AdamParams) :: param
+  end type TestCaseAdam
+
+contains
+
+  ! Constructor for the test case type
+  function test_case_constructor_adam(param)
+    type(TestCaseAdam) :: test_case_constructor_adam
+    type(AdamParams), intent(in) :: param
+    test_case_constructor_adam%param = param
+  end function test_case_constructor_adam
+
+  ! A fixture for varying Adam parameters
+  function get_parameters_adam() result(params)
+    type(AdamParams), allocatable :: params(:)
+    params = [ &
+      ! Baseline cases
+      AdamParams(0.001D0, 0.9D0, 0.999D0, 1.0D-8, 0.000D0, .false., &
+               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "Default Adam"), &
+      AdamParams(0.01D0, 0.9D0, 0.999D0, 1.0D-8, 0.010D0, .false., &
+               [0.969523D0, 1.039975D0, 1.039988D0, 1.039992D0], "Higher LR, with weight decay"), &
+      AdamParams(0.001D0, 0.8D0, 0.990D0, 1.0D-7, 0.000D0, .false., &
+               [1.000000D0, 1.003999D0, 1.004000D0, 1.004000D0], "Different betas, different eps"), &
+      AdamParams(0.001D0, 0.9D0, 0.999D0, 1.0D-8, 0.000D0, .true., &
+               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "With AMSGrad"), &
+
+      ! Edge cases and additional combinations
+      AdamParams(0.002D0, 0.9D0, 0.999D0, 1.0D-8, 0.001D0, .false., &
+               [0.997029D0, 1.007999D0, 1.008000D0, 1.008000D0], "Higher LR, small weight decay"), &
+      AdamParams(0.001D0, 0.95D0, 0.999D0, 1.0D-8, 0.000D0, .false., &
+               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "Different beta1"), &
+      AdamParams(0.001D0, 0.9D0, 0.9995D0, 1.0D-8, 0.000D0, .false., &
+               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "Different beta2") &
+    ]
+  end function get_parameters_adam
+
+  ! A fixture for writing out information about the specific parameters a test uses
+  function toStringAdam(this) result(string)
+    class(AdamParams), intent(in) :: this
+    character(:), allocatable :: string
+    
+    if (allocated(this%desc)) then
+      string = trim(this%desc)
+    else
+      string = "UNDEFINED"
+    end if
+  end function toStringAdam
+
+  ! Unit tests for Adam optimizer
+  ! Sets additional parameters and then compares the result of a single step to the
+  ! values obtained for the same process through the PyTorch interface
+  ! See accompanying test_optim_adam.py for PyTorch code.
+  @test(testParameters={get_parameters_adam()})
+  subroutine test_adam_params(this)
+    use ftorch, only: torch_tensor_ones, torch_tensor_mean
+    implicit none
+
+    class(TestCaseAdam), intent(inout) :: this
+
+    type(torch_optim) :: optimizer
+    type(torch_tensor) :: tensor, target_tensor, loss, grad
+    integer, parameter :: ndims = 1
+    integer, parameter :: tensor_layout(ndims) = [1]
+    integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
+    integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
+    real(sp), dimension(4), target :: target_data, tensor_data, expected
+    integer, parameter :: dtype = torch_kFloat32
+    integer :: i
+
+    ! Initialise data for the test to avoid Fortran's implied save
+    target_data = [1.0, 2.0, 3.0, 4.0]
+    tensor_data = [1.0, 1.0, 1.0, 1.0]
+
+    ! Create a tensor with requires_grad set to true
+    call torch_tensor_from_array(target_tensor, target_data, tensor_layout, torch_kCPU)
+    call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
+                            requires_grad=.true.)
+
+    ! Create an optimizer based on the parameters including new Adam parameters
+    ! Also set the expected value of the optimizer step
+    call torch_optim_Adam(optimizer, [tensor], learning_rate=this%param%learning_rate, &
+                         beta_1=this%param%beta_1, beta_2=this%param%beta_2, &
+                         eps=this%param%eps, weight_decay=this%param%weight_decay, &
+                         amsgrad=this%param%amsgrad)
+    expected = this%param%expected
+
+    ! Run a loop of 4 iterations to capture aspects such as momentum
+    do i = 1,4
+      ! Calculate MSE loss between tensor and target and perform a backwards step
+      call torch_tensor_empty(loss, ndims, scalar_shape, torch_kFloat32, torch_kCPU)
+      call torch_tensor_mean(loss, (tensor - target_tensor) ** 2)
+      call torch_tensor_backward(loss)
+
+      ! Perform an optimizer step
+      call optimizer%step()
+      call optimizer%zero_grad()  ! Clear gradients after each step
+
+      call torch_delete(loss)
+    end do
+
+    ! Check if the tensor values are updated correctly
+    if (.not. allclose(tensor_data, expected, test_name="test_adam_params ["//this%param%desc//"]")) then
+      print *, "Error :: Incorrect value after optimizer loop."
+      print *, "Expected: ", expected
+      print *, "     Got: ", tensor_data
+      stop 999
+    end if
+
+    ! Clean up
+    call torch_delete(tensor)
+    call torch_delete(target_tensor)
+    call torch_delete(grad)
+    call torch_optim_delete(optimizer)
+  end subroutine test_adam_params
+
+end module unittest_optim_adam

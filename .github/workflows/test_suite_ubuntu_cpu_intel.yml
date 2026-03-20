@@ -44,7 +44,7 @@ jobs:
           - toolchain: intel-ifort
             FC: ifort
             MPIFC: mpiifort
-        version: [2024.1.0]
+        version: [2025.3.2]
         std: [f08]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -68,12 +68,12 @@ jobs:
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
       - name: Install Intel tools
-        uses: rscohn2/setup-oneapi@2ad0cf6b74bc2426bdcee825cf88f9db719dd727 # v0.1.0
+        uses: rscohn2/setup-oneapi@a5ae4e7697b9cd5dc8a616f94c1e56b87140999d # v0.1.0
         with:
           components: |
             icx@${{ matrix.version }}
             ifx@${{ matrix.version }}
-            impi@2021.12.0
+            impi@2021.17.2
 
       - name: Setup Intel oneAPI environment
         run: |
@@ -144,7 +144,7 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
           export FTORCH_INSTALL_DIR="/tmp/ftorch-install"
-          export EXAMPLE_BUILD_DIR="examples/2_SimpleNet/build"
+          export EXAMPLE_BUILD_DIR="examples/02_SimpleNet/build"
           mkdir "${EXAMPLE_BUILD_DIR}"
           cd "${EXAMPLE_BUILD_DIR}"
           cmake .. \
