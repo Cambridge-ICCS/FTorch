@@ -49,9 +49,9 @@ if(CMAKE_BUILD_TESTS)
     NAME example_resnet_pt2ts
     COMMAND pt2ts resnet18
                   --input_tensor_file
-                  ${PROJECT_BINARY_DIR}/saved_resnet18_input_tensor_cpu.pt
+                  ${PROJECT_BINARY_DIR}/pytorch_resnet18_input_tensor_cpu.pt
                   --output_model_file
-                  ${PROJECT_BINARY_DIR}/saved_resnet18_model_cpu.pt
+                  ${PROJECT_BINARY_DIR}/torchscript_resnet18_model_cpu.pt
                   --model_weights IMAGENET1K_V1
                   --precision float32
                   --test)

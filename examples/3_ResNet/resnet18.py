@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     # Save the input tensor in PyTorch format
     input_batch = input_batch.to(device_type)
-    torch.save(input_batch, f"saved_resnet18_input_tensor_{device_type}.pt")
+    torch.save(input_batch, f"pytorch_resnet18_input_tensor_{device_type}.pt")
 
     # Run the model
     print("Running ResNet-18 model for input...", end="")
