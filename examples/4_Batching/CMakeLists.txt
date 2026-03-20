@@ -47,8 +47,10 @@ if(CMAKE_BUILD_TESTS)
   #    and run basic checks
   add_test(
     NAME example_batching_pt2ts
-    COMMAND pt2ts ${PROJECT_SOURCE_DIR}/batchingnet.py
-                  BatchingNet
+    COMMAND pt2ts BatchingNet
+                  --model_definition_file
+                  ${PROJECT_SOURCE_DIR}/batchingnet.py
+                  --input_model_file
                   ${PROJECT_SOURCE_DIR}/pytorch_batchingnet_model_cpu.pt
                   --input_tensor_file
                   ${PROJECT_SOURCE_DIR}/pytorch_batchingnet_input_tensor_cpu.pt

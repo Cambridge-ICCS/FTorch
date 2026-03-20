@@ -10,7 +10,7 @@ The same Python file `simplenet.py` is used from the earlier example. Recall
 that it defines a very simple PyTorch network that takes an input of length 5
 and applies a single `Linear` layer to multiply it by 2.
 
-The same `pt2ts.py` tool is used to save the simple network to TorchScript.
+The same `pt2ts` tool is used to save the simple network to TorchScript.
 
 A series of files `multigpu_infer_<LANG>` then bind from other languages to run
 the TorchScript model in inference mode.
@@ -53,7 +53,9 @@ for CUDA, and similarly for other device types.
 
 To convert the SimpleNet model to TorchScript run the `pt2ts` script:
 ```
-pt2ts simplenet.py SimpleNet pytorch_simplenet_model_<my_device_type>.pt \
+pt2ts SimpleNet \
+  --model_definition_file simplenet.py \
+  --input_model_file pytorch_simplenet_model_<my_device_type>.pt \
   --output_model_file torchscript_simplenet_model_<my_device_type>.pt
 ```
 This should produce `torchscript_simplenet_model_<my_device_type>.pt`.

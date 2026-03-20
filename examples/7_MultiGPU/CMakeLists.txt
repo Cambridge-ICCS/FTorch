@@ -192,8 +192,10 @@ if(CMAKE_BUILD_TESTS)
     #     and run basic checks
     add_test(
       NAME example_multigpu_pt2ts
-      COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
-                    SimpleNet
+      COMMAND pt2ts SimpleNet
+                    --model_definition_file
+                    ${PROJECT_SOURCE_DIR}/simplenet.py
+                    --input_model_file
                     ${PROJECT_SOURCE_DIR}/pytorch_simplenet_model_mps.pt
                     --input_tensor_file
                     ${PROJECT_SOURCE_DIR}/pytorch_simplenet_input_tensor_mps.pt

@@ -29,20 +29,20 @@ def parse_user_input():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "model_definition_file",
-        help="Filename for the definition of the PyTorch model, including path",
+        "model_name",
+        help="Name of the PyTorch model",
         type=str,
     )
     parser.add_argument(
-        "model_name",
-        help="Name of the PyTorch model",
+        "--model_definition_file",
+        help="Filename for the definition of the PyTorch model, including path",
         type=str,
     )
     # TODO: Accept pre-trained model name (needed for ResNet)
     #       Perhaps make model_definition_file optional? Need to allow weights
     #       specification, too
     parser.add_argument(
-        "input_model_file",
+        "--input_model_file",
         help="Filename for the model saved in PyTorch format, including path",
         type=str,
     )
@@ -168,9 +168,21 @@ def main_cli():
     environment's `bin` subdirectory.
     """
     parsed_args = parse_user_input()
-    model_definition_file = parsed_args.model_definition_file
     model_name = parsed_args.model_name
+    model_definition_file = parsed_args.model_definition_file
+    if model_definition_file is None:
+        value_error = (
+            "pt2ts does not yet support pre-trained models and so currently requires a"
+            " model definition file."
+        )
+        raise ValueError(value_error)
     input_model_file = parsed_args.input_model_file
+    if input_model_file is None:
+        value_error = (
+            "pt2ts does not yet support pre-trained models and so currently requires an"
+            " input model file."
+        )
+        raise ValueError(value_error)
     output_model_file = parsed_args.output_model_file
     trace = parsed_args.trace
     test = parsed_args.test

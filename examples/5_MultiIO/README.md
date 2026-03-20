@@ -20,7 +20,7 @@ is then split into two components. That is, we have
 ```
 where $a$ and $b$ are inputs and $c$ and $d$ are outputs.
 
-The same `pt2ts.py` tool as in the previous examples is used to save the
+The same `pt2ts` tool as in the previous examples is used to save the
 network to TorchScript. Again, a series of files `multiionet_infer_<LANG>` then
 bind from other languages to run the TorchScript model in inference mode.
 
@@ -57,7 +57,9 @@ created.
 
 To convert the MultiIONet model to TorchScript, run the `pt2ts` script:
 ```
-pt2ts multiionet.py MultiIONet pytorch_multiio_model_cpu.pt \
+pt2ts MultiIONet \
+  --model_definition_file multiionet.py \
+  --input_model_file pytorch_multiio_model_cpu.pt \
   --output_model_file torchscript_multiio_model_cpu.pt
 ```
 This should produce `torchscript_multiio_model_cpu.pt`.

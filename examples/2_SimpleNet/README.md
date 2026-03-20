@@ -52,7 +52,9 @@ created.
 
 To convert the SimpleNet model to TorchScript run the `pt2ts` script:
 ```
-pt2ts simplenet.py SimpleNet pytorch_simplenet_model_cpu.pt \
+pt2ts SimpleNet \
+  --model_definition_file simplenet.py \
+  --input_model_file pytorch_simplenet_model_cpu.pt \
   --output_model_file torchscript_simplenet_model_cpu.pt
 ```
 This should produce `torchscript_simplenet_model_cpu.pt`.

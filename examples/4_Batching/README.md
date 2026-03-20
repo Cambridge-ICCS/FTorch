@@ -148,7 +148,9 @@ created.
 
 To convert the BatchingNet model to TorchScript for use in Fortran, run:
 ```
-pt2ts.py batchingnet.py BatchingNet pytorch_batchingnet_model_cpu.pt \
+pt2ts BatchingNet \
+  --model_definition_file  batchingnet.py \
+  --input_model_file pytorch_batchingnet_model_cpu.pt \
   --output_model_file torchscript_batchingnet_model_cpu.pt
 ```
 This should produce `torchscript_batchingnet_model_cpu.pt`.
