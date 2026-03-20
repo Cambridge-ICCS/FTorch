@@ -4,12 +4,12 @@
 # It should be run from the top of the repository i.e. `FTorch/`
 # ---
 
-# Set up a virtual environment an install neccessary Python dependencies
+# Set up a virtual environment and install neccessary Python dependencies
 #   We will specify the cpu-only version of PyTorch to match the codespace hardware
 python3 -m venv venv
 # shellcheck source=/dev/null
 source venv/bin/activate
-pip install torch --index-url https://download.pytorch.org/whl/cpu
+pip install . --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Extract the location of the installed packages in the venv
 # This is typically `FTorch/build/venv/lib/python3.xx/site-packages/`
