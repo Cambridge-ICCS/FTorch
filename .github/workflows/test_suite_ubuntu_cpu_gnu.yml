@@ -122,7 +122,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
-          pip install . --extra-index-url https://download.pytorch.org/whl/cpu
+          pip install .[dev] --extra-index-url https://download.pytorch.org/whl/cpu
 
       - name: Install OpenMPI
         run: |
@@ -209,11 +209,16 @@ jobs:
               exit 1
           fi
 
-      - name: Run unit tests
+      - name: Run Fortran unit tests
         run: |
           . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex unit
+
+      - name: Run Python unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/python
 
       - name: Run integration tests
         run: |

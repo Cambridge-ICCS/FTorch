@@ -67,6 +67,11 @@ jobs:
           . ftorch/bin/activate
           pip install . --extra-index-url https://download.pytorch.org/whl/cpu
 
+      - name: Install ftorch_utils
+        run: |
+          . ftorch/bin/activate
+          python -m pip install .[dev]
+
       - name: Install Intel tools
         uses: rscohn2/setup-oneapi@2ad0cf6b74bc2426bdcee825cf88f9db719dd727 # v0.1.0
         with:
@@ -123,11 +128,16 @@ jobs:
           cmake --build .
           cmake --install .
 
-      - name: Run unit tests
+      - name: Run Fortran unit tests
         run: |
           . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex unit
+
+      - name: Run Python unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/python
 
       - name: Run integration tests
         run: |

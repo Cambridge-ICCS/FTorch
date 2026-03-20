@@ -76,6 +76,11 @@ jobs:
           # Check this is <= what GPU-runner has installed (backwards compatible)
           pip install . --extra-index-url https://download.pytorch.org/whl/cu129
 
+      - name: Install ftorch_utils
+        run: |
+          . ftorch/bin/activate
+          python -m pip install .[dev]
+
       - name: Install cmake and NVIDIA dev toolkit
         run: |
           sudo apt update
