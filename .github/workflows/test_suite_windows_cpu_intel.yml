@@ -71,7 +71,7 @@ jobs:
         shell: cmd
         run: |
           call ftorch\Scripts\activate
-          rem Find python executable in venv
+          rem Find Python executable in venv
           for /f %%i in ('python -c "import sys; print(sys.executable)"') do set PYTHON_EXECUTABLE=%%i
           rem Find torch location
           set TORCH_PATH=
