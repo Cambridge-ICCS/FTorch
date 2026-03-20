@@ -71,8 +71,8 @@ python -m venv .ftorch
 rem Activate the virtual environment
 call .ftorch\Scripts\activate
 
-rem Install dependencies
-pip install . --extra-index-url https://download.pytorch.org/whl/cpu
+rem Install dependencies (--extra-index-url not required on Windows)
+pip install .
 
 rem Enable output
 ECHO ON

@@ -65,7 +65,7 @@ jobs:
           pip install --upgrade pip
           python -m venv ftorch
           call ftorch\Scripts\activate
-          pip install . --extra-index-url https://download.pytorch.org/whl/cpu
+          pip install .
 
       - name: Build FTorch
         shell: cmd
