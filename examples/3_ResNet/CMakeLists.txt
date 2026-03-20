@@ -44,11 +44,11 @@ if(CMAKE_BUILD_TESTS)
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
   # 2. Check the model is saved to file in the expected location with the
-  #   pt2ts.py script
+  #    write_torchscript.py script
   add_test(
-    NAME example_resnet_pt2ts
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
-            ${PROJECT_BINARY_DIR}
+    NAME example_resnet_write_torchscript
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/write_torchscript.py
+            --filepath ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 3. Check the model can be loaded from file and run in Fortran and that its
