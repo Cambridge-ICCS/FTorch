@@ -68,7 +68,7 @@ if __name__ == "__main__":
     )
     parsed_args = parser.parse_args()
     filepath = parsed_args.filepath
-    saved_model_file = os.path.join(filepath, "saved_simplenet_model_cpu.pt")
+    saved_model_file = os.path.join(filepath, "torchscript_simplenet_model_cpu.pt")
 
     device_to_run = "cpu"
 

@@ -22,13 +22,14 @@ endif()
 find_package(MPI REQUIRED Fortran)
 message(STATUS "Building with Fortran PyTorch coupling")
 
-# Install Python dependencies
+# Check Python virtual environment is active
 find_package(Python COMPONENTS Interpreter REQUIRED)
 if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
   message(FATAL_ERROR "Please activate your virtualenv or conda environment")
 endif()
-execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
-                        ${PROJECT_SOURCE_DIR}/requirements.txt)
+
+# Install Python dependencies
+execute_process(COMMAND ${Python_EXECUTABLE} -m pip install mpi4py)
 
 # Fortran example
 add_executable(mpi_infer_fortran mpi_infer_fortran.f90)
@@ -44,19 +45,21 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_mpi_simplenet
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 2. Run the pt2ts script to convert the model file to TorchScript format
   #    and run basic checks
   add_test(
     NAME example_mpi_pt2ts
-    COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
-                  SimpleNet
-                  ${PROJECT_SOURCE_DIR}/saved_simplenet_model_cpu.pt
+    COMMAND pt2ts SimpleNet
+                  --model_definition_file
+                  ${PROJECT_SOURCE_DIR}/simplenet.py
+                  --input_model_file
+                  ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_cpu.pt
                   --input_tensor_file
-                  ${PROJECT_SOURCE_DIR}/saved_simplenet_input_tensor_cpu.pt
+                  ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_cpu.pt
                   --output_model_file
-                  ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
+                  ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_cpu.pt
                   --test)
 
   # 3. Check the model can be loaded from file and run with MPI in Python and
@@ -77,7 +80,7 @@ if(CMAKE_BUILD_TESTS)
     NAME example_mpi_mpi_infer_fortran
     COMMAND
       ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ./mpi_infer_fortran
-      ${PROJECT_BINARY_DIR}/saved_simplenet_model_cpu.pt
+      ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(

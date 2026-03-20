@@ -82,7 +82,9 @@ if __name__ == "__main__":
     parsed_args = parser.parse_args()
     filepath = parsed_args.filepath
     device_type = parsed_args.device_type
-    saved_model_file = os.path.join(filepath, f"saved_multigpu_model_{device_type}.pt")
+    saved_model_file = os.path.join(
+        filepath, f"torchscript_multigpu_model_{device_type}.pt"
+    )
 
     batch_size_to_run = 1
 

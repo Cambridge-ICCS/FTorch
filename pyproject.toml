@@ -32,7 +32,9 @@ classifiers = [
 	"Programming Language :: Python",
 ]
 dependencies = [
+  "numpy",
   "torch",
+  "torchvision",
 ]
 
 [project.optional-dependencies]

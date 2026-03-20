@@ -97,9 +97,10 @@ if __name__ == "__main__":
 
     # FTORCH-TODO
     # Set the name of the file you want to save the torchscript model to:
-    saved_ts_filename = f"saved_resnet18_model_{device_type}.pt"
+    saved_ts_filename = f"torchscript_resnet18_model_{device_type}.pt"
     # A filepath may also be provided. To do this, pass the filepath as an argument to
-    # this script when it is run from the command line, i.e. `./pt2ts.py path/to/model`.
+    # this script when it is run from the command line, i.e.
+    # `./write_torchscript.py --filepath path/to/model`.
 
     # FTORCH-TODO
     # Save the PyTorch model using either scripting (recommended if possible) or tracing

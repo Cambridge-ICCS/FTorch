@@ -116,7 +116,7 @@ It is likely that you will need to provide at least `CMAKE_PREFIX_PATH`.
       If Torch has been [installed as LibTorch](https://pytorch.org/cppdocs/installing.html)
       then this should be the absolute path to the unzipped LibTorch distribution.
       If Torch has been installed as PyTorch in a Python [venv (virtual environment)](https://docs.python.org/3/library/venv.html),
-      e.g. with `pip install torch`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
+      e.g. with `pip`, then this should be `</path/to/venv/>lib/python<3.xx>/site-packages/torch/`.  
 
 
 ## Usage

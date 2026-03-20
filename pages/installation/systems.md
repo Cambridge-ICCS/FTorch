@@ -71,8 +71,8 @@ python -m venv .ftorch
 rem Activate the virtual environment
 call .ftorch\Scripts\activate
 
-rem Install torch
-pip install torch torchvision torchaudio
+rem Install dependencies (--extra-index-url not required on Windows)
+pip install .
 
 rem Enable output
 ECHO ON
