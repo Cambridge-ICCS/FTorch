@@ -71,6 +71,8 @@ jobs:
         shell: cmd
         run: |
           call ftorch\Scripts\activate
+          rem Find python executable in venv
+          for /f %%i in ('python -c "import sys; print(sys.executable)"') do set PYTHON_EXECUTABLE=%%i
           rem Find torch location
           set TORCH_PATH=
           for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
@@ -79,6 +81,7 @@ jobs:
           cmake ^
             -Bbuild ^
             -G "NMake Makefiles" ^
+            -DPython_EXECUTABLE=%PYTHON_EXECUTABLE% ^
             -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
             -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" ^
             -DCMAKE_PREFIX_PATH=%TORCH_PATH% ^
@@ -111,6 +114,7 @@ jobs:
         shell: cmd
         run: |
           call ftorch\Scripts\activate
+          for /f %%i in ('python -c "import sys; print(sys.executable)"') do set PYTHON_EXECUTABLE=%%i
           set TORCH_PATH=
           for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
           set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
@@ -123,7 +127,7 @@ jobs:
             -G "NMake Makefiles" ^
             -DCMAKE_Fortran_COMPILER=ifx ^
             -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
-            -DPython_EXECUTABLE=%python% ^
+            -DPython_EXECUTABLE=%PYTHON_EXECUTABLE% ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DCMAKE_PREFIX_PATH=%FTORCH_INSTALL_DIR%;%TORCH_PATH% ^
             -DCMAKE_BUILD_TESTS=TRUE
