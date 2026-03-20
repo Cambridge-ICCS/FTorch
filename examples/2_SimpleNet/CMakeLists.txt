@@ -42,7 +42,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_simplenet_simplenet
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 2. Run the pt2ts script to convert the model file to TorchScript format
   #    and run basic checks
@@ -52,9 +52,9 @@ if(CMAKE_BUILD_TESTS)
                   --model_definition_file
                   ${PROJECT_SOURCE_DIR}/simplenet.py
                   --input_model_file
-                  ${PROJECT_SOURCE_DIR}/pytorch_simplenet_model_cpu.pt
+                  ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_cpu.pt
                   --input_tensor_file
-                  ${PROJECT_SOURCE_DIR}/pytorch_simplenet_input_tensor_cpu.pt
+                  ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_cpu.pt
                   --output_model_file
                   ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_cpu.pt
                   --test)

@@ -60,7 +60,8 @@ if(CMAKE_BUILD_TESTS)
     #     runs on a CUDA device and its outputs meet expectations
     add_test(NAME example_multigpu_simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type cuda)
+                     --device_type cuda
+             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
     # 2a. Run the pt2ts script to convert the model file to TorchScript format
     #     and run basic checks
@@ -68,9 +69,9 @@ if(CMAKE_BUILD_TESTS)
       NAME example_multigpu_pt2ts
       COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
                     SimpleNet
-                    ${PROJECT_SOURCE_DIR}/pytorch_simplenet_model_cuda.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_cuda.pt
                     --input_tensor_file
-                    ${PROJECT_SOURCE_DIR}/pytorch_simplenet_input_tensor_cuda.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_cuda.pt
                     --output_model_file
                     ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_cuda.pt
                     --test)
@@ -102,7 +103,8 @@ if(CMAKE_BUILD_TESTS)
     #     runs on a HIP device and its outputs meet expectations
     add_test(NAME simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type hip)
+                     --device_type hip
+             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
     # 2b. Run the pt2ts script to convert the model file to TorchScript format
     #     and run basic checks
@@ -110,9 +112,9 @@ if(CMAKE_BUILD_TESTS)
       NAME example_multigpu_pt2ts
       COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
                     SimpleNet
-                    ${PROJECT_SOURCE_DIR}/pytorch_simplenet_model_hip.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_hip.pt
                     --input_tensor_file
-                    ${PROJECT_SOURCE_DIR}/pytorch_simplenet_input_tensor_hip.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_hip.pt
                     --output_model_file
                     ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_hip.pt
                     --test)
@@ -144,7 +146,8 @@ if(CMAKE_BUILD_TESTS)
     #     runs on a XPU device and its outputs meet expectations
     add_test(NAME example_multigpu_simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type xpu)
+                     --device_type xpu
+             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
     # 2c. Run the pt2ts script to convert the model file to TorchScript format
     #     and run basic checks
@@ -152,9 +155,9 @@ if(CMAKE_BUILD_TESTS)
       NAME example_multigpu_pt2ts
       COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
                     SimpleNet
-                    ${PROJECT_SOURCE_DIR}/pytorch_simplenet_model_xpu.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_xpu.pt
                     --input_tensor_file
-                    ${PROJECT_SOURCE_DIR}/pytorch_simplenet_input_tensor_xpu.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_xpu.pt
                     --output_model_file
                     ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_xpu.pt
                     --test)
@@ -186,7 +189,8 @@ if(CMAKE_BUILD_TESTS)
     #     runs on a MPS device and its outputs meet expectations
     add_test(NAME example_multigpu_simplenet
              COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type mps)
+                     --device_type mps
+             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
     # 2d. Run the pt2ts script to convert the model file to TorchScript format
     #     and run basic checks
@@ -196,9 +200,9 @@ if(CMAKE_BUILD_TESTS)
                     --model_definition_file
                     ${PROJECT_SOURCE_DIR}/simplenet.py
                     --input_model_file
-                    ${PROJECT_SOURCE_DIR}/pytorch_simplenet_model_mps.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_mps.pt
                     --input_tensor_file
-                    ${PROJECT_SOURCE_DIR}/pytorch_simplenet_input_tensor_mps.pt
+                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_mps.pt
                     --output_model_file
                     ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_mps.pt
                     --test)

@@ -41,7 +41,7 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_batching_batchingnet
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/batchingnet.py
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 2. Run the pt2ts script to convert the model file to TorchScript format
   #    and run basic checks
@@ -51,9 +51,9 @@ if(CMAKE_BUILD_TESTS)
                   --model_definition_file
                   ${PROJECT_SOURCE_DIR}/batchingnet.py
                   --input_model_file
-                  ${PROJECT_SOURCE_DIR}/pytorch_batchingnet_model_cpu.pt
+                  ${PROJECT_BINARY_DIR}/pytorch_batchingnet_model_cpu.pt
                   --input_tensor_file
-                  ${PROJECT_SOURCE_DIR}/pytorch_batchingnet_input_tensor_cpu.pt
+                  ${PROJECT_BINARY_DIR}/pytorch_batchingnet_input_tensor_cpu.pt
                   --output_model_file
                   ${PROJECT_BINARY_DIR}/torchscript_batchingnet_model_cpu.pt
                   --test)
