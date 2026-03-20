@@ -1,4 +1,10 @@
 """Load a PyTorch model and convert it to TorchScript."""
+# NOTE: This script uses the old pt2ts approach of providing a template for users to
+#       modify for their use case. We are currently migrating to a more general approach
+#       using a centralised script. See
+#       https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/README.md
+#       for details. This example will be updated soon.
+#
 # Throughout this script there are various `FTORCH-TODO` comments indicating where
 # the user needs to modify as appropriate for their model
 
@@ -8,69 +14,14 @@ from typing import Optional
 # FTORCH-TODO
 # Add a module import with your model here:
 # This example assumes the model architecture is in an adjacent module `my_ml_model.py`
-import simplenet
+import resnet18
 import torch
 
-
-def script_to_torchscript(
-    model: torch.nn.Module, filename: Optional[str] = "scripted_model.pt"
-) -> None:
-    """
-    Save PyTorch model to TorchScript using scripting.
-
-    Parameters
-    ----------
-    model : torch.NN.Module
-        a PyTorch model
-    filename : str
-        name of file to save to
-    """
-    print("Saving model using scripting...", end="")
-    scripted_model = torch.jit.script(model)
-    # print(scripted_model.code)
-    scripted_model.save(filename)
-    print("done.")
-
-
-def trace_to_torchscript(
-    model: torch.nn.Module,
-    dummy_input: torch.Tensor,
-    filename: Optional[str] = "traced_model.pt",
-) -> None:
-    """
-    Save PyTorch model to TorchScript using tracing.
-
-    Parameters
-    ----------
-    model : torch.NN.Module
-        a PyTorch model
-    dummy_input : torch.Tensor
-        appropriate size Tensor to act as input to model
-    filename : str
-        name of file to save to
-    """
-    print("Saving model using tracing...", end="")
-    traced_model = torch.jit.trace(model, dummy_input)
-    frozen_model = torch.jit.freeze(traced_model)
-    ## print(frozen_model.graph)
-    ## print(frozen_model.code)
-    frozen_model.save(filename)
-    print("done.")
-
-
-def load_torchscript(filename: Optional[str] = "saved_model.pt") -> torch.nn.Module:
-    """
-    Load a TorchScript from file.
-
-    Parameters
-    ----------
-    filename : str
-        name of file containing TorchScript model
-    """
-    model = torch.jit.load(filename)
-
-    return model
-
+from ftorch_utils.torchscript import (
+    load_torchscript,
+    script_to_torchscript,
+    trace_to_torchscript,
+)
 
 if __name__ == "__main__":
     import argparse
@@ -79,32 +30,34 @@ if __name__ == "__main__":
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "--device_type",
+        help="Device type to run the inference on",
+        type=str,
+        choices=["cpu", "cuda", "hip", "xpu", "mps"],
+        default="cpu",
+    )
+    parser.add_argument(
         "--filepath",
         help="Path to the file containing the PyTorch model",
         type=str,
         default=os.path.dirname(__file__),
     )
-    parser.add_argument(
-        "--device_type",
-        help="Device type to run the inference on",
-        type=str,
-        choices=["cpu", "cuda", "hip", "xpu", "mps"],
-        default="cuda",
-    )
     parsed_args = parser.parse_args()
-    filepath = parsed_args.filepath
     device_type = parsed_args.device_type
+    filepath = parsed_args.filepath
 
     # =====================================================
     # Load model and prepare for saving
     # =====================================================
+
+    precision = torch.float32
 
     # FTORCH-TODO
     # Load a pre-trained PyTorch model
     # Insert code here to load your model as `trained_model`.
     # This example assumes my_ml_model has a method `initialize` to load
     # architecture, weights, and place in inference mode
-    trained_model = simplenet.SimpleNet()
+    trained_model = resnet18.initialize(precision)
 
     # Switch off specific layers/parts of the model that behave
     # differently during training and inference.
@@ -117,8 +70,9 @@ if __name__ == "__main__":
 
     # FTORCH-TODO
     # Generate a dummy input Tensor `dummy_input` to the model of appropriate size.
-    # This example assumes one input of size (5)
-    trained_model_dummy_input = torch.ones(5)
+    # This example assumes one input of size (1x3x244x244) -- one RGB (3) image
+    # of resolution 244x244 in a batch size of 1.
+    trained_model_dummy_input = torch.ones(1, 3, 224, 224)
 
     # Transfer the model and inputs to GPU device, if appropriate
     if device_type != "cpu":
@@ -143,9 +97,10 @@ if __name__ == "__main__":
 
     # FTORCH-TODO
     # Set the name of the file you want to save the torchscript model to:
-    saved_ts_filename = f"saved_multigpu_model_{device_type}.pt"
+    saved_ts_filename = f"torchscript_resnet18_model_{device_type}.pt"
     # A filepath may also be provided. To do this, pass the filepath as an argument to
-    # this script when it is run from the command line, i.e. `./pt2ts.py path/to/model`.
+    # this script when it is run from the command line, i.e.
+    # `./write_torchscript.py --filepath path/to/model`.
 
     # FTORCH-TODO
     # Save the PyTorch model using either scripting (recommended if possible) or tracing

@@ -20,7 +20,7 @@ on:
       - '**.py'
       - '**.sh'
       - '**CMakeLists.txt'
-      - 'requirements-dev.txt'
+      - 'pyproject.toml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -65,8 +65,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m venv ../ftorch_venv
           . ../ftorch_venv/bin/activate
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install -r requirements-dev.txt
+          pip install .[dev] --extra-index-url https://download.pytorch.org/whl/cpu
 
       # Run CMake build to get compile commands for clang
       - name: FTorch CMake
@@ -76,7 +75,7 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/build
-          mkdir ${BUILD_DIR}
+          mkdir -p ${BUILD_DIR}
           cd ${BUILD_DIR}
           cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${BUILD_DIR} -DCMAKE_Fortran_FLAGS="-std=f2008" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 

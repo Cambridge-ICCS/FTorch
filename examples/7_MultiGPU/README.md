@@ -10,7 +10,7 @@ The same Python file `simplenet.py` is used from the earlier example. Recall
 that it defines a very simple PyTorch network that takes an input of length 5
 and applies a single `Linear` layer to multiply it by 2.
 
-The same `pt2ts.py` tool is used to save the simple network to TorchScript.
+The same `pt2ts` tool is used to save the simple network to TorchScript.
 
 A series of files `multigpu_infer_<LANG>` then bind from other languages to run
 the TorchScript model in inference mode.
@@ -31,7 +31,6 @@ this directory create a virtual environment and install the necessary Python mod
 ```
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
 ```
 
 You can check that everything is working by running `simplenet.py`:
@@ -39,24 +38,26 @@ You can check that everything is working by running `simplenet.py`:
 python3 simplenet.py --device_type <my_device_type>
 ```
 where `<my_device_type>` is `cuda`/`xpu`/`mps` as appropriate for your device.
-
-As before, this defines the network and runs it with an input tensor
-[0.0, 1.0, 2.0, 3.0, 4.0]. The difference is that the code will make use of the
-default GPU device (index 0) to produce the result:
+You should find that a PyTorch model file
+`pytorch_simplenet_model_<my_device_type>.pt` is created. As before, this defines
+the network and runs it with an input tensor [0.0, 1.0, 2.0, 3.0, 4.0]. The only
+difference with the earlier example is that the model is built to be run on GPU
+devices rather than on CPU. The code will make use of the default GPU device
+(index 0) to produce the result:
 ```
 SimpleNet forward pass on CUDA device 0
-tensor([[0, 2, 4, 6, 8]])
+Model output: tensor([[0, 2, 4, 6, 8]])
 ```
 for CUDA, and similarly for other device types.
 
-To save the `SimpleNet` model to TorchScript run the modified version of the
-`pt2ts.py` tool:
+To convert the SimpleNet model to TorchScript run the `pt2ts` script:
 ```
-python3 pt2ts.py --device_type <my_device_type>
+pt2ts SimpleNet \
+  --model_definition_file simplenet.py \
+  --input_model_file pytorch_simplenet_model_<my_device_type>.pt \
+  --output_model_file torchscript_simplenet_model_<my_device_type>.pt
 ```
-which will generate `saved_multigpu_model_<my_device_type>.pt` - the TorchScript
-instance of the network. The only difference with the earlier example is that
-the model is built to be run on GPU devices rather than on CPU.
+This should produce `torchscript_simplenet_model_<my_device_type>.pt`.
 
 You can check that everything is working by running the
 `multigpu_infer_python.py` script. It's set up such that it loops over two GPU
@@ -95,7 +96,8 @@ and should match the compiler that was used to locally build FTorch.)
 To run the compiled code calling the saved `SimpleNet` TorchScript from
 Fortran, run the executable with arguments of device type and the saved model file:
 ```
-./multigpu_infer_fortran <cuda/xpu/mps> ../saved_multigpu_model_<cuda/xpu>.pt
+./multigpu_infer_fortran <cuda/xpu/mps> \
+  ../torchscript_multigpu_model_<my_device_type>.pt
 ```
 
 This runs the model with the same inputs as described above and should produce (some

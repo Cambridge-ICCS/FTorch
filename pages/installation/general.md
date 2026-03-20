@@ -20,11 +20,31 @@ To install FTorch requires the following to be installed on the system:
 - [CMake](https://cmake.org/) >= 3.18
 - Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 - [LibTorch](https://pytorch.org/cppdocs/installing.html)[^1] or [PyTorch](https://pytorch.org/)
+- TorchVision and NumPy (required for examples)
+
+For instructions on how to install PyTorch, TorchVision, and NumPy, see the
+[Python dependencies](#python-dependencies) section below.
 
 [^1]: 
     _The minimal example provided downloads the CPU-only Linux Nightly binary.
     [Alternative versions](https://pytorch.org/get-started/locally/) to match hardware
     may be required._
+
+#### Python dependencies
+
+If LibTorch is not installed then FTorch requires PyTorch to be installed.
+FTorch's `pt2ts` utility script has PyTorch as a hard requirement, as well as
+the `ftorch_utils` Python module included in the FTorch repo. To install
+PyTorch, `ftorch_utils`, and the additional dependencies (TorchVision and NumPy)
+of FTorch's examples suite, run
+```sh
+pip install . --extra-index-url <pytorch-wheel-download-url>
+```
+where `<pytorch-wheel-download-url>` is determined based on the
+[matrix](https://pytorch.org/get-started/locally/) on the PyTorch website.
+
+We recommend installing `torch` and `torchvision` in the same command such as
+would be done in the command above. Doing so ensures that they are configured in the same way.
 
 #### Additional dependencies of the test suite
 
@@ -33,12 +53,11 @@ FTorch's test suite has some additional dependencies.
 - You will also need to install the unit testing framework
   [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit).
 - FTorch's test suite requires that [PyTorch](https://pytorch.org/) has been
-  installed, as opposed to LibTorch. We recommend installing `torchvision` in
-  the same command (e.g., `pip install torch torchvision`).[^2] Doing so
-  ensures that `torch` and `torchvision` are configured in the same way.
-- Other Python modules are installed automatically upon building the tests.
-
-[^2]: _For more details, see [here](https://pytorch.org/get-started/locally/)._
+  installed, as opposed to LibTorch. See the
+  [Python dependencies](#python-dependencies) section above for details on how
+  to do this.
+- Other Python modules are installed automatically upon building specific tests,
+  namely `mpi4py` for the MPI example.
 
 
 ### Basic Installation Instructions

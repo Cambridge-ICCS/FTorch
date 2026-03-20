@@ -10,7 +10,7 @@ The Python file `simplenet.py` is copied from the earlier example. Recall that
 it defines a very simple PyTorch network that takes an input of length 5 and
 applies a single `Linear` layer to multiply it by 2.
 
-The same `pt2ts.py` tool is used to save the simple network to TorchScript.
+The same `pt2ts` tool is used to save the simple network to TorchScript.
 
 A series of files `mpi_infer_<LANG>` then bind from other languages to run the
 TorchScript model in inference mode.
@@ -32,7 +32,7 @@ Python modules:
 ```
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install mpi4py
 ```
 
 You can check the network is set up correctly by running `simplenet.py`:
@@ -42,16 +42,19 @@ python3 simplenet.py
 As before, this defines the network and runs it with an input tensor
 [0.0, 1.0, 2.0, 3.0, 4.0] to produce the result:
 ```
-tensor([[0, 2, 4, 6, 8]])
+Model output: tensor([[0, 2, 4, 6, 8]])
 ```
+You should find that a PyTorch model file `pytorch_simplenet_model_cpu.pt` is
+created.
 
-To save the `SimpleNet`` model to TorchScript run the modified version of the
-`pt2ts.py` tool:
+To convert the SimpleNet model to TorchScript run the `pt2ts` script:
 ```
-python3 pt2ts.py
+pt2ts SimpleNet \
+  --model_definition_file simplenet.py \
+  --input_model_file pytorch_simplenet_model_cpu.pt \
+  --output_model_file torchscript_simplenet_model_cpu.pt
 ```
-which will generate `saved_simplenet_model_cpu.pt` - the TorchScript instance
-of the network.
+This should produce `torchscript_simplenet_model_cpu.pt`.
 
 You can check that everything is working by running the `mpi_infer_python.py`
 script. It's set up with MPI such that a different GPU device is associated
@@ -96,7 +99,7 @@ To run the compiled code calling the saved `SimpleNet` TorchScript from Fortran,
 run the executable with an argument of the saved model file. Again, specify the
 number of MPI processes according to the desired number of GPUs:
 ```
-mpiexec -np <NP> ./mpi_infer_fortran ../saved_simplenet_model_cpu.pt
+mpiexec -np <NP> ./mpi_infer_fortran ../torchscript_simplenet_model_cpu.pt
 ```
 
 This runs the model with the same inputs as described above and should produce (some
