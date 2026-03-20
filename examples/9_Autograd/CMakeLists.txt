@@ -21,13 +21,11 @@ else()
 endif()
 message(STATUS "Building with Fortran PyTorch coupling")
 
-# Install Python dependencies
+# Check Python virtual environment is active
 find_package(Python COMPONENTS Interpreter REQUIRED)
 if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
   message(FATAL_ERROR "Please activate your virtualenv or conda environment")
 endif()
-execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
-                        ${PROJECT_SOURCE_DIR}/requirements.txt)
 
 # Fortran example
 add_executable(autograd autograd.f90)

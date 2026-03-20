@@ -31,7 +31,6 @@ this directory create a virtual environment and install the necessary Python mod
 ```
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
 ```
 
 You can check that everything is working by running `simplenet.py`:

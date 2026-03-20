@@ -32,7 +32,7 @@ Python modules:
 ```
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install mpi4py
 ```
 
 You can check the network is set up correctly by running `simplenet.py`:
