@@ -106,7 +106,7 @@ jobs:
           mkdir -p ${INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
-          mkdir ${BUILD_DIR}
+          mkdir -p ${BUILD_DIR}
           cd ${BUILD_DIR}
 
           cmake .. \
