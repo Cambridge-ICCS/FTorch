@@ -80,7 +80,7 @@ and should match the compiler that was used to locally build FTorch.)
 To run the compiled code calling the saved ResNet-18 TorchScript from Fortran run the
 executable with an argument of the saved model file:
 ```
-./resnet_infer_fortran ../saved_resnet18_model_cpu.pt
+./resnet_infer_fortran ../torchscript_resnet18_model_cpu.pt
 ```
 
 This should produce the same top result:
@@ -99,7 +99,7 @@ You will also likely need to add the location of the `.so` files to your `LD_LIB
 ```
 make
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib
-./resnet_infer_fortran saved_resnet18_model_cpu.pt
+./resnet_infer_fortran torchscript_resnet18_model_cpu.pt
 ```
 
 ## Further options

@@ -72,11 +72,11 @@ if __name__ == "__main__":
     model.eval()
 
     # Save the model in PyTorch format
-    torch.save(model.state_dict(), f"saved_batchingnet_model_{device_type}.pt")
+    torch.save(model.state_dict(), f"pytorch_batchingnet_model_{device_type}.pt")
 
     # Create an arbitrary input tensor and save it in PyTorch format
     input_tensor = torch.ones(5).to(device_type)
-    torch.save(input_tensor, f"saved_batchingnet_input_tensor_{device_type}.pt")
+    torch.save(input_tensor, f"pytorch_batchingnet_input_tensor_{device_type}.pt")
 
     # Propagate the input tensor through the model
     with torch.inference_mode():

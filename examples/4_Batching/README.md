@@ -143,15 +143,15 @@ A Python file `batchingnet.py` is provided that defines the simple PyTorch
 ```
 python3 batchingnet.py
 ```
-You should find that a PyTorch model file `saved_batchingnet_model_cpu.pt` is
+You should find that a PyTorch model file `pytorch_batchingnet_model_cpu.pt` is
 created.
 
 To convert the BatchingNet model to TorchScript for use in Fortran, run:
 ```
-pt2ts.py batchingnet.py BatchingNet saved_batchingnet_model_cpu.pt
+pt2ts.py batchingnet.py BatchingNet pytorch_batchingnet_model_cpu.pt \
+  --output_model_file torchscript_batchingnet_model_cpu.pt
 ```
-Without any further arguments, this will overwrite the
-`saved_batchingnet_model_cpu.pt` model file so you will receive a warning.
+This should produce `torchscript_batchingnet_model_cpu.pt`.
 
 You can see how you would perform batching in PyTorch by running the Python batching
 demo:
@@ -179,7 +179,7 @@ cmake --build .
 
 To run the compiled code calling the saved BatchingNet TorchScript from Fortran, run the executable with an argument of the saved model file:
 ```
-./batching_demo_fortran ../saved_batchingnet_model_cpu.pt
+./batching_demo_fortran ../torchscript_batchingnet_model_cpu.pt
 ```
 
 This runs the model with single, batched, and multidimensional batched input arrays and should produce the output:

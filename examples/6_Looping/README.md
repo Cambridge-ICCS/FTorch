@@ -84,15 +84,15 @@ produce the result:
 ```
 Model output: (tensor([0., 2., 4., 6., 8.]))
 ```
-You should find that a PyTorch model file `saved_simplenet_model_cpu.pt` is
+You should find that a PyTorch model file `pytorch_simplenet_model_cpu.pt` is
 created.
 
 To convert the SimpleNet model to TorchScript run the `pt2ts` script:
 ```
-pt2ts simplenet.py SimpleNet saved_simplenet_model_cpu.pt
+pt2ts simplenet.py SimpleNet pytorch_simplenet_model_cpu.pt \
+  --output_model_file torchscript_simplenet_model_cpu.pt
 ```
-Without any further arguments, this will overwrite the
-`saved_simplenet_model_cpu.pt` model file so you will receive a warning.
+This should produce `torchscript_simplenet_model_cpu.pt`.
 
 At this point we no longer require Python, so can deactivate the virtual
 environment:

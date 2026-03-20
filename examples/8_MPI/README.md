@@ -44,15 +44,15 @@ As before, this defines the network and runs it with an input tensor
 ```
 Model output: tensor([[0, 2, 4, 6, 8]])
 ```
-You should find that a PyTorch model file `saved_simplenet_model_cpu.pt` is
+You should find that a PyTorch model file `pytorch_simplenet_model_cpu.pt` is
 created.
 
 To convert the SimpleNet model to TorchScript run the `pt2ts` script:
 ```
-pt2ts simplenet.py SimpleNet saved_simplenet_model_cpu.pt
+pt2ts simplenet.py SimpleNet pytorch_simplenet_model_cpu.pt \
+  --output_model_file torchscript_simplenet_model_cpu.pt
 ```
-Without any further arguments, this will overwrite the
-`saved_simplenet_model_cpu.pt` model file so you will receive a warning.
+This should produce `torchscript_simplenet_model_cpu.pt`.
 
 You can check that everything is working by running the `mpi_infer_python.py`
 script. It's set up with MPI such that a different GPU device is associated
@@ -97,7 +97,7 @@ To run the compiled code calling the saved `SimpleNet` TorchScript from Fortran,
 run the executable with an argument of the saved model file. Again, specify the
 number of MPI processes according to the desired number of GPUs:
 ```
-mpiexec -np <NP> ./mpi_infer_fortran ../saved_simplenet_model_cpu.pt
+mpiexec -np <NP> ./mpi_infer_fortran ../torchscript_simplenet_model_cpu.pt
 ```
 
 This runs the model with the same inputs as described above and should produce (some

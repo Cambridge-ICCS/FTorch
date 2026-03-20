@@ -49,11 +49,11 @@ if(CMAKE_BUILD_TESTS)
     NAME example_batching_pt2ts
     COMMAND pt2ts ${PROJECT_SOURCE_DIR}/batchingnet.py
                   BatchingNet
-                  ${PROJECT_SOURCE_DIR}/saved_batchingnet_model_cpu.pt
+                  ${PROJECT_SOURCE_DIR}/pytorch_batchingnet_model_cpu.pt
                   --input_tensor_file
-                  ${PROJECT_SOURCE_DIR}/saved_batchingnet_input_tensor_cpu.pt
+                  ${PROJECT_SOURCE_DIR}/pytorch_batchingnet_input_tensor_cpu.pt
                   --output_model_file
-                  ${PROJECT_BINARY_DIR}/saved_batchingnet_model_cpu.pt
+                  ${PROJECT_BINARY_DIR}/torchscript_batchingnet_model_cpu.pt
                   --test)
 
   # 3. Load the model and run in Python checking that outputs meet expectations
@@ -67,7 +67,7 @@ if(CMAKE_BUILD_TESTS)
     NAME example_batching_demo_fortran
     COMMAND
       batching_demo_fortran
-      ${PROJECT_BINARY_DIR}/saved_batchingnet_model_cpu.pt
+      ${PROJECT_BINARY_DIR}/torchscript_batchingnet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
