@@ -286,6 +286,8 @@ contains
 
   end subroutine test_unit_external_grad_0d
 
+  ! Unit test checking that the expected gradient is computed correctly for a 0D tensor with an
+  ! explicitly provided non-unit external gradient
   @test(testParameters={get_parameters_short()})
   subroutine test_nonunit_external_grad_0d(this)
 
@@ -323,6 +325,8 @@ contains
 
   end subroutine test_nonunit_external_grad_0d
 
+  ! Unit test checking that the expected gradient is computed correctly for a 2D tensor with an
+  ! explicitly provided non-unit external gradient
   @test(testParameters={get_parameters_short()})
   subroutine test_nonunit_external_grad_2d(this)
 
