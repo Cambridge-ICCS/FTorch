@@ -243,6 +243,8 @@ contains
 
   end subroutine test_retain_graph
 
+  ! Unit test checking that the expected gradient is computed correctly for a 0D tensor both with an
+  ! explicitly provided unit external gradient and with the default (unit) external gradient
   @test(testParameters={get_parameters_switch()})
   subroutine test_unit_external_grad_0d(this)
 
@@ -269,6 +271,7 @@ contains
 
     ! Apply back-propagation and retrieve the gradient and check it takes the expected value:
     !   Q(a) = a => external_gradient * dQ/da = external_gradient * 1 = external_gradient
+    ! Test both provided and assumed external gradient functionality using parameter switch
     if (this%param%switch) then
       ! Create an external gradient filled with ones and pass it as the second argument
       call torch_tensor_ones(external_gradient, 1, scalar_shape, dtype, device_type)
