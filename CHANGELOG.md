@@ -68,8 +68,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 - Modified `torch_tensor_backward` so that it can accept a custom external
   gradient tensor as its second argument. The current API is broken slightly
   because the original signature (with assumed unit external gradient) now only
-  works if the first argument is a tensor with a single entry. However, this
-  does move FTorch's API to be in line with that of (Py)Torch.
+  works if the first argument is a 1-dimensional tensor with a single entry,
+  i.e., a scalar. However, this does move FTorch's API to be in line with that
+  of (Py)Torch.
 - Improve FTorch's modularisation under the hood by breaking single Fortran file down into submodules in [#508](https://github.com/Cambridge-ICCS/FTorch/pull/508)
 - Example numbers were bumped to account for new worked examples in
   [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291) and
