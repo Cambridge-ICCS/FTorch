@@ -510,6 +510,9 @@ void torch_tensor_backward_with_external_gradient(
     validate_tensor(t, "Input tensor");
     validate_tensor(g, "External gradient");
 
+    // Check if the input tensor has the requires_grad property
+    validate_requires_grad(t, "Input tensor");
+
     // Perform backwards step
     t->backward(*g, retain_graph);
   } catch (const std::exception &e) {
@@ -522,8 +525,11 @@ void torch_tensor_backward_without_external_gradient(const torch_tensor_t tensor
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
 
   try {
-    // Check if the tensors are valid and defined
+    // Check if the input tensor is valid and defined
     validate_tensor(t, "Input tensor");
+
+    // Check if the input tensor has the requires_grad property
+    validate_requires_grad(t, "Input tensor");
 
     // Perform backwards step
     t->backward({}, retain_graph);
