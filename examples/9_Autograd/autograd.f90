@@ -60,6 +60,8 @@ program autograd
 
   ! Create an appropriate external gradient tensor filled with ones
   ! You can think of this as the direction in which the derivative is computed
+  ! NOTE: An external gradient is required when calling backpropagation on a torch_tensor, except
+  !       when it is scalar-valued. In that case, the external gradient defaults to one.
   call torch_tensor_ones(external_gradient, Q%get_rank(), Q%get_shape(), Q%get_dtype(), &
                          Q%get_device_type())
 
