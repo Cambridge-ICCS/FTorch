@@ -307,16 +307,19 @@ destroyed because the call will have the form</p>
 <div class="codehilite"><pre><span></span><code><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">func</span><span class="p">()</span>
 </code></pre></div>
 
-<h4 id="other-operators-acting-on-tensors">Other operators acting on tensors</h4>
-<p>We have also exposed the operators for taking the sum or mean over the entries
-in a tensor, which can be achieved with the subroutines
-<a href="../../proc/torch_tensor_sum.html">torch_tensor_sum</a> and
-<a href="../../proc/torch_tensor_mean.html">torch_tensor_mean</a>, respectively.</p>
 <div class="alert alert-info">
 <p class="alert-title h4">Note</p>
 <p>For a concrete example of how to compute mathematical expressions involving Torch
 tensors, see the <a href="worked_examples.html">autograd worked example</a>.</p>
 </div>
+<h4 id="other-operators-acting-on-tensors">Other operators acting on tensors</h4>
+<p>We have also exposed the operators for taking the sum or mean over the entries
+in a tensor, which can be achieved with the subroutines
+<a href="../../proc/torch_tensor_sum.html">torch_tensor_sum</a> and
+<a href="../../proc/torch_tensor_mean.html">torch_tensor_mean</a>, respectively.</p>
+<p>For details related to backpropagation using
+<a href="../../interface/torch_tensor_backward.html">torch_tensor_backward</a>, see the
+<a href="online.html">online training</a> documentation page.</p>
 <div class="footnote">
 <hr>
 <ol>

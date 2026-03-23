@@ -208,8 +208,9 @@ set the <code>requires_grad</code> optional argument to <code>.true.</code> when
 and computed another tensor in terms of an expression involving these, we can
 compute gradients of that tensor with respect to those that it depends on. This
 is achieved using the
-<a href="../../proc/torch_tensor_backward.html">torch_tensor_backward</a> subroutine. For
-example, for input tensors <code>a</code> and <code>b</code> and an output tensor <code>Q</code>:</p>
+<a href="../../interface/torch_tensor_backward.html">torch_tensor_backward</a> subroutine. For
+example, suppose we want to multiply two input tensors <code>a</code> and <code>b</code> to produce an
+output tensor <code>Q</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">in_data1</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">                             </span><span class="n">requires_grad</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
 <span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">in_data2</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
@@ -217,10 +218,24 @@ example, for input tensors <code>a</code> and <code>b</code> and an output tenso
 <span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="w"> </span><span class="n">out_data1</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 
 <span class="n">Q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span>
-
-<span class="k">call </span><span class="n">torch_tensor_backward</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
 </code></pre></div>
 
+<p>If the output tensor <code>Q</code> is scalar (which is a common case for the output of a
+neural network) then we can simply call</p>
+<div class="codehilite"><pre><span></span><code>call torch_tensor_backward(Q)
+</code></pre></div>
+
+<p>to perform the backpropagation. This will assume that the 'external gradient'
+used to scale the gradient calculation is just <code>1.0</code>.</p>
+<p>If the output tensor <code>Q</code> is not scalar or you wish to provide an external
+gradient other than <code>1.0</code>, you need to define this quantity as a
+<a href="../../type/torch_tensor.html">torch_tensor</a> and pass it as the second argument:</p>
+<div class="codehilite"><pre><span></span><code>call torch_tensor_backward(Q, external_gradient)
+</code></pre></div>
+
+<p>You can think of the external gradient as the direction in which we seek to
+compute the derivative. This is why there is no default for non-scalar outputs:
+there is no obvious choice.</p>
 <p>Following the example code above, we can extract gradients of <code>Q</code> with respect
 to <code>a</code> and/or <code>b</code>. To do this, we can use the
 <a href="../../proc/torch_tensor_get_gradient.html">torch_tensor_get_gradient</a> subroutine. That
@@ -235,7 +250,7 @@ is, for tensors <code>dQda</code> and <code>dQdb</code>:</p>
 <h4 id="retain_graph-argument"><code>retain_graph</code> argument</h4>
 <p>If you wish to call the backpropagation operator multiple times then you may
 need to make use of the <code>retain_graph</code> argument for
-<a href="../../proc/torch_tensor_backward.html">torch_tensor_backward</a>. This argument
+<a href="../../interface/torch_tensor_backward.html">torch_tensor_backward</a>. This argument
 accepts logical values and defaults to <code>.false.</code>, for consistency with PyTorch
 and LibTorch. According to the
 <a href="https://pytorch.org/docs/stable/generated/torch.Tensor.backward.html">PyTorch docs</a>,
@@ -266,7 +281,7 @@ gradients before computing the next gradient. This can be achieved using the
 <h4 id="extracting-gradients">Extracting gradients</h4>
 <p>Note that <a href="../../proc/torch_tensor_get_gradient.html">torch_tensor_get_gradient</a> must
 be called after every call to
-<a href="../../proc/torch_tensor_backward.html">torch_tensor_backward</a> or
+<a href="../../interface/torch_tensor_backward.html">torch_tensor_backward</a> or
 <a href="../../proc/torch_tensor_zero_grad.html">torch_tensor_zero_grad</a>, even if the
 gradient for the same tensor is being extracted into the same array. This is due
 to the way that pointers are handled on the C++ side.</p>
