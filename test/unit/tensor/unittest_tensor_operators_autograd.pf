@@ -51,7 +51,7 @@ contains
     call torch_tensor_empty(Q, 1, scalar_shape, dtype, device_type)
     call torch_tensor_sum(Q, a)
 
-    ! Apply back-propagation
+    ! Apply back-propagation with assumed unit external gradient
     call torch_tensor_backward(Q)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
@@ -84,7 +84,7 @@ contains
     call torch_tensor_empty(Q, 1, scalar_shape, dtype, device_type)
     call torch_tensor_mean(Q, a)
 
-    ! Apply back-propagation
+    ! Apply back-propagation with assumed unit external gradient
     call torch_tensor_backward(Q)
 
     ! Create another tensor based off an output array for the gradient and then retrieve it
