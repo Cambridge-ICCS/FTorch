@@ -84,14 +84,26 @@ with `simplenet_backward`. Running
 ```
 python3 simplenet_backward.py
 ```
-should give the output
+should print the following to the console:
 ```
+x = tensor([[1., 2., 3., 4., 5.]], requires_grad=True)
 y = tensor([[ 2.,  4.,  6.,  8., 10.]], grad_fn=<MmBackward0>)
 dy/dx = tensor([[2., 2., 2., 2., 2.]])
 ```
+As expected, the values in the output tensor are double those in the input. As
+we might hope, the values in the gradient tensor are all twos.
 
 To run the Fortran version, simply execute
 ```
 ./simplenet_backward
 ```
-This should
+This should print the following to the console:
+```
+ x =    1.00000000       2.00000000       3.00000000       4.00000000       5.00000000
+ y =    2.00000000       4.00000000       6.00000000       8.00000000       10.0000000
+PASSED :: [autograd_simplenet_y] relative tolerance =  0.1000E-04
+ dy/dx =    2.00000000       2.00000000       2.00000000       2.00000000       2.00000000
+PASSED :: [autograd_simplenet_dydx] relative tolerance =  0.1000E-04
+ SimpleNet Autograd example ran successfully
+```
+The tensor values match those in the Python version of the example above.
