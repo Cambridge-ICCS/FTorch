@@ -59,6 +59,7 @@ if(CMAKE_BUILD_TESTS)
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/plot_and_compare.py &&
             ${CMAKE_COMMAND} -E test_file ${PROJECT_BINARY_DIR}/losses.png
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_plot_and_compare PROPERTIES PASS_REGULAR_EXPRESSION
+  set_tests_properties(example_plot_and_compare PROPERTIES
+                       PASS_REGULAR_EXPRESSION
                        "SUCCESS: Python and Fortran optimizer results match")
 endif()

@@ -1,9 +1,9 @@
 """Plot and compare Python and Fortran optimizer losses."""
 
-import matplotlib.pyplot as plt
-import numpy as np
 import sys
 
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Load both loss files
 with open("losses_pytorch.dat", "r") as f:
