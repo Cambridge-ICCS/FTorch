@@ -221,9 +221,12 @@ to the way that pointers are handled on the C++ side.
 ### Optimization
 
 FTorch now supports running optimizers. That is, it's possible to do training in
-Fortran as well as in Python. To make use of optimizers in FTorch, you need the
-`torch_optim` derived type. This derived type has two member subroutines as
-follows:
+Fortran as well as in Python.
+A summary is provided here, with more detailed information available on the
+[Optimizers API](|page|/usage/optimizers.html) page.
+
+To make use of optimizers in FTorch, you need the `torch_optim` derived type.
+This has two member subroutines as follows:
 
 * `torch_optim%zero_grad` ([[ftorch_optim(module):torch_optim_zero_grad(subroutine)]]),
   which zeroes all tensors associated with the
