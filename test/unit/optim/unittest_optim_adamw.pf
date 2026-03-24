@@ -29,7 +29,7 @@ module unittest_optim_adamw
     real(kind=dp) :: eps
     real(kind=dp) :: weight_decay
     logical :: amsgrad
-    real(kind=dp), dimension(4) :: expected
+    real(kind=sp), dimension(4) :: expected
     character(len=:), allocatable :: desc
    contains
     procedure :: toString => toStringAdamW
@@ -56,21 +56,19 @@ contains
     params = [ &
       ! Baseline cases
       AdamWParams(0.001D0, 0.9D0, 0.999D0, 1.0D-8, 0.010D0, .false., &
-               [0.999493D0, 1.003960D0, 1.003960D0, 1.003960D0], "Default AdamW"), &
+                  [0.999493, 1.003960, 1.003960, 1.003960], "Default AdamW"), &
       AdamWParams(0.01D0, 0.9D0, 0.999D0, 1.0D-8, 0.010D0, .false., &
-               [0.994934D0, 1.039570D0, 1.039582D0, 1.039586D0], "Higher LR, with weight decay"), &
+                  [0.994934, 1.039570, 1.039582, 1.039586], "Higher LR, with weight decay"), &
       AdamWParams(0.001D0, 0.8D0, 0.990D0, 1.0D-7, 0.020D0, .false., &
-               [0.999454D0, 1.003919D0, 1.003920D0, 1.003920D0], "Different betas, different weight decay"), &
+                  [0.999454, 1.003919, 1.003920, 1.003920], "Different betas, different weight decay"), &
       AdamWParams(0.001D0, 0.9D0, 0.999D0, 1.0D-8, 0.010D0, .true., &
-               [0.999493D0, 1.003960D0, 1.003960D0, 1.003960D0], "With AMSGrad"), &
-
-      ! Edge cases and additional combinations
+                  [0.999493, 1.003960, 1.003960, 1.003960], "With AMSGrad"), &
       AdamWParams(0.002D0, 0.9D0, 0.999D0, 1.0D-8, 0.005D0, .false., &
-               [0.998997D0, 1.007959D0, 1.007959D0, 1.007959D0], "Higher LR, smaller weight decay"), &
+                  [0.998997, 1.007959, 1.007959, 1.007959], "Higher LR, smaller weight decay"), &
       AdamWParams(0.001D0, 0.95D0, 0.999D0, 1.0D-8, 0.010D0, .false., &
-               [0.999512D0, 1.003960D0, 1.003960D0, 1.003960D0], "Different beta1"), &
+                  [0.999512, 1.003960, 1.003960, 1.003960], "Different beta1"), &
       AdamWParams(0.001D0, 0.9D0, 0.9995D0, 1.0D-8, 0.010D0, .false., &
-               [0.999493D0, 1.003960D0, 1.003960D0, 1.003960D0], "Different beta2") &
+                  [0.999493, 1.003960, 1.003960, 1.003960], "Different beta2") &
     ]
   end function get_parameters_adamw
 

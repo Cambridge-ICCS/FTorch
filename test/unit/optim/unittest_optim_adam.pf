@@ -29,7 +29,7 @@ module unittest_optim_adam
     real(kind=dp) :: eps
     real(kind=dp) :: weight_decay
     logical :: amsgrad
-    real(kind=dp), dimension(4) :: expected
+    real(kind=sp), dimension(4) :: expected
     character(len=:), allocatable :: desc
    contains
     procedure :: toString => toStringAdam
@@ -56,21 +56,19 @@ contains
     params = [ &
       ! Baseline cases
       AdamParams(0.001D0, 0.9D0, 0.999D0, 1.0D-8, 0.000D0, .false., &
-               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "Default Adam"), &
+                 [1.000000, 1.004000, 1.004000, 1.004000], "Default Adam"), &
       AdamParams(0.01D0, 0.9D0, 0.999D0, 1.0D-8, 0.010D0, .false., &
-               [0.969523D0, 1.039975D0, 1.039988D0, 1.039992D0], "Higher LR, with weight decay"), &
+                 [0.969523, 1.039975, 1.039988, 1.039992], "Higher LR, with weight decay"), &
       AdamParams(0.001D0, 0.8D0, 0.990D0, 1.0D-7, 0.000D0, .false., &
-               [1.000000D0, 1.003999D0, 1.004000D0, 1.004000D0], "Different betas, different eps"), &
+                 [1.000000, 1.003999, 1.004000, 1.004000], "Different betas, different eps"), &
       AdamParams(0.001D0, 0.9D0, 0.999D0, 1.0D-8, 0.000D0, .true., &
-               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "With AMSGrad"), &
-
-      ! Edge cases and additional combinations
+                 [1.000000, 1.004000, 1.004000, 1.004000], "With AMSGrad"), &
       AdamParams(0.002D0, 0.9D0, 0.999D0, 1.0D-8, 0.001D0, .false., &
-               [0.997029D0, 1.007999D0, 1.008000D0, 1.008000D0], "Higher LR, small weight decay"), &
+                 [0.997029, 1.007999, 1.008000, 1.008000], "Higher LR, small weight decay"), &
       AdamParams(0.001D0, 0.95D0, 0.999D0, 1.0D-8, 0.000D0, .false., &
-               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "Different beta1"), &
+                 [1.000000, 1.004000, 1.004000, 1.004000], "Different beta1"), &
       AdamParams(0.001D0, 0.9D0, 0.9995D0, 1.0D-8, 0.000D0, .false., &
-               [1.000000D0, 1.004000D0, 1.004000D0, 1.004000D0], "Different beta2") &
+                 [1.000000, 1.004000, 1.004000, 1.004000], "Different beta2") &
     ]
   end function get_parameters_adam
 
