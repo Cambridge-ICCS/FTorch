@@ -30,39 +30,40 @@ execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r
                         ${PROJECT_SOURCE_DIR}/requirements.txt)
 
 # Fortran examples
-add_executable(tensor_arithmetic tensor_arithmetic.f90)
-target_link_libraries(tensor_arithmetic PRIVATE FTorch::ftorch)
-add_executable(simplenet simplenet.f90)
-target_link_libraries(simplenet PRIVATE FTorch::ftorch)
+add_executable(tensor_manipulation_backward tensor_manipulation_backward.f90)
+target_link_libraries(tensor_manipulation_backward PRIVATE FTorch::ftorch)
+add_executable(simplenet_backward simplenet_backward.f90)
+target_link_libraries(simplenet_backward PRIVATE FTorch::ftorch)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
-  # 1. Check the Python tensor_arithmetic script runs successfully
-  add_test(NAME example_autograd_tensor_arithmetic_python
+  # 1. Check the Python tensor_manipulation_backward script runs successfully
+  add_test(NAME example_autograd_tensor_manipulation_backward_python
            COMMAND ${Python_EXECUTABLE}
-                   ${PROJECT_SOURCE_DIR}/tensor_arithmetic.py)
+                   ${PROJECT_SOURCE_DIR}/tensor_manipulation_backward.py)
 
-  # 2. Check the Fortran tensor_arithmetic script runs successfully
+  # 2. Check the Fortran tensor_manipulation_backward script runs successfully
   add_test(
-    NAME example_autograd_tensor_arithmetic_fortran
-    COMMAND tensor_arithmetic
+    NAME example_autograd_tensor_manipulation_backward_fortran
+    COMMAND tensor_manipulation_backward
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_autograd_tensor_arithmetic_fortran
+  set_tests_properties(example_autograd_tensor_manipulation_backward_fortran
                        PROPERTIES PASS_REGULAR_EXPRESSION
-                       "Tensor arithmetic Autograd example ran successfully")
+                       "Tensor manipulation Autograd example ran successfully")
 
-  # 3. Check the Python SimpleNet Autograd script runs successfully
-  add_test(NAME example_autograd_simplenet_python
-           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py)
+  # 3. Check the Python simplenet_backward Autograd script runs successfully
+  add_test(NAME example_autograd_simplenet_backward_python
+           COMMAND ${Python_EXECUTABLE}
+                   ${PROJECT_SOURCE_DIR}/simplenet_backward.py)
 
-  # 4. Check the Fortran SimpleNet Autograd script runs successfully
+  # 4. Check the Fortran simplenet_backward Autograd script runs successfully
   add_test(
-    NAME example_autograd_simplenet_fortran
-    COMMAND simplenet
+    NAME example_autograd_simplenet_backward_fortran
+    COMMAND simplenet_backward
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_autograd_simplenet_fortran
+  set_tests_properties(example_autograd_simplenet_backward_fortran
                        PROPERTIES PASS_REGULAR_EXPRESSION
                        "SimpleNet Autograd example ran successfully")
 endif()

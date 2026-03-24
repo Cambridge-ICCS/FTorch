@@ -9,14 +9,14 @@ expressions involving `torch_tensor`s.
 ## Description
 
 First, we include a modified version of the Python demo found in the PyTorch
-documentation as `tensor_arithmetic.py`, which shows how to compute the gradient of a
+documentation as `tensor_manipulation_backward.py`, which shows how to compute the gradient of a
 mathematical expression involving Torch Tensors. The demo is replicated in
-Fortran as `tensor_arithmetic.f90`, to show how to do the same thing using FTorch.
+Fortran as `tensor_manipulation_backward.f90`, to show how to do the same thing using FTorch.
 
-Second, we provide `simplenet.py`, which defines a simple neural network using
+Second, we provide `simplenet_backward.py`, which defines a simple neural network using
 PyTorch's `nn.Module` class, saves it in `TorchScript` format, and shows how to
 differentiate through the network propagation in Python. The Fortran version,
-`simplenet.f90`, shows how to load the saved model and differentiate through a
+`simplenet_backward.f90`, shows how to load the saved model and differentiate through a
 call to `torch_model_forward` in FTorch.
 
 ## Dependencies
@@ -39,11 +39,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Tensor arithmetic demo
+### Tensor manipulation demo
 
 Run the Python version of the first demo with
 ```
-python3 tensor_arithmetic.py
+python3 tensor_manipulation_backward.py
 ```
 This performs some arithmetic on two input tensors [2.0, 3.0] and [6.0, 4.0] to
 produce the result:
@@ -68,7 +68,7 @@ locally build FTorch.)
 
 To run the compiled code, simply use
 ```
-./tensor_arithmetic
+./tensor_manipulation_backward
 ```
 This should print
 ```
@@ -79,10 +79,10 @@ along with some testing output.
 
 ### Simple neural network demo
 
-The second example proceeds in much the same way, replacing `tensor_arithmetic`
-with `simplenet`. Running
+The second example proceeds in much the same way, replacing `tensor_manipulation_backward`
+with `simplenet_backward`. Running
 ```
-python3 simplenet.py
+python3 simplenet_backward.py
 ```
 should give the output
 ```
@@ -92,6 +92,6 @@ dy/dx = tensor([[2., 2., 2., 2., 2.]])
 
 To run the Fortran version, simply execute
 ```
-./simplenet
+./simplenet_backward
 ```
 This should

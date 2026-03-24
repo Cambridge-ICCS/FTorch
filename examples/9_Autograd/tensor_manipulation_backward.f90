@@ -1,4 +1,4 @@
-program autograd_tensor_arithmetic
+program autograd_tensor_manipulation
 
   ! Import precision info from iso
   use, intrinsic :: iso_fortran_env, only : sp => real32
@@ -95,6 +95,6 @@ program autograd_tensor_arithmetic
     stop 999
   end if
 
-  write (*,*) "Tensor arithmetic Autograd example ran successfully"
+  write (*,*) "Tensor manipulation Autograd example ran successfully"
 
-end program autograd_tensor_arithmetic
+end program autograd_tensor_manipulation
