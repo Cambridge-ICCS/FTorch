@@ -21,6 +21,9 @@ module unittest_optim
 
   public
 
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
   @testParameter
   type, extends(AbstractTestParameter) :: OptimizerTypes
     character(len=:), allocatable :: optimizer_type
@@ -221,13 +224,13 @@ contains
     ! calculation fron the appropriate formula.
     if (this%param%optimizer_type == "SGD") then
       call torch_optim_SGD(optimizer, [tensor], learning_rate=1.0D0)
-      expected = [1.0D0, 1.5D0, 2.0D0, 2.5D0]
+      expected = [1.0, 1.5, 2.0, 2.5]
     else if (this%param%optimizer_type == "Adam") then
       call torch_optim_Adam(optimizer, [tensor], learning_rate=1.0D0)
-      expected = [1.0D0, 2.0D0, 2.0D0, 2.0D0]
+      expected = [1.0, 2.0, 2.0, 2.0]
     else if (this%param%optimizer_type == "AdamW") then
       call torch_optim_AdamW(optimizer, [tensor], learning_rate=1.0D0)
-      expected = [0.99D0, 1.99D0, 1.99D0, 1.99D0]
+      expected = [0.99, 1.99, 1.99, 1.99]
     else
       write(*,*) "Error :: unsupported optimizer type: ", this%param%optimizer_type
       stop 999
@@ -293,15 +296,15 @@ contains
     if (this%param%optimizer_type == "SGD") then
       call torch_optim_SGD(optimizer, [tensor], learning_rate=0.1D0, momentum=0.9D0, &
                            weight_decay=0.025D0)
-      expected = [0.979859D0, 1.840596D0, 2.701334D0, 3.562072D0]
+      expected = [0.979859, 1.840596, 2.701334, 3.562072]
     else if (this%param%optimizer_type == "Adam") then
       call torch_optim_Adam(optimizer, [tensor], learning_rate=0.1D0, beta_1=0.75D0, &
                             beta_2=0.8D0, weight_decay=0.025D0)
-      expected = [1.067700D0, 1.389061D0, 1.388119D0, 1.387820D0]
+      expected = [1.067700, 1.389061, 1.388119, 1.387820]
     else if (this%param%optimizer_type == "AdamW") then
       call torch_optim_AdamW(optimizer, [tensor], learning_rate=0.1D0, beta_1=0.75D0, &
                             beta_2=0.8D0, weight_decay=0.025D0)
-      expected = [0.919747D0, 1.378128D0, 1.376950D0, 1.376567D0]
+      expected = [0.919747, 1.378128, 1.376950, 1.376567]
     else
       write(*,*) "Error :: unsupported optimizer type: ", this%param%optimizer_type
       stop 999
