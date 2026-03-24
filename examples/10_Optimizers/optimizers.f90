@@ -76,7 +76,7 @@ program foptimizer
     !       associated with it as it will be detached after the backward call.
     call torch_tensor_from_array(loss, loss_data, torch_kCPU)
     call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
-    write(unit=10, fmt="(e9.4)") loss_data(1)
+    write(unit=10, fmt="(es10.4)") loss_data(1)
 
     ! Perform backward step on loss to propogate gradients using autograd
     ! NOTE: This implicitly passes a unit 'external gradient' to the backward pass

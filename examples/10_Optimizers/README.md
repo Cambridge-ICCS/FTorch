@@ -98,14 +98,15 @@ each step, outputting values of interest to screen in the form:
 ...
 ```
 
-## Plotting the loss function convergence
+## Plotting the loss function convergence and checking for consistency
 
-The Python and Fortran versions of the demo output the values of the loss
-function values at each epoch to files `pytorch_losses.dat` and
-`ftorch_losses.dat`, respectively. These can be plotted using the
-`plot_losses.py` script, which can be run with:
+The Python and Fortran versions of the demo both output the values
+of the loss function at each epoch to files `pytorch_losses.dat` and
+`ftorch_losses.dat`, respectively. These can be compared to check that
+they match numerically and plotted using the `plot_and_compare.py`
+script which can be run with:
 ```sh
-python3 plot_losses.py
+python3 plot_and_compare.py
 ```
 which will read the data files and produce a `losses.png` file in the current
 directory. The result should look something like
