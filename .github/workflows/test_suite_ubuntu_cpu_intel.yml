@@ -41,10 +41,11 @@ jobs:
           - toolchain: intel-ifx
             FC: ifx
             MPIFC: mpiifx
+            version: 2025.3.2
           - toolchain: intel-ifort
             FC: ifort
             MPIFC: mpiifort
-        version: [2024.1.0]
+            version: 2024.2.0  # Last release of oneapi with ifort
         std: [f08]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -68,12 +69,12 @@ jobs:
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
       - name: Install Intel tools
-        uses: rscohn2/setup-oneapi@2ad0cf6b74bc2426bdcee825cf88f9db719dd727 # v0.1.0
+        uses: rscohn2/setup-oneapi@a5ae4e7697b9cd5dc8a616f94c1e56b87140999d
         with:
           components: |
             icx@${{ matrix.version }}
             ifx@${{ matrix.version }}
-            impi@2021.12.0
+            impi@2021.17.2
 
       - name: Setup Intel oneAPI environment
         run: |
@@ -119,7 +120,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+            -DCMAKE_Fortran_FLAGS="-stand ${FORTRAN_STANDARD}"
           cmake --build .
           cmake --install .
 
