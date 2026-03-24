@@ -123,7 +123,7 @@ contains
     class(TestCaseTypes), intent(inout) :: this
 
     type(torch_optim) :: optimizer
-    type(torch_tensor) :: tensor, tensor_sq, grad
+    type(torch_tensor) :: tensor, tensor_sq, grad, external_gradient
     integer, parameter :: ndims = 1
     integer, parameter :: tensor_layout(ndims) = [1]
     integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
@@ -159,9 +159,12 @@ contains
       stop 999
     end if
 
+    !Create an external gradient filled with ones
+    call torch_tensor_ones(external_gradient, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
+
     ! Perform a dummy backward pass to populate gradients
     tensor_sq = tensor ** 2
-    call torch_tensor_backward(tensor_sq, retain_graph=.true.)
+    call torch_tensor_backward(tensor_sq, external_gradient, retain_graph=.true.)
 
     ! Check gradients are non-zero (2*tensor)
     call torch_tensor_get_gradient(grad, tensor)
@@ -169,7 +172,7 @@ contains
 
     ! Repeat, and check that the gradients stack (2*2*tensor)
     tensor_sq = tensor ** 2
-    call torch_tensor_backward(tensor_sq, retain_graph=.true.)
+    call torch_tensor_backward(tensor_sq, external_gradient, retain_graph=.true.)
     call torch_tensor_get_gradient(grad, tensor)
     @assertTrue(allclose(grad_data, 4.0*tensor_data, test_name="test_torch_optim_zero_grad_2"))
 
@@ -178,7 +181,7 @@ contains
 
     ! Repeat the operation but check gradients no longer stacked (back to 2*tensor)
     tensor_sq = tensor ** 2
-    call torch_tensor_backward(tensor_sq, retain_graph=.true.)
+    call torch_tensor_backward(tensor_sq, external_gradient, retain_graph=.true.)
     call torch_tensor_get_gradient(grad, tensor)
     @assertTrue(allclose(grad_data, 2.0*tensor_data, test_name="test_torch_optim_zero_grad_3"))
 
@@ -186,6 +189,7 @@ contains
     call torch_delete(tensor)
     call torch_delete(tensor_sq)
     call torch_delete(grad)
+    call torch_delete(external_gradient)
     call torch_optim_delete(optimizer)
   end subroutine test_optim_zero_grad
 
