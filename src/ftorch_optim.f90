@@ -97,16 +97,16 @@ contains
     use, intrinsic :: iso_fortran_env, only : real64
     type(torch_optim), intent(out) :: optim  !! Optimizer we are creating
     type(torch_tensor), intent(in), dimension(:) :: parameters  !! Array of parameter tensors
-    real(kind=real64), optional, intent(in) :: learning_rate  !! learning rate for the optimization algorithm
-    real(kind=real64) :: learning_rate_value  !! learning rate for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: momentum  !! momentum for the optimization algorithm
-    real(kind=real64) :: momentum_value  !! momentum for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: dampening  !! dampening for the optimization algorithm
-    real(kind=real64) :: dampening_value  !! dampening for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: weight_decay  !! weight_decay for the optimization algorithm
-    real(kind=real64) :: weight_decay_value  !! weight_decay for the optimization algorithm
-    logical, optional, intent(in) :: nesterov  !! enable Nesterov momentum. Only applicable when momentum is non-zero.
-    logical :: nesterov_value  !! enable Nesterov momentum. Only applicable when momentum is non-zero.
+    real(kind=real64), optional, intent(in) :: learning_rate  !! learning rate for the optimization algorithm (default: 0.001)
+    real(kind=real64), optional, intent(in) :: momentum  !! momentum for the optimization algorithm (default: 0.0)
+    real(kind=real64), optional, intent(in) :: dampening  !! dampening for the optimization algorithm (default: 0.0)
+    real(kind=real64), optional, intent(in) :: weight_decay  !! weight_decay for the optimization algorithm (default: 0.0)
+    logical, optional, intent(in) :: nesterov  !! enable Nesterov momentum. Only applicable when momentum is non-zero. (default: .false.)
+    real(kind=real64) :: learning_rate_value  !! Resolved learning_rate value to be passed to the C interface
+    real(kind=real64) :: momentum_value  !! Resolved momentum value to be passed to the C interface
+    real(kind=real64) :: dampening_value  !! Resolved dampening value to be passed to the C interface
+    real(kind=real64) :: weight_decay_value  !! Resolved weight_decay value to be passed to the C interface
+    logical :: nesterov_value  !! Resolved nesterov value to be passed to the C interface
 
     integer(ftorch_int) :: i
     integer(c_int)      :: n_params
@@ -176,18 +176,18 @@ contains
     use, intrinsic :: iso_fortran_env, only : real64
     type(torch_optim), intent(out) :: optim  !! Optimizer we are creating
     type(torch_tensor), intent(in), dimension(:) :: parameters  !! Array of parameter tensors
-    real(kind=real64), optional, intent(in) :: learning_rate  !! learning rate for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: beta_1  !! beta 1 for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: beta_2  !! beta 2 for the optimization algorithm
-    real(kind=real64) :: learning_rate_value  !! learning rate for the optimization algorithm
-    real(kind=real64) :: beta_1_value  !! beta 1 for the optimization algorithm
-    real(kind=real64) :: beta_2_value  !! beta 2 for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: eps  !! eps for the optimization algorithm
-    real(kind=real64) :: eps_value  !! eps for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: weight_decay  !! weight_decay for the optimization algorithm
-    real(kind=real64) :: weight_decay_value  !! weight_decay for the optimization algorithm
-    logical, optional, intent(in) :: amsgrad  !! enable AMSGrad variant
-    logical :: amsgrad_value  !! enable AMSGrad variant
+    real(kind=real64), optional, intent(in) :: learning_rate  !! learning rate for the optimization algorithm (default: 0.001)
+    real(kind=real64), optional, intent(in) :: beta_1  !! beta 1 for the optimization algorithm (default: 0.9)
+    real(kind=real64), optional, intent(in) :: beta_2  !! beta 2 for the optimization algorithm (default: 0.999)
+    real(kind=real64), optional, intent(in) :: eps  !! eps for the optimization algorithm (default: 1.0e-8)
+    real(kind=real64), optional, intent(in) :: weight_decay  !! weight_decay for the optimization algorithm (default: 0.0)
+    logical, optional, intent(in) :: amsgrad  !! enable AMSGrad variant (default: .false.)
+    real(kind=real64) :: learning_rate_value  !! Resolved learning_rate value to be passed to the C interface
+    real(kind=real64) :: beta_1_value  !! Resolved beta_1 value to be passed to the C interface
+    real(kind=real64) :: beta_2_value  !! Resolved beta 2 value to be passed to the C interface
+    real(kind=real64) :: eps_value  !! Resolved eps value to be passed to the C interface
+    real(kind=real64) :: weight_decay_value  !! Resolved weight_decay value to be passed to the C interface
+    logical :: amsgrad_value  !! Resolved amsgrad value to be passed to the C interface
 
     integer(ftorch_int) :: i
     integer(c_int)      :: n_params
@@ -263,18 +263,18 @@ contains
     use, intrinsic :: iso_fortran_env, only : real64
     type(torch_optim), intent(out) :: optim  !! Optimizer we are creating
     type(torch_tensor), intent(in), dimension(:) :: parameters  !! Array of parameter tensors
-    real(kind=real64), optional, intent(in) :: learning_rate  !! learning rate for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: beta_1  !! beta 1 for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: beta_2  !! beta 2 for the optimization algorithm
-    real(kind=real64) :: learning_rate_value  !! learning rate for the optimization algorithm
-    real(kind=real64) :: beta_1_value  !! beta 1 for the optimization algorithm
-    real(kind=real64) :: beta_2_value  !! beta 2 for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: eps  !! eps for the optimization algorithm
-    real(kind=real64) :: eps_value  !! eps for the optimization algorithm
-    real(kind=real64), optional, intent(in) :: weight_decay  !! weight_decay for the optimization algorithm
-    real(kind=real64) :: weight_decay_value  !! weight_decay for the optimization algorithm
-    logical, optional, intent(in) :: amsgrad  !! enable AMSGrad variant
-    logical :: amsgrad_value  !! enable AMSGrad variant
+    real(kind=real64), optional, intent(in) :: learning_rate  !! learning rate for the optimization algorithm (default: 0.001)
+    real(kind=real64), optional, intent(in) :: beta_1  !! beta 1 for the optimization algorithm (default: 0.9)
+    real(kind=real64), optional, intent(in) :: beta_2  !! beta 2 for the optimization algorithm (default: 0.999)
+    real(kind=real64), optional, intent(in) :: eps  !! eps for the optimization algorithm (default: 1.0e-8)
+    real(kind=real64), optional, intent(in) :: weight_decay  !! weight_decay for the optimization algorithm (default: 0.01)
+    logical, optional, intent(in) :: amsgrad  !! enable AMSGrad variant (default: .false.)
+    real(kind=real64) :: learning_rate_value  !! Resolved learning_rate value to be passed to the C interface
+    real(kind=real64) :: beta_1_value  !! Resolved beta_1 value to be passed to the C interface
+    real(kind=real64) :: beta_2_value  !! Resolved beta 2 value to be passed to the C interface
+    real(kind=real64) :: eps_value  !! Resolved eps value to be passed to the C interface
+    real(kind=real64) :: weight_decay_value  !! Resolved weight_decay value to be passed to the C interface
+    logical :: amsgrad_value  !! Resolved amsgrad value to be passed to the C interface
 
     integer(ftorch_int) :: i
     integer(c_int)      :: n_params
