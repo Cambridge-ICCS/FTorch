@@ -11,7 +11,7 @@ program foptimizer
                     torch_kCPU, torch_kFloat32, &
                     torch_tensor, torch_tensor_from_array, &
                     torch_tensor_ones, torch_tensor_empty, &
-                    torch_tensor_print, torch_delete, &
+                    torch_tensor_print, &
                     torch_tensor_backward, torch_tensor_get_gradient, &
                     torch_tensor_mean
   use ftorch_optim, only: torch_optim, torch_optim_SGD
@@ -102,10 +102,6 @@ program foptimizer
         call torch_tensor_print(scaling_tensor)
         write(*,*)
     end if
-
-    ! Clean up created tensors
-    call torch_delete(output_vec)
-    call torch_delete(loss)
 
   end do
   close(unit=10)
