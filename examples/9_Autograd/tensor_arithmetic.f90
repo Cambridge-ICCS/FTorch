@@ -58,8 +58,11 @@ program autograd_tensor_arithmetic
     stop 999
   end if
 
-  ! Create an appropriate external gradient tensor filled with ones
-  ! You can think of this as the direction in which the derivative is computed
+  ! Create an appropriate external gradient tensor
+  ! You can think of this as the direction in which the derivative is computed. Here we exploit the
+  ! fact that we know that the mixed partial derivatives of Q are zero (i.e., there are no
+  ! cross-terms involving both a and b) so can compute both dQ/da and dQ/db in one backpropagation
+  ! by choosing a tensor filled with ones.
   ! NOTE: An external gradient is required when calling backpropagation on a torch_tensor, except
   !       when it is scalar-valued. In that case, the external gradient defaults to one.
   call torch_tensor_ones(external_gradient, Q%get_rank(), Q%get_shape(), Q%get_dtype(), &
