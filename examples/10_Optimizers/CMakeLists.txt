@@ -39,27 +39,27 @@ if(CMAKE_BUILD_TESTS)
 
   # 1. Check the Python Optimizers script runs successfully
   add_test(
-    NAME example_pyoptim
+    NAME example_optim_pyoptim
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/optimizers.py
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_pyoptim PROPERTIES PASS_REGULAR_EXPRESSION
+  set_tests_properties(example_optim_pyoptim PROPERTIES PASS_REGULAR_EXPRESSION
                        "Python optimizers example ran successfully")
 
   # 2. Check the Fortran Optimizers script runs successfully
   add_test(
-    NAME example_foptim
+    NAME example_optim_foptim
     COMMAND optimizers
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_foptim PROPERTIES PASS_REGULAR_EXPRESSION
+  set_tests_properties(example_optim_foptim PROPERTIES PASS_REGULAR_EXPRESSION
                        "Fortran optimizers example ran successfully")
 
   # 3. Plot results and verify Python and Fortran saved losses match
   add_test(
-    NAME example_plot_and_compare
+    NAME example_optim_plot_and_compare
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/plot_and_compare.py &&
             ${CMAKE_COMMAND} -E test_file ${PROJECT_BINARY_DIR}/losses.png
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_plot_and_compare PROPERTIES
+  set_tests_properties(example_optim_plot_and_compare PROPERTIES
                        PASS_REGULAR_EXPRESSION
                        "SUCCESS: Python and Fortran optimizer results match")
 endif()
