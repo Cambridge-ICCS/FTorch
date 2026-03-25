@@ -11,15 +11,18 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Provide worked example and documentation on differentiating through calls to
+  `torch_model_forward`.
+  [#486](https://github.com/Cambridge-ICCS/FTorch/pull/486)
+
+### Changed
+
 - Optimizer functionality added to FTorch.
   A new module ftorch_optim added which contains implementations of SGD, Adam, and AdamW
   as well as core optimizer methods.
   A new worked example training a single tensor as part of a loop is included, as are
   comprehensive unit tests and detailed documentation.
   [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
-
-### Changed
-
 - Example numbering updated to double digits to incorporate example 10.
   [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
 
