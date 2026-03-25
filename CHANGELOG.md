@@ -17,6 +17,15 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Optimizer functionality added to FTorch.
+  A new module ftorch_optim added which contains implementations of SGD, Adam, and AdamW
+  as well as core optimizer methods.
+  A new worked example training a single tensor as part of a loop is included, as are
+  comprehensive unit tests and detailed documentation.
+  [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
+- Example numbering updated to double digits to incorporate example 10.
+  [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
+
 ### Removed
 
 ### Fixed
