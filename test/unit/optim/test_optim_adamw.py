@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Replicates tests of test_optim_adamw.pf to generate values for comparison."""
 
 import torch
 from torch import optim
