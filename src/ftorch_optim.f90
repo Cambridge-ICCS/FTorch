@@ -9,7 +9,8 @@ module ftorch_optim
 
   use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
 
-  use ftorch, only: torch_tensor, ftorch_int
+  use ftorch_types, only: ftorch_int
+  use ftorch_tensor, only: torch_tensor
 
   implicit none
 
