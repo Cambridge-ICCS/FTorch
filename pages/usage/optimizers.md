@@ -59,7 +59,7 @@ have common core methods that are used.
 [[ftorch_optim(module):torch_optim_zero_grad(subroutine)]] clears the gradients of all
 parameters managed by the optimizer. This should be called at the beginning of each
 iteration during training.
-The method is implemented as a bound procedure on the
+The method is implemented as a procedure bound to the
 [[ftorch_optim(module):torch_optim(type)]] type and can be called as:
 `optimizer%zero_grad()`.
 
@@ -70,7 +70,7 @@ step, updating all parameters managed by the optimizer based on their gradients.
 It should be called after backpropogation has been performed following a forward pass
 during a training iteration.
 
-The method is implemented as a bound procedure on the
+The method is implemented as a procedure bound to the
 [[ftorch_optim(module):torch_optim(type)]] type and can be called as:
  `optimizer%step()`.
 
