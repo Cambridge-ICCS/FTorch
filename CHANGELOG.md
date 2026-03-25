@@ -20,6 +20,14 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 - Changed process for saving TorchScript models
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
+- Optimizer functionality added to FTorch.
+  A new module ftorch_optim added which contains implementations of SGD, Adam, and AdamW
+  as well as core optimizer methods.
+  A new worked example training a single tensor as part of a loop is included, as are
+  comprehensive unit tests and detailed documentation.
+  [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
+- Example numbering updated to double digits to incorporate example 10.
+  [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
 
 ### Removed
 
@@ -74,6 +82,12 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Modified `torch_tensor_backward` so that it can accept a custom external
+  gradient tensor as its second argument. The current API is broken slightly
+  because the original signature (with assumed unit external gradient) now only
+  works if the first argument is a 1-dimensional tensor with a single entry,
+  i.e., a scalar. However, this does move FTorch's API to be in line with that
+  of (Py)Torch.
 - Improve FTorch's modularisation under the hood by breaking single Fortran file down into submodules in [#508](https://github.com/Cambridge-ICCS/FTorch/pull/508)
 - Example numbers were bumped to account for new worked examples in
   [#291](https://github.com/Cambridge-ICCS/FTorch/pull/291) and

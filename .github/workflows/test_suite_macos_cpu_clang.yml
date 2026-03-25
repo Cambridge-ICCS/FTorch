@@ -224,7 +224,7 @@ jobs:
           export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
           export FTORCH_INSTALL_DIR=/tmp/ftorch-install
           export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch/lib:${FTORCH_BUILD_DIR}/lib
-          export EXAMPLE_BUILD_DIR="examples/2_SimpleNet/build"
+          export EXAMPLE_BUILD_DIR="examples/02_SimpleNet/build"
           mkdir "${EXAMPLE_BUILD_DIR}"
           cd "${EXAMPLE_BUILD_DIR}"
           cmake .. \

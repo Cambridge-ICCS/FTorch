@@ -19,6 +19,9 @@ typedef void *torch_jit_script_module_t;
 // Opaque pointer type alias for at::Tensor
 typedef void *torch_tensor_t;
 
+// Opaque pointer type aliases for optimizers
+typedef void *torch_optim_t;
+
 // Opaque pointer type alias for integer scalars
 typedef void *torch_int_t;
 
@@ -309,15 +312,25 @@ EXPORT_C void torch_tensor_mean(torch_tensor_t output, const torch_tensor_t tens
 EXPORT_C void torch_tensor_zero_grad(torch_tensor_t tensor);
 
 /**
- * Function to perform back-propagation on a Torch Tensor.
+ * Function to perform back-propagation on a Torch Tensor given some external gradient.
  * Note that the Tensor must have the requires_grad attribute set to true.
  * @param Tensor to perform back-propagation on
- * @param Tensor with an external gradient to supply for the back-propagation
  * @param whether the computational graph should be retained
  */
-EXPORT_C void torch_tensor_backward(const torch_tensor_t tensor,
-                                    const torch_tensor_t external_gradient,
-                                    const bool retain_graph);
+EXPORT_C void
+torch_tensor_backward_with_external_gradient(const torch_tensor_t tensor,
+                                             const torch_tensor_t external_gradient,
+                                             const bool retain_graph);
+
+/**
+ * Function to perform back-propagation on a Torch Tensor with an assumed external
+ * gradient of ones. Note that the Tensor must have the requires_grad attribute set to
+ * true.
+ * @param Tensor to perform back-propagation on
+ */
+EXPORT_C void
+torch_tensor_backward_without_external_gradient(const torch_tensor_t tensor,
+                                                const bool retain_graph);
 
 /**
  * Function to return the grad attribute of a Torch Tensor.
@@ -326,6 +339,79 @@ EXPORT_C void torch_tensor_backward(const torch_tensor_t tensor,
  */
 EXPORT_C void torch_tensor_get_gradient(const torch_tensor_t tensor,
                                         torch_tensor_t gradient);
+
+// =============================================================================
+// --- Torch optimizers API
+// =============================================================================
+
+/**
+ * Function to create an SGD optimizer over a set of parameters
+ * See the PyTorch documentation for a full description of the algorithm and parameters
+ * @param parameters to run the optimizer over
+ * @param number of parameter Tensors in the parameters vector
+ * @param learning rate for the optimizer
+ * @param momentum for the optimizer
+ * @param dampening of momentum for the optimizer
+ * @param weight decay for the optimizer
+ * @param whether to enable Nesterov momentum for the optimizer
+ */
+EXPORT_C torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int nin,
+                                       const double learning_rate,
+                                       const double momentum, const double dampening,
+                                       const double weight_decay, const bool nesterov);
+
+/**
+ * Function to create an Adam optimizer over a set of parameters
+ * See the PyTorch documentation for a full description of the algorithm and parameters
+ * @param parameters to run the optimizer over
+ * @param number of parameter Tensors in the parameters vector
+ * @param learning rate for the optimizer
+ * @param beta 1 for the optimizer
+ * @param beta 2 for the optimizer
+ * @param epsilon for the optimizer
+ * @param weight decay for the optimizer
+ * @param whether to enable AMSGrad for the optimizer
+ */
+EXPORT_C torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int nin,
+                                        const double learning_rate, const double beta_1,
+                                        const double beta_2, const double eps,
+                                        const double weight_decay, const bool amsgrad);
+
+/**
+ * Function to create an AdamW optimizer over a set of parameters
+ * See the PyTorch documentation for a full description of the algorithm and parameters
+ * @param parameters to run the optimizer over
+ * @param number of parameter Tensors in the parameters vector
+ * @param learning rate for the optimizer
+ * @param beta 1 for the optimizer
+ * @param beta 2 for the optimizer
+ * @param epsilon for the optimizer
+ * @param weight decay for the optimizer
+ * @param whether to enable AMSGrad for the optimizer
+ */
+EXPORT_C torch_optim_t torch_optim_AdamW(const torch_tensor_t *parameters,
+                                         const int nin, const double learning_rate,
+                                         const double beta_1, const double beta_2,
+                                         const double eps, const double weight_decay,
+                                         const bool amsgrad);
+
+/**
+ * Function to zero the gradients on tensors associated with a torch optimizer
+ * @param Torch Optimizer to zero gradients for
+ */
+EXPORT_C void torch_optim_zero_grad(const torch_optim_t optim);
+
+/**
+ * Function to step a torch optimizer on associated tensors
+ * @param Torch Optimizer to step
+ */
+EXPORT_C void torch_optim_step(const torch_optim_t optim);
+
+/**
+ * Function to delete a Torch optimizer to clean up
+ * @param Torch Optimizer to delete
+ */
+EXPORT_C void torch_optim_delete(torch_optim_t optim);
 
 // =============================================================================
 // --- Torch model API

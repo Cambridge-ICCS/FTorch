@@ -120,7 +120,7 @@ jobs:
           set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
           set PATH=%FTORCH_INSTALL_DIR%\bin;%PATH%
           set PATH=%TORCH_PATH%\torch\lib;%PATH%
-          set EXAMPLE_BUILD_DIR=examples\2_SimpleNet\build
+          set EXAMPLE_BUILD_DIR=examples\02_SimpleNet\build
           if not exist %EXAMPLE_BUILD_DIR% mkdir %EXAMPLE_BUILD_DIR%
           cd %EXAMPLE_BUILD_DIR%
           cmake .. ^
