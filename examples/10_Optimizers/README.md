@@ -1,18 +1,18 @@
 # Example 10 - Optimizers
 
-**This example is currently under development.** Eventually, it will demonstrate
-the use of optimizers in FTorch by leveraging PyTorch's optim module.
+This example demonstrates the use of optimizers in FTorch by
+leveraging PyTorch's optim module.
 
-By exposing optimizers in Fortran, FTorch will be able to compute optimisation
-steps to update models as part of a training process.
+By exposing optimizers in Fortran, FTorch is able to compute optimisation
+steps to update tensors and models as part of a training process.
 
 ## Description
 
-A Python demo is copied from the PyTorch documentation as `optimizers.py`, which
-shows how to use an optimiser in PyTorch.
+A Python demo that trains a single tensor to map an input vector to a
+target is provided as `optimizers.py`, showing how to use an optimiser in PyTorch.
 
-The demo will be replicated in Fortran as `optimizers.f90`, to show how to do the
-same thing using FTorch.
+The demo is then replicated in Fortran as `optimizers.f90`, to show how
+the same process and result can be achieved using FTorch.
 
 ## Dependencies
 
