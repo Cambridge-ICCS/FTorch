@@ -13,8 +13,8 @@ program foptimizer
                     torch_tensor_ones, torch_tensor_empty, &
                     torch_tensor_print, &
                     torch_tensor_backward, torch_tensor_get_gradient, &
-                    torch_tensor_mean
-  use ftorch_optim, only: torch_optim, torch_optim_SGD
+                    torch_tensor_mean, &
+                    torch_optim, torch_optim_SGD
 
   ! Import our tools module for testing utils
   use ftorch_test_utils, only : allclose
