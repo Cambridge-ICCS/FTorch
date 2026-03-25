@@ -1,9 +1,10 @@
 title: Usage
 author: Jack Atkinson
-date: Last Updated: October 2025
+date: Last Updated: March 2026
 ordered_subpage: generic_example.md
 ordered_subpage: worked_examples.md
 ordered_subpage: tensor.md
+ordered_subpage: optimizers.md
 ordered_subpage: transposing.md
 ordered_subpage: batching.md
 ordered_subpage: offline.md
@@ -21,7 +22,7 @@ ordered_subpage: troubleshooting.md
         - [Transposing data](|page|/usage/transposing.html)
     - Model API (WIP)
         - [Batching inference](|page|/usage/batching.html)
-    - Optimizers API (WIP)
+    - [Optimizers API](|page|/usage/optimizers.html)
 - [Training](#training)
     - [Offline](|page|/usage/offline.html)
     - [Online](|page|/usage/online.html)
@@ -46,8 +47,8 @@ understand how to use FTorch.
 ### API Documentation
 
 These pages contain detailed documentation of the various component APIs included in FTorch.
-Currently there is detail for [Tensors](|page|/usage/tensor.html), with Models and
-Optimizers being work in progress.
+Currently there is detail for [Tensors](|page|/usage/tensor.html) and
+[Optimizers](|page|/usage/optimizers.html), with Models being work in progress.
 There is also a page explaining how [batched inference](|page|/usage/batching.html)
 works in FTorch, including key tips.
 

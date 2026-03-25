@@ -21,3 +21,4 @@ add_subdirectory(fixtures)
 # Add units tests for the different modules
 add_subdirectory(tensor)
 add_subdirectory(model)
+add_subdirectory(optim)
