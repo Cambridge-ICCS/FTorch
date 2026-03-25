@@ -235,7 +235,7 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
           export FTORCH_INSTALL_DIR="/tmp/ftorch-install"
-          export EXAMPLE_BUILD_DIR="examples/2_SimpleNet/build"
+          export EXAMPLE_BUILD_DIR="examples/02_SimpleNet/build"
           mkdir "${EXAMPLE_BUILD_DIR}"
           cd "${EXAMPLE_BUILD_DIR}"
           cmake .. \
