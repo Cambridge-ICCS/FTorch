@@ -46,6 +46,14 @@ module ftorch
                           torch_model_is_training, &
                           torch_model_forward  !---------------- (procedures)
 
+  use ftorch_optim, only: torch_optim, &  !--------------------- (type)
+                          torch_optim_SGD, &  !----------------- (constructors)
+                          torch_optim_Adam, &
+                          torch_optim_AdamW, &
+                          torch_optim_delete, &  !-------------- (destructor)
+                          torch_optim_zero_grad, &  !----------- (procedures)
+                          torch_optim_step
+
   implicit none
 
   public
