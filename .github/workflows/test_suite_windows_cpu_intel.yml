@@ -65,13 +65,7 @@ jobs:
           pip install --upgrade pip
           python -m venv ftorch
           call ftorch\Scripts\activate
-          pip install .
-
-      - name: Install ftorch_utils
-        shell: cmd
-        run: |
-          . ftorch/bin/activate
-          python -m pip install .[dev]
+          pip install . --group test
 
       - name: Build FTorch
         shell: cmd
@@ -104,7 +98,7 @@ jobs:
         shell: cmd
         run: |
           call ftorch\Scripts\activate
-          pytest --verbose test/python
+          pytest --verbose test/ftorch_utils
 
       - name: Integration tests
         shell: cmd

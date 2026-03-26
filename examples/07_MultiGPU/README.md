@@ -26,12 +26,10 @@ To run this example requires:
 
 ## Running
 
-To run this example install FTorch as described in the main documentation. Then from
-this directory create a virtual environment and install the necessary Python modules:
-```
-python3 -m venv venv
-source venv/bin/activate
-```
+To run this example, first install FTorch as described in the main
+documentation, making use of the `examples` optional dependencies. See the
+[user guide section](https://cambridge-iccs.github.io/FTorch/page/installation/general.html#python-dependencies)
+on Python dependencies for details.
 
 You can check that everything is working by running `simplenet.py`:
 ```
@@ -96,8 +94,7 @@ and should match the compiler that was used to locally build FTorch.)
 To run the compiled code calling the saved `SimpleNet` TorchScript from
 Fortran, run the executable with arguments of device type and the saved model file:
 ```
-./multigpu_infer_fortran <cuda/xpu/mps> \
-  ../torchscript_multigpu_model_<my_device_type>.pt
+./multigpu_infer_fortran <my_device_type> ../torchscript_multigpu_model_<my_device_type>.pt
 ```
 
 This runs the model with the same inputs as described above and should produce (some

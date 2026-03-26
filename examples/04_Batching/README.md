@@ -130,11 +130,46 @@ tensor([[[  0.,   1.,   2.,   3.,   4.],
 
 ## Running
 
-To run this example, first install FTorch as described in the main documentation. Then, from this directory, create a virtual environment and install the necessary Python modules:
+To run this example, first install FTorch as described in the main
+documentation, making use of the `examples` optional dependencies. See the
+[user guide section](https://cambridge-iccs.github.io/FTorch/page/installation/general.html#python-dependencies)
+on Python dependencies for details.
+
+A Python file `batchingnet.py` is provided that defines the simple PyTorch
+'net'. Running this file as a script will write the model out in PyTorch's
+`.pt` file format.
 ```
-python3 -m venv venv
-source venv/bin/activate
+python3 batchingnet.py
 ```
+You should find that a PyTorch model file `pytorch_batchingnet_model_cpu.pt` is
+created.
+
+To convert the BatchingNet model to TorchScript for use in Fortran, run:
+```
+pt2ts BatchingNet \
+  --model_definition_file  batchingnet.py \
+  --input_model_file pytorch_batchingnet_model_cpu.pt \
+  --output_model_file torchscript_batchingnet_model_cpu.pt
+```
+This should produce `torchscript_batchingnet_model_cpu.pt`.
+
+A Python file `batchingnet.py` is provided that defines the simple PyTorch
+'net'. Running this file as a script will write the model out in PyTorch's
+`.pt` file format.
+```
+python3 batchingnet.py
+```
+You should find that a PyTorch model file `pytorch_batchingnet_model_cpu.pt` is
+created.
+
+To convert the BatchingNet model to TorchScript for use in Fortran, run:
+```
+pt2ts BatchingNet \
+  --model_definition_file  batchingnet.py \
+  --input_model_file pytorch_batchingnet_model_cpu.pt \
+  --output_model_file torchscript_batchingnet_model_cpu.pt
+```
+This should produce `torchscript_batchingnet_model_cpu.pt`.
 
 A Python file `batchingnet.py` is provided that defines the simple PyTorch
 'net'. Running this file as a script will write the model out in PyTorch's

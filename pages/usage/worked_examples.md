@@ -72,7 +72,9 @@ running the net with different input arrays on each MPI rank.
 
 #### 9) Autograd
 
-[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/9_Autograd)
-demonstrates how to perform automatic differentiation of mathematical
-expressions involving Torch tensors in FTorch by leveraging PyTorch's Autograd
-module.
+[These worked examples](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/9_Autograd)
+demonstrate how to perform automatic differentiation of operations available in
+FTorch by leveraging PyTorch's Autograd module. The first example shows how to
+differentiate through mathematical expressions involving Torch tensors, while
+the second example shows how to differentiate propagation through a simple
+neural network.

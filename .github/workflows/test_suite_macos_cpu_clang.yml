@@ -76,17 +76,12 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Install PyTorch
+      - name: Install ftorch_utils
         run: |
           python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
-          pip install . --extra-index-url https://download.pytorch.org/whl/cpu
-
-      - name: Install ftorch_utils
-        run: |
-          . ftorch/bin/activate
-          python -m pip install .[dev]
+          pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
 
       - name: Install gfortran and OpenMPI
         # Install from source to avoid compiler mismatch between gfortran versions
@@ -212,7 +207,7 @@ jobs:
       - name: Run Python unit tests
         run: |
           . ftorch/bin/activate
-          pytest --verbose test/python
+          pytest --verbose test/ftorch_utils
 
       - name: Run integration tests
         run: |

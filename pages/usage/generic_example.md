@@ -26,7 +26,7 @@ The PyTorch model should be written out in the usual way using
 That is, using the pickle file format commonly used for PyTorch objects such as
 models and tensors. The `.pt` file extension should be used.
 
-#### 2. Saving the model as TorchScript
+#### 2. Converting the model to TorchScript
 
 The trained PyTorch model needs to be exported to
 [TorchScript](https://pytorch.org/docs/stable/jit.html).
@@ -44,7 +44,7 @@ one using the TorchScript format. To make use of this tool, install the
 ```sh
 pip install .
 ```
-in FTorch's root directory. This will install the `pt2ts` scrip into your Python
+in FTorch's root directory. This will install the `pt2ts` script into your Python
 environment. For usage instructions, call `pt2ts --help` or read the
 [ftorch-utils README](https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils/README.md).
 
