@@ -20,9 +20,10 @@ To install FTorch requires the following to be installed on the system:
 - [CMake](https://cmake.org/) >= 3.18
 - Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 - [LibTorch](https://pytorch.org/cppdocs/installing.html)[^1] or [PyTorch](https://pytorch.org/)
-- TorchVision and NumPy (required for examples)
+- [NumPy](https://numpy.org/)
 
-For instructions on how to install PyTorch, TorchVision, and NumPy, see the
+For instructions on how to install PyTorch, NumPy, and additional Python
+dependencies for FTorch's examples, see the
 [Python dependencies](#python-dependencies) section below.
 
 [^1]: 
@@ -43,7 +44,7 @@ where `<pytorch-wheel-download-url>` is determined based on the
 [matrix](https://pytorch.org/get-started/locally/) on the PyTorch website.
 
 We recommend also installing the additional dependencies for FTorch's examples
-(TorchVision, NumPy, matplotlib, and mpi4py) in the same command. This can be
+(TorchVision, matplotlib, and mpi4py) in the same command. This can be
 achieved by including the `examples` optional dependencies, as follows:
 ```sh
 pip install .[examples] --extra-index-url <pytorch-wheel-download-url>
