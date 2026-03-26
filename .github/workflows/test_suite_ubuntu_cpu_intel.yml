@@ -138,7 +138,7 @@ jobs:
       - name: Run Python unit tests
         run: |
           . ftorch/bin/activate
-          pytest --verbose test/python
+          pytest --verbose test/ftorch_utils
 
       - name: Run integration tests
         run: |
