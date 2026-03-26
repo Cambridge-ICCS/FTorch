@@ -72,7 +72,7 @@ rem Activate the virtual environment
 call .ftorch\Scripts\activate
 
 rem Install dependencies (--extra-index-url not required on Windows)
-pip install . --group examples
+pip install .[examples]
 
 rem Enable output
 ECHO ON

@@ -26,7 +26,9 @@ To run this example requires:
 ## Running
 
 To run this example, first install FTorch as described in the main
-documentation, making use of the `examples` dependency group.
+documentation, making use of the `examples` optional dependencies. See the
+[user guide section](https://cambridge-iccs.github.io/FTorch/page/installation/general.html#python-dependencies)
+on Python dependencies for details.
 
 Run the Python version of the demo with
 ```

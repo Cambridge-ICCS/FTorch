@@ -31,7 +31,7 @@ HIP with a LibTorch binary.
 To install `ftorch_utils`, its dependencies, and the additional dependencies
 for the examples with GPU support, use
 ```sh
-pip install . --extra-index-url <pytorch-wheel-download-url> --group examples
+pip install .[examples] --extra-index-url <pytorch-wheel-download-url>
 ```
 or to install `torch` and `torchvision` directly use
 ```sh

@@ -44,9 +44,9 @@ where `<pytorch-wheel-download-url>` is determined based on the
 
 We recommend also installing the additional dependencies for FTorch's examples
 (TorchVision, NumPy, matplotlib, and mpi4py) in the same command. This can be
-achieved by including the `examples` dependency group, as follows:
+achieved by including the `examples` optional dependencies, as follows:
 ```sh
-pip install . --extra-index-url <pytorch-wheel-download-url> --group examples
+pip install .[examples] --extra-index-url <pytorch-wheel-download-url>
 ```
 
 If you don't want to install `ftorch_utils` then you can install FTorch's
