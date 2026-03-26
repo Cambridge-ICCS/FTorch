@@ -38,14 +38,14 @@ def test_input_model_extension():
         validate_input_model_file("model.py")
 
 
-def test_input_model_exists(filename):
+def test_input_model_does_not_exist(filename):
     """Check that an error is raised if an input model file doesn't exist."""
     expected = f"PyTorch input model file '{filename}' cannot be found."
     with pytest.raises(FileNotFoundError, match=expected):
         validate_input_model_file(filename)
 
 
-def test_input_tensor_extension():
+def test_input_tensor_invalid_extension():
     """Check that an error is raised for invalid input tensor file extension."""
     expected = (
         "PyTorch input tensor file 'tensor.py' has extension .py but .pt was expected."
@@ -54,21 +54,21 @@ def test_input_tensor_extension():
         validate_input_tensor_file("tensor.py")
 
 
-def test_input_tensor_exists(filename):
+def test_input_tensor_does_not_exist(filename):
     """Check that an error is raised if an input tensor file doesn't exist."""
     expected = f"PyTorch input tensor file '{filename}' cannot be found."
     with pytest.raises(FileNotFoundError, match=expected):
         validate_input_tensor_file(filename)
 
 
-def test_output_model_extension():
+def test_output_model_invalid_extension():
     """Check that an error is raised for invalid output model file extension."""
     expected = "TorchScript output model file 'output.py' has extension .py but .pt was expected."
     with pytest.raises(ValueError, match=expected):
         validate_output_model_file("output.py", "input.pt")
 
 
-def test_output_model_matching_file():
+def test_input_output_model_matching_files():
     """Check that an error is raised if the input and output file names match."""
     expected = (
         "TorchScript output model file name 'input.pt' coincides with PyTorch input"
