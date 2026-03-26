@@ -11,12 +11,18 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
-- Provide worked example and documentation on differentiating through calls to
-  `torch_model_forward`.
-  [#486](https://github.com/Cambridge-ICCS/FTorch/pull/486)
+- Introduced a central, installable `pt2ts` script
+  [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 
 ### Changed
 
+- Renamed `utils` as `ftorch_utils` and made it a proper Python module
+  [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
+- Changed process for saving TorchScript models
+  [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
+- Provide worked example and documentation on differentiating through calls to
+  `torch_model_forward`.
+  [#486](https://github.com/Cambridge-ICCS/FTorch/pull/486)
 - Optimizer functionality added to FTorch.
   A new module ftorch_optim added which contains implementations of SGD, Adam, and AdamW
   as well as core optimizer methods.
@@ -27,6 +33,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
 
 ### Removed
+
+- Removed `pt2ts.py` scripts from `utils` and all examples
+  [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 
 ### Fixed
 

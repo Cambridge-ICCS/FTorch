@@ -23,11 +23,14 @@ expected for submissions.
 ### Developer requirements
 
 Development tools for [pre-processing](#fortran-source-and-fypp),
-[code styling](#code-style) etc. are pip-installable using the
-[requirements-dev file](https://github.com/Cambridge-ICCS/FTorch/blob/main/requirements-dev.txt):
+[code styling](#code-style) etc. are pip-installable using the `dev` dependency
+group in the
+[pyproject.toml file](https://github.com/Cambridge-ICCS/FTorch/blob/main/pyproject.toml):
 ```sh
-pip install -r requirements-dev.txt
+pip install . --group dev
 ```
+This pulls in the packages in the `docs`, `lint`, `preproc`, and `test`
+dependency groups, which can also be used individually.
 
 In order to streamline the process of uploading we provide a pre-commit hook in
 [`.githooks/pre-commit`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.githooks/pre-commit).
@@ -126,7 +129,7 @@ CUDA LibTorch installation then compile errors would arise from the use of the
 @note
 _The HIP/ROCm backend uses the same API as the CUDA backend, so FTorch treats
 HIP as CUDA in places when calling LibTorch or PyTorch.
-This should not concern end-users as the FTorch and pt2ts.py APIs handle this.
+This should not concern end-users as the FTorch and `pt2ts` APIs handle this.
 For further information see the
 [PyTorch HIP documentation](https://docs.pytorch.org/docs/stable/notes/hip.html)_
 @endnote

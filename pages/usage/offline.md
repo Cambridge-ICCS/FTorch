@@ -41,12 +41,16 @@ extension. For more information on how to do this, see the
 #### 4. pt2ts
 
 Having written a trained model to a file with `.pt` extension, use the
-`pt2ts.py` utility Python script to convert it to TorchScript format. A template
-`pt2ts.py` script can be found in the
-[`utils`](https://github.com/Cambridge-ICCS/FTorch/tree/main/utils)
-subdirectory. See the
-[README](https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/README.md)
-there for more details on how to use the script.
+[`pt2ts`](https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils/pt2ts.py)
+Python utility script to convert it to TorchScript format. Run
+```sh
+pt2ts --help
+```
+or see the
+[README](https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/README.md)
+in the
+[`ftorch_utils`](https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils)
+subdirectory for more details on how to use the script.
 
 #### 5. Fortran model with inference
 

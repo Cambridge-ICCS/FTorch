@@ -21,10 +21,47 @@ To install FTorch requires the following to be installed on the system:
 - Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 - [LibTorch](https://pytorch.org/cppdocs/installing.html)[^1] or [PyTorch](https://pytorch.org/)
 
+For instructions on how to install PyTorch and additional Python dependencies
+for FTorch's examples, see the [Python dependencies](#python-dependencies)
+section below.
+
 [^1]: 
     _The minimal example provided downloads the CPU-only Linux Nightly binary.
     [Alternative versions](https://pytorch.org/get-started/locally/) to match hardware
     may be required._
+
+#### Python dependencies
+
+If LibTorch is not installed then FTorch requires PyTorch to be installed.
+FTorch's `pt2ts` utility script has PyTorch as a hard requirement, as well as
+the `ftorch_utils` Python module included in the FTorch repo. To install
+PyTorch and `ftorch_utils`, run
+```sh
+pip install . --extra-index-url <pytorch-wheel-download-url>
+```
+where `<pytorch-wheel-download-url>` is determined based on the
+[matrix](https://pytorch.org/get-started/locally/) on the PyTorch website.
+
+We recommend also installing the additional dependencies for FTorch's examples
+(TorchVision, matplotlib, NumPy, and mpi4py) in the same command. This can be
+achieved by including the `examples` optional dependencies, as follows:
+```sh
+pip install .[examples] --extra-index-url <pytorch-wheel-download-url>
+```
+
+If you don't want to install `ftorch_utils` then you can install FTorch's
+`torch` and `torchvision` dependencies using
+```sh
+pip install torch torchvision --index-url <pytorch-wheel-download-url>
+```
+
+@note
+We recommend installing `torch` and `torchvision` in the same command such as
+would be done in the third command above. Doing so ensures that they are
+configured in the same way. If you have installed the `ftorch_utils` module with
+the `examples` optional dependencies as in the second command above then there
+is no need to worry about this because they are both included as dependencies.
+@endnote
 
 #### Additional dependencies of the test suite
 
@@ -33,12 +70,11 @@ FTorch's test suite has some additional dependencies.
 - You will also need to install the unit testing framework
   [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit).
 - FTorch's test suite requires that [PyTorch](https://pytorch.org/) has been
-  installed, as opposed to LibTorch. We recommend installing `torchvision` in
-  the same command (e.g., `pip install torch torchvision`).[^2] Doing so
-  ensures that `torch` and `torchvision` are configured in the same way.
-- Other Python modules are installed automatically upon building the tests.
-
-[^2]: _For more details, see [here](https://pytorch.org/get-started/locally/)._
+  installed, as opposed to LibTorch. See the
+  [Python dependencies](#python-dependencies) section above for details on how
+  to do this.
+- Other Python modules are installed automatically upon building specific tests,
+  namely `mpi4py` for the MPI example.
 
 
 ### Basic Installation Instructions

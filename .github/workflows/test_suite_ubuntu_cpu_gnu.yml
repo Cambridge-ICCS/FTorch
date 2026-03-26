@@ -117,12 +117,12 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Install PyTorch
+      - name: Install ftorch_utils
         run: |
           python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
 
       - name: Install OpenMPI
         run: |
@@ -148,12 +148,12 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
           export BUILD_DIR=$(pwd)/build
+          mkdir -p ${BUILD_DIR}
           # Install to /tmp/ to ensure independent from the CMake build in standalone check.
           export INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
-          mkdir ${BUILD_DIR}
           cd ${BUILD_DIR}
 
           cmake .. \

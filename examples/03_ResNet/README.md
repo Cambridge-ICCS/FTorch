@@ -26,14 +26,10 @@ To run this example requires:
 
 ## Running
 
-To run this example install FTorch as described in the main documentation.
-Then from this directory create a virtual environment an install the neccessary Python
-modules:
-```
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+To run this example, first install FTorch as described in the main
+documentation, making use of the `examples` optional dependencies. See the
+[user guide section](https://cambridge-iccs.github.io/FTorch/page/installation/general.html#python-dependencies)
+on Python dependencies for details.
 
 You can check that everything is working by running `resnet18.py`:
 
@@ -80,7 +76,7 @@ and should match the compiler that was used to locally build FTorch.)
 To run the compiled code calling the saved ResNet-18 TorchScript from Fortran run the
 executable with an argument of the saved model file:
 ```
-./resnet_infer_fortran ../saved_resnet18_model_cpu.pt
+./resnet_infer_fortran ../torchscript_resnet18_model_cpu.pt
 ```
 
 This should produce the same top result:
@@ -99,7 +95,7 @@ You will also likely need to add the location of the `.so` files to your `LD_LIB
 ```
 make
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib
-./resnet_infer_fortran saved_resnet18_model_cpu.pt
+./resnet_infer_fortran torchscript_resnet18_model_cpu.pt
 ```
 
 ## Further options

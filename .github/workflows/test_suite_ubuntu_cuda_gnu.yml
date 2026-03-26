@@ -67,14 +67,14 @@ jobs:
         with:
           python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
 
-      - name: Install PyTorch
+      - name: Install ftorch_utils
         run: |
           python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
           # CUDA v12.9 chosen as latest supported by PyTorch
           # Check this is <= what GPU-runner has installed (backwards compatible)
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cu129
+          pip install . --extra-index-url https://download.pytorch.org/whl/cu129 --group test
 
       - name: Install cmake and NVIDIA dev toolkit
         run: |
@@ -110,7 +110,7 @@ jobs:
           mkdir -p ${INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
-          mkdir ${BUILD_DIR}
+          mkdir -p ${BUILD_DIR}
           cd ${BUILD_DIR}
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \

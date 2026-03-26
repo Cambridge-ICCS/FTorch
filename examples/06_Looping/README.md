@@ -24,7 +24,7 @@ We sum the results of each forward pass and print the final result.
 
 There are two folders `bad/` and `good/` that show two different approaches.
 
-The same `pt2ts.py` tool as in the previous examples is used to save the
+The same `pt2ts` tool as in the previous examples is used to save the
 network to TorchScript. A `simplenet_infer_fortran.f90` file contains the main
 program that runs over the loop. A `fortran_ml_mod.f90` file contains a module with
 the FTorch code to load the TorchScript model, run it in inference mode, and clean up.
@@ -66,14 +66,10 @@ To run this example requires:
 
 ## Running
 
-To run this example install FTorch as described in the main documentation. Then
-from this directory create a virtual environment and install the necessary
-Python modules:
-```
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+To run this example, first install FTorch as described in the main
+documentation, making use of the `examples` optional dependencies. See the
+[user guide section](https://cambridge-iccs.github.io/FTorch/page/installation/general.html#python-dependencies)
+on Python dependencies for details.
 
 You can check everything is working by running `simplenet.py`:
 ```
@@ -82,16 +78,19 @@ python3 simplenet.py
 This defines the network and runs it with input tensor [0.0, 1.0, 2.0, 3.0, 4.0] to
 produce the result:
 ```
-(tensor([0., 2., 4., 6., 8.]))
+Model output: (tensor([0., 2., 4., 6., 8.]))
 ```
+You should find that a PyTorch model file `pytorch_simplenet_model_cpu.pt` is
+created.
 
-To save the SimpleNet model to TorchScript, run the modified version of the
-`pt2ts.py` tool:
+To convert the SimpleNet model to TorchScript run the `pt2ts` script:
 ```
-python3 pt2ts.py
+pt2ts SimpleNet \
+  --model_definition_file simplenet.py \
+  --input_model_file pytorch_simplenet_model_cpu.pt \
+  --output_model_file torchscript_simplenet_model_cpu.pt
 ```
-which will generate `saved_simplenet_cpu.pt` - the TorchScript instance of
-the network and perform a quick sanity check that it can be read.
+This should produce `torchscript_simplenet_model_cpu.pt`.
 
 At this point we no longer require Python, so can deactivate the virtual
 environment:

@@ -9,10 +9,12 @@ covered in later examples.
 
 ## Description
 
-A Python file `simplenet.py` is provided that defines a very simple PyTorch 'net' that takes an input
-vector of length 5 and applies a single `Linear` layer to multiply it by 2.
+A Python file `simplenet.py` is provided that defines a very simple PyTorch
+'net' that takes an input vector of length 5 and applies a single `Linear` layer
+to multiply it by 2. Running this file as a script will write the model out in
+PyTorch's `.pt` file format.
 
-A modified version of the `pt2ts.py` tool saves this simple net to TorchScript.
+The `pt2ts` tool is used to convert the model file to the TorchScript format.
 
 A series of files `simplenet_infer_<LANG>` then bind from other languages to run the
 TorchScript model in inference mode.
@@ -28,14 +30,10 @@ To run this example requires:
 
 ## Running
 
-To run this example install FTorch as described in the main documentation.
-Then from this directory create a virtual environment and install the necessary Python
-modules:
-```
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+To run this example, first install FTorch as described in the main
+documentation, making use of the `examples` optional dependencies. See the
+[user guide section](https://cambridge-iccs.github.io/FTorch/page/installation/general.html#python-dependencies)
+on Python dependencies for details.
 
 You can check that everything is working by running `simplenet.py`:
 ```
@@ -45,13 +43,17 @@ This defines the net and runs it with an input tensor [0.0, 1.0, 2.0, 3.0, 4.0] 
 ```
 Model output: tensor([[0., 2., 4., 6., 8.]])
 ```
+You should find that a PyTorch model file `pytorch_simplenet_model_cpu.pt` is
+created.
 
-To save the SimpleNet model to TorchScript run the modified version of the
-`pt2ts.py` tool:
+To convert the SimpleNet model to TorchScript run the `pt2ts` script:
 ```
-python3 pt2ts.py
+pt2ts SimpleNet \
+  --model_definition_file simplenet.py \
+  --input_model_file pytorch_simplenet_model_cpu.pt \
+  --output_model_file torchscript_simplenet_model_cpu.pt
 ```
-which will generate `saved_simplenet_model_cpu.pt` - the TorchScript instance of the net.
+This should produce `torchscript_simplenet_model_cpu.pt`.
 
 You can check that everything is working by running the `simplenet_infer_python.py` script:
 ```
@@ -93,7 +95,7 @@ and should match the compiler that was used to locally build FTorch.)
 To run the compiled code calling the saved SimpleNet TorchScript from Fortran run the
 executable with an argument of the saved model file:
 ```
-./simplenet_infer_fortran ../saved_simplenet_model_cpu.pt
+./simplenet_infer_fortran ../torchscript_simplenet_model_cpu.pt
 ```
 
 This runs the model with the array `[0.0, 1.0, 2.0, 3.0, 4.0]` should produce
@@ -120,7 +122,7 @@ However, to do this you will need to modify `Makefile` to link to and include yo
 installation of FTorch as described in the main documentation. Also check that the compiler is the same as the one you built the Library with.
 ```
 make
-./simplenet_infer_fortran saved_simplenet_model_cpu.pt
+./simplenet_infer_fortran torchscript_simplenet_model_cpu.pt
 ```
 
 You will also likely need to add the location of the dynamic library files

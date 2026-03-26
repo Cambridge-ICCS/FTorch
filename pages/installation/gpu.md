@@ -28,14 +28,22 @@ HIP with a LibTorch binary.
 
 #### Installation using pip
 
-If installing using pip the appropriate version for the hardware can be specified by
-using the `--index-url` option during `pip install`.
+To install `ftorch_utils`, its dependencies, and the additional dependencies
+for the examples with GPU support, use
+```sh
+pip install .[examples] --extra-index-url <pytorch-wheel-download-url>
+```
+or to install `torch` and `torchvision` directly use
+```sh
+pip install torch torchvision --index-url <pytorch-wheel-download-url>
+```
 
-Instructions for CPU, CUDA, and HIP/ROCm can be found in the installation matrix on
-[pytorch.org](https://pytorch.org/).
-
-For XPU use `--index-url https://download.pytorch.org/whl/test/xpu`, whilst for MPS
-pip should automatically detect the hardware and install the appropriate version.
+In terms of the URL to use to download the appropriate wheel, instructions for
+CPU, CUDA, and HIP/ROCm can be found in the installation matrix on
+[pytorch.org](https://pytorch.org/). For XPU, use the
+`https://download.pytorch.org/whl/test/xpu` wheel. For MPS, `pip` should
+automatically detect the hardware and install the appropriate version so no
+wheel needs to be specified.
 
 #### LibTorch binary
 
@@ -60,23 +68,39 @@ cmake .. -DGPU_DEVICE=NONE
 ```
 i.e., CPU-only.
 
-**2) Save TorchScript models on the target device**  
-When saving a TorchScript model, ensure that it is on the GPU.
-For example, when using
-[`pt2ts.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py),
-this can be done by passing the `--device_type <cpu/cuda/hip/xpu/mps>` argument. This
-sets the `device_type` variable, which has the effect of transferring the model
-(and any input arrays used in tracing/testing) to the specified GPU device in the
-following lines:
+**2) Save PyTorch models on the target device**  
+When saving a model in PyTorch format, ensure that it has the desired GPU device
+type. For example, in
+[`examples/2_SimpleNet/simplenet.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/examples/2_SimpleNet/simplenet.py),
+this is done in the following lines:
 ```python
-if device_type != "cpu":
-    trained_model = trained_model.to(device_type)
-    trained_model.eval()
-    trained_model_dummy_input_1 = trained_model_dummy_input_1.to(device_type)
-    trained_model_dummy_input_2 = trained_model_dummy_input_2.to(device_type)
+    model = SimpleNet().to(device_type)
+```
+and
+```python
+    input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0]).to(device_type)
+```
+The first line transfers the model to the specified GPU device, while the second
+line does the same for any input arrays used in tracing or testing. Having
+transferred the model and any input tensors to the GPU device, write them out
+using `torch.save`. In the SimpleNet example above, this is done with
+```python
+    torch.save(model.state_dict(), f"saved_simplenet_model_{device_type}.pt")
+```
+and
+```python
+    torch.save(input_tensor, f"saved_simplenet_input_tensor_{device_type}.pt")
 ```
 
-**3) Specify the target device from FTorch**  
+**3) Convert PyTorch model to TorchScript model**  
+When converting a PyTorch model to a TorchScript model using the `pt2ts` script,
+the device type will be inherited. As such, if the PyTorch model is saved using
+a particular device type then this will be preserved in the resulting
+TorchScript model. For further details on the `pt2ts` script, call
+`pt2ts --help` or read the
+[ftorch-utils README](https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils/README.md).
+
+**4) Specify the target device from FTorch**  
 When calling [[ftorch_tensor(module):torch_tensor_from_array(interface)]] and
 [[ftorch_model(module):torch_model_load(subroutine)]]  in Fortran,
 the device type for the input tensor(s) and model should be set to the appropriate

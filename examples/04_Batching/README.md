@@ -8,7 +8,7 @@ show how to handle more complex cases, such as time series or multi-dimensional 
 A Python file `batchingnet.py` is provided that defines a simple PyTorch 'BatchingNet'
 that takes an input vector of length 5 and applies a single `Linear` layer to multiply
 each input feature by a different value (0, 1, 2, 3, 4). The demo script
-`batching_demo.py` shows how to use this model for unbatched, batched, and
+`batching_demo_python.py` shows how to use this model for unbatched, batched, and
 higher-dimensional inference, illustrating the effect of batching and the location of
 the batch dimension. All outputs are as described in the "Why Batching?" section below.
 
@@ -130,26 +130,36 @@ tensor([[[  0.,   1.,   2.,   3.,   4.],
 
 ## Running
 
-To run this example, first install FTorch as described in the main documentation. Then, from this directory, create a virtual environment and install the necessary Python modules:
+To run this example, first install FTorch as described in the main
+documentation, making use of the `examples` optional dependencies. See the
+[user guide section](https://cambridge-iccs.github.io/FTorch/page/installation/general.html#python-dependencies)
+on Python dependencies for details.
+
+A Python file `batchingnet.py` is provided that defines the simple PyTorch
+'net'. Running this file as a script will write the model out in PyTorch's
+`.pt` file format.
 ```
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+python3 batchingnet.py
 ```
+You should find that a PyTorch model file `pytorch_batchingnet_model_cpu.pt` is
+created.
+
+To convert the BatchingNet model to TorchScript for use in Fortran, run:
+```
+pt2ts BatchingNet \
+  --model_definition_file  batchingnet.py \
+  --input_model_file pytorch_batchingnet_model_cpu.pt \
+  --output_model_file torchscript_batchingnet_model_cpu.pt
+```
+This should produce `torchscript_batchingnet_model_cpu.pt`.
 
 You can see how you would perform batching in PyTorch by running the Python batching
 demo:
 ```
-python3 batching_demo.py
+python3 batching_demo_python.py
 ```
 This will run the BatchingNet model with various inputs and print the expected outputs
 as described above.
-
-To save the BatchingNet model to TorchScript for use in Fortran, run:
-```
-python3 pt2ts.py
-```
-This will generate `saved_batchingnet_model_cpu.pt` in the current directory.
 
 At this point you no longer require Python, so can deactivate the virtual environment:
 ```
@@ -157,7 +167,7 @@ deactivate
 ```
 
 To call the saved BatchingNet model from Fortran, repeating the different batching
-approaches in the Python demo compile the `batchingnet_infer_fortran.f90` file.
+approaches in the Python demo compile the `batching_demo_fortran.f90` file.
 This can be done using the included `CMakeLists.txt` as follows:
 ```
 mkdir build
@@ -169,7 +179,7 @@ cmake --build .
 
 To run the compiled code calling the saved BatchingNet TorchScript from Fortran, run the executable with an argument of the saved model file:
 ```
-./batchingnet_infer_fortran ../saved_batchingnet_model_cpu.pt
+./batching_demo_fortran ../torchscript_batchingnet_model_cpu.pt
 ```
 
 This runs the model with single, batched, and multidimensional batched input arrays and should produce the output:

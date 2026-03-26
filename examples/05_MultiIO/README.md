@@ -20,7 +20,7 @@ is then split into two components. That is, we have
 ```
 where $a$ and $b$ are inputs and $c$ and $d$ are outputs.
 
-The same `pt2ts.py` tool as in the previous examples is used to save the
+The same `pt2ts` tool as in the previous examples is used to save the
 network to TorchScript. Again, a series of files `multiionet_infer_<LANG>` then
 bind from other languages to run the TorchScript model in inference mode.
 
@@ -34,14 +34,10 @@ To run this example requires:
 
 ## Running
 
-To run this example install FTorch as described in the main documentation. Then
-from this directory create a virtual environment and install the necessary
-Python modules:
-```
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+To run this example, first install FTorch as described in the main
+documentation, making use of the `examples` optional dependencies. See the
+[user guide section](https://cambridge-iccs.github.io/FTorch/page/installation/general.html#python-dependencies)
+on Python dependencies for details.
 
 You can check everything is working by running `multiionet.py`:
 ```
@@ -52,14 +48,17 @@ This defines the network and runs it with input tensors [0.0, 1.0, 2.0, 3.0] and
 ```
 (tensor([0., 2., 4., 6.]), tensor([ 0., -3., -6., -9.]))
 ```
+You should find that a PyTorch model file `pytorch_multiio_model_cpu.pt` is
+created.
 
-To save the MultiIONet model to TorchScript, run the modified version of the
-`pt2ts.py` tool:
+To convert the MultiIONet model to TorchScript, run the `pt2ts` script:
 ```
-python3 pt2ts.py
+pt2ts MultiIONet \
+  --model_definition_file multiionet.py \
+  --input_model_file pytorch_multiio_model_cpu.pt \
+  --output_model_file torchscript_multiio_model_cpu.pt
 ```
-which will generate `saved_multiio_model_cpu.pt` - the TorchScript instance of
-the network.
+This should produce `torchscript_multiio_model_cpu.pt`.
 
 You can check everything is working by running the `multiionet_infer_python.py`
 script. This reads the model in from the TorchScript file and runs it with the
@@ -90,7 +89,7 @@ and should match the compiler that was used to locally build FTorch.)
 To run the compiled code calling the saved MultiIONet TorchScript from Fortran,
 run the executable with an argument of the saved model file:
 ```
-./multiionet_infer_fortran ../saved_multiio_model_cpu.pt
+./multiionet_infer_fortran ../torchscript_multiio_model_cpu.pt
 ```
 This runs the model with the same inputs as above and should produce the output:
 ```

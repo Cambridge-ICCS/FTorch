@@ -30,14 +30,10 @@ To run this example requires:
 
 ## Running
 
-To run this example install FTorch as described in the main documentation.
-Then from this directory create a virtual environment and install the necessary
-Python modules:
-```
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+To run this example, first install FTorch as described in the main
+documentation, making use of the `examples` optional dependencies. See the
+[user guide section](https://cambridge-iccs.github.io/FTorch/page/installation/general.html#python-dependencies)
+on Python dependencies for details.
 
 ### Tensor manipulation demo
 
