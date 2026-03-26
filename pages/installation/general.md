@@ -20,6 +20,10 @@ To install FTorch requires the following to be installed on the system:
 - [CMake](https://cmake.org/) >= 3.18
 - Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 - [LibTorch](https://pytorch.org/cppdocs/installing.html)[^1] or [PyTorch](https://pytorch.org/)
+- TorchVision and NumPy (required for examples)
+
+For instructions on how to install PyTorch, TorchVision, and NumPy, see the
+[Python dependencies](#python-dependencies) section below.
 
 For instructions on how to install PyTorch and additional Python dependencies
 for FTorch's examples, see the [Python dependencies](#python-dependencies)

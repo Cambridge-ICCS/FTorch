@@ -76,7 +76,7 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Install PyTorch
+      - name: Install ftorch_utils
         run: |
           python -m pip install --upgrade pip
           python -m venv ftorch
@@ -194,7 +194,7 @@ jobs:
               exit 1
           fi
 
-      - name: Run unit tests
+      - name: Run Fortran unit tests
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
@@ -203,6 +203,11 @@ jobs:
           export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:${Torch_DIR}/torch/lib:${FTORCH_BUILD_DIR}/lib
           cd build
           ctest --verbose --tests-regex unit
+
+      - name: Run Python unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/ftorch_utils
 
       - name: Run integration tests
         run: |

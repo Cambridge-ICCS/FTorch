@@ -153,6 +153,24 @@ pt2ts BatchingNet \
 ```
 This should produce `torchscript_batchingnet_model_cpu.pt`.
 
+A Python file `batchingnet.py` is provided that defines the simple PyTorch
+'net'. Running this file as a script will write the model out in PyTorch's
+`.pt` file format.
+```
+python3 batchingnet.py
+```
+You should find that a PyTorch model file `pytorch_batchingnet_model_cpu.pt` is
+created.
+
+To convert the BatchingNet model to TorchScript for use in Fortran, run:
+```
+pt2ts BatchingNet \
+  --model_definition_file  batchingnet.py \
+  --input_model_file pytorch_batchingnet_model_cpu.pt \
+  --output_model_file torchscript_batchingnet_model_cpu.pt
+```
+This should produce `torchscript_batchingnet_model_cpu.pt`.
+
 You can see how you would perform batching in PyTorch by running the Python batching
 demo:
 ```

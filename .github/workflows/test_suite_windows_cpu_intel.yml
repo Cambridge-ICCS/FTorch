@@ -94,6 +94,12 @@ jobs:
           cmake --build build
           cmake --install build
 
+      - name: Run Python unit tests
+        shell: cmd
+        run: |
+          call ftorch\Scripts\activate
+          pytest --verbose test/ftorch_utils
+
       - name: Integration tests
         shell: cmd
         run: |

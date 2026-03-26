@@ -28,6 +28,8 @@ keywords = [
 ]
 classifiers = [
 	"Development Status :: 5 - Production/Stable",
+	"Programming Language :: Fortran",
+	"Programming Language :: Python",
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: MIT License",
 	"Programming Language :: Fortran",

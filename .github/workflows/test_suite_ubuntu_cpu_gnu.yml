@@ -209,11 +209,16 @@ jobs:
               exit 1
           fi
 
-      - name: Run unit tests
+      - name: Run Fortran unit tests
         run: |
           . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex unit
+
+      - name: Run Python unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/ftorch_utils
 
       - name: Run integration tests
         run: |
