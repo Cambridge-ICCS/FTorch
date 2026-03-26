@@ -51,7 +51,7 @@ pip install torch torchvision --index-url <pytorch-wheel-download-url>
 
 @note
 We recommend installing `torch` and `torchvision` in the same command such as
-would be done in the secon command above. Doing so ensures that they are
+would be done in the second command above. Doing so ensures that they are
 configured in the same way. If you have installed the `ftorch_utils` module as
 in the first command above then there is no need to worry about this because
 they are both included as dependencies.
