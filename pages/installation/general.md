@@ -43,8 +43,19 @@ pip install . --extra-index-url <pytorch-wheel-download-url>
 where `<pytorch-wheel-download-url>` is determined based on the
 [matrix](https://pytorch.org/get-started/locally/) on the PyTorch website.
 
+If you don't want to install `ftorch_utils` then you can install FTorch's
+`torch` and `torchvision` dependencies using
+```sh
+pip install torch torchvision --index-url <pytorch-wheel-download-url>
+```
+
+@note
 We recommend installing `torch` and `torchvision` in the same command such as
-would be done in the command above. Doing so ensures that they are configured in the same way.
+would be done in the secon command above. Doing so ensures that they are
+configured in the same way. If you have installed the `ftorch_utils` module as
+in the first command above then there is no need to worry about this because
+they are both included as dependencies.
+@endnote
 
 #### Additional dependencies of the test suite
 
