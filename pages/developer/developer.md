@@ -23,11 +23,14 @@ expected for submissions.
 ### Developer requirements
 
 Development tools for [pre-processing](#fortran-source-and-fypp),
-[code styling](#code-style) etc. are pip-installable using the
+[code styling](#code-style) etc. are pip-installable using the `dev` dependency
+group in the
 [pyproject.toml file](https://github.com/Cambridge-ICCS/FTorch/blob/main/pyproject.toml):
 ```sh
-pip install .[dev]
+pip install . --group dev
 ```
+This pulls in the packages in the `docs`, `lint`, `preproc`, and `test`
+dependency groups, which can also be used individually.
 
 In order to streamline the process of uploading we provide a pre-commit hook in
 [`.githooks/pre-commit`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.githooks/pre-commit).

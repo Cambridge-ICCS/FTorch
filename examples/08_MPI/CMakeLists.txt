@@ -28,9 +28,6 @@ if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
   message(FATAL_ERROR "Please activate your virtualenv or conda environment")
 endif()
 
-# Install Python dependencies
-execute_process(COMMAND ${Python_EXECUTABLE} -m pip install mpi4py)
-
 # Fortran example
 add_executable(mpi_infer_fortran mpi_infer_fortran.f90)
 target_link_libraries(mpi_infer_fortran PRIVATE FTorch::ftorch)
