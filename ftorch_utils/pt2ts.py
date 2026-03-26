@@ -56,8 +56,7 @@ def parse_user_input():
     parser.add_argument(
         "--output_model_file",
         help=(
-            "Filename for the model to be saved in TorchScript format, including path"
-            " (defaults to match the input_model_file)"
+            "Filename for the model to be saved in TorchScript format, including path",
         ),
         type=str,
     )
@@ -113,7 +112,7 @@ def main_cli():
         raise ValueError(value_error)
     input_model_file = parsed_args.input_model_file
     validate_input_model_file(input_model_file)
-    output_model_file = parsed_args.output_model_file or input_model_file
+    output_model_file = parsed_args.output_model_file
     validate_output_model_file(output_model_file, input_model_file)
     trace = parsed_args.trace
     test = parsed_args.test
