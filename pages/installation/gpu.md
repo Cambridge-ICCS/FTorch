@@ -42,7 +42,7 @@ In terms of the URL to use to download the appropriate wheel, instructions for
 CPU, CUDA, and HIP/ROCm can be found in the installation matrix on
 [pytorch.org](https://pytorch.org/). For XPU, use the
 `https://download.pytorch.org/whl/test/xpu` wheel. For MPS, `pip` should
-automatically detect them hardware and install the appropriate version so no
+automatically detect the hardware and install the appropriate version so no
 wheel needs to be specified.
 
 #### LibTorch binary
