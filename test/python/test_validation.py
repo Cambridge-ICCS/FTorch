@@ -29,7 +29,7 @@ def filename():
     assert not os.path.exists(file_name)
 
 
-def test_input_model_extension():
+def test_input_model_invalid_extension():
     """Check that an error is raised for invalid input model file extension."""
     expected = (
         "PyTorch input model file 'model.py' has extension .py but .pt was expected."
