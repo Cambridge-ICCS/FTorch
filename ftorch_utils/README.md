@@ -17,7 +17,8 @@ Dependencies:
 2. Install `ftorch_utils` and its dependencies, if they aren't already
    installed. This can be achieved by running `pip install .` in the root
    directory of FTorch. It will install the `pt2ts` script into your Python
-   environment.
+   environment allowing you to call it directly as `pt2ts` when the
+   virtual environment is active.
 3. Run with `python3 -m pt2ts <arguments>` or simply `pt2ts <arguments>`.
    Run `pt2ts --help` (or below) to see the usage instructions for the script.
 

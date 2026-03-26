@@ -42,7 +42,7 @@ extension. For more information on how to do this, see the
 
 Having written a trained model to a file with `.pt` extension, use the
 [`pt2ts`](https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils/pt2ts.py)
-utility Python script to convert it to TorchScript format. Run
+Python utility script to convert it to TorchScript format. Run
 ```sh
 pt2ts --help
 ```
