@@ -96,8 +96,7 @@ and should match the compiler that was used to locally build FTorch.)
 To run the compiled code calling the saved `SimpleNet` TorchScript from
 Fortran, run the executable with arguments of device type and the saved model file:
 ```
-./multigpu_infer_fortran <cuda/xpu/mps> \
-  ../torchscript_multigpu_model_<my_device_type>.pt
+./multigpu_infer_fortran <my_device_type> ../torchscript_multigpu_model_<my_device_type>.pt
 ```
 
 This runs the model with the same inputs as described above and should produce (some
