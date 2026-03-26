@@ -177,11 +177,14 @@ expected for submissions.</p>
 </ul>
 <h3 id="developer-requirements">Developer requirements</h3>
 <p>Development tools for <a href="#fortran-source-and-fypp">pre-processing</a>,
-<a href="#code-style">code styling</a> etc. are pip-installable using the
-<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/requirements-dev.txt">requirements-dev file</a>:</p>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-dev.txt
+<a href="#code-style">code styling</a> etc. are pip-installable using the <code>dev</code> dependency
+group in the
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/pyproject.toml">pyproject.toml file</a>:</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>.<span class="w"> </span>--group<span class="w"> </span>dev
 </code></pre></div>
 
+<p>This pulls in the packages in the <code>docs</code>, <code>lint</code>, <code>preproc</code>, and <code>test</code>
+dependency groups, which can also be used individually.</p>
 <p>In order to streamline the process of uploading we provide a pre-commit hook in
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/.githooks/pre-commit"><code>.githooks/pre-commit</code></a>.
 This will check that both the <code>.fypp</code> and <code>.f90</code> files have been updated together in a
@@ -266,7 +269,7 @@ CUDA LibTorch installation then compile errors would arise from the use of the
 <p class="alert-title h4">Note</p>
 <p><em>The HIP/ROCm backend uses the same API as the CUDA backend, so FTorch treats
 HIP as CUDA in places when calling LibTorch or PyTorch.
-This should not concern end-users as the FTorch and pt2ts.py APIs handle this.
+This should not concern end-users as the FTorch and <code>pt2ts</code> APIs handle this.
 For further information see the
 <a href="https://docs.pytorch.org/docs/stable/notes/hip.html">PyTorch HIP documentation</a></em></p>
 </div>

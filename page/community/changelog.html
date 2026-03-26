@@ -161,12 +161,18 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 <h2 id="unreleased"><a href="https://github.com/Cambridge-ICCS/FTorch/compare/v1.1.0...HEAD">Unreleased</a></h2>
 <h3 id="added">Added</h3>
 <ul>
-<li>Provide worked example and documentation on differentiating through calls to
-  <code>torch_model_forward</code>.
-  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/486">#486</a></li>
+<li>Introduced a central, installable <code>pt2ts</code> script
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/555">#555</a></li>
 </ul>
 <h3 id="changed">Changed</h3>
 <ul>
+<li>Renamed <code>utils</code> as <code>ftorch_utils</code> and made it a proper Python module
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/555">#555</a></li>
+<li>Changed process for saving TorchScript models
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/555">#555</a></li>
+<li>Provide worked example and documentation on differentiating through calls to
+  <code>torch_model_forward</code>.
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/486">#486</a></li>
 <li>Optimizer functionality added to FTorch.
   A new module ftorch_optim added which contains implementations of SGD, Adam, and AdamW
   as well as core optimizer methods.
@@ -177,6 +183,10 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/320">#320</a></li>
 </ul>
 <h3 id="removed">Removed</h3>
+<ul>
+<li>Removed <code>pt2ts.py</code> scripts from <code>utils</code> and all examples
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/555">#555</a></li>
+</ul>
 <h3 id="fixed">Fixed</h3>
 <h3 id="patch-releases">Patch Releases</h3>
 <h2 id="110-2026-02-26"><a href="https://github.com/Cambridge-ICCS/FTorch/releases/tag/v1.1.0">1.1.0</a> - 2026-02-26</h2>

@@ -169,16 +169,49 @@ This is controlled by the <code>CMakeLists.txt</code> file in the root FTorch di
 <li>Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers</li>
 <li><a href="https://pytorch.org/cppdocs/installing.html">LibTorch</a><sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> or <a href="https://pytorch.org/">PyTorch</a></li>
 </ul>
+<p>For instructions on how to install PyTorch and additional Python dependencies
+for FTorch's examples, see the <a href="#python-dependencies">Python dependencies</a>
+section below.</p>
+<h4 id="python-dependencies">Python dependencies</h4>
+<p>If LibTorch is not installed then FTorch requires PyTorch to be installed.
+FTorch's <code>pt2ts</code> utility script has PyTorch as a hard requirement, as well as
+the <code>ftorch_utils</code> Python module included in the FTorch repo. To install
+PyTorch and <code>ftorch_utils</code>, run</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>.<span class="w"> </span>--extra-index-url<span class="w"> </span>&lt;pytorch-wheel-download-url&gt;
+</code></pre></div>
+
+<p>where <code>&lt;pytorch-wheel-download-url&gt;</code> is determined based on the
+<a href="https://pytorch.org/get-started/locally/">matrix</a> on the PyTorch website.</p>
+<p>We recommend also installing the additional dependencies for FTorch's examples
+(TorchVision, matplotlib, NumPy, and mpi4py) in the same command. This can be
+achieved by including the <code>examples</code> optional dependencies, as follows:</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>.<span class="o">[</span>examples<span class="o">]</span><span class="w"> </span>--extra-index-url<span class="w"> </span>&lt;pytorch-wheel-download-url&gt;
+</code></pre></div>
+
+<p>If you don't want to install <code>ftorch_utils</code> then you can install FTorch's
+<code>torch</code> and <code>torchvision</code> dependencies using</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>--index-url<span class="w"> </span>&lt;pytorch-wheel-download-url&gt;
+</code></pre></div>
+
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>We recommend installing <code>torch</code> and <code>torchvision</code> in the same command such as
+would be done in the third command above. Doing so ensures that they are
+configured in the same way. If you have installed the <code>ftorch_utils</code> module with
+the <code>examples</code> optional dependencies as in the second command above then there
+is no need to worry about this because they are both included as dependencies.</p>
+</div>
 <h4 id="additional-dependencies-of-the-test-suite">Additional dependencies of the test suite</h4>
 <p>FTorch's test suite has some additional dependencies.</p>
 <ul>
 <li>You will also need to install the unit testing framework
   <a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a>.</li>
 <li>FTorch's test suite requires that <a href="https://pytorch.org/">PyTorch</a> has been
-  installed, as opposed to LibTorch. We recommend installing <code>torchvision</code> in
-  the same command (e.g., <code>pip install torch torchvision</code>).<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup> Doing so
-  ensures that <code>torch</code> and <code>torchvision</code> are configured in the same way.</li>
-<li>Other Python modules are installed automatically upon building the tests.</li>
+  installed, as opposed to LibTorch. See the
+  <a href="#python-dependencies">Python dependencies</a> section above for details on how
+  to do this.</li>
+<li>Other Python modules are installed automatically upon building specific tests,
+  namely <code>mpi4py</code> for the MPI example.</li>
 </ul>
 <h3 id="basic-installation-instructions">Basic Installation Instructions</h3>
 <p>The following instructions assume a Unix system.
@@ -240,22 +273,22 @@ in order to tailor your build:</p>
 <tr>
 <td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html"><code>CMAKE_Fortran_COMPILER</code></a></td>
 <td><code>gfortran</code> / <code>ifx</code> / <code>ifort</code></td>
-<td>Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup id="fnref3:3"><a class="footnote-ref" href="#fn:3">3</a></sup></td>
+<td>Specify a Fortran compiler to build the library with. This should match the Fortran compiler you're using to build the code you are calling this library from.<sup id="fnref3:3"><a class="footnote-ref" href="#fn:3">2</a></sup></td>
 </tr>
 <tr>
 <td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html"><code>CMAKE_C_COMPILER</code></a></td>
 <td><code>gcc</code> / <code>icx</code> / <code>icc</code></td>
-<td>Specify a C compiler to build the library with.<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup></td>
+<td>Specify a C compiler to build the library with.<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">2</a></sup></td>
 </tr>
 <tr>
 <td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html"><code>CMAKE_CXX_COMPILER</code></a></td>
 <td><code>g++</code> / <code>icx</code> / <code>icpc</code></td>
-<td>Specify a C++ compiler to build the library with.<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></td>
+<td>Specify a C++ compiler to build the library with.<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">2</a></sup></td>
 </tr>
 <tr>
 <td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html"><code>CMAKE_PREFIX_PATH</code></a></td>
 <td><code>&lt;/path/to/libTorch/&gt;</code></td>
-<td>Location of Torch installation<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup></td>
+<td>Location of Torch installation<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">3</a></sup></td>
 </tr>
 <tr>
 <td><a href="https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html"><code>CMAKE_INSTALL_PREFIX</code></a></td>
@@ -270,12 +303,12 @@ in order to tailor your build:</p>
 <tr>
 <td><code>CMAKE_BUILD_TESTS</code></td>
 <td><code>TRUE</code> / <code>FALSE</code></td>
-<td>Specifies whether to compile FTorch's <a href="../developer/testing.html">test suite</a> as part of the build.<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup></td>
+<td>Specifies whether to compile FTorch's <a href="../developer/testing.html">test suite</a> as part of the build.<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">4</a></sup></td>
 </tr>
 <tr>
 <td><code>GPU_DEVICE</code></td>
 <td><code>NONE</code> / <code>CUDA</code> / <code>HIP</code> / <code>XPU</code> / <code>MPS</code></td>
-<td>Specifies the target GPU architecture (if any)<sup id="fnref:6"><a class="footnote-ref" href="#fn:6">6</a></sup></td>
+<td>Specifies the target GPU architecture (if any)<sup id="fnref:6"><a class="footnote-ref" href="#fn:6">5</a></sup></td>
 </tr>
 <tr>
 <td><code>MULTI_GPU</code></td>
@@ -349,12 +382,9 @@ on the <a href="hpc.html">HPC page</a>.</p>
 <a href="https://pytorch.org/get-started/locally/">Alternative versions</a> to match hardware
 may be required.</em>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
-<li id="fn:2">
-<p><em>For more details, see <a href="https://pytorch.org/get-started/locally/">here</a>.</em>&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
-</li>
 <li id="fn:3">
 <p><em>This may need to be the full path to the compiler if CMake
-cannot locate it by default.</em>&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+cannot locate it by default.</em>&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:3" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 <li id="fn:4">
 <p><em>The path to the Torch installation needs to allow CMake to locate the relevant Torch CMake files.<br>
@@ -363,16 +393,16 @@ then this should be the absolute path to the unzipped LibTorch distribution.
 If Torch has been installed as PyTorch in a Python <a href="https://docs.python.org/3/library/venv.html">venv (virtual environment)</a>,
 e.g. with <code>pip install torch</code>, then this should be<br>
 <code>&lt;/path/to/venv/&gt;lib/python&lt;3.xx&gt;/site-packages/torch/</code>.<br>
-You can find the location of your torch install by importing torch from your Python environment (<code>import torch</code>) and running <code>print(torch.__file__)</code></em>&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+You can find the location of your torch install by importing torch from your Python environment (<code>import torch</code>) and running <code>print(torch.__file__)</code></em>&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 <li id="fn:5">
 <p><em>To run the tests, your system's MPI must support <code>use mpi_f08</code>.<br>
-Note that <code>OpenMPI &lt; v2.0</code> and <code>MPICH &lt; v3.1</code> do not support this module.</em>&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+Note that <code>OpenMPI &lt; v2.0</code> and <code>MPICH &lt; v3.1</code> do not support this module.</em>&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 4 in the text">&#8617;</a></p>
 </li>
 <li id="fn:6">
 <p><em>This must match the installed PyTorch/Libtorch library. When installing with pip, the <code>index-url</code> flag can be used to ensure a CPU-only or GPU-enabled version is installed, e.g.
 <code>pip install torch --index-url https://download.pytorch.org/whl/cpu</code>
-URLs for alternative versions can be found <a href="https://pytorch.org/get-started/locally/">here</a>.</em>&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+URLs for alternative versions can be found <a href="https://pytorch.org/get-started/locally/">here</a>.</em>&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 5 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>

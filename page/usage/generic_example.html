@@ -166,7 +166,12 @@ To see this process in context we strongly advise following the
 <li>Build and compile the code, linking against the FTorch library</li>
 </ol>
 <p>These are outlined in detail below.</p>
-<h4 id="1-saving-the-model-as-torchscript">1. Saving the model as TorchScript</h4>
+<h4 id="1-saving-the-model-in-pytorch-format">1. Saving the model in PyTorch format</h4>
+<p>The PyTorch model should be written out in the usual way using
+<a href="https://docs.pytorch.org/docs/stable/generated/torch.save.html"><code>torch.save</code></a>.
+That is, using the pickle file format commonly used for PyTorch objects such as
+models and tensors. The <code>.pt</code> file extension should be used.</p>
+<h4 id="2-converting-the-model-to-torchscript">2. Converting the model to TorchScript</h4>
 <p>The trained PyTorch model needs to be exported to
 <a href="https://pytorch.org/docs/stable/jit.html">TorchScript</a>.
 This can be done from within your code using the
@@ -175,10 +180,17 @@ or
 <a href="https://pytorch.org/docs/stable/generated/torch.jit.trace.html#torch.jit.trace"><code>jit.trace</code></a>
 functionalities from within Python.</p>
 <p>If you are not familiar with these we provide a tool
-<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py"><code>pt2ts.py</code></a>
-as part of FTorch which contains an easily adaptable script to save your
-PyTorch model as TorchScript.</p>
-<h4 id="2-using-the-model-from-fortran">2. Using the model from Fortran</h4>
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/pt2ts.py"><code>pt2ts</code></a>
+as part of FTorch which allows to convert a model in PyTorch file format into
+one using the TorchScript format. To make use of this tool, install the
+<code>ftorch-utils</code> Python package and its dependencies by running</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>.
+</code></pre></div>
+
+<p>in FTorch's root directory. This will install the <code>pt2ts</code> script into your Python
+environment. For usage instructions, call <code>pt2ts --help</code> or read the
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils/README.md">ftorch-utils README</a>.</p>
+<h4 id="3-using-the-model-from-fortran">3. Using the model from Fortran</h4>
 <p>To use the trained Torch model from within Fortran we need to import the <code>ftorch</code>
 module and use the binding routines to load the model, convert the data,
 and run inference.
@@ -234,7 +246,7 @@ before writing your own code to fully explore the features.</p>
 <span class="k">call </span><span class="n">torch_delete</span><span class="p">(</span><span class="n">model_output_arr</span><span class="p">)</span>
 </code></pre></div>
 
-<h4 id="3-building-the-code">3. Building the code</h4>
+<h4 id="4-building-the-code">4. Building the code</h4>
 <p>The code now needs to be compiled and linked against our installed library.
 Here we describe how to do this for two build systems, CMake and make.</p>
 <h5 id="cmake">CMake</h5>

@@ -174,12 +174,21 @@ Torch compatible with the device you wish to target.</p>
 <p>This can be done for all hardwares by using a pip-installed version, and for CUDA and
 HIP with a LibTorch binary.</p>
 <h4 id="installation-using-pip">Installation using pip</h4>
-<p>If installing using pip the appropriate version for the hardware can be specified by
-using the <code>--index-url</code> option during <code>pip install</code>.</p>
-<p>Instructions for CPU, CUDA, and HIP/ROCm can be found in the installation matrix on
-<a href="https://pytorch.org/">pytorch.org</a>.</p>
-<p>For XPU use <code>--index-url https://download.pytorch.org/whl/test/xpu</code>, whilst for MPS
-pip should automatically detect the hardware and install the appropriate version.</p>
+<p>To install <code>ftorch_utils</code>, its dependencies, and the additional dependencies
+for the examples with GPU support, use</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>.<span class="o">[</span>examples<span class="o">]</span><span class="w"> </span>--extra-index-url<span class="w"> </span>&lt;pytorch-wheel-download-url&gt;
+</code></pre></div>
+
+<p>or to install <code>torch</code> and <code>torchvision</code> directly use</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>--index-url<span class="w"> </span>&lt;pytorch-wheel-download-url&gt;
+</code></pre></div>
+
+<p>In terms of the URL to use to download the appropriate wheel, instructions for
+CPU, CUDA, and HIP/ROCm can be found in the installation matrix on
+<a href="https://pytorch.org/">pytorch.org</a>. For XPU, use the
+<code>https://download.pytorch.org/whl/test/xpu</code> wheel. For MPS, <code>pip</code> should
+automatically detect the hardware and install the appropriate version so no
+wheel needs to be specified.</p>
 <h4 id="libtorch-binary">LibTorch binary</h4>
 <p>For pure LibTorch binaries see the installation matrix on
 <a href="https://pytorch.org/">pytorch.org</a>.
@@ -197,22 +206,37 @@ When building FTorch, specify the target GPU architecture using the
 </code></pre></div>
 
 <p>i.e., CPU-only.</p>
-<p><strong>2) Save TorchScript models on the target device</strong><br>
-When saving a TorchScript model, ensure that it is on the GPU.
-For example, when using
-<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/pt2ts.py"><code>pt2ts.py</code></a>,
-this can be done by passing the <code>--device_type &lt;cpu/cuda/hip/xpu/mps&gt;</code> argument. This
-sets the <code>device_type</code> variable, which has the effect of transferring the model
-(and any input arrays used in tracing/testing) to the specified GPU device in the
-following lines:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">if</span> <span class="n">device_type</span> <span class="o">!=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">:</span>
-    <span class="n">trained_model</span> <span class="o">=</span> <span class="n">trained_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
-    <span class="n">trained_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-    <span class="n">trained_model_dummy_input_1</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_1</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
-    <span class="n">trained_model_dummy_input_2</span> <span class="o">=</span> <span class="n">trained_model_dummy_input_2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
+<p><strong>2) Save PyTorch models on the target device</strong><br>
+When saving a model in PyTorch format, ensure that it has the desired GPU device
+type. For example, in
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/examples/2_SimpleNet/simplenet.py"><code>examples/2_SimpleNet/simplenet.py</code></a>,
+this is done in the following lines:</p>
+<div class="codehilite"><pre><span></span><code>    <span class="n">model</span> <span class="o">=</span> <span class="n">SimpleNet</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
 </code></pre></div>
 
-<p><strong>3) Specify the target device from FTorch</strong><br>
+<p>and</p>
+<div class="codehilite"><pre><span></span><code>    <span class="n">input_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The first line transfers the model to the specified GPU device, while the second
+line does the same for any input arrays used in tracing or testing. Having
+transferred the model and any input tensors to the GPU device, write them out
+using <code>torch.save</code>. In the SimpleNet example above, this is done with</p>
+<div class="codehilite"><pre><span></span><code>    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;saved_simplenet_model_</span><span class="si">{</span><span class="n">device_type</span><span class="si">}</span><span class="s2">.pt&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>and</p>
+<div class="codehilite"><pre><span></span><code>    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;saved_simplenet_input_tensor_</span><span class="si">{</span><span class="n">device_type</span><span class="si">}</span><span class="s2">.pt&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>3) Convert PyTorch model to TorchScript model</strong><br>
+When converting a PyTorch model to a TorchScript model using the <code>pt2ts</code> script,
+the device type will be inherited. As such, if the PyTorch model is saved using
+a particular device type then this will be preserved in the resulting
+TorchScript model. For further details on the <code>pt2ts</code> script, call
+<code>pt2ts --help</code> or read the
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils/README.md">ftorch-utils README</a>.</p>
+<p><strong>4) Specify the target device from FTorch</strong><br>
 When calling <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> and
 <a href="../../proc/torch_model_load.html">torch_model_load</a>  in Fortran,
 the device type for the input tensor(s) and model should be set to the appropriate
