@@ -20,11 +20,10 @@ To install FTorch requires the following to be installed on the system:
 - [CMake](https://cmake.org/) >= 3.18
 - Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
 - [LibTorch](https://pytorch.org/cppdocs/installing.html)[^1] or [PyTorch](https://pytorch.org/)
-- [NumPy](https://numpy.org/)
 
-For instructions on how to install PyTorch, NumPy, and additional Python
-dependencies for FTorch's examples, see the
-[Python dependencies](#python-dependencies) section below.
+For instructions on how to install PyTorch and additional Python dependencies
+for FTorch's examples, see the [Python dependencies](#python-dependencies)
+section below.
 
 [^1]: 
     _The minimal example provided downloads the CPU-only Linux Nightly binary.
@@ -44,7 +43,7 @@ where `<pytorch-wheel-download-url>` is determined based on the
 [matrix](https://pytorch.org/get-started/locally/) on the PyTorch website.
 
 We recommend also installing the additional dependencies for FTorch's examples
-(TorchVision, matplotlib, and mpi4py) in the same command. This can be
+(TorchVision, matplotlib, NumPy, and mpi4py) in the same command. This can be
 achieved by including the `examples` optional dependencies, as follows:
 ```sh
 pip install .[examples] --extra-index-url <pytorch-wheel-download-url>
@@ -60,8 +59,8 @@ pip install torch torchvision --index-url <pytorch-wheel-download-url>
 We recommend installing `torch` and `torchvision` in the same command such as
 would be done in the third command above. Doing so ensures that they are
 configured in the same way. If you have installed the `ftorch_utils` module with
-the `examples` dependency group as in the second command above then there is no
-need to worry about this because they are both included as dependencies.
+the `examples` optional dependencies as in the second command above then there
+is no need to worry about this because they are both included as dependencies.
 @endnote
 
 #### Additional dependencies of the test suite
