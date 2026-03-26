@@ -29,124 +29,124 @@ def filename():
     assert not os.path.exists(file_name)
 
 
-class TestValidateInputModel:
-    """Tests for validate_input_model_file."""
-
-    def test_invalid_extension(self):
-        """Check that an error is raised for invalid input model file extension."""
-        expected = "PyTorch input model file 'model.py' has extension .py but .pt was expected."
-        with pytest.raises(ValueError, match=expected):
-            validate_input_model_file("model.py")
-
-    def test_model_does_not_exist(self, filename):
-        """Check that an error is raised if an input model file doesn't exist."""
-        expected = f"PyTorch input model file '{filename}' cannot be found."
-        with pytest.raises(FileNotFoundError, match=expected):
-            validate_input_model_file(filename)
+def test_input_model_extension():
+    """Check that an error is raised for invalid input model file extension."""
+    expected = (
+        "PyTorch input model file 'model.py' has extension .py but .pt was expected."
+    )
+    with pytest.raises(ValueError, match=expected):
+        validate_input_model_file("model.py")
 
 
-class TestValidateInputTensor:
-    """Tests for validate_input_tensor_file."""
-
-    def test_invalid_extension(self):
-        """Check that an error is raised for invalid input tensor file extension."""
-        expected = "PyTorch input tensor file 'tensor.py' has extension .py but .pt was expected."
-        with pytest.raises(ValueError, match=expected):
-            validate_input_tensor_file("tensor.py")
-
-    def test_tensor_does_not_exist(self, filename):
-        """Check that an error is raised if an input tensor file doesn't exist."""
-        expected = f"PyTorch input tensor file '{filename}' cannot be found."
-        with pytest.raises(FileNotFoundError, match=expected):
-            validate_input_tensor_file(filename)
+def test_input_model_exists(filename):
+    """Check that an error is raised if an input model file doesn't exist."""
+    expected = f"PyTorch input model file '{filename}' cannot be found."
+    with pytest.raises(FileNotFoundError, match=expected):
+        validate_input_model_file(filename)
 
 
-class TestValidateOutputModel:
-    """Tests for validate_output_model_file."""
+def test_input_tensor_extension():
+    """Check that an error is raised for invalid input tensor file extension."""
+    expected = (
+        "PyTorch input tensor file 'tensor.py' has extension .py but .pt was expected."
+    )
+    with pytest.raises(ValueError, match=expected):
+        validate_input_tensor_file("tensor.py")
 
-    def test_invalid_extension(self):
-        """Check that an error is raised for invalid output model file extension."""
-        expected = "TorchScript output model file 'output.py' has extension .py but .pt was expected."
-        with pytest.raises(ValueError, match=expected):
-            validate_output_model_file("output.py", "input.pt")
 
-    def test_input_model_matching_file(self):
-        """Check that an error is raised if the input and output file names match."""
-        expected = (
-            "TorchScript output model file name 'input.pt' coincides with PyTorch input"
-            " model file name 'input.pt'. It would be overwritten."
+def test_input_tensor_exists(filename):
+    """Check that an error is raised if an input tensor file doesn't exist."""
+    expected = f"PyTorch input tensor file '{filename}' cannot be found."
+    with pytest.raises(FileNotFoundError, match=expected):
+        validate_input_tensor_file(filename)
+
+
+def test_output_model_extension():
+    """Check that an error is raised for invalid output model file extension."""
+    expected = "TorchScript output model file 'output.py' has extension .py but .pt was expected."
+    with pytest.raises(ValueError, match=expected):
+        validate_output_model_file("output.py", "input.pt")
+
+
+def test_output_model_matching_file():
+    """Check that an error is raised if the input and output file names match."""
+    expected = (
+        "TorchScript output model file name 'input.pt' coincides with PyTorch input"
+        " model file name 'input.pt'. It would be overwritten."
+    )
+    with pytest.raises(ValueError, match=expected):
+        validate_output_model_file("input.pt", "input.pt")
+
+
+def test_output_model_file_exists_warning(filename):
+    """Check that a warning is raised if the output file name already exists."""
+    # Create a fake model file
+    with open(filename, "w+") as f:
+        f.write("TEST FILE")
+
+    # Check that the expected warning is raised
+    expected = (
+        f"A file already exists with TorchScript output model file name '{filename}'."
+        " It will be overwritten."
+    )
+    with warnings.catch_warnings(record=True) as warning_list:
+        warnings.simplefilter("always")
+        validate_output_model_file(filename, "input.pt")
+        assert len(warning_list) == 1
+        assert issubclass(warning_list[0].category, UserWarning)
+        assert str(warning_list[0].message) == expected
+
+
+def test_validate_output_tensors_matching():
+    """Check that matching tensors are accepted."""
+    try:
+        validate_output_tensors(
+            torch.tensor([1.0, 2.0, 3.0]), torch.tensor([1.0, 2.0, 3.0])
         )
-        with pytest.raises(ValueError, match=expected):
-            validate_output_model_file("input.pt", "input.pt")
+    except RuntimeError:
+        pytest.fail("validate_output_tensors raised RuntimeError unexpectedly!")
 
-    def test_file_exists_warning(self, filename):
-        """Check that a warning is raised if the output file name already exists."""
-        # Create a fake model file
-        with open(filename, "w+") as f:
-            f.write("TEST FILE")
 
-        # Check that the expected warning is raised
-        expected = (
-            f"A file already exists with TorchScript output model file name '{filename}'."
-            " It will be overwritten."
+def test_validate_output_tensors_mismatching():
+    """Check that mismatching tensors are rejected."""
+    expected = (
+        "Saved Torchscript model is not performing as expected.\n"
+        "Consider using scripting if you used tracing, or investigate further."
+    )
+    with pytest.raises(RuntimeError, match=expected):
+        validate_output_tensors(
+            torch.tensor([1.0, 2.0, 3.0]), torch.tensor([1.0, 2.1, 3.0])
         )
-        with warnings.catch_warnings(record=True) as warning_list:
-            warnings.simplefilter("always")
-            validate_output_model_file(filename, "input.pt")
-            assert len(warning_list) == 1
-            assert issubclass(warning_list[0].category, UserWarning)
-            assert str(warning_list[0].message) == expected
 
 
-class TestValidateOutputTensors:
-    """Tests for validate_output_tensors."""
-
-    def test_validate_output_tensors_matching(self):
-        """Check that matching tensors are accepted."""
-        try:
-            validate_output_tensors(
-                torch.tensor([1.0, 2.0, 3.0]), torch.tensor([1.0, 2.0, 3.0])
-            )
-        except RuntimeError:
-            pytest.fail("validate_output_tensors raised RuntimeError unexpectedly!")
-
-    def test_mismatching(self):
-        """Check that mismatching tensors are rejected."""
-        expected = (
-            "Saved Torchscript model is not performing as expected.\n"
-            "Consider using scripting if you used tracing, or investigate further."
+def test_validate_output_tensors_mismatching_number():
+    """Check that mismatching numbers of tensors are rejected."""
+    expected = "argument 2 is shorter than argument 1"
+    with pytest.raises(ValueError, match=expected):
+        validate_output_tensors(
+            torch.tensor([1.0]), (torch.tensor([1.0]), torch.tensor([1.0]))
         )
-        with pytest.raises(RuntimeError, match=expected):
-            validate_output_tensors(
-                torch.tensor([1.0, 2.0, 3.0]), torch.tensor([1.0, 2.1, 3.0])
-            )
 
-    def test_mismatching_number(self):
-        """Check that mismatching numbers of tensors are rejected."""
-        expected = "argument 2 is shorter than argument 1"
-        with pytest.raises(ValueError, match=expected):
-            validate_output_tensors(
-                torch.tensor([1.0]), (torch.tensor([1.0]), torch.tensor([1.0]))
-            )
 
-    def test_tuple_matching(self):
-        """Check that matching tuples of tensors are accepted."""
-        try:
-            validate_output_tensors(
-                (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
-                (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
-            )
-        except RuntimeError:
-            pytest.fail("validate_output_tensors raised RuntimeError unexpectedly!")
-
-    def test_tuple_mismatching(self):
-        """Check that mismatching tuples of tensors are rejected."""
-        expected = (
-            "Saved Torchscript model is not performing as expected.\n"
-            "Consider using scripting if you used tracing, or investigate further."
+def test_validate_output_tensors_tuple_matching():
+    """Check that matching tuples of tensors are accepted."""
+    try:
+        validate_output_tensors(
+            (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
+            (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
         )
-        with pytest.raises(RuntimeError, match=expected):
-            validate_output_tensors(
-                (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
-                (torch.tensor([1.0, 2.0]), torch.tensor([3.1, 4.0])),
-            )
+    except RuntimeError:
+        pytest.fail("validate_output_tensors raised RuntimeError unexpectedly!")
+
+
+def test_validate_output_tensors_tuple_mismatching():
+    """Check that mismatching tuples of tensors are rejected."""
+    expected = (
+        "Saved Torchscript model is not performing as expected.\n"
+        "Consider using scripting if you used tracing, or investigate further."
+    )
+    with pytest.raises(RuntimeError, match=expected):
+        validate_output_tensors(
+            (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
+            (torch.tensor([1.0, 2.0]), torch.tensor([3.1, 4.0])),
+        )
