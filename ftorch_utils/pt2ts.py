@@ -229,7 +229,9 @@ def main_cli():
             ts_model_outputs = (ts_model_outputs,)
         if not isinstance(pt_model_outputs, tuple):
             pt_model_outputs = (pt_model_outputs,)
-        for ts_output, pt_output in zip(ts_model_outputs, pt_model_outputs, strict=True):
+        for ts_output, pt_output in zip(
+            ts_model_outputs, pt_model_outputs, strict=True
+        ):
             if not torch.all(ts_output.eq(pt_output)):
                 model_error = (
                     "Saved Torchscript model is not performing as expected.\n"
