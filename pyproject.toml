@@ -34,8 +34,8 @@ classifiers = [
 	"Programming Language :: Python",
   "Topic :: Scientific/Engineering",
 ]
-dependencies = ["torch"]
-optional-dependencies = {examples = ["matplotlib", "mpi4py", "numpy", "torchvision"]}
+dependencies = ["numpy", "torch"]
+optional-dependencies = {examples = ["matplotlib", "mpi4py", "torchvision"]}
 
 [dependency-groups]
 docs = ["ford>=7.0.13"]
@@ -50,7 +50,6 @@ preproc = ["fypp==3.2"]
 test = [
   "matplotlib",
   "mpi4py",
-  "numpy",
   "pytest",
   "torchvision",
 ]
