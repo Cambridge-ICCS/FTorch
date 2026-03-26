@@ -24,7 +24,7 @@ To run this example requires:
 ## Running
 
 To run this example, first install FTorch as described in the main
-documentation.
+documentation, making use of the `examples` dependency group.
 
 To compile the Fortran code, using the included `CMakeLists.txt`, execute the
 following code:

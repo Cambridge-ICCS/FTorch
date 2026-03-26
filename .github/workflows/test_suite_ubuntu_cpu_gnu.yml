@@ -122,7 +122,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
-          pip install . --extra-index-url https://download.pytorch.org/whl/cpu
+          pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
 
       - name: Install OpenMPI
         run: |

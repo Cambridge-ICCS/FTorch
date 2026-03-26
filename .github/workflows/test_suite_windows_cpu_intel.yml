@@ -65,7 +65,7 @@ jobs:
           pip install --upgrade pip
           python -m venv ftorch
           call ftorch\Scripts\activate
-          pip install .
+          pip install . --group test
 
       - name: Build FTorch
         shell: cmd

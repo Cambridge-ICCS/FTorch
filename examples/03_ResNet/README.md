@@ -26,13 +26,8 @@ To run this example requires:
 
 ## Running
 
-To run this example install FTorch as described in the main documentation.
-Then from this directory create a virtual environment an install the neccessary Python
-modules:
-```
-python3 -m venv venv
-source venv/bin/activate
-```
+To run this example, first install FTorch as described in the main
+documentation, making use of the `examples` dependency group.
 
 You can check that everything is working by running `resnet18.py`:
 

@@ -9,7 +9,7 @@
 python3 -m venv venv
 # shellcheck source=/dev/null
 source venv/bin/activate
-pip install . --extra-index-url https://download.pytorch.org/whl/cpu
+pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group examples
 
 # Extract the location of the installed packages in the venv
 # This is typically `FTorch/build/venv/lib/python3.xx/site-packages/`
