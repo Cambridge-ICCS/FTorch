@@ -66,12 +66,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
-          pip install . --extra-index-url https://download.pytorch.org/whl/cpu
-
-      - name: Install ftorch_utils
-        run: |
-          . ftorch/bin/activate
-          python -m pip install .[dev]
+          pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
 
       - name: Install Intel tools
         uses: rscohn2/setup-oneapi@a5ae4e7697b9cd5dc8a616f94c1e56b87140999d

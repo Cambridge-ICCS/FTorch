@@ -28,9 +28,10 @@ HIP with a LibTorch binary.
 
 #### Installation using pip
 
-To install `ftorch_utils` and its dependencies with GPU support, use
+To install `ftorch_utils`, its dependencies, and the additional dependencies
+for the examples with GPU support, use
 ```sh
-pip install . --extra-index-url <pytorch-wheel-download-url>
+pip install .[examples] --extra-index-url <pytorch-wheel-download-url>
 ```
 or to install `torch` and `torchvision` directly use
 ```sh
@@ -41,7 +42,7 @@ In terms of the URL to use to download the appropriate wheel, instructions for
 CPU, CUDA, and HIP/ROCm can be found in the installation matrix on
 [pytorch.org](https://pytorch.org/). For XPU, use the
 `https://download.pytorch.org/whl/test/xpu` wheel. For MPS, `pip` should
-automatically detect them hardware and install the appropriate version so no
+automatically detect the hardware and install the appropriate version so no
 wheel needs to be specified.
 
 #### LibTorch binary

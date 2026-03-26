@@ -55,9 +55,7 @@ def parse_user_input():
     )
     parser.add_argument(
         "--output_model_file",
-        help=(
-            "Filename for the model to be saved in TorchScript format, including path",
-        ),
+        help="Filename for the model to be saved in TorchScript format, including path",
         type=str,
     )
     parser.add_argument(
@@ -111,6 +109,12 @@ def main_cli():
         )
         raise ValueError(value_error)
     input_model_file = parsed_args.input_model_file
+    if input_model_file is None:
+        value_error = (
+            "pt2ts does not yet support pre-trained models and so currently requires an"
+            " input model file."
+        )
+        raise ValueError(value_error)
     validate_input_model_file(input_model_file)
     output_model_file = parsed_args.output_model_file
     validate_output_model_file(output_model_file, input_model_file)

@@ -25,6 +25,10 @@ To install FTorch requires the following to be installed on the system:
 For instructions on how to install PyTorch, TorchVision, and NumPy, see the
 [Python dependencies](#python-dependencies) section below.
 
+For instructions on how to install PyTorch and additional Python dependencies
+for FTorch's examples, see the [Python dependencies](#python-dependencies)
+section below.
+
 [^1]: 
     _The minimal example provided downloads the CPU-only Linux Nightly binary.
     [Alternative versions](https://pytorch.org/get-started/locally/) to match hardware
@@ -35,13 +39,19 @@ For instructions on how to install PyTorch, TorchVision, and NumPy, see the
 If LibTorch is not installed then FTorch requires PyTorch to be installed.
 FTorch's `pt2ts` utility script has PyTorch as a hard requirement, as well as
 the `ftorch_utils` Python module included in the FTorch repo. To install
-PyTorch, `ftorch_utils`, and the additional dependencies (TorchVision and NumPy)
-of FTorch's examples suite, run
+PyTorch and `ftorch_utils`, run
 ```sh
 pip install . --extra-index-url <pytorch-wheel-download-url>
 ```
 where `<pytorch-wheel-download-url>` is determined based on the
 [matrix](https://pytorch.org/get-started/locally/) on the PyTorch website.
+
+We recommend also installing the additional dependencies for FTorch's examples
+(TorchVision, matplotlib, NumPy, and mpi4py) in the same command. This can be
+achieved by including the `examples` optional dependencies, as follows:
+```sh
+pip install .[examples] --extra-index-url <pytorch-wheel-download-url>
+```
 
 If you don't want to install `ftorch_utils` then you can install FTorch's
 `torch` and `torchvision` dependencies using
@@ -51,10 +61,10 @@ pip install torch torchvision --index-url <pytorch-wheel-download-url>
 
 @note
 We recommend installing `torch` and `torchvision` in the same command such as
-would be done in the secon command above. Doing so ensures that they are
-configured in the same way. If you have installed the `ftorch_utils` module as
-in the first command above then there is no need to worry about this because
-they are both included as dependencies.
+would be done in the third command above. Doing so ensures that they are
+configured in the same way. If you have installed the `ftorch_utils` module with
+the `examples` optional dependencies as in the second command above then there
+is no need to worry about this because they are both included as dependencies.
 @endnote
 
 #### Additional dependencies of the test suite
