@@ -13,7 +13,7 @@ To see this process in context we strongly advise following the
 
 In order to use FTorch users will typically need to follow these steps:
 
-1. Save a PyTorch model as [TorchScript](https://pytorch.org/docs/stable/jit.html).
+1. Save a PyTorch model as [TorchScript](https://docs.pytorch.org/docs/2.10/jit.html).
 2. Write Fortran using the FTorch bindings to use the model from within Fortran.
 3. Build and compile the code, linking against the FTorch library
 
@@ -29,11 +29,11 @@ models and tensors. The `.pt` file extension should be used.
 #### 2. Converting the model to TorchScript
 
 The trained PyTorch model needs to be exported to
-[TorchScript](https://pytorch.org/docs/stable/jit.html).
+[TorchScript](https://docs.pytorch.org/docs/2.10/jit.html).
 This can be done from within your code using the
-[`jit.script`](https://pytorch.org/docs/stable/generated/torch.jit.script.html#torch.jit.script)
+[`jit.script`](https://docs.pytorch.org/docs/2.10/generated/torch.jit.script.html#torch.jit.script)
 or
-[`jit.trace`](https://pytorch.org/docs/stable/generated/torch.jit.trace.html#torch.jit.trace)
+[`jit.trace`](https://docs.pytorch.org/docs/2.10/generated/torch.jit.script.html#torch.jit.trace)
 functionalities from within Python.
 
 If you are not familiar with these we provide a tool
