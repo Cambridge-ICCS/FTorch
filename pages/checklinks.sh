@@ -25,17 +25,44 @@ URL_REGEX='s/.*(\(http.*\)).*/\1/p'
 check_url() {
   local url=$1
   echo "Checking URL: $url"
-  status_code=$(curl --head --silent --fail --max-time 10 -L -o /dev/null -w "%{http_code}" "$url")
-  if [[ "$status_code" -eq 000 ]]; then
-    echo "⚠️ Warning: $url returned HTTP $status_code (possibly blocked or inaccessible)."
-  elif [[ "$status_code" -ge 400 ]]; then
+  
+  # Try with GET request to get status code
+  status_code=$(curl --silent --fail --max-time 15 -L -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" -o /dev/null -w "%{http_code}" "$url")
+  
+  # Handle returned status codes
+  if [[ "$status_code" -eq 200 ]]; then
+    echo "✅ $url is reachable (HTTP $status_code)."
+    return 0
+  elif [[ "$status_code" -eq 000 ]]; then
+    echo "⚠️ Warning: $url returned HTTP $status_code (connection failed or timeout)."
+    return 1
+  elif [[ "$status_code" -eq 403 ]]; then
+    # Check if this might be a Cloudflare challenge or other similar security measure
+    response=$(curl --silent --max-time 10 -L -A "Mozilla/5.0" "$url" 2>/dev/null | grep -i "cloudflare\|just a moment\|enable javascript\|access denied" | head -1)
+    if [[ -n "$response" ]]; then
+      echo "⚠️ Warning: $url returned HTTP $status_code (likely protected by Cloudflare/bot protection)."
+      echo "   This URL may be valid but requires a browser with JavaScript enabled."
+    else
+      # If we can't determine, treat as potentially valid but with access restrictions
+      echo "⚠️ Warning: $url returned HTTP $status_code (may require special access or browser)."
+      echo "   This URL might be valid but requires specific conditions to access."
+    fi
+  elif [[ "$status_code" -eq 429 ]]; then
+    echo "❌ $url is not reachable (HTTP $status_code - Rate limited, try again later)."
+    return 1
+  elif [[ "$status_code" -eq 404 ]]; then
+    echo "❌ $url is not reachable (HTTP $status_code - Not Found)."
+    return 1
+  elif [[ "$status_code" -ge 400 && "$status_code" -ne 403 ]]; then
     echo "❌ $url is not reachable (HTTP $status_code)."
     return 1
-  elif [[ "$status_code" -ge 300 ]]; then
+  elif [[ "$status_code" -ge 300 && "$status_code" -lt 400 ]]; then
     echo "⚠️ Warning: $url returned HTTP $status_code (redirect followed)."
   else
-    echo "✅ $url is reachable (HTTP $status_code)."
+    echo "❌ $url returned unexpected HTTP $status_code."
+    return 1
   fi
+  
   return 0
 }
 
