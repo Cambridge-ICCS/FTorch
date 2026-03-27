@@ -69,7 +69,7 @@ jobs:
           pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
 
       - name: Install Intel tools
-        uses: rscohn2/setup-oneapi@a5ae4e7697b9cd5dc8a616f94c1e56b87140999d
+        uses: rscohn2/setup-oneapi@9ac2e22dab93541676ee39841d702c35ee0b8e4c # v0.2.0
         with:
           components: |
             icx@${{ matrix.version }}
