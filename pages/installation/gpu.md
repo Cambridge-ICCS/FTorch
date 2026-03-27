@@ -71,7 +71,7 @@ i.e., CPU-only.
 **2) Save PyTorch models on the target device**  
 When saving a model in PyTorch format, ensure that it has the desired GPU device
 type. For example, in
-[`examples/2_SimpleNet/simplenet.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/examples/2_SimpleNet/simplenet.py),
+[`examples/02_SimpleNet/simplenet.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/examples/02_SimpleNet/simplenet.py),
 this is done in the following lines:
 ```python
     model = SimpleNet().to(device_type)
@@ -150,5 +150,5 @@ Note that `MPS` does not currently support multiple devices, so the
 default device index should always be used.
 
 See the
-[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/6_MultiGPU)
+[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/06_MultiGPU)
 for a worked example of running with multiple devices from one code.
