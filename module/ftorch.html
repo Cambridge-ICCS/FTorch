@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.5% of total for modules and submodules.">13 statements</a>
+                 title=" 0.5% of total for modules and submodules.">14 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -175,11 +175,11 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='ftorch_tensor.html'>ftorch_tensor</a></li>
-                  <li class="list-inline-item"><a href='ftorch_types.html'>ftorch_types</a></li>
                   <li class="list-inline-item"><a href='ftorch_model.html'>ftorch_model</a></li>
                   <li class="list-inline-item"><a href='ftorch_optim.html'>ftorch_optim</a></li>
+                  <li class="list-inline-item"><a href='ftorch_types.html'>ftorch_types</a></li>
                   <li class="list-inline-item"><a href='ftorch_devices.html'>ftorch_devices</a></li>
+                  <li class="list-inline-item"><a href='ftorch_tensor.html'>ftorch_tensor</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -542,6 +542,45 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
             <td><strong>model</strong></td>
             <td>
 <p>Torch Model to deallocate</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  subroutine <a href='../proc/torch_optim_delete.html'>torch_optim_delete</a>(optim)  
+
+    </h3>
+    
+  <p>Deallocate a Torch optimizer</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-optim~3"></span>
+              type(<a href='../type/torch_optim.html'>torch_optim</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>optim</strong></td>
+            <td>
+<p>Optimizer to deallocate</p>
             </td>
         </tr>
     </tbody>

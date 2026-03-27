@@ -62,6 +62,7 @@ module ftorch
   interface torch_delete
     module procedure torch_tensor_delete
     module procedure torch_model_delete
+    module procedure torch_optim_delete
   end interface
 
 end module ftorch
