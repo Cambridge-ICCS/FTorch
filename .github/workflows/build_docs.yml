@@ -66,7 +66,7 @@ jobs:
         run: |
           cd pages/
           chmod +x checklinks.sh
-          ./checklinks.sh "*.md"
+          ./checklinks.sh
 
       - name: Build docs with FORD
         run: ford FTorch.md
