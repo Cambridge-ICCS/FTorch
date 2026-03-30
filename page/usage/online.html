@@ -174,9 +174,9 @@ for information on how to do this.</p>
 <p>The scripting section comes earlier in the online workflow. Having written a
 model to a file with <code>.pt</code> extension, use the <code>pt2ts.py</code> utility Python script
 to convert it to TorchScript format. A template <code>pt2ts.py</code> script can be found
-in the <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/utils"><code>utils</code></a>
+in the <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils"><code>utils</code></a>
 subdirectory. See the
-<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/README.md">README</a>
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/README.md">README</a>
 there for more details on how to use the script.</p>
 <h4 id="3-data-generation-and-training">3. Data generation and training</h4>
 <p>In the online case, data generation and training are done in the same step,
@@ -239,7 +239,7 @@ can be achieved by setting the scalar as a rank-1
 
 <p>For a concrete example of how to compute mathematical expressions involving
 Torch tensors, see the
-<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd">autograd worked example</a>.</p>
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/09_Autograd">autograd worked example</a>.</p>
 <h3 id="the-requires_grad-property">The <code>requires_grad</code> property</h3>
 <p>For Tensors that you would like to differentiate with respect to, be sure to
 set the <code>requires_grad</code> optional argument to <code>.true.</code> when you construct it.</p>
