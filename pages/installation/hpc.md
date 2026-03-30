@@ -211,8 +211,8 @@ If you are investigating running FTorch on HPC then you are probably interested
 in improving computational efficiency via parallelism.
 
 For a worked example of running with MPI, see the
-[associated example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/07_MPI).
+[associated example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/08_MPI).
 
 For information on running on GPU architectures, see the
 [GPU user guide page](|page|/installation/gpu.html) and/or the
-[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/06_MultiGPU).
+[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/07_MultiGPU).

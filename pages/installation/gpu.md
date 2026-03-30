@@ -150,5 +150,5 @@ Note that `MPS` does not currently support multiple devices, so the
 default device index should always be used.
 
 See the
-[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/06_MultiGPU)
+[MultiGPU example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/07_MultiGPU)
 for a worked example of running with multiple devices from one code.
