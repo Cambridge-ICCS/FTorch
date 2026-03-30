@@ -31,9 +31,9 @@ for information on how to do this.
 The scripting section comes earlier in the online workflow. Having written a
 model to a file with `.pt` extension, use the `pt2ts.py` utility Python script
 to convert it to TorchScript format. A template `pt2ts.py` script can be found
-in the [`utils`](https://github.com/Cambridge-ICCS/FTorch/tree/main/utils)
+in the [`utils`](https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils)
 subdirectory. See the
-[README](https://github.com/Cambridge-ICCS/FTorch/blob/main/utils/README.md)
+[README](https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/README.md)
 there for more details on how to use the script.
 
 #### 3. Data generation and training
@@ -111,7 +111,7 @@ call torch_tensor_from_array(multiplier, multiplier_value, torch_kCPU)
 
 For a concrete example of how to compute mathematical expressions involving
 Torch tensors, see the
-[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/8_Autograd).
+[autograd worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/09_Autograd).
 
 
 ### The `requires_grad` property
