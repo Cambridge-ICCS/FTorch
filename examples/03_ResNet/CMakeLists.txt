@@ -35,21 +35,37 @@ target_link_libraries(resnet_infer_fortran PRIVATE FTorch::ftorch)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
-  # 1. Check the PyTorch model runs and its outputs meet expectations
+  # 1. Write the PyTorch model out and check it runs and its outputs meet
+  #    expectations
   add_test(
     NAME example_resnet_resnet18
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/resnet18.py
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-
-  # 2. Check the model is saved to file in the expected location with the
-  #    write_torchscript.py script
-  add_test(
-    NAME example_resnet_write_torchscript
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/write_torchscript.py
-            --filepath ${PROJECT_BINARY_DIR}
+            --data_dir ${PROJECT_SOURCE_DIR}/data
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-  # 3. Check the model can be loaded from file and run in Fortran and that its
+  # 2. Run the pt2ts script to convert the model file to TorchScript format
+  #    and run basic checks
+  add_test(
+    NAME example_resnet_pt2ts
+    COMMAND pt2ts resnet18
+                  --input_tensor_file
+                  ${PROJECT_BINARY_DIR}/pytorch_resnet18_input_tensor_cpu.pt
+                  --output_model_file
+                  ${PROJECT_BINARY_DIR}/torchscript_resnet18_model_cpu.pt
+                  --model_weights IMAGENET1K_V1
+                  --precision float32
+                  --test)
+
+  # 3. Check the model can be loaded from file and run in Python and that its
+  #   outputs meet expectations
+  add_test(
+    NAME example_resnet_resnet_infer_python
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/resnet_infer_python.py
+            --filepath ${PROJECT_BINARY_DIR}
+            --data_dir ${PROJECT_SOURCE_DIR}/data
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+  # 4. Check the model can be loaded from file and run in Fortran and that its
   #   outputs meet expectations
   add_test(
     NAME example_resnet_resnet_infer_fortran

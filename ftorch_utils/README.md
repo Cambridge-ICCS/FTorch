@@ -29,16 +29,24 @@ The Torchscript model will be saved locally in the specified location.
 The `pt2ts.py` script is set up with the `argparse` Python module such that it
 accepts several command line arguments:
 * `model_name <model_name>`, which is required to specify the name of the model
-  class (e.g. `SimpleNet`).
+  class (e.g. `SimpleNet`). This can also be used to load pre-trained models
+  from TorchVision by providing the name used in `torchvision.models`.
 * `--model_definition_file </path/to/model/def>`, which specifies the path of
-  the local file in which a PyTorch model is defined.
-* `--input_model_file </path/to/saved/model>`, which is required to specify the
-  path to the directory in which the PyTorch model is saved.
-* `--output_model_file </path/to/save/model>`, which allows you to specify the
-  path to the directory in which the TorchScript model should be saved.
+  the local file in which a PyTorch model is defined. (Not required for
+  pre-trained models.)
+* `--input_model_file </path/to/saved/model>`, which specifies the path to the
+  directory in which a local PyTorch model is saved. (Not required for
+  pre-trained models.)
+* `--output_model_file </path/to/save/model>`, which specifies the path to the
+  directory in which the TorchScript model should be saved. (Defaults to match
+  input model file.)
 * `--trace`, which allows you to switch from scripting to tracing.
 * `--test`, which allows you to run basic tests to check things are working as
   expected.
+* `--precision`, which specifies the working precision.
+* `--model_weights`, which allows customisation of model weights for pre-trained
+  models or locally defined models whose `__init__` method accepts a
+  `model_weights` keyword argument.
 * `--input_tensor_file </path/to/saved/tensor>`, which is required (if `--trace`
   or `--test` was passed) to specify the path to the directory in which a
   PyTorch tensor of appropriate input dimensions is saved.
