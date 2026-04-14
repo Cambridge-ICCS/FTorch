@@ -75,7 +75,7 @@ jobs:
           # Find Python executable in venv
           $PYTHON_EXECUTABLE = python -c "import sys; print(sys.executable)"
           # Find torch location
-          $Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line.Split(':')[1].Trim() })
+          $Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line -replace "^Location:\s*", "" })
           # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           cmake `
@@ -105,7 +105,7 @@ jobs:
         run: |
           .\ftorch\Scripts\Activate.ps1
           # Find Python executable in venv
-          $Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line.Split(':')[1].Trim() })
+          $Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line -replace "^Location:\s*", "" })
           # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           # Add FTorch and PyTorch to the path for the test executables
@@ -124,7 +124,7 @@ jobs:
           # Find Python executable in venv
           $PYTHON_EXECUTABLE = python -c "import sys; print(sys.executable)"
           # Find torch location
-          $Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line.Split(':')[1].Trim() })
+          $Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line -replace "^Location:\s*", "" })
           # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           # Add FTorch and PyTorch to the path for the test executables
