@@ -84,7 +84,7 @@ jobs:
             -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
             -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" `
             -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" `
-            -DCMAKE_PREFIX_PATH="$Torch_DIR" `
+            -DCMAKE_PREFIX_PATH="$Torch_DIR\torch" `
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_Fortran_COMPILER=ifx `
             -DCMAKE_C_COMPILER=icx `
@@ -109,7 +109,7 @@ jobs:
           # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           # Add FTorch and PyTorch to the path for the test executables
-          $PATH = "$env:FTORCH_INSTALL_DIR\bin;$env:Torch_DIR\torch\lib;$env:PATH"
+          $env:PATH = "$FTORCH_INSTALL_DIR\bin;$Torch_DIR\torch\lib;$env:PATH"
           cd build
           ctest --verbose --tests-regex example_tensor
           ctest --verbose --tests-regex example_simplenet
@@ -128,9 +128,9 @@ jobs:
           # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           # Add FTorch and PyTorch to the path for the test executables
-          $PATH = "$env:FTORCH_INSTALL_DIR\bin;$env:Torch_DIR\torch\lib;$env:PATH"
+          $env:PATH = "$FTORCH_INSTALL_DIR\bin;$Torch_DIR\torch\lib;$env:PATH"
           $EXAMPLE_BUILD_DIR = "examples\02_SimpleNet\build"
-          if not exist $EXAMPLE_BUILD_DIR mkdir $EXAMPLE_BUILD_DIR
+          if (-not (Test-Path $EXAMPLE_BUILD_DIR)) { New-Item -ItemType Directory -Path $EXAMPLE_BUILD_DIR | Out-Null }
           cd $EXAMPLE_BUILD_DIR
           cmake .. `
             -G "NMake Makefiles" `
@@ -138,7 +138,7 @@ jobs:
             -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" `
             -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
             -DCMAKE_BUILD_TYPE=Release `
-            -DCMAKE_PREFIX_PATH="$FTORCH_INSTALL_DIR%;$Torch_DIR" `
+            -DCMAKE_PREFIX_PATH="$FTORCH_INSTALL_DIR;$Torch_DIR\torch" `
             -DCMAKE_BUILD_TESTS=TRUE
           cmake --build .
           ctest -V
