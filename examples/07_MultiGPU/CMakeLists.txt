@@ -56,12 +56,12 @@ if(CMAKE_BUILD_TESTS)
   # Map library build device option (GPU_DEVICE) to runtime strings used by
   # Python/Fortran test drivers and to select the correct saved model filename.
   #
-  # * Root CMake uses: NONE | CUDA | HIP | XPU | MPS
-  # * Python scripts expect lowercase: cpu | cuda | hip | xpu | mps
-  # * Fortran program expects corresponding enums, i.e., GPU_DEVICE_CODE
+  # * Root CMake uses the following strings:
+  #   NONE | CUDA | HIP | XPU | MPS
+  # * The Python scripts and Fortran program expect the lowercase counterparts:
+  #   cpu | cuda | hip | xpu | mps
   if("${GPU_DEVICE}" STREQUAL "")
     set(GPU_DEVICE "NONE")
-    set(GPU_DEVICE_CODE "0")
   endif()
   if("${GPU_DEVICE}" STREQUAL "NONE")
     set(DEVICE_LOW "cpu")
@@ -88,8 +88,10 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_multigpu_pt2ts
     COMMAND
-    pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
-          SimpleNet
+    pt2ts SimpleNet
+          --model_definition_file
+          ${PROJECT_SOURCE_DIR}/simplenet.py
+          --input_model_file
           ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_${DEVICE_LOW}.pt
           --input_tensor_file
           ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_${DEVICE_LOW}.pt

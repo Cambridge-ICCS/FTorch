@@ -54,7 +54,7 @@ program inference
       device_type = torch_kMPS
       num_devices = 1
    else
-      write (*,*) "Error :: invalid device type", trim(args(1))
+      write (*,*) "Error :: invalid GPU device type ", trim(args(1))
       stop 999
    end if
 

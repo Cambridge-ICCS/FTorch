@@ -72,7 +72,7 @@ if __name__ == "__main__":
     # Propagate the input tensor through the model
     print(
         f"SimpleNet forward pass on {device_type.capitalize()} device"
-        f" {input_tensor_gpu.get_device()}"
+        f" {input_tensor.get_device()}"
     )
     with torch.inference_mode():
         output_tensor = model(input_tensor).to("cpu")
