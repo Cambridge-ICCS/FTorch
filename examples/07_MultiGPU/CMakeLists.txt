@@ -102,7 +102,7 @@ if(CMAKE_BUILD_TESTS)
   # 3. Check the model can be loaded from file and run on the specified devices
   #    in Python and that its outputs meet expectations
   add_test(
-    NAME example_multigpu_multigpu_infer_python
+    NAME example_multigpu_infer_python
     COMMAND ${Python_EXECUTABLE}
             ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py
             --device_type ${DEVICE_LOW}

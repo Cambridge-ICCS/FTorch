@@ -133,8 +133,8 @@ jobs:
           cd build
           ctest --verbose --tests-regex cuda
 
-      - name: Run integration tests
+      - name: Run GPU-enabled integration tests
         run: |
           . ftorch/bin/activate
           cd build
-          ctest --verbose --tests-regex example
+          ctest --verbose --tests-regex example_multigpu
