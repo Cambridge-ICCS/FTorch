@@ -53,177 +53,62 @@ target_link_libraries(multigpu_infer_fortran PRIVATE FTorch::ftorch)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
-  if("${GPU_DEVICE}" STREQUAL "CUDA")
-    # 1a. Write the PyTorch model out with the CUDA device type and check it
-    #     runs on a CUDA device and its outputs meet expectations
-    add_test(NAME example_multigpu_simplenet
-             COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type cuda
-             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-
-    # 2a. Run the pt2ts script to convert the model file to TorchScript format
-    #     and run basic checks
-    add_test(
-      NAME example_multigpu_pt2ts
-      COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
-                    SimpleNet
-                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_cuda.pt
-                    --input_tensor_file
-                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_cuda.pt
-                    --output_model_file
-                    ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_cuda.pt
-                    --test)
-
-    # 3a. Check the model can be loaded from file and run on two CUDA devices in
-    # Python and that its outputs meet expectations
-    add_test(
-      NAME example_multigpu_multigpu_infer_python
-      COMMAND ${Python_EXECUTABLE}
-              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type cuda
-              --filepath ${PROJECT_BINARY_DIR}
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-
-    # 4a. Check the model can be loaded from file and run on two CUDA devices in
-    # Fortran and that its outputs meet expectations
-    add_test(
-      NAME example_multigpu_infer_fortran
-      COMMAND multigpu_infer_fortran cuda
-              ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_cuda.pt
-      # Command line arguments for device type and model file
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-    set_tests_properties(
-      example_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-      "MultiGPU example ran successfully")
+  # Map library build device option (GPU_DEVICE) to runtime strings used by
+  # Python/Fortran test drivers and to select the correct saved model filename.
+  #
+  # * Root CMake uses: NONE | CUDA | HIP | XPU | MPS
+  # * Python scripts expect lowercase: cpu | cuda | hip | xpu | mps
+  # * Fortran program expects corresponding enums, i.e., GPU_DEVICE_CODE
+  if("${GPU_DEVICE}" STREQUAL "")
+    set(GPU_DEVICE "NONE")
+    set(GPU_DEVICE_CODE "0")
+  endif()
+  if("${GPU_DEVICE}" STREQUAL "NONE")
+    set(DEVICE_LOW "cpu")
+  else()
+    string(TOLOWER "${GPU_DEVICE}" DEVICE_LOW)
   endif()
 
-  if("${GPU_DEVICE}" STREQUAL "HIP")
-    # 1b. Write the PyTorch model out with the HIP device type and check it
-    #     runs on a HIP device and its outputs meet expectations
-    add_test(NAME simplenet
-             COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type hip
-             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  # 1. Write the PyTorch model out with the specified device type and check it
+  #    runs on that device type and its outputs meet expectations
+  add_test(NAME example_multigpu_simplenet
+           COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
+                   --device_type ${DEVICE_LOW}
+           WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 2b. Run the pt2ts script to convert the model file to TorchScript format
-    #     and run basic checks
-    add_test(
-      NAME example_multigpu_pt2ts
-      COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
-                    SimpleNet
-                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_hip.pt
-                    --input_tensor_file
-                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_hip.pt
-                    --output_model_file
-                    ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_hip.pt
-                    --test)
+  # 2. Run the pt2ts script to convert the model file to TorchScript format
+  #    and run basic checks
+  add_test(
+    NAME example_multigpu_pt2ts
+    COMMAND
+    pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
+          SimpleNet
+          ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_${DEVICE_LOW}.pt
+          --input_tensor_file
+          ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_${DEVICE_LOW}.pt
+          --output_model_file
+          ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_${DEVICE_LOW}.pt
+          --test)
 
-    # 3b. Check the model can be loaded from file and run on two HIP devices in
-    # Python and that its outputs meet expectations
-    add_test(
-      NAME multigpu_infer_python
-      COMMAND ${Python_EXECUTABLE}
-              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type hip
-              --filepath ${PROJECT_BINARY_DIR}
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  # 3. Check the model can be loaded from file and run on the specified devices
+  #    in Python and that its outputs meet expectations
+  add_test(
+    NAME example_multigpu_multigpu_infer_python
+    COMMAND ${Python_EXECUTABLE}
+            ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py
+            --device_type ${DEVICE_LOW}
+            --filepath ${PROJECT_BINARY_DIR}
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-    # 4b. Check the model can be loaded from file and run on two HIP devices in
-    # Fortran and that its outputs meet expectations
-    add_test(
-      NAME multigpu_infer_fortran
-      COMMAND multigpu_infer_fortran hip
-              ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_hip.pt
-      # Command line arguments for device type and model file
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-    set_tests_properties(
-      multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-                                        "MultiGPU example ran successfully")
-  endif()
-
-  if("${GPU_DEVICE}" STREQUAL "XPU")
-    # 1c. Write the PyTorch model out with the XPU device type and check it
-    #     runs on a XPU device and its outputs meet expectations
-    add_test(NAME example_multigpu_simplenet
-             COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type xpu
-             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-
-    # 2c. Run the pt2ts script to convert the model file to TorchScript format
-    #     and run basic checks
-    add_test(
-      NAME example_multigpu_pt2ts
-      COMMAND pt2ts ${PROJECT_SOURCE_DIR}/simplenet.py
-                    SimpleNet
-                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_xpu.pt
-                    --input_tensor_file
-                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_xpu.pt
-                    --output_model_file
-                    ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_xpu.pt
-                    --test)
-
-    # 3c. Check the model can be loaded from file and run on two XPU devices in
-    # Python and that its outputs meet expectations
-    add_test(
-      NAME example_multigpu_infer_python
-      COMMAND ${Python_EXECUTABLE}
-              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type xpu
-              --filepath ${PROJECT_BINARY_DIR}
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-
-    # 4c. Check the model can be loaded from file and run on two XPU devices in
-    # Fortran and that its outputs meet expectations
-    add_test(
-      NAME example_multigpu_infer_fortran
-      COMMAND multigpu_infer_fortran xpu
-              ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_xpu.pt
-      # Command line arguments for device type and model file
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-    set_tests_properties(
-      example_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-      "MultiGPU example ran successfully")
-  endif()
-
-  if("${GPU_DEVICE}" STREQUAL "MPS")
-    # 1d. Write the PyTorch model out with the MPS device type and check it
-    #     runs on a MPS device and its outputs meet expectations
-    add_test(NAME example_multigpu_simplenet
-             COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
-                     --device_type mps
-             WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-
-    # 2d. Run the pt2ts script to convert the model file to TorchScript format
-    #     and run basic checks
-    add_test(
-      NAME example_multigpu_pt2ts
-      COMMAND pt2ts SimpleNet
-                    --model_definition_file
-                    ${PROJECT_SOURCE_DIR}/simplenet.py
-                    --input_model_file
-                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_model_mps.pt
-                    --input_tensor_file
-                    ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_mps.pt
-                    --output_model_file
-                    ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_mps.pt
-                    --test)
-
-    # 3d. Check the model can be loaded from file and run on one MPS device in
-    # Python and that its outputs meet expectations
-    add_test(
-      NAME example_multigpu_infer_python
-      COMMAND ${Python_EXECUTABLE}
-              ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py --device_type mps
-              --filepath ${PROJECT_BINARY_DIR}
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-
-    # 4d. Check the model can be loaded from file and run on one MPS device in
-    # Fortran and that its outputs meet expectations
-    add_test(
-      NAME example_multigpu_infer_fortran
-      COMMAND multigpu_infer_fortran mps
-              ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_mps.pt
-      # Command line arguments for device type and model file
-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-    set_tests_properties(
-      example_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-      "MultiGPU example ran successfully")
-  endif()
+  # 4. Check the model can be loaded from file and run on the specified devices
+  #    in Fortran and that its outputs meet expectations
+  add_test(
+    NAME example_multigpu_infer_fortran
+    COMMAND multigpu_infer_fortran ${DEVICE_LOW}
+            ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_${DEVICE_LOW}.pt
+    # Command line arguments for device type and model file
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_tests_properties(
+    example_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "MultiGPU example ran successfully")
 endif()
