@@ -72,11 +72,11 @@ jobs:
         shell: pwsh
         run: |
           .\ftorch\Scripts\Activate.ps1
-          rem Find Python executable in venv
+          # Find Python executable in venv
           $PYTHON_EXECUTABLE = python -c "import sys; print(sys.executable)"
-          rem Find torch location
+          # Find torch location
           $TORCH_PATH = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line.Split(':')[1].Trim() })
-          rem Set install location
+          # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           cmake `
             -Bbuild `
@@ -104,11 +104,11 @@ jobs:
         shell: pwsh
         run: |
           .\ftorch\Scripts\Activate.ps1
-          rem Find Python executable in venv
+          # Find Python executable in venv
           $TORCH_PATH = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line.Split(':')[1].Trim() })
-          rem Set install location
+          # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
-          rem Add FTorch and PyTorch to the path for the test executables
+          # Add FTorch and PyTorch to the path for the test executables
           $PATH = "$env:FTORCH_INSTALL_DIR\bin;$env:TORCH_PATH\torch\lib;$env:PATH"
           cd build
           ctest --verbose --tests-regex example_tensor
@@ -121,13 +121,13 @@ jobs:
         shell: pwsh
         run: |
           .\ftorch\Scripts\Activate.ps1
-          rem Find Python executable in venv
+          # Find Python executable in venv
           $PYTHON_EXECUTABLE = python -c "import sys; print(sys.executable)"
-          rem Find torch location
+          # Find torch location
           $TORCH_PATH = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line.Split(':')[1].Trim() })
-          rem Set install location
+          # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
-          rem Add FTorch and PyTorch to the path for the test executables
+          # Add FTorch and PyTorch to the path for the test executables
           $PATH = "$env:FTORCH_INSTALL_DIR\bin;$env:TORCH_PATH\torch\lib;$env:PATH"
           $EXAMPLE_BUILD_DIR = "examples\02_SimpleNet\build"
           if not exist $EXAMPLE_BUILD_DIR mkdir $EXAMPLE_BUILD_DIR
