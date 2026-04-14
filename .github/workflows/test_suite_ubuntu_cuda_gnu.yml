@@ -24,7 +24,7 @@ on:
       - 'examples/**/*.f90'
       # Build system
       - '**CMakeLists.txt'
-      - '**requirements.txt'
+      - 'pyproject.toml'
 
   pull_request:
     paths:
