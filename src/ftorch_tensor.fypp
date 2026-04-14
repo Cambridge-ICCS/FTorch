@@ -740,7 +740,7 @@ contains
   !> Overloads assignment operator for tensors.
   subroutine torch_tensor_assign(output, input)
     use, intrinsic :: iso_c_binding, only : c_associated
-    type(torch_tensor), intent(in) :: input      !! Tensor whose values are to be used
+    type(torch_tensor), intent(inout) :: input   !! Tensor whose values are to be used
     type(torch_tensor), intent(inout) :: output  !! Tensor to assign values to
 
     interface
@@ -761,6 +761,7 @@ contains
       stop 1
     end if
     call torch_tensor_assign_c(output%p, input%p)
+    call torch_tensor_delete(input)
   end subroutine torch_tensor_assign
 
   !> Overloads addition operator for two tensors.
