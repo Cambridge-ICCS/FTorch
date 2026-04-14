@@ -69,6 +69,13 @@ if(CMAKE_BUILD_TESTS)
     string(TOLOWER "${GPU_DEVICE}" DEVICE_LOW)
   endif()
 
+  # Only use multiple GPUs if the MULTI_GPU option is enabled
+  if("${MULTI_GPU}" STREQUAL "ON")
+    set(NUM_DEVICES 2)
+  else()
+    set(NUM_DEVICES 1)
+  endif()
+
   # 1. Write the PyTorch model out with the specified device type and check it
   #    runs on that device type and its outputs meet expectations
   add_test(NAME example_multigpu_simplenet
