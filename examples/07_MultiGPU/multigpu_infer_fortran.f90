@@ -37,26 +37,29 @@ program inference
    ! Flag for testing
    logical :: test_pass
 
-   ! Get device type as first command line argument and TorchScript model file as second command
-   ! line argument
+   ! Get TorchScript model file, device type, and number of devices as second command line arguments
    num_args = command_argument_count()
    allocate(args(num_args))
    do ix = 1, num_args
       call get_command_argument(ix,args(ix))
    end do
-   if (trim(args(1)) == "cuda") then
+   if (num_args < 3) then
+     write(*,*) "Usage: multigpu_infer_fortran <model_file> <device_type> <num_devices>"
+     stop 2
+   end if
+   if (trim(args(2)) == "cuda") then
       device_type = torch_kCUDA
-    else if (trim(args(1)) == "hip") then
+    else if (trim(args(2)) == "hip") then
       device_type = torch_kHIP
-   else if (trim(args(1)) == "xpu") then
+   else if (trim(args(2)) == "xpu") then
       device_type = torch_kXPU
-   else if (trim(args(1)) == "mps") then
+   else if (trim(args(2)) == "mps") then
       device_type = torch_kMPS
-      num_devices = 1
    else
       write (*,*) "Error :: invalid GPU device type ", trim(args(1))
       stop 999
    end if
+   read(args(3),"(i1)") num_devices
 
    do device_index = 0, num_devices-1
 
@@ -77,7 +80,7 @@ program inference
 
       ! Load ML model. Ensure that the same device type and device index are used
       ! as for the input data.
-      call torch_model_load(model, args(2), device_type, device_index=device_index)
+      call torch_model_load(model, args(1), device_type, device_index=device_index)
 
       ! Infer
       call torch_model_forward(model, in_tensors, out_tensors)
