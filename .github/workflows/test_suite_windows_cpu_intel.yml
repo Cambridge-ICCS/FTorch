@@ -65,51 +65,51 @@ jobs:
         run: |
           pip install --upgrade pip
           python -m venv ftorch
-          call ftorch\Scripts\activate
+          .\ftorch\Scripts\Activate.ps1
           pip install . --group test
 
       - name: Build FTorch
         shell: pwsh
         run: |
-          call ftorch\Scripts\activate
+          .\ftorch\Scripts\Activate.ps1
           rem Find Python executable in venv
-          for /f %%i in ('python -c "import sys; print(sys.executable)"') do set PYTHON_EXECUTABLE=%%i
+          $PYTHON_EXECUTABLE = python -c "import sys; print(sys.executable)"
           rem Find torch location
-          set TORCH_PATH=
-          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
+          $TORCH_PATH = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line.Split(':')[1].Trim() })
           rem Set install location
-          set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
-          cmake ^
-            -Bbuild ^
-            -G "NMake Makefiles" ^
-            -DPython_EXECUTABLE=%PYTHON_EXECUTABLE% ^
-            -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
-            -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" ^
-            -DCMAKE_PREFIX_PATH=%TORCH_PATH% ^
-            -DCMAKE_BUILD_TYPE=Release ^
-            -DCMAKE_Fortran_COMPILER=ifx ^
-            -DCMAKE_C_COMPILER=icx ^
-            -DCMAKE_CXX_COMPILER=icx ^
-            -DCMAKE_BUILD_TESTS=TRUE ^
-            -DCMAKE_INSTALL_PREFIX=%FTORCH_INSTALL_DIR%
+          $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
+          cmake `
+            -Bbuild `
+            -G "NMake Makefiles" `
+            -DPython_EXECUTABLE=$PYTHON_EXECUTABLE `
+            -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" `
+            -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" `
+            -DCMAKE_PREFIX_PATH=$TORCH_PATH `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_Fortran_COMPILER=ifx `
+            -DCMAKE_C_COMPILER=icx `
+            -DCMAKE_CXX_COMPILER=icx `
+            -DCMAKE_BUILD_TESTS=TRUE `
+            -DCMAKE_INSTALL_PREFIX=$FTORCH_INSTALL_DIR
           cmake --build build
           cmake --install build
 
       - name: Run Python unit tests
         shell: pwsh
         run: |
-          call ftorch\Scripts\activate
+          .\ftorch\Scripts\Activate.ps1
           pytest --verbose test/ftorch_utils
 
       - name: Integration tests
         shell: pwsh
         run: |
-          call ftorch\Scripts\activate
-          set TORCH_PATH=
-          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
-          set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
-          set PATH=%FTORCH_INSTALL_DIR%\bin;%PATH%
-          set PATH=%TORCH_PATH%\torch\lib;%PATH%
+          .\ftorch\Scripts\Activate.ps1
+          rem Find Python executable in venv
+          $TORCH_PATH = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line.Split(':')[1].Trim() })
+          rem Set install location
+          $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
+          rem Add FTorch and PyTorch to the path for the test executables
+          $PATH = "$env:FTORCH_INSTALL_DIR\bin;$env:TORCH_PATH\torch\lib;$env:PATH"
           cd build
           ctest --verbose --tests-regex example_tensor
           ctest --verbose --tests-regex example_simplenet
@@ -120,23 +120,25 @@ jobs:
       - name: Standalone SimpleNet example
         shell: pwsh
         run: |
-          call ftorch\Scripts\activate
-          for /f %%i in ('python -c "import sys; print(sys.executable)"') do set PYTHON_EXECUTABLE=%%i
-          set TORCH_PATH=
-          for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set TORCH_PATH=%%i
-          set FTORCH_INSTALL_DIR=%TEMP%\ftorch-install
-          set PATH=%FTORCH_INSTALL_DIR%\bin;%PATH%
-          set PATH=%TORCH_PATH%\torch\lib;%PATH%
-          set EXAMPLE_BUILD_DIR=examples\02_SimpleNet\build
-          if not exist %EXAMPLE_BUILD_DIR% mkdir %EXAMPLE_BUILD_DIR%
-          cd %EXAMPLE_BUILD_DIR%
-          cmake .. ^
-            -G "NMake Makefiles" ^
-            -DCMAKE_Fortran_COMPILER=ifx ^
-            -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
-            -DPython_EXECUTABLE=%PYTHON_EXECUTABLE% ^
-            -DCMAKE_BUILD_TYPE=Release ^
-            -DCMAKE_PREFIX_PATH=%FTORCH_INSTALL_DIR%;%TORCH_PATH% ^
+          .\ftorch\Scripts\Activate.ps1
+          rem Find Python executable in venv
+          $PYTHON_EXECUTABLE = python -c "import sys; print(sys.executable)"
+          rem Find torch location
+          $TORCH_PATH = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line.Split(':')[1].Trim() })
+          rem Set install location
+          $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
+          rem Add FTorch and PyTorch to the path for the test executables
+          $PATH = "$env:FTORCH_INSTALL_DIR\bin;$env:TORCH_PATH\torch\lib;$env:PATH"
+          $EXAMPLE_BUILD_DIR = "examples\02_SimpleNet\build"
+          if not exist $EXAMPLE_BUILD_DIR mkdir $EXAMPLE_BUILD_DIR
+          cd $EXAMPLE_BUILD_DIR
+          cmake .. `
+            -G "NMake Makefiles" `
+            -DCMAKE_Fortran_COMPILER=ifx `
+            -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" `
+            -DPython_EXECUTABLE=%PYTHON_EXECUTABLE% `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_PREFIX_PATH=%FTORCH_INSTALL_DIR%;%TORCH_PATH% `
             -DCMAKE_BUILD_TESTS=TRUE
           cmake --build .
           ctest -V
