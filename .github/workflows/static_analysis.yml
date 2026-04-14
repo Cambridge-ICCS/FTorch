@@ -116,7 +116,7 @@ jobs:
       # Configurable using the .clang-format and .clang-tidy config files if present
       - name: clang source
         if: always()
-        uses: cpp-linter/cpp-linter-action@b7fbdde0f6776f478f4d8867c2b746077fa7ea89 # v2
+        uses: cpp-linter/cpp-linter-action@77c390c5ba9c947ebc185a3e49cc754f1558abb5 # v2.18.0
         id: linter
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

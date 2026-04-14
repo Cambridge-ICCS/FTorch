@@ -42,7 +42,8 @@ jobs:
 
     steps:
       # configure windows VM with intel compilers
-      - uses: fortran-lang/setup-fortran@d2ba6ea44297a24407def2f6e117954d844a5368 # v1
+      - name: Setup Fortran
+        uses: fortran-lang/setup-fortran@2a1b9c55897d827a9dfeb114408f3615e53b2b72 # v1.9.0
         id: setup-fortran
         with:
           compiler: ${{ matrix.toolchain.compiler }}
@@ -55,7 +56,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Setup Python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
 
