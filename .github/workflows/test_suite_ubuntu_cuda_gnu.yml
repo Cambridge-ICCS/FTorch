@@ -84,10 +84,10 @@ jobs:
           sudo apt update
           sudo apt install -y cmake nvidia-cuda-toolkit
 
-        # Currently used by example_mpi
-      - name: Install an MPI distribution
+      - name: Run GPU-enabled Python unit tests
         run: |
-          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
+          . ftorch/bin/activate
+          pytest --verbose test/ftorch_utils -k cuda
 
       - name: Install pFUnit
         run: |
@@ -126,11 +126,6 @@ jobs:
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
           cmake --build .
           cmake --install .
-
-      - name: Run GPU-enabled Python unit tests
-        run: |
-          . ftorch/bin/activate
-          pytest --verbose test/ftorch_utils -k cuda
 
       - name: Run GPU-enabled Fortran unit tests
         run: |
