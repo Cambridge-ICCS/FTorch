@@ -79,15 +79,15 @@ jobs:
           # Check this is <= what GPU-runner has installed (backwards compatible)
           pip install . --extra-index-url https://download.pytorch.org/whl/cu129 --group test
 
-      - name: Install cmake and NVIDIA dev toolkit
-        run: |
-          sudo apt update
-          sudo apt install -y cmake nvidia-cuda-toolkit
-
       - name: Run GPU-enabled Python unit tests
         run: |
           . ftorch/bin/activate
           pytest --verbose test/ftorch_utils -k cuda
+
+      - name: Install cmake, NVIDIA dev toolkit, and GNU Fortran compiler
+        run: |
+          sudo apt update
+          sudo apt install -y cmake nvidia-cuda-toolkit gfortran
 
       - name: Install pFUnit
         run: |
