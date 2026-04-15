@@ -182,8 +182,8 @@ class TestValidateDeviceTypes:
         if torch.cuda.device_count() == 0:
             pytest.skip("No CUDA devices available, skipping test.")
         expected = (
-            "The model is on a different device from input tensor 0 ('cpu' vs."
-            " 'cuda:0'). Ensure they are on the same device and try again."
+            "The model is on a different device from input tensor 0 ('cpu' vs. 'cuda')."
+            " Ensure they are on the same device and try again."
         )
         with pytest.raises(RuntimeError, match=expected):
             validate_device_types(
@@ -196,8 +196,8 @@ class TestValidateDeviceTypes:
         if torch.cuda.device_count() == 0:
             pytest.skip("No CUDA devices available, skipping test.")
         expected = (
-            "The model has parameters on different devices ('cpu' vs. 'cuda:0')."
-            " Ensure all model parameters are on the same device and try again."
+            "The model has parameters on different devices ('cpu' vs. 'cuda'). Ensure"
+            " all model parameters are on the same device and try again."
         )
         model = torch.nn.Sequential(
             torch.nn.Linear(2, 2).to("cpu"),
