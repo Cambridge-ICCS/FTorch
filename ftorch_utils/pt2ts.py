@@ -14,6 +14,7 @@ from ftorch_utils.torchscript import (
     trace_to_torchscript,
 )
 from ftorch_utils.validation import (
+    validate_device_types,
     validate_file_exists,
     validate_input_model_file,
     validate_input_tensor_file,
@@ -142,6 +143,7 @@ def main_cli():
 
     if test:
         validate_file_exists(output_model_file, "Saved TorchScript output model")
+        validate_device_types(model, input_tensors)
 
         # Propagate the input tensor through the PyTorch model
         # If something isn't working then this will generate an error

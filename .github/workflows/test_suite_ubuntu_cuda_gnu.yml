@@ -127,7 +127,12 @@ jobs:
           cmake --build .
           cmake --install .
 
-      - name: Run unit tests
+      - name: Run GPU-enabled Python unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/ftorch_utils -k cuda
+
+      - name: Run GPU-enabled Fortran unit tests
         run: |
           . ftorch/bin/activate
           cd build
