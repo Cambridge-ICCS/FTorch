@@ -78,7 +78,7 @@ if(CMAKE_BUILD_TESTS)
 
   # 1. Write the PyTorch model out with the specified device type and check it
   #    runs on that device type and its outputs meet expectations
-  add_test(NAME example_multigpu_simplenet
+  add_test(NAME example_multigpu_simplenet_${DEVICE_LOW}
            COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/simplenet.py
                    --device_type ${DEVICE_LOW}
            WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
@@ -86,7 +86,7 @@ if(CMAKE_BUILD_TESTS)
   # 2. Run the pt2ts script to convert the model file to TorchScript format
   #    and run basic checks
   add_test(
-    NAME example_multigpu_pt2ts
+    NAME example_multigpu_pt2ts_${DEVICE_LOW}
     COMMAND
     pt2ts SimpleNet
           --model_definition_file
@@ -102,7 +102,7 @@ if(CMAKE_BUILD_TESTS)
   # 3. Check the model can be loaded from file and run on the specified devices
   #    in Python and that its outputs meet expectations
   add_test(
-    NAME example_multigpu_infer_python
+    NAME example_multigpu_infer_python_${DEVICE_LOW}
     COMMAND ${Python_EXECUTABLE}
             ${PROJECT_SOURCE_DIR}/multigpu_infer_python.py
             --device_type ${DEVICE_LOW}
@@ -112,7 +112,7 @@ if(CMAKE_BUILD_TESTS)
   # 4. Check the model can be loaded from file and run on the specified devices
   #    in Fortran and that its outputs meet expectations
   add_test(
-    NAME example_multigpu_infer_fortran
+    NAME example_multigpu_infer_fortran_${DEVICE_LOW}
     COMMAND multigpu_infer_fortran ${DEVICE_LOW}
             ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_${DEVICE_LOW}.pt
     # Command line arguments for device type and model file
