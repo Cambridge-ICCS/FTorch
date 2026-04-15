@@ -3,7 +3,15 @@ cmake_minimum_required(VERSION 3.18...3.31)
 # target_sources is run
 cmake_policy(SET CMP0076 NEW)
 
-set(PROJECT_NAME TensorExample)
+if ("${TEST}" STREQUAL "NONE")
+  set(prefix "example")
+  set(name "example")
+else()
+  set(prefix "integrationtest")
+  set(name "integration test")
+endif()
+
+set(PROJECT_NAME TensorIntegrationTest)
 
 project(${PROJECT_NAME} LANGUAGES Fortran)
 
@@ -21,20 +29,20 @@ else()
 endif()
 message(STATUS "Building with Fortran PyTorch coupling")
 
-# Fortran example
-add_executable(example_tensor_manipulation tensor_manipulation.f90)
-target_link_libraries(example_tensor_manipulation PRIVATE FTorch::ftorch)
+# Fortran integration test
+add_executable(${prefix}_tensor_manipulation tensor_manipulation.f90)
+target_link_libraries(${prefix}_tensor_manipulation PRIVATE FTorch::ftorch)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
-  # 1. Check the Fortran example runs and its outputs meet expectations
+  # 1. Check the Fortran integration test runs and its outputs meet expectations
   add_test(
-    NAME example_tensor_manipulation
-    COMMAND example_tensor_manipulation
+    NAME ${prefix}_tensor_manipulation
+    COMMAND ${prefix}_tensor_manipulation
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_tensor_manipulation
+  set_tests_properties(${prefix}_tensor_manipulation
                        PROPERTIES PASS_REGULAR_EXPRESSION
-                       "Tensor manipulation example ran successfully")
+                       "Tensor manipulation ${name} ran successfully")
 endif()

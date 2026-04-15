@@ -219,14 +219,9 @@ if(CMAKE_BUILD_TESTS)
 
   # Enable CTest
   enable_testing()
+  add_subdirectory(test)
 
-  # Unit tests
-  # NOTE: We do not currently support unit testing on Windows
-  if(UNIX)
-    add_subdirectory(test/unit)
-  endif()
-
-  # Integration tests
+  # Examples
   add_subdirectory(examples)
 endif()
 
