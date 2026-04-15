@@ -85,7 +85,7 @@
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
               <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
-              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: April 2026</li>
           </ul>
         </div>
         <div class="col">
@@ -176,26 +176,92 @@ resources. The following additional dependencies are also required:</p>
 directory (see the <a href="https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/use-the-setvars-script-with-windows.html">Intel
 docs</a>)
 for more details.</p>
-<p>From <code>cmd</code> this can be done with:</p>
+<p>From PowerShell this can be done with:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
+</code></pre></div>
+
+<p>If you are using the legacy <code>cmd</code> shell, instead use</p>
 <div class="codehilite"><pre><span></span><code><span class="n">call</span><span class="w"> </span><span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
 </code></pre></div>
 
 <p>FTorch can then be built according to the <a href="general.html">regular CMake instructions</a>,
 with the addition of <code>-G "NMake Makefiles"</code>.</p>
-<p>So the basic command to build from <code>cmd</code> becomes:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\&lt;path-to-libtorch-download&gt;\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
-<span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">build</span><span class="w"> </span><span class="o">.</span>
-<span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">install</span><span class="w"> </span><span class="o">.</span>
+<p>So the basic command to build (with either PowerShell or <code>cmd</code>) becomes:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">cmake</span> <span class="n">-G</span> <span class="s2">&quot;NMake Makefiles&quot;</span> <span class="n">-DCMAKE_PREFIX_PATH</span><span class="p">=</span><span class="s2">&quot;C:\Users\&lt;path-to-libtorch-download&gt;\libtorch&quot;</span> <span class="n">-DCMAKE_BUILD_TYPE</span><span class="p">=</span><span class="n">Release</span> <span class="p">..</span>
+<span class="n">cmake</span> <span class="p">-</span><span class="n">-build</span> <span class="p">.</span>
+<span class="n">cmake</span> <span class="p">-</span><span class="n">-install</span> <span class="p">.</span>
 </code></pre></div>
 
 <blockquote>
 <p>Note: <em>In a Windows environment administrator privileges are required for the default install location.</em></p>
 </blockquote>
-<p>The following is an example <code>cmd</code> script that installs FTorch and runs the integration tests. It assumes you have already
-installed CMake, git, the Intel compilers, and Visual Studio. There are a few
-places where output is turned on or off using the <code>ECHO</code> command. If you are
-experiencing issues with the install then it may be helpful to set <code>ECHO ON</code>
-throughout.</p>
+<p>The following is an example PowerShell script that installs FTorch and runs the integration tests. It assumes you have already installed CMake, git, the Intel
+compilers, and Visual Studio.</p>
+<div class="codehilite"><pre><span></span><code><span class="c"># Load intel compilers</span>
+<span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
+
+<span class="c"># Download ftorch</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">Cambridge-ICCS</span><span class="p">/</span><span class="n">FTorch</span><span class="p">.</span><span class="n">git</span>
+<span class="nb">cd </span><span class="n">FTorch</span>
+
+<span class="c"># Make virtual environment</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">ftorch</span>
+
+<span class="c"># Activate the virtual environment</span>
+<span class="p">.\</span><span class="n">ftorch</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Activate</span><span class="p">.</span><span class="n">ps1</span>
+
+<span class="c"># Install dependencies (--extra-index-url not required on Windows)</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="p">.</span><span class="no">[examples]</span>
+
+<span class="c"># Find torch location</span>
+<span class="nv">$Torch_DIR</span> <span class="p">=</span> <span class="p">(</span><span class="n">pip</span> <span class="n">show</span> <span class="n">torch</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s2">&quot;^Location&quot;</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Line</span> <span class="o">-replace</span> <span class="s2">&quot;^Location:\s*&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span> <span class="p">})</span>
+
+<span class="c"># Run CMake to generate build scripts</span>
+<span class="c"># (Update CMAKE_PREFIX_PATH depending on location of ftorch venv)</span>
+<span class="n">cmake</span> <span class="p">`</span>
+  <span class="n">-Bbuild</span> <span class="p">`</span>
+  <span class="n">-G</span> <span class="s2">&quot;NMake Makefiles&quot;</span> <span class="p">`</span>
+  <span class="n">-DPython_EXECUTABLE</span><span class="p">=</span><span class="s2">&quot;$PYTHON_EXECUTABLE&quot;</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_Fortran_FLAGS</span><span class="p">=</span><span class="s2">&quot;/fpscomp:logicals&quot;</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_CXX_FLAGS</span><span class="p">=</span><span class="s2">&quot;/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH&quot;</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_PREFIX_PATH</span><span class="p">=</span><span class="s2">&quot;$Torch_DIR\torch&quot;</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_BUILD_TYPE</span><span class="p">=</span><span class="n">Release</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_Fortran_COMPILER</span><span class="p">=</span><span class="n">ifx</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_C_COMPILER</span><span class="p">=</span><span class="n">icx</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_CXX_COMPILER</span><span class="p">=</span><span class="n">icx</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_BUILD_TESTS</span><span class="p">=</span><span class="n">TRUE</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_INSTALL_PREFIX</span><span class="p">=</span><span class="s2">&quot;$FTORCH_INSTALL_DIR&quot;</span>
+
+<span class="c"># Build and install FTorch</span>
+<span class="n">cmake</span> <span class="p">-</span><span class="n">-build</span> <span class="n">build</span>
+<span class="n">cmake</span> <span class="p">-</span><span class="n">-install</span> <span class="n">build</span>
+
+<span class="c"># Add FTorch and PyTorch libs to path</span>
+<span class="c"># (Update the first one depending on where you installed FTorch)</span>
+<span class="nv">$env:PATH</span> <span class="p">=</span> <span class="s2">&quot;$FTORCH_INSTALL_DIR\bin;$Torch_DIR\torch\lib;$env:PATH&quot;</span>
+
+<span class="c"># Run integration tests</span>
+<span class="nb">cd </span><span class="n">build</span>
+<span class="n">ctest</span> <span class="p">-</span><span class="n">-verbose</span> <span class="p">-</span><span class="n">-tests</span><span class="o">-regex</span> <span class="n">example_tensor</span>
+<span class="n">ctest</span> <span class="p">-</span><span class="n">-verbose</span> <span class="p">-</span><span class="n">-tests</span><span class="o">-regex</span> <span class="n">example_simplenet</span>
+<span class="n">ctest</span> <span class="p">-</span><span class="n">-verbose</span> <span class="p">-</span><span class="n">-tests</span><span class="o">-regex</span> <span class="n">example_resnet</span>
+<span class="n">ctest</span> <span class="p">-</span><span class="n">-verbose</span> <span class="p">-</span><span class="n">-tests</span><span class="o">-regex</span> <span class="n">example_multiio</span>
+<span class="n">ctest</span> <span class="p">-</span><span class="n">-verbose</span> <span class="p">-</span><span class="n">-tests</span><span class="o">-regex</span> <span class="n">example_autograd</span>
+</code></pre></div>
+
+<p>Here the <code>/fpscomp:logicals</code> flag is used to ensure Fortran logicals are
+compatible with those used by PyTorch. The
+<code>/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH</code> flag is used to suppress warnings
+related to mismatched compiler versions between the Intel compilers and
+those used to build LibTorch.</p>
+<p>We recommend Windows users review the Windows continuous integration workflow
+(<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_windows_cpu_intel.yml"><code>.github/workflows/test_suite_windows_cpu_intel.yml</code></a>)
+for more information, as this provides another example of how to build and run
+FTorch and its integration tests.</p>
+<p>If you are using the legacy <code>cmd</code> shell then the following script can be used
+instead to build and run the tests. There are a few places where output is
+turned on or off using the <code>ECHO</code> command. If you are experiencing issues
+with the install then it may be helpful to set <code>ECHO ON</code> throughout.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">rem</span><span class="w"> </span><span class="n">Disable</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">now</span>
 <span class="n">ECHO</span><span class="w"> </span><span class="n">OFF</span>
 
@@ -249,28 +315,13 @@ throughout.</p>
 
 <span class="n">rem</span><span class="w"> </span><span class="n">Run</span><span class="w"> </span><span class="n">integration</span><span class="w"> </span><span class="n">tests</span>
 <span class="n">ECHO</span><span class="w"> </span><span class="n">ON</span>
+<span class="n">cd</span><span class="w"> </span><span class="n">build</span>
 <span class="n">ctest</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="o">--</span><span class="n">tests</span><span class="o">-</span><span class="n">regex</span><span class="w"> </span><span class="n">example1</span>
 <span class="n">ctest</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="o">--</span><span class="n">tests</span><span class="o">-</span><span class="n">regex</span><span class="w"> </span><span class="n">example2</span>
 <span class="n">ctest</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="o">--</span><span class="n">tests</span><span class="o">-</span><span class="n">regex</span><span class="w"> </span><span class="n">example3</span>
 <span class="n">ctest</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="o">--</span><span class="n">tests</span><span class="o">-</span><span class="n">regex</span><span class="w"> </span><span class="n">example4</span>
 <span class="n">ctest</span><span class="w"> </span><span class="o">--</span><span class="n">verbose</span><span class="w"> </span><span class="o">--</span><span class="n">tests</span><span class="o">-</span><span class="n">regex</span><span class="w"> </span><span class="n">example8</span>
 <span class="k">if</span><span class="w"> </span><span class="o">%</span><span class="n">errorlevel</span><span class="o">%</span><span class="w"> </span><span class="n">neq</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">exit</span><span class="w"> </span><span class="o">/</span><span class="n">b</span><span class="w"> </span><span class="o">%</span><span class="n">errorlevel</span><span class="o">%</span>
-</code></pre></div>
-
-<p>Here the <code>/fpscomp:logicals</code> flag is used to ensure Fortran logicals are
-compatible with those used by PyTorch. The
-<code>/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH</code> flag is used to suppress warnings
-related to mismatched compiler versions between the Intel compilers and
-those used to build LibTorch.</p>
-<p>We recommend Windows users review the Windows continuous integration workflow
-(<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_windows_cpu_intel.yml"><code>.github/workflows/test_suite_windows_cpu_intel.yml</code></a>)
-for more information, as this provides another example of how to build and run
-FTorch and its integration tests.</p>
-<p>If using powershell the setvars and build commands become:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">cmd</span><span class="w"> </span><span class="o">/</span><span class="n">k</span><span class="w"> </span><span class="s1">&#39;&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot; &amp;&amp; powershell&#39;</span>
-<span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;C:\Users\&lt;path-to-libtorch-download&gt;\libtorch&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">..</span>
-<span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">build</span><span class="w"> </span><span class="o">.</span>
-<span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">install</span><span class="w"> </span><span class="o">.</span>
 </code></pre></div>
 
 <h3 id="macos-apple-silicon">MacOS (Apple Silicon)</h3>
