@@ -143,6 +143,10 @@ def main_cli():
 
     if test:
         validate_file_exists(output_model_file, "Saved TorchScript output model")
+
+        # Transfer model to the same device as the input tensor
+        # TODO: Separate checks in validate_device_types
+        model = model.to(input_tensors[0].device)
         validate_device_types(model, input_tensors)
 
         # Propagate the input tensor through the PyTorch model
