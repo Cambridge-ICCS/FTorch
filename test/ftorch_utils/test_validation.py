@@ -1,6 +1,7 @@
 """Unit tests for validation module."""
 
 import os
+import re
 import warnings
 
 import pytest
@@ -185,7 +186,7 @@ class TestValidateDeviceTypes:
             "The model is on a different device from input tensor 0 ('cpu' vs. 'cuda')."
             " Ensure they are on the same device and try again."
         )
-        with pytest.raises(RuntimeError, match=expected):
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
             validate_device_types(
                 torch.nn.Linear(2, 2).to("cpu"),
                 torch.tensor([1.0, 2.0, 3.0]).to("cuda"),
@@ -203,5 +204,5 @@ class TestValidateDeviceTypes:
             torch.nn.Linear(2, 2).to("cpu"),
             torch.nn.Linear(2, 2).to("cuda"),
         )
-        with pytest.raises(RuntimeError, match=expected):
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
             validate_device_types(model, None)
