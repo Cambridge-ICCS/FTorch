@@ -22,7 +22,7 @@ endif()
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Fortran example
-add_executable(tensor_manipulation tensor_manipulation.f90)
+add_executable(tensor_manipulation app/main.f90)
 target_link_libraries(tensor_manipulation PRIVATE FTorch::ftorch)
 
 # Integration testing
