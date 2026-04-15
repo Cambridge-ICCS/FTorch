@@ -17,6 +17,9 @@ on:
       - 'src/*.c'
       - 'src/*.cpp'
       - 'src/*.h'
+      # Unit tests
+      - 'test/unit/**/*.pf'
+      - 'test/ftorch_utils/*.py'
       # Specific integration tests
       - 'examples/07_MultiGPU/*.py'
       - 'examples/07_MultiGPU/*.f90'
