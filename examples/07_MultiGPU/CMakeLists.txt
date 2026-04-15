@@ -118,6 +118,6 @@ if(CMAKE_BUILD_TESTS)
     # Command line arguments for device type and model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
-    example_multigpu_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-    "MultiGPU example ran successfully")
+    example_multigpu_infer_fortran_${DEVICE_LOW}
+    PROPERTIES PASS_REGULAR_EXPRESSION "MultiGPU example ran successfully")
 endif()
