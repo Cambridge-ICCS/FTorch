@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     # Propagate the input tensor through the model
     print(
-        f"SimpleNet forward pass on {device_type.capitalize()} device"
+        f"SimpleNet forward pass on {device_type.upper()} device"
         f" {input_tensor.get_device()}"
     )
     with torch.no_grad():
@@ -79,6 +79,7 @@ if __name__ == "__main__":
     print(f"Model output: {output_tensor}")
 
     # Perform a basic check of the model output
+    input_tensor = input_tensor.to("cpu")
     if not torch.allclose(output_tensor, 2 * input_tensor):
         result_error = (
             f"result:\n{output_tensor}\ndoes not match expected value:\n"
