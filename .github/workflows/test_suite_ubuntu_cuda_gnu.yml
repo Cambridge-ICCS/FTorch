@@ -87,10 +87,10 @@ jobs:
           . ftorch/bin/activate
           pytest --verbose test/ftorch_utils -k cuda
 
-      - name: Install cmake, NVIDIA dev toolkit, and an MPI distribution
+      - name: Install cmake, NVIDIA dev toolkit, a Fortran compiler, and dependencies of pFUnit
         run: |
           sudo apt update
-          sudo apt install -y cmake nvidia-cuda-toolkit openmpi-bin openmpi-common libopenmpi-dev
+          sudo apt install -y cmake nvidia-cuda-toolkit gfortran m4
 
       - name: Install pFUnit
         run: |
