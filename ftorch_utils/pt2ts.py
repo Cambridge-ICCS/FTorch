@@ -44,8 +44,8 @@ def parse_user_input():
         "--model_definition_file",
         help=(
             "Filename for the definition of the PyTorch model, including path. If not"
-            " provided, an attempt will be made to load the model from TorchVision's"
-            " pre-trained models."
+            " provided, an attempt will be made to load a model matching the model_name"
+            " from TorchVision's pre-trained models."
         ),
         type=str,
     )
