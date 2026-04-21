@@ -20,6 +20,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 - Changed process for saving TorchScript models
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
+- Extended `pt2ts` to account for pre-trained torchvision models, weights, and
+  precision
+  [#565](https://github.com/Cambridge-ICCS/FTorch/pull/565)
 - Provide worked example and documentation on differentiating through calls to
   `torch_model_forward`.
   [#486](https://github.com/Cambridge-ICCS/FTorch/pull/486)
