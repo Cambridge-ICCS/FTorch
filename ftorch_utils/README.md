@@ -43,7 +43,8 @@ accepts several command line arguments:
 * `--trace`, which allows you to switch from scripting to tracing.
 * `--test`, which allows you to run basic tests to check things are working as
   expected.
-* `--precision`, which specifies the working precision.
+* `--precision`, which specifies the working precision for the model and all
+  PyTorch operations, e.g., 'float32'.
 * `--model_weights`, which allows customisation of model weights for pre-trained
   models or locally defined models whose `__init__` method accepts a
   `model_weights` keyword argument.

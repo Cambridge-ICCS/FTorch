@@ -99,7 +99,10 @@ def parse_user_input():
     )
     parser.add_argument(
         "--precision",
-        help="Set the working precision of the model.",
+        help=(
+            "Set the working precision for the model and all PyTorch operations, e.g.,"
+            " 'float32'."
+        ),
         type=str,
         default="float32",
     )
