@@ -31,15 +31,14 @@ accepts several command line arguments:
 * `model_name <model_name>`, which is required to specify the name of the model
   class (e.g. `SimpleNet`). This can also be used to load pre-trained models
   from TorchVision by providing the name used in `torchvision.models`.
-* `--model_definition_file </path/to/model/def>`, which specifies the path of
-  the local file in which a PyTorch model is defined. (Not required for
+* `--model_definition_file </path/to/model/def>`, which specifies the file name
+  for a local PyTorch model definition (including its path). (Not required for
   pre-trained models.)
-* `--input_model_file </path/to/saved/model>`, which specifies the path to the
-  directory in which a local PyTorch model is saved. (Not required for
-  pre-trained models.)
-* `--output_model_file </path/to/save/model>`, which specifies the path to the
-  directory in which the TorchScript model should be saved. (Defaults to match
-  input model file.)
+* `--input_model_file </path/to/saved/model>`, which specifies the file name of
+  a local PyTorch model file (including its path). (Not required for pre-trained
+  models.)
+* `--output_model_file </path/to/save/model>`, which specifies the file name of
+  the TorchScript model to be written out (including its path).
 * `--trace`, which allows you to switch from scripting to tracing.
 * `--test`, which allows you to run basic tests to check things are working as
   expected.
@@ -49,5 +48,5 @@ accepts several command line arguments:
   models or locally defined models whose `__init__` method accepts a
   `model_weights` keyword argument.
 * `--input_tensor_file </path/to/saved/tensor>`, which is required (if `--trace`
-  or `--test` was passed) to specify the path to the directory in which a
-  PyTorch tensor of appropriate input dimensions is saved.
+  or `--test` was passed) to specify the file name of a local PyTorch tensor of
+  appropriate input dimensions (including its path).
