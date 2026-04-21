@@ -116,16 +116,10 @@ if __name__ == "__main__":
         choices=["cpu", "cuda", "hip", "xpu", "mps"],
         default="cpu",
     )
-    parser.add_argument(
-        "--data_dir",
-        help="Path to the directory containing the input data",
-        type=str,
-        default=os.path.join(os.path.dirname(__file__), "data"),
-    )
     parsed_args = parser.parse_args()
     parsed_args = parser.parse_args()
     device_type = parsed_args.device_type
-    data_dir = parsed_args.data_dir
+    data_dir = os.path.join(os.path.dirname(__file__), "data")
 
     # Specify working precision
     np_precision = np.float32

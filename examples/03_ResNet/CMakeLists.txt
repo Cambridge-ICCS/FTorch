@@ -40,7 +40,6 @@ if(CMAKE_BUILD_TESTS)
   add_test(
     NAME example_resnet_resnet18
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/resnet18.py
-            --data_dir ${PROJECT_SOURCE_DIR}/data
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
   # 2. Run the pt2ts script to convert the model file to TorchScript format
