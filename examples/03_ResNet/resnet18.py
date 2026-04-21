@@ -13,8 +13,8 @@ def initialize(precision: torch.dtype) -> torch.nn.Module:
     """
     Download pre-trained ResNet-18 model and prepare for inference.
 
-    These steps duplicate the process for loading pre-trained models in the pt2ts
-    script.
+    NOTE: These steps duplicate the process for loading pre-trained models in the pt2ts
+    script and are provided here for testing.
 
     Parameters
     ----------
