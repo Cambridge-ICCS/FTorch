@@ -171,7 +171,7 @@ class TestValidateModelDeviceTypes:
             torch.nn.Linear(2, 2).to("cuda"),
         )
         with pytest.raises(RuntimeError, match=re.escape(expected)):
-            validate_model_device_types(model, None)
+            validate_model_device_types(model)
 
 
 class TestValidateDeviceTypes:

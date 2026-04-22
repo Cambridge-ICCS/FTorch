@@ -128,7 +128,7 @@ def validate_output_tensors(expected_tensor, result_tensor):
             raise RuntimeError(model_error)
 
 
-def validate_model_device_types(model, input_tensors):
+def validate_model_device_types(model):
     """Check the model parameters are on the same device type.
 
     Parameters
