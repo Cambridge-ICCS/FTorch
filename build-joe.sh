@@ -35,10 +35,8 @@ pip install -q -e . --extra-index-url https://download.pytorch.org/whl/cpu
 #   exit 1
 # fi
 
-# Set the build directory
-BUILD_DIR="$(pwd)/build"
-
 # Parse command line arguments
+BUILD_DIR="$(pwd)/build"
 BUILD_TYPE=Release
 FRESH_BUILD=false
 FPM_BUILD=false
