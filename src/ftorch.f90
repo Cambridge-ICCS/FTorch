@@ -44,6 +44,7 @@ module ftorch
                           torch_model_delete, &  !-------------- (destructor)
                           torch_model_print_parameters, &  !---- (interrogation)
                           torch_model_is_training, &
+                          torch_model_get_parameters, &
                           torch_model_forward  !---------------- (procedures)
 
   use ftorch_optim, only: torch_optim, &  !--------------------- (type)

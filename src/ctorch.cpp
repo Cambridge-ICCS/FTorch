@@ -792,6 +792,22 @@ bool torch_jit_module_is_training(const torch_jit_script_module_t module) {
   return m->is_training();
 }
 
+void torch_jit_module_parameters(const torch_jit_script_module_t module,
+                                 torch_tensor_t *outputs, const int nout) {
+  // Cast the pointers we recieved in to Tensor objects
+  auto model = static_cast<torch::jit::script::Module *>(module);
+  auto out = reinterpret_cast<torch::Tensor **>(outputs);
+  auto parameters = model->parameters();
+  if (parameters.size() != nout) {
+    ctorch_error("Number of parameters does not match output dimension");
+  }
+  int i = 0;
+  for (auto parameter : parameters) {
+    std::move(*out[i]) = parameter;
+    i++;
+  }
+}
+
 void torch_jit_module_delete(torch_jit_script_module_t module) {
   auto m = reinterpret_cast<torch::jit::script::Module *>(module);
   delete m;
