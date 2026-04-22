@@ -20,7 +20,7 @@ class SimpleNet(nn.Module):
         self._fwd_seq = nn.Sequential(
             nn.Linear(5, 5, bias=False),
         )
-        with torch.inference_mode():
+        with torch.no_grad():
             self._fwd_seq[0].weight = nn.Parameter(2.0 * torch.eye(5))
 
     def forward(self, batch: torch.Tensor) -> torch.Tensor:
@@ -71,14 +71,15 @@ if __name__ == "__main__":
 
     # Propagate the input tensor through the model
     print(
-        f"SimpleNet forward pass on {device_type.capitalize()} device"
-        f" {input_tensor_gpu.get_device()}"
+        f"SimpleNet forward pass on {device_type.upper()} device"
+        f" {input_tensor.get_device()}"
     )
-    with torch.inference_mode():
+    with torch.no_grad():
         output_tensor = model(input_tensor).to("cpu")
     print(f"Model output: {output_tensor}")
 
     # Perform a basic check of the model output
+    input_tensor = input_tensor.to("cpu")
     if not torch.allclose(output_tensor, 2 * input_tensor):
         result_error = (
             f"result:\n{output_tensor}\ndoes not match expected value:\n"

@@ -8,7 +8,7 @@ if(CMAKE_BUILD_TESTS)
   # NOTE: Example 06_Looping is built here but not run as part of the
   #       integration test suite. This is because it demonstrates
   #       'good' versus 'bad' practice, as opposed to functionality.
-  if(NOT "${GPU_DEVICE}" STREQUAL "NONE" AND MULTI_GPU)
+  if(NOT "${GPU_DEVICE}" STREQUAL "NONE")
     add_subdirectory(07_MultiGPU)
   else()
     message(STATUS "Skipping Multi GPU integration tests")

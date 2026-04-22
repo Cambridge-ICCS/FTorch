@@ -23,7 +23,7 @@ on:
       - '**.pf'
       # Build system
       - '**CMakeLists.txt'
-      - '**requirements.txt'
+      - 'pyproject.toml'
       # Data
       - '**data/*'
 

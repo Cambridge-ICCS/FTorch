@@ -12,6 +12,8 @@ __all__ = [
     "validate_input_tensor_file",
     "validate_output_model_file",
     "validate_output_tensors",
+    "validate_model_device_types",
+    "validate_device_types",
 ]
 
 
@@ -124,3 +126,42 @@ def validate_output_tensors(expected_tensor, result_tensor):
                 "Consider using scripting if you used tracing, or investigate further."
             )
             raise RuntimeError(model_error)
+
+
+def validate_model_device_types(model):
+    """Check the model parameters are on the same device type.
+
+    Parameters
+    ----------
+    model : torch.nn.Module
+        The TorchScript model to be tested.
+    """
+    device_type = list(model.parameters())[0].device.type
+    for parameter in model.parameters():
+        if parameter.device.type != device_type:
+            raise RuntimeError(
+                f"The model has parameters on different devices ('{device_type}' vs."
+                f" '{parameter.device.type}'). Ensure all model parameters are on the"
+                " same device and try again."
+            )
+
+
+def validate_device_types(model, input_tensors):
+    """Check the model and input tensors are on the same device type.
+
+    Parameters
+    ----------
+    model : torch.nn.Module
+        The TorchScript model to be tested.
+
+    input_tensors : tuple of torch.Tensor
+        The input tensors used for testing the model.
+    """
+    device_type = list(model.parameters())[0].device.type
+    for i, input_tensor in enumerate(input_tensors):
+        if device_type != input_tensor.device.type:
+            raise RuntimeError(
+                f"The model is on a different device from input tensor {i}"
+                f" ('{device_type}' vs. '{input_tensor.device.type}'). Ensure they are"
+                " on the same device and try again."
+            )
