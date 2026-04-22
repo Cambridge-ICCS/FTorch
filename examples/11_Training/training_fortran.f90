@@ -1,5 +1,3 @@
-! FIXME: Almost works! See https://docs.pytorch.org/cppdocs/frontend.html#end-to-end-example
-! for end-to-end example in C++
 program training
 
   ! Import precision info from iso
@@ -11,8 +9,7 @@ program training
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only: assignment(=), operator(-), operator(*), operator(/), operator(**), &
                     torch_kCPU, torch_kFloat32, &
-                    torch_tensor, torch_tensor_from_array, &
-                    torch_tensor_ones, torch_tensor_empty, &
+                    torch_tensor, torch_tensor_from_array, torch_tensor_empty, &
                     torch_tensor_print, &
                     torch_tensor_backward, torch_tensor_get_gradient, &
                     torch_tensor_mean, &
@@ -77,10 +74,6 @@ program training
   call torch_model_load(model, args(1), torch_kCPU, is_training=.true.)
 
   ! Get weights from model
-  call torch_tensor_empty(weights_tensors(1), ndims, weights_shape, torch_kFloat32, torch_kCPU, &
-                          requires_grad=.true.)
-  ! FIXME: If requires_grad=.true. above then the following call errors with
-  ! "a leaf Variable that requires grad is being used in an in-place operation"
   call torch_model_get_parameters(model, weights_tensors)
   write (*,*) "Initial model weights:"
   call torch_tensor_print(weights_tensors(1))

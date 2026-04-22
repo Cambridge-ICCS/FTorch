@@ -188,7 +188,7 @@ contains
   subroutine torch_model_get_parameters(model, output_tensors)
     use, intrinsic :: iso_c_binding, only : c_int, c_loc, c_ptr
     type(torch_model), intent(in) :: model  !! Model
-    type(torch_tensor), intent(in), dimension(:) :: output_tensors  !! Returned output tensors
+    type(torch_tensor), intent(inout), dimension(:) :: output_tensors  !! Returned output tensors
 
     integer(c_int) :: n_outputs
     integer :: i
@@ -212,6 +212,11 @@ contains
     end do
 
     call torch_jit_model_parameters_c(model%p, c_loc(output_ptrs), n_outputs)
+
+    ! Copy updated pointers back to output tensors
+    do i = 1, n_outputs
+      output_tensors(i)%p = output_ptrs(i)
+    end do
   end subroutine torch_model_get_parameters
 
   ! ============================================================================
