@@ -43,15 +43,20 @@ def parse_user_input():
     )
     parser.add_argument(
         "--model_definition_file",
-        help="Filename for the definition of the PyTorch model, including path",
+        help=(
+            "Filename for the definition of the PyTorch model, including path. If not"
+            " provided, an attempt will be made to load a model matching the model_name"
+            " from TorchVision's pre-trained models."
+        ),
         type=str,
     )
-    # TODO: Accept pre-trained model name (needed for ResNet)
-    #       Perhaps make model_definition_file optional? Need to allow weights
-    #       specification, too
     parser.add_argument(
         "--input_model_file",
-        help="Filename for the model saved in PyTorch format, including path",
+        help=(
+            "Filename for the model saved in PyTorch format, including path. If not"
+            " provided, an attempt will be made to load the model from TorchVision's"
+            " pre-trained models."
+        ),
         type=str,
     )
     parser.add_argument(
@@ -65,6 +70,15 @@ def parse_user_input():
             "Filename for the tensor(s) saved in PyTorch format, including path (only"
             " required if running with --trace or --test). The tensor is used to"
             " determine the dimensionality of the inputs so its values are ignored."
+        ),
+        type=str,
+    )
+    parser.add_argument(
+        "--model_weights",
+        help=(
+            "Name of the model weights if loading a pre-trained model. This can also"
+            " be used for models defined in a local file provided their `__init__`"
+            " method accepts a `model_weights` keyword argument."
         ),
         type=str,
     )
@@ -83,6 +97,15 @@ def parse_user_input():
             "If used then --input_tensor_file must also be provided."
         ),
         action="store_true",
+    )
+    parser.add_argument(
+        "--precision",
+        help=(
+            "Set the working precision for the model and all PyTorch operations, e.g.,"
+            " 'float32'."
+        ),
+        type=str,
+        default="float32",
     )
     parsed_args = parser.parse_args()
     if parsed_args.input_tensor_file is None and parsed_args.trace:
@@ -103,30 +126,27 @@ def main_cli():
     parsed_args = parse_user_input()
     model_name = parsed_args.model_name
     model_definition_file = parsed_args.model_definition_file
-    if model_definition_file is None:
-        value_error = (
-            "pt2ts does not yet support pre-trained models and so currently requires a"
-            " model definition file."
-        )
-        raise ValueError(value_error)
     input_model_file = parsed_args.input_model_file
-    if input_model_file is None:
-        value_error = (
-            "pt2ts does not yet support pre-trained models and so currently requires an"
-            " input model file."
-        )
-        raise ValueError(value_error)
-    validate_input_model_file(input_model_file)
+    if input_model_file is not None:
+        validate_input_model_file(input_model_file)
     output_model_file = parsed_args.output_model_file
-    validate_output_model_file(output_model_file, input_model_file)
+    if output_model_file is not None:
+        validate_output_model_file(output_model_file, input_model_file)
     trace = parsed_args.trace
     test = parsed_args.test
     input_tensor_file = parsed_args.input_tensor_file
     if input_tensor_file is not None:
         validate_input_tensor_file(input_tensor_file)
+    model_weights = parsed_args.model_weights
+    precision = getattr(torch, parsed_args.precision)
+
+    # Set working precision
+    torch.set_default_dtype(precision)
 
     # Load the input PyTorch model
-    model = load_pytorch(model_definition_file, model_name, input_model_file)
+    model = load_pytorch(
+        model_name, model_definition_file, input_model_file, model_weights
+    )
 
     if test or trace:
         # Load the input tensor

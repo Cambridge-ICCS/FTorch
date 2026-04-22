@@ -103,7 +103,7 @@ class TestValidateOutputModel:
 class TestValidateOutputTensors:
     """Tests for validate_output_tensors."""
 
-    def test_validate_output_tensors_matching(self):
+    def test_matching(self):
         """Check that matching tensors are accepted."""
         try:
             validate_output_tensors(

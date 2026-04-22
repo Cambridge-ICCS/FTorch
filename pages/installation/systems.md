@@ -1,6 +1,6 @@
 title: System-Specific Guidance
 author: Jack Atkinson
-date: Last Updated: October 2025
+date: Last Updated: April 2026
 
 ## System-Specific Guidance
 
@@ -30,7 +30,12 @@ directory (see the [Intel
 docs](https://www.intel.com/content/www/us/en/docs/oneapi/programming-guide/2023-2/use-the-setvars-script-with-windows.html))
 for more details.
 
-From `cmd` this can be done with:
+From PowerShell this can be done with:
+```pwsh
+& "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
+```
+
+If you are using the legacy `cmd` shell, instead use
 ```
 call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
 ```
@@ -38,8 +43,8 @@ call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
 FTorch can then be built according to the [regular CMake instructions](|page|/installation/general.html),
 with the addition of `-G "NMake Makefiles"`.
 
-So the basic command to build from `cmd` becomes:
-```
+So the basic command to build (with either PowerShell or `cmd`) becomes:
+```pwsh
 cmake -G "NMake Makefiles" -DCMAKE_PREFIX_PATH="C:\Users\<path-to-libtorch-download>\libtorch" -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
 cmake --install .
@@ -47,12 +52,77 @@ cmake --install .
 
 > Note: _In a Windows environment administrator privileges are required for the default install location._
 
+The following is an example PowerShell script that installs FTorch and runs the integration tests. It assumes you have already installed CMake, git, the Intel
+compilers, and Visual Studio.
 
-The following is an example `cmd` script that installs FTorch and runs the integration tests. It assumes you have already
-installed CMake, git, the Intel compilers, and Visual Studio. There are a few
-places where output is turned on or off using the `ECHO` command. If you are
-experiencing issues with the install then it may be helpful to set `ECHO ON`
-throughout.
+```pwsh
+# Load intel compilers
+& "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
+
+# Download ftorch
+git clone https://github.com/Cambridge-ICCS/FTorch.git
+cd FTorch
+
+# Make virtual environment
+python -m venv .ftorch
+
+# Activate the virtual environment
+.\ftorch\Scripts\Activate.ps1
+
+# Install dependencies (--extra-index-url not required on Windows)
+pip install .[examples]
+
+# Find torch location
+$Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line -replace "^Location:\s*", "" })
+
+# Run CMake to generate build scripts
+# (Update CMAKE_PREFIX_PATH depending on location of ftorch venv)
+cmake `
+  -Bbuild `
+  -G "NMake Makefiles" `
+  -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
+  -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" `
+  -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" `
+  -DCMAKE_PREFIX_PATH="$Torch_DIR\torch" `
+  -DCMAKE_BUILD_TYPE=Release `
+  -DCMAKE_Fortran_COMPILER=ifx `
+  -DCMAKE_C_COMPILER=icx `
+  -DCMAKE_CXX_COMPILER=icx `
+  -DCMAKE_BUILD_TESTS=TRUE `
+  -DCMAKE_INSTALL_PREFIX="$FTORCH_INSTALL_DIR"
+
+# Build and install FTorch
+cmake --build build
+cmake --install build
+
+# Add FTorch and PyTorch libs to path
+# (Update the first one depending on where you installed FTorch)
+$env:PATH = "$FTORCH_INSTALL_DIR\bin;$Torch_DIR\torch\lib;$env:PATH"
+
+# Run integration tests
+cd build
+ctest --verbose --tests-regex example_tensor
+ctest --verbose --tests-regex example_simplenet
+ctest --verbose --tests-regex example_resnet
+ctest --verbose --tests-regex example_multiio
+ctest --verbose --tests-regex example_autograd
+```
+
+Here the `/fpscomp:logicals` flag is used to ensure Fortran logicals are
+compatible with those used by PyTorch. The
+`/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH` flag is used to suppress warnings
+related to mismatched compiler versions between the Intel compilers and
+those used to build LibTorch.
+
+We recommend Windows users review the Windows continuous integration workflow
+([`.github/workflows/test_suite_windows_cpu_intel.yml`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_windows_cpu_intel.yml))
+for more information, as this provides another example of how to build and run
+FTorch and its integration tests.
+
+If you are using the legacy `cmd` shell then the following script can be used
+instead to build and run the tests. There are a few places where output is
+turned on or off using the `ECHO` command. If you are experiencing issues
+with the install then it may be helpful to set `ECHO ON` throughout.
 
 ```cmd
 rem Disable output for now
@@ -108,31 +178,13 @@ set PATH=%torch_path%\torch\lib;%PATH%
 
 rem Run integration tests
 ECHO ON
+cd build
 ctest --verbose --tests-regex example1
 ctest --verbose --tests-regex example2
 ctest --verbose --tests-regex example3
 ctest --verbose --tests-regex example4
 ctest --verbose --tests-regex example8
 if %errorlevel% neq 0 exit /b %errorlevel%
-```
-
-Here the `/fpscomp:logicals` flag is used to ensure Fortran logicals are
-compatible with those used by PyTorch. The
-`/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH` flag is used to suppress warnings
-related to mismatched compiler versions between the Intel compilers and
-those used to build LibTorch.
-
-We recommend Windows users review the Windows continuous integration workflow
-([`.github/workflows/test_suite_windows_cpu_intel.yml`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_windows_cpu_intel.yml))
-for more information, as this provides another example of how to build and run
-FTorch and its integration tests.
-
-If using powershell the setvars and build commands become:
-```
-cmd /k '"C:\Program Files (x86)\Intel\oneAPI\setvars.bat" && powershell'
-cmake -G "NMake Makefiles" -DCMAKE_PREFIX_PATH="C:\Users\<path-to-libtorch-download>\libtorch" -DCMAKE_BUILD_TYPE=Release ..
-cmake --build .
-cmake --install .
 ```
 
 
