@@ -1,7 +1,7 @@
 program training
 
   ! Import precision info from iso
-  use, intrinsic :: iso_fortran_env, only : sp => real32
+  use, intrinsic :: iso_fortran_env, only : sp => real32, dp => real64
 
   ! Import c_int64_t
   use, intrinsic :: iso_c_binding, only: c_int64_t
@@ -49,8 +49,9 @@ program training
 
   ! Set up training parameters
   integer :: i
-  integer, parameter :: n_train = 15
-  integer, parameter :: n_print = 1
+  integer, parameter :: n_train = 10000
+  integer, parameter :: n_print = 100
+  real(dp), parameter :: lr = 0.05
 
   ! Get TorchScript model file as a command line argument
   num_args = command_argument_count()
@@ -58,12 +59,6 @@ program training
   do ix = 1, num_args
     call get_command_argument(ix,args(ix))
   end do
-
-  ! Initialise input data
-  in_data = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
-
-  ! Specify the output that we want the network to give (a permutation of the input)
-  target_data = [4.0_wp, 0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp]
 
   ! Initialise Torch Tensors from input/output/target arrays
   call torch_tensor_from_array(in_tensors(1), in_data, torch_kCPU)
@@ -84,7 +79,7 @@ program training
   call torch_tensor_empty(weights_grad, ndims, weights_shape, torch_kFloat32, torch_kCPU)
 
   ! Initialise an optimizer and apply it to scaling_tensor
-  call torch_optim_SGD(optimizer, weights_tensors, learning_rate=1.0D0)
+  call torch_optim_SGD(optimizer, weights_tensors, learning_rate=lr)
 
   ! Create a file for recording the loss function progress
   open(unit=10, file="losses_ftorch.dat")
@@ -93,6 +88,10 @@ program training
   do i = 1, n_train+1
     ! Zero any previously stored gradients ready for a new iteration
     call optimizer%zero_grad()
+
+    ! Initialise input data and the output that we want the network to give (a permutation)
+    call random_number(in_data)
+    target_data(:) = in_data([5,1,2,3,4])
 
     ! Forward pass: run inference
     call torch_model_forward(model, in_tensors, out_tensors, requires_grad=.true.)
@@ -116,6 +115,9 @@ program training
         write(*,*) "================================================"
         write(*,*) "Epoch: ", i
         write(*,*)
+        write(*,*) "Input:"
+        call torch_tensor_print(in_tensors(1))
+        write(*,*)
         write(*,*) "Output:"
         call torch_tensor_print(out_tensors(1))
         write(*,*)
@@ -133,15 +135,21 @@ program training
   end do
   close(unit=10)
 
+  ! Set final input data and expected output
+  in_data = [1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp]
+  target_data(:) = in_data([5,1,2,3,4])
+
   ! Run a final inference pass to populate out_data for the convergence check below.
   ! During training, requires_grad=.true. caused a shallow copy that decoupled out_tensors(1)
   ! from the Fortran array, so we re-connect it here before running inference.
   call torch_tensor_from_array(out_tensors(1), out_data, torch_kCPU)
   call torch_model_forward(model, in_tensors, out_tensors)
 
-
   ! Check scaling tensor converges to the expected value
-  if (.not. allclose(out_data, target_data, test_name="optimizers", rtol=1e-3)) then
+  write(*,*) "Final check after training:"
+  write(*,*) "Input:", in_data
+  write(*,*) "Output:", out_data
+  if (.not. allclose(out_data, target_data, test_name="training", rtol=1e-3)) then
     write(*,*) "Error :: value of out_data does not match expected value"
     stop 999
   end if

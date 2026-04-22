@@ -821,7 +821,13 @@ void torch_jit_module_parameters(const torch_jit_script_module_t module,
   }
   int i = 0;
   for (auto parameter : parameters) {
-    *out[i] = parameter;
+    // Allocate a new heap-based Tensor that is a shallow copy (alias) of the
+    // model parameter.  PyTorch's copy constructor shares underlying storage,
+    // so the optimizer will update the model's actual weights through this
+    // handle.  Writing the address back into out[i] initialises the previously
+    // unset Fortran torch_tensor variable, matching the pattern used by every
+    // other tensor-creating function (torch_empty, torch_from_blob, etc.).
+    out[i] = new torch::Tensor(parameter);
     i++;
   }
 }
