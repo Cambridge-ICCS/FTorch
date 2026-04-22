@@ -821,8 +821,7 @@ void torch_jit_module_parameters(const torch_jit_script_module_t module,
   }
   int i = 0;
   for (auto parameter : parameters) {
-    delete out[i];
-    out[i] = new torch::Tensor(parameter);
+    *out[i] = parameter;
     i++;
   }
 }
