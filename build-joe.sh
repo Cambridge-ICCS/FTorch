@@ -66,6 +66,7 @@ for arg in "$@"; do
     ;;
   --compiler)
     COMPILER="$2"
+    BUILD_DIR="${BUILD_DIR}_${COMPILER}"
     shift 2
     ;;
   --help | -h)
