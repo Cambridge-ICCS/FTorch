@@ -25,7 +25,8 @@ before running this script."
   exit 1
 fi
 
-# pip install -e .
+# Install ftorch_utils
+pip install -q -e . --extra-index-url https://download.pytorch.org/whl/cpu
 
 # # Check if a Spack environment is active
 # if [ -z "${SPACK_ENV}" ]; then
