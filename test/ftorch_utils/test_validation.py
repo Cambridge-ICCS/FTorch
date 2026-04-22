@@ -11,6 +11,7 @@ from ftorch_utils.validation import (
     validate_device_types,
     validate_input_model_file,
     validate_input_tensor_file,
+    validate_model_device_types,
     validate_output_model_file,
     validate_output_tensors,
 )
@@ -154,45 +155,10 @@ class TestValidateOutputTensors:
             )
 
 
-class TestValidateDeviceTypes:
-    """Tests for validate_device_types."""
+class TestValidateModelDeviceTypes:
+    """Tests for validate_model_device_types."""
 
-    def test_validate_device_types_matching_cpu(self):
-        """Check that matching CPU device types are accepted."""
-        try:
-            validate_device_types(
-                torch.nn.Linear(2, 2).to("cpu"), torch.tensor([1.0, 2.0, 3.0]).to("cpu")
-            )
-        except RuntimeError:
-            pytest.fail("validate_device_types raised RuntimeError unexpectedly!")
-
-    def test_validate_device_types_matching_cuda(self):
-        """Check that matching CUDA device types are accepted."""
-        if torch.cuda.device_count() == 0:
-            pytest.skip("No CUDA devices available, skipping test.")
-        try:
-            validate_device_types(
-                torch.nn.Linear(2, 2).to("cuda"),
-                torch.tensor([1.0, 2.0, 3.0]).to("cuda"),
-            )
-        except RuntimeError:
-            pytest.fail("validate_device_types raised RuntimeError unexpectedly!")
-
-    def test_validate_device_types_mismatching_cpu_cuda(self):
-        """Check that mismatching device types raise an error."""
-        if torch.cuda.device_count() == 0:
-            pytest.skip("No CUDA devices available, skipping test.")
-        expected = (
-            "The model is on a different device from input tensor 0 ('cpu' vs. 'cuda')."
-            " Ensure they are on the same device and try again."
-        )
-        with pytest.raises(RuntimeError, match=re.escape(expected)):
-            validate_device_types(
-                torch.nn.Linear(2, 2).to("cpu"),
-                torch.tensor([1.0, 2.0, 3.0]).to("cuda"),
-            )
-
-    def test_validate_model_device_types_mismatching_cpu_cuda(self):
+    def test_mismatching_cpu_cuda(self):
         """Check that mismatching device types in model parameters raise an error."""
         if torch.cuda.device_count() == 0:
             pytest.skip("No CUDA devices available, skipping test.")
@@ -205,4 +171,43 @@ class TestValidateDeviceTypes:
             torch.nn.Linear(2, 2).to("cuda"),
         )
         with pytest.raises(RuntimeError, match=re.escape(expected)):
-            validate_device_types(model, None)
+            validate_model_device_types(model, None)
+
+
+class TestValidateDeviceTypes:
+    """Tests for validate_device_types."""
+
+    def test_matching_cpu(self):
+        """Check that matching CPU device types are accepted."""
+        try:
+            validate_device_types(
+                torch.nn.Linear(2, 2).to("cpu"), torch.tensor([1.0, 2.0, 3.0]).to("cpu")
+            )
+        except RuntimeError:
+            pytest.fail("validate_device_types raised RuntimeError unexpectedly!")
+
+    def test_matching_cuda(self):
+        """Check that matching CUDA device types are accepted."""
+        if torch.cuda.device_count() == 0:
+            pytest.skip("No CUDA devices available, skipping test.")
+        try:
+            validate_device_types(
+                torch.nn.Linear(2, 2).to("cuda"),
+                torch.tensor([1.0, 2.0, 3.0]).to("cuda"),
+            )
+        except RuntimeError:
+            pytest.fail("validate_device_types raised RuntimeError unexpectedly!")
+
+    def test_mismatching_cpu_cuda(self):
+        """Check that mismatching device types raise an error."""
+        if torch.cuda.device_count() == 0:
+            pytest.skip("No CUDA devices available, skipping test.")
+        expected = (
+            "The model is on a different device from input tensor 0 ('cpu' vs. 'cuda')."
+            " Ensure they are on the same device and try again."
+        )
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
+            validate_device_types(
+                torch.nn.Linear(2, 2).to("cpu"),
+                torch.tensor([1.0, 2.0, 3.0]).to("cuda"),
+            )

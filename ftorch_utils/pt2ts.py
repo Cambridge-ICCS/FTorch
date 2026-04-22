@@ -18,6 +18,7 @@ from ftorch_utils.validation import (
     validate_file_exists,
     validate_input_model_file,
     validate_input_tensor_file,
+    validate_model_device_types,
     validate_output_model_file,
     validate_output_tensors,
 )
@@ -165,8 +166,8 @@ def main_cli():
         validate_file_exists(output_model_file, "Saved TorchScript output model")
 
         # Transfer model to the same device as the input tensor
-        # TODO: Separate checks in validate_device_types
         model = model.to(input_tensors[0].device)
+        validate_model_device_types(model)
         validate_device_types(model, input_tensors)
 
         # Propagate the input tensor through the PyTorch model
