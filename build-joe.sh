@@ -117,6 +117,10 @@ else
   exit 1
 fi
 
+# Paths to dependencies
+Torch_DIR="$(python -c 'import torch;print(torch.utils.cmake_prefix_path)')"
+PFUNIT_DIR="${HOME}/tools/${COMPILER}/pfunit/build/installed/PFUNIT-4.12"
+
 # Build the library
 if [ "${FPM_BUILD}" = true ]; then
   fpm build \
