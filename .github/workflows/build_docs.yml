@@ -62,6 +62,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install --group docs
 
+      - name: Check broken URLs
+        run: |
+          cd pages/
+          chmod +x checklinks.sh
+          ./checklinks.sh
+
       - name: Build docs with FORD
         run: ford FTorch.md
 
