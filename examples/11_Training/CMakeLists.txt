@@ -59,12 +59,12 @@ if(CMAKE_BUILD_TESTS)
 
   # 3. Check the Fortran training script runs successfully
   add_test(
-    NAME example_training
+    NAME example_training_fortran
     COMMAND training
       ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_training
+  set_tests_properties(example_training_fortran
                        PROPERTIES PASS_REGULAR_EXPRESSION
                        "Fortran training example ran successfully")
 
