@@ -85,6 +85,12 @@ should print the following to the console:
 x = tensor([[1., 2., 3., 4., 5.]], requires_grad=True)
 y = tensor([[ 2.,  4.,  6.,  8., 10.]], grad_fn=<MmBackward0>)
 dy/dx = tensor([[2., 2., 2., 2., 2.]])
+dy/d(weights):
+tensor([[1., 2., 3., 4., 5.],
+        [1., 2., 3., 4., 5.],
+        [1., 2., 3., 4., 5.],
+        [1., 2., 3., 4., 5.],
+        [1., 2., 3., 4., 5.]])
 ```
 As expected, the values in the output tensor are double those in the input. As
 we might hope, the values in the gradient tensor are all twos.
@@ -100,6 +106,21 @@ This should print the following to the console:
 PASSED :: [autograd_simplenet_y] relative tolerance =  0.1000E-04
  dy/dx =    2.00000000       2.00000000       2.00000000       2.00000000       2.00000000
 PASSED :: [autograd_simplenet_dydx] relative tolerance =  0.1000E-04
+ Model weights:
+ 2  0  0  0  0
+ 0  2  0  0  0
+ 0  0  2  0  0
+ 0  0  0  2  0
+ 0  0  0  0  2
+[ CPUFloatType{5,5} ]
+ dy/d(weights):
+ 1  2  3  4  5
+ 1  2  3  4  5
+ 1  2  3  4  5
+ 1  2  3  4  5
+ 1  2  3  4  5
+[ CPUFloatType{5,5} ]
+PASSED :: [autograd_simplenet_dydw] relative tolerance =  0.1000E-04
  SimpleNet Autograd example ran successfully
 ```
 The tensor values match those in the Python version of the example above.
