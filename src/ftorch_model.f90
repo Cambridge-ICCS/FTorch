@@ -89,7 +89,12 @@ contains
   ! --- Procedures for performing inference
   ! ============================================================================
 
-  !> Performs a forward pass of the model with the input tensors
+  !| Performs a forward pass of the model with the input tensors
+  !
+  !  WARNING: If requires_grad=.true. then any association between the output_tensors and Fortran
+  !           arrays is lost. The output_tensors will instead point directly to the tensor objects
+  !           outputted from the model in Torch. This is required to track gradients through any
+  !           intermediate tensors (such as model weights) during backpropagation.
   subroutine torch_model_forward(model, input_tensors, output_tensors, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int, c_loc
     type(torch_model), intent(in) :: model  !! Model
