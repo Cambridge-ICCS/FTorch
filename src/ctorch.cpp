@@ -764,12 +764,13 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
       // Single output models will return a tensor directly.
       // Two assignment strategies are used depending on whether gradient
       // tracking is needed:
-      //   requires_grad=true  (training):  plain lvalue assignment selects
-      //     Tensor::operator=(Tensor&&) & -- a shallow impl-swap that leaves
-      //     the grad_fn intact so that loss.backward() reaches the weights.
-      //   requires_grad=false (inference): std::move turns *out into an rvalue,
-      //     selecting Tensor::operator=(Tensor&&) && which calls copy_(),
-      //     writing result data into the backing Fortran array (no graph built).
+      //   requires_grad=true (training):
+      //     Plain lvalue assignment selects Tensor::operator=(Tensor&&) &
+      //     This is a shallow swap that leaves the grad_fn intact so that we can differentiate
+      //     with respect to weights
+      //   requires_grad=false (inference):
+      //     std::move turns *out into an rvalue, selecting Tensor::operator=(Tensor&&) &&
+      //     This calls copy_(), writing result data into the Fortran array (no graph built).
       if (requires_grad) {
         *out[0] = model_out.toTensor();
       } else {
@@ -821,12 +822,11 @@ void torch_jit_module_parameters(const torch_jit_script_module_t module,
   }
   int i = 0;
   for (auto parameter : parameters) {
-    // Allocate a new heap-based Tensor that is a shallow copy (alias) of the
-    // model parameter.  PyTorch's copy constructor shares underlying storage,
-    // so the optimizer will update the model's actual weights through this
-    // handle.  Writing the address back into out[i] initialises the previously
-    // unset Fortran torch_tensor variable, matching the pattern used by every
-    // other tensor-creating function (torch_empty, torch_from_blob, etc.).
+    // Allocate a new heap-based Tensor that is a shallow copy (alias) of the model parameter.
+    // Torch's copy constructor shares underlying storage, so if the model parameters are used in an
+    // optimizer then the optimizer will update the model's actual weights through this handle.
+    // In writing the address back into out[i] we assume that the associated Fortran torch_tensor is
+    // not associated (and indeed check this on the Fortran side).
     out[i] = new torch::Tensor(parameter);
     i++;
   }
