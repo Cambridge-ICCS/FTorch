@@ -766,11 +766,13 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
       // tracking is needed:
       //   requires_grad=true (training):
       //     Plain lvalue assignment selects Tensor::operator=(Tensor&&) &
-      //     This is a shallow swap that leaves the grad_fn intact so that we can differentiate
-      //     with respect to weights
+      //     This is a shallow swap that leaves the grad_fn intact so that we can
+      //     differentiate with respect to weights
       //   requires_grad=false (inference):
-      //     std::move turns *out into an rvalue, selecting Tensor::operator=(Tensor&&) &&
-      //     This calls copy_(), writing result data into the Fortran array (no graph built).
+      //     std::move turns *out into an rvalue, selecting
+      //     Tensor::operator=(Tensor&&) &&
+      //     This calls copy_(), writing result data into the Fortran array (no graph
+      //     built).
       if (requires_grad) {
         *out[0] = model_out.toTensor();
       } else {
@@ -822,11 +824,12 @@ void torch_jit_module_parameters(const torch_jit_script_module_t module,
   }
   int i = 0;
   for (auto parameter : parameters) {
-    // Allocate a new heap-based Tensor that is a shallow copy (alias) of the model parameter.
-    // Torch's copy constructor shares underlying storage, so if the model parameters are used in an
-    // optimizer then the optimizer will update the model's actual weights through this handle.
-    // In writing the address back into out[i] we assume that the associated Fortran torch_tensor is
-    // not associated (and indeed check this on the Fortran side).
+    // Allocate a new heap-based Tensor that is a shallow copy (alias) of the model
+    // parameter. Torch's copy constructor shares underlying storage, so if the model
+    // parameters are used in an optimizer then the optimizer will update the model's
+    // actual weights through this handle. In writing the address back into out[i] we
+    // assume that the associated Fortran torch_tensor is not associated (and indeed
+    // check this on the Fortran side).
     out[i] = new torch::Tensor(parameter);
     i++;
   }
