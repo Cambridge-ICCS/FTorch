@@ -1,14 +1,13 @@
 title: Online training
 author: Joe Wallwork
-date: Last Updated: March 2026
+date: Last Updated: April 2026
 
 ## Online Training
 
 FTorch has supported offline training of ML models for some time (see the
-[offline training user guide page](|page|/usage/offline.html) for details). We are
-currently working on extending its functionality to support online training
-by exposing the backpropagation and optimization
-functionalities of PyTorch/LibTorch.
+[offline training user guide page](|page|/usage/offline.html) for details). We
+recently extended its functionality to support online training by exposing the
+backpropagation and optimization functionalities of PyTorch/LibTorch.
 
 Below we provide a schematic of the online training workflow, which is broken
 down into separate tasks below.
@@ -51,8 +50,12 @@ and the modified ML model is written out to the same TorchScript file at the
 end of the Fortran program. This way, the model can be trained in multiple
 Fortran runs, with the same model being read.
 
-*Note: Training and writing out models has not yet been implemented in FTorch,
-but is work in progress.*
+See the
+[training worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/11_Training)
+for a demonstration of how to train a PyTorch model purely in Fortran.
+
+*Note: Writing out models has not yet been implemented in FTorch, but is work in
+progress.*
 
 #### 4. Fortran model with inference
 
