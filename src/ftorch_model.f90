@@ -186,7 +186,7 @@ contains
 
   !> Extracts the parameters from a model
   subroutine torch_model_parameters(model, output_tensors)
-    use, intrinsic :: iso_c_binding, only : c_int, c_loc, c_ptr
+    use, intrinsic :: iso_c_binding, only : c_associated, c_int, c_loc, c_ptr
     type(torch_model), intent(in) :: model  !! Model
     type(torch_tensor), intent(inout), dimension(:) :: output_tensors  !! Returned output tensors
 
@@ -204,13 +204,17 @@ contains
         integer(c_int), value, intent(in) :: n_outputs_c
       end subroutine torch_jit_model_parameters_c
     end interface
-    n_outputs = size(output_tensors)
 
-    ! Assign array of pointers to the output tensors
+    ! Check the tensors aren't already associated
     do i = 1, n_outputs
-      output_ptrs(i) = output_tensors(i)%p
+      if (c_associated(output_tensors(i)%p)) then
+        write(*,*) "Error :: tensor pointer will be lost in call to torch_model_parameters"
+        stop 1
+      end if
     end do
 
+    ! Get the parameters that were created during model construction
+    n_outputs = size(output_tensors)
     call torch_jit_model_parameters_c(model%p, c_loc(output_ptrs), n_outputs)
 
     ! Copy updated pointers back to output tensors
