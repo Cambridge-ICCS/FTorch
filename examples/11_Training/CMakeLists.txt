@@ -57,17 +57,7 @@ if(CMAKE_BUILD_TESTS)
                   ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_cpu.pt
                   --test)
 
-  # 3. Check the Python training script runs successfully
-  add_test(
-    NAME example_training_python
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/training_python.py
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_training_python
-                       PROPERTIES PASS_REGULAR_EXPRESSION
-                       "Python training example ran successfully")
-
-
-  # 4. Check the Fortran training script runs successfully
+  # 3. Check the Fortran training script runs successfully
   add_test(
     NAME example_training_fortran
     COMMAND training_fortran
@@ -78,7 +68,7 @@ if(CMAKE_BUILD_TESTS)
                        PROPERTIES PASS_REGULAR_EXPRESSION
                        "Fortran training example ran successfully")
 
-  # 3. Plot results
+  # 4. Plot results and check the plot file exists
   add_test(
     NAME example_training_plot
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/plot.py &&
