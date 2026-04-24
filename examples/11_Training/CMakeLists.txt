@@ -28,8 +28,8 @@ if(NOT DEFINED ENV{VIRTUAL_ENV} AND NOT DEFINED ENV{CONDA_PREFIX})
 endif()
 
 # Fortran example
-add_executable(training_fortran training_fortran.f90)
-target_link_libraries(training_fortran PRIVATE FTorch::ftorch)
+add_executable(training training.f90)
+target_link_libraries(training PRIVATE FTorch::ftorch)
 
 # Integration testing
 if(CMAKE_BUILD_TESTS)
@@ -59,12 +59,12 @@ if(CMAKE_BUILD_TESTS)
 
   # 3. Check the Fortran training script runs successfully
   add_test(
-    NAME example_training_fortran
-    COMMAND training_fortran
+    NAME example_training
+    COMMAND training
       ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-  set_tests_properties(example_training_fortran
+  set_tests_properties(example_training
                        PROPERTIES PASS_REGULAR_EXPRESSION
                        "Fortran training example ran successfully")
 
