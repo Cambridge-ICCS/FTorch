@@ -25,14 +25,20 @@ print(f"x = {x}")
 y = scripted_model(x)
 print(f"y = {y}")
 
+external_gradient = torch.ones_like(y)
 dydx = torch.autograd.grad(
     outputs=y,
     inputs=x,
-    grad_outputs=torch.ones_like(y),
+    grad_outputs=external_gradient,
     retain_graph=True,
     allow_unused=True,
 )[0]
-
 print(f"dy/dx = {dydx}")
+assert torch.allclose(dydx, 2.0 * external_gradient)
 
-assert torch.allclose(dydx, 2.0 * torch.ones_like(y))
+y.backward(external_gradient)
+
+weights = model._fwd_seq[0].weight
+dydw = weights.grad
+print(f"dy/d(weights):\n{dydw}")
+assert torch.allclose(dydw, torch.vstack(5 * [x]))

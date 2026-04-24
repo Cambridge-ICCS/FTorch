@@ -10,3 +10,6 @@ add_pfunit_ctest(unittest_model_forward
 add_pfunit_ctest(unittest_model_batching
                  TEST_SOURCES unittest_model_batching.pf
                  LINK_LIBRARIES FTorch::ftorch)
+add_pfunit_ctest(unittest_model_parameters
+                 TEST_SOURCES unittest_model_parameters.pf
+                 LINK_LIBRARIES FTorch::ftorch)
