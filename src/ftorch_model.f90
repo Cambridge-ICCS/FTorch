@@ -185,7 +185,7 @@ contains
   end function torch_model_is_training
 
   !> Extracts the parameters from a model
-  subroutine torch_model_get_parameters(model, output_tensors)
+  subroutine torch_model_parameters(model, output_tensors)
     use, intrinsic :: iso_c_binding, only : c_int, c_loc, c_ptr
     type(torch_model), intent(in) :: model  !! Model
     type(torch_tensor), intent(inout), dimension(:) :: output_tensors  !! Returned output tensors
@@ -217,7 +217,7 @@ contains
     do i = 1, n_outputs
       output_tensors(i)%p = output_ptrs(i)
     end do
-  end subroutine torch_model_get_parameters
+  end subroutine torch_model_parameters
 
   ! ============================================================================
   ! --- Procedures for deallocating models

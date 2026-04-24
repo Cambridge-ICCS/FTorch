@@ -13,7 +13,7 @@ program training
                     torch_tensor_print, &
                     torch_tensor_backward, torch_tensor_get_gradient, &
                     torch_tensor_mean, &
-                    torch_model, torch_model_load, torch_model_get_parameters, &
+                    torch_model, torch_model_load, torch_model_parameters, &
                     torch_model_forward, &
                     torch_optim, torch_optim_SGD
 
@@ -71,7 +71,7 @@ program training
   ! Get weights from model
   ! NOTE: We don't construct weights_tensors because we want it to point to weights data created by
   !       the model constructor
-  call torch_model_get_parameters(model, weights_tensors)
+  call torch_model_parameters(model, weights_tensors)
   write (*,*) "Initial model weights:"
   call torch_tensor_print(weights_tensors(1))
 
