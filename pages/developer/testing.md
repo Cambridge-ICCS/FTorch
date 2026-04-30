@@ -19,7 +19,9 @@ tests based on a subset of the [worked examples](|page|/usage/worked_examples.ht
 
 ### Building
 
-To enable FTorch's test suite, set `CMAKE_BUILD_TESTS=TRUE` during the build.
+Set `CMAKE_BUILD_TESTS=TRUE` to build both unit and integration tests by
+default. To build only one test family, disable the other.
+
 To run the unit tests, you will need to install
 [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit) and provide its
 install location to the `CMAKE_PREFIX_PATH` or as the environment variable `PFUNIT_DIR`:
@@ -38,6 +40,18 @@ cmake -DCMAKE_BUILD_TESTS=TRUE -S </path/to/FTorch> -B </path/to/FTorch/build>
 Note that pFUnit includes the version number in the install directory name,
 so for version 4.12 that path will need to be specified as
 `/path/to/pFUnit/build/installed/PFUNIT-4.12`, for example.
+
+Integration tests can be built without pFUnit by disabling the unit tests:
+```shell
+cmake -DCMAKE_BUILD_TESTS=TRUE -DFTORCH_BUILD_UNIT_TESTS=OFF \
+    -S </path/to/FTorch> -B </path/to/FTorch/build>
+```
+
+Unit tests can be built without integration tests:
+```shell
+cmake -DCMAKE_BUILD_TESTS=TRUE -DFTORCH_BUILD_INTEGRATION_TESTS=OFF \
+    -S </path/to/FTorch> -B </path/to/FTorch/build>
+```
 
 @note
 If a `GPU_DEVICE` is specified but only one is available, set `MULTI_GPU=OFF` to skip

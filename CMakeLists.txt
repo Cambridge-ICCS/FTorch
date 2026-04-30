@@ -16,23 +16,18 @@ set(_ftorch_tests_default OFF)
 if(CMAKE_BUILD_TESTS)
   set(_ftorch_tests_default ON)
 endif()
-option(BUILD_UNIT_TESTS "Build pFUnit-based unit tests"
+option(FTORCH_BUILD_UNIT_TESTS "Build pFUnit-based unit tests"
        ${_ftorch_tests_default})
-option(BUILD_INTEGRATION_TESTS "Build integration tests from examples/"
+option(FTORCH_BUILD_INTEGRATION_TESTS "Build integration tests from examples/"
        ${_ftorch_tests_default})
 
-set(_ftorch_enable_tests OFF)
-if(CMAKE_BUILD_TESTS OR BUILD_UNIT_TESTS OR BUILD_INTEGRATION_TESTS)
-  set(_ftorch_enable_tests ON)
-endif()
-
-if(CMAKE_BUILD_TESTS AND NOT BUILD_UNIT_TESTS AND NOT BUILD_INTEGRATION_TESTS)
-  message(FATAL_ERROR
-          "CMAKE_BUILD_TESTS=ON requires at least one of BUILD_UNIT_TESTS or BUILD_INTEGRATION_TESTS to be ON.")
-endif()
-
-if(_ftorch_enable_tests)
+if(FTORCH_BUILD_UNIT_TESTS OR FTORCH_BUILD_INTEGRATION_TESTS)
   set(CMAKE_BUILD_TESTS ON)
+elseif(CMAKE_BUILD_TESTS)
+  message(FATAL_ERROR
+          "CMAKE_BUILD_TESTS=ON requires at least one of "
+          "FTORCH_BUILD_UNIT_TESTS or FTORCH_BUILD_INTEGRATION_TESTS "
+          "to be ON.")
 endif()
 
 if(WIN32)
@@ -246,12 +241,12 @@ if(CMAKE_BUILD_TESTS)
 
   # Unit tests
   # NOTE: We do not currently support unit testing on Windows
-  if(BUILD_UNIT_TESTS AND UNIX)
+  if(FTORCH_BUILD_UNIT_TESTS AND UNIX)
     add_subdirectory(test/unit)
   endif()
 
   # Integration tests
-  if(BUILD_INTEGRATION_TESTS)
+  if(FTORCH_BUILD_INTEGRATION_TESTS)
     add_subdirectory(examples)
   endif()
 endif()
