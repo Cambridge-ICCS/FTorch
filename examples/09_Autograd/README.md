@@ -76,7 +76,12 @@ along with some testing output.
 ### Simple neural network demo
 
 The second example proceeds in much the same way, replacing `tensor_manipulation_backward`
-with `simplenet_backward`. Running
+with `simplenet_backward`. In the example, we propagate an arbitrary tensor
+through the `SimpleNet` model, which has the effect of doubling its values. We
+then apply backpropagation to compute derivatives of the output with respect to
+both the input tensor and also with respect to the model weights.
+
+Running
 ```
 python3 simplenet_backward.py
 ```
@@ -92,8 +97,15 @@ tensor([[1., 2., 3., 4., 5.],
         [1., 2., 3., 4., 5.],
         [1., 2., 3., 4., 5.]])
 ```
-As expected, the values in the output tensor are double those in the input. As
-we might hope, the values in the gradient tensor are all twos.
+As expected, the values in the output tensor are double those in the input.
+It makes sense that the values in $\frac{\mathrm{d}y}{\mathrm{d}x}`$ are all
+twos because the model has the effect of doubling the input. To understand the
+other derivative matrix, given $y=Wx$ where $W$ is the weights matrix, the
+product rule implies
+$$\frac{\partial y}{\partial W}=Ex+W\frac{\partial W}{\partial x},$$
+where $e$ is a $5\times1$ matrix of ones. (Note that $x$ is technically a
+$1\times5$ matrix.) The weight matrix is independent of the input, so the second
+term in the product vanishes. The first term evaluates to the value shown above.
 
 To run the Fortran version, simply execute
 ```
