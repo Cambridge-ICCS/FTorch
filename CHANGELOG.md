@@ -15,6 +15,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 - Added a worked example for training in Fortran in
   [#581](https://github.com/Cambridge-ICCS/FTorch/pull/581)
+- Implemented `torch_model_save` in
+  [#587](https://github.com/Cambridge-ICCS/FTorch/pull/587)
 
 ### Changed
 

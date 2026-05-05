@@ -26,7 +26,7 @@ module ftorch_model
 contains
 
   ! ============================================================================
-  ! --- Procedures for constructing tensors
+  ! --- Procedures for constructing models
   ! ============================================================================
 
   !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
@@ -84,6 +84,25 @@ contains
                                device_index_value, logical(requires_grad_value, c_bool), &
                                logical(is_training_value, c_bool))
   end subroutine torch_model_load
+
+  !> Writes out a model in a file in TorchScript format
+  subroutine torch_model_save(model, filename)
+    use, intrinsic :: iso_c_binding, only : c_null_char
+    type(torch_model), intent(in) :: model  !! Model to write out
+    character(*), intent(in) :: filename    !! Filename for saved TorchScript model
+
+    interface
+      subroutine torch_jit_save_c(model_c, filename_c) bind(c, name = 'torch_jit_save')
+        use, intrinsic :: iso_c_binding, only : c_char, c_ptr
+        implicit none
+        type(c_ptr), value, intent(in) :: model_c
+        character(c_char), intent(in) :: filename_c(*)
+      end subroutine torch_jit_save_c
+    end interface
+
+    ! Need to append c_null_char at end of filename
+    call torch_jit_save_c(model%p, trim(adjustl(filename))//c_null_char)
+  end subroutine torch_model_save
 
   ! ============================================================================
   ! --- Procedures for performing inference

@@ -1,6 +1,6 @@
 title: Online training
 author: Joe Wallwork
-date: Last Updated: April 2026
+date: Last Updated: May 2026
 
 ## Online Training
 
@@ -63,8 +63,10 @@ In order to run inference with the trained ML model, you will need to create
 another modified version of your Fortran model that loads the TorchScript model
 and uses FTorch syntax to set up appropriate `torch_tensor` and `torch_model`
 objects and call the [[ftorch_model(module):torch_model_forward(subroutine)]]
-subroutine to run the inference. For
-examples of how to do this, see the
+subroutine to run the inference. The trained model should be written out in
+TorchScript format using [[ftorch_model(module):torch_model_save(subroutine)]].
+
+For examples of how to do this, see the
 [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers).
 
 ### Defining as much as possible in the model
