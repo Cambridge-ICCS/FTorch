@@ -762,11 +762,32 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     auto model_out = model->forward(inputs_vec);
     if (model_out.isTensor()) {
       // Single output models will return a tensor directly.
-      std::move(*out[0]) = model_out.toTensor();
+      // Two assignment strategies are used depending on whether gradient
+      // tracking is needed:
+      //   requires_grad=true (training):
+      //     Plain lvalue assignment selects Tensor::operator=(Tensor&&) &
+      //     This is a shallow swap that leaves the grad_fn intact so that we can
+      //     differentiate with respect to weights
+      //   requires_grad=false (inference):
+      //     std::move turns *out into an rvalue, selecting
+      //     Tensor::operator=(Tensor&&) &&
+      //     This calls copy_(), writing result data into the Fortran array (no graph
+      //     built).
+      if (requires_grad) {
+        *out[0] = model_out.toTensor();
+      } else {
+        std::move(*out[0]) = model_out.toTensor();
+      }
     } else if (model_out.isTuple()) {
       // Multiple output models will return a tuple => cast to tensors.
       for (int i = 0; i < nout; ++i) {
-        std::move(*out[i]) = model_out.toTuple()->elements()[i].toTensor();
+        auto tensor = model_out.toTuple()->elements()[i].toTensor();
+        // Same two strategies as the single-tensor branch above.
+        if (requires_grad) {
+          *out[i] = tensor;
+        } else {
+          std::move(*out[i]) = tensor;
+        }
       }
     } else {
       // If for some reason the forward method does not return a Tensor it
@@ -790,6 +811,28 @@ void torch_jit_module_print_parameters(const torch_jit_script_module_t module) {
 bool torch_jit_module_is_training(const torch_jit_script_module_t module) {
   auto m = reinterpret_cast<torch::jit::script::Module *>(module);
   return m->is_training();
+}
+
+void torch_jit_module_parameters(const torch_jit_script_module_t module,
+                                 torch_tensor_t *outputs, const int nout) {
+  // Cast the pointers we recieved in to Tensor objects
+  auto model = static_cast<torch::jit::script::Module *>(module);
+  auto out = reinterpret_cast<torch::Tensor **>(outputs);
+  auto parameters = model->parameters();
+  if (parameters.size() != nout) {
+    ctorch_error("Number of parameters does not match output dimension");
+  }
+  int i = 0;
+  for (auto parameter : parameters) {
+    // Allocate a new heap-based Tensor that is a shallow copy (alias) of the model
+    // parameter. Torch's copy constructor shares underlying storage, so if the model
+    // parameters are used in an optimizer then the optimizer will update the model's
+    // actual weights through this handle. In writing the address back into out[i] we
+    // assume that the associated Fortran torch_tensor is not associated (and indeed
+    // check this on the Fortran side).
+    out[i] = new torch::Tensor(parameter);
+    i++;
+  }
 }
 
 void torch_jit_module_delete(torch_jit_script_module_t module) {

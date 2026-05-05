@@ -13,6 +13,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 - Introduced a central, installable `pt2ts` script
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
+- Added a worked example for training in Fortran in
+  [#581](https://github.com/Cambridge-ICCS/FTorch/pull/581)
 
 ### Changed
 
