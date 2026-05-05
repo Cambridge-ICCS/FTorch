@@ -1,0 +1,45 @@
+!| Unit tests for writing out TorchScript models with FTorch.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_model_save
+  use funit
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_model, only: torch_model, torch_model_save, torch_model_load
+
+  implicit none
+
+  public
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  character(len=256), parameter :: input_filename = "../fixtures/simplenet.pt"
+  character(len=256), parameter :: output_filename = "tmp.pt"
+
+contains
+
+  ! Unit test checking files are indeed written
+  @test
+  subroutine test_exists()
+    type(torch_model) :: model
+    integer :: istat
+    logical :: exists
+
+    ! Load the test model from file then save it out with a different name
+    call torch_model_load(model, trim(input_filename), device_type)
+    call torch_model_save(model, trim(output_filename))
+
+    ! Check that the file exists
+    inquire(file=trim(output_filename), exist=exists)
+    @assertTrue(exists)
+
+    ! Delete the file
+    open(unit=10, iostat=istat, file=trim(output_filename), status="old")
+    @assertEqual(istat, 0)
+    close(unit=10, status="delete")
+  end subroutine test_exists
+
+end module unittest_model_save
