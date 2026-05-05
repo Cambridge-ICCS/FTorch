@@ -1,4 +1,4 @@
-"""Plot Fortran training loss."""
+"""Plot training loss using data saved out from Fortran."""
 
 import sys
 
@@ -12,6 +12,7 @@ with open("losses_ftorch.dat", "r") as f:
 # Plot on a log-log scale
 fig, axes = plt.subplots(figsize=(10, 6))
 axes.loglog(np.arange(1, len(ftorch) + 1), ftorch, ":x", color="purple", label="FTorch")
+axes.set_title("Loss curve from training in Fortran")
 axes.set_xlabel("Epoch")
 axes.set_ylabel("Loss")
 axes.legend()
