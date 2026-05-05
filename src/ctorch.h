@@ -438,7 +438,8 @@ EXPORT_C torch_jit_script_module_t torch_jit_load(const char *filename,
  * @param Torch Module to be written out
  * @param filename where TorchScript description of model is to be stored
  */
-EXPORT_C void torch_jit_save(const torch_jit_script_module_t module, const char *filename);
+EXPORT_C void torch_jit_save(const torch_jit_script_module_t module,
+                             const char *filename);
 
 /**
  * Function to run the `forward` method of a Torch Module
