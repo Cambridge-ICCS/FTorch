@@ -102,10 +102,10 @@ It makes sense that the values in $\frac{\mathrm{d}y}{\mathrm{d}x}`$ are all
 twos because the model has the effect of doubling the input. To understand the
 other derivative matrix, given $y=Wx$ where $W$ is the weights matrix, the
 product rule implies
-$$\frac{\partial y}{\partial W}=Ex+W\frac{\partial W}{\partial x},$$
-where $e$ is a $5\times1$ matrix of ones. (Note that $x$ is technically a
-$1\times5$ matrix.) The weight matrix is independent of the input, so the second
-term in the product vanishes. The first term evaluates to the value shown above.
+$$\frac{\partial y}{\partial W}=e\otimes x+W\frac{\partial x}{\partial W},$$
+where $e$ is a vector ones and $\otimes$ denotes the outer product. The input is
+independent of the weight matrix, so the second term in the product vanishes.
+The first term evaluates to the value shown above.
 
 To run the Fortran version, simply execute
 ```
