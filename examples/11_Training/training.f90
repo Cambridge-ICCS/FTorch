@@ -69,8 +69,8 @@ program training
   call torch_model_load(model, args(1), torch_kCPU, is_training=.true.)
 
   ! Get weights from model
-  ! NOTE: We don't construct weights_tensors because we want it to point to weights data created by
-  !       the model constructor
+  ! NOTE: We don't construct weights_tensors from a Fortran array because we want it
+  !        to point to weights data created by the model constructor
   call torch_model_parameters(model, weights_tensors)
   write (*,*) "Initial model weights:"
   call torch_tensor_print(weights_tensors(1))

@@ -26,7 +26,8 @@ This can be represented by the weights matrix
 [0, 0, 0, 1, 0]
 ```
 In each iteration of the training loop, we generate a random input vector and
-apply the permutation to get the expected output.
+manually apply the permutation to get the expected output as training data
+before conducting a training step.
 
 The stochastic gradient descent (SGD) training loop with learning rate 0.05 is
 demonstrated to converge within the 10000 iterations used. The loss trajectory
