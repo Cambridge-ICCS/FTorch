@@ -93,18 +93,16 @@ program training
     call random_number(in_data)
     target_data(:) = in_data([5,1,2,3,4])
 
-    ! Forward pass: run inference
+    ! Forward pass: propagate the input tensor through the network
     call torch_model_forward(model, in_tensors, out_tensors, requires_grad=.true.)
 
-    ! Evaluate the loss function as computed mean square error (MSE) between target and input, then
-    ! log its value
-    ! NOTE: We reconstruct loss each iteration so torch_tensor_mean's rank/shape check
-    !       sees a fresh rank-1 size-1 tensor.  torch_tensor_mean then replaces the impl.
+    ! Evaluate the loss function as the mean square error (MSE) between target and input, logging
+    ! its value
     call torch_tensor_from_array(loss, loss_data, torch_kCPU)
     call torch_tensor_mean(loss, (out_tensors(1) - target_tensors(1)) ** 2)
     write(unit=10, fmt="(es10.4)") loss_data(1)
 
-    ! Perform backward step on loss to propogate gradients using autograd
+    ! Backpropagation: compute the gradient of the loss with respect to the weights using autograd
     call torch_tensor_backward(loss)
     call torch_tensor_get_gradient(weights_grad, weights_tensors(1))
 
