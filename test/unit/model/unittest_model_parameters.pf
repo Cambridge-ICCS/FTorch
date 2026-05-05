@@ -111,4 +111,29 @@ contains
 
   end subroutine test_parameters_values
 
+  ! Unit test for checking that requires_grad is correctly propagated to the parameters
+  @test(testparameters={get_parameters_requires_grad()})
+  subroutine test_parameters_requires_grad(this)
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    character(len=256), parameter :: filename = "../fixtures/simplenet.pt"
+    type(torch_model) :: model
+    type(torch_tensor) :: parameters_tensors(1)
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [5]
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type, device_index, this%param%requires_grad)
+
+    ! Extract the model parameters
+    call torch_model_parameters(model, parameters_tensors)
+
+    ! Check that the parameters have the correct requires_grad property
+    ! FIXME: When requires_grad=.false. we get .true.. Is this right?
+    @assertEqual(this%param%requires_grad, parameters_tensors(1)%requires_grad())
+
+  end subroutine test_parameters_requires_grad
+
 end module unittest_model_parameters
