@@ -177,6 +177,7 @@ def main_cli():
         # Load the TorchScript model, propagate the same input tensor, and check the
         # results match
         ts_model = load_torchscript(output_model_file)
+        ts_model = ts_model.to(input_tensors[0].device)
         ts_model_outputs = ts_model(*input_tensors)
         validate_output_tensors(pt_model_outputs, ts_model_outputs)
         print("Saved TorchScript model working as expected in a basic test.")

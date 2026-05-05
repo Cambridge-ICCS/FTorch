@@ -96,7 +96,7 @@ if(CMAKE_BUILD_TESTS)
           --input_tensor_file
           ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_${DEVICE_LOW}.pt
           --output_model_file
-          ${PROJECT_BINARY_DIR}/torchscript_simplenet_model_${DEVICE_LOW}.pt
+          ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_${DEVICE_LOW}.pt
           --test)
 
   # 3. Check the model can be loaded from file and run on the specified devices
@@ -113,9 +113,11 @@ if(CMAKE_BUILD_TESTS)
   #    in Fortran and that its outputs meet expectations
   add_test(
     NAME example_multigpu_infer_fortran_${DEVICE_LOW}
-    COMMAND multigpu_infer_fortran ${DEVICE_LOW}
+    COMMAND multigpu_infer_fortran
             ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_${DEVICE_LOW}.pt
-    # Command line arguments for device type and model file
+            ${DEVICE_LOW}
+            ${NUM_DEVICES}
+    # Command line arguments: model file, device type, and number of devices
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
     example_multigpu_infer_fortran_${DEVICE_LOW}
