@@ -207,7 +207,7 @@ is no need to worry about this because they are both included as dependencies.</
 <h4 id="additional-dependencies-of-the-test-suite">Additional dependencies of the test suite</h4>
 <p>FTorch's test suite has some additional dependencies.</p>
 <ul>
-<li>You will also need to install the unit testing framework
+<li>Unit tests require the unit testing framework
   <a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a>.</li>
 <li>FTorch's test suite requires that <a href="https://pytorch.org/">PyTorch</a> has been
   installed, as opposed to LibTorch. See the
@@ -307,6 +307,16 @@ in order to tailor your build:</p>
 <td><code>CMAKE_BUILD_TESTS</code></td>
 <td><code>TRUE</code> / <code>FALSE</code></td>
 <td>Specifies whether to compile FTorch's <a href="../developer/testing.html">test suite</a> as part of the build.<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">4</a></sup></td>
+</tr>
+<tr>
+<td><code>FTORCH_BUILD_UNIT_TESTS</code></td>
+<td><code>ON</code> / <code>OFF</code></td>
+<td>Specifies whether to build the pFUnit-based unit tests. Defaults to <code>ON</code> when <code>CMAKE_BUILD_TESTS=TRUE</code>, otherwise <code>OFF</code>.</td>
+</tr>
+<tr>
+<td><code>FTORCH_BUILD_INTEGRATION_TESTS</code></td>
+<td><code>ON</code> / <code>OFF</code></td>
+<td>Specifies whether to build the integration tests from <code>examples/</code>. Defaults to <code>ON</code> when <code>CMAKE_BUILD_TESTS=TRUE</code>, otherwise <code>OFF</code>.</td>
 </tr>
 <tr>
 <td><code>GPU_DEVICE</code></td>

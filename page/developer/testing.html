@@ -170,8 +170,9 @@ tests based on a subset of the <a href="../usage/worked_examples.html">worked ex
 </li>
 </ul>
 <h3 id="building">Building</h3>
-<p>To enable FTorch's test suite, set <code>CMAKE_BUILD_TESTS=TRUE</code> during the build.
-To run the unit tests, you will need to install
+<p>Set <code>CMAKE_BUILD_TESTS=TRUE</code> to build both unit and integration tests by
+default. To build only one test family, disable the other.</p>
+<p>To run the unit tests, you will need to install
 <a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a> and provide its
 install location to the <code>CMAKE_PREFIX_PATH</code> or as the environment variable <code>PFUNIT_DIR</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1"># Update `CMAKE_PREFIX_PATH` explicitly with pFUnit install directory</span>
@@ -188,6 +189,16 @@ cmake<span class="w"> </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>TRUE<spa
 <p>Note that pFUnit includes the version number in the install directory name,
 so for version 4.12 that path will need to be specified as
 <code>/path/to/pFUnit/build/installed/PFUNIT-4.12</code>, for example.</p>
+<p>Integration tests can be built without pFUnit by disabling the unit tests:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>TRUE<span class="w"> </span>-DFTORCH_BUILD_UNIT_TESTS<span class="o">=</span>OFF<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-S<span class="w"> </span>&lt;/path/to/FTorch&gt;<span class="w"> </span>-B<span class="w"> </span>&lt;/path/to/FTorch/build&gt;
+</code></pre></div>
+
+<p>Unit tests can be built without integration tests:</p>
+<div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>TRUE<span class="w"> </span>-DFTORCH_BUILD_INTEGRATION_TESTS<span class="o">=</span>OFF<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-S<span class="w"> </span>&lt;/path/to/FTorch&gt;<span class="w"> </span>-B<span class="w"> </span>&lt;/path/to/FTorch/build&gt;
+</code></pre></div>
+
 <div class="alert alert-info">
 <p class="alert-title h4">Note</p>
 <p>If a <code>GPU_DEVICE</code> is specified but only one is available, set <code>MULTI_GPU=OFF</code> to skip
