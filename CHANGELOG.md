@@ -13,6 +13,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 - Introduced a central, installable `pt2ts` script
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
+- Ability to build only integration or unit tests as desired using CMake options in
+  [#584](https://github.com/Cambridge-ICCS/FTorch/pull/584)
+
 
 ### Changed
 
