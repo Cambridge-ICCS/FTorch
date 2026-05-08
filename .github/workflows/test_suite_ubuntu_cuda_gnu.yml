@@ -19,16 +19,22 @@ on:
       - 'src/*.h'
       # Unit tests
       - 'test/unit/**/*.pf'
-      # Integration tests
-      - 'examples/**/*.py'
-      - 'examples/**/*.f90'
+      - 'test/ftorch_utils/*.py'
+      # Specific integration tests
+      - 'examples/07_MultiGPU/*.py'
+      - 'examples/07_MultiGPU/*.f90'
       # Build system
       - '**CMakeLists.txt'
-      - '**requirements.txt'
+      - 'pyproject.toml'
 
   pull_request:
     paths:
+      # This workflow
       - '.github/workflows/test_suite_ubuntu_cuda_gnu.yml'
+      # Specific integration tests
+      - 'examples/07_MultiGPU/*.py'
+      - 'examples/07_MultiGPU/*.f90'
+      - 'examples/07_MultiGPU/CMakeLists.txt'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -51,8 +57,8 @@ jobs:
     strategy:
       fail-fast: true
 
-    # Terminate the job if it runs for more than 15 minutes
-    timeout-minutes: 15
+    # Terminate the job if it runs for more than 20 minutes
+    timeout-minutes: 20
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -76,15 +82,15 @@ jobs:
           # Check this is <= what GPU-runner has installed (backwards compatible)
           pip install . --extra-index-url https://download.pytorch.org/whl/cu129 --group test
 
-      - name: Install cmake and NVIDIA dev toolkit
+      - name: Run GPU-enabled Python unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/ftorch_utils -k cuda
+
+      - name: Install cmake, NVIDIA dev toolkit, and an MPI distribution
         run: |
           sudo apt update
-          sudo apt install -y cmake nvidia-cuda-toolkit
-
-        # Currently used by example_mpi
-      - name: Install an MPI distribution
-        run: |
-          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
+          sudo apt install -y cmake nvidia-cuda-toolkit openmpi-bin openmpi-common libopenmpi-dev
 
       - name: Install pFUnit
         run: |
@@ -124,14 +130,14 @@ jobs:
           cmake --build .
           cmake --install .
 
-      - name: Run unit tests
+      - name: Run GPU-enabled Fortran unit tests
         run: |
           . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex cuda
 
-      - name: Run integration tests
+      - name: Run GPU-enabled integration tests
         run: |
           . ftorch/bin/activate
           cd build
-          ctest --verbose --tests-regex example
+          ctest --verbose --tests-regex example_multigpu
