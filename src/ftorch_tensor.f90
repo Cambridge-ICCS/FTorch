@@ -2921,14 +2921,15 @@ contains
       end subroutine torch_tensor_backward_without_external_gradient_c
     end interface
 
-    ! Accept a rank-0 tensor (0-dim PyTorch scalar) or a rank-1 size-1 tensor
     if (tensor%get_rank() == 1) then
+      ! Accept rank-1 tensors so long as they only have a single entry
       sizes(:) = tensor%get_shape()
       if (sizes(1) /= 1) then
         write(*,*) "Error :: external gradient can only be implicitly created for scalar fields"
         stop 1
       end if
     else if (tensor%get_rank() /= 0) then
+      ! Disallow anything else except rank-0 tensors (i.e., 0-dim PyTorch scalars)
       write(*,*) "Error :: external gradient can only be implicitly created for scalar fields"
       stop 1
     end if
