@@ -85,7 +85,7 @@
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
               <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Joe Wallwork</li>
-              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: March 2026</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: April 2026</li>
           </ul>
         </div>
         <div class="col">
@@ -155,10 +155,9 @@
     <div class="col-9" id='text'>
       <h2 id="online-training">Online Training</h2>
 <p>FTorch has supported offline training of ML models for some time (see the
-<a href="offline.html">offline training user guide page</a> for details). We are
-currently working on extending its functionality to support online training
-by exposing the backpropagation and optimization
-functionalities of PyTorch/LibTorch.</p>
+<a href="offline.html">offline training user guide page</a> for details). We
+recently extended its functionality to support online training by exposing the
+backpropagation and optimization functionalities of PyTorch/LibTorch.</p>
 <p>Below we provide a schematic of the online training workflow, which is broken
 down into separate tasks below.</p>
 <p><img alt="schematic" src="../../media/usage/online.svg" title="Online training schematic"></p>
@@ -190,8 +189,11 @@ model that was created in step 2 is read in at the start of the Fortran program
 and the modified ML model is written out to the same TorchScript file at the
 end of the Fortran program. This way, the model can be trained in multiple
 Fortran runs, with the same model being read.</p>
-<p><em>Note: Training and writing out models has not yet been implemented in FTorch,
-but is work in progress.</em></p>
+<p>See the
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/11_Training">training worked example</a>
+for a demonstration of how to train a PyTorch model purely in Fortran.</p>
+<p><em>Note: Writing out models has not yet been implemented in FTorch, but is work in
+progress.</em></p>
 <h4 id="4-fortran-model-with-inference">4. Fortran model with inference</h4>
 <p>In order to run inference with the trained ML model, you will need to create
 another modified version of your Fortran model that loads the TorchScript model

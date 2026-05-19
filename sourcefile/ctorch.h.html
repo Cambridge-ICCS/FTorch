@@ -619,12 +619,22 @@
 <a id="ln-462" name="ln-462" href="#ln-462"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">torch_jit_module_is_training</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
 <a id="ln-463" name="ln-463" href="#ln-463"></a>
 <a id="ln-464" name="ln-464" href="#ln-464"></a><span class="cm">/**</span>
-<a id="ln-465" name="ln-465" href="#ln-465"></a><span class="cm"> * Function to delete a Torch Module to clean up</span>
-<a id="ln-466" name="ln-466" href="#ln-466"></a><span class="cm"> * @param Torch Module to delete</span>
-<a id="ln-467" name="ln-467" href="#ln-467"></a><span class="cm"> */</span>
-<a id="ln-468" name="ln-468" href="#ln-468"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_delete</span><span class="p">(</span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
-<a id="ln-469" name="ln-469" href="#ln-469"></a>
-<a id="ln-470" name="ln-470" href="#ln-470"></a><span class="cp">#endif </span><span class="cm">/* C_TORCH_H*/</span>
+<a id="ln-465" name="ln-465" href="#ln-465"></a><span class="cm"> * Function to extract the parameters of a Torch Model as tensors.</span>
+<a id="ln-466" name="ln-466" href="#ln-466"></a><span class="cm"> *</span>
+<a id="ln-467" name="ln-467" href="#ln-467"></a><span class="cm"> * @param Torch Model to extract parameters from</span>
+<a id="ln-468" name="ln-468" href="#ln-468"></a><span class="cm"> * @param Torch Tensors to be extracted</span>
+<a id="ln-469" name="ln-469" href="#ln-469"></a><span class="cm"> * @param Number of Torch Tensors to extract</span>
+<a id="ln-470" name="ln-470" href="#ln-470"></a><span class="cm"> */</span>
+<a id="ln-471" name="ln-471" href="#ln-471"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_parameters</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">,</span>
+<a id="ln-472" name="ln-472" href="#ln-472"></a><span class="w">                                          </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="o">*</span><span class="n">outputs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nout</span><span class="p">);</span>
+<a id="ln-473" name="ln-473" href="#ln-473"></a>
+<a id="ln-474" name="ln-474" href="#ln-474"></a><span class="cm">/**</span>
+<a id="ln-475" name="ln-475" href="#ln-475"></a><span class="cm"> * Function to delete a Torch Module to clean up</span>
+<a id="ln-476" name="ln-476" href="#ln-476"></a><span class="cm"> * @param Torch Module to delete</span>
+<a id="ln-477" name="ln-477" href="#ln-477"></a><span class="cm"> */</span>
+<a id="ln-478" name="ln-478" href="#ln-478"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_jit_module_delete</span><span class="p">(</span><span class="n">torch_jit_script_module_t</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
+<a id="ln-479" name="ln-479" href="#ln-479"></a>
+<a id="ln-480" name="ln-480" href="#ln-480"></a><span class="cp">#endif </span><span class="cm">/* C_TORCH_H*/</span>
 </pre></div>
 
       </section>

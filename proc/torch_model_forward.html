@@ -281,6 +281,10 @@ modules which it uses.
 
 
     <p>Performs a forward pass of the model with the input tensors</p>
+<p>WARNING: If requires_grad=.true. then any association between the output_tensors and Fortran
+          arrays is lost. The output_tensors will instead point directly to the tensor objects
+          outputted from the model in Torch. This is required to track gradients through any
+          intermediate tensors (such as model weights) during backpropagation.</p>
 
 
     <h3>Arguments</h3>
