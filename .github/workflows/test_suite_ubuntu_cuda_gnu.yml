@@ -100,6 +100,9 @@ jobs:
         env:
           FORTRAN_STANDARD: f2008
         run: |
+          # GitHub Actions doesn't source /etc/profile.d/ scripts, so the CUDA bin directory
+          # (added by the apt package post-install script) won't be in PATH automatically.
+          export PATH=/usr/local/cuda/bin:$PATH
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
