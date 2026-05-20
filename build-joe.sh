@@ -4,8 +4,7 @@ set -e # Exit immediately if a command exits with a non-zero status
 
 # Function to display help text
 show_help() {
-  echo "Usage: $0 [--debug | -d] [--fresh | -f] [--fpm] [--std <standard>]"
-  echo "                  [--compiler <compiler>] [--help | -h]"
+  echo "Usage: $0 [--debug | -d] [--fresh | -f] [--fpm] [--std <standard>] [--help | -h]"
   echo
   echo "Options:"
   echo "  --debug   | -d      Compile in Debug mode."
@@ -13,8 +12,6 @@ show_help() {
   echo "  --fpm     | -fpm    Use Fortran Package Manager (fpm) for building"
   echo "                      instead of CMake."
   echo "  --std <standard>    Specify the Fortran standard (e.g., f2008, f2018)."
-  echo "  --compiler <family> Specify the compiler family"
-  echo "                      (gnu/intel/nvidia/flang)."
   echo "  --help    | -h      Show this help message and exit."
 }
 
@@ -26,7 +23,7 @@ before running this script."
 fi
 
 # Install ftorch_utils
-pip install -q -e . --extra-index-url https://download.pytorch.org/whl/cpu
+pip install -q -e .[examples] --extra-index-url https://download.pytorch.org/whl/cpu
 
 # # Check if a Spack environment is active
 # if [ -z "${SPACK_ENV}" ]; then
@@ -38,10 +35,10 @@ pip install -q -e . --extra-index-url https://download.pytorch.org/whl/cpu
 # Parse command line arguments
 BUILD_DIR="$(pwd)/build"
 BUILD_TYPE=Release
+FFLAGS=""
 FRESH_BUILD=false
 FPM_BUILD=false
 FORTRAN_STANDARD=f2018
-COMPILER=flang
 HELP=false
 for arg in "$@"; do
   case $arg in
@@ -62,11 +59,6 @@ for arg in "$@"; do
     FORTRAN_STANDARD="$2"
     shift 2
     ;;
-  --compiler)
-    COMPILER="$2"
-    BUILD_DIR="${BUILD_DIR}_${COMPILER}"
-    shift 2
-    ;;
   --help | -h)
     HELP=true
     shift
@@ -74,6 +66,25 @@ for arg in "$@"; do
   *) ;;
   esac
 done
+
+# Determine compiler family
+if [ -n "$(mpif90 --version | grep GNU)" ]; then
+  BUILD_DIR="${BUILD_DIR}/gnu"
+  FFLAGS="${FFLAGS} -std=${FORTRAN_STANDARD}"
+elif [ -n "$(mpif90 --version | grep IFX)" ]; then
+  BUILD_DIR="${BUILD_DIR}/intel"
+  FFLAGS="${FFLAGS} -stand ${FORTRAN_STANDARD} -fpscomp logicals"
+elif [ -n "$(mpif90 --version | grep NVIDIA)" ]; then
+  BUILD_DIR="${BUILD_DIR}/nvidia"
+  # FFLAGS="${FFLAGS} -std=${FORTRAN_STANDARD}"
+elif [ -n "$(mpif90 --version | grep flang)" ]; then
+  BUILD_DIR="${BUILD_DIR}/flang"
+  FFLAGS="${FFLAGS} -std=${FORTRAN_STANDARD}"
+else
+  echo "Unsupported compiler: ${COMPILER}"
+  echo "Supported compilers are: gnu, intel, nvidia, flang"
+  exit 1
+fi
 
 # Check for --help option
 if [ "${HELP}" = true ]; then
@@ -91,57 +102,37 @@ if [ "${FRESH_BUILD}" = true ]; then
 else
   echo "Rebuilding..."
 fi
-
-# Select compiler family
-if [ "${COMPILER}" == "gnu" ]; then
-  CC=gcc
-  CXX=g++
-  FC=gfortran
-elif [ "${COMPILER}" == "intel" ]; then
-  CC=icx-cc
-  CXX=icx-cl
-  FC=ifx
-elif [ "${COMPILER}" == "nvidia" ]; then
-  CC=nvcc
-  CXX=nvc++
-  FC=nvfortran
-elif [ "${COMPILER}" == "flang" ]; then
-  CC=clang
-  CXX=clang++
-  FC=flang
-else
-  echo "Unsupported compiler: ${COMPILER}"
-  echo "Supported compilers are: gnu, intel, nvidia, flang"
-  exit 1
-fi
+mkdir -p "${BUILD_DIR}"
 
 # Paths to dependencies
-Torch_DIR="$(python -c 'import torch;print(torch.utils.cmake_prefix_path)')"
-PFUNIT_DIR="${HOME}/tools/${COMPILER}/pfunit/build/installed/PFUNIT-4.12"
+Torch_DIR="${VIRTUAL_ENV}/lib/python3.14/site-packages"
+export SPACK_COLOR=false
+PFUNIT_DIR="$(spack find --format 'pfunit-{version}-{hash}/PFUNIT-{version}' pfunit)"
+export SPACK_COLOR=always
+PFUNIT_DIR="${SPACK_ROOT}/opt/spack/linux-skylake/${PFUNIT_DIR::-2}"
 
 # Build the library
 if [ "${FPM_BUILD}" = true ]; then
   fpm build \
     --profile debug \
-    --compiler "${FC}" \
-    --c-compiler "${CC}" \
-    --cxx-compiler "${CXX}" \
-    --flag "-std=${FORTRAN_STANDARD}" \
+    --compiler mpif90 \
+    --c-compiler mpicc \
+    --cxx-compiler mpicxx \
+    --flag "${FFLAGS}" \
     --c-flag "-cpp -std=c++17 -I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include" \
     --cxx-flag "-cpp -std=c++17 -I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include" \
     --link-flag "-L${Torch_DIR}/lib -L${PFUNIT_DIR}/lib" \
     --verbose
 else
   cmake -S . -B "${BUILD_DIR}" \
-    -DPython_EXECUTABLE="$(which python)" \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_Fortran_COMPILER="${FC}" \
-    -DCMAKE_C_COMPILER="${CC}" \
-    -DCMAKE_CXX_COMPILER="${CXX}" \
+    -DCMAKE_Fortran_COMPILER=mpif90 \
+    -DCMAKE_C_COMPILER=mpicc \
+    -DCMAKE_CXX_COMPILER=mpicxx \
     -DCMAKE_INSTALL_PREFIX="${BUILD_DIR}" \
     -DCMAKE_BUILD_TESTS=TRUE \
     -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-    -DCMAKE_Fortran_FLAGS="-std=f2018" # -Wall
+    -DCMAKE_Fortran_FLAGS="${FFLAGS}"
   cmake --build "${BUILD_DIR}" --config Release --verbose
   cmake --install "${BUILD_DIR}"
 fi

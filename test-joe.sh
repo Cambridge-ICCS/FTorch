@@ -11,8 +11,6 @@ show_help() {
   echo "  --debug   | -d      Run in Debug mode."
   echo "  --fpm     | -fpm    Use Fortran Package Manager (fpm) build"
   echo "                      instead of CMake."
-  echo "  --compiler <family> Specify the compiler family"
-  echo "                      (gnu/intel/nvidia/flang)."
   echo "  --help    | -h      Show this help message and exit."
 }
 
@@ -27,7 +25,6 @@ fi
 BUILD_DIR="$(pwd)/build"
 BUILD_TYPE=Release
 FPM_BUILD=false
-COMPILER=flang
 HELP=false
 for arg in "$@"; do
   case $arg in
@@ -40,11 +37,6 @@ for arg in "$@"; do
     FPM_BUILD=true
     shift
     ;;
-  --compiler)
-    COMPILER="$2"
-    BUILD_DIR="${BUILD_DIR}_${COMPILER}"
-    shift 2
-    ;;
   --help | -h)
     HELP=true
     shift
@@ -52,6 +44,21 @@ for arg in "$@"; do
   *) ;;
   esac
 done
+
+# Determine compiler family
+if [ -n "$(mpif90 --version | grep GNU)" ]; then
+  BUILD_DIR="${BUILD_DIR}/gnu"
+elif [ -n "$(mpif90 --version | grep IFX)" ]; then
+  BUILD_DIR="${BUILD_DIR}/intel"
+elif [ -n "$(mpif90 --version | grep NVIDIA)" ]; then
+  BUILD_DIR="${BUILD_DIR}/nvidia"
+elif [ -n "$(mpif90 --version | grep flang)" ]; then
+  BUILD_DIR="${BUILD_DIR}/flang"
+else
+  echo "Unsupported compiler: ${COMPILER}"
+  echo "Supported compilers are: gnu, intel, nvidia, flang"
+  exit 1
+fi
 
 # Check for --help option
 if [ "${HELP}" = true ]; then
