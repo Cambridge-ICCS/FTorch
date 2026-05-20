@@ -79,7 +79,7 @@ jobs:
       - name: Install cmake and NVIDIA dev toolkit
         run: |
           sudo apt update
-          sudo apt install -y cmake nvidia-cuda-toolkit
+          sudo apt install -y cmake cuda-toolkit
 
         # Currently used by example_mpi
       - name: Install an MPI distribution
