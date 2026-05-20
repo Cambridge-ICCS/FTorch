@@ -213,8 +213,7 @@ contains
     ! Check the tensors aren't already associated
     do i = 1, n_outputs
       if (c_associated(output_tensors(i)%p)) then
-        write(*,*) "Error :: tensor pointer will be lost in call to torch_model_parameters"
-        stop 1
+        write(*,*) "Warning :: tensor pointer will be lost in call to torch_model_parameters"
       end if
     end do
 
