@@ -72,13 +72,12 @@ jobs:
           python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
-          # CUDA v12.9 chosen as latest supported by PyTorch
-          # Check this is <= what GPU-runner has installed (backwards compatible)
-          pip install . --extra-index-url https://download.pytorch.org/whl/cu129 --group test
+          pip install . --extra-index-url https://download.pytorch.org/whl/cu132 --group test
 
       - name: Install cmake and CUDA toolkit
         run: |
           sudo apt update
+          # NOTE: CUDA version should be consistent with the download above, i.e., 13.2
           sudo apt install -y cmake cuda-toolkit
 
         # Currently used by example_mpi
