@@ -76,7 +76,7 @@ jobs:
           # Check this is <= what GPU-runner has installed (backwards compatible)
           pip install . --extra-index-url https://download.pytorch.org/whl/cu129 --group test
 
-      - name: Install cmake and NVIDIA dev toolkit
+      - name: Install cmake and CUDA toolkit
         run: |
           sudo apt update
           sudo apt install -y cmake cuda-toolkit
