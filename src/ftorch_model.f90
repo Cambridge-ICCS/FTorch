@@ -214,7 +214,8 @@ contains
     n_outputs = size(output_tensors)
     do i = 1, n_outputs
       if (c_associated(output_tensors(i)%p)) then
-        write(*,*) "Warning :: tensor pointer will be lost in call to torch_model_parameters"
+        write(*,*) "Error :: tensor pointer will be lost in call to torch_model_parameters"
+        exit 1
       end if
     end do
 
