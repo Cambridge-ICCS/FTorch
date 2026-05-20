@@ -26,7 +26,7 @@ module ftorch_model
 contains
 
   ! ============================================================================
-  ! --- Procedures for constructing tensors
+  ! --- Procedures for constructing models
   ! ============================================================================
 
   !> Loads a TorchScript nn.module (pre-trained PyTorch model saved with TorchScript)
@@ -149,7 +149,7 @@ contains
   end subroutine torch_model_forward
 
   ! ============================================================================
-  ! --- Procedures for interrogating tensors
+  ! --- Procedures for interrogating models
   ! ============================================================================
 
   !| Prints the parameters associated with a model
