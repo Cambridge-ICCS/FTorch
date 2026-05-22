@@ -64,7 +64,7 @@ contains
   end subroutine test_sum
 
   ! Unit test for the mean reduction
-  @test(testParameters={get_parameters_short()})
+  @test
   subroutine test_mean()
     use ftorch_tensor, only: torch_tensor_mean
 
