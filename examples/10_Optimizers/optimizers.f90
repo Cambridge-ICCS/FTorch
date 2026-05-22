@@ -13,7 +13,7 @@ program foptimizer
                     torch_tensor_ones, torch_tensor_empty, &
                     torch_tensor_print, &
                     torch_tensor_backward, torch_tensor_get_gradient, &
-                    torch_tensor_mean, &
+                    torch_loss_mse, &
                     torch_optim, torch_optim_SGD
 
   ! Import our tools module for testing utils
@@ -75,7 +75,7 @@ program foptimizer
     ! NOTE: We need to reconstruct the loss tensor at each iteration to capture a new graph
     !       associated with it as it will be detached after the backward call.
     call torch_tensor_from_array(loss, loss_data, torch_kCPU)
-    call torch_tensor_mean(loss, (output_vec - target_vec) ** 2)
+    call torch_loss_mse(output_vec, target_vec, loss)
     write(unit=10, fmt="(es10.4)") loss_data(1)
 
     ! Perform backward step on loss to propogate gradients using autograd
