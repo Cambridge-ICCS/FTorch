@@ -3,9 +3,9 @@
  * (https://pytorch.org/cppdocs) and more specifically the C++ API documentation
  * (https://pytorch.org/cppdocs/api/library_root.html) pages on the PyTorch website.
  */
+#include <torch/nn/functional/loss.h>
 #include <torch/script.h>
 #include <torch/torch.h>
-#include <torch/nn/functional/loss.h>
 
 #include "ctorch.h"
 
@@ -846,7 +846,8 @@ void torch_jit_module_delete(torch_jit_script_module_t module) {
 // =============================================================================
 
 // Function to create an MSELoss and return a pointer to it
-void torch_loss_mse(const torch_tensor_t input, const torch_tensor_t target, torch_tensor_t loss) {
+void torch_loss_mse(const torch_tensor_t input, const torch_tensor_t target,
+                    torch_tensor_t loss) {
   try {
     // Cast the parameters pointer into Tensor objects
     auto t1 = reinterpret_cast<torch::Tensor *const>(input);
