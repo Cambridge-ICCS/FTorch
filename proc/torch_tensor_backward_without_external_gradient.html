@@ -622,15 +622,16 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">      </span><span class="k">end subroutine </span><span class="n">torch_tensor_backward_without_external_gradient_c</span>
 <span class="w">    </span><span class="k">end interface</span>
 
-<span class="w">    </span><span class="c">! Accept a rank-0 tensor (0-dim PyTorch scalar) or a rank-1 size-1 tensor</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tensor</span><span class="p">%</span><span class="n">get_rank</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">      </span><span class="n">sizes</span><span class="p">(:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_shape</span><span class="p">()</span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">tensor</span><span class="p">%</span><span class="n">get_rank</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">      </span><span class="c">! Accept rank-1 tensors so long as they only have a single entry</span>
+<span class="w">      </span><span class="n">sizes</span><span class="p">(:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tensor</span><span class="p">%</span><span class="n">get_shape</span><span class="p">()</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sizes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: external gradient can only be implicitly created for scalar fields&quot;</span>
 <span class="w">        </span><span class="k">stop </span><span class="mi">1</span>
 <span class="w">      </span><span class="k">end if</span>
 <span class="k">    else if</span><span class="w"> </span><span class="p">(</span><span class="n">tensor</span><span class="p">%</span><span class="n">get_rank</span><span class="p">()</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">      write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: external gradient can only be implicitly created for scalar fields&quot;</span>
+<span class="w">      </span><span class="c">! Disallow anything else except rank-0 tensors (i.e., 0-dim PyTorch scalars)</span>
+<span class="w">      </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: external gradient can only be implicitly created for scalar fields&quot;</span>
 <span class="w">      </span><span class="k">stop </span><span class="mi">1</span>
 <span class="w">    </span><span class="k">end if</span>
 

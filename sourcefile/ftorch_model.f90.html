@@ -599,15 +599,15 @@ can be.
 <a id="ln-211" name="ln-211" href="#ln-211"></a><span class="w">    </span><span class="k">end interface</span>
 <a id="ln-212" name="ln-212" href="#ln-212"></a>
 <a id="ln-213" name="ln-213" href="#ln-213"></a><span class="w">    </span><span class="c">! Check the tensors aren&#39;t already associated</span>
-<a id="ln-214" name="ln-214" href="#ln-214"></a><span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_outputs</span>
-<a id="ln-215" name="ln-215" href="#ln-215"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">c_associated</span><span class="p">(</span><span class="n">output_tensors</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
-<a id="ln-216" name="ln-216" href="#ln-216"></a><span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: tensor pointer will be lost in call to torch_model_parameters&quot;</span>
-<a id="ln-217" name="ln-217" href="#ln-217"></a><span class="w">        </span><span class="k">stop </span><span class="mi">1</span>
-<a id="ln-218" name="ln-218" href="#ln-218"></a><span class="w">      </span><span class="k">end if</span>
-<a id="ln-219" name="ln-219" href="#ln-219"></a><span class="k">    end do</span>
-<a id="ln-220" name="ln-220" href="#ln-220"></a>
-<a id="ln-221" name="ln-221" href="#ln-221"></a><span class="w">    </span><span class="c">! Get the parameters that were created during model construction</span>
-<a id="ln-222" name="ln-222" href="#ln-222"></a><span class="w">    </span><span class="n">n_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">output_tensors</span><span class="p">)</span>
+<a id="ln-214" name="ln-214" href="#ln-214"></a><span class="w">    </span><span class="n">n_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">output_tensors</span><span class="p">)</span>
+<a id="ln-215" name="ln-215" href="#ln-215"></a><span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_outputs</span>
+<a id="ln-216" name="ln-216" href="#ln-216"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">c_associated</span><span class="p">(</span><span class="n">output_tensors</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<a id="ln-217" name="ln-217" href="#ln-217"></a><span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: tensor pointer will be lost in call to torch_model_parameters&quot;</span>
+<a id="ln-218" name="ln-218" href="#ln-218"></a><span class="w">        </span><span class="k">stop </span><span class="mi">1</span>
+<a id="ln-219" name="ln-219" href="#ln-219"></a><span class="w">      </span><span class="k">end if</span>
+<a id="ln-220" name="ln-220" href="#ln-220"></a><span class="k">    end do</span>
+<a id="ln-221" name="ln-221" href="#ln-221"></a>
+<a id="ln-222" name="ln-222" href="#ln-222"></a><span class="w">    </span><span class="c">! Get the parameters that were created during model construction</span>
 <a id="ln-223" name="ln-223" href="#ln-223"></a><span class="w">    </span><span class="k">call </span><span class="n">torch_jit_model_parameters_c</span><span class="p">(</span><span class="n">model</span><span class="p">%</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span><span class="p">(</span><span class="n">output_ptrs</span><span class="p">),</span><span class="w"> </span><span class="n">n_outputs</span><span class="p">)</span>
 <a id="ln-224" name="ln-224" href="#ln-224"></a>
 <a id="ln-225" name="ln-225" href="#ln-225"></a><span class="w">    </span><span class="c">! Copy updated pointers back to output tensors</span>
