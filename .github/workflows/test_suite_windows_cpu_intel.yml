@@ -82,7 +82,7 @@ jobs:
             -Bbuild `
             -G "NMake Makefiles" `
             -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
-            -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" `
+            -DCMAKE_Fortran_FLAGS="/stand:08 /fpscomp:logicals" `
             -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" `
             -DCMAKE_PREFIX_PATH="$Torch_DIR\torch" `
             -DCMAKE_BUILD_TYPE=Release `
@@ -135,7 +135,7 @@ jobs:
           cmake .. `
             -G "NMake Makefiles" `
             -DCMAKE_Fortran_COMPILER=ifx `
-            -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" `
+            -DCMAKE_Fortran_FLAGS="/stand:08 /fpscomp:logicals" `
             -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_PREFIX_PATH="$FTORCH_INSTALL_DIR;$Torch_DIR\torch" `
