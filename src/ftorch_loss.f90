@@ -19,9 +19,9 @@ contains
   ! ============================================================================
 
   !> Evaluate MSELoss
-  ! TODO: Allow reductions
+  ! TODO: Allow reductions other than mean
   subroutine torch_loss_mse(input_tensor, target_tensor, loss_tensor)
-    use, intrinsic :: iso_c_binding, only : c_ptr
+    use, intrinsic :: iso_c_binding, only : c_associated
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
@@ -37,6 +37,10 @@ contains
       end subroutine torch_loss_mse_c
     end interface
 
+    if (.not. c_associated(loss_tensor%p)) then
+      write(*,*) "Error :: loss tensor has not been constructed"
+      stop 1
+    end if
     call torch_loss_mse_c(input_tensor%p, target_tensor%p, loss_tensor%p)
   end subroutine torch_loss_mse
 

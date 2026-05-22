@@ -857,12 +857,12 @@ void torch_loss_mse(const torch_tensor_t input, const torch_tensor_t target, tor
     validate_tensor(t2, "Target tensor");
 
     // Set up options
-    // TODO: Allow reductions
+    // TODO: Allow reductions other than mean
     namespace F = torch::nn::functional;
-    auto options = F::MSELossFuncOptions(torch::kNone);
+    auto options = F::MSELossFuncOptions(torch::kMean);
 
     // Create the optimizer and cast to torch_optim_t to return
-    *l = F::mse_loss(*t1, *t2, options);
+    std::move(*l) = F::mse_loss(*t1, *t2, options);
   } catch (const std::exception &e) {
     ctorch_error(std::string(e.what()) + " in torch_loss_mse");
   }
