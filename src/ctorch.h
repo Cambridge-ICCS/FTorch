@@ -477,4 +477,17 @@ EXPORT_C void torch_jit_module_parameters(const torch_jit_script_module_t module
  */
 EXPORT_C void torch_jit_module_delete(torch_jit_script_module_t module);
 
+// =============================================================================
+// --- Torch loss API
+// =============================================================================
+
+/**
+ * Function to create an MSELoss and return a pointer to it
+ * @param Input Torch tensor to evaluate the loss at
+ * @param Target Torch tensor to evaluate the loss against
+ * @param Tensor containing loss value(s)
+ */
+EXPORT_C void torch_loss_mse(const torch_tensor_t input, const torch_tensor_t target,
+                             torch_tensor_t loss);
+
 #endif /* C_TORCH_H*/

@@ -5,6 +5,7 @@
  */
 #include <torch/script.h>
 #include <torch/torch.h>
+#include <torch/nn/functional/loss.h>
 
 #include "ctorch.h"
 
@@ -838,4 +839,31 @@ void torch_jit_module_parameters(const torch_jit_script_module_t module,
 void torch_jit_module_delete(torch_jit_script_module_t module) {
   auto m = reinterpret_cast<torch::jit::script::Module *>(module);
   delete m;
+}
+
+// =============================================================================
+// --- Torch loss functions API
+// =============================================================================
+
+// Function to create an MSELoss and return a pointer to it
+void torch_loss_mse(const torch_tensor_t input, const torch_tensor_t target, torch_tensor_t loss) {
+  try {
+    // Cast the parameters pointer into Tensor objects
+    auto t1 = reinterpret_cast<torch::Tensor *const>(input);
+    auto t2 = reinterpret_cast<torch::Tensor *const>(target);
+    auto l = reinterpret_cast<torch::Tensor *>(loss);
+
+    validate_tensor(t1, "Input tensor");
+    validate_tensor(t2, "Target tensor");
+
+    // Set up options
+    // TODO: Allow reductions
+    namespace F = torch::nn::functional;
+    auto options = F::MSELossFuncOptions(torch::kNone);
+
+    // Create the optimizer and cast to torch_optim_t to return
+    *l = F::mse_loss(*t1, *t2, options);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_loss_mse");
+  }
 }
