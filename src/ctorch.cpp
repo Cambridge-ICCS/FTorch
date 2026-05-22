@@ -159,19 +159,19 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
   }
 }
 
-// Mapping from FTorch torch_reduction_t to libtorch reduction type
-constexpr auto get_libtorch_reduction_type(torch_reduction_t reduction_type) {
+// Mapping from FTorch torch_reduction_t to libtorch reduction type.
+// torch::kNone, torch::kMean, and torch::kSum are distinct struct types in the
+// Torch C++ API (see torch/csrc/api/include/torch/enum.h), so the return type
+// must be the variant torch::nn::MSELossOptions::reduction_t.
+torch::nn::MSELossOptions::reduction_t
+get_libtorch_reduction_type(torch_reduction_t reduction_type) {
   switch (reduction_type) {
   case torch_kNone:
-    // FIXME: See torch/include/torch/csrc/api/include/torch/enum.h
-    //   return torch::kNone;
-    ctorch_error("Not currently supported");
+    return torch::kNone;
   case torch_kMean:
     return torch::kMean;
   case torch_kSum:
-    // FIXME: See torch/include/torch/csrc/api/include/torch/enum.h
-    //   return torch::kSum;
-    ctorch_error("Not currently supported");
+    return torch::kSum;
   default:
     ctorch_warn("unknown reduction type, setting to torch_kMean");
     return torch::kMean;
@@ -878,7 +878,8 @@ void torch_loss_mse(const torch_tensor_t input, const torch_tensor_t target,
 
     // Set up options
     namespace F = torch::nn::functional;
-    auto options = F::MSELossFuncOptions(get_libtorch_reduction_type(reduction_type));
+    F::MSELossFuncOptions options;
+    options.reduction(get_libtorch_reduction_type(reduction_type));
 
     // Create the optimizer and cast to torch_optim_t to return
     std::move(*l) = F::mse_loss(*t1, *t2, options);
