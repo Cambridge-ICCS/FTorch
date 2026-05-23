@@ -1,0 +1,253 @@
+# Workflow to validate the Spack package definition for FTorch
+name: Spack Package Validation
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with code changes
+  pull_request:
+    paths:
+      # This workflow
+      - '.github/workflows/spack_build.yml'
+      # Package definition
+      - '.spack-package/package.py'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Write permissions are not required
+permissions: {}
+
+jobs:
+  # Job 1: Validate Spack package syntax and concretization with matrix
+  spack-validate:
+    name: Test ${{ matrix.description }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Valid variant combinations (should succeed)
+          - spec: "ftorch@main~cuda~hip~xpu~mps~tests"
+            description: "Base (no GPU, no tests)"
+            should_fail: false
+            
+          - spec: "ftorch@main~cuda~hip~xpu~mps+tests"
+            description: "With tests enabled"
+            should_fail: false
+            
+          - spec: "ftorch@main+cuda~hip~xpu~mps~tests cuda_arch=80"
+            description: "CUDA (no tests)"
+            should_fail: false
+            
+          - spec: "ftorch@main+cuda~hip~xpu~mps+tests cuda_arch=80"
+            description: "CUDA with tests"
+            should_fail: false
+            
+          - spec: "ftorch@main~cuda+hip~xpu~mps~tests amdgpu_target=gfx90a"
+            description: "HIP/ROCm (no tests)"
+            should_fail: false
+            
+          - spec: "ftorch@main~cuda+hip~xpu~mps+tests amdgpu_target=gfx90a"
+            description: "HIP/ROCm with tests"
+            should_fail: false
+            
+          - spec: "ftorch@main~cuda~hip~xpu~mps+shared~tests"
+            description: "Shared library enabled"
+            should_fail: false
+            
+          - spec: "ftorch@main~cuda~hip~xpu~mps~shared~tests"
+            description: "Static library"
+            should_fail: false
+            
+          - spec: "ftorch@main+cuda~hip~xpu~mps+shared+tests cuda_arch=80"
+            description: "CUDA + shared + tests"
+            should_fail: false
+            
+          - spec: "ftorch@main~cuda~hip+xpu~mps~tests"
+            description: "XPU (may fail - IPEX not in Spack)"
+            should_fail: optional
+            
+          # Conflict tests (should fail)
+          - spec: "ftorch@main+cuda+hip cuda_arch=80 amdgpu_target=gfx90a"
+            description: "CUDA+HIP conflict"
+            should_fail: true
+            
+          - spec: "ftorch@main+cuda+xpu cuda_arch=80"
+            description: "CUDA+XPU conflict"
+            should_fail: true
+            
+          - spec: "ftorch@main+cuda+mps cuda_arch=80"
+            description: "CUDA+MPS conflict"
+            should_fail: true
+            
+          - spec: "ftorch@main+hip+xpu amdgpu_target=gfx90a"
+            description: "HIP+XPU conflict"
+            should_fail: true
+            
+          - spec: "ftorch@main+hip+mps amdgpu_target=gfx90a"
+            description: "HIP+MPS conflict"
+            should_fail: true
+            
+          - spec: "ftorch@main+xpu+mps"
+            description: "XPU+MPS conflict"
+            should_fail: true
+            
+          - spec: "ftorch@main+cuda+hip+xpu+mps cuda_arch=80 amdgpu_target=gfx90a"
+            description: "All GPU backends (multiple conflicts)"
+            should_fail: true
+
+    steps:
+      - name: Checkout FTorch repository
+        # v5.0.0 pinned to SHA for security
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Setup Spack
+        # v2 pinned to recent stable commit for security
+        uses: spack/setup-spack@b01309596568e0f36df3e38124601ed3327871ed
+        with:
+          ref: develop
+          color: true
+
+      - name: Add FTorch package to Spack
+        run: |
+          # Create a custom Spack repository for FTorch
+          mkdir -p ftorch-repo/packages/ftorch
+          cp .spack-package/package.py ftorch-repo/packages/ftorch/
+          
+          # Create repo.yaml for the custom repo
+          echo "repo:" > ftorch-repo/repo.yaml
+          echo "  namespace: ftorch" >> ftorch-repo/repo.yaml
+          
+          # Add the custom repo to Spack
+          spack repo add $(pwd)/ftorch-repo
+
+      - name: Validate package syntax (first test only)
+        if: matrix.spec == 'ftorch@main~cuda~hip~xpu~mps~tests'
+        run: |
+          # Check that the package is recognized
+          spack info ftorch
+          
+          # Validate package Python syntax
+          python -m py_compile .spack-package/package.py
+          echo "Package syntax is valid"
+
+      - name: Test concretization - ${{ matrix.description }}
+        run: |
+          echo "Testing: ${{ matrix.spec }}"
+          echo "Expected outcome: ${{ matrix.should_fail == 'true' && 'FAIL (conflict)' || matrix.should_fail == 'optional' && 'PASS or FAIL (optional)' || 'PASS' }}"
+          
+          # Run spack spec and capture both output and exit code
+          set +e
+          output=$(spack spec ${{ matrix.spec }} 2>&1)
+          exit_code=$?
+          set -e
+          
+          echo "--- Spack output ---"
+          echo "$output"
+          echo "--- End output ---"
+          echo "Exit code: $exit_code"
+          
+          # For conflict tests, check that concretization failed (non-zero exit)
+          # Spack may report conflicts as "unsatisfiable", "conflicts", or other errors
+          if [[ "${{ matrix.should_fail }}" == "true" ]]; then
+            # Should fail - check for non-zero exit or conflict/unsatisfiable message
+            if [[ $exit_code -ne 0 ]]; then
+              echo "✅ PASS: Concretization correctly failed (conflict enforced)"
+              exit 0
+            else
+              echo "❌ FAIL: Expected conflict but concretization succeeded"
+              exit 1
+            fi
+          elif [[ "${{ matrix.should_fail }}" == "optional" ]]; then
+            # Optional - either pass or fail is acceptable
+            if [[ $exit_code -eq 0 ]]; then
+              echo "✅ PASS: Concretization succeeded"
+            else
+              echo "⚠️  NOTE: Concretization failed (acceptable for this variant)"
+              echo "     This variant requires packages not in standard Spack"
+            fi
+            exit 0
+          else
+            # Should succeed
+            if [[ $exit_code -eq 0 ]]; then
+              echo "✅ PASS: Concretization succeeded"
+              exit 0
+            else
+              echo "❌ FAIL: Concretization failed unexpectedly"
+              exit 1
+            fi
+          fi
+
+  # Job 2: Build FTorch with CMake using pip-installed PyTorch
+  # This validates the build process works, similar to other CI tests
+  cmake-build:
+    name: CMake Build Test
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout FTorch repository
+        # v5.0.0 pinned to SHA for security
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran cmake
+
+      - name: Setup Python and install PyTorch
+        # v5.5.0 pinned to SHA for security
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+
+      - name: Install PyTorch via pip
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Build FTorch with CMake
+        run: |
+          # Get PyTorch path
+          TORCH_PATH=$(python -c "import torch; print(torch.__path__[0])")
+          
+          mkdir build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="${TORCH_PATH}" \
+            -DCMAKE_INSTALL_PREFIX="${PWD}/install"
+          cmake --build .
+          cmake --install .
+
+      - name: Verify installation
+        run: |
+          # Verify key files were installed
+          ls -la build/install/lib/
+          ls -la build/install/include/
+          
+          if [[ ! -f "build/install/lib/libftorch.so" ]]; then
+            echo "ERROR: libftorch.so not found"
+            exit 1
+          fi
+          
+          if [[ ! -f "build/install/include/ctorch.h" ]]; then
+            echo "ERROR: ctorch.h not found"
+            exit 1
+          fi
+          
+          echo "Build and installation successful!"
