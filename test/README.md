@@ -9,7 +9,6 @@ directory to the `CMAKE_PREFIX_PATH` when building FTorch.
 
 Note that the unit tests are currently only available on Unix based systems, not Windows.
 
-
 ## Integration tests
 
 The `examples` subdirectory is populated with code and data from the examples
@@ -27,9 +26,11 @@ To build with testing enabled, add the flag
 ```
 when building FTorch.
 
+If building with Flang, then [pFUnit >= 4.18.2](https://github.com/Goddard-Fortran-Ecosystem/pFUnit/releases/tag/v4.18.2) is needed.
+
 ## Running
 
 Having built the unit and integration tests, ensure the Python virtual
 environment is active and run them by navigating to the build directory and
 calling `ctest`. For finer-grained control over which tests to run, see the
-[testing user guide page](https://cambridge-iccs.github.io/FTorch/page/testing.html).
+[testing user guide page](https://cambridge-iccs.github.io/FTorch/page/developer/testing.html).
