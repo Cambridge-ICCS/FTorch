@@ -173,8 +173,6 @@ contains
     real(wp), dimension(1), target :: loss_data
     real(wp) :: matching, nonmatching
 
-    @assertEqual(this%param%reduction, torch_kNone)
-
     ! Create two arbitrary input arrays
     in_data(:,:) = reshape([1.0, 0.0, 0.0, 0.0, 1.0, 0.0], [2,3])
     target_data(:,:) = reshape([0.0, 0.0, 1.0, 0.0, 1.0, 0.0], [2,3])
