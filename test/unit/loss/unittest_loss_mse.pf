@@ -57,7 +57,7 @@ contains
     call torch_tensor_sum(sum_tensor, in_tensor ** 2)
 
     ! Do the same calculation using torch_loss_mse
-    call torch_loss_mse(in_tensor, zero_tensor, mse_tensor, torch_kSum)
+    call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kSum)
 
     ! Compare the data in the tensor to the negative of the input array
     @assertTrue(allclose(mse_data, sum_data, test_name="test_sum_output"))
@@ -91,7 +91,7 @@ contains
     call torch_tensor_mean(mean_tensor, in_tensor ** 2)
 
     ! Do the same calculation using torch_loss_mse
-    call torch_loss_mse(in_tensor, zero_tensor, mse_tensor, torch_kMean)
+    call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kMean)
 
     ! Compare the data in the tensor to the negative of the input array
     @assertTrue(allclose(mse_data, mean_data, test_name="test_mean_output"))

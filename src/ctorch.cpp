@@ -865,8 +865,9 @@ void torch_jit_module_delete(torch_jit_script_module_t module) {
 // =============================================================================
 
 // Function to create an MSELoss and return a pointer to it
-void torch_loss_mse(const torch_tensor_t input, const torch_tensor_t target,
-                    torch_tensor_t loss, const torch_reduction_t reduction_type) {
+void torch_loss_mse(torch_tensor_t loss, const torch_tensor_t input,
+                    const torch_tensor_t target,
+                    const torch_reduction_t reduction_type) {
   try {
     // Cast the parameters pointer into Tensor objects
     auto t1 = reinterpret_cast<torch::Tensor *const>(input);
