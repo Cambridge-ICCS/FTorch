@@ -25,7 +25,7 @@ contains
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
-    integer, optional, intent(in) :: reduction_type  !! Reduction type to use (default: torch_kMean)
+    integer, optional, intent(in) :: reduction_type  !! Optional reduction type (default: torch_kMean)
 
     integer(c_int) :: reduction_type_value
 
@@ -56,13 +56,12 @@ contains
   end subroutine torch_loss_mse
 
   !> Evaluate CrossEntropyLoss
-  ! TODO: Support other optional args
   subroutine torch_loss_cross_entropy(loss_tensor, input_tensor, target_tensor, reduction_type)
     use, intrinsic :: iso_c_binding, only : c_associated, c_int
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
-    integer, optional, intent(in) :: reduction_type  !! Reduction type to use (default: torch_kMean)
+    integer, optional, intent(in) :: reduction_type  !! Optional reduction type (default: torch_kMean)
 
     integer(c_int) :: reduction_type_value
 

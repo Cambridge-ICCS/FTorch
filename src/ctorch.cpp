@@ -890,9 +890,8 @@ void torch_loss_mse(torch_tensor_t loss, const torch_tensor_t input,
 }
 
 void torch_loss_cross_entropy(torch_tensor_t loss, const torch_tensor_t input,
-                              const torch_tensor_t target, const bool ignore_index,
-                              const torch_reduction_t reduction_type,
-                              const float label_smoothing) {
+                              const torch_tensor_t target,
+                              const torch_reduction_t reduction_type) {
   try {
     // Cast the parameters pointer into Tensor objects
     auto l = reinterpret_cast<torch::Tensor *>(loss);
@@ -905,9 +904,7 @@ void torch_loss_cross_entropy(torch_tensor_t loss, const torch_tensor_t input,
     // Set up options
     namespace F = torch::nn::functional;
     F::CrossEntropyFuncOptions options;
-    options.ignore_index(ignore_index)
-        .label_smoothing(label_smoothing)
-        .reduction(get_libtorch_reduction_type(reduction_type));
+    options.reduction(get_libtorch_reduction_type(reduction_type));
 
     // Create the optimizer and cast to torch_optim_t to return
     std::move(*l) = F::cross_entropy(*t1, *t2, options);

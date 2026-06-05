@@ -1,0 +1,66 @@
+!| Unit tests for FTorch's cross entropy loss.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_loss_cross_entropy
+  use funit
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_tensor, only: torch_tensor, torch_tensor_from_array, torch_tensor_zeros
+  use ftorch_loss, only: torch_loss_cross_entropy
+  use ftorch_test_utils, only: allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use, intrinsic :: iso_c_binding, only : c_int64_t
+
+  implicit none
+
+  public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  ! All unit tests in this module use 1D arrays with float32 precision
+  integer, parameter :: ndims = 1
+  integer, parameter :: dtype = torch_kFloat32
+
+contains
+
+  ! Unit test for the cross entropy loss without a reduction
+  @test
+  subroutine test_no_reduction()
+    use ftorch_types, only: torch_kNone
+
+    type(torch_tensor) :: in_tensor, target_tensor, loss_tensor
+    real(wp), dimension(6), target :: in_data, target_data, loss_data
+    real(wp) :: matching, nonmatching
+
+    ! Create two arbitrary input arrays
+    in_data(:) = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    target_data(:) = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+
+    ! Create tensors based off the input and target arrays
+    call torch_tensor_from_array(in_tensor, in_data, device_type)
+    call torch_tensor_from_array(target_tensor, target_data, device_type)
+
+    ! Create tensors based off output arrays containing single scalar values
+    call torch_tensor_from_array(loss_tensor, loss_data, device_type)
+
+    ! Evaluate loss function for non-matching input and target
+    call torch_loss_cross_entropy(loss_tensor, in_tensor, target_tensor, torch_kNone)
+    nonmatching = loss_data(1)
+
+    ! Evaluate loss function for matching input and target
+    call torch_loss_cross_entropy(loss_tensor, target_tensor, target_tensor, torch_kNone)
+    matching = loss_data(1)
+
+    ! Check the loss is smaller in the matching case
+    @assertTrue(matching < nonmatching)
+
+  end subroutine test_no_reduction
+
+end module unittest_loss_cross_entropy

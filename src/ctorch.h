@@ -500,15 +500,10 @@ EXPORT_C void torch_loss_mse(torch_tensor_t loss, const torch_tensor_t input,
  * @param Tensor containing loss value(s)
  * @param Input Torch tensor to evaluate the loss at
  * @param Target Torch tensor to evaluate the loss against
- * @param Optional weight tensor
- * @param Optional boolean ignore index
  * @param Optional reduction type
- * @param Optional float label smoothing
  */
 EXPORT_C void torch_loss_cross_entropy(torch_tensor_t loss, const torch_tensor_t input,
                                        const torch_tensor_t target,
-                                       const bool ignore_index,
-                                       const torch_reduction_t reduction_type,
-                                       const float label_smoothing);
+                                       const torch_reduction_t reduction_type);
 
 #endif /* C_TORCH_H*/
