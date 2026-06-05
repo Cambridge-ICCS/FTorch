@@ -11,6 +11,7 @@ module unittest_loss_cross_entropy
   use ftorch_tensor, only: torch_tensor, torch_tensor_from_array, torch_tensor_zeros
   use ftorch_loss, only: torch_loss_cross_entropy
   use ftorch_test_utils, only: allclose
+  use ftorch_types, only: torch_kNone, torch_kMean, torch_kSum
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use, intrinsic :: iso_c_binding, only : c_int64_t
 
@@ -28,13 +29,61 @@ module unittest_loss_cross_entropy
   integer, parameter :: ndims = 1
   integer, parameter :: dtype = torch_kFloat32
 
+  ! Typedef holding a set of parameter values
+  @testParameter
+  type, extends(AbstractTestParameter) :: TestParametersType
+    integer :: reduction
+  contains
+    procedure :: toString
+  end type TestParametersType
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_constructor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(TestParametersType) :: param
+  end type TestCaseType
+
 contains
 
-  ! Unit test for the cross entropy loss without a reduction
-  @test
-  subroutine test_no_reduction()
-    use ftorch_types, only: torch_kNone
+  ! A fixture comprised of a full list of parameter sets
+  function get_parameters_full() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(torch_kNone), &
+      TestParametersType(torch_kMean), &
+      TestParametersType(torch_kSum) &
+    ]
+  end function get_parameters_full
 
+  ! Constructor for the test case type
+  function test_case_constructor(param)
+    type(TestCaseType) :: test_case_constructor
+    type(TestParametersType), intent(in) :: param
+    test_case_constructor%param = param
+  end function test_case_constructor
+
+  ! Function for representing a parameter set as a string
+  function toString(this) result(string)
+    class(TestParametersType), intent(in) :: this
+    character(:), allocatable :: string
+    character(len=4) :: str
+    if (this%reduction == torch_kNone) then
+      write(str,"('none')")
+    else if (this%reduction == torch_kMean) then
+      write(str,"('mean')")
+    else if (this%reduction == torch_kSum) then
+      write(str,"(' sum')")
+    else
+      write(*,*) "Reduction type not recognised"
+      stop 1
+    end if
+    string = str
+  end function toString
+
+  ! Unit test for the cross entropy loss for a 1D array (for which reduction has no effect)
+  @test(testParameters={get_parameters_full()})
+  subroutine test_1d(this)
+    class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: in_tensor, target_tensor, loss_tensor
     real(wp), dimension(6), target :: in_data, target_data, loss_data
     real(wp) :: matching, nonmatching
@@ -51,16 +100,19 @@ contains
     call torch_tensor_from_array(loss_tensor, loss_data, device_type)
 
     ! Evaluate loss function for non-matching input and target
-    call torch_loss_cross_entropy(loss_tensor, in_tensor, target_tensor, torch_kNone)
+    call torch_loss_cross_entropy(loss_tensor, in_tensor, target_tensor, this%param%reduction)
     nonmatching = loss_data(1)
 
     ! Evaluate loss function for matching input and target
-    call torch_loss_cross_entropy(loss_tensor, target_tensor, target_tensor, torch_kNone)
+    call torch_loss_cross_entropy(loss_tensor, target_tensor, target_tensor, this%param%reduction)
     matching = loss_data(1)
 
     ! Check the loss is smaller in the matching case
     @assertTrue(matching < nonmatching)
+  end subroutine test_1d
 
-  end subroutine test_no_reduction
+  ! TODO: test_2d_no_reduction (with appropriate fixture)
+
+  ! TODO: test_2d_reduction (with appropriate fixture)
 
 end module unittest_loss_cross_entropy
