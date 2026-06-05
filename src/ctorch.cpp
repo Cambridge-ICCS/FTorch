@@ -904,7 +904,7 @@ void torch_loss_cross_entropy(torch_tensor_t loss, const torch_tensor_t input,
 
     // Set up options
     namespace F = torch::nn::functional;
-    F::CrossEntropyLossFuncOptions options;
+    F::CrossEntropyFuncOptions options;
     options.ignore_index(ignore_index)
         .label_smoothing(label_smoothing)
         .reduction(get_libtorch_reduction_type(reduction_type));
