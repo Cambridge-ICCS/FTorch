@@ -249,7 +249,7 @@ exposed in FTorch. Currently, this only includes the
 [[ftorch_loss(module):torch_loss_mse(subroutine)]] subroutine for the
 mean-square-error (MSE) and the
 [[ftorch_loss(module):torch_loss_cross_entropy(subroutine)]] subroutine for the
-Cross-Entropy loss, the latter of which is designed for categorisation problems.
+Cross-Entropy loss, the latter of which is designed for classification problems.
 
 See the [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers)
 for an example of how to use [[ftorch_loss(module):torch_loss_mse(subroutine)]]
