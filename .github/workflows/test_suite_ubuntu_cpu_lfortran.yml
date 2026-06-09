@@ -71,8 +71,8 @@ jobs:
         run: |
           . ftorch/bin/activate
           sudo apt-get install build-essential
-          sudo apt-get install zlib1g-dev libzstd-dev
-          pip install bison re2c libunwind
+          sudo apt-get install zlib1g-dev libzstd-dev libunwind8
+          pip install bison re2c
           git clone https://github.com/lfortran/lfortran.git
           cd lfortran
           ./build0.sh
