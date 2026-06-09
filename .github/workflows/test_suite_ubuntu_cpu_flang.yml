@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        standard: [f2018]
+        std: [f2018]
         flang_version: [21]
         pfunit_version: [4.18.2]
 
@@ -56,9 +56,9 @@ jobs:
       - name: Install Clang and Flang
         run: |
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo apt-add-repository "deb http://apt.llvm.org/`lsb_release -c | cut -f2`/ llvm-toolchain-`lsb_release -c | cut -f2`-${flang_version} main"
+          sudo apt-add-repository "deb http://apt.llvm.org/$(lsb_release -cs)/ llvm-toolchain-$(lsb_release -cs)-${{ matrix.flang_version }} main"
           sudo apt-get update
-          sudo apt-get install -y "llvm-${flang_version}-dev" "clang-${flang_version}" "flang-${flang_version}"
+          sudo apt-get install -y "llvm-${{ matrix.flang_version }}-dev" "clang-${{ matrix.flang_version }}" "flang-${{ matrix.flang_version }}"
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
