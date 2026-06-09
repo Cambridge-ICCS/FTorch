@@ -40,64 +40,21 @@ permissions: {}
 
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
-  # Dynamically build matrix for GNU job
-  setup-matrix:
-    name: setup matrix
-    runs-on: ubuntu-latest
-
-    # Terminate the job if it runs for more than 5 minutes
-    timeout-minutes: 5
-
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    env:
-      EVENT_NAME: ${{ github.event_name }}
-    steps:
-      - id: set-matrix
-        run: |
-          if [[ "$EVENT_NAME" == 'push' ]]
-          then
-            # Include GCC 9–13 for PRs to main
-            MATRIX_JSON='
-            {
-              "toolchain": [
-                {"compiler": "gcc", "version": 13},
-                {"compiler": "gcc", "version": 12},
-                {"compiler": "gcc", "version": 11},
-                {"compiler": "gcc", "version": 10},
-                {"compiler": "gcc", "version": 9}
-              ],
-              "std": ["f2008"],
-              "include": [
-                {"toolchain": {"compiler": "gcc", "version": 13}, "std": "f2018"}
-              ],
-              "pfunit_longversion": ["4.18.2"],
-              "pfunit_shortversion": ["4.18"]
-            }'
-          else
-            # Only GCC 13 for everything else
-            MATRIX_JSON='
-            {
-              "toolchain": [
-                {"compiler": "gcc", "version": 13}
-              ],
-              "std": ["f2008", "f2018"],
-              "pfunit_longversion": ["4.18.2"],
-              "pfunit_shortversion": ["4.18"]
-            }'
-          fi
-          # Convert json to compact line expected by github action
-          MATRIX_JSON=$(echo "$MATRIX_JSON" | jq -c .)
-          echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
-
   test-suite:
-    name: gfortran ${{ matrix.toolchain.version }}, ${{ matrix.toolchain.std }}
+    name: gfortran ${{ matrix.gcc_version }}, ${{ matrix.std }}
     needs: setup-matrix
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
+      matrix:
+        std: ["f2008"]
+        gcc_version: [9, 10, 11, 12, 13]
+        pfunit_longversion: ["4.18.2"]
+        pfunit_shortversion: ["4.18"]
+        include:
+          - gcc_version: ${{ github.event_name == 'push' && 13 }}
+          - std: ${{ github.event_name != 'push' && f2018 }}
 
     # Terminate the job if it runs for more than 15 minutes
     timeout-minutes: 15
@@ -113,8 +70,8 @@ jobs:
       - name: Setup Fortran
         uses: fortran-lang/setup-fortran@2a1b9c55897d827a9dfeb114408f3615e53b2b72 # v1.9.0
         with:
-          compiler: ${{ matrix.toolchain.compiler }}
-          version: ${{ matrix.toolchain.version }}
+          compiler: gcc
+          version: ${{ matrix.gcc_version }}
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
