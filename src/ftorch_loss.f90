@@ -21,7 +21,7 @@ contains
 
   !| Evaluate MSELoss
   !
-  !  Note that if the reduction type relates to the operation to perform across batches. Within each
+  !  Note that the reduction type relates to the operation to perform across batches. Within each
   !  batch of data, the mean will always be taken.
   subroutine torch_loss_mse(loss_tensor, input_tensor, target_tensor, reduction_type)
     use, intrinsic :: iso_c_binding, only : c_associated, c_int
