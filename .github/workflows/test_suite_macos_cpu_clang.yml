@@ -132,7 +132,7 @@ jobs:
           cmake --build .
           cmake --install .
 
-      - name: Check pkg-config file 
+      - name: Check pkg-config file
         run: |
           # pkg-config looks in the `build` directory for libraries
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
