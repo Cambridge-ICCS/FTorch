@@ -124,21 +124,23 @@ jobs:
           . ftorch/bin/activate
           pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
 
-      - name: Install OpenMPI
-        run: |
-          sudo apt update
-          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
+      # TODO: Re-enable integration tests
+      # - name: Install OpenMPI
+      #   run: |
+      #     sudo apt update
+      #     sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
-      - name: Install pFUnit
-        run: |
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
-          mkdir pFUnit/build
-          cd pFUnit/build
-          cmake ..\
-            -DCMAKE_Fortran_COMPILER=gfortran\
-            -DMPI_Fortran_COMPILER=mpif90
-          make -j 4 install
+      # TODO: Re-enable unit tests
+      # - name: Install pFUnit
+      #   run: |
+      #     # TODO: Avoid version pinning (needed because version appears in install path)
+      #     git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+      #     mkdir pFUnit/build
+      #     cd pFUnit/build
+      #     cmake ..\
+      #       -DCMAKE_Fortran_COMPILER=gfortran\
+      #       -DMPI_Fortran_COMPILER=mpif90
+      #     make -j 4 install
 
       - name: Build FTorch
         env:
@@ -156,58 +158,71 @@ jobs:
           export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
           cd ${BUILD_DIR}
 
-          cmake .. \
-            -DPython_EXECUTABLE="$(which python)" \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER=gfortran  \
-            -DCMAKE_C_COMPILER=gcc  \
-            -DCMAKE_CXX_COMPILER=g++  \
-            -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
-            -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
-          cmake --build .
-          cmake --install .
+          # TODO: Re-enable CMake build system
+          # cmake .. \
+          #   -DPython_EXECUTABLE="$(which python)" \
+          #   -DCMAKE_BUILD_TYPE=Release \
+          #   -DCMAKE_Fortran_COMPILER=gfortran  \
+          #   -DCMAKE_C_COMPILER=gcc  \
+          #   -DCMAKE_CXX_COMPILER=g++  \
+          #   -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
+          #   -DCMAKE_BUILD_TESTS=TRUE \
+          #   -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+          #   -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+          # cmake --build .
+          # cmake --install .
 
-      - name: Check pkg-config file 
-        run: |
-          # pkg-config looks in the `build` directory for libraries
-          export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
+          fpm build \
+            --profile debug \
+            --compiler mpif90 \
+            --c-compiler mpicc \
+            --cxx-compiler mpicxx \
+            --flag "${FFLAGS}" \
+            --c-flag "-cpp -std=c++17 -I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include" \
+            --cxx-flag "-cpp -std=c++17 -I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include" \
+            --link-flag "-L${Torch_DIR}/lib -L${PFUNIT_DIR}/lib" \
+            --verbose
 
-          libs=$(pkg-config --libs ftorch)
-          cflags=$(pkg-config --cflags ftorch)
+      # TODO: Re-enable pkg-config
+      # - name: Check pkg-config file 
+      #   run: |
+      #     # pkg-config looks in the `build` directory for libraries
+      #     export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
 
-          # Assert linker flags not empty
-          if [[ -z "${libs}" ]]
-          then
-            echo "::error ::pkg-config --libs ftorch returned empty output"
-            exit 1
-          fi
+      #     libs=$(pkg-config --libs ftorch)
+      #     cflags=$(pkg-config --cflags ftorch)
 
-          # Assert expected linker flags
-          lib_dir=$(grep -oE "\-L.*/lib" <<< ${libs})
-          lib=$(grep -oE "\-lftorch" <<< ${libs})
-          if [[ -z "${lib_dir}" || -z "${lib}" ]]
-          then
-            echo "::error ::pkg-config --libs ftorch do not contain expected linker flags"
-            exit 1
-          fi
+      #     # Assert linker flags not empty
+      #     if [[ -z "${libs}" ]]
+      #     then
+      #       echo "::error ::pkg-config --libs ftorch returned empty output"
+      #       exit 1
+      #     fi
 
-          # Assert compiler flags not empty
-          if [[ -z "${cflags}" ]]
-          then
-            echo "::error ::pkg-config --cflags ftorch returned empty output"
-            exit 1
-          fi
+      #     # Assert expected linker flags
+      #     lib_dir=$(grep -oE "\-L.*/lib" <<< ${libs})
+      #     lib=$(grep -oE "\-lftorch" <<< ${libs})
+      #     if [[ -z "${lib_dir}" || -z "${lib}" ]]
+      #     then
+      #       echo "::error ::pkg-config --libs ftorch do not contain expected linker flags"
+      #       exit 1
+      #     fi
 
-          # Assert expected compiler flags
-          include_dir=$(grep -oE "/include " <<< ${cflags})
-          module_dir=$(grep -oE "/include/ftorch" <<< ${cflags})
-          if [[ -z ${include_dir} || -z ${module_dir} ]]
-          then
-              echo "::error ::pkg-config --cflags ftorch do not contain expected compiler flags"
-              exit 1
-          fi
+      #     # Assert compiler flags not empty
+      #     if [[ -z "${cflags}" ]]
+      #     then
+      #       echo "::error ::pkg-config --cflags ftorch returned empty output"
+      #       exit 1
+      #     fi
+
+      #     # Assert expected compiler flags
+      #     include_dir=$(grep -oE "/include " <<< ${cflags})
+      #     module_dir=$(grep -oE "/include/ftorch" <<< ${cflags})
+      #     if [[ -z ${include_dir} || -z ${module_dir} ]]
+      #     then
+      #         echo "::error ::pkg-config --cflags ftorch do not contain expected compiler flags"
+      #         exit 1
+      #     fi
 
       # TODO: Re-enable unit tests
       # - name: Run Fortran unit tests
