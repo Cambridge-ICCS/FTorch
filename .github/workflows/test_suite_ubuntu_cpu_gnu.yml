@@ -42,7 +42,6 @@ permissions: {}
 jobs:
   test-suite:
     name: gfortran ${{ matrix.gcc_version }}, ${{ matrix.std }}
-    needs: setup-matrix
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
