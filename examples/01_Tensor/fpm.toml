@@ -1,0 +1,29 @@
+name = "tensor_manipulation"
+
+[build]
+external-modules = ["torch", "torch_cpu", "c10"]
+# Add additional torch-related and system libraries to resolve c10 / jit symbols
+# and to ensure the linker pulls in all necessary symbols from libtorch and libc10.
+link = [
+  "torch_global_deps",
+  "torch",
+  "torch_cpu",
+  "c10",
+  "torch_python",  # may be necessary for some distributions where python bindings expose extra symbols
+  "stdc++",
+  "pthread",
+  "dl",
+  "m",
+  "rt",
+  "z",
+  "gomp",  # OpenMP runtime (libgomp) - present in many torch builds
+]
+
+[fortran]
+implicit-external = true
+implicit-typing = true
+source-form = "free"
+
+[dependencies]
+FTorch.git = "https://github.com/Cambridge-ICCS/FTorch"
+FTorch.rev = "95ad269b908d8d48bfb5805f7e550520dc9bc46b"
