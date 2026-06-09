@@ -54,7 +54,7 @@ jobs:
         pfunit_shortversion: ["4.18"]
         include:
           - gcc_version: ${{ github.event_name == 'push' && 13 }}
-          - std: ${{ github.event_name != 'push' && f2018 }}
+          - std: ${{ github.event_name != 'push' && 'f2018' }}
 
     # Terminate the job if it runs for more than 15 minutes
     timeout-minutes: 15
