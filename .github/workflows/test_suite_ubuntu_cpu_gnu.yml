@@ -52,27 +52,17 @@ jobs:
         pfunit_longversion: ["4.18.2"]
         pfunit_shortversion: ["4.18"]
         include:
+          - std: f2008
+          # Configuration for pushes to main
+          - gcc_version: ${{ github.event_name == 'push' && 9 }}
+          - gcc_version: ${{ github.event_name == 'push' && 10 }}
+          - gcc_version: ${{ github.event_name == 'push' && 11 }}
+          - gcc_version: ${{ github.event_name == 'push' && 12 }}
           - gcc_version: 13
-            std: f2008
-            if: github.event_name == 'push'
-          - gcc_version: 13
-            std: f2018
-            if: github.event_name == 'push'
-          - gcc_version: 9
-            std: f2008
-            if: github.event_name != 'push'
-          - gcc_version: 10
-            std: f2008
-            if: github.event_name != 'push'
-          - gcc_version: 11
-            std: f2008
-            if: github.event_name != 'push'
-          - gcc_version: 12
-            std: f2008
-            if: github.event_name != 'push'
-          - gcc_version: 13
-            std: f2008
-            if: github.event_name != 'push'
+          - std: ${{ github.event_name == 'push' && 'f2018' }}
+            gcc_version: 13
+          # Configuration for pull requests etc.
+          - std: ${{ github.event_name != 'push' && 'f2018' }}
 
     # Terminate the job if it runs for more than 15 minutes
     timeout-minutes: 15
