@@ -91,8 +91,8 @@ jobs:
       - name: Install pFUnit
         run: |
           export FC=/usr/bin/gfortran
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          # NOTE: version pin needed because version appears in install path
+          git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
           # MPI support is currently not needed for the unit testing
@@ -112,7 +112,7 @@ jobs:
           export INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_version }}"
           mkdir -p ${BUILD_DIR}
           cd ${BUILD_DIR}
           cmake .. \
