@@ -71,7 +71,7 @@ jobs:
               "include": [
                 {"toolchain": {"compiler": "gcc", "version": 13}, "std": "f2018"}
               ],
-              "pfunit_version": [4.18.2]
+              "pfunit_version": ["4.18.2"]
             }'
           else
             # Only GCC 13 for everything else
@@ -81,7 +81,7 @@ jobs:
                 {"compiler": "gcc", "version": 13}
               ],
               "std": ["f2008", "f2018"],
-              "pfunit_version": [4.18.2]
+              "pfunit_version": ["4.18.2"]
             }'
           fi
           # Convert json to compact line expected by github action
