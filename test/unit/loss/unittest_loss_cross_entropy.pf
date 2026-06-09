@@ -1,0 +1,199 @@
+!| Unit tests for FTorch's cross entropy loss.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_loss_cross_entropy
+  use funit
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_tensor, only: torch_tensor, torch_tensor_from_array, torch_tensor_zeros
+  use ftorch_loss, only: torch_loss_cross_entropy
+  use ftorch_test_utils, only: allclose
+  use ftorch_types, only: torch_kNone, torch_kMean, torch_kSum
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use, intrinsic :: iso_c_binding, only : c_int64_t
+
+  implicit none
+
+  public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  ! All unit tests in this module use 1D arrays with float32 precision
+  integer, parameter :: ndims = 1
+  integer, parameter :: dtype = torch_kFloat32
+
+  ! Typedef holding a set of parameter values
+  @testParameter
+  type, extends(AbstractTestParameter) :: TestParametersType
+    integer :: reduction
+  contains
+    procedure :: toString
+  end type TestParametersType
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_constructor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(TestParametersType) :: param
+  end type TestCaseType
+
+contains
+
+  ! A fixture comprised of a full list of parameters
+  function get_parameters_full() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(torch_kNone), &
+      TestParametersType(torch_kMean), &
+      TestParametersType(torch_kSum) &
+    ]
+  end function get_parameters_full
+
+  ! A fixture comprised of a list of parameters corresponding to no reduction operator
+  function get_parameters_no_reduction() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [TestParametersType(torch_kNone)]
+  end function get_parameters_no_reduction
+
+  ! A fixture comprised of a list of parameters corresponding to reduction operators
+  function get_parameters_reduction() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(torch_kMean), &
+      TestParametersType(torch_kSum) &
+    ]
+  end function get_parameters_reduction
+
+  ! Constructor for the test case type
+  function test_case_constructor(param)
+    type(TestCaseType) :: test_case_constructor
+    type(TestParametersType), intent(in) :: param
+    test_case_constructor%param = param
+  end function test_case_constructor
+
+  ! Function for representing a parameter set as a string
+  function toString(this) result(string)
+    class(TestParametersType), intent(in) :: this
+    character(:), allocatable :: string
+    character(len=4) :: str
+    if (this%reduction == torch_kNone) then
+      write(str,"('none')")
+    else if (this%reduction == torch_kMean) then
+      write(str,"('mean')")
+    else if (this%reduction == torch_kSum) then
+      write(str,"(' sum')")
+    else
+      write(*,*) "Reduction type not recognised"
+      stop 1
+    end if
+    string = str
+  end function toString
+
+  ! Unit test for the cross entropy loss for a 1D array (for which reduction has no effect)
+  @test(testParameters={get_parameters_full()})
+  subroutine test_1d(this)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: in_tensor, target_tensor, loss_tensor
+    real(wp), dimension(6), target :: in_data, target_data
+    real(wp), dimension(1), target :: loss_data
+    real(wp) :: matching, nonmatching
+
+    ! Create two arbitrary input arrays
+    in_data(:) = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    target_data(:) = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+
+    ! Create tensors based off the input and target arrays
+    call torch_tensor_from_array(in_tensor, in_data, device_type)
+    call torch_tensor_from_array(target_tensor, target_data, device_type)
+
+    ! Create tensors based off output arrays containing single scalar values
+    call torch_tensor_from_array(loss_tensor, loss_data, device_type)
+
+    ! Evaluate loss function for non-matching input and target
+    call torch_loss_cross_entropy(loss_tensor, in_tensor, target_tensor, this%param%reduction)
+    nonmatching = loss_data(1)
+
+    ! Evaluate loss function for matching input and target
+    call torch_loss_cross_entropy(loss_tensor, target_tensor, target_tensor, this%param%reduction)
+    matching = loss_data(1)
+
+    ! Check the loss is smaller in the matching case
+    @assertTrue(matching < nonmatching)
+  end subroutine test_1d
+
+  ! Unit test for the cross entropy loss for a 2D array with no reduction
+  @test(testParameters={get_parameters_no_reduction()})
+  subroutine test_2d_no_reduction(this)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: in_tensor, target_tensor, loss_tensor
+    real(wp), dimension(2,3), target :: in_data, target_data
+    real(wp), dimension(2), target :: loss_data
+    real(wp), dimension(2) :: matching, nonmatching
+
+    @assertEqual(this%param%reduction, torch_kNone)
+
+    ! Create two arbitrary input arrays
+    in_data(:,:) = reshape([1.0, 0.0, 0.0, 0.0, 1.0, 0.0], [2,3])
+    target_data(:,:) = reshape([0.0, 0.0, 1.0, 0.0, 1.0, 0.0], [2,3])
+
+    ! Create tensors based off the input and target arrays
+    call torch_tensor_from_array(in_tensor, in_data, device_type)
+    call torch_tensor_from_array(target_tensor, target_data, device_type)
+
+    ! Create tensors based off output arrays containing single scalar values
+    call torch_tensor_from_array(loss_tensor, loss_data, device_type)
+
+    ! Evaluate loss function for non-matching input and target
+    call torch_loss_cross_entropy(loss_tensor, in_tensor, target_tensor, this%param%reduction)
+    nonmatching(:) = loss_data
+
+    ! Evaluate loss function for matching input and target
+    call torch_loss_cross_entropy(loss_tensor, target_tensor, target_tensor, this%param%reduction)
+    matching(:) = loss_data
+
+    ! Check the loss is smaller for the first batch
+    @assertTrue(matching(1) < nonmatching(1))
+
+    ! Check the loss is the same for the second batch
+    @assertTrue(matching(2) == nonmatching(2))
+  end subroutine test_2d_no_reduction
+
+  ! Unit test for the cross entropy loss for a 2D array with reduction
+  @test(testParameters={get_parameters_reduction()})
+  subroutine test_2d_reduction(this)
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: in_tensor, target_tensor, loss_tensor
+    real(wp), dimension(2,3), target :: in_data, target_data
+    real(wp), dimension(1), target :: loss_data
+    real(wp) :: matching, nonmatching
+
+    ! Create two arbitrary input arrays
+    in_data(:,:) = reshape([1.0, 0.0, 0.0, 0.0, 1.0, 0.0], [2,3])
+    target_data(:,:) = reshape([0.0, 0.0, 1.0, 0.0, 1.0, 0.0], [2,3])
+
+    ! Create tensors based off the input and target arrays
+    call torch_tensor_from_array(in_tensor, in_data, device_type)
+    call torch_tensor_from_array(target_tensor, target_data, device_type)
+
+    ! Create tensors based off output arrays containing single scalar values
+    call torch_tensor_from_array(loss_tensor, loss_data, device_type)
+
+    ! Evaluate loss function for non-matching input and target
+    call torch_loss_cross_entropy(loss_tensor, in_tensor, target_tensor, this%param%reduction)
+    nonmatching = loss_data(1)
+
+    ! Evaluate loss function for matching input and target
+    call torch_loss_cross_entropy(loss_tensor, target_tensor, target_tensor, this%param%reduction)
+    matching = loss_data(1)
+
+    ! Check the loss is smaller for the matching case
+    @assertTrue(matching < nonmatching)
+  end subroutine test_2d_reduction
+
+end module unittest_loss_cross_entropy

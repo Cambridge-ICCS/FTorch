@@ -870,9 +870,9 @@ void torch_loss_mse(torch_tensor_t loss, const torch_tensor_t input,
                     const torch_reduction_t reduction_type) {
   try {
     // Cast the parameters pointer into Tensor objects
+    auto l = reinterpret_cast<torch::Tensor *>(loss);
     auto t1 = reinterpret_cast<torch::Tensor *const>(input);
     auto t2 = reinterpret_cast<torch::Tensor *const>(target);
-    auto l = reinterpret_cast<torch::Tensor *>(loss);
 
     validate_tensor(t1, "Input tensor");
     validate_tensor(t2, "Target tensor");
@@ -886,5 +886,29 @@ void torch_loss_mse(torch_tensor_t loss, const torch_tensor_t input,
     std::move(*l) = F::mse_loss(*t1, *t2, options);
   } catch (const std::exception &e) {
     ctorch_error(std::string(e.what()) + " in torch_loss_mse");
+  }
+}
+
+void torch_loss_cross_entropy(torch_tensor_t loss, const torch_tensor_t input,
+                              const torch_tensor_t target,
+                              const torch_reduction_t reduction_type) {
+  try {
+    // Cast the parameters pointer into Tensor objects
+    auto l = reinterpret_cast<torch::Tensor *>(loss);
+    auto t1 = reinterpret_cast<torch::Tensor *const>(input);
+    auto t2 = reinterpret_cast<torch::Tensor *const>(target);
+
+    validate_tensor(t1, "Input tensor");
+    validate_tensor(t2, "Target tensor");
+
+    // Set up options
+    namespace F = torch::nn::functional;
+    F::CrossEntropyFuncOptions options;
+    options.reduction(get_libtorch_reduction_type(reduction_type));
+
+    // Create the optimizer and cast to torch_optim_t to return
+    std::move(*l) = F::cross_entropy(*t1, *t2, options);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_loss_cross_entropy");
   }
 }

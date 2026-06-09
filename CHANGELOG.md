@@ -19,6 +19,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#584](https://github.com/Cambridge-ICCS/FTorch/pull/584)
 - MSE loss function implemented in
   [#591](https://github.com/Cambridge-ICCS/FTorch/pull/591)
+- Cross entropy loss function implemented in
+  [#593](https://github.com/Cambridge-ICCS/FTorch/pull/593)
 
 
 ### Changed
