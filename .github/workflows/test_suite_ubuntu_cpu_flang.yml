@@ -84,7 +84,7 @@ jobs:
           mkdir pFUnit/build
           cd pFUnit/build
           cmake ..\
-            -DCMAKE_Fortran_COMPILER=flang \
+            -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
             -DMPI_Fortran_COMPILER=mpif90
           make -j 4 install
 
@@ -107,7 +107,7 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER=flang  \
+            -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
             -DCMAKE_C_COMPILER=clang  \
             -DCMAKE_CXX_COMPILER=clang++  \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
