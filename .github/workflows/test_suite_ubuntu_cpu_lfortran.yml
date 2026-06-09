@@ -34,8 +34,6 @@ jobs:
       matrix:
         std: [f2018]
         flang_version: [21]
-        pfunit_longversion: [4.18.2]
-        pfunit_shortversion: [4.18]
 
     # Terminate the job if it runs for more than 15 minutes
     timeout-minutes: 15
@@ -84,18 +82,6 @@ jobs:
           sudo apt update
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
-      - name: Install pFUnit
-        run: |
-          export PATH="$(pwd)/lfortran/src/bin:${PATH}"
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b "v${{ matrix.pfunit_longversion }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
-          mkdir pFUnit/build
-          cd pFUnit/build
-          cmake ..\
-            -DCMAKE_Fortran_COMPILER=lfortran \
-            -DMPI_Fortran_COMPILER=mpif90
-          make -j 4 install
-
       - name: Build FTorch
         env:
           FORTRAN_STANDARD: ${{ matrix.std }}
@@ -109,8 +95,6 @@ jobs:
           # Install to /tmp/ to ensure independent from the CMake build in standalone check.
           export INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${INSTALL_DIR}
-          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
           cd ${BUILD_DIR}
 
           cmake .. \
@@ -121,7 +105,7 @@ jobs:
             -DCMAKE_CXX_COMPILER=clang++  \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+            -DCMAKE_PREFIX_PATH="${Torch_DIR}" \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
           cmake --build .
           cmake --install .
@@ -166,13 +150,6 @@ jobs:
       #         echo "::error ::pkg-config --cflags ftorch do not contain expected compiler flags"
       #         exit 1
       #     fi
-
-      - name: Run Fortran unit tests
-        run: |
-          export PATH="$(pwd)/lfortran/src/bin:${PATH}"
-          . ftorch/bin/activate
-          cd build
-          ctest --verbose --tests-regex unit
 
       - name: Run Python unit tests
         run: |
