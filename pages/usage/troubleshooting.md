@@ -129,7 +129,9 @@ If FTorch unit tests segfault when built with `flang`, a common cause is an
 older `pFUnit` version which then exposes a bug in `flang`.
 
 The solution is to use `pFUnit v4.18.2` or newer, then reconfigure and rebuild FTorch (and its unit
-tests).
+tests), e.g., specifying to `cmake` an explicit path to the newer `pFUnit` (e.g.
+`-DCMAKE_INSTALL_PREFIX="path/pfunit-4.18.2`).
+
 
 
 ### Common warnings
