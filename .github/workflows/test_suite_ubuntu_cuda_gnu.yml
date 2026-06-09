@@ -44,7 +44,7 @@ permissions: {}
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   test-suite:
-    name: gfortran, $${{ matrix.std }}
+    name: gfortran, ${{ matrix.std }}
 
     # The type of runner that the job will run on
     runs-on: GPU-runner
