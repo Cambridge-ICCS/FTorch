@@ -47,7 +47,8 @@ jobs:
             MPIFC: mpiifort
             version: 2024.2.0  # Last release of oneapi with ifort
         std: [f08]
-        pfunit_version: [4.18.2]
+        pfunit_longversion: [4.18.2]
+        pfunit_shortversion: [4.18]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -85,7 +86,7 @@ jobs:
       - name: Install pFUnit
         run: |
           # NOTE: version pin needed because version appears in install path
-          git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          git clone -b "v${{ matrix.pfunit_longversion }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
           cmake .. \
@@ -107,7 +108,7 @@ jobs:
           export INSTALL_DIR="/tmp/ftorch-install"
           mkdir -p ${INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_version }}"
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
           mkdir -p ${BUILD_DIR}
           cd ${BUILD_DIR}
 
