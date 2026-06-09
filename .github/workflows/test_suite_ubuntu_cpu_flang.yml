@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite using jobs for Flang compiler
-name: Test suite (Ubuntu CPU Flang)
+name: Test suite (Ubuntu CPU)
 
 # Controls when the workflow will run
 on:

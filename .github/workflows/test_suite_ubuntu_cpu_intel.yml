@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite using jobs for Intel compiler
-name: Test suite (Ubuntu CPU Intel)
+name: Test suite (Ubuntu CPU)
 
 # Controls when the workflow will run
 on:

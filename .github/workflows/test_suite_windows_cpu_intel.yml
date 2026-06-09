@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite
-name: Test suite (Windows CPU Intel)
+name: Test suite (Windows CPU)
 
 # Controls when the workflow will run
 on:
