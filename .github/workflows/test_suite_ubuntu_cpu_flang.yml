@@ -1,0 +1,196 @@
+# Workflow to run the FTorch test suite using jobs for Flang compiler
+name: Test suite (Ubuntu CPU Flang)
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with changes to this workflow
+  pull_request:
+    paths:
+      - '.github/workflows/test_suite_ubuntu_cpu_flang.yml'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Write permissions are not required
+permissions: {}
+
+# Workflow run - one or more jobs that can run sequentially or in parallel
+jobs:
+  test-suite:
+    name: test suite
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        standard: [f2018]
+        flang_version: [21]
+        pfunit_version: [4.18.2]
+
+    # Terminate the job if it runs for more than 15 minutes
+    timeout-minutes: 15
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout FTorch repository
+        with:
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup Fortran
+        uses: fortran-lang/setup-fortran@2a1b9c55897d827a9dfeb114408f3615e53b2b72 # v1.9.0
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - name: Install Clang and Flang
+        run: |
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          sudo apt-add-repository "deb http://apt.llvm.org/`lsb_release -c | cut -f2`/ llvm-toolchain-`lsb_release -c | cut -f2`-${flang_version} main"
+          sudo apt-get update
+          sudo apt-get install -y "llvm-${flang_version}-dev" "clang-${flang_version}" "flang-${flang_version}"
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.13'
+
+      - name: Install ftorch_utils
+        run: |
+          python -m pip install --upgrade pip
+          python -m venv ftorch
+          . ftorch/bin/activate
+          pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
+
+      - name: Install OpenMPI
+        run: |
+          sudo apt update
+          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
+
+      - name: Install pFUnit
+        run: |
+          # TODO: Avoid version pinning (needed because version appears in install path)
+          git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          mkdir pFUnit/build
+          cd pFUnit/build
+          cmake ..\
+            -DCMAKE_Fortran_COMPILER=flang \
+            -DMPI_Fortran_COMPILER=mpif90
+          make -j 4 install
+
+      - name: Build FTorch
+        env:
+          FORTRAN_STANDARD: ${{ matrix.std }}
+        run: |
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
+          export BUILD_DIR=$(pwd)/build
+          mkdir -p ${BUILD_DIR}
+          # Install to /tmp/ to ensure independent from the CMake build in standalone check.
+          export INSTALL_DIR=/tmp/ftorch-install
+          mkdir -p ${INSTALL_DIR}
+          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_version }}"
+          cd ${BUILD_DIR}
+
+          cmake .. \
+            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_Fortran_COMPILER=flang  \
+            -DCMAKE_C_COMPILER=clang  \
+            -DCMAKE_CXX_COMPILER=clang++  \
+            -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
+            -DCMAKE_BUILD_TESTS=TRUE \
+            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+          cmake --build .
+          cmake --install .
+
+      - name: Check pkg-config file 
+        run: |
+          # pkg-config looks in the `build` directory for libraries
+          export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
+
+          libs=$(pkg-config --libs ftorch)
+          cflags=$(pkg-config --cflags ftorch)
+
+          # Assert linker flags not empty
+          if [[ -z "${libs}" ]]
+          then
+            echo "::error ::pkg-config --libs ftorch returned empty output"
+            exit 1
+          fi
+
+          # Assert expected linker flags
+          lib_dir=$(grep -oE "\-L.*/lib" <<< ${libs})
+          lib=$(grep -oE "\-lftorch" <<< ${libs})
+          if [[ -z "${lib_dir}" || -z "${lib}" ]]
+          then
+            echo "::error ::pkg-config --libs ftorch do not contain expected linker flags"
+            exit 1
+          fi
+
+          # Assert compiler flags not empty
+          if [[ -z "${cflags}" ]]
+          then
+            echo "::error ::pkg-config --cflags ftorch returned empty output"
+            exit 1
+          fi
+
+          # Assert expected compiler flags
+          include_dir=$(grep -oE "/include " <<< ${cflags})
+          module_dir=$(grep -oE "/include/ftorch" <<< ${cflags})
+          if [[ -z ${include_dir} || -z ${module_dir} ]]
+          then
+              echo "::error ::pkg-config --cflags ftorch do not contain expected compiler flags"
+              exit 1
+          fi
+
+      - name: Run Fortran unit tests
+        run: |
+          . ftorch/bin/activate
+          cd build
+          ctest --verbose --tests-regex unit
+
+      - name: Run Python unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/ftorch_utils
+
+      - name: Run integration tests
+        run: |
+          . ftorch/bin/activate
+          cd build
+          ctest --verbose --tests-regex example
+
+        # Check that we can successfully build and run an example outside the main FTorch build process
+      - name: Standalone SimpleNet example
+        env:
+          FORTRAN_STANDARD: ${{ matrix.std }}
+        run: |
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
+          export FTORCH_INSTALL_DIR="/tmp/ftorch-install"
+          export EXAMPLE_BUILD_DIR="examples/02_SimpleNet/build"
+          mkdir "${EXAMPLE_BUILD_DIR}"
+          cd "${EXAMPLE_BUILD_DIR}"
+          cmake .. \
+            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
+            -DCMAKE_BUILD_TESTS=TRUE \
+            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+          cmake --build .
+          ctest -V
