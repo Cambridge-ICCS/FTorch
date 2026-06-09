@@ -21,15 +21,14 @@ contains
 
   !| Evaluate MSELoss
   !
-  !  Note that if the reduction type is set to torch_kSum then technically we no longer have a
-  !  *mean-square-error* loss, rather a *summed-square-error* loss. Similarly, if the reduction type
-  !  is torch_kNone then we have a *square-error* loss. We follow the naming scheme used in PyTorch.
+  !  Note that if the reduction type relates to the operation to perform across batches. Within each
+  !  batch of data, the mean will always be taken.
   subroutine torch_loss_mse(loss_tensor, input_tensor, target_tensor, reduction_type)
     use, intrinsic :: iso_c_binding, only : c_associated, c_int
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
-    integer, optional, intent(in) :: reduction_type  !! Reduction type to use (default: torch_kMean)
+    integer, optional, intent(in) :: reduction_type  !! Reduction type to use over batches (default: torch_kMean)
 
     integer(c_int) :: reduction_type_value
 
