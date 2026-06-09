@@ -19,7 +19,11 @@ contains
   ! --- Procedures for evaluating specific loss functions
   ! ============================================================================
 
-  !> Evaluate MSELoss
+  !| Evaluate MSELoss
+  !
+  !  Note that if the reduction type is set to torch_kSum then technically we no longer have a
+  !  *mean-square-error* loss, rather a *summed-square-error* loss. Similarly, if the reduction type
+  !  is torch_kNone then we have a *square-error* loss. We follow the naming scheme used in PyTorch.
   subroutine torch_loss_mse(loss_tensor, input_tensor, target_tensor, reduction_type)
     use, intrinsic :: iso_c_binding, only : c_associated, c_int
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
