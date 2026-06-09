@@ -26,7 +26,7 @@ permissions: {}
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   test-suite:
-    name: test suite
+    name: flang ${{ matrix.flang_version }}, ${{ matrix.standard }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
@@ -50,8 +50,8 @@ jobs:
       - name: Setup Fortran
         uses: fortran-lang/setup-fortran@2a1b9c55897d827a9dfeb114408f3615e53b2b72 # v1.9.0
         with:
-          compiler: ${{ matrix.toolchain.compiler }}
-          version: ${{ matrix.toolchain.version }}
+          compiler: flang
+          version: ${{ matrix.flang_version }}
 
       - name: Install Clang and Flang
         run: |

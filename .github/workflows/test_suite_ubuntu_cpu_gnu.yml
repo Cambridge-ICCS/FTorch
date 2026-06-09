@@ -87,7 +87,7 @@ jobs:
           echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
 
   test-suite:
-    name: test suite
+    name: gfortran ${{ matrix.toolchain.version }}, $${{ matrix.toolchain.std }}
     needs: setup-matrix
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
