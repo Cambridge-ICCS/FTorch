@@ -107,24 +107,21 @@ jobs:
           . ftorch/bin/activate
           pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
 
-      # TODO: Re-enable integration tests
-      # - name: Install OpenMPI
-      #   run: |
-      #     sudo apt update
-      #     sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
+      - name: Install OpenMPI
+        run: |
+          sudo apt update
+          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
       # TODO: Re-enable unit tests
       # - name: Install pFUnit
       #   run: |
-      #     # NOTE: version pin needed because version appears in install path
-      #     git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+      #     # TODO: Avoid version pinning (needed because version appears in install path)
+      #     git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
       #     mkdir pFUnit/build
       #     cd pFUnit/build
-      #     cmake .. \
-      #       -DCMAKE_C_COMPILER=gcc \
-      #       -DCMAKE_Fortran_COMPILER=gfortran \
-      #       -DSKIP_MPI=YES \
-      #       -DSKIP_OPENMP=YES
+      #     cmake ..\
+      #       -DCMAKE_Fortran_COMPILER=gfortran\
+      #       -DMPI_Fortran_COMPILER=mpif90
       #     make -j 4 install
 
       - name: Build FTorch
@@ -133,7 +130,7 @@ jobs:
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
-          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch
           export BUILD_DIR=$(pwd)/build
           mkdir -p ${BUILD_DIR}
           # Install to /tmp/ to ensure independent from the CMake build in standalone check.
