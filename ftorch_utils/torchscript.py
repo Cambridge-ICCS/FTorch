@@ -3,6 +3,7 @@
 import importlib.util
 import os
 import sys
+from typing import Optional
 
 import torch
 
@@ -53,40 +54,69 @@ def trace_to_torchscript(
 
 
 def load_pytorch(
-    model_definition_file: str, model_name: str, saved_model_file: str
+    model_name: str,
+    model_definition_file: Optional[str] = None,
+    saved_model_file: Optional[str] = None,
+    model_weights: Optional[str] = None,
 ) -> torch.nn.Module:
     """
-    Load a PyTorch model from file.
+    Load a PyTorch model from file or from TorchVision's pre-trained models.
 
     Parameters
     ----------
-    model_definition_file : str
-        name of file containing PyTorch model definition
     model_name : str
         name of the PyTorch model
+    model_definition_file : str
+        name of file containing PyTorch model definition if not loading a pre-trained
+        model
     saved_model_file : str
-        name of file containing saved PyTorch model
+        name of file containing saved PyTorch model if not loading a pre-trained model
+    model_weights : str
+        name of model weights if loading a pretrained model
 
     Returns
     -------
     model : torch.NN.Module
         a PyTorch model
     """
-    # Import the module containing the model definition
-    module_name, _ = os.path.splitext(os.path.basename(model_definition_file))
-    module_spec = importlib.util.spec_from_file_location(
-        module_name, model_definition_file
-    )
-    module = importlib.util.module_from_spec(module_spec)
-    sys.modules[module_name] = module
-    module_spec.loader.exec_module(module)
+    pretrained = model_definition_file is None and saved_model_file is None
+    if pretrained:
+        import torchvision
+
+        print(f"Loading pre-trained {model_name} model...", end="")
+        module = torchvision.models
+    elif model_definition_file is None or saved_model_file is None:
+        raise ValueError(
+            "Model definition file and input model file must either both be provided"
+            " (to load a model from file) or both be skipped (to load a pre-trained"
+            " model)."
+        )
+    else:
+        # Import the module containing the model definition
+        module_name, _ = os.path.splitext(os.path.basename(model_definition_file))
+        module_spec = importlib.util.spec_from_file_location(
+            module_name, model_definition_file
+        )
+        module = importlib.util.module_from_spec(module_spec)
+        sys.modules[module_name] = module
+        module_spec.loader.exec_module(module)
 
     # Construct the PyTorch model and load its weights from file
     cls = getattr(module, model_name)
-    model = cls()
-    with torch.inference_mode():
-        model.load_state_dict(torch.load(saved_model_file, weights_only=True))
+    if model_weights is None:
+        model = cls()
+    else:
+        model = cls(weights=model_weights)
+    if pretrained:
+        print("done.")
+    elif model_weights is None:
+        with torch.inference_mode():
+            model.load_state_dict(torch.load(saved_model_file, weights_only=True))
+
+    # Switch-off some specific layers/parts of the model that behave
+    # differently during training and inference
     model.eval()
+
     return model
 
 

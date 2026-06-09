@@ -120,7 +120,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-stand ${FORTRAN_STANDARD}"
+            -DCMAKE_Fortran_FLAGS="-stand ${FORTRAN_STANDARD} -fpscomp logicals"
           cmake --build .
           cmake --install .
 
@@ -162,6 +162,6 @@ jobs:
             -DMPI_Fortran_COMPILER="${{ matrix.MPIFC }}" \
             -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+            -DCMAKE_Fortran_FLAGS="-stand ${FORTRAN_STANDARD} -fpscomp logicals"
           cmake --build .
           ctest -V

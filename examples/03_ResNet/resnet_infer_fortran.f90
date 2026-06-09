@@ -115,6 +115,7 @@ contains
       deallocate(args)
 
       if (.not. test_pass) then
+        write (*,*) "Predicted probability does not match the expected value:", expected_prob
         stop 999
       end if
 
