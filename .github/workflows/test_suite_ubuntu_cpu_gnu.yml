@@ -172,10 +172,10 @@ jobs:
 
           fpm build \
             --profile debug \
-            --compiler mpif90 \
-            --c-compiler mpicc \
-            --cxx-compiler mpicxx \
-            --flag "${FFLAGS}" \
+            --compiler gfortran \
+            --c-compiler gcc \
+            --cxx-compiler g++ \
+            --flag "-std=${FORTRAN_STANDARD}" \
             --c-flag "-cpp -std=c++17 -I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include" \
             --cxx-flag "-cpp -std=c++17 -I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include" \
             --link-flag "-L${Torch_DIR}/lib -L${PFUNIT_DIR}/lib" \
