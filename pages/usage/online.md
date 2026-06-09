@@ -244,12 +244,11 @@ is probably the best place to get started to see how to use the functionality.
 
 ### Loss functions
 
-The loss function classes defined in PyTorch/LibTorch have not yet been exposed
-in FTorch. However, the [[ftorch_tensor(module):torch_tensor_sum(subroutine)]] and
-[[ftorch_tensor(module):torch_tensor_mean(subroutine)]] reduction
-operators have been provided, which should be sufficient for simple loss
-functions such as the mean-square-error (MSE).
+A subset of the loss function classes defined in PyTorch/LibTorch have been
+exposed in FTorch. Currently, this only includes the
+[[ftorch_loss(module):torch_loss_mse(subroutine)]] subroutine for the
+mean-square-error (MSE).
 
 See the [optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers)
-for an example of how to use [[ftorch_tensor(module):torch_tensor_mean(subroutine)]]
+for an example of how to use [[ftorch_loss(module):torch_loss_mse(subroutine)]]
 to define a MSE loss function.

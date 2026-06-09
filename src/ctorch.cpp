@@ -3,6 +3,7 @@
  * (https://pytorch.org/cppdocs) and more specifically the C++ API documentation
  * (https://pytorch.org/cppdocs/api/library_root.html) pages on the PyTorch website.
  */
+#include <torch/nn/functional/loss.h>
 #include <torch/script.h>
 #include <torch/torch.h>
 
@@ -35,7 +36,7 @@ void ctorch_warn(const std::string &message) {
 // --- Constant expressions
 // =============================================================================
 
-// Mapping from FTorch device_data_t to libtorch Dtype
+// Mapping from FTorch torch_data_t to libtorch Dtype
 constexpr auto get_libtorch_dtype(torch_data_t dtype) {
   switch (dtype) {
   case torch_kUInt8:
@@ -62,7 +63,7 @@ constexpr auto get_libtorch_dtype(torch_data_t dtype) {
   }
 }
 
-// Mapping from libtorch Dtype to FTorch device_data_t
+// Mapping from libtorch Dtype to FTorch torch_data_t
 torch_data_t get_ftorch_dtype(caffe2::TypeMeta dtype) {
   if (dtype == torch::kUInt8) {
     ctorch_error("uint8 not supported in Fortran");
@@ -90,7 +91,7 @@ torch_data_t get_ftorch_dtype(caffe2::TypeMeta dtype) {
   return torch_kFloat32; // Dummy return to satisfy the compiler
 }
 
-// Mapping from FTorch device_type_t to libtorch DeviceType
+// Mapping from FTorch torch_device_t to libtorch DeviceType
 const auto get_libtorch_device(torch_device_t device_type, int device_index) {
   switch (device_type) {
   case torch_kCPU:
@@ -138,7 +139,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
   }
 }
 
-// Mapping from libtorch DeviceType to FTorch device_type_t
+// Mapping from libtorch DeviceType to FTorch torch_device_t
 const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
   switch (device_type) {
   case torch::kCPU:
@@ -155,6 +156,25 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
     std::cerr << "[ERROR]: device type " << device_type << " not implemented in FTorch"
               << std::endl;
     exit(EXIT_FAILURE);
+  }
+}
+
+// Mapping from FTorch torch_reduction_t to libtorch reduction type.
+// torch::kNone, torch::kMean, and torch::kSum are distinct struct types in the
+// Torch C++ API (see torch/csrc/api/include/torch/enum.h), so the return type
+// must be the variant torch::nn::MSELossOptions::reduction_t.
+torch::nn::MSELossOptions::reduction_t
+get_libtorch_reduction_type(torch_reduction_t reduction_type) {
+  switch (reduction_type) {
+  case torch_kNone:
+    return torch::kNone;
+  case torch_kMean:
+    return torch::kMean;
+  case torch_kSum:
+    return torch::kSum;
+  default:
+    ctorch_warn("unknown reduction type, setting to torch_kMean");
+    return torch::kMean;
   }
 }
 
@@ -838,4 +858,33 @@ void torch_jit_module_parameters(const torch_jit_script_module_t module,
 void torch_jit_module_delete(torch_jit_script_module_t module) {
   auto m = reinterpret_cast<torch::jit::script::Module *>(module);
   delete m;
+}
+
+// =============================================================================
+// --- Torch loss functions API
+// =============================================================================
+
+// Function to create an MSELoss and return a pointer to it
+void torch_loss_mse(torch_tensor_t loss, const torch_tensor_t input,
+                    const torch_tensor_t target,
+                    const torch_reduction_t reduction_type) {
+  try {
+    // Cast the parameters pointer into Tensor objects
+    auto t1 = reinterpret_cast<torch::Tensor *const>(input);
+    auto t2 = reinterpret_cast<torch::Tensor *const>(target);
+    auto l = reinterpret_cast<torch::Tensor *>(loss);
+
+    validate_tensor(t1, "Input tensor");
+    validate_tensor(t2, "Target tensor");
+
+    // Set up options
+    namespace F = torch::nn::functional;
+    F::MSELossFuncOptions options;
+    options.reduction(get_libtorch_reduction_type(reduction_type));
+
+    // Create the optimizer and cast to torch_optim_t to return
+    std::move(*l) = F::mse_loss(*t1, *t2, options);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_loss_mse");
+  }
 }

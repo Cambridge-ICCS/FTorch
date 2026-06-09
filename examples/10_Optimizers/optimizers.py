@@ -31,7 +31,7 @@ for epoch in range(n_iter + 1):
 
     # Evaluate the loss function as computed mean square error (MSE) between target and
     # input, then log its value
-    loss = ((output - target_vec) ** 2).mean()
+    loss = torch.nn.functional.mse_loss(output, target_vec)
     loss_progress.append(float(loss))
 
     # Perform backward step on loss to propogate gradients using autograd
