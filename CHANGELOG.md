@@ -51,6 +51,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Fixed
 
+- Fixed CI workflows for gfortran versions 9 and 10 in
+  [#603](https://github.com/Cambridge-ICCS/FTorch/pull/603)
+
 ### Patch Releases
 
 
