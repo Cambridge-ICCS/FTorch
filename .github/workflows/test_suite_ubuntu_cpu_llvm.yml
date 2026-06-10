@@ -146,7 +146,8 @@ jobs:
             -DCMAKE_C_COMPILER=clang  \
             -DCMAKE_CXX_COMPILER=clang++  \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
-            -DCMAKE_BUILD_TESTS=TRUE \
+            -DCMAKE_BUILD_UNIT_TESTS="${{ matrix.compiler == 'flang' }}" \
+            -DCMAKE_BUILD_INTEGRATION_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PREFIX}" \
             -DCMAKE_Fortran_FLAGS="${FFLAGS}"
           cmake --build .
