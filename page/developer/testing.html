@@ -189,6 +189,11 @@ cmake<span class="w"> </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>TRUE<spa
 <p>Note that pFUnit includes the version number in the install directory name,
 so for version 4.12 that path will need to be specified as
 <code>/path/to/pFUnit/build/installed/PFUNIT-4.12</code>, for example.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>If you are using the Flang compiler then you will need to use pFUnit 4.18.2 or
+later due to a bug in pFUnit that was fixed in that release.</p>
+</div>
 <p>Integration tests can be built without pFUnit by disabling the unit tests:</p>
 <div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>TRUE<span class="w"> </span>-DFTORCH_BUILD_UNIT_TESTS<span class="o">=</span>OFF<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-S<span class="w"> </span>&lt;/path/to/FTorch&gt;<span class="w"> </span>-B<span class="w"> </span>&lt;/path/to/FTorch/build&gt;

@@ -160,6 +160,7 @@
 <li><a href="#common-errors">Common Errors</a><ul>
 <li><a href="#no-specific-subroutine">No specific subroutine</a></li>
 <li><a href="#segmentation-faults">Segmentation faults</a></li>
+<li><a href="#unit-test-segfaults-with-flang">Unit test segfaults with flang</a></li>
 </ul>
 </li>
 <li><a href="#common-warnings">Common warnings</a></li>
@@ -252,6 +253,12 @@ the overloaded assignment operator should be triggered. As such, if you aren't
 using the bare <code>use ftorch</code> import then you should ensure you specify
 <code>use ftorch, only: assignment(=)</code> (as well as any other module members you
 require). See the <a href="tensor.html">tensor documentation</a> for more details.</p>
+<h5 id="unit-test-segfaults-with-flang">Unit test segfaults with flang</h5>
+<p>If FTorch unit tests segfault when built with <code>flang</code>, a common cause is an
+older <code>pFUnit</code> version which then exposes a bug in <code>flang</code>.</p>
+<p>The solution is to use <code>pFUnit v4.18.2</code> or newer, then reconfigure and rebuild FTorch (and its unit
+tests), e.g., specifying to <code>cmake</code> an explicit path to the newer <code>pFUnit</code> (e.g.
+<code>-DCMAKE_INSTALL_PREFIX="path/pfunit-4.18.2</code>).</p>
 <h3 id="common-warnings">Common warnings</h3>
 <h4 id="structure-constructor-finalizer-with-fortran-2008">Structure constructor finalizer with Fortran 2008</h4>
 <p>If you are building FTorch with gfortran and are specifying the Fortran 2008
