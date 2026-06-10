@@ -112,7 +112,7 @@ jobs:
           mkdir pFUnit/build
           cd pFUnit/build
           cmake ..\
-            -DCMAKE_Fortran_COMPILER=gfortran\
+            -DCMAKE_Fortran_COMPILER=gfortran \
             -DMPI_Fortran_COMPILER=mpif90
           make -j 4 install
 
