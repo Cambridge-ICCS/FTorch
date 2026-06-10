@@ -129,7 +129,7 @@ jobs:
 
           if [ "${{ matrix.compiler }}" == "flang" ]; then
             # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-            PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
+            PFUNIT_DIR="$(pwd)/../pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
             PREFIX="${PFUNIT_DIR};${Torch_DIR}"
             FC="flang-${{ matrix.flang_version }}"
             FFLAGS="-std=${FORTRAN_STANDARD}"
