@@ -72,8 +72,7 @@ jobs:
         if: ${{ matrix.compiler == 'lfortran' }}
         run: |
           . ftorch/bin/activate
-          sudo apt-get install build-essential binutils-dev
-          sudo apt-get install zlib1g-dev libzstd-dev libunwind-dev
+          sudo apt-get install build-essential binutils-dev zlib1g-dev libzstd-dev libunwind-dev
           pip install bison re2c
           git clone https://github.com/lfortran/lfortran.git
           cd lfortran
@@ -92,10 +91,10 @@ jobs:
               -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
               -DCMAKE_C_COMPILER=clang \
               -DCMAKE_CXX_COMPILER=clang++ \
-              -DCMAKE_C_FLAGS="${CFLAGS} -fdiagnostics-color=always" \
-              -DCMAKE_CXX_FLAGS="${CXXFLAGS} -fdiagnostics-color=always"
+              -DCMAKE_C_FLAGS="-fdiagnostics-color=always" \
+              -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always"
           cmake --build .
-          echo "export PATH="$(pwd)/lfortran/src/bin:\${PATH}" >> ftorch/bin/activate
+          echo "export PATH=$(pwd)/src/bin:\${PATH}" >> ftorch/bin/activate
 
       - name: Install OpenMPI
         run: |
@@ -130,13 +129,15 @@ jobs:
 
           if [ "${{ matrix.compiler }}" == "flang" ]; then
             # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-            export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
+            PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
             PREFIX="${PFUNIT_DIR};${Torch_DIR}"
             FFLAGS="-std=${FORTRAN_STANDARD}"
           else
+            PFUNIT_DIR=""
             PREFIX="${Torch_DIR}"
             FFLAGS=""
           fi
+          export PFUNIT_DIR
 
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
