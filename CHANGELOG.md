@@ -17,6 +17,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#581](https://github.com/Cambridge-ICCS/FTorch/pull/581)
 - Ability to build only integration or unit tests as desired using CMake options in
   [#584](https://github.com/Cambridge-ICCS/FTorch/pull/584)
+- Added Flang CI workflow in
+  [#595](https://github.com/Cambridge-ICCS/FTorch/pull/595)
 
 
 ### Changed
@@ -39,6 +41,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
 - Example numbering updated to double digits to incorporate example 10.
   [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
+- Updated CI workflows to use pFUnit 4.18.2 in
+  [#595](https://github.com/Cambridge-ICCS/FTorch/pull/595)
 
 ### Removed
 

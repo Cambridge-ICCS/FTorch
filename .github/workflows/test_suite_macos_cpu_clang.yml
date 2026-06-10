@@ -27,38 +27,16 @@ permissions: {}
 
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
-  # Dynamically build matrix for job
-  setup-matrix:
-    name: setup matrix
-    runs-on: macos-latest
-
-    # Terminate the job if it runs for more than 5 minutes
-    timeout-minutes: 5
-
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    env:
-      EVENT_NAME: ${{ github.event_name }}
-    steps:
-      - id: set-matrix
-        run: |
-          MATRIX_JSON='
-          {
-            "std": ["f2008", "f2018"],
-            "compiler": ["clang"]
-          }'
-          # Convert json to compact line expected by github action
-          MATRIX_JSON=$(echo "$MATRIX_JSON" | jq -c .)
-          echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
-
   test-suite:
-    name: test suite (${{ matrix.compiler }}, ${{ matrix.std }})
-    needs: setup-matrix
+    name: clang, ${{ matrix.std }}
     # The type of runner that the job will run on
     runs-on: macos-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
+      matrix:
+        std: [f2008, f2018]
+        pfunit_longversion: [4.18.2]
+        pfunit_shortversion: [4.18]
 
     # Terminate the job if it runs for more than 20 minutes
     timeout-minutes: 20
@@ -111,8 +89,8 @@ jobs:
 
       - name: Install pFUnit
         run: |
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          # NOTE: version pin needed because version appears in install path
+          git clone -b "v${{ matrix.pfunit_longversion }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
           cmake ..\
@@ -135,7 +113,7 @@ jobs:
           export FTORCH_INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${FTORCH_INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
           cd ${FTORCH_BUILD_DIR}
 
           cmake .. \
@@ -154,7 +132,7 @@ jobs:
           cmake --build .
           cmake --install .
 
-      - name: Check pkg-config file 
+      - name: Check pkg-config file
         run: |
           # pkg-config looks in the `build` directory for libraries
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build

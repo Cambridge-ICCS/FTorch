@@ -41,6 +41,11 @@ Note that pFUnit includes the version number in the install directory name,
 so for version 4.12 that path will need to be specified as
 `/path/to/pFUnit/build/installed/PFUNIT-4.12`, for example.
 
+@note
+If you are using the Flang compiler then you will need to use pFUnit 4.18.2 or
+later due to a bug in pFUnit that was fixed in that release.
+@endnote
+
 Integration tests can be built without pFUnit by disabling the unit tests:
 ```shell
 cmake -DCMAKE_BUILD_TESTS=TRUE -DFTORCH_BUILD_UNIT_TESTS=OFF \

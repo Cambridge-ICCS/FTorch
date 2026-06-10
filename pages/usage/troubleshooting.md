@@ -10,6 +10,7 @@ If you are experiencing problems building or using FTorch please see below for g
 - [Common Errors](#common-errors)
     - [No specific subroutine](#no-specific-subroutine)
     - [Segmentation faults](#segmentation-faults)
+     - [Unit test segfaults with flang](#unit-test-segfaults-with-flang)
 - [Common warnings](#common-warnings)
 
 
@@ -121,6 +122,16 @@ the overloaded assignment operator should be triggered. As such, if you aren't
 using the bare `use ftorch` import then you should ensure you specify
 `use ftorch, only: assignment(=)` (as well as any other module members you
 require). See the [tensor documentation](|page|/usage/tensor.html) for more details.
+
+##### Unit test segfaults with flang
+
+If FTorch unit tests segfault when built with `flang`, a common cause is an
+older `pFUnit` version which then exposes a bug in `flang`.
+
+The solution is to use `pFUnit v4.18.2` or newer, then reconfigure and rebuild FTorch (and its unit
+tests), e.g., specifying to `cmake` an explicit path to the newer `pFUnit` (e.g.
+`-DCMAKE_INSTALL_PREFIX="path/pfunit-4.18.2`).
+
 
 
 ### Common warnings

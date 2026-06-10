@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite
-name: Test suite (Windows CPU Intel)
+name: Test suite (Windows CPU)
 
 # Controls when the workflow will run
 on:
@@ -27,7 +27,7 @@ permissions: {}
 jobs:
   # This workflow contains a single job called "test-suite-windows"
   test-suite:
-    name: test suite
+    name: ifx ${{ matrix.toolchain.version }}, ${{ matrix.std }}
 
     # The type of runner that the job will run on
     runs-on: windows-latest
@@ -36,6 +36,7 @@ jobs:
       matrix:
         toolchain:
           - {compiler: intel, version: '2023.2'}
+        std: [f08]
 
     # Terminate the job if it runs for more than 15 minutes
     timeout-minutes: 15
