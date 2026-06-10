@@ -72,13 +72,11 @@ jobs:
             std: f2018
           - gcc_version: ${{ github.event_name == 'push' && 12 }}
             std: f2018
-          - gcc_version: ${{ github.event_name == 'push' && 13 }}
           # Configuration for pull requests etc.
           - gcc_version: ${{ github.event_name != 'push' && 9 }}
           - gcc_version: ${{ github.event_name != 'push' && 10 }}
           - gcc_version: ${{ github.event_name != 'push' && 11 }}
           - gcc_version: ${{ github.event_name != 'push' && 12 }}
-          - gcc_version: ${{ github.event_name != 'push' && 13 }}
 
     # Terminate the job if it runs for more than 15 minutes
     timeout-minutes: 15
