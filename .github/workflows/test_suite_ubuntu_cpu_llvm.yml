@@ -131,23 +131,25 @@ jobs:
             # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
             PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
             PREFIX="${PFUNIT_DIR};${Torch_DIR}"
+            FC="flang-${{ matrix.flang_version }}"
             FFLAGS="-std=${FORTRAN_STANDARD}"
           else
             PFUNIT_DIR=""
             PREFIX="${Torch_DIR}"
+            FC=lfortran
             FFLAGS=""
           fi
           export PFUNIT_DIR
-
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
             -DCMAKE_C_COMPILER=clang  \
             -DCMAKE_CXX_COMPILER=clang++  \
+            -DCMAKE_Fortran_COMPILER="${FC}" \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
-            -DCMAKE_BUILD_UNIT_TESTS="${{ matrix.compiler == 'flang' }}" \
-            -DCMAKE_BUILD_INTEGRATION_TESTS=TRUE \
+            -DFTORCH_BUILD_UNIT_TESTS="${{ matrix.compiler == 'flang' }}" \
+            -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PREFIX}" \
             -DCMAKE_Fortran_FLAGS="${FFLAGS}"
           cmake --build .
@@ -223,11 +225,21 @@ jobs:
           export EXAMPLE_BUILD_DIR="examples/02_SimpleNet/build"
           mkdir "${EXAMPLE_BUILD_DIR}"
           cd "${EXAMPLE_BUILD_DIR}"
+          if [ "${{ matrix.compiler }}" == "flang" ]; then
+            FC="flang-${{ matrix.flang_version }}"
+            FFLAGS="-std=${FORTRAN_STANDARD}"
+          else
+            FC=lfortran
+            FFLAGS=""
+          fi
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+            -DCMAKE_C_COMPILER=clang  \
+            -DCMAKE_CXX_COMPILER=clang++  \
+            -DCMAKE_Fortran_COMPILER="${FC}" \
+            -DCMAKE_Fortran_FLAGS="${FFLAGS}"
           cmake --build .
           ctest -V
