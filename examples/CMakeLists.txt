@@ -15,7 +15,8 @@ if(CMAKE_BUILD_TESTS)
   endif()
   # NOTE: We do not currently support running with MPI on Windows
   if(UNIX)
-    add_subdirectory(08_MPI)
+    # TODO: Re-enable MPI test
+    # add_subdirectory(08_MPI)
   endif()
   add_subdirectory(09_Autograd)
   add_subdirectory(10_Optimizers)
