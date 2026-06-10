@@ -55,8 +55,12 @@ jobs:
           # Configuration for pushes to main
           - gcc_version: ${{ github.event_name == 'push' && 9 }}
             std: f2018
+            pfunit_longversion: 4.12.0
+            pfunit_shortversion: 4.12
           - gcc_version: ${{ github.event_name == 'push' && 10 }}
             std: f2018
+            pfunit_longversion: 4.12.0
+            pfunit_shortversion: 4.12
           - gcc_version: ${{ github.event_name == 'push' && 11 }}
             std: f2018
           - gcc_version: ${{ github.event_name == 'push' && 12 }}
