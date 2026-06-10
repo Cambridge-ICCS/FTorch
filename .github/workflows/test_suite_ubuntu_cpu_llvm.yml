@@ -77,9 +77,24 @@ jobs:
           pip install bison re2c
           git clone https://github.com/lfortran/lfortran.git
           cd lfortran
-          export CMAKE_PREFIX_PATH_LFORTRAN=$(pwd)/build
           ./build0.sh
-          ./build1.sh
+          cmake . \
+              -G Ninja \
+              -DCMAKE_BUILD_TYPE=Debug \
+              -DWITH_LLVM=yes \
+              -DLFORTRAN_BUILD_ALL=yes \
+              -DWITH_STACKTRACE=yes \
+              -DWITH_RUNTIME_STACKTRACE=yes \
+              -DWITH_LSP=no \
+              -DWITH_INTERNAL_ALLOC_CHECK=yes \
+              -DUSE_DYNAMIC_ZSTD=no \
+              -DCMAKE_INSTALL_LIBDIR=share/lfortran/lib \
+              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+              -DCMAKE_C_COMPILER=clang \
+              -DCMAKE_CXX_COMPILER=clang++ \
+              -DCMAKE_C_FLAGS="${CFLAGS} -fdiagnostics-color=always" \
+              -DCMAKE_CXX_FLAGS="${CXXFLAGS} -fdiagnostics-color=always"
+          cmake --build .
           echo "export PATH="$(pwd)/lfortran/src/bin:\${PATH}" >> ftorch/bin/activate
 
       - name: Install OpenMPI
