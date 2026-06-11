@@ -112,8 +112,9 @@ jobs:
           export FTORCH_INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${FTORCH_INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          VN="${{ matrix.pfunit_version }}"
-          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
+          PFUNIT_VERSION="${{ matrix.pfunit_version }}"
+          PFUNIT_VERSION_PREFIX="${PFUNIT_VERSION%.*}"
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${PFUNIT_VERSION_PREFIX}"
           cd ${FTORCH_BUILD_DIR}
 
           cmake .. \
