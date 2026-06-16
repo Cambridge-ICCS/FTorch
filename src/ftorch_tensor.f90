@@ -72,6 +72,11 @@ module ftorch_tensor
     module procedure torch_tensor_from_array_real64_3d
     module procedure torch_tensor_from_array_real64_4d
     module procedure torch_tensor_from_array_real64_5d
+  end interface
+
+  !> DEPRECATED: Old signature (tensor, data, layout, device_type, [device_index], [requires_grad]).
+  !> Use torch_tensor_from_array instead. This will be removed in FTorch version 2.0.
+  interface torch_tensor_from_array_legacy
     module procedure torch_tensor_from_array_int8_1d_legacy
     module procedure torch_tensor_from_array_int8_2d_legacy
     module procedure torch_tensor_from_array_int8_3d_legacy
