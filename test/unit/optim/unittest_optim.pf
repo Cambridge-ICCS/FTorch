@@ -125,7 +125,6 @@ contains
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor, tensor_sq, grad, external_gradient
     integer, parameter :: ndims = 1
-    integer, parameter :: tensor_layout(ndims) = [1]
     integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
     real(sp), dimension(4), target :: tensor_data, grad_data
     real(sp), dimension(4), parameter :: expected_zero = [0.0, 0.0, 0.0, 0.0]
@@ -142,9 +141,8 @@ contains
     tensor_data = [1.0, 2.0, 3.0, 4.0]
 
     ! Create a tensor with requires_grad set to true
-    call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
-                                 requires_grad=.true.)
-    call torch_tensor_from_array(grad, grad_data, tensor_layout, torch_kCPU)
+    call torch_tensor_from_array(tensor, tensor_data, torch_kCPU, requires_grad=.true.)
+    call torch_tensor_from_array(grad, grad_data, torch_kCPU)
     call torch_tensor_empty(tensor_sq, ndims, tensor_shape, torch_kFloat32, torch_kCPU)
 
     ! Create an optimizer based on the parameter type
@@ -208,7 +206,6 @@ contains
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor, target_tensor, loss, grad
     integer, parameter :: ndims = 1
-    integer, parameter :: tensor_layout(ndims) = [1]
     integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
     integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
     real(sp), dimension(4), target :: target_data, tensor_data, expected
@@ -219,9 +216,8 @@ contains
     tensor_data = [1.0, 1.0, 1.0, 1.0]
 
     ! Create a tensor with requires_grad set to true
-    call torch_tensor_from_array(target_tensor, target_data, tensor_layout, torch_kCPU)
-    call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
-                            requires_grad=.true.)
+    call torch_tensor_from_array(target_tensor, target_data, torch_kCPU)
+    call torch_tensor_from_array(tensor, tensor_data, torch_kCPU, requires_grad=.true.)
 
     ! Create an optimizer based on the parameter type, learning rate 1.0
     ! Also set the expected value of the optimizer step based on approximate value of
@@ -278,7 +274,6 @@ contains
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor, target_tensor, loss, grad
     integer, parameter :: ndims = 1
-    integer, parameter :: tensor_layout(ndims) = [1]
     integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
     integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
     real(sp), dimension(4), target :: target_data, tensor_data, expected
@@ -290,9 +285,8 @@ contains
     tensor_data = [1.0, 1.0, 1.0, 1.0]
 
     ! Create a tensor with requires_grad set to true
-    call torch_tensor_from_array(target_tensor, target_data, tensor_layout, torch_kCPU)
-    call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
-                            requires_grad=.true.)
+    call torch_tensor_from_array(target_tensor, target_data, torch_kCPU)
+    call torch_tensor_from_array(tensor, tensor_data, torch_kCPU, requires_grad=.true.)
 
     ! Create an optimizer based on the parameter type, learning rate 1.0
     ! Also set the expected value of the optimizer step based on approximate value of
