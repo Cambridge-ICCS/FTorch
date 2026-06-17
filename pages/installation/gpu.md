@@ -136,14 +136,13 @@ For example, the following code snippet sets up a Torch tensor with CUDA GPU
 device index 2:
 ```fortran
 device_index = 2
-call torch_tensor_from_array(in_tensors(1), in_data, tensor_layout, &
-                             torch_kCUDA, device_index=device_index)
+call torch_tensor_from_array(in_tensors(1), in_data, torch_kCUDA, &
+                             device_index=device_index)
 ```
 Whereas the following code snippet sets up a Torch tensor with (default) CUDA
 device index 0:
 ```fortran
-call torch_tensor_from_array(in_tensors(1), in_data, tensor_layout, &
-                             torch_kCUDA)
+call torch_tensor_from_array(in_tensors(1), in_data, torch_kCUDA)
 ```
 Similarly for the `HIP` or `XPU` device type.
 Note that `MPS` does not currently support multiple devices, so the
