@@ -68,8 +68,10 @@ module ftorch_tensor
     #:endfor
   end interface
 
-  !> DEPRECATED: Old signature (tensor, data, layout, device_type, [device_index], [requires_grad]).
-  !> Use torch_tensor_from_array instead. This will be removed in FTorch version 2.0.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array:
+  !> `(tensor, data, layout, device_type, [device_index], [requires_grad])`.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   interface torch_tensor_from_array_legacy
     #:for PREC in PRECISIONS
     #:for RANK in RANKS
@@ -425,7 +427,9 @@ contains
 
   #:for PREC in PRECISIONS
   #:for RANK in RANKS
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_${PREC}$_${RANK}$d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int

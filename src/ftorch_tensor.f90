@@ -74,8 +74,10 @@ module ftorch_tensor
     module procedure torch_tensor_from_array_real64_5d
   end interface
 
-  !> DEPRECATED: Old signature (tensor, data, layout, device_type, [device_index], [requires_grad]).
-  !> Use torch_tensor_from_array instead. This will be removed in FTorch version 2.0.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array:
+  !> `(tensor, data, layout, device_type, [device_index], [requires_grad])`.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   interface torch_tensor_from_array_legacy
     module procedure torch_tensor_from_array_int8_1d_legacy
     module procedure torch_tensor_from_array_int8_2d_legacy
@@ -1642,7 +1644,9 @@ contains
    end subroutine torch_tensor_from_array_real64_5d
 
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int8_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1666,7 +1670,9 @@ contains
 
   end subroutine torch_tensor_from_array_int8_1d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int8_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1690,7 +1696,9 @@ contains
 
   end subroutine torch_tensor_from_array_int8_2d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int8_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1714,7 +1722,9 @@ contains
 
   end subroutine torch_tensor_from_array_int8_3d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int8_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1738,7 +1748,9 @@ contains
 
   end subroutine torch_tensor_from_array_int8_4d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int8_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1762,7 +1774,9 @@ contains
 
   end subroutine torch_tensor_from_array_int8_5d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int16_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1786,7 +1800,9 @@ contains
 
   end subroutine torch_tensor_from_array_int16_1d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int16_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1810,7 +1826,9 @@ contains
 
   end subroutine torch_tensor_from_array_int16_2d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int16_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1834,7 +1852,9 @@ contains
 
   end subroutine torch_tensor_from_array_int16_3d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int16_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1858,7 +1878,9 @@ contains
 
   end subroutine torch_tensor_from_array_int16_4d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int16_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1882,7 +1904,9 @@ contains
 
   end subroutine torch_tensor_from_array_int16_5d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int32_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1906,7 +1930,9 @@ contains
 
   end subroutine torch_tensor_from_array_int32_1d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int32_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1930,7 +1956,9 @@ contains
 
   end subroutine torch_tensor_from_array_int32_2d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int32_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1954,7 +1982,9 @@ contains
 
   end subroutine torch_tensor_from_array_int32_3d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int32_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -1978,7 +2008,9 @@ contains
 
   end subroutine torch_tensor_from_array_int32_4d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int32_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2002,7 +2034,9 @@ contains
 
   end subroutine torch_tensor_from_array_int32_5d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int64_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2026,7 +2060,9 @@ contains
 
   end subroutine torch_tensor_from_array_int64_1d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int64_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2050,7 +2086,9 @@ contains
 
   end subroutine torch_tensor_from_array_int64_2d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int64_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2074,7 +2112,9 @@ contains
 
   end subroutine torch_tensor_from_array_int64_3d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int64_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2098,7 +2138,9 @@ contains
 
   end subroutine torch_tensor_from_array_int64_4d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int64_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2122,7 +2164,9 @@ contains
 
   end subroutine torch_tensor_from_array_int64_5d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real32_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2146,7 +2190,9 @@ contains
 
   end subroutine torch_tensor_from_array_real32_1d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real32_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2170,7 +2216,9 @@ contains
 
   end subroutine torch_tensor_from_array_real32_2d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real32_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2194,7 +2242,9 @@ contains
 
   end subroutine torch_tensor_from_array_real32_3d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real32_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2218,7 +2268,9 @@ contains
 
   end subroutine torch_tensor_from_array_real32_4d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real32_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2242,7 +2294,9 @@ contains
 
   end subroutine torch_tensor_from_array_real32_5d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real64_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2266,7 +2320,9 @@ contains
 
   end subroutine torch_tensor_from_array_real64_1d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real64_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2290,7 +2346,9 @@ contains
 
   end subroutine torch_tensor_from_array_real64_2d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real64_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2314,7 +2372,9 @@ contains
 
   end subroutine torch_tensor_from_array_real64_3d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real64_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
@@ -2338,7 +2398,9 @@ contains
 
   end subroutine torch_tensor_from_array_real64_4d_legacy
 
-  !> DEPRECATED: Use torch_tensor_from_array with layout after device_type.
+  !> deprecated: true
+  !> This is the old layout-required signature for torch_tensor_from_array.
+  !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real64_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_int
