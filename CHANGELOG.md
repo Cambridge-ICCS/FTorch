@@ -23,6 +23,11 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Made `layout` optional in `torch_tensor_from_array` and moved it after `device_index`.
+  This is a breaking API change.
+  A legacy interface `torch_tensor_from_array_legacy` preserves the old layout-required
+  signature with a runtime deprecation warning.
+  [#604](https://github.com/Cambridge-ICCS/FTorch/pull/604)
 - Renamed `utils` as `ftorch_utils` and made it a proper Python module
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 - Changed process for saving TorchScript models
