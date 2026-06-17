@@ -163,7 +163,7 @@ a & b \\
 c & d
 \end{pmatrix}
 $$
-is passed as `torch_tensor_from_array(A, [1, 2], torch_device)`
+is passed as `torch_tensor_from_array(tensor, A, torch_device, layout=[1, 2])`
 the resulting Tensor will be read by Torch as 
 $$
 \begin{pmatrix}
@@ -173,7 +173,7 @@ c & d
 $$
 
 > Note: _If, for some reason, we did want a different, transposed layout in Torch we
-> could use `torch_tensor_from_array(A, [2, 1], torch_device)` to get:_
+> could use `torch_tensor_from_array(tensor, A, torch_device, layout=[2, 1])` to get:_
 > $$
 > \begin{pmatrix}
 > a & c \\

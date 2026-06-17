@@ -45,7 +45,7 @@ for [[ftorch_tensor(module):torch_tensor_from_array(interface)]] and
 
 ### Common Errors
 
-#### No specific subroutine
+#### No specific subroutine - using temporaries
 
 FTorch makes heavy use of Fortran `interfaces` to `module procedure`s to achieve
 [overloading of subroutines](https://fortran-lang.org/learn/oop_features_in_fortran/object_based_programming_techniques/)
@@ -55,9 +55,9 @@ of tensor.
 If you make a call to a subroutine that fails to match anything in the interface
 you will face a compile-time error of the form:
 ```
-   42 |   call torch_tensor_from_array(tensor, in_data, tensor_layout, torch_kCPU)
-      |                                                                          1
-Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+    42 |   call torch_tensor_from_array(tensor, in_data, torch_kCPU, layout=tensor_layout)
+       |                                                                            1
+Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
 ```
 
 The first thing to do in this instance is to inspect the interface you are trying to
@@ -83,10 +83,63 @@ Error: There is no specific subroutine for the generic ‘torch_tensor_from_arra
 ```
 and slices such as
 ```
-   36 |   call torch_tensor_from_array(a, in_data1(1,:), torch_kCPU, requires_grad=.true.)
-      |                                                                                  1
-Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+    36 |   call torch_tensor_from_array(a, in_data1(1,:), torch_kCPU, requires_grad=.true.)
+       |                                                                                  1
+Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
 ```
+
+@note
+If you recently upgraded FTorch and your call used `layout` as the third argument,
+see the [Deprecated signature](#no-specific-subroutine-deprecated-torch_tensor_from_array-signature)
+section below.
+@endnote
+
+#### No specific subroutine - Deprecated `torch_tensor_from_array` signature
+
+The update of FTorch to v2.0 brought in a breaking API change to
+`torch_tensor_from_array`. If you see this error after upgrading FTorch:
+```
+Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
+```
+and you are passing `layout` as the third argument after `data`, the interface
+signature has changed. The `layout` argument now appears after `device_type` and is
+optional. The old layout-first signature has been moved to a separate interface
+`torch_tensor_from_array_legacy`, which is deprecated and will be removed in a future
+version.
+
+@note
+If the error is for a different reason (e.g., passing a temporary array, expression,
+or slice as an argument), see the [No specific subroutine](#no-specific-subroutine-using-temporaries)
+section above.
+@endnote
+
+The recommended fix for this is to update your calls to the new signature by changing
+the order of the layout argument:
+```fortran
+! Old
+call torch_tensor_from_array(tensor, data, tensor_layout, torch_kCPU)
+
+! New
+call torch_tensor_from_array(tensor, data, torch_kCPU, layout=tensor_layout)
+```
+
+If your Fortran and Torch arrays use the same default row-ordered indexing (`[1, 2, ..., n]`)
+you can omit `layout` entirely:
+```fortran
+call torch_tensor_from_array(tensor, data, torch_kCPU)
+```
+
+If you need to keep the argument order for some reason you can use the
+`torch_tensor_from_array_legacy` interface, but be aware that this will be removed in
+future:
+```fortran
+! Old
+call torch_tensor_from_array(tensor, data, tensor_layout, torch_kCPU)
+
+! Backwards compatible legacy interface
+call torch_tensor_from_array_legacy(tensor, data, tensor_layout, torch_kCPU)
+```
+
 
 #### `int64` versions of `ftorch` for large tensors
 

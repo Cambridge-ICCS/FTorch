@@ -134,11 +134,9 @@ example, suppose we want to multiply two input tensors `a` and `b` to produce an
 output tensor `Q`:
 
 ```fortran
-call torch_tensor_from_array(a, in_data1, tensor_layout, torch_kCPU, &
-                             requires_grad=.true.)
-call torch_tensor_from_array(b, in_data2, tensor_layout, torch_kCPU, &
-                             requires_grad=.true.)
-call torch_tensor_from_array(Q, out_data1, tensor_layout, torch_kCPU)
+call torch_tensor_from_array(a, in_data1, torch_kCPU, requires_grad=.true.)
+call torch_tensor_from_array(b, in_data2, torch_kCPU, requires_grad=.true.)
+call torch_tensor_from_array(Q, out_data1, torch_kCPU)
 
 Q = a * b
 ```
@@ -167,10 +165,10 @@ to `a` and/or `b`. To do this, we can use the
 is, for tensors `dQda` and `dQdb`:
 
 ```fortran
-call torch_tensor_from_array(dQda, out_data2, tensor_layout, torch_kCPU)
+call torch_tensor_from_array(dQda, out_data2, torch_kCPU)
 call torch_tensor_get_gradient(dQda, a)
 
-call torch_tensor_from_array(dQdb, out_data3, tensor_layout, torch_kCPU)
+call torch_tensor_from_array(dQdb, out_data3, torch_kCPU)
 call torch_tensor_get_gradient(dQdb, b)
 ```
 
