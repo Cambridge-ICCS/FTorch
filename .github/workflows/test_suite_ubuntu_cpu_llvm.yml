@@ -108,7 +108,6 @@ jobs:
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
       - name: Install pFUnit
-        if: ${{ matrix.compiler == 'flang' }}
         run: |
           # TODO: Avoid version pinning (needed because version appears in install path)
           git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
@@ -140,7 +139,8 @@ jobs:
 
           if [ "${{ matrix.compiler }}" == "flang" ]; then
             # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-            PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
+            VN="${{ matrix.pfunit_version }}"
+            PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
             PREFIX="${PFUNIT_DIR};${Torch_DIR}"
             FC="flang-${{ matrix.flang_version }}"
             FFLAGS="-std=${FORTRAN_STANDARD}"
@@ -154,10 +154,10 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
             -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
             -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
             -DCMAKE_Fortran_COMPILER="${FC}" \
+            -DMPI_Fortran_COMPILER="${FC}" \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
             -DFTORCH_BUILD_UNIT_TESTS="${{ matrix.compiler == 'flang' }}" \
             -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE \
