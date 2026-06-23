@@ -188,6 +188,9 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
+            -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
+            -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
             -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
