@@ -120,18 +120,18 @@ jobs:
         run: |
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
-          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
-          export BUILD_DIR=$(pwd)/build
+          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages"
+          export BUILD_DIR="$(pwd)/build"
           mkdir -p ${BUILD_DIR}
           # Install to /tmp/ to ensure independent from the CMake build in standalone check.
           export INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${INSTALL_DIR}
+          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
+          VN="${{ matrix.pfunit_version }}"
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
           cd ${BUILD_DIR}
 
           if [ "${{ matrix.compiler }}" == "flang" ]; then
-            # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-            VN="${{ matrix.pfunit_version }}"
-            PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
             PREFIX="${PFUNIT_DIR};${Torch_DIR}"
             FC="flang-${{ matrix.flang_version }}"
             FFLAGS="-std=${FORTRAN_STANDARD}"
