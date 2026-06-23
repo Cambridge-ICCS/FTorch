@@ -57,6 +57,10 @@ jobs:
                                   "flang-${{ matrix.flang_version }}" \
                                   "libomp-${{ matrix.flang_version }}-dev"
 
+      - name: Install OpenMPI
+        run: |
+          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
+
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
@@ -68,11 +72,6 @@ jobs:
           python -m venv ftorch
           . ftorch/bin/activate
           pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
-
-      - name: Install OpenMPI
-        run: |
-          sudo apt update
-          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
       - name: Install pFUnit
         run: |
