@@ -64,6 +64,12 @@ class TestValidateInputTensor:
 class TestValidateOutputModel:
     """Tests for validate_output_model_file."""
 
+    def test_is_not_none(self):
+        """Check that an error is raised for invalid output model file extension."""
+        expected = "No output model file provided via --output_model_file argument."
+        with pytest.raises(ValueError, match=expected):
+            validate_output_model_file(None, "input.pt")
+
     def test_invalid_extension(self):
         """Check that an error is raised for invalid output model file extension."""
         expected = "TorchScript output model file 'output.py' has extension .py but .pt was expected."
