@@ -90,9 +90,9 @@ jobs:
           cd pFUnit/build
           cmake .. \
             -DCMAKE_C_COMPILER=icx \
-            -DCMAKE_CXX_COMPILER=icpx \
             -DCMAKE_Fortran_COMPILER=${{ matrix.FC }} \
-            -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }}
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=YES
           make -j 4 install
 
       - name: Build and install FTorch

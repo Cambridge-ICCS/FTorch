@@ -92,10 +92,11 @@ jobs:
           git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake ..\
-            -DCMAKE_C_COMPILER=$CC  \
-            -DCMAKE_Fortran_COMPILER=$FC\
-            -DMPI_Fortran_COMPILER=$MPI_FC
+          cmake .. \
+            -DCMAKE_C_COMPILER=$CC \
+            -DCMAKE_Fortran_COMPILER=$FC \
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=YES
           make -j 4 install
 
       - name: Build FTorch

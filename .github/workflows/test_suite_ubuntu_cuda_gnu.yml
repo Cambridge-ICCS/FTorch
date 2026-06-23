@@ -97,7 +97,11 @@ jobs:
           mkdir pFUnit/build
           cd pFUnit/build
           # MPI support is currently not needed for the unit testing
-          cmake .. -DSKIP_MPI=YES
+          cmake .. \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_Fortran_COMPILER=gfortran \
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=YES
           make -j 4 install
 
       - name: Build FTorch

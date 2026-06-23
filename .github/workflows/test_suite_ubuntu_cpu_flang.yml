@@ -78,7 +78,7 @@ jobs:
           git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake ..\
+          cmake .. \
             -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
             -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
             -DSKIP_MPI=YES \
