@@ -35,8 +35,7 @@ jobs:
         compiler: [flang, lfortran]
         std: [f2018]
         flang_version: [21]
-        pfunit_longversion: [4.18.2]
-        pfunit_shortversion: [4.18]
+        pfunit_version: [4.18.2]
 
     # Terminate the job if it runs for more than 15 minutes
     timeout-minutes: 15
@@ -54,7 +53,13 @@ jobs:
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
           sudo apt-add-repository "deb http://apt.llvm.org/$(lsb_release -cs)/ llvm-toolchain-$(lsb_release -cs)-${{ matrix.flang_version }} main"
           sudo apt-get update
-          sudo apt-get install -y "llvm-${{ matrix.flang_version }}-dev" "clang-${{ matrix.flang_version }}" "flang-${{ matrix.flang_version }}"
+          sudo apt-get install -y "llvm-${{ matrix.flang_version }}-dev" \
+                                  "clang-${{ matrix.flang_version }}" \
+                                  "flang-${{ matrix.flang_version }}"
+
+      - name: Install OpenMPI
+        run: |
+          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
@@ -96,21 +101,17 @@ jobs:
           cmake --build .
           echo "export PATH=$(pwd)/src/bin:\${PATH}" >> ../ftorch/bin/activate
 
-      - name: Install OpenMPI
-        run: |
-          sudo apt update
-          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
-
       - name: Install pFUnit
-        if: ${{ matrix.compiler == 'flang' }}
         run: |
           # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b "v${{ matrix.pfunit_longversion }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake ..\
+          cmake .. \
+            -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
             -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
-            -DMPI_Fortran_COMPILER=mpif90
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=YES
           make -j 4 install
 
       - name: Build FTorch
@@ -129,7 +130,8 @@ jobs:
 
           if [ "${{ matrix.compiler }}" == "flang" ]; then
             # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-            PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
+            VN="${{ matrix.pfunit_version }}"
+            PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
             PREFIX="${PFUNIT_DIR};${Torch_DIR}"
             FC="flang-${{ matrix.flang_version }}"
             FFLAGS="-std=${FORTRAN_STANDARD}"
@@ -143,10 +145,10 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
-            -DCMAKE_C_COMPILER=clang  \
-            -DCMAKE_CXX_COMPILER=clang++  \
+            -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
+            -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
             -DCMAKE_Fortran_COMPILER="${FC}" \
+            -DMPI_Fortran_COMPILER="${FC}" \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
             -DFTORCH_BUILD_UNIT_TESTS="${{ matrix.compiler == 'flang' }}" \
             -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE \
