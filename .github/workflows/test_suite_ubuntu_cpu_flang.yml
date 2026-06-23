@@ -54,8 +54,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y "llvm-${{ matrix.flang_version }}-dev" \
                                   "clang-${{ matrix.flang_version }}" \
-                                  "flang-${{ matrix.flang_version }}" \
-                                  "libomp-${{ matrix.flang_version }}-dev"
+                                  "flang-${{ matrix.flang_version }}"
 
       - name: Install OpenMPI
         run: |
@@ -82,7 +81,8 @@ jobs:
           cmake ..\
             -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
             -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
-            -DSKIP_MPI=YES
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=YES
           make -j 4 install
 
       - name: Build FTorch
@@ -100,7 +100,6 @@ jobs:
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
           VN="${{ matrix.pfunit_version }}"
           export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
-          export OMPI_FC="flang-${{ matrix.flang_version }}"
           cd ${BUILD_DIR}
 
           cmake .. \
@@ -109,7 +108,7 @@ jobs:
             -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
             -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
             -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
-            -DMPI_Fortran_COMPILER="${OMPI_FC}" \
+            -DMPI_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
