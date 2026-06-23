@@ -19,7 +19,7 @@ if(CMAKE_BUILD_TESTS)
 else()
   find_package(FTorch REQUIRED)
 endif()
-find_package(MPI REQUIRED Fortran)
+find_package(MPI REQUIRED COMPONENTS Fortran)
 message(STATUS "Building with Fortran PyTorch coupling")
 
 # Check Python virtual environment is active

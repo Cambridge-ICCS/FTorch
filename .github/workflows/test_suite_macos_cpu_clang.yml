@@ -35,8 +35,7 @@ jobs:
       fail-fast: false
       matrix:
         std: [f2008, f2018]
-        pfunit_longversion: [4.18.2]
-        pfunit_shortversion: [4.18]
+        pfunit_version: [4.18.2]
 
     # Terminate the job if it runs for more than 20 minutes
     timeout-minutes: 20
@@ -90,13 +89,14 @@ jobs:
       - name: Install pFUnit
         run: |
           # NOTE: version pin needed because version appears in install path
-          git clone -b "v${{ matrix.pfunit_longversion }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake ..\
-            -DCMAKE_C_COMPILER=$CC  \
-            -DCMAKE_Fortran_COMPILER=$FC\
-            -DMPI_Fortran_COMPILER=$MPI_FC
+          cmake .. \
+            -DCMAKE_C_COMPILER=$CC \
+            -DCMAKE_Fortran_COMPILER=$FC \
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=YES
           make -j 4 install
 
       - name: Build FTorch
@@ -113,7 +113,9 @@ jobs:
           export FTORCH_INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${FTORCH_INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${{ matrix.pfunit_shortversion }}"
+          PFUNIT_VERSION="${{ matrix.pfunit_version }}"
+          PFUNIT_VERSION_PREFIX="${PFUNIT_VERSION%.*}"
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${PFUNIT_VERSION_PREFIX}"
           cd ${FTORCH_BUILD_DIR}
 
           cmake .. \
