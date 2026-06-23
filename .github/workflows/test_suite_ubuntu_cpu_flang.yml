@@ -82,7 +82,7 @@ jobs:
           cmake ..\
             -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
             -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
-            -DMPI_Fortran_COMPILER=mpif90
+            -DSKIP_MPI=YES
           make -j 4 install
 
       - name: Build FTorch
