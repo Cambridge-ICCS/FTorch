@@ -109,7 +109,7 @@ jobs:
             -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
             -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
             -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
-            -DMPI_Fortran_COMPILER=mpif90 \
+            -DMPI_Fortran_COMPILER="${OMPI_FC}" \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
