@@ -263,6 +263,10 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_CXX_COMPILER=g++ \
+            -DCMAKE_Fortran_COMPILER=gfortran \
+            -DMPI_Fortran_COMPILER=mpif90 \
             -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
@@ -281,9 +285,9 @@ jobs:
           cd examples/01_Tensor
           fpm run \
             --profile debug \
-            --compiler mpif90 \
-            --c-compiler mpicc \
-            --cxx-compiler mpicxx \
+            --compiler gfortran \
+            --c-compiler gcc \
+            --cxx-compiler g++ \
             --flag "-std=${FORTRAN_STANDARD}" \
             --c-flag "-cpp -std=c++17 -I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include" \
             --cxx-flag "-cpp -std=c++17 -I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include" \
