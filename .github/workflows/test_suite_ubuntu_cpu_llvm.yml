@@ -1,4 +1,4 @@
-# Workflow to run the FTorch test suite using jobs for Flang compiler
+# Workflow to run the FTorch test suite using jobs for LLVM-based compilers
 name: Test suite (Ubuntu CPU)
 
 # Controls when the workflow will run
@@ -10,7 +10,7 @@ on:
   # Triggers the workflow on pushes to open pull requests with changes to this workflow
   pull_request:
     paths:
-      - '.github/workflows/test_suite_ubuntu_cpu_flang.yml'
+      - '.github/workflows/test_suite_ubuntu_cpu_llvm.yml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -26,12 +26,13 @@ permissions: {}
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   test-suite:
-    name: flang ${{ matrix.flang_version }}, ${{ matrix.standard }}
+    name: ${{ matrix.compiler }} ${{ matrix.flang_version }}, ${{ matrix.standard }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        compiler: [flang, lfortran]
         std: [f2018]
         flang_version: [21]
         pfunit_version: [4.18.2]
@@ -72,7 +73,36 @@ jobs:
           . ftorch/bin/activate
           pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
 
+      - name: Install LFortran
+        if: ${{ matrix.compiler == 'lfortran' }}
+        run: |
+          . ftorch/bin/activate
+          sudo apt-get install build-essential binutils-dev zlib1g-dev libzstd-dev libunwind-dev
+          pip install bison re2c
+          git clone https://github.com/lfortran/lfortran.git
+          cd lfortran
+          ./build0.sh
+          cmake . \
+              -G Ninja \
+              -DCMAKE_BUILD_TYPE=Debug \
+              -DWITH_LLVM=yes \
+              -DLFORTRAN_BUILD_ALL=yes \
+              -DWITH_STACKTRACE=yes \
+              -DWITH_RUNTIME_STACKTRACE=yes \
+              -DWITH_LSP=no \
+              -DWITH_INTERNAL_ALLOC_CHECK=yes \
+              -DUSE_DYNAMIC_ZSTD=no \
+              -DCMAKE_INSTALL_LIBDIR=share/lfortran/lib \
+              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+              -DCMAKE_C_COMPILER=clang \
+              -DCMAKE_CXX_COMPILER=clang++ \
+              -DCMAKE_C_FLAGS="-fdiagnostics-color=always" \
+              -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always"
+          cmake --build .
+          echo "export PATH=$(pwd)/src/bin:\${PATH}" >> ../ftorch/bin/activate
+
       - name: Install pFUnit
+        if: ${{ matrix.compiler == 'flang' }}
         run: |
           # TODO: Avoid version pinning (needed because version appears in install path)
           git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
@@ -97,22 +127,32 @@ jobs:
           # Install to /tmp/ to ensure independent from the CMake build in standalone check.
           export INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${INSTALL_DIR}
-          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          VN="${{ matrix.pfunit_version }}"
-          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
+          # Compiler-specific settings
+          if [ "${{ matrix.compiler }}" == "flang" ]; then
+            FC="flang-${{ matrix.flang_version }}"
+            FFLAGS="-std=${FORTRAN_STANDARD}"
+            # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
+            VN="${{ matrix.pfunit_version }}"
+            export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
+            PREFIX="${PFUNIT_DIR};${Torch_DIR}"
+          else
+            FC=lfortran
+            FFLAGS=""
+            PREFIX="${Torch_DIR}"
+          fi
           cd ${BUILD_DIR}
-
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
+            -DCMAKE_Fortran_COMPILER="${FC}" \
             -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
             -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
-            -DMPI_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
+            -DMPI_Fortran_COMPILER="${FC}" \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
-            -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+            -DFTORCH_BUILD_UNIT_TESTS="${{ matrix.compiler == 'flang' }}" \
+            -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE \
+            -DCMAKE_PREFIX_PATH="${PREFIX}" \
+            -DCMAKE_Fortran_FLAGS="${FFLAGS}"
           cmake --build .
           cmake --install .
 
@@ -157,6 +197,7 @@ jobs:
           fi
 
       - name: Run Fortran unit tests
+        if: ${{ matrix.compiler == 'flang' }}
         run: |
           . ftorch/bin/activate
           cd build
@@ -185,14 +226,21 @@ jobs:
           export EXAMPLE_BUILD_DIR="examples/02_SimpleNet/build"
           mkdir "${EXAMPLE_BUILD_DIR}"
           cd "${EXAMPLE_BUILD_DIR}"
+          if [ "${{ matrix.compiler }}" == "flang" ]; then
+            FC="flang-${{ matrix.flang_version }}"
+            FFLAGS="-std=${FORTRAN_STANDARD}"
+          else
+            FC=lfortran
+            FFLAGS=""
+          fi
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
-            -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
-            -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
             -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+            -DCMAKE_Fortran_COMPILER="${FC}" \
+            -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
+            -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
+            -DCMAKE_Fortran_FLAGS="${FFLAGS}"
           cmake --build .
           ctest -V

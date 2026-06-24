@@ -151,7 +151,7 @@ module ftorch_test_utils
         end if
       else if (print_result_value) then
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      end if
 
     end function allclose_${PREC}$_${RANK}$d
 

@@ -176,7 +176,7 @@ module ftorch_test_utils
         end if
       else if (print_result_value) then
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      end if
 
     end function allclose_real32_1d
 
@@ -221,7 +221,7 @@ module ftorch_test_utils
         end if
       else if (print_result_value) then
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      end if
 
     end function allclose_real32_2d
 
@@ -266,7 +266,7 @@ module ftorch_test_utils
         end if
       else if (print_result_value) then
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      end if
 
     end function allclose_real32_3d
 
@@ -311,7 +311,7 @@ module ftorch_test_utils
         end if
       else if (print_result_value) then
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      end if
 
     end function allclose_real64_1d
 
@@ -356,7 +356,7 @@ module ftorch_test_utils
         end if
       else if (print_result_value) then
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      end if
 
     end function allclose_real64_2d
 
@@ -401,7 +401,7 @@ module ftorch_test_utils
         end if
       else if (print_result_value) then
         call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      end if
 
     end function allclose_real64_3d
 
