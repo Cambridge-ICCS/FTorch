@@ -272,7 +272,7 @@ jobs:
           cmake --build .
           ctest -V
 
-      - name: Standalone Tensor example with fpm
+      - name: Standalone SimpleNet example with fpm
         if: ${{ matrix.build_system == 'fpm' }}
         env:
           FORTRAN_STANDARD: ${{ matrix.std }}
@@ -281,7 +281,7 @@ jobs:
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
           export LD_LIBRARY_PATH="${Torch_DIR}/lib:${LD_LIBRARY_PATH}"
-          cd examples/01_Tensor
+          cd examples/02_SimpleNet
           fpm run \
             --profile debug \
             --compiler gfortran \
