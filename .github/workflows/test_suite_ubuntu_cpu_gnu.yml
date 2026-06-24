@@ -153,6 +153,7 @@ jobs:
           VN="${{ matrix.pfunit_version }}"
           export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
           cd ${BUILD_DIR}
+
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
