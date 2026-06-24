@@ -110,7 +110,7 @@ jobs:
       # TODO: Add pip package to Python dependencies once https://github.com/fortran-lang/fpm/pull/1250 merged
       - name: Build fpm
         run: |
-          git clone -b 1226-link-flag-propagation https://github.com/ijatinydv/fpm.git
+          git clone -b fix/1226-link-flag-propagation https://github.com/ijatinydv/fpm.git
           cd fpm
           ./install.sh --prefix="$(pwd)/build"
           export "export PATH='$(pwd)/build/bin:\${PATH}'" >> ftorch/bin/activate
