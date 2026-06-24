@@ -113,7 +113,7 @@ jobs:
           git clone -b fix/1226-link-flag-propagation https://github.com/ijatinydv/fpm.git
           cd fpm
           ./install.sh --prefix="$(pwd)/build"
-          export "export PATH='$(pwd)/build/bin:\${PATH}'" >> ftorch/bin/activate
+          export "export PATH='$(pwd)/build/bin:\${PATH}'" >> ../ftorch/bin/activate
 
       - name: Install OpenMPI
         run: |
