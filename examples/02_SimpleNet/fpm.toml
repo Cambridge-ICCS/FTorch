@@ -4,6 +4,8 @@ name = "SimpleNet"
 implicit-external = true
 implicit-typing = true
 
+# TODO: Is it possible to also run simplenet.py and pt2ts first?
+
 [[executable]]
 name = "simplenet_infer_fortran"
 source-dir = "."
