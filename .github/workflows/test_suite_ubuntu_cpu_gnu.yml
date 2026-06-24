@@ -184,6 +184,7 @@ jobs:
             --verbose
 
       - name: Check pkg-config file
+        if: ${{ matrix.build_system == 'cmake' }}
         run: |
           # pkg-config looks in the `build` directory for libraries
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
