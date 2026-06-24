@@ -282,13 +282,16 @@ jobs:
           export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
           export LD_LIBRARY_PATH="${Torch_DIR}/lib:${LD_LIBRARY_PATH}"
           cd examples/02_SimpleNet
+          # Save PyTorch model to file
           python simplenet.py
+          # Convert model file to TorchScript format
           pt2ts SimpleNet \
             --model_definition_file simplenet.py \
             --input_model_file pytorch_simplenet_model_cpu.pt \
             --input_tensor_file pytorch_simplenet_input_tensor_cpu.pt \
             --output_model_file torchscript_simplenet_model_cpu.pt \
             --test
+          # Run inference in Fortran, passing the model filename as an argument
           fpm run \
             --profile debug \
             --compiler gfortran \
