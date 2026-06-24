@@ -126,22 +126,20 @@ jobs:
           # Install to /tmp/ to ensure independent from the CMake build in standalone check.
           export INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${INSTALL_DIR}
-          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          VN="${{ matrix.pfunit_version }}"
-          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
-          cd ${BUILD_DIR}
-
+          # Compiler-specific settings
           if [ "${{ matrix.compiler }}" == "flang" ]; then
-            PREFIX="${PFUNIT_DIR};${Torch_DIR}"
             FC="flang-${{ matrix.flang_version }}"
             FFLAGS="-std=${FORTRAN_STANDARD}"
+            # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
+            VN="${{ matrix.pfunit_version }}"
+            export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
+            PREFIX="${PFUNIT_DIR};${Torch_DIR}"
           else
-            PFUNIT_DIR=""
-            PREFIX="${Torch_DIR}"
             FC=lfortran
             FFLAGS=""
+            PREFIX="${Torch_DIR}"
           fi
-          export PFUNIT_DIR
+          cd ${BUILD_DIR}
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
