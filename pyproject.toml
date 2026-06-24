@@ -36,7 +36,8 @@ classifiers = [
 	"Programming Language :: Python",
   "Topic :: Scientific/Engineering",
 ]
-dependencies = ["fpm", "numpy", "torch"]
+# dependencies = ["fpm", "numpy", "torch"]
+dependencies = ["numpy", "torch"]
 optional-dependencies = {examples = ["matplotlib", "mpi4py", "torchvision"]}
 
 [dependency-groups]
