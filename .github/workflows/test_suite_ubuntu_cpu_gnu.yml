@@ -41,7 +41,7 @@ permissions: {}
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   test-suite:
-    name: gfortran ${{ matrix.gcc_version }}, ${{ matrix.std }}
+    name: gfortran ${{ matrix.gcc_version }}, ${{ matrix.std }}, ${{ matrix.build_system }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
