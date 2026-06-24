@@ -247,7 +247,7 @@ jobs:
           ctest --verbose --tests-regex example
 
         # Check that we can successfully build and run an example outside the main FTorch build process
-      - name: Standalone Tensor example with CMake
+      - name: Standalone SimpleNet example with CMake
         if: ${{ matrix.build_system == 'cmake' }}
         env:
           FORTRAN_STANDARD: ${{ matrix.std }}

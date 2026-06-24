@@ -1,4 +1,4 @@
-name = "tensor_manipulation"
+name = "Tensor"
 
 [fortran]
 implicit-external = true
