@@ -41,12 +41,13 @@ permissions: {}
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   test-suite:
-    name: gfortran ${{ matrix.gcc_version }}, ${{ matrix.std }}
+    name: gfortran ${{ matrix.gcc_version }}, ${{ matrix.std }}, ${{ matrix.build_system }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        build_system: [cmake, fpm]
         std: ["f2008", "f2018"]
         gcc_version: [9, 10, 11, 12, 13]
         pfunit_version: ["4.12.0", "4.18.2"]
@@ -107,12 +108,22 @@ jobs:
           . ftorch/bin/activate
           pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
 
+      # TODO: Add pip package to Python dependencies once https://github.com/fortran-lang/fpm/pull/1250 merged
+      - name: Build fpm
+        if: ${{ matrix.build_system == 'fpm' }}
+        run: |
+          git clone -b fix/1226-link-flag-propagation https://github.com/ijatinydv/fpm.git
+          cd fpm
+          ./install.sh --prefix="$(pwd)/build"
+          echo "export PATH=$(pwd)/build/bin:\${PATH}" >> ../ftorch/bin/activate
+
       - name: Install OpenMPI
         run: |
           sudo apt update
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
       - name: Install pFUnit
+        if: ${{ matrix.build_system == 'cmake' }}
         run: |
           # NOTE: version pin needed because version appears in install path
           git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
@@ -125,7 +136,8 @@ jobs:
             -DSKIP_OPENMP=YES
           make -j 4 install
 
-      - name: Build FTorch
+      - name: Build FTorch with CMake
+        if: ${{ matrix.build_system == 'cmake' }}
         env:
           FORTRAN_STANDARD: ${{ matrix.std }}
         run: |
@@ -155,7 +167,26 @@ jobs:
           cmake --build .
           cmake --install .
 
+      - name: Build FTorch with fpm
+        if: ${{ matrix.build_system == 'fpm' }}
+        env:
+          FORTRAN_STANDARD: ${{ matrix.std }}
+        run: |
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch
+          fpm build \
+            --profile debug \
+            --compiler gfortran \
+            --c-compiler gcc \
+            --cxx-compiler g++ \
+            --flag "-std=${FORTRAN_STANDARD}" \
+            --cxx-flag "-I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include" \
+            --link-flag "-L${Torch_DIR}/lib" \
+            --verbose
+
       - name: Check pkg-config file
+        if: ${{ matrix.build_system == 'cmake' }}
         run: |
           # pkg-config looks in the `build` directory for libraries
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build
@@ -196,24 +227,28 @@ jobs:
           fi
 
       - name: Run Fortran unit tests
+        if: ${{ matrix.build_system == 'cmake' }}
         run: |
           . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex unit
 
       - name: Run Python unit tests
+        if: ${{ matrix.build_system == 'cmake' }}
         run: |
           . ftorch/bin/activate
           pytest --verbose test/ftorch_utils
 
       - name: Run integration tests
+        if: ${{ matrix.build_system == 'cmake' }}
         run: |
           . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex example
 
         # Check that we can successfully build and run an example outside the main FTorch build process
-      - name: Standalone SimpleNet example
+      - name: Standalone SimpleNet example with CMake
+        if: ${{ matrix.build_system == 'cmake' }}
         env:
           FORTRAN_STANDARD: ${{ matrix.std }}
         run: |
@@ -227,8 +262,43 @@ jobs:
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_CXX_COMPILER=g++ \
+            -DCMAKE_Fortran_COMPILER=gfortran \
+            -DMPI_Fortran_COMPILER=mpif90 \
             -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
           cmake --build .
           ctest -V
+
+      - name: Standalone SimpleNet example with fpm
+        if: ${{ matrix.build_system == 'fpm' }}
+        env:
+          FORTRAN_STANDARD: ${{ matrix.std }}
+        run: |
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
+          export LD_LIBRARY_PATH="${Torch_DIR}/lib:${LD_LIBRARY_PATH}"
+          cd examples/02_SimpleNet
+          # Save PyTorch model to file
+          python simplenet.py
+          # Convert model file to TorchScript format
+          pt2ts SimpleNet \
+            --model_definition_file simplenet.py \
+            --input_model_file pytorch_simplenet_model_cpu.pt \
+            --input_tensor_file pytorch_simplenet_input_tensor_cpu.pt \
+            --output_model_file torchscript_simplenet_model_cpu.pt \
+            --test
+          # Run inference in Fortran, passing the model filename as an argument
+          fpm run \
+            --profile debug \
+            --compiler gfortran \
+            --c-compiler gcc \
+            --cxx-compiler g++ \
+            --flag "-std=${FORTRAN_STANDARD}" \
+            --cxx-flag "-I${Torch_DIR}/include -I${Torch_DIR}/include/torch/csrc/api/include" \
+            --link-flag "-L${Torch_DIR}/lib" \
+            --verbose \
+            -- torchscript_simplenet_model_cpu.pt

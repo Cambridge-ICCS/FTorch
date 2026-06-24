@@ -1,0 +1,16 @@
+name = "SimpleNet"
+
+[fortran]
+implicit-external = true
+implicit-typing = true
+
+# TODO: Is it possible to also run simplenet.py and pt2ts first?
+
+[[executable]]
+name = "simplenet_infer_fortran"
+source-dir = "."
+main = "simplenet_infer_fortran.f90"
+
+[dependencies]
+FTorch.git = "https://github.com/Cambridge-ICCS/FTorch"
+FTorch.rev = "6c37f17e20f7f4e37c5243478f1655ee530ac65b"
