@@ -29,7 +29,8 @@ include-dir = [
 auto-executables = true
 # TODO: pFUnit currently doesn't provide an fpm.toml
 auto-tests = false
-# TODO: Set up building examples
+# NOTE: We can't use auto-examples because most examples have multiple steps, some of which aren't
+#       in Fortran
 auto-examples = false
 module-naming = false
 
