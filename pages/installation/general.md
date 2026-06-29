@@ -71,7 +71,7 @@ is no need to worry about this because they are both included as dependencies.
 
 FTorch's test suite has some additional dependencies.
 
-- You will also need to install the unit testing framework
+- Unit tests require the unit testing framework
   [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit).
 - FTorch's test suite requires that [PyTorch](https://pytorch.org/) has been
   installed, as opposed to LibTorch. See the
@@ -148,6 +148,8 @@ in order to tailor your build:
 | [`CMAKE_INSTALL_PREFIX`](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)  | `</path/to/install/lib/at/>`            | Location at which the library files should be installed. By default this is `/usr/local`                                                                                   |
 | [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)          | `Release` / `Debug`                     | Specifies build type. The default is `Debug`, use `Release` for production code                                                                                            |
 | `CMAKE_BUILD_TESTS`                                                                               | `TRUE` / `FALSE`                        | Specifies whether to compile FTorch's [test suite](|page|/developer/testing.html) as part of the build.[^5]                                                                                     |
+| `FTORCH_BUILD_UNIT_TESTS`                                                                         | `ON` / `OFF`                            | Specifies whether to build the pFUnit-based unit tests. Defaults to `ON` when `CMAKE_BUILD_TESTS=TRUE`, otherwise `OFF`.                                                                          |
+| `FTORCH_BUILD_INTEGRATION_TESTS`                                                                  | `ON` / `OFF`                            | Specifies whether to build the integration tests from `examples/`. Defaults to `ON` when `CMAKE_BUILD_TESTS=TRUE`, otherwise `OFF`.                                                               |
 | `GPU_DEVICE`                                                                                      | `NONE` / `CUDA` / `HIP` / `XPU` / `MPS` | Specifies the target GPU architecture (if any)[^6]                                                                                                                |
 | `MULTI_GPU`                                                                                      | `ON` / `OFF` | Specifies whether to build the tests that involve multiple GPU devices (`ON` by default if `CMAKE_BUILD_TESTS` and `GPU_DEVICE` are set).                                                                                                                |
 

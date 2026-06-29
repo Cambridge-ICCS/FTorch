@@ -75,10 +75,10 @@ program training
   write (*,*) "Initial model weights:"
   call torch_tensor_print(weights_tensors(1))
 
-  ! Initialise Scaling tensor as ones as in Python example and a tensor for its gradient
+  ! Initialise weights gradient tensor
   call torch_tensor_empty(weights_grad, ndims, weights_shape, torch_kFloat32, torch_kCPU)
 
-  ! Initialise an optimizer and apply it to scaling_tensor
+  ! Initialise an optimizer and apply it to weights_tensor
   call torch_optim_SGD(optimizer, weights_tensors, learning_rate=lr)
 
   ! Create a file for recording the loss function progress
@@ -143,7 +143,7 @@ program training
   call torch_tensor_from_array(out_tensors(1), out_data, torch_kCPU)
   call torch_model_forward(model, in_tensors, out_tensors)
 
-  ! Check scaling tensor converges to the expected value
+  ! Check weights tensor converges to the expected value
   write(*,*) "Final check after training:"
   write(*,*) "Input:", in_data
   write(*,*) "Output:", out_data

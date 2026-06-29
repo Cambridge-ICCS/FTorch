@@ -230,6 +230,7 @@ contains
     end interface
 
     ! Check the tensors aren't already associated
+    n_outputs = size(output_tensors)
     do i = 1, n_outputs
       if (c_associated(output_tensors(i)%p)) then
         write(*,*) "Error :: tensor pointer will be lost in call to torch_model_parameters"
@@ -238,7 +239,6 @@ contains
     end do
 
     ! Get the parameters that were created during model construction
-    n_outputs = size(output_tensors)
     call torch_jit_model_parameters_c(model%p, c_loc(output_ptrs), n_outputs)
 
     ! Copy updated pointers back to output tensors
