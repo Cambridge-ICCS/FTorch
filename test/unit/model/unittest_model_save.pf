@@ -18,7 +18,7 @@ module unittest_model_save
   integer, parameter :: device_type = torch_kCPU
 
   character(len=256), parameter :: input_filename = "../fixtures/simplenet.pt"
-  character(len=256), parameter :: output_filename = "tmp.pt"
+  character(len=256), parameter :: output_filename = "saved_net_from_test.pt"
 
 contains
 
