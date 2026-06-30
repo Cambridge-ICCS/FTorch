@@ -51,7 +51,7 @@ end of the Fortran program. This way, the model can be trained in multiple
 Fortran runs, with the same model being read.
 
 Upon completing the training, write the trained model out in TorchScript format
-using [ftorch_model(module):torch_model_save(subroutine)].
+using [[ftorch_model(module):torch_model_save(subroutine)]].
 
 See the
 [training worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/11_Training)
@@ -60,14 +60,13 @@ for a demonstration of how to train a PyTorch model purely in Fortran.
 #### 4. Fortran model with inference
 
 In order to run inference with the trained ML model, you will need to create
-another modified version of your Fortran model that loads the TorchScript model
-and uses FTorch syntax to set up appropriate `torch_tensor` and `torch_model`
-objects and call the [[ftorch_model(module):torch_model_forward(subroutine)]]
-subroutine to run the inference. The trained model should be written out in
-TorchScript format using [[ftorch_model(module):torch_model_save(subroutine)]].
-
-For examples of how to do this, see the
-[optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers).
+another modified version of your Fortran model that loads the trained
+TorchScript model and uses FTorch syntax to set up appropriate `torch_tensor`
+and `torch_model` objects and call the
+[[ftorch_model(module):torch_model_forward(subroutine)]] subroutine to run the
+inference. This file will be much the same as the offline training examples such
+as the
+[SimpleNet example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/02_SimpleNet).
 
 ### Defining as much as possible in the model
 
