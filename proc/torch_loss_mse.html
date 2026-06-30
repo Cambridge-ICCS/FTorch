@@ -283,8 +283,8 @@ modules which it uses.
     <p>Evaluate MSELoss</p>
 <p>Note that the reduction type relates to the operation to perform within a (mini)batch. With
  torch_kNone, no reduction is applied and the loss tensor will have the same dimensions as the
- input tensor. If torch_kMean or torch_kSum is applied then the loss tensor will differ in the
- first dimension (for the batch), which will be collapsed.</p>
+ input tensor. If torch_kMean (default) or torch_kSum is applied then the loss tensor will differ
+ in the first dimension (for the batch), which will be collapsed.</p>
 <p>We refer to the PyTorch docs for the specifics of how this works for MSELoss
  https://docs.pytorch.org/docs/main/nn.functional.html#torch.nn.functional.mse_loss</p>
 
