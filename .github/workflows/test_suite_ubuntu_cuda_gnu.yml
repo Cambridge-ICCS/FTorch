@@ -82,7 +82,7 @@ jobs:
           # Check this is <= what GPU-runner has installed (backwards compatible)
           pip install . --extra-index-url https://download.pytorch.org/whl/cu129 --group test
 
-      - name: Run GPU-enabled Python unit tests
+      - name: Run GPU-specific FTorch-utils unit tests
         run: |
           . ftorch/bin/activate
           pytest --verbose test/ftorch_utils -k cuda
@@ -136,7 +136,7 @@ jobs:
           cd build
           ctest --verbose --tests-regex cuda
 
-      - name: Run GPU-enabled integration tests
+      - name: Run Multi-GPU integration test
         run: |
           . ftorch/bin/activate
           cd build

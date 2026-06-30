@@ -93,6 +93,7 @@ cmake --build .
 Note that the `GPU_DEVICE` flag needs to be used again, despite the fact that it
 was provided during the FTorch build. This is because it is used in the CTest
 setup logic to automatically support testing on different device types.
+In general, when building FTorch code for GPU on your project, this is not needed.
 
 (Note that the Fortran compiler can be chosen explicitly with the `-DCMAKE_Fortran_COMPILER` flag,
 and should match the compiler that was used to locally build FTorch.)

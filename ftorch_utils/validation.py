@@ -140,9 +140,9 @@ def validate_model_device_types(model):
     for parameter in model.parameters():
         if parameter.device.type != device_type:
             raise RuntimeError(
-                f"The model has parameters on different devices ('{device_type}' vs."
-                f" '{parameter.device.type}'). Ensure all model parameters are on the"
-                " same device and try again."
+                "The model has parameters on different devices (model on "
+                f"'{device_type}' vs. parameters on '{parameter.device.type}')."
+                "Ensure all model parameters are on the same device and try again."
             )
 
 
@@ -162,6 +162,7 @@ def validate_device_types(model, input_tensors):
         if device_type != input_tensor.device.type:
             raise RuntimeError(
                 f"The model is on a different device from input tensor {i}"
-                f" ('{device_type}' vs. '{input_tensor.device.type}'). Ensure they are"
+                f" (model on '{device_type}' vs. input tensor on"
+                f" '{input_tensor.device.type}'). Ensure they are"
                 " on the same device and try again."
             )
