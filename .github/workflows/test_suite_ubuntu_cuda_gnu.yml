@@ -82,15 +82,15 @@ jobs:
           # Check this is <= what GPU-runner has installed (backwards compatible)
           pip install . --extra-index-url https://download.pytorch.org/whl/cu129 --group test
 
+      - name: Install CMake, NVIDIA dev toolkit, and an MPI distribution
+        run: |
+          sudo apt update
+          sudo apt install -y cmake nvidia-cuda-toolkit openmpi-bin openmpi-common libopenmpi-dev
+
       - name: Run GPU-specific FTorch-utils unit tests
         run: |
           . ftorch/bin/activate
           pytest --verbose test/ftorch_utils -k cuda
-
-      - name: Install cmake, NVIDIA dev toolkit, and an MPI distribution
-        run: |
-          sudo apt update
-          sudo apt install -y cmake nvidia-cuda-toolkit openmpi-bin openmpi-common libopenmpi-dev
 
       - name: Install pFUnit
         run: |
