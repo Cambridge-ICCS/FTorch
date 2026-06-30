@@ -94,6 +94,6 @@ program inference
     stop 999
   end if
 
-  write (*,*) "FNO1d example ran successfully"
+  write (*,*) "FNO example ran successfully"
 
 end program inference

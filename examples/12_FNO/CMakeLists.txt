@@ -25,22 +25,32 @@ target_link_libraries(fno1d_infer_fortran PRIVATE FTorch::ftorch)
 if(CMAKE_BUILD_TESTS)
   include(CTest)
 
-  # 1. Check the PyTorch model runs and its outputs meet expectations
-  add_test(NAME fno1d COMMAND ${Python_EXECUTABLE}
-                                  ${PROJECT_SOURCE_DIR}/fno1d.py)
-
-  # 2. Check the model is saved to file in the expected location with the
-  #   pt2ts.py script
+  # 1. Write the PyTorch model out and check it runs and its outputs meet
+  #    expectations
   add_test(
-    NAME pt2ts
-    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/pt2ts.py --filepath
-            ${PROJECT_BINARY_DIR}
+    NAME example_fno_fno1d
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/fno1d.py
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+  # 2. Run the pt2ts script to convert the model file to TorchScript format
+  #    and run basic checks
+  add_test(
+    NAME example_fno_pt2ts
+    COMMAND pt2ts FNO1d
+                  --model_definition_file
+                  ${PROJECT_SOURCE_DIR}/fno1d.py
+                  --input_model_file
+                  ${PROJECT_BINARY_DIR}/pytorch_fno_model_cpu.pt
+                  --input_tensor_file
+                  ${PROJECT_BINARY_DIR}/pytorch_fno_input_tensor_cpu.pt
+                  --output_model_file
+                  ${PROJECT_BINARY_DIR}/torchscript_fno_model_cpu.pt
+                  --test)
 
   # 3. Check the model can be loaded from file and run in Python and that its
   #   outputs meet expectations
   add_test(
-    NAME fno1d_infer_python
+    NAME example_fno_fno1d_infer_python
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/fno1d_infer_python.py
             --filepath ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
@@ -48,12 +58,13 @@ if(CMAKE_BUILD_TESTS)
   # 4. Check the model can be loaded from file and run in Fortran and that its
   #   outputs meet expectations
   add_test(
-    NAME fno1d_infer_fortran
+    NAME example_fno_fno1d_infer_fortran
     COMMAND
-      fno1d_infer_fortran ${PROJECT_BINARY_DIR}/fno1d_sine.pt
+      simplenet_infer_fortran
+      ${PROJECT_BINARY_DIR}/torchscript_fno_model_cpu.pt
       # Command line argument: model file
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
   set_tests_properties(
-    fno1d_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
-    "fno1d example ran successfully")
+    example_fno_fno1d_infer_fortran PROPERTIES PASS_REGULAR_EXPRESSION
+    "FNO example ran successfully")
 endif()
