@@ -5,7 +5,7 @@ cmake_policy(SET CMP0076 NEW)
 
 set(PROJECT_NAME MultiGPUExample)
 
-project(${PROJECT_NAME} LANGUAGES C CXX Fortran)
+project(${PROJECT_NAME} LANGUAGES Fortran)
 
 # Build in Debug mode if not specified
 if(NOT CMAKE_BUILD_TYPE)
