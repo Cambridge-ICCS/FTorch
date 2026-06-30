@@ -55,6 +55,8 @@ module ftorch
                           torch_optim_zero_grad, &  !----------- (procedures)
                           torch_optim_step
 
+  use ftorch_loss, only: torch_loss_mse
+
   implicit none
 
   public

@@ -235,7 +235,7 @@ for further details about finalization.</p>
 
 <span class="w">  </span><span class="c">! Forward pass and loss calculation</span>
 <span class="w">  </span><span class="k">call </span><span class="n">my_forward_pass</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">)</span>
-<span class="w">  </span><span class="k">call </span><span class="n">torch_tensor_mean</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">output</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">target_data</span><span class="p">)</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">  </span><span class="k">call </span><span class="n">torch_loss_mse</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="k">target</span><span class="p">,</span><span class="w"> </span><span class="n">loss</span><span class="p">)</span>
 
 <span class="w">  </span><span class="c">! Backward pass</span>
 <span class="w">  </span><span class="k">call </span><span class="n">torch_tensor_backward</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>

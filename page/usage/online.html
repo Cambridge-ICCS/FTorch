@@ -345,13 +345,12 @@ This has two member subroutines as follows:</p>
 <p>The <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers">optimizer worked example</a>
 is probably the best place to get started to see how to use the functionality.</p>
 <h3 id="loss-functions">Loss functions</h3>
-<p>The loss function classes defined in PyTorch/LibTorch have not yet been exposed
-in FTorch. However, the <a href="../../proc/torch_tensor_sum.html">torch_tensor_sum</a> and
-<a href="../../proc/torch_tensor_mean.html">torch_tensor_mean</a> reduction
-operators have been provided, which should be sufficient for simple loss
-functions such as the mean-square-error (MSE).</p>
+<p>A subset of the loss function classes defined in PyTorch/LibTorch have been
+exposed in FTorch. Currently, this only includes the
+<a href="../../proc/torch_loss_mse.html">torch_loss_mse</a> subroutine for the
+mean-square-error (MSE).</p>
 <p>See the <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers">optimizer worked example</a>
-for an example of how to use <a href="../../proc/torch_tensor_mean.html">torch_tensor_mean</a>
+for an example of how to use <a href="../../proc/torch_loss_mse.html">torch_loss_mse</a>
 to define a MSE loss function.</p>
     </div>
   </div>
