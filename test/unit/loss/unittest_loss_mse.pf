@@ -30,9 +30,40 @@ module unittest_loss_mse
 
 contains
 
+  ! Unit test for consistency without a reduction
+  @test
+  subroutine test_no_reduction()
+    use ftorch_types, only: torch_kNone
+
+    type(torch_tensor) :: in_tensor, zero_tensor, mse_tensor
+    real(wp), dimension(6), target :: in_data, expected, mse_data
+
+    ! Create two arbitrary input arrays
+    in_data(:) = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+
+    ! Create tensors based off the input array
+    call torch_tensor_from_array(in_tensor, in_data, device_type)
+
+    ! Create a tensor of zeros of the same type and shape
+    call torch_tensor_zeros(zero_tensor, ndims, in_tensor%get_shape(), dtype, device_type)
+
+    ! Create tensors based off output arrays containing single scalar values
+    call torch_tensor_from_array(mse_tensor, mse_data, device_type)
+
+    ! Compute the square
+    expected(:) = in_data ** 2
+
+    ! Do the same calculation using torch_loss_mse
+    call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kNone)
+
+    ! Compare the data in the tensor to the negative of the input array
+    @assertTrue(allclose(mse_data, expected, test_name="test_no_reduction"))
+
+  end subroutine test_no_reduction
+
   ! Unit test for consistency with the summation reduction
   @test
-  subroutine test_sum()
+  subroutine test_sum_reduction()
     use ftorch_tensor, only: torch_tensor_sum
     use ftorch_types, only: torch_kSum
 
@@ -53,20 +84,20 @@ contains
     call torch_tensor_from_array(sum_tensor, sum_data, device_type)
     call torch_tensor_from_array(mse_tensor, mse_data, device_type)
 
-    ! Compute the sum with torch_tensor_sum
+    ! Compute the sum of squares with torch_tensor_sum
     call torch_tensor_sum(sum_tensor, in_tensor ** 2)
 
     ! Do the same calculation using torch_loss_mse
     call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kSum)
 
     ! Compare the data in the tensor to the negative of the input array
-    @assertTrue(allclose(mse_data, sum_data, test_name="test_sum_output"))
+    @assertTrue(allclose(mse_data, sum_data, test_name="test_sum_reduction"))
 
-  end subroutine test_sum
+  end subroutine test_sum_reduction
 
   ! Unit test for consistency with the mean reduction
   @test
-  subroutine test_mean()
+  subroutine test_mean_reduction()
     use ftorch_tensor, only: torch_tensor_mean
     use ftorch_types, only: torch_kMean
 
@@ -87,15 +118,15 @@ contains
     call torch_tensor_from_array(mean_tensor, mean_data, device_type)
     call torch_tensor_from_array(mse_tensor, mse_data, device_type)
 
-    ! Compute the mean with torch_tensor_mean
+    ! Compute the mean of squares with torch_tensor_mean
     call torch_tensor_mean(mean_tensor, in_tensor ** 2)
 
     ! Do the same calculation using torch_loss_mse
     call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kMean)
 
     ! Compare the data in the tensor to the negative of the input array
-    @assertTrue(allclose(mse_data, mean_data, test_name="test_mean_output"))
+    @assertTrue(allclose(mse_data, mean_data, test_name="test_mean_reduction"))
 
-  end subroutine test_mean
+  end subroutine test_mean_reduction
 
 end module unittest_loss_mse

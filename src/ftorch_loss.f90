@@ -19,13 +19,16 @@ contains
   ! --- Procedures for evaluating specific loss functions
   ! ============================================================================
 
-  !> Evaluate MSELoss
+  !| Evaluate MSELoss
+  !
+  !  Note that the reduction type relates to the operation to perform across batches. Within each
+  !  batch of data, the mean will always be taken.
   subroutine torch_loss_mse(loss_tensor, input_tensor, target_tensor, reduction_type)
     use, intrinsic :: iso_c_binding, only : c_associated, c_int
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
-    integer, optional, intent(in) :: reduction_type  !! Optional reduction type (default: torch_kMean)
+    integer, optional, intent(in) :: reduction_type  !! Reduction type to use over batches (default: torch_kMean)
 
     integer(c_int) :: reduction_type_value
 
