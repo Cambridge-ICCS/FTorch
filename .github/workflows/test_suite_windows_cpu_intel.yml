@@ -77,17 +77,34 @@ jobs:
           # libircmt.lib are included in LIB alongside the MSVC libraries.
           # VsDevCmd.bat alone would overwrite LIB with only MSVC paths, causing
           # LNK1104 when icx/ifx try to link against Intel runtime libs.
-          $CompilerVars = "$env:CMPLR_ROOT\windows\bin\compilervars.bat"
+          $CompilerVars = "$env:CMPLR_ROOT\env\vars.bat"
           if (Test-Path $CompilerVars) {
+            Write-Host "Running: VsDevCmd.bat && $CompilerVars intel64"
             cmd /c "`"$VsDevCmd`" -arch=x64 -host_arch=x64 && `"$CompilerVars`" intel64 && set" | ForEach-Object {
               if ($_ -match "^(.*?)=(.*)$") {
                 "$($_)" | Out-File -Append $env:GITHUB_ENV -Encoding utf8
               }
             }
           } else {
-            Write-Warning "Intel compilervars.bat not found at $CompilerVars; Intel runtime libs may be missing from LIB."
+            Write-Warning "Intel vars.bat not found at $CompilerVars"
+            # Manually append Intel compiler lib directories to LIB
+            $IntelLibDirs = @(
+              "$env:CMPLR_ROOT\windows\compiler\lib\intel64_win",
+              "$env:CMPLR_ROOT\compiler\lib\intel64_win",
+              "$env:CMPLR_ROOT\windows\lib",
+              "$env:CMPLR_ROOT\lib"
+            )
             cmd /c "`"$VsDevCmd`" -arch=x64 -host_arch=x64 && set" | ForEach-Object {
-              if ($_ -match "^(.*?)=(.*)$") {
+              if ($_ -match "^LIB=(.*)$") {
+                $LibPath = $matches[1]
+                foreach ($dir in $IntelLibDirs) {
+                  if (Test-Path $dir) {
+                    Write-Host "Adding Intel lib dir: $dir"
+                    $LibPath = "$dir;$LibPath"
+                  }
+                }
+                "LIB=$LibPath" | Out-File -Append $env:GITHUB_ENV -Encoding utf8
+              } elseif ($_ -match "^(.*?)=(.*)$") {
                 "$($_)" | Out-File -Append $env:GITHUB_ENV -Encoding utf8
               }
             }
