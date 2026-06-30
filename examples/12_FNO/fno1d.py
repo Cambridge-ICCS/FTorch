@@ -191,8 +191,6 @@ class FNO1d(nn.Module):
         torch.Tensor
             (batch, x, channels=time_future)
         """
-        # grid = self.get_grid(u.shape, u.device)
-        # x = torch.cat((u, grid), dim=-1)  # Add grid as extra channel
         x = u
         print("Shape before fc0:", x.shape)
         x = self.fc0(x)
@@ -220,29 +218,6 @@ class FNO1d(nn.Module):
         x = self.fc2(x)
 
         return x
-
-    # UNUSED
-    def get_grid(self, shape: List[int], device: torch.device):
-        """
-        Generate normalized grid for input.
-
-        Parameters
-        ----------
-        shape  : List[int]
-            Shape of the input tensor
-            (batch, x, channels)
-        device  : torch.device
-            Device to create the grid on
-
-        Returns
-        -------
-        torch.Tensor
-            grid tensor of shape (batch, x, 1)
-        """
-        batchsize, size_x = shape[0], shape[1]
-        gridx = torch.linspace(tensor(0), tensor(1), steps=size_x, device=device)
-        gridx = gridx.view(1, size_x, 1).repeat(batchsize, 1, 1)
-        return gridx
 
 
 if __name__ == "__main__":
