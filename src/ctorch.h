@@ -49,6 +49,9 @@ typedef enum {
   torch_kFloat64
 } torch_data_t;
 
+// Reduction types
+typedef enum { torch_kNone, torch_kMean, torch_kSum } torch_reduction_t;
+
 // Device types
 // NOTE: Defined in main CMakeLists and passed via preprocessor
 typedef enum {
@@ -476,5 +479,20 @@ EXPORT_C void torch_jit_module_parameters(const torch_jit_script_module_t module
  * @param Torch Module to delete
  */
 EXPORT_C void torch_jit_module_delete(torch_jit_script_module_t module);
+
+// =============================================================================
+// --- Torch loss API
+// =============================================================================
+
+/**
+ * Function to create an MSELoss and return a pointer to it
+ * @param Tensor containing loss value(s)
+ * @param Input Torch tensor to evaluate the loss at
+ * @param Target Torch tensor to evaluate the loss against
+ * @param Reduction type option
+ */
+EXPORT_C void torch_loss_mse(torch_tensor_t loss, const torch_tensor_t input,
+                             const torch_tensor_t target,
+                             const torch_reduction_t reduction_type);
 
 #endif /* C_TORCH_H*/

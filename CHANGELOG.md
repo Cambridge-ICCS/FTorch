@@ -17,6 +17,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#581](https://github.com/Cambridge-ICCS/FTorch/pull/581)
 - Ability to build only integration or unit tests as desired using CMake options in
   [#584](https://github.com/Cambridge-ICCS/FTorch/pull/584)
+- MSE loss function implemented in
+  [#591](https://github.com/Cambridge-ICCS/FTorch/pull/591)
 - Added Flang CI workflow in
   [#595](https://github.com/Cambridge-ICCS/FTorch/pull/595)
 

@@ -102,7 +102,7 @@ do i = 1, n_epochs
   
   ! Forward pass and loss calculation
   call my_forward_pass(tensor, output)
-  call torch_tensor_mean(loss, (output - target_data) ** 2)
+  call torch_loss_mse(output, target, loss)
   
   ! Backward pass
   call torch_tensor_backward(loss)

@@ -133,7 +133,7 @@ endif()
 add_library(${LIB_NAME} src/ctorch.cpp src/ftorch.f90 src/ftorch_devices.F90
                         src/ftorch_types.f90 src/ftorch_tensor.f90
                         src/ftorch_model.f90 src/ftorch_optim.f90
-                        src/ftorch_test_utils.f90)
+                        src/ftorch_loss.f90 src/ftorch_test_utils.f90)
 
 # Define compile definitions, including GPU devices
 target_compile_definitions(
