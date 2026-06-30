@@ -25,6 +25,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#593](https://github.com/Cambridge-ICCS/FTorch/pull/593)
 - Added Flang CI workflow in
   [#595](https://github.com/Cambridge-ICCS/FTorch/pull/595)
+- Added check for consistent device indices when applying overloaded operators in
+  [#614](https://github.com/Cambridge-ICCS/FTorch/pull/614)
 
 
 ### Changed
