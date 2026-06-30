@@ -50,6 +50,16 @@ jobs:
           compiler: ${{ matrix.toolchain.compiler }}
           version: ${{ matrix.toolchain.version }}
 
+      - name: Add Intel oneAPI compiler to PATH
+        shell: pwsh
+        run: |
+          # setup-fortran exports CMPLR_ROOT but does not add compiler binaries to PATH.
+          # On oneAPI 2023.x Windows, ifx/icx live in $CMPLR_ROOT\windows\bin.
+          # On oneAPI 2024+, they live in $CMPLR_ROOT\bin.  Add both if they exist.
+          foreach ($dir in @("$env:CMPLR_ROOT\windows\bin", "$env:CMPLR_ROOT\bin")) {
+            if (Test-Path $dir) { $dir | Out-File -Append $env:GITHUB_PATH -Encoding utf8 }
+          }
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout FTorch repository
         with:
@@ -79,15 +89,6 @@ jobs:
           $Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line -replace "^Location:\s*", "" })
           # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
-          if ($env:CMPLR_ROOT) {
-            $env:PATH = "$env:CMPLR_ROOT\bin;$env:CMPLR_ROOT\bin\intel64;$env:PATH"
-          }
-          $NINJA = Get-Command ninja -ErrorAction SilentlyContinue
-          $IFX = Get-Command ifx -ErrorAction SilentlyContinue
-          $ICX = Get-Command icx -ErrorAction SilentlyContinue
-          if (-not $NINJA) { throw "ninja not found on PATH" }
-          if (-not $IFX) { throw "ifx not found on PATH (CMPLR_ROOT=$env:CMPLR_ROOT)" }
-          if (-not $ICX) { throw "icx not found on PATH (CMPLR_ROOT=$env:CMPLR_ROOT)" }
           cmake `
             -Bbuild `
             -G "Ninja" `
@@ -96,9 +97,9 @@ jobs:
             -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" `
             -DCMAKE_PREFIX_PATH="$Torch_DIR\torch" `
             -DCMAKE_BUILD_TYPE=Release `
-            -DCMAKE_Fortran_COMPILER="$($IFX.Source)" `
-            -DCMAKE_C_COMPILER="$($ICX.Source)" `
-            -DCMAKE_CXX_COMPILER="$($ICX.Source)" `
+            -DCMAKE_Fortran_COMPILER=ifx `
+            -DCMAKE_C_COMPILER=icx `
+            -DCMAKE_CXX_COMPILER=icx `
             -DCMAKE_BUILD_TESTS=TRUE `
             -DCMAKE_INSTALL_PREFIX="$FTORCH_INSTALL_DIR"
           cmake --build build
@@ -137,15 +138,6 @@ jobs:
           $Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line -replace "^Location:\s*", "" })
           # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
-          if ($env:CMPLR_ROOT) {
-            $env:PATH = "$env:CMPLR_ROOT\bin;$env:CMPLR_ROOT\bin\intel64;$env:PATH"
-          }
-          $NINJA = Get-Command ninja -ErrorAction SilentlyContinue
-          $IFX = Get-Command ifx -ErrorAction SilentlyContinue
-          $ICX = Get-Command icx -ErrorAction SilentlyContinue
-          if (-not $NINJA) { throw "ninja not found on PATH" }
-          if (-not $IFX) { throw "ifx not found on PATH (CMPLR_ROOT=$env:CMPLR_ROOT)" }
-          if (-not $ICX) { throw "icx not found on PATH (CMPLR_ROOT=$env:CMPLR_ROOT)" }
           # Add FTorch and PyTorch to the path for the test executables
           $env:PATH = "$FTORCH_INSTALL_DIR\bin;$Torch_DIR\torch\lib;$env:PATH"
           $EXAMPLE_BUILD_DIR = "examples\02_SimpleNet\build"
@@ -153,9 +145,9 @@ jobs:
           cd $EXAMPLE_BUILD_DIR
           cmake .. `
             -G "Ninja" `
-            -DCMAKE_Fortran_COMPILER="$($IFX.Source)" `
-            -DCMAKE_C_COMPILER="$($ICX.Source)" `
-            -DCMAKE_CXX_COMPILER="$($ICX.Source)" `
+            -DCMAKE_Fortran_COMPILER=ifx `
+            -DCMAKE_C_COMPILER=icx `
+            -DCMAKE_CXX_COMPILER=icx `
             -DCMAKE_Fortran_FLAGS="/stand:08 /fpscomp:logicals" `
             -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
             -DCMAKE_BUILD_TYPE=Release `
