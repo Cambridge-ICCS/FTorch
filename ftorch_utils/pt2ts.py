@@ -14,10 +14,12 @@ from ftorch_utils.torchscript import (
     trace_to_torchscript,
 )
 from ftorch_utils.validation import (
+    validate_device_indices,
     validate_device_types,
     validate_file_exists,
     validate_input_model_file,
     validate_input_tensor_file,
+    validate_model_device_indices,
     validate_model_device_types,
     validate_output_model_file,
     validate_output_tensors,
@@ -167,7 +169,9 @@ def main_cli():
         # Transfer model to the same device as the input tensor
         model = model.to(input_tensors[0].device)
         validate_model_device_types(model)
+        validate_model_device_indices(model)
         validate_device_types(model, input_tensors)
+        validate_device_indices(model, input_tensors)
 
         # Propagate the input tensor through the PyTorch model
         # If something isn't working then this will generate an error
