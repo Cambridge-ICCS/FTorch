@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite using jobs for Intel compiler
-name: Test suite (Ubuntu CPU Intel)
+name: Test suite (Ubuntu CPU)
 
 # Controls when the workflow will run
 on:
@@ -26,7 +26,7 @@ permissions: {}
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   test-suite:
-    name: test suite
+    name: ${{ matrix.FC }} ${{ matrix.version }}, ${{ matrix.std }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -47,6 +47,7 @@ jobs:
             MPIFC: mpiifort
             version: 2024.2.0  # Last release of oneapi with ifort
         std: [f08]
+        pfunit_version: [4.18.2]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -83,15 +84,15 @@ jobs:
 
       - name: Install pFUnit
         run: |
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          # NOTE: version pin needed because version appears in install path
+          git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
           cmake .. \
             -DCMAKE_C_COMPILER=icx \
-            -DCMAKE_CXX_COMPILER=icpx \
             -DCMAKE_Fortran_COMPILER=${{ matrix.FC }} \
-            -DMPI_Fortran_COMPILER=${{ matrix.MPIFC }}
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=YES
           make -j 4 install
 
       - name: Build and install FTorch
@@ -106,7 +107,8 @@ jobs:
           export INSTALL_DIR="/tmp/ftorch-install"
           mkdir -p ${INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
+          VN="${{ matrix.pfunit_version }}"
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
           mkdir -p ${BUILD_DIR}
           cd ${BUILD_DIR}
 
@@ -120,7 +122,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-stand ${FORTRAN_STANDARD}"
+            -DCMAKE_Fortran_FLAGS="-stand ${FORTRAN_STANDARD} -fpscomp logicals"
           cmake --build .
           cmake --install .
 
@@ -162,6 +164,6 @@ jobs:
             -DMPI_Fortran_COMPILER="${{ matrix.MPIFC }}" \
             -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+            -DCMAKE_Fortran_FLAGS="-stand ${FORTRAN_STANDARD} -fpscomp logicals"
           cmake --build .
           ctest -V
