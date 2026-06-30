@@ -1,6 +1,6 @@
 title: Online training
 author: Joe Wallwork
-date: Last Updated: April 2026
+date: Last Updated: June 2026
 
 ## Online Training
 
@@ -28,12 +28,10 @@ for information on how to do this.
 #### 2. pt2ts
 
 The scripting section comes earlier in the online workflow. Having written a
-model to a file with `.pt` extension, use the `pt2ts.py` utility Python script
-to convert it to TorchScript format. A template `pt2ts.py` script can be found
-in the [`utils`](https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils)
-subdirectory. See the
-[README](https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/README.md)
-there for more details on how to use the script.
+model to a file with `.pt` extension, use the `pt2ts` utility to convert it to
+TorchScript format. See the
+[ftorch_utils README](https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/README.md)
+for details on how to use the script.
 
 #### 3. Data generation and training
 
@@ -50,22 +48,27 @@ and the modified ML model is written out to the same TorchScript file at the
 end of the Fortran program. This way, the model can be trained in multiple
 Fortran runs, with the same model being read.
 
+Upon completing the training, write the trained model out in TorchScript format
+using [[ftorch_model(module):torch_model_save(subroutine)]].
+
 See the
 [training worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/11_Training)
 for a demonstration of how to train a PyTorch model purely in Fortran.
 
-*Note: Writing out models has not yet been implemented in FTorch, but is work in
-progress.*
-
 #### 4. Fortran model with inference
 
-In order to run inference with the trained ML model, you will need to create
-another modified version of your Fortran model that loads the TorchScript model
-and uses FTorch syntax to set up appropriate `torch_tensor` and `torch_model`
-objects and call the [[ftorch_model(module):torch_model_forward(subroutine)]]
-subroutine to run the inference. For
-examples of how to do this, see the
-[optimizer worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers).
+Having trained the model, suppose you now want to deploy it to run inference.
+In this case, the model weights will be fixed. You will need to create
+another modified version of your Fortran model that loads the trained
+TorchScript model and uses FTorch syntax to set up appropriate `torch_tensor`
+and `torch_model` objects and call the
+[[ftorch_model(module):torch_model_forward(subroutine)]] subroutine to run the
+inference. This file will be much the same as the offline training examples such
+as the
+[SimpleNet example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/02_SimpleNet).
+
+Alternatively, you could add a logical flag to your Fortran code in step 3 so
+that you can turn training on or off.
 
 ### Defining as much as possible in the model
 

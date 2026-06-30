@@ -15,6 +15,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 - Added a worked example for training in Fortran in
   [#581](https://github.com/Cambridge-ICCS/FTorch/pull/581)
+- Implemented `torch_model_save` in
+  [#587](https://github.com/Cambridge-ICCS/FTorch/pull/587)
 - Ability to build only integration or unit tests as desired using CMake options in
   [#584](https://github.com/Cambridge-ICCS/FTorch/pull/584)
 - MSE loss function implemented in

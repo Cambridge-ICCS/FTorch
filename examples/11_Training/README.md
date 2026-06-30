@@ -156,6 +156,10 @@ PASSED :: [training] relative tolerance =  0.1000E-02
  Fortran training example ran successfully
 ```
 
+In addition, the model should be written out in the build directory in
+TorchScript format under the filename `torchscript_permutenet_model_cpu.pt`,
+where `permutenet` refers to the fact that the model now permutes the input.
+
 ## Plotting the loss function convergence
 
 The Fortran program outputs the values of the loss function at each epoch to

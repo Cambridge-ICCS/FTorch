@@ -755,12 +755,23 @@ torch_jit_script_module_t torch_jit_load(const char *filename,
   return module;
 }
 
+void torch_jit_save(const torch_jit_script_module_t module, const char *filename) {
+  auto model = static_cast<torch::jit::script::Module *>(module);
+  try {
+    model->save(filename);
+  } catch (const torch::Error &e) {
+    ctorch_error(e.msg());
+  } catch (const std::exception &e) {
+    ctorch_error(e.what());
+  }
+}
+
 void torch_jit_module_forward(const torch_jit_script_module_t module,
                               const torch_tensor_t *inputs, const int nin,
                               torch_tensor_t *outputs, const int nout,
                               const bool requires_grad = false) {
   torch::AutoGradMode enable_grad(requires_grad);
-  // Here we cast the pointers we recieved in to Tensor objects
+  // Here we cast the pointers we recieved in to Module and Tensor objects
   auto model = static_cast<torch::jit::script::Module *>(module);
   auto in = reinterpret_cast<torch::Tensor *const *>(inputs);
   auto out = reinterpret_cast<torch::Tensor **>(outputs);

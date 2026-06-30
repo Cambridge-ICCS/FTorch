@@ -14,7 +14,7 @@ program training
                     torch_tensor_backward, torch_tensor_get_gradient, &
                     torch_tensor_mean, &
                     torch_model, torch_model_load, torch_model_parameters, &
-                    torch_model_forward, &
+                    torch_model_forward, torch_model_save, &
                     torch_optim, torch_optim_SGD
 
   ! Import our tools module for testing utils
@@ -151,6 +151,9 @@ program training
     write(*,*) "Error :: value of out_data does not match expected value"
     stop 999
   end if
+
+  ! Write the model out in TorchScript format
+  call torch_model_save(model, trim("torchscript_permutenet_model_cpu.pt"))
 
   write(*,*) "Training complete."
 

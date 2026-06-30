@@ -1,0 +1,94 @@
+!| Unit tests for writing out TorchScript models with FTorch.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_model_save
+  use funit
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_model, only: torch_model, torch_model_save, torch_model_load
+  use ftorch_test_utils, only: allclose
+
+  implicit none
+
+  public
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+
+  character(len=256), parameter :: input_filename = "../fixtures/simplenet.pt"
+  character(len=256), parameter :: output_filename = "saved_net_from_test.pt"
+
+contains
+
+  ! Subroutine for deleting the file with name given by output_filename
+  subroutine delete_file()
+    implicit none
+    integer :: istat
+    logical :: exists
+
+    ! Delete the file
+    open(unit=10, iostat=istat, file=trim(output_filename), status="old")
+    @assertEqual(istat, 0)
+    close(unit=10, status="delete")
+
+    ! Check that the file has indeed been deleted
+    inquire(file=trim(output_filename), exist=exists)
+    @assertFalse(exists)
+  end subroutine
+
+  ! Unit test checking files are indeed written
+  @test
+  subroutine test_exists()
+    type(torch_model) :: model
+    logical :: exists
+
+    ! Load the test model from file then save it out with a different name
+    call torch_model_load(model, trim(input_filename), device_type)
+    call torch_model_save(model, trim(output_filename))
+
+    ! Check that the file exists
+    inquire(file=trim(output_filename), exist=exists)
+    @assertTrue(exists)
+
+    ! Delete the file that was written out
+    call delete_file()
+  end subroutine test_exists
+
+  ! Unit test checking saved file has expected weights
+  @test
+  subroutine test_weights()
+    use, intrinsic :: iso_fortran_env, only : sp => real32
+    use ftorch_tensor, only: torch_tensor, torch_tensor_from_array, torch_tensor_to
+    use ftorch_model, only: torch_model_parameters
+
+    ! Set working precision for reals
+    integer, parameter :: wp = sp
+
+    ! Define two models and tensors and arrays for extracing their parameters
+    type(torch_model) :: model1, model2
+    type(torch_tensor) :: parameters1(1), parameters2(1), tensor1, tensor2
+    real(wp), dimension(5,5), target :: array1, array2
+
+    ! Load the test model from file then save it out with a different name
+    call torch_model_load(model1, trim(input_filename), device_type)
+    call torch_model_save(model1, trim(output_filename))
+
+    ! Load another model from the saved file
+    call torch_model_load(model2, trim(output_filename), device_type)
+
+    ! Extract the model parameters and check they are consistent
+    call torch_model_parameters(model1, parameters1)
+    call torch_model_parameters(model2, parameters2)
+    call torch_tensor_from_array(tensor1, array1, torch_kCPU)
+    call torch_tensor_from_array(tensor2, array2, torch_kCPU)
+    call torch_tensor_to(parameters1(1), tensor1)
+    call torch_tensor_to(parameters2(1), tensor2)
+    @assertTrue(allclose(array2, array1, test_name="test_weights"))
+
+    ! Delete the file that was written out
+    call delete_file()
+  end subroutine test_weights
+
+end module unittest_model_save
