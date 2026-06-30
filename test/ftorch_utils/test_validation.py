@@ -169,8 +169,9 @@ class TestValidateModelDeviceTypes:
         if torch.cuda.device_count() == 0:
             pytest.skip("No CUDA devices available, skipping test.")
         expected = (
-            "The model has parameters on different devices ('cpu' vs. 'cuda'). Ensure"
-            " all model parameters are on the same device and try again."
+            "The model has parameters on different devices (model on 'cpu' vs."
+            " parameters on 'cuda'). Ensure all model parameters are on the same device"
+            " and try again."
         )
         model = torch.nn.Sequential(
             torch.nn.Linear(2, 2).to("cpu"),
