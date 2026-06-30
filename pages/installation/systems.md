@@ -17,7 +17,7 @@ the library. In this case the build process is the same as for a Linux environme
 Building in Windows itself can be done using Visual Studio and the Intel Fortran
 resources. The following additional dependencies are also required:
 
-* [Visual Studio](https://visualstudio.microsoft.com/) ensuring C++ tools are selected and installed.
+* [Visual Studio](https://visualstudio.microsoft.com/) ensuring C++ tools are selected and installed (this includes Ninja via the "C++ CMake tools for Windows" component).
 * [Intel OneAPI Basetoolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html)
 * [Intel OneAPI HPC toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit.html) ensuring that the Intel Fortran compiler and VS integration is selected.
 
@@ -41,11 +41,11 @@ call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat"
 ```
 
 FTorch can then be built according to the [regular CMake instructions](|page|/installation/general.html),
-with the addition of `-G "NMake Makefiles"`.
+with the addition of `-G "Ninja"`.
 
 So the basic command to build (with either PowerShell or `cmd`) becomes:
 ```pwsh
-cmake -G "NMake Makefiles" -DCMAKE_PREFIX_PATH="C:\Users\<path-to-libtorch-download>\libtorch" -DCMAKE_BUILD_TYPE=Release ..
+cmake -G "Ninja" -DCMAKE_PREFIX_PATH="C:\Users\<path-to-libtorch-download>\libtorch" -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
 cmake --install .
 ```
@@ -79,7 +79,7 @@ $Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Obje
 # (Update CMAKE_PREFIX_PATH depending on location of ftorch venv)
 cmake `
   -Bbuild `
-  -G "NMake Makefiles" `
+  -G "Ninja" `
   -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
   -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" `
   -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" `
@@ -152,7 +152,7 @@ for /f "tokens=2*" %%i in ('pip show torch ^| findstr /R "^Location"') do set to
 
 rem Run CMake to generate build scripts
 rem (Update CMAKE_PREFIX_PATH depending on location of ftorch venv)
-cmake -Bbuild -G "NMake Makefiles" -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
+cmake -Bbuild -G "Ninja" -DCMAKE_Fortran_FLAGS="/fpscomp:logicals" ^
  -DCMAKE_PREFIX_PATH="%torch_path%" ^
  -DCMAKE_BUILD_TYPE=Release ^
  -DCMAKE_BUILD_TESTS=True ^

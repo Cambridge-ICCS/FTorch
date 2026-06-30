@@ -35,7 +35,7 @@ jobs:
       fail-fast: false
       matrix:
         toolchain:
-          - {compiler: intel, version: '2023.2'}
+          - {compiler: intel, version: '2025.0'}
         std: [f08]
 
     # Terminate the job if it runs for more than 15 minutes
@@ -49,6 +49,22 @@ jobs:
         with:
           compiler: ${{ matrix.toolchain.compiler }}
           version: ${{ matrix.toolchain.version }}
+
+      - name: Setup MSVC and Intel environment
+        shell: pwsh
+        run: |
+          # setup-fortran installs Intel compilers but doesn't configure MSVC environment
+          # which is needed for Windows SDK libraries (kernel32.lib, etc.) and Intel libs.
+          # Initialize both MSVC and Intel environments.
+          $VsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $VsInstallPath = & $VsWhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
+          $VsDevCmd = Join-Path $VsInstallPath "Common7\Tools\VsDevCmd.bat"
+          $IntelVars = "$env:CMPLR_ROOT\env\vars.bat"
+          cmd /c "`"$VsDevCmd`" -arch=x64 && `"$IntelVars`" intel64 && set" | ForEach-Object {
+            if ($_ -match "^(.*?)=(.*)$") {
+              "$($_)" | Out-File -Append $env:GITHUB_ENV -Encoding utf8
+            }
+          }
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout FTorch repository
@@ -81,9 +97,9 @@ jobs:
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           cmake `
             -Bbuild `
-            -G "NMake Makefiles" `
+            -G "Ninja" `
             -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
-            -DCMAKE_Fortran_FLAGS="/stand:08 /fpscomp:logicals" `
+            -DCMAKE_Fortran_FLAGS="/stand:f08 /fpscomp:logicals" `
             -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" `
             -DCMAKE_PREFIX_PATH="$Torch_DIR\torch" `
             -DCMAKE_BUILD_TYPE=Release `
@@ -134,9 +150,11 @@ jobs:
           if (-not (Test-Path $EXAMPLE_BUILD_DIR)) { New-Item -ItemType Directory -Path $EXAMPLE_BUILD_DIR | Out-Null }
           cd $EXAMPLE_BUILD_DIR
           cmake .. `
-            -G "NMake Makefiles" `
+            -G "Ninja" `
             -DCMAKE_Fortran_COMPILER=ifx `
-            -DCMAKE_Fortran_FLAGS="/stand:08 /fpscomp:logicals" `
+            -DCMAKE_C_COMPILER=icx `
+            -DCMAKE_CXX_COMPILER=icx `
+            -DCMAKE_Fortran_FLAGS="/stand:f08 /fpscomp:logicals" `
             -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_PREFIX_PATH="$FTORCH_INSTALL_DIR;$Torch_DIR\torch" `
