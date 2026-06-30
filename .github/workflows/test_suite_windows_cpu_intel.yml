@@ -72,9 +72,24 @@ jobs:
           if (-not (Test-Path $VsDevCmd)) {
             throw "Could not locate VsDevCmd.bat at $VsDevCmd."
           }
-          cmd /c "`"$VsDevCmd`" -arch=x64 -host_arch=x64 && set" | ForEach-Object {
-            if ($_ -match "^(.*?)=(.*)$") {
-              "$($_)" | Out-File -Append $env:GITHUB_ENV -Encoding utf8
+          # Run VsDevCmd first (MSVC toolchain), then re-initialise the Intel
+          # compiler environment on top so that Intel runtime libraries such as
+          # libircmt.lib are included in LIB alongside the MSVC libraries.
+          # VsDevCmd.bat alone would overwrite LIB with only MSVC paths, causing
+          # LNK1104 when icx/ifx try to link against Intel runtime libs.
+          $CompilerVars = "$env:CMPLR_ROOT\windows\bin\compilervars.bat"
+          if (Test-Path $CompilerVars) {
+            cmd /c "`"$VsDevCmd`" -arch=x64 -host_arch=x64 && `"$CompilerVars`" intel64 && set" | ForEach-Object {
+              if ($_ -match "^(.*?)=(.*)$") {
+                "$($_)" | Out-File -Append $env:GITHUB_ENV -Encoding utf8
+              }
+            }
+          } else {
+            Write-Warning "Intel compilervars.bat not found at $CompilerVars; Intel runtime libs may be missing from LIB."
+            cmd /c "`"$VsDevCmd`" -arch=x64 -host_arch=x64 && set" | ForEach-Object {
+              if ($_ -match "^(.*?)=(.*)$") {
+                "$($_)" | Out-File -Append $env:GITHUB_ENV -Encoding utf8
+              }
             }
           }
 
