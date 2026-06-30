@@ -166,7 +166,7 @@ the library. In this case the build process is the same as for a Linux environme
 <p>Building in Windows itself can be done using Visual Studio and the Intel Fortran
 resources. The following additional dependencies are also required:</p>
 <ul>
-<li><a href="https://visualstudio.microsoft.com/">Visual Studio</a> ensuring C++ tools are selected and installed.</li>
+<li><a href="https://visualstudio.microsoft.com/">Visual Studio</a> ensuring C++ tools are selected and installed (this includes Ninja via the "C++ CMake tools for Windows" component).</li>
 <li><a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html">Intel OneAPI Basetoolkit</a></li>
 <li><a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit.html">Intel OneAPI HPC toolkit</a> ensuring that the Intel Fortran compiler and VS integration is selected.</li>
 </ul>
@@ -185,9 +185,9 @@ for more details.</p>
 </code></pre></div>
 
 <p>FTorch can then be built according to the <a href="general.html">regular CMake instructions</a>,
-with the addition of <code>-G "NMake Makefiles"</code>.</p>
+with the addition of <code>-G "Ninja"</code>.</p>
 <p>So the basic command to build (with either PowerShell or <code>cmd</code>) becomes:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">cmake</span> <span class="n">-G</span> <span class="s2">&quot;NMake Makefiles&quot;</span> <span class="n">-DCMAKE_PREFIX_PATH</span><span class="p">=</span><span class="s2">&quot;C:\Users\&lt;path-to-libtorch-download&gt;\libtorch&quot;</span> <span class="n">-DCMAKE_BUILD_TYPE</span><span class="p">=</span><span class="n">Release</span> <span class="p">..</span>
+<div class="codehilite"><pre><span></span><code><span class="n">cmake</span> <span class="n">-G</span> <span class="s2">&quot;Ninja&quot;</span> <span class="n">-DCMAKE_PREFIX_PATH</span><span class="p">=</span><span class="s2">&quot;C:\Users\&lt;path-to-libtorch-download&gt;\libtorch&quot;</span> <span class="n">-DCMAKE_BUILD_TYPE</span><span class="p">=</span><span class="n">Release</span> <span class="p">..</span>
 <span class="n">cmake</span> <span class="p">-</span><span class="n">-build</span> <span class="p">.</span>
 <span class="n">cmake</span> <span class="p">-</span><span class="n">-install</span> <span class="p">.</span>
 </code></pre></div>
@@ -220,7 +220,7 @@ compilers, and Visual Studio.</p>
 <span class="c"># (Update CMAKE_PREFIX_PATH depending on location of ftorch venv)</span>
 <span class="n">cmake</span> <span class="p">`</span>
   <span class="n">-Bbuild</span> <span class="p">`</span>
-  <span class="n">-G</span> <span class="s2">&quot;NMake Makefiles&quot;</span> <span class="p">`</span>
+  <span class="n">-G</span> <span class="s2">&quot;Ninja&quot;</span> <span class="p">`</span>
   <span class="n">-DPython_EXECUTABLE</span><span class="p">=</span><span class="s2">&quot;$PYTHON_EXECUTABLE&quot;</span> <span class="p">`</span>
   <span class="n">-DCMAKE_Fortran_FLAGS</span><span class="p">=</span><span class="s2">&quot;/fpscomp:logicals&quot;</span> <span class="p">`</span>
   <span class="n">-DCMAKE_CXX_FLAGS</span><span class="p">=</span><span class="s2">&quot;/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH&quot;</span> <span class="p">`</span>
@@ -289,7 +289,7 @@ with the install then it may be helpful to set <code>ECHO ON</code> throughout.<
 
 <span class="n">rem</span><span class="w"> </span><span class="n">Run</span><span class="w"> </span><span class="n">CMake</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="n">build</span><span class="w"> </span><span class="n">scripts</span>
 <span class="n">rem</span><span class="w"> </span><span class="p">(</span><span class="n">Update</span><span class="w"> </span><span class="n">CMAKE_PREFIX_PATH</span><span class="w"> </span><span class="n">depending</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">location</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">ftorch</span><span class="w"> </span><span class="n">venv</span><span class="p">)</span>
-<span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">Bbuild</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;NMake Makefiles&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_FLAGS</span><span class="o">=</span><span class="s2">&quot;/fpscomp:logicals&quot;</span><span class="w"> </span><span class="o">^</span>
+<span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">Bbuild</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;Ninja&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_FLAGS</span><span class="o">=</span><span class="s2">&quot;/fpscomp:logicals&quot;</span><span class="w"> </span><span class="o">^</span>
 <span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;%torch_path%&quot;</span><span class="w"> </span><span class="o">^</span>
 <span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">^</span>
 <span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TESTS</span><span class="o">=</span><span class="n">True</span><span class="w"> </span><span class="o">^</span>
