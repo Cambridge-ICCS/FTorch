@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.4% of total for modules and submodules.">36 statements</a>
+                 title=" 2.4% of total for modules and submodules.">64 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -143,6 +143,7 @@
       </a>
       <div id="subs-0" class="collapse">
         <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/ftorch_loss.html#proc-torch_loss_cross_entropy">torch_loss_cross_entropy</a>
             <a class="list-group-item" href="../module/ftorch_loss.html#proc-torch_loss_mse">torch_loss_mse</a>
         </div>
       </div>
@@ -176,8 +177,8 @@
             <li class="list-group-item">
               <ul class="list-inline">
                   <li class="list-inline-item"><a href='ftorch_types.html'>ftorch_types</a></li>
-                  <li class="list-inline-item"><a href='ftorch_tensor.html'>ftorch_tensor</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
+                  <li class="list-inline-item"><a href='ftorch_tensor.html'>ftorch_tensor</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -499,6 +500,91 @@ modules which it uses.
 
         <section>
           <h2>Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_loss_cross_entropy"></span> <h3>public  subroutine <a href='../proc/torch_loss_cross_entropy.html'>torch_loss_cross_entropy</a>(loss_tensor, input_tensor, target_tensor, reduction_type)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Evaluate CrossEntropyLoss</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-loss_tensor~2"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>loss_tensor</strong></td>
+            <td>
+<p>Tensor to hold the loss value</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-input_tensor~2"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>input_tensor</strong></td>
+            <td>
+<p>Input tensor to evaluate loss at</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-target_tensor~3"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>target_tensor</strong></td>
+            <td>
+<p>Target tensor to evaluate loss against</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-reduction_type~2"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>reduction_type</strong></td>
+            <td>
+<p>Optional reduction type (default: torch_kMean)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-torch_loss_mse"></span> <h3>public  subroutine <a href='../proc/torch_loss_mse.html'>torch_loss_mse</a>(loss_tensor, input_tensor, target_tensor, reduction_type)  
 </h3></div>

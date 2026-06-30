@@ -497,10 +497,21 @@ EXPORT_C void torch_jit_module_delete(torch_jit_script_module_t module);
  * @param Tensor containing loss value(s)
  * @param Input Torch tensor to evaluate the loss at
  * @param Target Torch tensor to evaluate the loss against
- * @param Reduction type option
+ * @param Optional reduction type
  */
 EXPORT_C void torch_loss_mse(torch_tensor_t loss, const torch_tensor_t input,
                              const torch_tensor_t target,
                              const torch_reduction_t reduction_type);
+
+/**
+ * Function to create a CrossEntropyLoss and return a pointer to it
+ * @param Tensor containing loss value(s)
+ * @param Input Torch tensor to evaluate the loss at
+ * @param Target Torch tensor to evaluate the loss against
+ * @param Optional reduction type
+ */
+EXPORT_C void torch_loss_cross_entropy(torch_tensor_t loss, const torch_tensor_t input,
+                                       const torch_tensor_t target,
+                                       const torch_reduction_t reduction_type);
 
 #endif /* C_TORCH_H*/

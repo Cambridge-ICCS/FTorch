@@ -444,20 +444,21 @@ can be.
 <a id="ln-56" name="ln-56" href="#ln-56"></a><span class="w">                          </span><span class="n">torch_optim_zero_grad</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w">  </span><span class="c">!----------- (procedures)</span>
 <a id="ln-57" name="ln-57" href="#ln-57"></a><span class="w">                          </span><span class="n">torch_optim_step</span>
 <a id="ln-58" name="ln-58" href="#ln-58"></a>
-<a id="ln-59" name="ln-59" href="#ln-59"></a><span class="w">  </span><span class="k">use </span><span class="n">ftorch_loss</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">torch_loss_mse</span>
-<a id="ln-60" name="ln-60" href="#ln-60"></a>
-<a id="ln-61" name="ln-61" href="#ln-61"></a><span class="w">  </span><span class="k">implicit none</span>
-<a id="ln-62" name="ln-62" href="#ln-62"></a>
-<a id="ln-63" name="ln-63" href="#ln-63"></a><span class="k">  public</span>
-<a id="ln-64" name="ln-64" href="#ln-64"></a>
-<a id="ln-65" name="ln-65" href="#ln-65"></a><span class="w">  </span><span class="c">!&gt; Interface for deleting generic torch objects</span>
-<a id="ln-66" name="ln-66" href="#ln-66"></a><span class="w">  </span><span class="k">interface </span><span class="n">torch_delete</span>
-<a id="ln-67" name="ln-67" href="#ln-67"></a><span class="w">    </span><span class="k">module procedure </span><span class="n">torch_tensor_delete</span>
-<a id="ln-68" name="ln-68" href="#ln-68"></a><span class="w">    </span><span class="k">module procedure </span><span class="n">torch_model_delete</span>
-<a id="ln-69" name="ln-69" href="#ln-69"></a><span class="w">    </span><span class="k">module procedure </span><span class="n">torch_optim_delete</span>
-<a id="ln-70" name="ln-70" href="#ln-70"></a><span class="w">  </span><span class="k">end interface</span>
-<a id="ln-71" name="ln-71" href="#ln-71"></a>
-<a id="ln-72" name="ln-72" href="#ln-72"></a><span class="k">end module </span><span class="n">ftorch</span>
+<a id="ln-59" name="ln-59" href="#ln-59"></a><span class="w">  </span><span class="k">use </span><span class="n">ftorch_loss</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">torch_loss_mse</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<a id="ln-60" name="ln-60" href="#ln-60"></a><span class="w">                         </span><span class="n">torch_loss_cross_entropy</span>
+<a id="ln-61" name="ln-61" href="#ln-61"></a>
+<a id="ln-62" name="ln-62" href="#ln-62"></a><span class="w">  </span><span class="k">implicit none</span>
+<a id="ln-63" name="ln-63" href="#ln-63"></a>
+<a id="ln-64" name="ln-64" href="#ln-64"></a><span class="k">  public</span>
+<a id="ln-65" name="ln-65" href="#ln-65"></a>
+<a id="ln-66" name="ln-66" href="#ln-66"></a><span class="w">  </span><span class="c">!&gt; Interface for deleting generic torch objects</span>
+<a id="ln-67" name="ln-67" href="#ln-67"></a><span class="w">  </span><span class="k">interface </span><span class="n">torch_delete</span>
+<a id="ln-68" name="ln-68" href="#ln-68"></a><span class="w">    </span><span class="k">module procedure </span><span class="n">torch_tensor_delete</span>
+<a id="ln-69" name="ln-69" href="#ln-69"></a><span class="w">    </span><span class="k">module procedure </span><span class="n">torch_model_delete</span>
+<a id="ln-70" name="ln-70" href="#ln-70"></a><span class="w">    </span><span class="k">module procedure </span><span class="n">torch_optim_delete</span>
+<a id="ln-71" name="ln-71" href="#ln-71"></a><span class="w">  </span><span class="k">end interface</span>
+<a id="ln-72" name="ln-72" href="#ln-72"></a>
+<a id="ln-73" name="ln-73" href="#ln-73"></a><span class="k">end module </span><span class="n">ftorch</span>
 </pre></div>
 
       </section>
