@@ -32,7 +32,13 @@ if(CMAKE_BUILD_TESTS)
     COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/fno1d.py
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-  # 2. Run the pt2ts script to convert the model file to TorchScript format
+  # 2. Train the model in Python
+  add_test(
+    NAME example_fno_train
+    COMMAND ${Python_EXECUTABLE} ${PROJECT_SOURCE_DIR}/fno1d_train.py
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+  # 3. Run the pt2ts script to convert the model file to TorchScript format
   #    and run basic checks
   add_test(
     NAME example_fno_pt2ts
@@ -47,7 +53,7 @@ if(CMAKE_BUILD_TESTS)
                   ${PROJECT_BINARY_DIR}/torchscript_fno_model_cpu.pt
                   --test)
 
-  # 3. Check the model can be loaded from file and run in Python and that its
+  # 4. Check the model can be loaded from file and run in Python and that its
   #   outputs meet expectations
   add_test(
     NAME example_fno_fno1d_infer_python
@@ -55,7 +61,7 @@ if(CMAKE_BUILD_TESTS)
             --filepath ${PROJECT_BINARY_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-  # 4. Check the model can be loaded from file and run in Fortran and that its
+  # 5. Check the model can be loaded from file and run in Fortran and that its
   #   outputs meet expectations
   add_test(
     NAME example_fno_fno1d_infer_fortran

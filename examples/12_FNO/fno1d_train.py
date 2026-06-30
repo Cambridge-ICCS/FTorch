@@ -180,8 +180,8 @@ def validate() -> None:
     """
     # Load trained model
     loaded_model = FNO1d()
-    loaded_model = torch.jit.load("fno1d_sine.pt")
-    # model.load_state_dict(torch.load("fno1d_sine.pt"))
+    loaded_model = torch.jit.load("pytorch_fno_model_cpu.pt")
+    # model.load_state_dict(torch.load("pytorch_fno_model_cpu.pt"))
     loaded_model.eval()
 
     # Generate fresh test data
