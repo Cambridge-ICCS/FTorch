@@ -85,7 +85,7 @@ program inference
 
   ! Check against tolerance
   test_pass = (total_error < tol_sum)
-  if test_pass then
+  if (test_pass) then
     write(*,"('Total error = ',es11.4,' — within tolerance.')") total_error
     write(*,*) "All predictions within tolerance."
   else
