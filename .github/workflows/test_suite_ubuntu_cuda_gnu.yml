@@ -84,11 +84,11 @@ jobs:
           # NOTE: CUDA version should be consistent with the download below, i.e., 13.2
           pip install . --extra-index-url https://download.pytorch.org/whl/cu132 --group test
 
-      - name: Install cmake and CUDA toolkit
+      - name: Install cmake, GNU compilers, and CUDA toolkit
         run: |
           sudo apt update
           # NOTE: CUDA version should be consistent with the download above, i.e., 13.2
-          sudo apt install -y cmake cuda-toolkit
+          sudo apt install -y cmake gcc g++ gfortran cuda-toolkit
 
       - name: Run GPU-specific FTorch-utils unit tests
         run: |
@@ -97,7 +97,6 @@ jobs:
 
       - name: Install pFUnit
         run: |
-          export CC=/usr/bin/gcc
           export FC=/usr/bin/gfortran
           # NOTE: version pin needed because version appears in install path
           git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
@@ -105,8 +104,8 @@ jobs:
           cd pFUnit/build
           # MPI support is currently not needed for the unit testing
           cmake .. \
-            -DCMAKE_C_COMPILER="${CC}" \
-            -DCMAKE_Fortran_COMPILER="${FC}" \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_Fortran_COMPILER=gfortran \
             -DSKIP_MPI=YES \
             -DSKIP_OPENMP=YES
           make -j 4 install
