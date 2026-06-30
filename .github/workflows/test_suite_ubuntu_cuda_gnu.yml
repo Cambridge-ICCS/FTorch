@@ -97,6 +97,7 @@ jobs:
 
       - name: Install pFUnit
         run: |
+          export CC=/usr/bin/gcc
           export FC=/usr/bin/gfortran
           # NOTE: version pin needed because version appears in install path
           git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
@@ -104,8 +105,8 @@ jobs:
           cd pFUnit/build
           # MPI support is currently not needed for the unit testing
           cmake .. \
-            -DCMAKE_C_COMPILER=gcc \
-            -DCMAKE_Fortran_COMPILER=gfortran \
+            -DCMAKE_C_COMPILER="${CC}" \
+            -DCMAKE_Fortran_COMPILER="${FC}" \
             -DSKIP_MPI=YES \
             -DSKIP_OPENMP=YES
           make -j 4 install
