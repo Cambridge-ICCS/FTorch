@@ -13,6 +13,13 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 - Introduced a central, installable `pt2ts` script
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
+- Added a worked example for training in Fortran in
+  [#581](https://github.com/Cambridge-ICCS/FTorch/pull/581)
+- Ability to build only integration or unit tests as desired using CMake options in
+  [#584](https://github.com/Cambridge-ICCS/FTorch/pull/584)
+- Added Flang CI workflow in
+  [#595](https://github.com/Cambridge-ICCS/FTorch/pull/595)
+
 
 ### Changed
 
@@ -34,6 +41,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
 - Example numbering updated to double digits to incorporate example 10.
   [#320](https://github.com/Cambridge-ICCS/FTorch/pull/320)
+- Updated CI workflows to use pFUnit 4.18.2 in
+  [#595](https://github.com/Cambridge-ICCS/FTorch/pull/595)
 
 ### Removed
 
@@ -41,6 +50,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#555](https://github.com/Cambridge-ICCS/FTorch/pull/555)
 
 ### Fixed
+
+- Fixed CI workflows for gfortran versions 9 and 10 in
+  [#603](https://github.com/Cambridge-ICCS/FTorch/pull/603)
 
 ### Patch Releases
 

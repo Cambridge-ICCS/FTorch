@@ -78,30 +78,36 @@ contains
   end function toString
 
   ! Unit test for checking values are propagated correctly through the test model
-  @test(testparameters={get_parameters_short()})
+  @test(testparameters={get_parameters_requires_grad()})
   subroutine test_forward_value(this)
-    use ftorch_tensor, only: torch_tensor_from_array
+    use ftorch_tensor, only: torch_tensor_from_array, torch_tensor_empty, torch_tensor_to
 
     implicit none
 
     class(TestCaseType), intent(inout) :: this
     character(len=256), parameter :: filename = "../fixtures/simplenet.pt"
     type(torch_model) :: model
-    type(torch_tensor) :: input_tensors(1), output_tensors(1)
+    type(torch_tensor) :: input_tensors(1), loss_tensors(1), output_tensor
     real(wp), dimension(5), target :: input_array, output_array
     real(wp), dimension(5) :: expected
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [5]
 
     ! Initialise an input tensor and an output tensor
     input_array = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
     call torch_tensor_from_array(input_tensors(1), input_array, torch_kCPU)
-    call torch_tensor_from_array(output_tensors(1), output_array, torch_kCPU)
+    call torch_tensor_empty(loss_tensors(1), ndims, tensor_shape, dtype, device_type, &
+                            device_index)
+    call torch_tensor_from_array(output_tensor, output_array, torch_kCPU)
 
     ! Load the test model from file
     call torch_model_load(model, trim(filename), device_type)
 
     ! Propagate the input tensor through the model
-    call torch_model_forward(model, input_tensors, output_tensors)
+    call torch_model_forward(model, input_tensors, loss_tensors, this%param%requires_grad)
 
+    ! Copy the loss values into the output tensor (required when requires_grad=.true.)
+    call torch_tensor_to(loss_tensors(1), output_tensor)
     expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
     @assertTrue(allclose(output_array, expected, test_name="test_forward_value"))
 

@@ -462,6 +462,16 @@ EXPORT_C void torch_jit_module_print_parameters(const torch_jit_script_module_t 
 EXPORT_C bool torch_jit_module_is_training(const torch_jit_script_module_t module);
 
 /**
+ * Function to extract the parameters of a Torch Model as tensors.
+ *
+ * @param Torch Model to extract parameters from
+ * @param Torch Tensors to be extracted
+ * @param Number of Torch Tensors to extract
+ */
+EXPORT_C void torch_jit_module_parameters(const torch_jit_script_module_t module,
+                                          torch_tensor_t *outputs, const int nout);
+
+/**
  * Function to delete a Torch Module to clean up
  * @param Torch Module to delete
  */

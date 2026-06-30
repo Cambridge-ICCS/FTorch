@@ -131,8 +131,7 @@ def main_cli():
     if input_model_file is not None:
         validate_input_model_file(input_model_file)
     output_model_file = parsed_args.output_model_file
-    if output_model_file is not None:
-        validate_output_model_file(output_model_file, input_model_file)
+    validate_output_model_file(output_model_file, input_model_file)
     trace = parsed_args.trace
     test = parsed_args.test
     input_tensor_file = parsed_args.input_tensor_file

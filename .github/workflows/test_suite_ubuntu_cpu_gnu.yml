@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite using jobs for GNU compiler
-name: Test suite (Ubuntu CPU GNU)
+name: Test suite (Ubuntu CPU)
 
 # Controls when the workflow will run
 on:
@@ -40,60 +40,43 @@ permissions: {}
 
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
-  # Dynamically build matrix for GNU job
-  setup-matrix:
-    name: setup matrix
-    runs-on: ubuntu-latest
-
-    # Terminate the job if it runs for more than 5 minutes
-    timeout-minutes: 5
-
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    env:
-      EVENT_NAME: ${{ github.event_name }}
-    steps:
-      - id: set-matrix
-        run: |
-          if [[ "$EVENT_NAME" == 'push' ]]
-          then
-            # Include GCC 9–13 for PRs to main
-            MATRIX_JSON='
-            {
-              "toolchain": [
-                {"compiler": "gcc", "version": 13},
-                {"compiler": "gcc", "version": 12},
-                {"compiler": "gcc", "version": 11},
-                {"compiler": "gcc", "version": 10},
-                {"compiler": "gcc", "version": 9}
-              ],
-              "std": ["f2008"],
-              "include": [
-                {"toolchain": {"compiler": "gcc", "version": 13}, "std": "f2018"}
-              ]
-            }'
-          else
-            # Only GCC 13 for everything else
-            MATRIX_JSON='
-            {
-              "toolchain": [
-                {"compiler": "gcc", "version": 13}
-              ],
-              "std": ["f2008", "f2018"]
-            }'
-          fi
-          # Convert json to compact line expected by github action
-          MATRIX_JSON=$(echo "$MATRIX_JSON" | jq -c .)
-          echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
-
   test-suite:
-    name: test suite
-    needs: setup-matrix
+    name: gfortran ${{ matrix.gcc_version }}, ${{ matrix.std }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
+      matrix:
+        std: ["f2008", "f2018"]
+        gcc_version: [9, 10, 11, 12, 13]
+        pfunit_version: ["4.12.0", "4.18.2"]
+        exclude:
+          # Always run gcc 9 and 10 with pFUnit 4.12.0
+          - gcc_version: 9
+            pfunit_version: 4.18.2
+          - gcc_version: 10
+            pfunit_version: 4.18.2
+          # Always run gcc 11, 12, and 13 with pFUnit 4.18.2
+          - gcc_version: 11
+            pfunit_version: 4.12.0
+          - gcc_version: 12
+            pfunit_version: 4.12.0
+          - gcc_version: 13
+            pfunit_version: 4.12.0
+          # Configuration for pushes to main
+          - gcc_version: ${{ github.event_name == 'push' && 9 }}
+            std: f2018
+          - gcc_version: ${{ github.event_name == 'push' && 10 }}
+            std: f2018
+          - gcc_version: ${{ github.event_name == 'push' && 11 }}
+            std: f2018
+          - gcc_version: ${{ github.event_name == 'push' && 12 }}
+            std: f2018
+          # Configuration for pull requests etc.
+          - gcc_version: ${{ github.event_name != 'push' && 9 }}
+          - gcc_version: ${{ github.event_name != 'push' && 10 }}
+          - gcc_version: ${{ github.event_name != 'push' && 11 }}
+          - gcc_version: ${{ github.event_name != 'push' && 12 }}
 
     # Terminate the job if it runs for more than 15 minutes
     timeout-minutes: 15
@@ -109,8 +92,8 @@ jobs:
       - name: Setup Fortran
         uses: fortran-lang/setup-fortran@2a1b9c55897d827a9dfeb114408f3615e53b2b72 # v1.9.0
         with:
-          compiler: ${{ matrix.toolchain.compiler }}
-          version: ${{ matrix.toolchain.version }}
+          compiler: gcc
+          version: ${{ matrix.gcc_version }}
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
@@ -131,13 +114,15 @@ jobs:
 
       - name: Install pFUnit
         run: |
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          # NOTE: version pin needed because version appears in install path
+          git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
-          cmake ..\
-            -DCMAKE_Fortran_COMPILER=gfortran\
-            -DMPI_Fortran_COMPILER=mpif90
+          cmake .. \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_Fortran_COMPILER=gfortran \
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=YES
           make -j 4 install
 
       - name: Build FTorch
@@ -153,7 +138,8 @@ jobs:
           export INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
+          VN="${{ matrix.pfunit_version }}"
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
           cd ${BUILD_DIR}
 
           cmake .. \
@@ -169,7 +155,7 @@ jobs:
           cmake --build .
           cmake --install .
 
-      - name: Check pkg-config file 
+      - name: Check pkg-config file
         run: |
           # pkg-config looks in the `build` directory for libraries
           export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:build

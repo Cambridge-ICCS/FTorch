@@ -80,6 +80,9 @@ def validate_output_model_file(output_model_file, input_model_file):
     input_model_file : str
         Name of the input model file
     """
+    if output_model_file is None:
+        value_error = "No output model file provided via --output_model_file argument."
+        raise ValueError(value_error)
     _, output_model_ext = os.path.splitext(output_model_file)
     if output_model_ext != ".pt":
         value_error = (

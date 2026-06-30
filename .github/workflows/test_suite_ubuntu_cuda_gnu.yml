@@ -1,5 +1,5 @@
 # Workflow to run the FTorch test suite on a CUDA enabled runner with the GNU compiler
-name: Test suite (Ubuntu CUDA GNU)
+name: Test suite (Ubuntu CUDA)
 
 # Controls when the workflow will run
 on:
@@ -50,12 +50,15 @@ permissions: {}
 # Workflow run - one or more jobs that can run sequentially or in parallel
 jobs:
   test-suite:
-    name: test suite
+    name: gfortran, ${{ matrix.std }}
 
     # The type of runner that the job will run on
     runs-on: GPU-runner
     strategy:
       fail-fast: true
+      matrix:
+        std: [f2008]
+        pfunit_version: [4.18.2]
 
     # Terminate the job if it runs for more than 20 minutes
     timeout-minutes: 20
@@ -78,14 +81,14 @@ jobs:
           python -m pip install --upgrade pip
           python -m venv ftorch
           . ftorch/bin/activate
-          # CUDA v12.9 chosen as latest supported by PyTorch
-          # Check this is <= what GPU-runner has installed (backwards compatible)
-          pip install . --extra-index-url https://download.pytorch.org/whl/cu129 --group test
+          # NOTE: CUDA version should be consistent with the download below, i.e., 13.2
+          pip install . --extra-index-url https://download.pytorch.org/whl/cu132 --group test
 
-      - name: Install CMake, NVIDIA dev toolkit, and an MPI distribution
+      - name: Install cmake and CUDA toolkit
         run: |
           sudo apt update
-          sudo apt install -y cmake nvidia-cuda-toolkit openmpi-bin openmpi-common libopenmpi-dev
+          # NOTE: CUDA version should be consistent with the download above, i.e., 13.2
+          sudo apt install -y cmake cuda-toolkit
 
       - name: Run GPU-specific FTorch-utils unit tests
         run: |
@@ -95,18 +98,23 @@ jobs:
       - name: Install pFUnit
         run: |
           export FC=/usr/bin/gfortran
-          # TODO: Avoid version pinning (needed because version appears in install path)
-          git clone -b v4.12.0 https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          # NOTE: version pin needed because version appears in install path
+          git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
           # MPI support is currently not needed for the unit testing
-          cmake .. -DSKIP_MPI=YES
+          cmake .. \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_Fortran_COMPILER=gfortran \
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=YES
           make -j 4 install
 
       - name: Build FTorch
-        env:
-          FORTRAN_STANDARD: f2008
         run: |
+          # GitHub Actions doesn't source /etc/profile.d/ scripts, so the CUDA bin directory
+          # (added by the apt package post-install script) won't be in PATH automatically.
+          export PATH=/usr/local/cuda/bin:$PATH
           . ftorch/bin/activate
           VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
           export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
@@ -115,7 +123,8 @@ jobs:
           export INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${INSTALL_DIR}
           # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          export PFUNIT_DIR=$(pwd)/pFUnit/build/installed/PFUNIT-4.12
+          VN="${{ matrix.pfunit_version }}"
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
           mkdir -p ${BUILD_DIR}
           cd ${BUILD_DIR}
           cmake .. \
@@ -126,7 +135,7 @@ jobs:
             -DGPU_DEVICE=CUDA \
             -DMULTI_GPU=OFF \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_Fortran_FLAGS="-std=${FORTRAN_STANDARD}"
+            -DCMAKE_Fortran_FLAGS="-std=${{ matrix.std }}"
           cmake --build .
           cmake --install .
 

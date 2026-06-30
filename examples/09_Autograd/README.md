@@ -76,7 +76,12 @@ along with some testing output.
 ### Simple neural network demo
 
 The second example proceeds in much the same way, replacing `tensor_manipulation_backward`
-with `simplenet_backward`. Running
+with `simplenet_backward`. In the example, we propagate an arbitrary tensor
+through the `SimpleNet` model, which has the effect of doubling its values. We
+then apply backpropagation to compute derivatives of the output with respect to
+both the input tensor and also with respect to the model weights.
+
+Running
 ```
 python3 simplenet_backward.py
 ```
@@ -85,9 +90,22 @@ should print the following to the console:
 x = tensor([[1., 2., 3., 4., 5.]], requires_grad=True)
 y = tensor([[ 2.,  4.,  6.,  8., 10.]], grad_fn=<MmBackward0>)
 dy/dx = tensor([[2., 2., 2., 2., 2.]])
+dy/d(weights):
+tensor([[1., 2., 3., 4., 5.],
+        [1., 2., 3., 4., 5.],
+        [1., 2., 3., 4., 5.],
+        [1., 2., 3., 4., 5.],
+        [1., 2., 3., 4., 5.]])
 ```
-As expected, the values in the output tensor are double those in the input. As
-we might hope, the values in the gradient tensor are all twos.
+As expected, the values in the output tensor are double those in the input.
+It makes sense that the values in $\frac{\mathrm{d}y}{\mathrm{d}x}`$ are all
+twos because the model has the effect of doubling the input. To understand the
+other derivative matrix, given $y=Wx$ where $W$ is the weights matrix, the
+product rule implies
+$$\frac{\partial y}{\partial W}=e\otimes x+W\frac{\partial x}{\partial W},$$
+where $e$ is a vector ones and $\otimes$ denotes the outer product. The input is
+independent of the weight matrix, so the second term in the product vanishes.
+The first term evaluates to the value shown above.
 
 To run the Fortran version, simply execute
 ```
@@ -100,6 +118,21 @@ This should print the following to the console:
 PASSED :: [autograd_simplenet_y] relative tolerance =  0.1000E-04
  dy/dx =    2.00000000       2.00000000       2.00000000       2.00000000       2.00000000
 PASSED :: [autograd_simplenet_dydx] relative tolerance =  0.1000E-04
+ Model weights:
+ 2  0  0  0  0
+ 0  2  0  0  0
+ 0  0  2  0  0
+ 0  0  0  2  0
+ 0  0  0  0  2
+[ CPUFloatType{5,5} ]
+ dy/d(weights):
+ 1  2  3  4  5
+ 1  2  3  4  5
+ 1  2  3  4  5
+ 1  2  3  4  5
+ 1  2  3  4  5
+[ CPUFloatType{5,5} ]
+PASSED :: [autograd_simplenet_dydw] relative tolerance =  0.1000E-04
  SimpleNet Autograd example ran successfully
 ```
 The tensor values match those in the Python version of the example above.
