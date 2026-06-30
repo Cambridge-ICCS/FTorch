@@ -85,12 +85,11 @@ program inference
    total_error = sum(error)
 
    ! Check against tolerance
-   if (total_error < tol_sum) then
-       print *, "Total error = ", total_error, " — within tolerance."
-       test_pass = .true.
+   test_pass = (total_error < tol_sum)
+   if test_pass then
+       write(*,"('Total error = ',es11.4,' — within tolerance.')") total_error
    else
-       print *, "Total error = ", total_error, " — exceeds tolerance!"
-       test_pass = .false.
+       write(*,"('Total error = ',es11.4,' — exceeds tolerance!')") total_error
    end if
 
 
