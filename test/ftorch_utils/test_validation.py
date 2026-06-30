@@ -1,6 +1,7 @@
 """Unit tests for validation module."""
 
 import os
+import re
 import warnings
 
 import pytest
@@ -178,7 +179,7 @@ class TestValidateModelDevice:
             torch.nn.Linear(2, 2).to("cpu"),
             torch.nn.Linear(2, 2).to("cuda"),
         )
-        with pytest.raises(RuntimeError, match=expected):
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
             validate_model_device_types(model)
 
     def test_mismatching_cuda_index(self):
@@ -194,7 +195,7 @@ class TestValidateModelDevice:
             torch.nn.Linear(2, 2).to("cuda:0"),
             torch.nn.Linear(2, 2).to("cuda:1"),
         )
-        with pytest.raises(RuntimeError, match=expected):
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
             validate_model_device_types(model)
 
 
@@ -231,7 +232,7 @@ class TestValidateDevice:
             " input tensor on 'cuda'). Ensure they are on the same device and try"
             " again."
         )
-        with pytest.raises(RuntimeError, match=expected):
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
             validate_device_types(
                 torch.nn.Linear(2, 2).to("cpu"),
                 torch.tensor([1.0, 2.0, 3.0]).to("cuda"),
@@ -246,7 +247,7 @@ class TestValidateDevice:
             " device with index '0' vs. input tensor on device with index '1'). Ensure"
             " they are on the same device and try again."
         )
-        with pytest.raises(RuntimeError, match=expected):
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
             validate_device_types(
                 torch.nn.Linear(2, 2).to("cuda:0"),
                 torch.tensor([1.0, 2.0, 3.0]).to("cuda:1"),
