@@ -192,7 +192,7 @@ def validate_device_types(model, input_tensors):
             )
 
 
-def validate_device_indices(model, input_tensor):
+def validate_device_indices(model, input_tensors):
     """Check the model and input tensors are on devices with the same index.
 
     Parameters
