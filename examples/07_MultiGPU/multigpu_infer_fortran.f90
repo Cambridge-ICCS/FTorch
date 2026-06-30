@@ -37,7 +37,7 @@ program inference
    ! Flag for testing
    logical :: test_pass
 
-   ! Get TorchScript model file, device type, and number of devices as second command line arguments
+   ! Get TorchScript model file, device type, and number of devices as command line arguments
    num_args = command_argument_count()
    allocate(args(num_args))
    do ix = 1, num_args
