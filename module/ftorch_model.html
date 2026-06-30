@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 6.2% of total for modules and submodules.">164 statements</a>
+                 title=" 6.7% of total for modules and submodules.">178 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -170,6 +170,7 @@
             <a class="list-group-item" href="../module/ftorch_model.html#proc-torch_model_load">torch_model_load</a>
             <a class="list-group-item" href="../module/ftorch_model.html#proc-torch_model_parameters">torch_model_parameters</a>
             <a class="list-group-item" href="../module/ftorch_model.html#proc-torch_model_print_parameters">torch_model_print_parameters</a>
+            <a class="list-group-item" href="../module/ftorch_model.html#proc-torch_model_save">torch_model_save</a>
         </div>
       </div>
     </div>
@@ -201,10 +202,10 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
+                  <li class="list-inline-item"><a href='ftorch_tensor.html'>ftorch_tensor</a></li>
+                  <li class="list-inline-item"><a href='ftorch_types.html'>ftorch_types</a></li>
                   <li class="list-inline-item"><a href='ftorch_devices.html'>ftorch_devices</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
-                  <li class="list-inline-item"><a href='ftorch_types.html'>ftorch_types</a></li>
-                  <li class="list-inline-item"><a href='ftorch_tensor.html'>ftorch_tensor</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -556,7 +557,7 @@ modules which it uses.
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-p~2"></span>
+              <span class="anchor" id="variable-p"></span>
               type(c_ptr),
             </td>
               <td>public</td>
@@ -679,7 +680,7 @@ modules which it uses.
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-model~4"></span>
+              <span class="anchor" id="variable-model~5"></span>
               type(<a href='../type/torch_model.html'>torch_model</a>),
             </td>
 <td>intent(inout)</td>
@@ -719,7 +720,7 @@ modules which it uses.
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-model~2"></span>
+              <span class="anchor" id="variable-model~3"></span>
               type(<a href='../type/torch_model.html'>torch_model</a>),
             </td>
 <td>intent(in)</td>
@@ -919,7 +920,7 @@ modules which it uses.
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-model~3"></span>
+              <span class="anchor" id="variable-model~4"></span>
               type(<a href='../type/torch_model.html'>torch_model</a>),
             </td>
 <td>intent(in)</td>
@@ -988,6 +989,61 @@ modules which it uses.
             <td><strong>self</strong></td>
             <td>
 <p>Model to print the parameters of</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_model_save"></span> <h3>public  subroutine <a href='../proc/torch_model_save.html'>torch_model_save</a>(model, filename)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Writes out a model to file in TorchScript format</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-model~2"></span>
+              type(<a href='../type/torch_model.html'>torch_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>model</strong></td>
+            <td>
+<p>Model to write out</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-filename~2"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+<p>Filename for saved TorchScript model</p>
             </td>
         </tr>
     </tbody>

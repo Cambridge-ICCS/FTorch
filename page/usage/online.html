@@ -85,7 +85,7 @@
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
               <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Joe Wallwork</li>
-              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: April 2026</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: June 2026</li>
           </ul>
         </div>
         <div class="col">
@@ -171,12 +171,10 @@ not described here. See the
 for information on how to do this.</p>
 <h4 id="2-pt2ts">2. pt2ts</h4>
 <p>The scripting section comes earlier in the online workflow. Having written a
-model to a file with <code>.pt</code> extension, use the <code>pt2ts.py</code> utility Python script
-to convert it to TorchScript format. A template <code>pt2ts.py</code> script can be found
-in the <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils"><code>utils</code></a>
-subdirectory. See the
-<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/README.md">README</a>
-there for more details on how to use the script.</p>
+model to a file with <code>.pt</code> extension, use the <code>pt2ts</code> utility to convert it to
+TorchScript format. See the
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/README.md">ftorch_utils README</a>
+for details on how to use the script.</p>
 <h4 id="3-data-generation-and-training">3. Data generation and training</h4>
 <p>In the online case, data generation and training are done in the same step,
 purely in Fortran. Code modifications are made so that we can run the Fortran
@@ -189,19 +187,23 @@ model that was created in step 2 is read in at the start of the Fortran program
 and the modified ML model is written out to the same TorchScript file at the
 end of the Fortran program. This way, the model can be trained in multiple
 Fortran runs, with the same model being read.</p>
+<p>Upon completing the training, write the trained model out in TorchScript format
+using <a href="../../proc/torch_model_save.html">torch_model_save</a>.</p>
 <p>See the
 <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/11_Training">training worked example</a>
 for a demonstration of how to train a PyTorch model purely in Fortran.</p>
-<p><em>Note: Writing out models has not yet been implemented in FTorch, but is work in
-progress.</em></p>
 <h4 id="4-fortran-model-with-inference">4. Fortran model with inference</h4>
-<p>In order to run inference with the trained ML model, you will need to create
-another modified version of your Fortran model that loads the TorchScript model
-and uses FTorch syntax to set up appropriate <code>torch_tensor</code> and <code>torch_model</code>
-objects and call the <a href="../../proc/torch_model_forward.html">torch_model_forward</a>
-subroutine to run the inference. For
-examples of how to do this, see the
-<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/10_Optimizers">optimizer worked example</a>.</p>
+<p>Having trained the model, suppose you now want to deploy it to run inference.
+In this case, the model weights will be fixed. You will need to create
+another modified version of your Fortran model that loads the trained
+TorchScript model and uses FTorch syntax to set up appropriate <code>torch_tensor</code>
+and <code>torch_model</code> objects and call the
+<a href="../../proc/torch_model_forward.html">torch_model_forward</a> subroutine to run the
+inference. This file will be much the same as the offline training examples such
+as the
+<a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/02_SimpleNet">SimpleNet example</a>.</p>
+<p>Alternatively, you could add a logical flag to your Fortran code in step 3 so
+that you can turn training on or off.</p>
 <h3 id="defining-as-much-as-possible-in-the-model">Defining as much as possible in the model</h3>
 <p>The first thing to note is that it's best to define as much as possible in the
 PyTorch model before writing it to file. As well as layers, activation
