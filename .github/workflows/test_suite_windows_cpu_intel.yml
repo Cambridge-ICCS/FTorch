@@ -50,6 +50,22 @@ jobs:
           compiler: ${{ matrix.toolchain.compiler }}
           version: ${{ matrix.toolchain.version }}
 
+      - name: Setup MSVC and Intel environment
+        shell: pwsh
+        run: |
+          # setup-fortran installs Intel compilers but doesn't configure MSVC environment
+          # which is needed for Windows SDK libraries (kernel32.lib, etc.) and Intel libs.
+          # Initialize both MSVC and Intel environments.
+          $VsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $VsInstallPath = & $VsWhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
+          $VsDevCmd = Join-Path $VsInstallPath "Common7\Tools\VsDevCmd.bat"
+          $IntelVars = "$env:CMPLR_ROOT\env\vars.bat"
+          cmd /c "`"$VsDevCmd`" -arch=x64 && `"$IntelVars`" intel64 && set" | ForEach-Object {
+            if ($_ -match "^(.*?)=(.*)$") {
+              "$($_)" | Out-File -Append $env:GITHUB_ENV -Encoding utf8
+            }
+          }
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout FTorch repository
         with:
