@@ -21,8 +21,13 @@ contains
 
   !| Evaluate MSELoss
   !
-  !  Note that the reduction type relates to the operation to perform across batches. Within each
-  !  batch of data, the mean will always be taken.
+  !  Note that the reduction type relates to the operation to perform within a (mini)batch. With
+  !  torch_kNone, no reduction is applied and the loss tensor will have the same dimensions as the
+  !  input tensor. If torch_kMean or torch_kSum is applied then the loss tensor will differ in the
+  !  first dimension (for the batch), which will be collapsed.
+  !
+  !  We refer to the PyTorch docs for the specifics of how this works for MSELoss
+  !  https://docs.pytorch.org/docs/main/nn.functional.html#torch.nn.functional.mse_loss
   subroutine torch_loss_mse(loss_tensor, input_tensor, target_tensor, reduction_type)
     use, intrinsic :: iso_c_binding, only : c_associated, c_int
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
