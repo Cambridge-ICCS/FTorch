@@ -92,15 +92,7 @@ program inference
    else
       write(*,"('Total error = ',es11.4,' — exceeds tolerance!')") total_error
       write(*,*) "Some predictions exceeded tolerance."
-   end if
-
-   ! Cleanup
-   call torch_delete(model)
-   call torch_delete(in_tensors)
-   call torch_delete(out_tensors)
-
-   if (.not. test_pass) then
-     stop 999
+      stop 999
    end if
 
   write (*,*) "FNO1d example ran successfully"
