@@ -8,7 +8,8 @@ module unittest_tensor_constructors_destructors
   use funit
   use ftorch_devices, only: torch_kCPU
   use ftorch_types, only: torch_kFloat32
-  use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_delete, torch_tensor_from_array
+  use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_delete, torch_tensor_from_array, &
+                           torch_tensor_from_array_legacy
   use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use iso_c_binding, only: c_associated, c_int64_t
@@ -244,7 +245,7 @@ contains
 
     ! Create a tensor based off an input array
     call torch_tensor_from_array(tensor1, in_data, device_type, device_index, &
-                                 this%param%requires_grad)
+                                  requires_grad=this%param%requires_grad)
 
     ! Check the stride and shape
     @assertEqual([1], tensor1 % get_stride())
@@ -294,8 +295,8 @@ contains
       tensor_layout(:) = [1, 2]
       expected_stride(:) = [1, 2]
     end if
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
-                                 this%param%requires_grad)
+    call torch_tensor_from_array(tensor1, in_data, device_type, device_index, tensor_layout, &
+                                  requires_grad=this%param%requires_grad)
 
     ! Verify the stride and shape
     @assertEqual(expected_stride, tensor1 % get_stride())
@@ -346,8 +347,8 @@ contains
       tensor_layout(:) = [1, 2, 3]
       expected_stride(:) = [1, 1, 2]
     end if
-    call torch_tensor_from_array(tensor1, in_data, tensor_layout, device_type, device_index, &
-                                 this%param%requires_grad)
+    call torch_tensor_from_array(tensor1, in_data, device_type, device_index, tensor_layout, &
+                                  requires_grad=this%param%requires_grad)
 
     ! Verify the stride and shape
     @assertEqual(expected_stride, tensor1 % get_stride())
@@ -399,7 +400,7 @@ contains
     @assertTrue(c_associated(tensor1%p))
 
     ! Create a tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, layout, device_type, device_index)
+    call torch_tensor_from_array(tensor2, out_data, device_type, device_index, layout)
 
     ! Set the values of the second tensor to match those of the first using the overloaded
     ! assignment operator
@@ -536,5 +537,28 @@ contains
     @assertFalse(c_associated(mixed_array(3)%p))
 
   end subroutine test_partial_array_destruct
+
+  ! Unit test for the deprecated legacy interface
+  @test(testparameters={get_parameters_simple()})
+  subroutine test_legacy_interface(this)
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer :: tensor_layout(ndims) = [1, 2]
+    real(wp), dimension(2,3), target :: in_data
+
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
+
+    ! Call via legacy interface - should work but print deprecation warning to stdout
+    call torch_tensor_from_array_legacy(tensor, in_data, tensor_layout, device_type, device_index)
+
+    ! Verify tensor was created correctly
+    @assertTrue(c_associated(tensor%p))
+    @assertEqual([2, 3], tensor % get_shape())
+
+  end subroutine test_legacy_interface
 
 end module unittest_tensor_constructors_destructors

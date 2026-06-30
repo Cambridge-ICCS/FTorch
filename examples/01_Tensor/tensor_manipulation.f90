@@ -26,7 +26,6 @@ program tensor_manipulation
   real(wp), dimension(2,3), target :: in_data, out_data
 
   ! Variables for constructing tensors containing a single scalar value
-  integer, parameter :: scalar_layout(1) = [1]
   real(wp), dimension(1), target :: scalar_data
 
   ! Create a tensor of ones
@@ -88,7 +87,7 @@ program tensor_manipulation
   ! While the mean over a tensor is a scalar value, we compute it as a single value in a tensor of
   ! dimension 1. First construct the 'tensor' with `torch_tensor_from_array` and then compute the
   ! mean as follows.
-  call torch_tensor_from_array(mean, scalar_data, scalar_layout, torch_kCPU)
+  call torch_tensor_from_array(mean, scalar_data, torch_kCPU)
   call torch_tensor_mean(mean, c)
   write(*,*) "Mean value:"
   write(*,*) scalar_data
