@@ -1,6 +1,6 @@
 title: Online training
 author: Joe Wallwork
-date: Last Updated: May 2026
+date: Last Updated: June 2026
 
 ## Online Training
 
@@ -50,12 +50,12 @@ and the modified ML model is written out to the same TorchScript file at the
 end of the Fortran program. This way, the model can be trained in multiple
 Fortran runs, with the same model being read.
 
+Upon completing the training, write the trained model out in TorchScript format
+using [ftorch_model(module):torch_model_save(subroutine)].
+
 See the
 [training worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/11_Training)
 for a demonstration of how to train a PyTorch model purely in Fortran.
-
-*Note: Writing out models has not yet been implemented in FTorch, but is work in
-progress.*
 
 #### 4. Fortran model with inference
 
