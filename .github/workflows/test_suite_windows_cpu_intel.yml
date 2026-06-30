@@ -81,7 +81,7 @@ jobs:
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           cmake `
             -Bbuild `
-            -G "NMake Makefiles" `
+            -G "Ninja" `
             -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
             -DCMAKE_Fortran_FLAGS="/stand:08 /fpscomp:logicals" `
             -DCMAKE_CXX_FLAGS="/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH" `
@@ -134,7 +134,7 @@ jobs:
           if (-not (Test-Path $EXAMPLE_BUILD_DIR)) { New-Item -ItemType Directory -Path $EXAMPLE_BUILD_DIR | Out-Null }
           cd $EXAMPLE_BUILD_DIR
           cmake .. `
-            -G "NMake Makefiles" `
+            -G "Ninja" `
             -DCMAKE_Fortran_COMPILER=ifx `
             -DCMAKE_Fortran_FLAGS="/stand:08 /fpscomp:logicals" `
             -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
