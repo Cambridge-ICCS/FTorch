@@ -1,6 +1,6 @@
 title: GPU Support
 author: Jack Atkinson
-date: Last Updated: October 2025
+date: Last Updated: June 2026
 
 ## GPU Support
 
@@ -102,10 +102,10 @@ TorchScript model. For further details on the `pt2ts` script, call
 
 **4) Specify the target device from FTorch**  
 When calling [[ftorch_tensor(module):torch_tensor_from_array(interface)]] and
-[[ftorch_model(module):torch_model_load(subroutine)]]  in Fortran,
-the device type for the input tensor(s) and model should be set to the appropriate
-device type (`torch_kCUDA`, `torch_kHIP`, `torch_kXPU`, or `torch_kMPS`) rather
-than `torch_kCPU`.
+[[ftorch_model(module):torch_model_load(subroutine)]] in Fortran, the device
+for the input tensor(s) and model should be set to the same device type that
+they were written out using (`torch_kCUDA`, `torch_kHIP`, `torch_kXPU`, or
+`torch_kMPS`) rather than `torch_kCPU`.
 
 The following snippet shows how you would load a model to a CUDA device, create tensors,
 and run inference:
