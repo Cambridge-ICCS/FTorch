@@ -218,13 +218,11 @@ def validate() -> None:
             print("Test passed: Predicted sine wave accurately!")
 
 
-def main() -> None:
-    """
-    Train and evaluate the FNO1d model.
+if __name__ == "__main__":
+    # Train and evaluate the FNO1d model.
 
-    Training and evaluation of the FNO1d model on a sine wave dataset.
-    The model is trained for 100 epochs, and the loss is printed every 10 epochs.
-    """
+    # Training and evaluation of the FNO1d model on a sine wave dataset.
+    # The model is trained for 100 epochs, and the loss is printed every 10 epochs.
     model = FNO1d()
     model = model.float()
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
@@ -254,7 +252,3 @@ def main() -> None:
 
     # Evaluate the model
     validate()
-
-
-if __name__ == "__main__":
-    main()
