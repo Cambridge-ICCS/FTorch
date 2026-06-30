@@ -35,7 +35,7 @@ jobs:
       fail-fast: false
       matrix:
         toolchain:
-          - {compiler: intel, version: '2023.2'}
+          - {compiler: intel, version: '2025.0'}
         std: [f08]
 
     # Terminate the job if it runs for more than 15 minutes
@@ -54,9 +54,10 @@ jobs:
         shell: pwsh
         run: |
           # setup-fortran exports CMPLR_ROOT but does not add compiler binaries to PATH.
-          # On oneAPI 2023.x Windows, ifx/icx live in $CMPLR_ROOT\windows\bin.
-          # On oneAPI 2024+, they live in $CMPLR_ROOT\bin.  Add both if they exist.
-          foreach ($dir in @("$env:CMPLR_ROOT\windows\bin", "$env:CMPLR_ROOT\bin")) {
+          # On oneAPI 2024+, ifx/icx live in $CMPLR_ROOT\bin.
+          # On older oneAPI 2023.x Windows, they lived in $CMPLR_ROOT\windows\bin.
+          # Add both if they exist for backward compatibility.
+          foreach ($dir in @("$env:CMPLR_ROOT\bin", "$env:CMPLR_ROOT\windows\bin")) {
             if (Test-Path $dir) { $dir | Out-File -Append $env:GITHUB_PATH -Encoding utf8 }
           }
 
