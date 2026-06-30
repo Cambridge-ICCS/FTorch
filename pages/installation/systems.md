@@ -17,10 +17,9 @@ the library. In this case the build process is the same as for a Linux environme
 Building in Windows itself can be done using Visual Studio and the Intel Fortran
 resources. The following additional dependencies are also required:
 
-* [Visual Studio](https://visualstudio.microsoft.com/) ensuring C++ tools are selected and installed.
+* [Visual Studio](https://visualstudio.microsoft.com/) ensuring C++ tools are selected and installed (this includes Ninja via the "C++ CMake tools for Windows" component).
 * [Intel OneAPI Basetoolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html)
 * [Intel OneAPI HPC toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit.html) ensuring that the Intel Fortran compiler and VS integration is selected.
-* [Ninja](https://ninja-build.org/) build tool. Ninja is included with Visual Studio when the "C++ CMake tools for Windows" workload is installed. It can also be installed via `winget install Ninja-build.Ninja` or `choco install ninja`.
 
 Note that LibTorch is _not_ supported for the GNU Fortran compiler with MinGW.
 
