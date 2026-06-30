@@ -85,7 +85,7 @@ contains
                                logical(is_training_value, c_bool))
   end subroutine torch_model_load
 
-  !> Writes out a model in a file in TorchScript format
+  !> Writes out a model to file in TorchScript format
   subroutine torch_model_save(model, filename)
     use, intrinsic :: iso_c_binding, only : c_null_char
     type(torch_model), intent(in) :: model  !! Model to write out
