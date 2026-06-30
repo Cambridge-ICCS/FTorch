@@ -47,6 +47,7 @@ program inference
      write(*,*) "Usage: multigpu_infer_fortran <model_file> <device_type> <num_devices>"
      stop 2
    end if
+   read(args(3),"(i1)") num_devices
    if (trim(args(2)) == "cuda") then
       device_type = torch_kCUDA
     else if (trim(args(2)) == "hip") then
@@ -55,11 +56,11 @@ program inference
       device_type = torch_kXPU
    else if (trim(args(2)) == "mps") then
       device_type = torch_kMPS
+      num_devices = 1
    else
       write (*,*) "Error :: invalid GPU device type ", trim(args(1))
       stop 999
    end if
-   read(args(3),"(i1)") num_devices
 
    do device_index = 0, num_devices-1
 

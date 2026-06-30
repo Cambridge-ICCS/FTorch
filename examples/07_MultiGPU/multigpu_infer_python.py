@@ -88,7 +88,7 @@ if __name__ == "__main__":
     parsed_args = parser.parse_args()
     filepath = parsed_args.filepath
     device_type = parsed_args.device_type
-    num_devices = parsed_args.num_devices
+    num_devices = 1 if device_type == "mps" else parsed_args.num_devices
     saved_model_file = os.path.join(
         filepath, f"torchscript_multigpu_model_{device_type}.pt"
     )
