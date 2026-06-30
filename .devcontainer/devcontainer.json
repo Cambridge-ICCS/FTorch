@@ -1,0 +1,38 @@
+// For format details, see https://containers.dev/implementors/json_reference/.
+// For config options, see the README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "FTorch",
+	"build": { "dockerfile": "Dockerfile" },
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": [],
+
+	// Configure tool-specific properties.
+  "customizations": {
+      // Configure properties specific to VS Code see https://containers.dev/supporting.html
+      "vscode": {
+        // Set *default* container specific settings.json values on container create.
+        "settings": {},
+        "extensions": [
+          "fortran-lang.linter-gfortran",
+          "ms-vscode.cpptools-extension-pack",
+          "charliermarsh.ruff"
+        ],
+      },
+      // Define the landing page in the codespace to be the codespace README
+      "codespaces": {
+        "openFiles": [
+          "codespace/README.md",
+        ]
+      }
+  }
+
+	// Uncomment to connect as root instead. https://containers.dev/implementors/json_reference/#remoteUser.
+	// "remoteUser": "root"
+}

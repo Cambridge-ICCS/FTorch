@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15...3.31)
+cmake_minimum_required(VERSION 3.18...3.31)
 cmake_policy(SET CMP0076 NEW)
 
 project(
@@ -6,35 +6,19 @@ project(
   VERSION 1.0.0
   LANGUAGES Fortran)
 
-find_package(FTorch)
+if(CMAKE_BUILD_TESTS)
+  find_package(FTorch QUIET)
+else()
+  find_package(FTorch REQUIRED)
+endif()
 message(STATUS "Building with Fortran PyTorch coupling")
 
 find_package(PFUNIT REQUIRED)
 
-add_pfunit_ctest(
-  test_tensor_constructors_destructors TEST_SOURCES
-  test_tensor_constructors_destructors.pf LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(test_tensor_interrogation
-  TEST_SOURCES test_tensor_interrogation.pf LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(test_tensor_manipulation
-  TEST_SOURCES test_tensor_manipulation.pf LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(
-  test_operator_overloads TEST_SOURCES test_tensor_operator_overloads.pf
-  LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(
-  test_operator_overloads_autograd TEST_SOURCES
-  test_tensor_operator_overloads_autograd.pf LINK_LIBRARIES FTorch::ftorch)
-add_pfunit_ctest(test_tensor_autograd
-  TEST_SOURCES test_tensor_autograd.pf LINK_LIBRARIES FTorch::ftorch)
+# Set up fixtures for the unit tests
+add_subdirectory(fixtures)
 
-if("${GPU_DEVICE}" STREQUAL "CUDA")
-  check_language(CUDA)
-  if(CMAKE_CUDA_COMPILER)
-    enable_language(CUDA)
-  else()
-    message(ERROR "No CUDA support")
-  endif()
-  add_pfunit_ctest(
-    test_tensor_interrogation_cuda TEST_SOURCES
-    test_tensor_interrogation_cuda.pf LINK_LIBRARIES FTorch::ftorch)
-endif()
+# Add units tests for the different modules
+add_subdirectory(tensor)
+add_subdirectory(model)
+add_subdirectory(optim)

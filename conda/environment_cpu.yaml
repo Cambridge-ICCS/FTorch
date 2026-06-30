@@ -5,7 +5,7 @@ channels:
 dependencies:
   - fortran-compiler
   - cxx-compiler
-  - cmake >=3.15
+  - cmake >=3.18
   - openmpi >=5.0.6  # For pFUnit
   - pytorch-cpu >=2.5.1  # Force cpu-only version
   - torchvision  # For the ResNet example

@@ -13,6 +13,25 @@
 #endif
 
 // =============================================================================
+// --- Functions to aid in consistent error handling
+// =============================================================================
+
+// Accept a string message and handle as error. Accepts a cleanup function if desired.
+void ctorch_error(const std::string &message,
+                  const std::function<void()> &cleanup = nullptr) {
+  std::cerr << "[ERROR]: " << message << std::endl;
+  if (cleanup) {
+    cleanup(); // Perform cleanup actions
+  }
+  exit(EXIT_FAILURE);
+}
+
+// Accept a string message and handle as a warning.
+void ctorch_warn(const std::string &message) {
+  std::cerr << "[WARNING]: " << message << std::endl;
+}
+
+// =============================================================================
 // --- Constant expressions
 // =============================================================================
 
@@ -20,9 +39,8 @@
 constexpr auto get_libtorch_dtype(torch_data_t dtype) {
   switch (dtype) {
   case torch_kUInt8:
-    std::cerr << "[WARNING]: uint8 not supported in Fortran" << std::endl;
+    ctorch_error("uint8 not supported in Fortran");
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
-    exit(EXIT_FAILURE);
   case torch_kInt8:
     return torch::kInt8;
   case torch_kInt16:
@@ -32,15 +50,14 @@ constexpr auto get_libtorch_dtype(torch_data_t dtype) {
   case torch_kInt64:
     return torch::kInt64;
   case torch_kFloat16:
-    std::cerr << "[WARNING]: float16 not supported in Fortran" << std::endl;
+    ctorch_error("float16 not supported in Fortran");
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
-    exit(EXIT_FAILURE);
   case torch_kFloat32:
     return torch::kFloat32;
   case torch_kFloat64:
     return torch::kFloat64;
   default:
-    std::cerr << "[WARNING]: unknown data type, setting to torch_kFloat32" << std::endl;
+    ctorch_warn("unknown data type, setting to torch_kFloat32");
     return torch::kFloat32;
   }
 }
@@ -48,9 +65,8 @@ constexpr auto get_libtorch_dtype(torch_data_t dtype) {
 // Mapping from libtorch Dtype to FTorch device_data_t
 torch_data_t get_ftorch_dtype(caffe2::TypeMeta dtype) {
   if (dtype == torch::kUInt8) {
-    std::cerr << "[WARNING]: uint8 not supported in Fortran" << std::endl;
+    ctorch_error("uint8 not supported in Fortran");
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
-    exit(EXIT_FAILURE);
   } else if (dtype == torch::kInt8) {
     return torch_kInt8;
   } else if (dtype == torch::kInt16) {
@@ -60,9 +76,8 @@ torch_data_t get_ftorch_dtype(caffe2::TypeMeta dtype) {
   } else if (dtype == torch::kInt64) {
     return torch_kInt64;
   } else if (dtype == torch::kFloat16) {
-    std::cerr << "[WARNING]: float16 not supported in Fortran" << std::endl;
+    ctorch_error("float16 not supported in Fortran");
     // See https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
-    exit(EXIT_FAILURE);
   } else if (dtype == torch::kFloat32) {
     return torch_kFloat32;
   } else if (dtype == torch::kFloat64) {
@@ -72,6 +87,7 @@ torch_data_t get_ftorch_dtype(caffe2::TypeMeta dtype) {
               << std::endl;
     exit(EXIT_FAILURE);
   }
+  return torch_kFloat32; // Dummy return to satisfy the compiler
 }
 
 // Mapping from FTorch device_type_t to libtorch DeviceType
@@ -79,13 +95,14 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
   switch (device_type) {
   case torch_kCPU:
     if (device_index != -1) {
-      std::cerr << "[WARNING]: device index unused for CPU-only runs" << std::endl;
+      ctorch_warn("device index unused for tensors on CPUs");
     }
     return torch::Device(torch::kCPU);
-#if GPU_DEVICE == GPU_DEVICE_CUDA
+#if (GPU_DEVICE == GPU_DEVICE_CUDA) || (GPU_DEVICE == GPU_DEVICE_HIP)
+  // NOTE: HIP is treated as CUDA in this project
   case torch_kCUDA:
     if (device_index == -1) {
-      std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;
+      ctorch_warn("device index unset, defaulting to 0");
       device_index = 0;
     }
     if (device_index >= 0 && device_index < torch::cuda::device_count()) {
@@ -98,13 +115,13 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
 #endif
   case torch_kMPS:
     if (device_index != -1 && device_index != 0) {
-      std::cerr << "[WARNING]: Only one device is available for MPS runs" << std::endl;
+      ctorch_warn("Only one device is available for MPS runs");
     }
     return torch::Device(torch::kMPS);
 #if GPU_DEVICE == GPU_DEVICE_XPU
   case torch_kXPU:
     if (device_index == -1) {
-      std::cerr << "[WARNING]: device index unset, defaulting to 0" << std::endl;
+      ctorch_warn("device index unset, defaulting to 0");
       device_index = 0;
     }
     if (device_index >= 0 && device_index < torch::xpu::device_count()) {
@@ -116,7 +133,7 @@ const auto get_libtorch_device(torch_device_t device_type, int device_index) {
     }
 #endif
   default:
-    std::cerr << "[WARNING]: unknown device type, setting to torch_kCPU" << std::endl;
+    ctorch_warn("unknown device type, setting to torch_kCPU");
     return torch::Device(torch::kCPU);
   }
 }
@@ -128,6 +145,8 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
     return torch_kCPU;
   case torch::kCUDA:
     return torch_kCUDA;
+  case torch::kHIP:
+    return torch_kHIP;
   case torch::kXPU:
     return torch_kXPU;
   case torch::kMPS:
@@ -140,6 +159,43 @@ const torch_device_t get_ftorch_device(torch::DeviceType device_type) {
 }
 
 // =============================================================================
+// --- Functions for validating tensors
+// =============================================================================
+
+// Check if a tensor is valid
+void validate_tensor_not_null(const torch::Tensor *t, const std::string &name) {
+  if (!t) {
+    throw std::invalid_argument(name + " is null.");
+  }
+}
+
+// Check if a tensor is defined
+void validate_tensor_defined(const torch::Tensor *t, const std::string &name) {
+  if (!t->defined()) {
+    throw std::invalid_argument(name + " is undefined.");
+  }
+}
+
+void validate_tensor(const torch::Tensor *t, const std::string &name) {
+  validate_tensor_not_null(t, name);
+  validate_tensor_defined(t, name);
+}
+
+// Check if a tensor has requires_grad set
+void validate_requires_grad(const torch::Tensor *t, const std::string &name) {
+  if (!t->requires_grad()) {
+    throw std::runtime_error(name + " does not have requires_grad set.");
+  }
+}
+
+void validate_gradient_defined(const torch::Tensor *t, const std::string &name) {
+  if (!t->grad().defined()) {
+    throw std::runtime_error(
+        name + " has an undefined gradient.\nPerhaps you forgot to call backward.");
+  }
+}
+
+// =============================================================================
 // --- Functions for constructing tensors
 // =============================================================================
 
@@ -147,7 +203,7 @@ torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
                            torch_device_t device_type, int device_index = -1,
                            const bool requires_grad = false) {
   torch::AutoGradMode enable_grad(requires_grad);
-  torch::Tensor *tensor = nullptr;
+  auto tensor = new torch::Tensor;
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
@@ -155,16 +211,11 @@ torch_tensor_t torch_empty(int ndim, const int64_t *shape, torch_data_t dtype,
                        .dtype(get_libtorch_dtype(dtype))
                        .device(get_libtorch_device(device_type, device_index))
                        .requires_grad(requires_grad);
-    tensor = new torch::Tensor;
     *tensor = torch::empty(vshape, options);
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg(), [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what(), [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -173,7 +224,7 @@ torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
                            torch_device_t device_type, int device_index = -1,
                            const bool requires_grad = false) {
   torch::AutoGradMode enable_grad(requires_grad);
-  torch::Tensor *tensor = nullptr;
+  auto tensor = new torch::Tensor;
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
@@ -181,16 +232,11 @@ torch_tensor_t torch_zeros(int ndim, const int64_t *shape, torch_data_t dtype,
                        .dtype(get_libtorch_dtype(dtype))
                        .device(get_libtorch_device(device_type, device_index))
                        .requires_grad(requires_grad);
-    tensor = new torch::Tensor;
     *tensor = torch::zeros(vshape, options);
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg(), [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what(), [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -199,7 +245,7 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
                           torch_device_t device_type, int device_index = -1,
                           const bool requires_grad = false) {
   torch::AutoGradMode enable_grad(requires_grad);
-  torch::Tensor *tensor = nullptr;
+  auto tensor = new torch::Tensor;
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
@@ -207,16 +253,11 @@ torch_tensor_t torch_ones(int ndim, const int64_t *shape, torch_data_t dtype,
                        .dtype(get_libtorch_dtype(dtype))
                        .device(get_libtorch_device(device_type, device_index))
                        .requires_grad(requires_grad);
-    tensor = new torch::Tensor;
     *tensor = torch::ones(vshape, options);
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg(), [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what(), [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -228,27 +269,25 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
                                torch_device_t device_type, int device_index = -1,
                                const bool requires_grad = false) {
   torch::AutoGradMode enable_grad(requires_grad);
-  torch::Tensor *tensor = nullptr;
+  auto tensor = new torch::Tensor;
 
   try {
     // This doesn't throw if shape and dimensions are incompatible
     c10::IntArrayRef vshape(shape, ndim);
     c10::IntArrayRef vstrides(strides, ndim);
+    // NOTE: Do not pass device TensorOptions since this would cause torch::from_blob
+    //       to expect data to reside on the host device_type, which is not case if
+    //       device_type is a GPU device (see #365)
     auto options = torch::TensorOptions()
                        .dtype(get_libtorch_dtype(dtype))
-                       .device(get_libtorch_device(device_type, device_index))
                        .requires_grad(requires_grad);
-    tensor = new torch::Tensor;
-    *tensor = torch::from_blob(data, vshape, vstrides, options);
+    *tensor = torch::from_blob(data, vshape, vstrides, options)
+                  .to(get_libtorch_device(device_type, device_index));
 
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg(), [&]() { delete tensor; });
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete tensor;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what(), [&]() { delete tensor; });
   }
   return tensor;
 }
@@ -267,17 +306,15 @@ int torch_tensor_get_rank(const torch_tensor_t tensor) {
   return t->sizes().size();
 }
 
-#ifdef UNIX
-const long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
+const torch_size_t *torch_tensor_get_sizes(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   return t->sizes().data();
 }
-#else
-const long long int *torch_tensor_get_sizes(const torch_tensor_t tensor) {
+
+const torch_size_t *torch_tensor_get_stride(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
-  return t->sizes().data();
+  return t->strides().data();
 }
-#endif
 
 torch_data_t torch_tensor_get_dtype(const torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
@@ -314,7 +351,23 @@ void torch_tensor_delete(torch_tensor_t tensor) {
 
 void torch_tensor_zero(torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  validate_tensor(t, "Input tensor");
   t->zero_();
+}
+
+void torch_tensor_to(const torch_tensor_t source_tensor, torch_tensor_t target_tensor,
+                     bool non_blocking) {
+  auto source_tens = reinterpret_cast<torch::Tensor *>(source_tensor);
+  auto target_tens = reinterpret_cast<torch::Tensor *>(target_tensor);
+  validate_tensor(source_tens, "Source tensor");
+  validate_tensor(target_tens, "Target tensor");
+
+  torch::Device device_type = target_tens->device();
+  at::ScalarType dtype = target_tens->scalar_type();
+
+  // For non-blocking usage see:
+  // https://pytorch.org/tutorials/intermediate/pinmem_nonblock.html
+  std::move(*target_tens) = source_tens->to(device_type, dtype, non_blocking);
 }
 
 // =====================================================================================
@@ -324,12 +377,18 @@ void torch_tensor_zero(torch_tensor_t tensor) {
 void torch_tensor_assign(torch_tensor_t output, const torch_tensor_t input) {
   auto out = reinterpret_cast<torch::Tensor *>(output);
   auto in = reinterpret_cast<torch::Tensor *const>(input);
+  validate_tensor(out, "Output tensor");
+  validate_tensor(in, "Input tensor");
   torch::AutoGradMode enable_grad(in->requires_grad());
   // NOTE: The following line ensures that the output tensor continues to point to a
   //       Fortran array if it was set up to do so using torch_tensor_from_array. If
   //       it's removed then the Fortran array keeps its original value and is no
   //       longer be pointed to.
   std::move(*out) = *in;
+  // NOTE: The following line ensures that we always overwrite the requires_grad
+  // property matching the PyTorch behaviour. See the Python examples on
+  // https://github.com/Cambridge-ICCS/FTorch/pull/373.
+  out->requires_grad_(in->requires_grad());
 }
 
 void torch_tensor_add(torch_tensor_t output, const torch_tensor_t tensor1,
@@ -388,27 +447,258 @@ void torch_tensor_power_float(torch_tensor_t output, const torch_tensor_t tensor
   *out = pow(*t, *exp);
 }
 
+// ============================================================================
+// --- Other operators for computations involving tensors
+// ============================================================================
+
+void torch_tensor_sum(torch_tensor_t output, const torch_tensor_t tensor) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+
+  if (torch_tensor_get_rank(output) != 1) {
+    std::stringstream errmsg;
+    errmsg << "Invalid rank of output tensor for sum\nrank="
+           << torch_tensor_get_rank(output) << " != 1";
+    ctorch_error(errmsg.str());
+  }
+  if (torch_tensor_get_sizes(output)[0] != 1) {
+    std::stringstream errmsg;
+    errmsg << "Invalid shape of output tensor for sum\nshape=["
+           << torch_tensor_get_sizes(output)[0] << "] != [1]";
+    ctorch_error(errmsg.str());
+  }
+  std::move(*out) = t->sum();
+}
+
+void torch_tensor_mean(torch_tensor_t output, const torch_tensor_t tensor) {
+  auto out = reinterpret_cast<torch::Tensor *>(output);
+  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+
+  if (torch_tensor_get_rank(output) != 1) {
+    std::stringstream errmsg;
+    std::cerr << "Invalid rank of output tensor for mean\nrank="
+              << torch_tensor_get_rank(output) << " != 1";
+    ctorch_error(errmsg.str());
+  }
+  if (torch_tensor_get_sizes(output)[0] != 1) {
+    std::stringstream errmsg;
+    errmsg << "Invalid shape of output tensor for mean\nshape=["
+           << torch_tensor_get_sizes(output)[0] << "] != [1]";
+    ctorch_error(errmsg.str());
+  }
+  std::move(*out) = t->mean();
+}
+
 // =============================================================================
 // --- Functions related to automatic differentiation functionality for tensors
 // =============================================================================
 
 void torch_tensor_zero_grad(torch_tensor_t tensor) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
+  validate_tensor(t, "Gradient to zero");
   t->mutable_grad().zero_();
 }
 
-void torch_tensor_backward(const torch_tensor_t tensor,
-                           const torch_tensor_t external_gradient,
-                           const bool retain_graph) {
+void torch_tensor_backward_with_external_gradient(
+    const torch_tensor_t tensor, const torch_tensor_t external_gradient,
+    const bool retain_graph) {
   auto t = reinterpret_cast<torch::Tensor *>(tensor);
   auto g = reinterpret_cast<torch::Tensor *const>(external_gradient);
-  t->backward(*g, retain_graph);
+
+  try {
+    // Check if the tensors are valid and defined
+    validate_tensor(t, "Input tensor");
+    validate_tensor(g, "External gradient");
+
+    // Check if the input tensor has the requires_grad property
+    validate_requires_grad(t, "Input tensor");
+
+    // Perform backwards step
+    t->backward(*g, retain_graph);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_tensor_backward");
+  }
+}
+
+void torch_tensor_backward_without_external_gradient(const torch_tensor_t tensor,
+                                                     const bool retain_graph) {
+  auto t = reinterpret_cast<torch::Tensor *>(tensor);
+
+  try {
+    // Check if the input tensor is valid and defined
+    validate_tensor(t, "Input tensor");
+
+    // Check if the input tensor has the requires_grad property
+    validate_requires_grad(t, "Input tensor");
+
+    // Perform backwards step
+    t->backward({}, retain_graph);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_tensor_backward");
+  }
 }
 
 void torch_tensor_get_gradient(const torch_tensor_t tensor, torch_tensor_t gradient) {
-  auto t = reinterpret_cast<torch::Tensor *const>(tensor);
-  auto g = reinterpret_cast<torch::Tensor *>(gradient);
-  std::move(*g) = t->grad();
+  try {
+    // Cast the input pointers to torch::Tensor
+    auto t = reinterpret_cast<torch::Tensor *const>(tensor);
+    auto g = reinterpret_cast<torch::Tensor *>(gradient);
+
+    // Check if the tensors are valid and defined
+    validate_tensor(t, "Input tensor");
+    validate_tensor_not_null(g, "Output gradient");
+    // Check input has requires_grad set and can generate a valid gradient tensor
+    validate_requires_grad(t, "Input tensor");
+    validate_gradient_defined(t, "Input tensor");
+
+    // Assign the gradient to the output tensor
+    std::move(*g) = t->grad();
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_tensor_get_gradient");
+  }
+}
+
+// =============================================================================
+// --- Torch optimizers API
+// =============================================================================
+
+// Check if an optimizer is valid
+void validate_optimizer(const torch_optim_t optim, const std::string &name) {
+  if (!optim) {
+    throw std::invalid_argument(name + " is null.");
+  }
+}
+
+// Function to create an SGD optimizer and return a pointer to it
+torch_optim_t torch_optim_SGD(const torch_tensor_t *parameters, const int npar,
+                              const double learning_rate, const double momentum = 0.0,
+                              const double dampening = 0.0,
+                              const double weight_decay = 0.0,
+                              const bool nesterov = false) {
+  try {
+    // Cast the parameters pointer into Tensor objects
+    auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
+
+    // Generate a vector of Tensors populated from parameters
+    std::vector<torch::Tensor> parameters_vec;
+    for (int i = 0; i < npar; ++i) {
+      validate_tensor(params[i],
+                      "Parameter at index " + std::to_string(i) + "in torch_optim_SGD");
+      parameters_vec.push_back(*(params[i]));
+    }
+
+    // Set up options
+    auto options = torch::optim::SGDOptions(learning_rate)
+                       .momentum(momentum)
+                       .dampening(dampening)
+                       .weight_decay(weight_decay)
+                       .nesterov(nesterov);
+
+    // Create the optimizer and cast to torch_optim_t to return
+    auto optimizer_SGD = new torch::optim::SGD(parameters_vec, options);
+    return static_cast<torch_optim_t>(optimizer_SGD);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_SGD");
+  }
+  return nullptr; // Return null in case of error
+}
+
+// Function to create an Adam optimizer and return a pointer to it
+torch_optim_t torch_optim_Adam(const torch_tensor_t *parameters, const int npar,
+                               const double learning_rate, const double beta_1 = 0.9,
+                               const double beta_2 = 0.999, const double eps = 1e-8,
+                               const double weight_decay = 0.0,
+                               const bool amsgrad = false) {
+  try {
+    // Cast the parameters pointer into Tensor objects
+    auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
+
+    // Generate a vector of Tensors populated from parameters
+    std::vector<torch::Tensor> parameters_vec;
+    for (int i = 0; i < npar; ++i) {
+      validate_tensor(params[i], "Parameter at index " + std::to_string(i) +
+                                     "in torch_optim_Adam");
+      parameters_vec.push_back(*(params[i]));
+    }
+
+    // Set up options
+    auto betas_tup = std::make_tuple(beta_1, beta_2);
+    auto options = torch::optim::AdamOptions(learning_rate)
+                       .betas(betas_tup)
+                       .eps(eps)
+                       .weight_decay(weight_decay)
+                       .amsgrad(amsgrad);
+
+    // Create the optimizer and cast to torch_optim_t to return
+    auto optimizer_Adam = new torch::optim::Adam(parameters_vec, options);
+    return static_cast<torch_optim_t>(optimizer_Adam);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_Adam");
+  }
+  return nullptr; // Return null in case of error
+}
+
+// Function to create an AdamW optimizer and return a pointer to it
+torch_optim_t torch_optim_AdamW(const torch_tensor_t *parameters, const int npar,
+                                const double learning_rate, const double beta_1 = 0.9,
+                                const double beta_2 = 0.999, const double eps = 1e-8,
+                                const double weight_decay = 0.01,
+                                const bool amsgrad = false) {
+  try {
+    // Cast the parameters pointer into Tensor objects
+    auto params = reinterpret_cast<torch::Tensor *const *>(parameters);
+
+    // Generate a vector of Tensors populated from parameters
+    std::vector<torch::Tensor> parameters_vec;
+    for (int i = 0; i < npar; ++i) {
+      validate_tensor(params[i], "Parameter at index " + std::to_string(i) +
+                                     "in torch_optim_AdamW");
+      parameters_vec.push_back(*(params[i]));
+    }
+
+    // Set up options
+    auto betas_tup = std::make_tuple(beta_1, beta_2);
+    auto options = torch::optim::AdamWOptions(learning_rate)
+                       .betas(betas_tup)
+                       .eps(eps)
+                       .weight_decay(weight_decay)
+                       .amsgrad(amsgrad);
+
+    // Create the optimizer and cast to torch_optim_t to return
+    auto optimizer_AdamW = new torch::optim::AdamW(parameters_vec, options);
+    return static_cast<torch_optim_t>(optimizer_AdamW);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_AdamW");
+  }
+  return nullptr; // Return null in case of error
+}
+
+// Function to zero gradients for an optimizer
+void torch_optim_zero_grad(torch_optim_t optim) {
+  try {
+    auto optimizer = static_cast<torch::optim::Optimizer *>(optim);
+    validate_optimizer(optimizer, "Optimizer in torch_optim_zero_grad");
+    optimizer->zero_grad();
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_zero_grad");
+  }
+}
+
+// Function to step an optimizer
+void torch_optim_step(torch_optim_t optim) {
+  try {
+    auto optimizer = static_cast<torch::optim::Optimizer *>(optim);
+    validate_optimizer(optimizer, "Optimizer in torch_optim_step");
+    optimizer->step();
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_optim_step");
+  }
+}
+
+// Function to delete an optimizer
+void torch_optim_delete(torch_optim_t optim) {
+  auto opt = reinterpret_cast<torch::optim::Optimizer *>(optim);
+  delete opt;
 }
 
 // =============================================================================
@@ -436,13 +726,9 @@ torch_jit_script_module_t torch_jit_load(const char *filename,
     *module =
         torch::jit::load(filename, get_libtorch_device(device_type, device_index));
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    delete module;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg(), [&]() { delete module; });
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    delete module;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what(), [&]() { delete module; });
   }
   set_is_training(module, is_training);
 
@@ -469,33 +755,83 @@ void torch_jit_module_forward(const torch_jit_script_module_t module,
     if (LocalTensor.isTensor()) {
       inputs_vec.push_back(LocalTensor);
     } else {
-      std::cerr << "[ERROR]: One of the inputs to torch_jit_module_forward is "
-                   "not a Tensor."
-                << std::endl;
-      exit(EXIT_FAILURE);
+      ctorch_error("One of the inputs to torch_jit_module_forward is not a Tensor");
     }
   }
   try {
     auto model_out = model->forward(inputs_vec);
     if (model_out.isTensor()) {
       // Single output models will return a tensor directly.
-      std::move(*out[0]) = model_out.toTensor();
+      // Two assignment strategies are used depending on whether gradient
+      // tracking is needed:
+      //   requires_grad=true (training):
+      //     Plain lvalue assignment selects Tensor::operator=(Tensor&&) &
+      //     This is a shallow swap that leaves the grad_fn intact so that we can
+      //     differentiate with respect to weights
+      //   requires_grad=false (inference):
+      //     std::move turns *out into an rvalue, selecting
+      //     Tensor::operator=(Tensor&&) &&
+      //     This calls copy_(), writing result data into the Fortran array (no graph
+      //     built).
+      if (requires_grad) {
+        *out[0] = model_out.toTensor();
+      } else {
+        std::move(*out[0]) = model_out.toTensor();
+      }
     } else if (model_out.isTuple()) {
       // Multiple output models will return a tuple => cast to tensors.
       for (int i = 0; i < nout; ++i) {
-        std::move(*out[i]) = model_out.toTuple()->elements()[i].toTensor();
+        auto tensor = model_out.toTuple()->elements()[i].toTensor();
+        // Same two strategies as the single-tensor branch above.
+        if (requires_grad) {
+          *out[i] = tensor;
+        } else {
+          std::move(*out[i]) = tensor;
+        }
       }
     } else {
       // If for some reason the forward method does not return a Tensor it
       // should raise an error when trying to cast to a Tensor type
-      std::cerr << "[ERROR]: Model Output is neither Tensor nor Tuple." << std::endl;
+      ctorch_error("Model Output is neither Tensor nor Tuple");
     }
   } catch (const torch::Error &e) {
-    std::cerr << "[ERROR]: " << e.msg() << std::endl;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.msg());
   } catch (const std::exception &e) {
-    std::cerr << "[ERROR]: " << e.what() << std::endl;
-    exit(EXIT_FAILURE);
+    ctorch_error(e.what());
+  }
+}
+
+void torch_jit_module_print_parameters(const torch_jit_script_module_t module) {
+  auto m = reinterpret_cast<torch::jit::script::Module *>(module);
+  for (const auto &[key, value] : m->named_parameters()) {
+    std::cout << key << ":\n" << value << std::endl;
+  }
+}
+
+bool torch_jit_module_is_training(const torch_jit_script_module_t module) {
+  auto m = reinterpret_cast<torch::jit::script::Module *>(module);
+  return m->is_training();
+}
+
+void torch_jit_module_parameters(const torch_jit_script_module_t module,
+                                 torch_tensor_t *outputs, const int nout) {
+  // Cast the pointers we recieved in to Tensor objects
+  auto model = static_cast<torch::jit::script::Module *>(module);
+  auto out = reinterpret_cast<torch::Tensor **>(outputs);
+  auto parameters = model->parameters();
+  if (parameters.size() != nout) {
+    ctorch_error("Number of parameters does not match output dimension");
+  }
+  int i = 0;
+  for (auto parameter : parameters) {
+    // Allocate a new heap-based Tensor that is a shallow copy (alias) of the model
+    // parameter. Torch's copy constructor shares underlying storage, so if the model
+    // parameters are used in an optimizer then the optimizer will update the model's
+    // actual weights through this handle. In writing the address back into out[i] we
+    // assume that the associated Fortran torch_tensor is not associated (and indeed
+    // check this on the Fortran side).
+    out[i] = new torch::Tensor(parameter);
+    i++;
   }
 }
 

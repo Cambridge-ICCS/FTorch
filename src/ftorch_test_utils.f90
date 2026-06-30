@@ -1,4 +1,4 @@
-!| Utils module for FTorch containing assertions for testing
+!| Utils module for FTorch containing value comparisons for testing
 !
 !  * License
 !    FTorch is released under an MIT license.
@@ -12,6 +12,20 @@ module ftorch_test_utils
   implicit none
 
   public
+
+  interface isclose
+    module procedure isclose_real32
+    module procedure isclose_real64
+  end interface
+
+  interface allclose
+    module procedure allclose_real32_1d
+    module procedure allclose_real32_2d
+    module procedure allclose_real32_3d
+    module procedure allclose_real64_1d
+    module procedure allclose_real64_2d
+    module procedure allclose_real64_3d
+  end interface
 
   interface assert_isclose
     module procedure assert_isclose_real32
@@ -34,7 +48,7 @@ module ftorch_test_utils
 
       character(len=*), intent(in) :: test_name  !! Name of the test being run
       character(len=*), intent(in) :: message    !! Message to print
-      logical, intent(in) :: test_pass           !! Result of the assertion
+      logical, intent(in) :: test_pass           !! Result of the value comparison
 
       character(len=15) :: report
 
@@ -46,7 +60,356 @@ module ftorch_test_utils
       write(*, '(A, " :: [", A, "] ", A)') report, trim(test_name), trim(message)
     end subroutine test_print
 
-    !> Asserts that two real32 values coincide to a given relative tolerance
+    !> Determines whether two real32 values coincide to a given relative tolerance
+    function isclose_real32(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                      !! Name of the test being run
+      real(kind=real32), intent(in) :: got             !! The value to be tested
+      real(kind=real32), intent(in) :: expect          !! The expected value
+      real(kind=real32), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      character(len=80) :: message
+
+      real(kind=real32) :: rtol_value
+      logical :: print_result_value
+
+      if (.not. present(rtol)) then
+        rtol_value = 1e-5
+      else
+        rtol_value = rtol
+      end if
+
+      if (.not. present(print_result)) then
+        print_result_value = .true.
+      else
+        print_result_value = print_result
+      end if
+
+      test_pass = (abs(got - expect) <= rtol_value * abs(expect))
+
+      if (print_result_value) then
+        write(message,'("relative tolerance = ", E11.4)') rtol_value
+        call test_print(test_name, message, test_pass)
+      end if
+
+    end function isclose_real32
+
+    !> Determines whether two real64 values coincide to a given relative tolerance
+    function isclose_real64(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                      !! Name of the test being run
+      real(kind=real64), intent(in) :: got             !! The value to be tested
+      real(kind=real64), intent(in) :: expect          !! The expected value
+      real(kind=real64), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      character(len=80) :: message
+
+      real(kind=real64) :: rtol_value
+      logical :: print_result_value
+
+      if (.not. present(rtol)) then
+        rtol_value = 1e-5
+      else
+        rtol_value = rtol
+      end if
+
+      if (.not. present(print_result)) then
+        print_result_value = .true.
+      else
+        print_result_value = print_result
+      end if
+
+      test_pass = (abs(got - expect) <= rtol_value * abs(expect))
+
+      if (print_result_value) then
+        write(message,'("relative tolerance = ", E11.4)') rtol_value
+        call test_print(test_name, message, test_pass)
+      end if
+
+    end function isclose_real64
+
+
+    !> Determines whether two real32-valued 1D arrays coincide to a given relative tolerance
+    function allclose_real32_1d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real32), intent(in), dimension(:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:) :: expect  !! The array of expected values
+      real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      character(len=80) :: message
+
+      real(kind=real32) :: rtol_value
+      integer :: shape_error
+      logical :: print_result_value
+
+      if (.not. present(rtol)) then
+        rtol_value = 1.0e-5
+      else
+        rtol_value = rtol
+      end if
+
+      if (.not. present(print_result)) then
+        print_result_value = .true.
+      else
+        print_result_value = print_result
+      end if
+
+      ! Check the shapes of the arrays match
+      shape_error = maxval(abs(shape(got) - shape(expect)))
+      test_pass = (shape_error == 0)
+
+      if (test_pass) then
+        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
+        if (print_result_value) then
+          write(message,'("relative tolerance = ", E11.4)') rtol_value
+          call test_print(test_name, message, test_pass)
+        end if
+      else if (print_result_value) then
+        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
+      endif
+
+    end function allclose_real32_1d
+
+    !> Determines whether two real32-valued 2D arrays coincide to a given relative tolerance
+    function allclose_real32_2d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real32), intent(in), dimension(:,:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:,:) :: expect  !! The array of expected values
+      real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      character(len=80) :: message
+
+      real(kind=real32) :: rtol_value
+      integer :: shape_error
+      logical :: print_result_value
+
+      if (.not. present(rtol)) then
+        rtol_value = 1.0e-5
+      else
+        rtol_value = rtol
+      end if
+
+      if (.not. present(print_result)) then
+        print_result_value = .true.
+      else
+        print_result_value = print_result
+      end if
+
+      ! Check the shapes of the arrays match
+      shape_error = maxval(abs(shape(got) - shape(expect)))
+      test_pass = (shape_error == 0)
+
+      if (test_pass) then
+        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
+        if (print_result_value) then
+          write(message,'("relative tolerance = ", E11.4)') rtol_value
+          call test_print(test_name, message, test_pass)
+        end if
+      else if (print_result_value) then
+        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
+      endif
+
+    end function allclose_real32_2d
+
+    !> Determines whether two real32-valued 3D arrays coincide to a given relative tolerance
+    function allclose_real32_3d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real32), intent(in), dimension(:,:,:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:,:,:) :: expect  !! The array of expected values
+      real(kind=real32), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      character(len=80) :: message
+
+      real(kind=real32) :: rtol_value
+      integer :: shape_error
+      logical :: print_result_value
+
+      if (.not. present(rtol)) then
+        rtol_value = 1.0e-5
+      else
+        rtol_value = rtol
+      end if
+
+      if (.not. present(print_result)) then
+        print_result_value = .true.
+      else
+        print_result_value = print_result
+      end if
+
+      ! Check the shapes of the arrays match
+      shape_error = maxval(abs(shape(got) - shape(expect)))
+      test_pass = (shape_error == 0)
+
+      if (test_pass) then
+        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
+        if (print_result_value) then
+          write(message,'("relative tolerance = ", E11.4)') rtol_value
+          call test_print(test_name, message, test_pass)
+        end if
+      else if (print_result_value) then
+        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
+      endif
+
+    end function allclose_real32_3d
+
+    !> Determines whether two real64-valued 1D arrays coincide to a given relative tolerance
+    function allclose_real64_1d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real64), intent(in), dimension(:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:) :: expect  !! The array of expected values
+      real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      character(len=80) :: message
+
+      real(kind=real64) :: rtol_value
+      integer :: shape_error
+      logical :: print_result_value
+
+      if (.not. present(rtol)) then
+        rtol_value = 1.0e-5
+      else
+        rtol_value = rtol
+      end if
+
+      if (.not. present(print_result)) then
+        print_result_value = .true.
+      else
+        print_result_value = print_result
+      end if
+
+      ! Check the shapes of the arrays match
+      shape_error = maxval(abs(shape(got) - shape(expect)))
+      test_pass = (shape_error == 0)
+
+      if (test_pass) then
+        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
+        if (print_result_value) then
+          write(message,'("relative tolerance = ", E11.4)') rtol_value
+          call test_print(test_name, message, test_pass)
+        end if
+      else if (print_result_value) then
+        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
+      endif
+
+    end function allclose_real64_1d
+
+    !> Determines whether two real64-valued 2D arrays coincide to a given relative tolerance
+    function allclose_real64_2d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real64), intent(in), dimension(:,:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:,:) :: expect  !! The array of expected values
+      real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      character(len=80) :: message
+
+      real(kind=real64) :: rtol_value
+      integer :: shape_error
+      logical :: print_result_value
+
+      if (.not. present(rtol)) then
+        rtol_value = 1.0e-5
+      else
+        rtol_value = rtol
+      end if
+
+      if (.not. present(print_result)) then
+        print_result_value = .true.
+      else
+        print_result_value = print_result
+      end if
+
+      ! Check the shapes of the arrays match
+      shape_error = maxval(abs(shape(got) - shape(expect)))
+      test_pass = (shape_error == 0)
+
+      if (test_pass) then
+        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
+        if (print_result_value) then
+          write(message,'("relative tolerance = ", E11.4)') rtol_value
+          call test_print(test_name, message, test_pass)
+        end if
+      else if (print_result_value) then
+        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
+      endif
+
+    end function allclose_real64_2d
+
+    !> Determines whether two real64-valued 3D arrays coincide to a given relative tolerance
+    function allclose_real64_3d(got, expect, test_name, rtol, print_result) result(test_pass)
+
+      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
+      real(kind=real64), intent(in), dimension(:,:,:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:,:,:) :: expect  !! The array of expected values
+      real(kind=real64), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
+      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      character(len=80) :: message
+
+      real(kind=real64) :: rtol_value
+      integer :: shape_error
+      logical :: print_result_value
+
+      if (.not. present(rtol)) then
+        rtol_value = 1.0e-5
+      else
+        rtol_value = rtol
+      end if
+
+      if (.not. present(print_result)) then
+        print_result_value = .true.
+      else
+        print_result_value = print_result
+      end if
+
+      ! Check the shapes of the arrays match
+      shape_error = maxval(abs(shape(got) - shape(expect)))
+      test_pass = (shape_error == 0)
+
+      if (test_pass) then
+        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
+        if (print_result_value) then
+          write(message,'("relative tolerance = ", E11.4)') rtol_value
+          call test_print(test_name, message, test_pass)
+        end if
+      else if (print_result_value) then
+        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
+      endif
+
+    end function allclose_real64_3d
+
+
+    !| Alias for isclose_real32
+    !
+    !  This version is deprecated and is only included for backwards compatibility. It will be
+    !  removed in FTorch version 2.0.
     function assert_isclose_real32(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                      !! Name of the test being run
@@ -57,33 +420,16 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the assertion pass?
 
-      character(len=80) :: message
+      write(*,*) "Warning: assert_isclose is deprecated and will be removed in FTorch version 2.0. Please use isclose instead."
 
-      real(kind=real32) :: rtol_value
-      logical :: print_result_value
-
-      if (.not. present(rtol)) then
-        rtol_value = 1e-5
-      else
-        rtol_value = rtol
-      end if
-
-      if (.not. present(print_result)) then
-        print_result_value = .true.
-      else
-        print_result_value = print_result
-      end if
-
-      test_pass = (abs(got - expect) <= rtol_value * abs(expect))
-
-      if (print_result_value) then
-        write(message,'("relative tolerance = ", E11.4)') rtol_value
-        call test_print(test_name, message, test_pass)
-      end if
+      test_pass = isclose_real32(got, expect, test_name, rtol, print_result)
 
     end function assert_isclose_real32
 
-    !> Asserts that two real64 values coincide to a given relative tolerance
+    !| Alias for isclose_real64
+    !
+    !  This version is deprecated and is only included for backwards compatibility. It will be
+    !  removed in FTorch version 2.0.
     function assert_isclose_real64(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                      !! Name of the test being run
@@ -94,34 +440,17 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the assertion pass?
 
-      character(len=80) :: message
+      write(*,*) "Warning: assert_isclose is deprecated and will be removed in FTorch version 2.0. Please use isclose instead."
 
-      real(kind=real64) :: rtol_value
-      logical :: print_result_value
-
-      if (.not. present(rtol)) then
-        rtol_value = 1e-5
-      else
-        rtol_value = rtol
-      end if
-
-      if (.not. present(print_result)) then
-        print_result_value = .true.
-      else
-        print_result_value = print_result
-      end if
-
-      test_pass = (abs(got - expect) <= rtol_value * abs(expect))
-
-      if (print_result_value) then
-        write(message,'("relative tolerance = ", E11.4)') rtol_value
-        call test_print(test_name, message, test_pass)
-      end if
+      test_pass = isclose_real64(got, expect, test_name, rtol, print_result)
 
     end function assert_isclose_real64
 
 
-    !> Asserts that two real32-valued 1D arrays coincide to a given relative tolerance
+    !| Alias for allclose_real32_1d
+    !
+    !  This version is deprecated and is only included for backwards compatibility. It will be
+    !  removed in FTorch version 2.0.
     function assert_allclose_real32_1d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -132,41 +461,16 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the assertion pass?
 
-      character(len=80) :: message
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
 
-      real(kind=real32) :: rtol_value
-      integer :: shape_error
-      logical :: print_result_value
-
-      if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
-      else
-        rtol_value = rtol
-      end if
-
-      if (.not. present(print_result)) then
-        print_result_value = .true.
-      else
-        print_result_value = print_result
-      end if
-
-      ! Check the shapes of the arrays match
-      shape_error = maxval(abs(shape(got) - shape(expect)))
-      test_pass = (shape_error == 0)
-
-      if (test_pass) then
-        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
-        if (print_result_value) then
-          write(message,'("relative tolerance = ", E11.4)') rtol_value
-          call test_print(test_name, message, test_pass)
-        end if
-      else if (print_result_value) then
-        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      test_pass = allclose_real32_1d(got, expect, test_name, rtol, print_result)
 
     end function assert_allclose_real32_1d
 
-    !> Asserts that two real32-valued 2D arrays coincide to a given relative tolerance
+    !| Alias for allclose_real32_2d
+    !
+    !  This version is deprecated and is only included for backwards compatibility. It will be
+    !  removed in FTorch version 2.0.
     function assert_allclose_real32_2d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -177,41 +481,16 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the assertion pass?
 
-      character(len=80) :: message
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
 
-      real(kind=real32) :: rtol_value
-      integer :: shape_error
-      logical :: print_result_value
-
-      if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
-      else
-        rtol_value = rtol
-      end if
-
-      if (.not. present(print_result)) then
-        print_result_value = .true.
-      else
-        print_result_value = print_result
-      end if
-
-      ! Check the shapes of the arrays match
-      shape_error = maxval(abs(shape(got) - shape(expect)))
-      test_pass = (shape_error == 0)
-
-      if (test_pass) then
-        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
-        if (print_result_value) then
-          write(message,'("relative tolerance = ", E11.4)') rtol_value
-          call test_print(test_name, message, test_pass)
-        end if
-      else if (print_result_value) then
-        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      test_pass = allclose_real32_2d(got, expect, test_name, rtol, print_result)
 
     end function assert_allclose_real32_2d
 
-    !> Asserts that two real32-valued 3D arrays coincide to a given relative tolerance
+    !| Alias for allclose_real32_3d
+    !
+    !  This version is deprecated and is only included for backwards compatibility. It will be
+    !  removed in FTorch version 2.0.
     function assert_allclose_real32_3d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -222,41 +501,16 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the assertion pass?
 
-      character(len=80) :: message
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
 
-      real(kind=real32) :: rtol_value
-      integer :: shape_error
-      logical :: print_result_value
-
-      if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
-      else
-        rtol_value = rtol
-      end if
-
-      if (.not. present(print_result)) then
-        print_result_value = .true.
-      else
-        print_result_value = print_result
-      end if
-
-      ! Check the shapes of the arrays match
-      shape_error = maxval(abs(shape(got) - shape(expect)))
-      test_pass = (shape_error == 0)
-
-      if (test_pass) then
-        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
-        if (print_result_value) then
-          write(message,'("relative tolerance = ", E11.4)') rtol_value
-          call test_print(test_name, message, test_pass)
-        end if
-      else if (print_result_value) then
-        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      test_pass = allclose_real32_3d(got, expect, test_name, rtol, print_result)
 
     end function assert_allclose_real32_3d
 
-    !> Asserts that two real64-valued 1D arrays coincide to a given relative tolerance
+    !| Alias for allclose_real64_1d
+    !
+    !  This version is deprecated and is only included for backwards compatibility. It will be
+    !  removed in FTorch version 2.0.
     function assert_allclose_real64_1d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -267,41 +521,16 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the assertion pass?
 
-      character(len=80) :: message
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
 
-      real(kind=real64) :: rtol_value
-      integer :: shape_error
-      logical :: print_result_value
-
-      if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
-      else
-        rtol_value = rtol
-      end if
-
-      if (.not. present(print_result)) then
-        print_result_value = .true.
-      else
-        print_result_value = print_result
-      end if
-
-      ! Check the shapes of the arrays match
-      shape_error = maxval(abs(shape(got) - shape(expect)))
-      test_pass = (shape_error == 0)
-
-      if (test_pass) then
-        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
-        if (print_result_value) then
-          write(message,'("relative tolerance = ", E11.4)') rtol_value
-          call test_print(test_name, message, test_pass)
-        end if
-      else if (print_result_value) then
-        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      test_pass = allclose_real64_1d(got, expect, test_name, rtol, print_result)
 
     end function assert_allclose_real64_1d
 
-    !> Asserts that two real64-valued 2D arrays coincide to a given relative tolerance
+    !| Alias for allclose_real64_2d
+    !
+    !  This version is deprecated and is only included for backwards compatibility. It will be
+    !  removed in FTorch version 2.0.
     function assert_allclose_real64_2d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -312,41 +541,16 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the assertion pass?
 
-      character(len=80) :: message
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
 
-      real(kind=real64) :: rtol_value
-      integer :: shape_error
-      logical :: print_result_value
-
-      if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
-      else
-        rtol_value = rtol
-      end if
-
-      if (.not. present(print_result)) then
-        print_result_value = .true.
-      else
-        print_result_value = print_result
-      end if
-
-      ! Check the shapes of the arrays match
-      shape_error = maxval(abs(shape(got) - shape(expect)))
-      test_pass = (shape_error == 0)
-
-      if (test_pass) then
-        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
-        if (print_result_value) then
-          write(message,'("relative tolerance = ", E11.4)') rtol_value
-          call test_print(test_name, message, test_pass)
-        end if
-      else if (print_result_value) then
-        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      test_pass = allclose_real64_2d(got, expect, test_name, rtol, print_result)
 
     end function assert_allclose_real64_2d
 
-    !> Asserts that two real64-valued 3D arrays coincide to a given relative tolerance
+    !| Alias for allclose_real64_3d
+    !
+    !  This version is deprecated and is only included for backwards compatibility. It will be
+    !  removed in FTorch version 2.0.
     function assert_allclose_real64_3d(got, expect, test_name, rtol, print_result) result(test_pass)
 
       character(len=*), intent(in) :: test_name                                             !! Name of the test being run
@@ -357,37 +561,9 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the assertion pass?
 
-      character(len=80) :: message
+      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
 
-      real(kind=real64) :: rtol_value
-      integer :: shape_error
-      logical :: print_result_value
-
-      if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
-      else
-        rtol_value = rtol
-      end if
-
-      if (.not. present(print_result)) then
-        print_result_value = .true.
-      else
-        print_result_value = print_result
-      end if
-
-      ! Check the shapes of the arrays match
-      shape_error = maxval(abs(shape(got) - shape(expect)))
-      test_pass = (shape_error == 0)
-
-      if (test_pass) then
-        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
-        if (print_result_value) then
-          write(message,'("relative tolerance = ", E11.4)') rtol_value
-          call test_print(test_name, message, test_pass)
-        end if
-      else if (print_result_value) then
-        call test_print(test_name, "Arrays have mismatching shapes.", test_pass)
-      endif
+      test_pass = allclose_real64_3d(got, expect, test_name, rtol, print_result)
 
     end function assert_allclose_real64_3d
 

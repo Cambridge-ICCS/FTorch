@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+include(CMakeFindDependencyMacro)
+# Uses the Torch path provided during FTorch build to force downstream
+# libraries to find the Torch dependency of FTorch...
+# Added in order to allow static library builds
+find_dependency(Torch REQUIRED PATHS "@PACKAGE_TORCH_BASE_DIR@")
+

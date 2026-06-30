@@ -1,0 +1,242 @@
+!| Unit tests for FTorch subroutines that construct and destroy tensors on CUDA
+!  devices.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_tensor_constructors_destructors_cuda
+  use funit
+  use ftorch_devices, only: torch_kCPU, torch_kCUDA
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_delete, &
+                           torch_tensor_from_array, torch_tensor_to
+  use ftorch_test_utils, only: allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use iso_c_binding, only: c_associated, c_int64_t
+
+  implicit none
+
+  public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  ! All unit tests in this module run on a single CUDA device with a CPU host
+  integer, parameter :: host_type = torch_kCPU
+  integer, parameter :: device_type = torch_kCUDA
+  integer, parameter :: device_index = 0
+
+  ! All unit tests in this module use float32 precision
+  integer, parameter :: dtype = torch_kFloat32
+
+  ! Typedef holding a set of parameter values
+  @testParameter
+  type, extends(AbstractTestParameter) :: TestParametersType
+    logical :: requires_grad  ! Value used for the requires_grad argument
+    logical :: auto_delete    ! torch_tensor_delete is called when .false., otherwise the finalizer
+                              !   will call it when a tensor goes out of scope
+    integer :: iterations     ! Number of times to construct/destruct a tensor
+  contains
+    procedure :: toString
+  end type TestParametersType
+
+  ! Typedef for a test case with a particular set of parameters
+  @testCase(constructor=test_case_constructor)
+  type, extends (ParameterizedTestCase) :: TestCaseType
+    type(TestParametersType) :: param
+  end type TestCaseType
+
+contains
+
+  ! Constructor for the test case type
+  function test_case_constructor(param)
+    type(TestCaseType) :: test_case_constructor
+    type(TestParametersType), intent(in) :: param
+    test_case_constructor%param = param
+  end function test_case_constructor
+
+  ! A fixture comprised of parameter sets for destructor tests
+  function get_parameters_destruction() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,.false.,1), &
+      TestParametersType(.false.,.false.,2), &
+      TestParametersType(.false.,.true.,1), &
+      TestParametersType(.false.,.true.,2) &
+    ]
+  end function get_parameters_destruction
+
+  ! A fixture comprised of parameter sets for varying the requires_grad argument
+  function get_parameters_requires_grad() result(params)
+    type(TestParametersType), allocatable :: params(:)
+    params = [ &
+      TestParametersType(.false.,.false.,1), &
+      TestParametersType(.true.,.false.,1) &
+    ]
+  end function get_parameters_requires_grad
+
+  ! Function for representing a parameter set as a string
+  function toString(this) result(string)
+    class(TestParametersType), intent(in) :: this
+    character(:), allocatable :: string
+    character(len=7) :: str
+    write(str,"(l1,',',l1,',',i1)") this%requires_grad, this%auto_delete, this%iterations
+    string = str
+  end function toString
+
+  ! Unit test for the torch_tensor_empty subroutine
+  @test(testparameters={get_parameters_requires_grad()})
+  subroutine test_empty(this)
+    use ftorch_tensor, only: torch_tensor_empty
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: gpu_tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(gpu_tensor%p))
+
+    ! Create a tensor without any data values assigned on the CUDA device
+    call torch_tensor_empty(gpu_tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+                            this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(gpu_tensor%p))
+
+    ! Check the tensor properties
+    @assertEqual(expected_stride, gpu_tensor%get_stride())
+    @assertEqual(tensor_shape, gpu_tensor%get_shape())
+    @assertEqual(device_type, gpu_tensor%get_device_type())
+    @assertEqual(device_index, gpu_tensor%get_device_index())
+
+  end subroutine test_empty
+
+  ! Unit test for the torch_tensor_zeros subroutine
+  @test(testParameters={get_parameters_requires_grad()})
+  subroutine test_zeros(this)
+    use ftorch_tensor, only: torch_tensor_zeros
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: cpu_tensor, gpu_tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+    real(wp), dimension(2,3), target :: out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(gpu_tensor%p))
+
+    ! Create a tensor of zeros on the CUDA device
+    call torch_tensor_zeros(gpu_tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+                            this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(gpu_tensor%p))
+
+    ! Check the tensor properties
+    @assertEqual(expected_stride, gpu_tensor%get_stride())
+    @assertEqual(tensor_shape, gpu_tensor%get_shape())
+    @assertEqual(device_type, gpu_tensor%get_device_type())
+    @assertEqual(device_index, gpu_tensor%get_device_index())
+
+    ! Create a tensor based off an output array on the CPU host
+    call torch_tensor_from_array(cpu_tensor, out_data, host_type)
+
+    ! Transfer data from the device to the host
+    call torch_tensor_to(gpu_tensor, cpu_tensor)
+
+    ! Check that the tensor values are all zero
+    expected(:,:) = 0.0
+    @assertTrue(allclose(out_data, expected, test_name="test_zeros"))
+
+  end subroutine test_zeros
+
+  ! Unit test for the torch_tensor_ones subroutine
+  @test(testParameters={get_parameters_requires_grad()})
+  subroutine test_ones(this)
+    use ftorch_tensor, only: torch_tensor_ones
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: cpu_tensor, gpu_tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+    real(wp), dimension(2,3), target :: out_data
+    real(wp), dimension(2,3) :: expected
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(gpu_tensor%p))
+
+    ! Create tensor of ones on the CUDA device
+    call torch_tensor_ones(gpu_tensor, ndims, tensor_shape, dtype, device_type, device_index, &
+                           this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(gpu_tensor%p))
+
+    ! Check the tensor properties
+    @assertEqual(expected_stride, gpu_tensor%get_stride())
+    @assertEqual(tensor_shape, gpu_tensor%get_shape())
+    @assertEqual(device_type, gpu_tensor%get_device_type())
+    @assertEqual(device_index, gpu_tensor%get_device_index())
+
+    ! Create a tensor based off an output array on the CPU host
+    call torch_tensor_from_array(cpu_tensor, out_data, host_type)
+
+    ! Transfer data from the device to the host
+    call torch_tensor_to(gpu_tensor, cpu_tensor)
+
+    ! Check that the tensor values are all one
+    expected(:,:) = 1.0
+    @assertTrue(allclose(out_data, expected, test_name="test_ones"))
+
+  end subroutine test_ones
+
+  ! Unit test for destroying tensors, both manually with torch_tensor_delete and automatically (via
+  ! torch_tensor's destructor)
+  @test(testparameters={get_parameters_destruction()})
+  subroutine test_destruction(this)
+    use ftorch_tensor, only: torch_tensor_empty
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor
+    integer, parameter :: ndims = 2
+    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer :: i
+
+    do i = 1, this%param%iterations
+
+      ! Check the tensor pointer is not associated
+      @assertFalse(c_associated(tensor%p))
+
+      ! Create a tensor without any data values assigned
+      call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, device_index)
+
+      ! Check the tensor pointer is associated
+      @assertTrue(c_associated(tensor%p))
+
+      if (i < this%param%iterations .or. .not. this%param%auto_delete) then
+        ! Call torch_tensor_delete manually
+        call torch_tensor_delete(tensor)
+
+        ! Check torch_tensor_delete does indeed free the memory
+        @assertFalse(c_associated(tensor%p))
+      end if
+
+    end do
+
+  end subroutine test_destruction
+
+end module unittest_tensor_constructors_destructors_cuda

@@ -145,13 +145,15 @@ make tests
 make install
 ```
 
-The unit tests only can be run using the provided script:
+The unit tests can be run by navigating to the FTorch build directory and
+calling `ctest`:
 ```sh
-./run_test_suite.sh --unit-only
+cd build
+ctest --verbose --tests-regex
 ```
 
 > [!NOTE]  
-> The automated integration testing also makes use of pip to install pytorch and other
+> The automated integration testing also makes use of pip to install PyTorch and other
 > Python dependencies. Conda users wishing to run this should amend the test script
 > to  remove the `pip install` command as these additional requirements are included
 > in the environment files provided.

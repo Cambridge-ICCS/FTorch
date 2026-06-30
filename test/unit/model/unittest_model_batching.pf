@@ -1,0 +1,134 @@
+!| Unit tests for batching with TorchScript models with FTorch.
+!| Uses a model that generates output[i] = input[i] * i for i in 0..4 to clearly
+!| demonstrate the effect of batching on different dimensions.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_model_batching
+  use funit
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kFloat32
+  use ftorch_model, only: torch_model, torch_model_load, torch_model_forward
+  use ftorch_tensor, only: torch_tensor
+  use ftorch_test_utils, only: allclose
+  use, intrinsic :: iso_fortran_env, only : sp => real32
+  use iso_c_binding, only: c_int64_t
+
+  implicit none
+
+  public
+
+  ! Set working precision for reals
+  integer, parameter :: wp = sp
+
+  ! All unit tests in this module run on CPU
+  integer, parameter :: device_type = torch_kCPU
+  integer, parameter :: device_index = -1
+
+  ! All unit tests in this module use float32 precision
+  integer, parameter :: dtype = torch_kFloat32
+  
+  character(len=256), parameter :: filename = "../fixtures/batchingnet.pt"
+
+contains
+
+  ! Unit test for checking that batchingnet runs correctly on unbatched input
+  @test
+  subroutine test_unbatched()
+    use ftorch_tensor, only: torch_tensor_from_array, torch_tensor_ones
+
+    implicit none
+
+    type(torch_model) :: model
+    type(torch_tensor) :: input_tensors(1), output_tensors(1)
+    integer, parameter :: ndims = 1
+    integer(c_int64_t), parameter :: tensor_shape(ndims) = [5]
+    real(wp), dimension(5), target :: output_array
+    real(wp), dimension(5) :: expected
+
+    ! Initialise an input tensor and an output tensor
+    call torch_tensor_ones(input_tensors(1), ndims, tensor_shape, dtype, device_type, device_index)
+    call torch_tensor_from_array(output_tensors(1), output_array, torch_kCPU)
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Propagate the input tensor through the model
+    call torch_model_forward(model, input_tensors, output_tensors)
+
+    expected = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
+    @assertTrue(allclose(output_array, expected, test_name="test_unbatched"))
+
+  end subroutine test_unbatched
+
+  ! Unit test for batched inference when batching in a single dimension.
+  @test
+  subroutine test_batched_1d()
+    use ftorch_tensor, only: torch_tensor_from_array
+
+    implicit none
+
+    type(torch_model) :: model
+    type(torch_tensor) :: input_tensors(1), output_tensors(1)
+    real(wp), dimension(2,5), target :: input_array, output_array
+    real(wp), dimension(2,5) :: expected
+
+    ! Initialise an input tensor and an output tensor
+    input_array(1,:) = 1.0_wp
+    input_array(2,:) = 2.0_wp
+    call torch_tensor_from_array(input_tensors(1), input_array, torch_kCPU)
+    call torch_tensor_from_array(output_tensors(1), output_array, torch_kCPU)
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Propagate the input tensor through the model
+    call torch_model_forward(model, input_tensors, output_tensors)
+
+    expected(1,:) = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
+    expected(2,:) = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
+    @assertTrue(allclose(output_array, expected, test_name="test_batched_1d"))
+
+  end subroutine test_batched_1d
+
+  ! Unit test for batched inference when batching in multiple dimensions.
+  @test
+  subroutine test_batched_multi()
+    use ftorch_tensor, only: torch_tensor_from_array
+
+    implicit none
+
+    type(torch_model) :: model
+    type(torch_tensor) :: input_tensors(1), output_tensors(1)
+    real(wp), dimension(2,3,5), target :: input_array, output_array
+    real(wp), dimension(2,3,5) :: expected
+
+    ! Initialise an input tensor and an output tensor
+    input_array(1,1,:) = 1.0_wp
+    input_array(1,2,:) = 2.0_wp
+    input_array(1,3,:) = 3.0_wp
+    input_array(2,1,:) = 10.0_wp
+    input_array(2,2,:) = 20.0_wp
+    input_array(2,3,:) = 30.0_wp
+    call torch_tensor_from_array(input_tensors(1), input_array, torch_kCPU)
+    call torch_tensor_from_array(output_tensors(1), output_array, torch_kCPU)
+
+    ! Load the test model from file
+    call torch_model_load(model, trim(filename), device_type)
+
+    ! Propagate the input tensor through the model
+    call torch_model_forward(model, input_tensors, output_tensors)
+
+    expected(1,1,:) = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
+    expected(1,2,:) = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
+    expected(1,3,:) = [0.0_wp, 3.0_wp, 6.0_wp, 9.0_wp, 12.0_wp]
+    expected(2,1,:) = [0.0_wp, 10.0_wp, 20.0_wp, 30.0_wp, 40.0_wp]
+    expected(2,2,:) = [0.0_wp, 20.0_wp, 40.0_wp, 60.0_wp, 80.0_wp]
+    expected(2,3,:) = [0.0_wp, 30.0_wp, 60.0_wp, 90.0_wp, 120.0_wp]
+    @assertTrue(allclose(output_array, expected, test_name="test_batched_multi"))
+
+  end subroutine test_batched_multi
+
+end module unittest_model_batching

@@ -1,0 +1,151 @@
+/* ===== General ===== */
+
+body {
+    background-color: #f0f0f0;
+    color: #333333;
+}
+
+/* purple headings */
+h1 {
+    color: #734f96;
+}
+
+
+/* Main section of written pages */
+.col-9 {
+    background-color: #e9e9e9;
+    max-width: 800px;
+    padding: 1em 2em 2em 2em;
+    border-radius: 8px;
+}
+
+
+/* ===== Tables ===== */
+table:not(.table) {
+  border-collapse: collapse;
+  border: 2px solid black;
+  margin: 1em 0 2em 0;
+}
+
+table:not(.table) th {
+  background-color: #cccccc;
+  font-weight: bold;
+}
+
+table:not(.table) td,
+table:not(.table) th {
+  border: 1px solid black;
+  text-align: start;
+  padding: 0.5rem;
+}
+
+table:not(.table) tr:nth-child(even) {
+  /* Set every other cell slightly darker. Improves readability. */
+  background-color: #dfdae3;
+}
+
+
+/* ===== Code ===== */
+.codehilite, pre {
+    border-radius: 4px;
+}
+
+pre {
+    background-color: #eeffcc;
+    padding: 12px;
+}
+
+code {  /* Code inline (and in code blocks with overrides below) */
+    background-color: #e8e5df;
+    border-radius: 4px;
+    padding: 4px;
+    color: #a84c97;
+    white-space: nowrap;
+}
+pre code {  /* Specific to code in code blocks */
+    background-color: transparent;
+    white-space: pre;
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 4px;
+}
+
+
+/* ===== Main Page ===== */
+
+/* Top box with project summary */
+#jumbotron {
+    background-color: #dfdae3 !important;
+    border-color: #734f96 !important;
+    color: #734f96 !important;
+}
+
+/* card and TOC sidebar */
+div.card.card-body.bg-light {
+    background-color: #e5e5e5 !important;
+    border-color: #bababa !important;
+}
+.card-header.bg-primary.text-white {
+    background-color: #734f96 !important;
+    color: #ffffff !important;
+    text-decoration-color: #ffffff !important;
+}
+
+/* Web and GH buttons */
+.btn {
+    background-color: #734f96 !important;
+    color: #ffffff !important;
+    border-color: #5e3a7a !important;
+}
+.btn:hover {
+    background-color: #8d65c9 !important;
+    color: #ffffff !important;
+}
+.container.p-2.mb-4.bg-light.border.rounded-3 {
+    background-color: #e5e5e5 !important;
+    border-color: #bababa !important;
+}
+
+
+/* ===== Note Boxes ===== */
+.alert {
+  font-size: 0.85em;
+  padding: 0.5em 1em 0 1em;
+}
+.alert-title {
+  font-size: 1em;
+}
+
+
+/* ===== Navigation ===== */
+/* navigation links */
+nav.nav.nav-pills.flex-column .nav-link {
+    color: #734f96 !important;
+}
+
+/* Make main mections in the side menu bold */
+nav.nav.nav-pills.flex-column:not(nav.nav-pills *) > .nav-link {
+    font-weight: bold;
+}
+
+/* active nav-link inside vertical pills */
+nav.nav.nav-pills.flex-column .nav-link.active {
+    background-color: #734f96 !important;
+    color: #ffffff !important;
+}
+
+/* hover state for nav-link */
+nav.nav.nav-pills.flex-column .nav-link:hover {
+    background-color: #a179c7 !important;
+    color: #ffffff !important;
+}
+
+/* top nav */
+.nav.flex-column.align-items .nav-link {
+    color: #333333 !important;  /* default link color */
+}
+
+.nav.flex-column.align-items .nav-link.active {
+    color: #734f96 !important;
+    font-weight: bold;
+}

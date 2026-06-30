@@ -1,0 +1,152 @@
+!| Unit tests for FTorch SGD optimizer with parameters.
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_optim_sgd
+  use funit
+  use ftorch, only: assignment(=), operator(-), operator(*), operator(**), &
+                    torch_kFloat32, torch_kCPU, torch_tensor, &
+                    torch_delete, torch_tensor_from_array, torch_tensor_empty, &
+                    torch_tensor_backward, torch_tensor_get_gradient
+  use ftorch_optim, only: torch_optim, torch_optim_zero_grad, torch_optim_step, &
+                          torch_optim_delete, torch_optim_SGD
+  use ftorch_test_utils, only: allclose
+  use, intrinsic :: iso_c_binding, only: c_associated, c_int64_t
+  use, intrinsic :: iso_fortran_env, only :  dp => real64, sp => real32
+
+  implicit none
+
+  public
+
+  ! Parameter type for SGD-specific tests
+  @testParameter
+  type, extends(AbstractTestParameter) :: SGDParams
+    real(kind=dp) :: learning_rate
+    real(kind=dp) :: momentum
+    real(kind=dp) :: dampening
+    real(kind=dp) :: weight_decay
+    logical :: nesterov
+    real(kind=sp), dimension(4) :: expected
+    character(len=:), allocatable :: desc
+   contains
+    procedure :: toString => toStringSGD
+  end type SGDParams
+
+  ! Test case type for SGD parameter tests
+  @testCase(constructor=test_case_constructor_sgd)
+  type, extends (ParameterizedTestCase) :: TestCaseSGD
+    type(SGDParams) :: param
+  end type TestCaseSGD
+
+contains
+
+  ! Constructor for the test case type
+  function test_case_constructor_sgd(param)
+    type(TestCaseSGD) :: test_case_constructor_sgd
+    type(SGDParams), intent(in) :: param
+    test_case_constructor_sgd%param = param
+  end function test_case_constructor_sgd
+
+  ! A fixture for varying SGD parameters
+  function get_parameters_sgd() result(params)
+    type(SGDParams), allocatable :: params(:)
+    params = [ &
+      ! Baseline cases
+      SGDParams(0.1D0, 0.0D0, 0.0D0, 0.000D0, .false., &
+                [1.000000, 1.185494, 1.370988, 1.556481], "Basic SGD"), &
+      SGDParams(0.1D0, 0.9D0, 0.0D0, 0.025D0, .false., &
+                [0.979147, 1.396209, 1.813271, 2.230334], "SGD with momentum"), &
+      SGDParams(0.1D0, 0.9D0, 0.1D0, 0.025D0, .false., &
+                [0.980320, 1.373912, 1.767504, 2.161097], "SGD with dampening"), &
+      SGDParams(0.1D0, 0.9D0, 0.0D0, 0.025D0, .true., &
+                [0.973899, 1.495909, 2.017919, 2.539929], "SGD with nesterov"), &
+      SGDParams(0.1D0, 0.9D0, 0.9D0, 0.025D0, .false., &
+                [0.990124, 1.187636, 1.385148, 1.582659], "Full dampening"), &
+      SGDParams(0.01D0, 0.99D0, 0.0D0, 0.000D0, .true., &
+                [1.000000, 1.068006, 1.136011, 1.204017], "Small LR, High momentum, Nesterov"), &
+      SGDParams(0.5D0, 0.5D0, 0.25D0, 0.1D0, .false., &
+                [0.832593, 1.669628, 2.506663, 3.343699], "Aggressive parameters") &
+    ]
+  end function get_parameters_sgd
+
+  ! A fixture for writing out information about the specific parameters a test uses
+  function toStringSGD(this) result(string)
+    class(SGDParams), intent(in) :: this
+    character(:), allocatable :: string
+   
+    if (allocated(this%desc)) then
+      string = trim(this%desc)
+    else
+      string = "UNDEFINED"
+    end if
+  end function toStringSGD
+
+  ! Unit tests for SGD optimizer with parameters
+  ! Sets parameters and then compares the result of a single step to the
+  ! values obtained for the same process through the PyTorch interface
+  ! See accompanying test_optim_sgd.py for PyTorch code.
+  @test(testParameters={get_parameters_sgd()})
+  subroutine test_sgd_params(this)
+    use ftorch, only: torch_tensor_ones, torch_tensor_mean
+    implicit none
+
+    class(TestCaseSGD), intent(inout) :: this
+
+    type(torch_optim) :: optimizer
+    type(torch_tensor) :: tensor, target_tensor, loss, grad
+    integer, parameter :: ndims = 1
+    integer, parameter :: tensor_layout(ndims) = [1]
+    integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
+    integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
+    real(sp), dimension(4), target :: target_data, tensor_data, expected
+    integer, parameter :: dtype = torch_kFloat32
+    integer :: i
+
+    ! Initialise data for the test to avoid Fortran's implied save
+    target_data = [1.0, 2.0, 3.0, 4.0]
+    tensor_data = [1.0, 1.0, 1.0, 1.0]
+
+    ! Create a tensor with requires_grad set to true
+    call torch_tensor_from_array(target_tensor, target_data, tensor_layout, torch_kCPU)
+    call torch_tensor_from_array(tensor, tensor_data, tensor_layout, torch_kCPU, &
+                            requires_grad=.true.)
+
+    ! Create an optimizer based on the parameters including new SGD parameters
+    ! Also set the expected value of the optimizer step
+    call torch_optim_SGD(optimizer, [tensor], learning_rate=this%param%learning_rate, &
+                         momentum=this%param%momentum, dampening = this%param%dampening, &
+                         weight_decay=this%param%weight_decay, nesterov = this%param%nesterov)
+    expected = this%param%expected
+
+    ! Run a loop of 4 iterations to capture aspects such as momentum
+    do i = 1,4
+      ! Calculate MSE loss between tensor and target and perform a backwards step
+      call torch_tensor_empty(loss, ndims, scalar_shape, torch_kFloat32, torch_kCPU)
+      call torch_tensor_mean(loss, (tensor - target_tensor) ** 2)
+      call torch_tensor_backward(loss)
+
+      ! Perform an optimizer step
+      call optimizer%step()
+      call optimizer%zero_grad()  ! Clear gradients after each step
+
+      call torch_delete(loss)
+    end do
+
+    ! Check if the tensor values are updated correctly
+    if (.not. allclose(tensor_data, expected, test_name="test_sgd_params ["//this%param%desc//"]")) then
+      print *, "Error :: Incorrect value after optimizer loop."
+      print *, "Expected: ", expected
+      print *, "     Got: ", tensor_data
+      stop 999
+    end if
+
+    ! Clean up
+    call torch_delete(tensor)
+    call torch_delete(target_tensor)
+    call torch_delete(grad)
+    call torch_optim_delete(optimizer)
+  end subroutine test_sgd_params
+
+end module unittest_optim_sgd

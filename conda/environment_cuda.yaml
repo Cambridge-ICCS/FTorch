@@ -5,7 +5,7 @@ channels:
 dependencies:
   - fortran-compiler
   - cxx-compiler
-  - cmake >=3.15
+  - cmake >=3.18
   - openmpi-mpifort >=5.0.6  # For pFUnit to run the test suite and MultiGPU example
   - cuda-version 12.6  # Set version of cuda here
   - cuda-compiler >=12.6.3

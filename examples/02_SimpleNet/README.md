@@ -1,0 +1,144 @@
+# Example 2 - SimpleNet
+
+This example provides a simple but complete demonstration of how to use the library.
+
+The aim is to demonstrate the most basic features of coupling before worrying about
+multi-dimension tensors, row- vs. column-major, multiple inputs etc. that will be
+covered in later examples.
+
+
+## Description
+
+A Python file `simplenet.py` is provided that defines a very simple PyTorch
+'net' that takes an input vector of length 5 and applies a single `Linear` layer
+to multiply it by 2. Running this file as a script will write the model out in
+PyTorch's `.pt` file format.
+
+The `pt2ts` tool is used to convert the model file to the TorchScript format.
+
+A series of files `simplenet_infer_<LANG>` then bind from other languages to run the
+TorchScript model in inference mode.
+
+## Dependencies
+
+To run this example requires:
+
+- CMake or Make
+- Fortran compiler
+- FTorch (installed as described in main package)
+- Python 3
+
+## Running
+
+To run this example, first install FTorch as described in the main
+documentation, making use of the `examples` optional dependencies. See the
+[user guide section](https://cambridge-iccs.github.io/FTorch/page/installation/general.html#python-dependencies)
+on Python dependencies for details.
+
+You can check that everything is working by running `simplenet.py`:
+```
+python3 simplenet.py
+```
+This defines the net and runs it with an input tensor [0.0, 1.0, 2.0, 3.0, 4.0] to produce the result:
+```
+Model output: tensor([[0., 2., 4., 6., 8.]])
+```
+You should find that a PyTorch model file `pytorch_simplenet_model_cpu.pt` is
+created.
+
+To convert the SimpleNet model to TorchScript run the `pt2ts` script:
+```
+pt2ts SimpleNet \
+  --model_definition_file simplenet.py \
+  --input_model_file pytorch_simplenet_model_cpu.pt \
+  --output_model_file torchscript_simplenet_model_cpu.pt
+```
+This should produce `torchscript_simplenet_model_cpu.pt`.
+
+You can check that everything is working by running the `simplenet_infer_python.py` script:
+```
+python3 simplenet_infer_python.py
+```
+This reads the model in from the TorchScript file and runs it with an input tensor
+[0.0, 1.0, 2.0, 3.0, 4.0] to produce the following output:
+```
+Model parameters:
+Parameter: _fwd_seq.0.weight
+tensor([[2., 0., 0., 0., 0.],
+        [0., 2., 0., 0., 0.],
+        [0., 0., 2., 0., 0.],
+        [0., 0., 0., 2., 0.],
+        [0., 0., 0., 0., 2.]])
+Model output: tensor([[0., 2., 4., 6., 8.]])
+```
+First, the model parameters are printed (the weights of the linear layer),
+followed by the output of the model.
+
+At this point we no longer require Python, so can deactivate the virtual environment:
+```
+deactivate
+```
+
+To call the saved SimpleNet model from Fortran we need to compile the `simplenet_infer`
+files.
+This can be done using the included `CMakeLists.txt` as follows:
+```
+mkdir build
+cd build
+cmake .. -DCMAKE_PREFIX_PATH=<path/to/your/installation/of/library/> -DCMAKE_BUILD_TYPE=Release
+cmake --build .
+```
+
+(Note that the Fortran compiler can be chosen explicitly with the `-DCMAKE_Fortran_COMPILER` flag,
+and should match the compiler that was used to locally build FTorch.)
+
+To run the compiled code calling the saved SimpleNet TorchScript from Fortran run the
+executable with an argument of the saved model file:
+```
+./simplenet_infer_fortran ../torchscript_simplenet_model_cpu.pt
+```
+
+This runs the model with the array `[0.0, 1.0, 2.0, 3.0, 4.0]` should produce
+the following output:
+```
+ Model parameters:
+_fwd_seq.0.weight:
+ 2  0  0  0  0
+ 0  2  0  0  0
+ 0  0  2  0  0
+ 0  0  0  2  0
+ 0  0  0  0  2
+[ CPUFloatType{5,5} ]
+ Model output:
+   0.00000000       2.00000000       4.00000000       6.00000000       8.00000000
+```
+Again, the model parameters are printed first (the weights of the linear layer),
+followed by the output of the model, which is consistent with the earlier
+Python results. The `CPUFloatType{5,5}` indicates that the weight tensor is a
+5x5 matrix of 32-bit floats stored on the CPU.
+
+Alternatively we can use `make`, instead of CMake, with the included Makefile.
+However, to do this you will need to modify `Makefile` to link to and include your
+installation of FTorch as described in the main documentation. Also check that the compiler is the same as the one you built the Library with.
+```
+make
+./simplenet_infer_fortran torchscript_simplenet_model_cpu.pt
+```
+
+You will also likely need to add the location of the dynamic library files
+(`.so` or `.dylib` files) that we will link against at runtime to your `LD_LIBRARY_PATH`:
+```
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib
+```
+or `DYLD_LIBRARY_PATH` on Mac:  
+```
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:</path/to/library/installation>/lib
+```
+
+## Further options
+
+To explore the functionalities of this model:
+
+- Try saving the model through tracing rather than scripting by modifying `pt2ts.py`
+- Consider adapting the model definition in `simplenet.py` to function differently and
+  then adapt the rest of the code to successfully couple your new model.
