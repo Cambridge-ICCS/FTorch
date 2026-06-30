@@ -10,22 +10,7 @@ on:
   # Triggers the workflow on pushes to open pull requests with changes to this workflow
   pull_request:
     paths:
-      # This workflow
       - '.github/workflows/test_suite_windows_cpu_intel.yml'
-      # Source files
-      - '**.c'
-      - '**.cpp'
-      - '**.fypp'
-      - '**.f90'
-      - '**.F90'
-      - '**.py'
-      # Unit tests
-      - '**.pf'
-      # Build system
-      - '**CMakeLists.txt'
-      - '**requirements.txt'
-      # Data
-      - '**data/*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -75,6 +60,24 @@ jobs:
             if (Test-Path $dir) { $dir | Out-File -Append $env:GITHUB_PATH -Encoding utf8 }
           }
 
+      - name: Setup MSVC developer command prompt
+        shell: pwsh
+        run: |
+          $VsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $VsInstallPath = & $VsWhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
+          if (-not $VsInstallPath) {
+            throw "Could not locate a Visual Studio installation."
+          }
+          $VsDevCmd = Join-Path $VsInstallPath "Common7\Tools\VsDevCmd.bat"
+          if (-not (Test-Path $VsDevCmd)) {
+            throw "Could not locate VsDevCmd.bat at $VsDevCmd."
+          }
+          cmd /c "`"$VsDevCmd`" -arch=x64 -host_arch=x64 && set" | ForEach-Object {
+            if ($_ -match "^(.*?)=(.*)$") {
+              "$($_)" | Out-File -Append $env:GITHUB_ENV -Encoding utf8
+            }
+          }
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout FTorch repository
         with:
@@ -105,8 +108,7 @@ jobs:
           # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           cmake `
-            -S . `
-            -B build `
+            -Bbuild `
             -G "Ninja" `
             -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" `
             -DCMAKE_Fortran_FLAGS="/stand:08 /fpscomp:logicals" `
@@ -118,7 +120,7 @@ jobs:
             -DCMAKE_CXX_COMPILER=icx `
             -DCMAKE_BUILD_TESTS=TRUE `
             -DCMAKE_INSTALL_PREFIX="$FTORCH_INSTALL_DIR"
-          cmake --build build --config Release --parallel
+          cmake --build build
           cmake --install build
 
       - name: Run Python unit tests
@@ -131,12 +133,18 @@ jobs:
         shell: pwsh
         run: |
           .\ftorch\Scripts\Activate.ps1
+          # Find Python executable in venv
           $Torch_DIR = (pip show torch | Select-String -Pattern "^Location" | ForEach-Object { $_.Line -replace "^Location:\s*", "" })
           # Set install location
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           # Add FTorch and PyTorch to the path for the test executables
           $env:PATH = "$FTORCH_INSTALL_DIR\bin;$Torch_DIR\torch\lib;$env:PATH"
-          ctest --test-dir build --verbose --output-on-failure --tests-regex "example_tensor|example_simplenet|example_resnet|example_multiio|example_autograd"
+          cd build
+          ctest --verbose --tests-regex example_tensor
+          ctest --verbose --tests-regex example_simplenet
+          ctest --verbose --tests-regex example_resnet
+          ctest --verbose --tests-regex example_multiio
+          ctest --verbose --tests-regex example_autograd
 
       - name: Standalone SimpleNet example
         shell: pwsh
@@ -150,9 +158,10 @@ jobs:
           $FTORCH_INSTALL_DIR = "$env:TEMP\ftorch-install"
           # Add FTorch and PyTorch to the path for the test executables
           $env:PATH = "$FTORCH_INSTALL_DIR\bin;$Torch_DIR\torch\lib;$env:PATH"
-          cmake `
-            -S examples\02_SimpleNet `
-            -B examples\02_SimpleNet\build `
+          $EXAMPLE_BUILD_DIR = "examples\02_SimpleNet\build"
+          if (-not (Test-Path $EXAMPLE_BUILD_DIR)) { New-Item -ItemType Directory -Path $EXAMPLE_BUILD_DIR | Out-Null }
+          cd $EXAMPLE_BUILD_DIR
+          cmake .. `
             -G "Ninja" `
             -DCMAKE_Fortran_COMPILER=ifx `
             -DCMAKE_C_COMPILER=icx `
@@ -162,5 +171,5 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_PREFIX_PATH="$FTORCH_INSTALL_DIR;$Torch_DIR\torch" `
             -DCMAKE_BUILD_TESTS=TRUE
-          cmake --build examples\02_SimpleNet\build --config Release --parallel
-          ctest --test-dir examples\02_SimpleNet\build -V --output-on-failure
+          cmake --build .
+          ctest -V
