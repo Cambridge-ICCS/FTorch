@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.9% of total for procedures.">23 statements</a>
+                 title=" 1.0% of total for procedures.">27 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -704,6 +704,10 @@ implementation in a submodule of an interface in a parent module.
 
 <span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">tensor1</span><span class="p">%</span><span class="n">get_device_type</span><span class="p">()</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">tensor2</span><span class="p">%</span><span class="n">get_device_type</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
 <span class="k">      write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: cannot subtract tensors with different device types&quot;</span>
+<span class="w">      </span><span class="k">stop </span><span class="mi">1</span>
+<span class="w">    </span><span class="k">end if</span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">tensor1</span><span class="p">%</span><span class="n">get_device_index</span><span class="p">()</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">tensor2</span><span class="p">%</span><span class="n">get_device_index</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;Error :: cannot subtract tensors with different device indices&quot;</span>
 <span class="w">      </span><span class="k">stop </span><span class="mi">1</span>
 <span class="w">    </span><span class="k">end if</span>
 
