@@ -2497,9 +2497,15 @@ contains
       call torch_tensor_empty(output, input%get_rank(), input%get_shape(), input%get_dtype(), &
                               input%get_device_type(), device_index=input%get_device_index(), &
                               requires_grad=input%requires_grad())
-    else if (input%get_device_type() /= output%get_device_type()) then
-      write(*,*) "Error :: cannot assign tensors with different device types"
-      stop 1
+    else
+      if (input%get_device_type() /= output%get_device_type()) then
+        write(*,*) "Error :: cannot assign tensors with different device types"
+        stop 1
+      end if
+      if (input%get_device_index() /= output%get_device_index()) then
+        write(*,*) "Error :: cannot assign tensors with different device indices"
+        stop 1
+      end if
     end if
     call torch_tensor_assign_c(output%p, input%p)
   end subroutine torch_tensor_assign
@@ -2526,6 +2532,11 @@ contains
       write(*,*) "Error :: cannot add tensors with different device types"
       stop 1
     end if
+    if (tensor1%get_device_index() /= tensor2%get_device_index()) then
+      write(*,*) "Error :: cannot add tensors with different device indices"
+      stop 1
+    end if
+
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
                               tensor1%get_dtype(), tensor1%get_device_type(), &
@@ -2580,6 +2591,10 @@ contains
       write(*,*) "Error :: cannot subtract tensors with different device types"
       stop 1
     end if
+    if (tensor1%get_device_index() /= tensor2%get_device_index()) then
+      write(*,*) "Error :: cannot subtract tensors with different device indices"
+      stop 1
+    end if
 
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
@@ -2601,6 +2616,10 @@ contains
       write(*,*) "Error :: cannot multiply tensors with different device types"
       stop 1
     end if
+    if (tensor1%get_device_index() /= tensor2%get_device_index()) then
+      write(*,*) "Error :: cannot multiply tensors with different device indices"
+      stop 1
+    end if
 
     if (.not. c_associated(output%p)) then
       call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
@@ -2620,6 +2639,10 @@ contains
 
     if (tensor1%get_device_type() /= tensor2%get_device_type()) then
       write(*,*) "Error :: cannot divide tensors with different device types"
+      stop 1
+    end if
+    if (tensor1%get_device_index() /= tensor2%get_device_index()) then
+      write(*,*) "Error :: cannot divide tensors with different device indices"
       stop 1
     end if
 
