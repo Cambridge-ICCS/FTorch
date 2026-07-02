@@ -1,14 +1,19 @@
 """Unit tests for validation module."""
 
 import os
+import re
 import warnings
 
 import pytest
 import torch
 
 from ftorch_utils.validation import (
+    validate_device_indices,
+    validate_device_types,
     validate_input_model_file,
     validate_input_tensor_file,
+    validate_model_device_indices,
+    validate_model_device_types,
     validate_output_model_file,
     validate_output_tensors,
 )
@@ -155,4 +160,95 @@ class TestValidateOutputTensors:
             validate_output_tensors(
                 (torch.tensor([1.0, 2.0]), torch.tensor([3.0, 4.0])),
                 (torch.tensor([1.0, 2.0]), torch.tensor([3.1, 4.0])),
+            )
+
+
+class TestValidateModelDevice:
+    """Tests for validate_model_device_types and validate_model_device_indices."""
+
+    def test_mismatching_cpu_cuda(self):
+        """Check that mismatching device types in model parameters raise an error."""
+        if torch.cuda.device_count() == 0:
+            pytest.skip("No CUDA devices available, skipping test.")
+        expected = (
+            "The model has parameters on different devices (model on 'cpu' vs."
+            " parameters on 'cuda'). Ensure all model parameters are on the same device"
+            " and try again."
+        )
+        model = torch.nn.Sequential(
+            torch.nn.Linear(2, 2).to("cpu"),
+            torch.nn.Linear(2, 2).to("cuda"),
+        )
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
+            validate_model_device_types(model)
+
+    def test_mismatching_cuda_index(self):
+        """Check that mismatching device indices in model parameters raise an error."""
+        if torch.cuda.device_count() < 2:
+            pytest.skip("Insufficient CUDA devices available, skipping test.")
+        expected = (
+            "The model has parameters on devices with different indices (model on "
+            " device with index '0' vs. parameters on device with index '1'). Ensure"
+            " all model parameters are on the same device and try again."
+        )
+        model = torch.nn.Sequential(
+            torch.nn.Linear(2, 2).to("cuda:0"),
+            torch.nn.Linear(2, 2).to("cuda:1"),
+        )
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
+            validate_model_device_types(model)
+
+
+class TestValidateDevice:
+    """Tests for validate_device_types and validate_device_indices."""
+
+    def test_matching_cpu(self):
+        """Check that matching CPU device types are accepted."""
+        try:
+            validate_device_types(
+                torch.nn.Linear(2, 2).to("cpu"), torch.tensor([1.0, 2.0, 3.0]).to("cpu")
+            )
+        except RuntimeError:
+            pytest.fail("validate_device_types raised RuntimeError unexpectedly!")
+
+    def test_matching_cuda(self):
+        """Check that matching CUDA device types are accepted."""
+        if torch.cuda.device_count() == 0:
+            pytest.skip("No CUDA devices available, skipping test.")
+        try:
+            validate_device_types(
+                torch.nn.Linear(2, 2).to("cuda"),
+                torch.tensor([1.0, 2.0, 3.0]).to("cuda"),
+            )
+        except RuntimeError:
+            pytest.fail("validate_device_types raised RuntimeError unexpectedly!")
+
+    def test_mismatching_cpu_cuda(self):
+        """Check that mismatching device types raise an error."""
+        if torch.cuda.device_count() == 0:
+            pytest.skip("No CUDA devices available, skipping test.")
+        expected = (
+            "The model is on a different device from input tensor 0 (model on 'cpu' vs."
+            " input tensor on 'cuda'). Ensure they are on the same device and try"
+            " again."
+        )
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
+            validate_device_types(
+                torch.nn.Linear(2, 2).to("cpu"),
+                torch.tensor([1.0, 2.0, 3.0]).to("cuda"),
+            )
+
+    def test_mismatching_cuda_index(self):
+        """Check that mismatching device indices raise an error."""
+        if torch.cuda.device_count() < 2:
+            pytest.skip("Insufficient CUDA devices available, skipping test.")
+        expected = (
+            "The model is on a device with a different index from input tensor 0 (model"
+            " device with index '0' vs. input tensor on device with index '1'). Ensure"
+            " they are on the same device and try again."
+        )
+        with pytest.raises(RuntimeError, match=re.escape(expected)):
+            validate_device_types(
+                torch.nn.Linear(2, 2).to("cuda:0"),
+                torch.tensor([1.0, 2.0, 3.0]).to("cuda:1"),
             )

@@ -19,16 +19,22 @@ on:
       - 'src/*.h'
       # Unit tests
       - 'test/unit/**/*.pf'
-      # Integration tests
-      - 'examples/**/*.py'
-      - 'examples/**/*.f90'
+      - 'test/ftorch_utils/*.py'
+      # Specific integration tests
+      - 'examples/07_MultiGPU/*.py'
+      - 'examples/07_MultiGPU/*.f90'
       # Build system
       - '**CMakeLists.txt'
-      - '**requirements.txt'
+      - 'pyproject.toml'
 
   pull_request:
     paths:
+      # This workflow
       - '.github/workflows/test_suite_ubuntu_cuda_gnu.yml'
+      # Specific integration tests
+      - 'examples/07_MultiGPU/*.py'
+      - 'examples/07_MultiGPU/*.f90'
+      - 'examples/07_MultiGPU/CMakeLists.txt'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -78,16 +84,16 @@ jobs:
           # NOTE: CUDA version should be consistent with the download below, i.e., 13.2
           pip install . --extra-index-url https://download.pytorch.org/whl/cu132 --group test
 
-      - name: Install cmake and CUDA toolkit
+      - name: Install cmake, GNU compilers, m4, and CUDA toolkit
         run: |
           sudo apt update
           # NOTE: CUDA version should be consistent with the download above, i.e., 13.2
-          sudo apt install -y cmake cuda-toolkit
+          sudo apt install -y cmake gcc g++ gfortran m4 cuda-toolkit
 
-        # Currently used by example_mpi
-      - name: Install an MPI distribution
+      - name: Run GPU-specific FTorch-utils unit tests
         run: |
-          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
+          . ftorch/bin/activate
+          pytest --verbose test/ftorch_utils -k cuda
 
       - name: Install pFUnit
         run: |
@@ -133,14 +139,14 @@ jobs:
           cmake --build .
           cmake --install .
 
-      - name: Run unit tests
+      - name: Run GPU-enabled Fortran unit tests
         run: |
           . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex cuda
 
-      - name: Run integration tests
+      - name: Run Multi-GPU integration test
         run: |
           . ftorch/bin/activate
           cd build
-          ctest --verbose --tests-regex example
+          ctest --verbose --tests-regex example_multigpu
