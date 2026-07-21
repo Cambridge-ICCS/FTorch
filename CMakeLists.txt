@@ -209,6 +209,8 @@ install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_model.mod"
         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
 install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_optim.mod"
         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
+install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_loss.mod"
+        DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
 install(FILES "${CMAKE_Fortran_MODULE_DIRECTORY}/ftorch_test_utils.mod"
         DESTINATION "${CMAKE_INSTALL_MODULEDIR}")
 
