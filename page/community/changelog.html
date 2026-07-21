@@ -158,8 +158,15 @@ changes to the project will be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.
 For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/page/developer.html#versioning-and-changelog">FTorch online documentation</a>.</p>
-<h2 id="unreleased"><a href="https://github.com/Cambridge-ICCS/FTorch/compare/v1.1.0...HEAD">Unreleased</a></h2>
+<h2 id="unreleased"><a href="https://github.com/Cambridge-ICCS/FTorch/compare/v1.2.0...HEAD">Unreleased</a></h2>
 <h3 id="added">Added</h3>
+<h3 id="changed">Changed</h3>
+<h3 id="removed">Removed</h3>
+<h3 id="fixed">Fixed</h3>
+<h3 id="patch-releases">Patch Releases</h3>
+<h2 id="120-2026-07-21"><a href="https://github.com/Cambridge-ICCS/FTorch/releases/tag/v1.2.0">1.2.0</a> - 2026-07-21</h2>
+<p><a href="https://github.com/Cambridge-ICCS/FTorch/compare/v1.1.0...v1.2.0">GitHub diff with v1.1.0</a></p>
+<h3 id="added_1">Added</h3>
 <ul>
 <li>Introduced a central, installable <code>pt2ts</code> script
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/555">#555</a></li>
@@ -178,7 +185,7 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 <li>Added check for consistent device indices when applying overloaded operators in
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/614">#614</a></li>
 </ul>
-<h3 id="changed">Changed</h3>
+<h3 id="changed_1">Changed</h3>
 <ul>
 <li>Renamed <code>utils</code> as <code>ftorch_utils</code> and made it a proper Python module
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/555">#555</a></li>
@@ -201,20 +208,20 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 <li>Updated CI workflows to use pFUnit 4.18.2 in
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/595">#595</a></li>
 </ul>
-<h3 id="removed">Removed</h3>
+<h3 id="removed_1">Removed</h3>
 <ul>
 <li>Removed <code>pt2ts.py</code> scripts from <code>utils</code> and all examples
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/555">#555</a></li>
 </ul>
-<h3 id="fixed">Fixed</h3>
+<h3 id="fixed_1">Fixed</h3>
 <ul>
 <li>Fixed CI workflows for gfortran versions 9 and 10 in
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/603">#603</a></li>
 </ul>
-<h3 id="patch-releases">Patch Releases</h3>
+<h3 id="patch-releases_1">Patch Releases</h3>
 <h2 id="110-2026-02-26"><a href="https://github.com/Cambridge-ICCS/FTorch/releases/tag/v1.1.0">1.1.0</a> - 2026-02-26</h2>
 <p><a href="https://github.com/Cambridge-ICCS/FTorch/compare/v1.0.0...v1.1.0">GitHub diff with v1.0.0</a></p>
-<h3 id="added_1">Added</h3>
+<h3 id="added_2">Added</h3>
 <ul>
 <li>Add unit testing for the Torch Model with multiple input/output tensors and batching
   capabilities. <a href="https://github.com/Cambridge-ICCS/FTorch/pull/559">#559</a></li>
@@ -251,7 +258,7 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 <li>Overload taking sum and mean of tensors in
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/344">#344</a>.</li>
 </ul>
-<h3 id="changed_1">Changed</h3>
+<h3 id="changed_2">Changed</h3>
 <ul>
 <li>Modified <code>torch_tensor_backward</code> so that it can accept a custom external
   gradient tensor as its second argument. The current API is broken slightly
@@ -279,14 +286,14 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
   examples in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/348">#348</a>.</li>
 <li>Error handling in <code>ctorch.cpp</code> improved in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/347">#347</a>.</li>
 </ul>
-<h3 id="removed_1">Removed</h3>
+<h3 id="removed_2">Removed</h3>
 <ul>
 <li><code>torch_tensor_array_delete</code> was removed in favour of using elemental
   <code>torch_tensor_delete</code> instead in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/545">#545</a>.
   Users should be using the <code>torch_delete</code> interface so not be impacted and thus this
   is not considered a breaking change.</li>
 </ul>
-<h3 id="fixed_1">Fixed</h3>
+<h3 id="fixed_2">Fixed</h3>
 <ul>
 <li>Finalizer for <code>torch_tensor</code>s (<code>torch_tensor_delete</code>) was made elemental in
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/545">#545</a>. This fixes a possible
@@ -302,9 +309,9 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
   However, that was a bug rather than a feature, so any workflow crashes due to
   this change will provide the user with information on how to remove the error.</li>
 </ul>
-<h3 id="patch-releases_1">Patch Releases</h3>
+<h3 id="patch-releases_2">Patch Releases</h3>
 <h2 id="100-2025-03-05"><a href="https://github.com/Cambridge-ICCS/FTorch/releases/tag/v1.0.0">1.0.0</a> - 2025-03-05</h2>
-<h3 id="added_2">Added</h3>
+<h3 id="added_3">Added</h3>
 <ul>
 <li>First release of FTorch accompanying pulication in JOSS</li>
 <li>MIT License</li>
