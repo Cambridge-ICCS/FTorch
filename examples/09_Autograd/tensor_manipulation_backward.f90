@@ -17,7 +17,7 @@ program autograd_tensor_manipulation
   ! Set working precision for reals
   integer, parameter :: wp = sp
 
-  integer, parameter :: n = 2
+  integer(c_int), parameter :: n = 2_c_int
   real(wp), dimension(n), target :: in_data1, in_data2
   real(wp), dimension(n), target :: out_data1, out_data2, out_data3
   real(wp), dimension(1), target :: multiplier_value, divisor_value
