@@ -17,7 +17,7 @@ program autograd_tensor_manipulation
   ! Set working precision for reals
   integer, parameter :: wp = sp
 
-  integer, parameter :: ndims = 1
+  integer(c_int) :: ndims
   integer, parameter :: n = 2
   integer(c_int) :: device_type
   real(wp), dimension(n), target :: in_data1, in_data2
@@ -67,6 +67,7 @@ program autograd_tensor_manipulation
   ! by choosing a tensor filled with ones.
   ! NOTE: An external gradient is required when calling backpropagation on a torch_tensor, except
   !       when it is scalar-valued. In that case, the external gradient defaults to one.
+  ndims = Q%get_rank()
   device_type = Q%get_device_type()
   call torch_tensor_ones(external_gradient, ndims, Q%get_shape(), Q%get_dtype(), device_type)
 
