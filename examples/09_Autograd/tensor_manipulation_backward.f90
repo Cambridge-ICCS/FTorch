@@ -19,7 +19,6 @@ program autograd_tensor_manipulation
 
 
   integer, parameter :: n = 2
-  integer(c_int) :: ndims, device_type
   real(wp), dimension(n), target :: in_data1, in_data2
   real(wp), dimension(n), target :: out_data1, out_data2, out_data3
   real(wp), dimension(1), target :: multiplier_value, divisor_value
@@ -67,9 +66,13 @@ program autograd_tensor_manipulation
   ! by choosing a tensor filled with ones.
   ! NOTE: An external gradient is required when calling backpropagation on a torch_tensor, except
   !       when it is scalar-valued. In that case, the external gradient defaults to one.
-  ndims = Q%get_rank()
-  device_type = Q%get_device_type()
-  call torch_tensor_ones(external_gradient, ndims, Q%get_shape(), Q%get_dtype(), device_type)
+  block
+    integer(c_int) :: ndims, device_type
+
+    ndims = Q%get_rank()
+    device_type = Q%get_device_type()
+    call torch_tensor_ones(external_gradient, ndims, Q%get_shape(), Q%get_dtype(), device_type)
+  end block
 
   ! Run the backpropagation operator
   ! This will perform backpropogation on the tensors involved in generating Q (a and b), setting the
