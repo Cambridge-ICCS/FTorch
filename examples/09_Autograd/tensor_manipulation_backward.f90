@@ -65,8 +65,7 @@ program autograd_tensor_manipulation
   ! by choosing a tensor filled with ones.
   ! NOTE: An external gradient is required when calling backpropagation on a torch_tensor, except
   !       when it is scalar-valued. In that case, the external gradient defaults to one.
-  call torch_tensor_ones(external_gradient, Q%get_rank(), Q%get_shape(), Q%get_dtype(), &
-                         Q%get_device_type())
+  call torch_tensor_ones(external_gradient, ndims, Q%get_shape(), Q%get_dtype(), torch_kCPU)
 
   ! Run the backpropagation operator
   ! This will perform backpropogation on the tensors involved in generating Q (a and b), setting the
