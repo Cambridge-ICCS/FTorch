@@ -207,7 +207,8 @@ macOS system libraries.
 Apple does not provide a Fortran compiler so users will need to install one.
 We recommend GNU's `gfortran` which comes with GCC.
 
-Users will additionally need to install OpenMP (and, for some examples, Open-MPI).
+Users will additionally need to install OpenMP to run tests with pFUnit and, for some
+examples, Open-MPI.
 This can be done e.g. using the [homebrew package manager](https://brew.sh/) with:
 ```
 brew install gcc openmpi libomp
@@ -227,6 +228,7 @@ cmake .. \
   -DCMAKE_C_COMPILER=clang \
   -DCMAKE_CXX_COMPILER=clang++ \
   -DCMAKE_Fortran_COMPILER=gfortran \
+  -DCMAKE_BUILD_TESTS=TRUE \
   -DOpenMP_ROOT="$(brew --prefix libomp)" \
   -DGPU_DEVICE=MPS
 cmake --build .
@@ -234,6 +236,8 @@ cmake --install .
 ```
 
 To build without support for Apple Silicon MPS acceleration, remove the `-DGPU_DEVICE=MPS`.
+If not building tests remove `-DCMAKE_BUILD_TESTS` and there is no need to specify
+`OpenMP_ROOT`.
 
 We recommend Mac users review the MacOS continuous integration workflow
 ([`.github/workflows/test_suite_macos_cpu_clang.yml`](https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_macos_cpu_clang.yml))
