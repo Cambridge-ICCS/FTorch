@@ -13,6 +13,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Guidance around OpenMP on MacOS and building updated (along with MacOS workflow) in
+  [#618](https://github.com/Cambridge-ICCS/FTorch/pull/618)
+
 ### Removed
 
 ### Fixed
