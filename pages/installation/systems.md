@@ -215,15 +215,11 @@ brew install gcc openmpi libomp
 
 #### Building
 
-MacOS requires explicit linking to the C++ standard library and OpenMP support via
-`libomp`. This can be done through C and C++ flags at compilation time:
-  - `-Xpreprocessor -fopenmp` which tells clang to use OpenMP, with `-Xpreprocessor`
-    passing the flag to the preprocessor,
-  - `-I<path/to/libomp>/include` to find OpenMP headers,
-  - `-stdlib=libc++` to ensure use of the native MacOS C++ standard library, and
-  - `-L<path/to/libomp>/lib -lomp` to link against the OpenMP library.
-
-If using homebrew you can replace `<path/to/libomp>` with `$(brew --prefix libomp)`.
+MacOS does not have OpenMP installed by default, unlike Linux, so Torch bundles its
+own version. To satisfy pFUnit's need to find OpenMP without conflicting the internal
+Torch OpenMP we pass an additional CMake flag (`OpenMP_ROOT`) pointing to the
+system installed version.
+If using homebrew you can set this to `$(brew --prefix libomp)`.
 
 Example CMake command:
 ```sh
@@ -231,9 +227,7 @@ cmake .. \
   -DCMAKE_C_COMPILER=clang \
   -DCMAKE_CXX_COMPILER=clang++ \
   -DCMAKE_Fortran_COMPILER=gfortran \
-  -DCMAKE_C_FLAGS="-Xpreprocessor -fopenmp -I<path/to/libomp>/include" \
-  -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Xpreprocessor -fopenmp -I<path/to/libomp>/include" \
-  -DCMAKE_EXE_LINKER_FLAGS="-L<path/to/libomp>/lib -lomp" \
+  -DOpenMP_ROOT="$(brew --prefix libomp)" \
   -DGPU_DEVICE=MPS
 cmake --build .
 cmake --install .
