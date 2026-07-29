@@ -337,34 +337,33 @@ This avoids ABI incompatibilities with LibTorch and ensures proper linkage with
 macOS system libraries.</p>
 <p>Apple does not provide a Fortran compiler so users will need to install one.
 We recommend GNU's <code>gfortran</code> which comes with GCC.</p>
-<p>Users will additionally need to install OpenMP (and, for some examples, Open-MPI).
+<p>Users will additionally need to install OpenMP to run tests with pFUnit and, for some
+examples, Open-MPI.
 This can be done e.g. using the <a href="https://brew.sh/">homebrew package manager</a> with:</p>
 <div class="codehilite"><pre><span></span><code>brew install gcc openmpi libomp
 </code></pre></div>
 
 <h4 id="building">Building</h4>
-<p>MacOS requires explicit linking to the C++ standard library and OpenMP support via
-<code>libomp</code>. This can be done through C and C++ flags at compilation time:
-  - <code>-Xpreprocessor -fopenmp</code> which tells clang to use OpenMP, with <code>-Xpreprocessor</code>
-    passing the flag to the preprocessor,
-  - <code>-I&lt;path/to/libomp&gt;/include</code> to find OpenMP headers,
-  - <code>-stdlib=libc++</code> to ensure use of the native MacOS C++ standard library, and
-  - <code>-L&lt;path/to/libomp&gt;/lib -lomp</code> to link against the OpenMP library.</p>
-<p>If using homebrew you can replace <code>&lt;path/to/libomp&gt;</code> with <code>$(brew --prefix libomp)</code>.</p>
+<p>MacOS does not have OpenMP installed by default, unlike Linux, so Torch bundles its
+own version. To satisfy pFUnit's need to find OpenMP without conflicting the internal
+Torch OpenMP we pass an additional CMake flag (<code>OpenMP_ROOT</code>) pointing to the
+system installed version.
+If using homebrew you can set this to <code>$(brew --prefix libomp)</code>.</p>
 <p>Example CMake command:</p>
 <div class="codehilite"><pre><span></span><code>cmake<span class="w"> </span>..<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DCMAKE_C_COMPILER<span class="o">=</span>clang<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>clang++<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DCMAKE_Fortran_COMPILER<span class="o">=</span>gfortran<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DCMAKE_C_FLAGS<span class="o">=</span><span class="s2">&quot;-Xpreprocessor -fopenmp -I&lt;path/to/libomp&gt;/include&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DCMAKE_CXX_FLAGS<span class="o">=</span><span class="s2">&quot;-stdlib=libc++ -Xpreprocessor -fopenmp -I&lt;path/to/libomp&gt;/include&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DCMAKE_EXE_LINKER_FLAGS<span class="o">=</span><span class="s2">&quot;-L&lt;path/to/libomp&gt;/lib -lomp&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>TRUE<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DOpenMP_ROOT<span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>brew<span class="w"> </span>--prefix<span class="w"> </span>libomp<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DGPU_DEVICE<span class="o">=</span>MPS
 cmake<span class="w"> </span>--build<span class="w"> </span>.
 cmake<span class="w"> </span>--install<span class="w"> </span>.
 </code></pre></div>
 
-<p>To build without support for Apple Silicon MPS acceleration, remove the <code>-DGPU_DEVICE=MPS</code>.</p>
+<p>To build without support for Apple Silicon MPS acceleration, remove the <code>-DGPU_DEVICE=MPS</code>.
+If not building tests remove <code>-DCMAKE_BUILD_TESTS</code> and there is no need to specify
+<code>OpenMP_ROOT</code>.</p>
 <p>We recommend Mac users review the MacOS continuous integration workflow
 (<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/.github/workflows/test_suite_macos_cpu_clang.yml"><code>.github/workflows/test_suite_macos_cpu_clang.yml</code></a>)
 for more information, as this provides another example of how to build and run
