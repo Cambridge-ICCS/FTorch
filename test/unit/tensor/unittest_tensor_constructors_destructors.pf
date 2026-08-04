@@ -9,7 +9,7 @@ module unittest_tensor_constructors_destructors
   use ftorch_devices, only: torch_kCPU
   use ftorch_types, only: torch_kFloat32, ftorch_int
   use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_delete, torch_tensor_from_array, &
-                           torch_tensor_from_array_legacy
+                           torch_tensor_from_array_legacy, torch_tensor_from_array_permuted
   use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
   use iso_c_binding, only: c_associated, c_int64_t
@@ -35,6 +35,7 @@ module unittest_tensor_constructors_destructors
     logical :: auto_delete    ! torch_tensor_delete is called when .false., otherwise the finalizer
                               !   will call it when a tensor goes out of scope
     logical :: reordered      ! If .true., a reversed tensor layout is used
+    logical :: permuted       ! If .true., a reverse-axes permutation tensor layout is used
     integer :: iterations     ! Number of times to construct/destruct a tensor
   contains
     procedure :: toString
@@ -59,7 +60,7 @@ contains
   function get_parameters_simple() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
-      TestParametersType(.false.,.false.,.false.,0) &
+      TestParametersType(.false.,.false.,.false.,.false.,0) &
     ]
   end function get_parameters_simple
 
@@ -67,10 +68,10 @@ contains
   function get_parameters_destruction() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
-      TestParametersType(.false.,.false.,.false.,1), &
-      TestParametersType(.false.,.false.,.false.,2), &
-      TestParametersType(.false.,.true.,.false.,1), &
-      TestParametersType(.false.,.true.,.false.,2) &
+      TestParametersType(.false.,.false.,.false.,.false.,1), &
+      TestParametersType(.false.,.false.,.false.,.false.,2), &
+      TestParametersType(.false.,.true.,.false.,.false.,1), &
+      TestParametersType(.false.,.true.,.false.,.false.,2) &
     ]
   end function get_parameters_destruction
 
@@ -78,8 +79,8 @@ contains
   function get_parameters_requires_grad() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
-      TestParametersType(.false.,.false.,.false.,1), &
-      TestParametersType(.true.,.false.,.false.,1) &
+      TestParametersType(.false.,.false.,.false.,.false.,1), &
+      TestParametersType(.true.,.false.,.false.,.false.,1) &
     ]
   end function get_parameters_requires_grad
 
@@ -87,8 +88,8 @@ contains
   function get_parameters_reordered() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
-      TestParametersType(.false.,.false.,.false.,1), &
-      TestParametersType(.false.,.false.,.true.,1) &
+      TestParametersType(.false.,.false.,.false.,.false.,1), &
+      TestParametersType(.false.,.false.,.true.,.false.,1) &
     ]
   end function get_parameters_reordered
 
@@ -96,9 +97,9 @@ contains
   function get_parameters_elemental() result(params)
     type(TestParametersType), allocatable :: params(:)
     params = [ &
-      TestParametersType(.false.,.false.,.false.,1), & ! Basic case
-      TestParametersType(.true.,.false.,.false.,3), &   ! With requires_grad
-      TestParametersType(.false.,.true.,.false.,1) &  ! Autodelete
+      TestParametersType(.false.,.false.,.false.,.false.,1), & ! Basic case
+      TestParametersType(.true.,.false.,.false.,.false.,3), &   ! With requires_grad
+      TestParametersType(.false.,.true.,.false.,.false.,1) &  ! Autodelete
     ]
   end function get_parameters_elemental
 
@@ -106,9 +107,9 @@ contains
   function toString(this) result(string)
     class(TestParametersType), intent(in) :: this
     character(:), allocatable :: string
-    character(len=7) :: str
-    write(str,"(l1,',',l1,',',l1,',',i1)") this%requires_grad, this%auto_delete, this%reordered, &
-                                           this%iterations
+    character(len=9) :: str
+    write(str,"(l1,',',l1,',',l1,',',l1,',',i1)") this%requires_grad, this%auto_delete, this%reordered, &
+                                                  this%permuted, this%iterations
     string = str
   end function toString
 
