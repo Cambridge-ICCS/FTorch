@@ -371,6 +371,59 @@ contains
 
   end subroutine test_torch_from_array_3d
 
+  ! Basic smoke test for the torch_tensor_from_array_permuted subroutine functionality
+  @test(testParameters={get_parameters_simple()})
+  subroutine test_torch_permuted_2d(this)
+    use ftorch_tensor, only: torch_tensor_from_array_permuted
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    integer, parameter :: ndims = 2
+    integer(ftorch_int), parameter :: permute_dims(ndims) = [2, 1]
+    integer(c_int64_t), parameter :: expected_shape(ndims) = [3, 2]
+    integer(c_int64_t), parameter :: expected_stride(ndims) = [2, 1]
+    real(wp), dimension(2,3), target :: in_data
+    real(wp), dimension(3,2), target :: out_data
+    real(wp), dimension(3,2) :: expected
+
+    ! Create input array
+    in_data(:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0], [2,3])
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor1%p))
+
+    ! Create a tensor with permuted (transposed) dimensions
+    ! When queried we expect it to have different shape and strides to the Fortran
+    ! array in_data.
+    call torch_tensor_from_array_permuted(tensor1, in_data, device_type, device_index, &
+                                          permute_dims, requires_grad=this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor1%p))
+
+    ! Check the rank is preserved
+    @assertEqual(ndims, tensor1 % get_rank())
+
+    ! Check the shape and stride reflect the permutation
+    @assertEqual(expected_shape, tensor1 % get_shape())
+    @assertEqual(expected_stride, tensor1 % get_stride())
+
+    ! Create a second tensor associated to an output array, with permuted shape
+    call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
+
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
+
+    ! Compare the data in tensor2 to the (permuted) input data
+    ! Perform the permutation in Fortran and compare to that resulting from torch.
+    expected(:,:) = reshape(in_data, [3,2], order=permute_dims)
+    @assertTrue(allclose(out_data, expected, test_name="test_from_array_permuted"))
+
+  end subroutine test_torch_from_array_permuted_2d
+
   ! Unit test for the torch_tensor_from_blob subroutine
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_blob(this)
