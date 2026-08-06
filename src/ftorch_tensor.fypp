@@ -59,21 +59,11 @@ module ftorch_tensor
   ! ============================================================================
 
   !> Interface for directing `torch_tensor_from_array` to possible input types and ranks
-  !> Signature: (tensor, data, device_type, [device_index], [layout], [requires_grad])
+  !> Signature: (tensor, data, device_type, [device_index], [permute_dims], [requires_grad])
   interface torch_tensor_from_array
     #:for PREC in PRECISIONS
     #:for RANK in RANKS
     module procedure torch_tensor_from_array_${PREC}$_${RANK}$d
-    #:endfor
-    #:endfor
-  end interface
-
-  !> Interface for directing `torch_tensor_from_array_permuted` to possible input types and ranks
-  !> Signature: (tensor, data, device_type, [device_index], [permute_dims], [requires_grad])
-  interface torch_tensor_from_array_permuted
-    #:for PREC in PRECISIONS
-    #:for RANK in RANKS
-    module procedure torch_tensor_from_array_permuted_${PREC}$_${RANK}$d
     #:endfor
     #:endfor
   end interface
@@ -385,8 +375,8 @@ contains
   #:for PREC in PRECISIONS
   #:for RANK in RANKS
   !> Return a Torch tensor pointing to data_in array of rank ${RANK}$ containing data of type `${PREC}$`
-  !> This subroutine is part of an interface and should be accessed through `torch_tensor_from_array_permuted`
-  subroutine torch_tensor_from_array_permuted_${PREC}$_${RANK}$d(tensor, data_in, &
+  !> This subroutine is part of an interface and should be accessed through `torch_tensor_from_array`
+  subroutine torch_tensor_from_array_${PREC}$_${RANK}$d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
@@ -442,61 +432,6 @@ contains
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
                                  torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_${PREC}$_${RANK}$d
-
-  #:endfor
-  #:endfor
-
-  #:for PREC in PRECISIONS
-  #:for RANK in RANKS
-  !> Return a Torch tensor pointing to data_in array of rank ${RANK}$ containing data of type `${PREC}$`
-  !> This subroutine is part of an interface and should be accessed through `torch_tensor_from_array`
-  subroutine torch_tensor_from_array_${PREC}$_${RANK}$d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : ${PREC}$
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    ${f_type(PREC)}$(kind=${PREC}$), intent(in), pointer, contiguous :: data_in${ranksuffix(RANK)}$  !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(${RANK}$)  !! Control order of indices
-    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: tensor_shape(${RANK}$)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(${RANK}$)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(${RANK}$)          !! Strides for the tensor
-    integer(c_int), parameter :: dtype = ${enum_from_prec(PREC)}$  !! Data type
-    integer(c_int), parameter :: ndims = ${RANK}$                  !! Number of dimension of input data
-    integer :: i
-
-    tensor_shape = shape(data_in)
-
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
-    do i = 1, ndims
-      if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
-      else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) * tensor_shape(tensor_layout(i - 1))
-      end if
-    end do
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_${PREC}$_${RANK}$d
