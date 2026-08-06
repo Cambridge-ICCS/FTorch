@@ -40,7 +40,7 @@ module ftorch_tensor
   ! ============================================================================
 
   !> Interface for directing `torch_tensor_from_array` to possible input types and ranks
-  !> Signature: (tensor, data, device_type, [device_index], [layout], [requires_grad])
+  !> Signature: (tensor, data, device_type, [device_index], [permute_dims], [requires_grad])
   interface torch_tensor_from_array
     module procedure torch_tensor_from_array_int8_1d
     module procedure torch_tensor_from_array_int8_2d
@@ -72,41 +72,6 @@ module ftorch_tensor
     module procedure torch_tensor_from_array_real64_3d
     module procedure torch_tensor_from_array_real64_4d
     module procedure torch_tensor_from_array_real64_5d
-  end interface
-
-  !> Interface for directing `torch_tensor_from_array_permuted` to possible input types and ranks
-  !> Signature: (tensor, data, device_type, [device_index], [permute_dims], [requires_grad])
-  interface torch_tensor_from_array_permuted
-    module procedure torch_tensor_from_array_permuted_int8_1d
-    module procedure torch_tensor_from_array_permuted_int8_2d
-    module procedure torch_tensor_from_array_permuted_int8_3d
-    module procedure torch_tensor_from_array_permuted_int8_4d
-    module procedure torch_tensor_from_array_permuted_int8_5d
-    module procedure torch_tensor_from_array_permuted_int16_1d
-    module procedure torch_tensor_from_array_permuted_int16_2d
-    module procedure torch_tensor_from_array_permuted_int16_3d
-    module procedure torch_tensor_from_array_permuted_int16_4d
-    module procedure torch_tensor_from_array_permuted_int16_5d
-    module procedure torch_tensor_from_array_permuted_int32_1d
-    module procedure torch_tensor_from_array_permuted_int32_2d
-    module procedure torch_tensor_from_array_permuted_int32_3d
-    module procedure torch_tensor_from_array_permuted_int32_4d
-    module procedure torch_tensor_from_array_permuted_int32_5d
-    module procedure torch_tensor_from_array_permuted_int64_1d
-    module procedure torch_tensor_from_array_permuted_int64_2d
-    module procedure torch_tensor_from_array_permuted_int64_3d
-    module procedure torch_tensor_from_array_permuted_int64_4d
-    module procedure torch_tensor_from_array_permuted_int64_5d
-    module procedure torch_tensor_from_array_permuted_real32_1d
-    module procedure torch_tensor_from_array_permuted_real32_2d
-    module procedure torch_tensor_from_array_permuted_real32_3d
-    module procedure torch_tensor_from_array_permuted_real32_4d
-    module procedure torch_tensor_from_array_permuted_real32_5d
-    module procedure torch_tensor_from_array_permuted_real64_1d
-    module procedure torch_tensor_from_array_permuted_real64_2d
-    module procedure torch_tensor_from_array_permuted_real64_3d
-    module procedure torch_tensor_from_array_permuted_real64_4d
-    module procedure torch_tensor_from_array_permuted_real64_5d
   end interface
 
   !> deprecated: true
@@ -455,2170 +420,9 @@ contains
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
   !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int8_1d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 1
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int8_1d
-
-  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int8`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int8_2d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 2
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int8_2d
-
-  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int8`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int8_3d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 3
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int8_3d
-
-  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int8`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int8_4d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 4
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int8_4d
-
-  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int8`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int8_5d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int8
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 5
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int8_5d
-
-  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int16`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int16_1d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 1
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int16_1d
-
-  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int16`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int16_2d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 2
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int16_2d
-
-  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int16`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int16_3d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 3
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int16_3d
-
-  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int16`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int16_4d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 4
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int16_4d
-
-  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int16`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int16_5d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int16
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 5
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int16_5d
-
-  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int32`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int32_1d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 1
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int32_1d
-
-  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int32`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int32_2d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 2
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int32_2d
-
-  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int32`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int32_3d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 3
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int32_3d
-
-  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int32`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int32_4d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 4
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int32_4d
-
-  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int32`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int32_5d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int32
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 5
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int32_5d
-
-  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int64`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int64_1d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 1
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int64_1d
-
-  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `int64`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int64_2d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 2
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int64_2d
-
-  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `int64`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int64_3d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 3
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int64_3d
-
-  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `int64`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int64_4d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 4
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int64_4d
-
-  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `int64`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_int64_5d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : int64
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 5
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_int64_5d
-
-  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real32`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_real32_1d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    real(kind=real32), intent(in), pointer, contiguous :: data_in(:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 1
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_real32_1d
-
-  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real32`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_real32_2d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 2
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_real32_2d
-
-  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real32`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_real32_3d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 3
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_real32_3d
-
-  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real32`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_real32_4d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 4
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_real32_4d
-
-  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `real32`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_real32_5d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real32
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 5
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_real32_5d
-
-  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `real64`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_real64_1d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    real(kind=real64), intent(in), pointer, contiguous :: data_in(:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 1
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_real64_1d
-
-  !> Return a Torch tensor pointing to data_in array of rank 2 containing data of type `real64`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_real64_2d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 2
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_real64_2d
-
-  !> Return a Torch tensor pointing to data_in array of rank 3 containing data of type `real64`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_real64_3d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 3
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_real64_3d
-
-  !> Return a Torch tensor pointing to data_in array of rank 4 containing data of type `real64`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_real64_4d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 4
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_real64_4d
-
-  !> Return a Torch tensor pointing to data_in array of rank 5 containing data of type `real64`
-  !> This subroutine is part of an interface and should be accessed through
-  !> `torch_tensor_from_array_permuted`.
-  subroutine torch_tensor_from_array_permuted_real64_5d(tensor, data_in, &
-                                                         device_type, device_index, permute_dims, &
-                                                         requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
-    use, intrinsic :: iso_fortran_env, only : real64
-
-    ! output tensor
-    type(torch_tensor), intent(out) :: tensor  !! Returned tensor
-
-    ! inputs
-    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
-        !! Input data that tensor will point at
-    integer(c_int), intent(in)    :: device_type
-        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
-        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
-        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
-        !! noting that this is Fortran so we index from 1!
-    logical, optional, intent(in) :: requires_grad
-        !! Whether gradients need to be computed for the created tensor
-
-    ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
-        !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
-        !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
-        !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
-        !! Strides for the Torch tensor
-    integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 5
-        !! Number of dimension of input data
-    integer :: i
-
-    fortran_shape = shape(data_in)
-
-    ! Compute native Fortran strides
-    do i = 1, ndims
-      if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
-      else
-        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
-      end if
-    end do
-
-    if (present(permute_dims)) then
-      ! permute shape of torch tensor to match permutation requested ('transpose')
-      do i = 1, ndims
-          torch_shape(i) = fortran_shape(permute_dims(i))
-          torch_strides(i) = fortran_strides(permute_dims(i))
-      end do
-    else
-      ! Keep Torch shape and strides same as Fortran
-      torch_shape = fortran_shape
-      torch_strides = fortran_strides
-    end if
-
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
-
-   end subroutine torch_tensor_from_array_permuted_real64_5d
-
-
-  !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
-  !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int8_1d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
@@ -2631,40 +435,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(1)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(1)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(1)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(1)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(1)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(1)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(1)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 1
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int8_1d
@@ -2673,7 +494,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int8_2d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
@@ -2686,40 +507,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(2)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(2)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(2)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(2)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(2)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(2)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(2)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 2
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int8_2d
@@ -2728,7 +566,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int8_3d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
@@ -2741,40 +579,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(3)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(3)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(3)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(3)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(3)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(3)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(3)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 3
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int8_3d
@@ -2783,7 +638,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int8_4d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
@@ -2796,40 +651,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(4)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(4)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(4)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(4)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(4)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(4)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(4)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 4
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int8_4d
@@ -2838,7 +710,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int8_5d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
@@ -2851,40 +723,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(5)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(5)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(5)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(5)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(5)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(5)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(5)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 5
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int8_5d
@@ -2893,7 +782,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int16_1d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
@@ -2906,40 +795,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(1)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(1)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(1)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(1)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(1)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(1)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(1)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 1
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int16_1d
@@ -2948,7 +854,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int16_2d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
@@ -2961,40 +867,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(2)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(2)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(2)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(2)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(2)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(2)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(2)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 2
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int16_2d
@@ -3003,7 +926,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int16_3d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
@@ -3016,40 +939,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(3)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(3)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(3)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(3)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(3)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(3)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(3)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 3
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int16_3d
@@ -3058,7 +998,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int16_4d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
@@ -3071,40 +1011,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(4)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(4)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(4)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(4)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(4)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(4)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(4)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 4
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int16_4d
@@ -3113,7 +1070,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int16_5d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
@@ -3126,40 +1083,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(5)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(5)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(5)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(5)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(5)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(5)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(5)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 5
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int16_5d
@@ -3168,7 +1142,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int32_1d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
@@ -3181,40 +1155,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(1)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(1)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(1)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(1)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(1)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(1)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(1)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 1
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int32_1d
@@ -3223,7 +1214,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int32_2d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
@@ -3236,40 +1227,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(2)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(2)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(2)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(2)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(2)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(2)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(2)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 2
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int32_2d
@@ -3278,7 +1286,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int32_3d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
@@ -3291,40 +1299,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(3)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(3)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(3)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(3)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(3)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(3)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(3)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 3
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int32_3d
@@ -3333,7 +1358,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int32_4d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
@@ -3346,40 +1371,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(4)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(4)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(4)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(4)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(4)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(4)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(4)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 4
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int32_4d
@@ -3388,7 +1430,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int32_5d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
@@ -3401,40 +1443,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(5)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(5)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(5)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(5)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(5)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(5)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(5)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 5
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int32_5d
@@ -3443,7 +1502,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int64_1d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
@@ -3456,40 +1515,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(1)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(1)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(1)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(1)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(1)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(1)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(1)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 1
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int64_1d
@@ -3498,7 +1574,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int64_2d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
@@ -3511,40 +1587,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(2)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(2)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(2)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(2)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(2)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(2)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(2)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 2
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int64_2d
@@ -3553,7 +1646,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int64_3d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
@@ -3566,40 +1659,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(3)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(3)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(3)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(3)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(3)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(3)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(3)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 3
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int64_3d
@@ -3608,7 +1718,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int64_4d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
@@ -3621,40 +1731,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(4)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(4)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(4)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(4)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(4)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(4)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(4)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 4
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int64_4d
@@ -3663,7 +1790,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_int64_5d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
@@ -3676,40 +1803,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(5)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(5)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(5)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(5)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(5)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(5)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(5)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 5
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_int64_5d
@@ -3718,7 +1862,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_real32_1d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
@@ -3731,40 +1875,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(1)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(1)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(1)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(1)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(1)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(1)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(1)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 1
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_real32_1d
@@ -3773,7 +1934,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_real32_2d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
@@ -3786,40 +1947,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(2)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(2)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(2)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(2)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(2)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(2)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(2)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 2
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_real32_2d
@@ -3828,7 +2006,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_real32_3d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
@@ -3841,40 +2019,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(3)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(3)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(3)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(3)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(3)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(3)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(3)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 3
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_real32_3d
@@ -3883,7 +2078,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_real32_4d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
@@ -3896,40 +2091,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(4)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(4)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(4)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(4)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(4)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(4)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(4)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 4
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_real32_4d
@@ -3938,7 +2150,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_real32_5d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
@@ -3951,40 +2163,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(5)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(5)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(5)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(5)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(5)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(5)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(5)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 5
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_real32_5d
@@ -3993,7 +2222,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_real64_1d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
@@ -4006,40 +2235,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(1)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(1)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(1)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(1)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(1)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(1)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(1)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(1)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 1
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_real64_1d
@@ -4048,7 +2294,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_real64_2d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
@@ -4061,40 +2307,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(2)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(2)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(2)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(2)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(2)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(2)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(2)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(2)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 2
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_real64_2d
@@ -4103,7 +2366,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_real64_3d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
@@ -4116,40 +2379,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(3)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(3)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(3)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(3)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(3)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(3)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(3)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(3)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 3
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_real64_3d
@@ -4158,7 +2438,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_real64_4d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
@@ -4171,40 +2451,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(4)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(4)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(4)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(4)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(4)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(4)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(4)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(4)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 4
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_real64_4d
@@ -4213,7 +2510,7 @@ contains
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
   subroutine torch_tensor_from_array_real64_5d(tensor, data_in, &
-                                                         device_type, device_index, layout, &
+                                                         device_type, device_index, permute_dims, &
                                                          requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
@@ -4226,40 +2523,57 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: layout(5)  !! Control order of indices
+    integer, optional, intent(in) :: device_index
+       !! Device index for GPU devices
+    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
+        !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
+        !! is the `rank`. The elements indicate the new location for a dimension on the
+        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
+        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: tensor_shape(5)            !! Shape of the tensor
-    integer(ftorch_int)       :: tensor_layout(5)           !! Layout for strides
-    integer(c_int64_t)       :: tensor_strides(5)          !! Strides for the tensor
+    integer(c_int64_t)        :: fortran_shape(5)
+        !! Shape of the unpermuted Fortran array
+    integer(c_int64_t)        :: fortran_strides(5)
+        !! Strides for the Fortran array
+    integer(c_int64_t)        :: torch_shape(5)
+        !! Shape of the Torch tensor
+    integer(c_int64_t)        :: torch_strides(5)
+        !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    integer(c_int), parameter :: ndims = 5
+        !! Number of dimension of input data
     integer :: i
 
-    tensor_shape = shape(data_in)
+    fortran_shape = shape(data_in)
 
-    if (present(layout)) then
-      tensor_layout = layout
-    else
-      do i = 1, ndims
-        tensor_layout(i) = i
-      end do
-    end if
-    tensor_strides(:) = 0
+    ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(tensor_layout(i)) = 1
+        fortran_strides(1) = 1_c_int64_t
       else
-        tensor_strides(tensor_layout(i)) = tensor_strides(tensor_layout(i - 1)) &
-                                           * tensor_shape(tensor_layout(i - 1))
+        fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
     end do
 
-    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, tensor_shape, &
-                                 tensor_strides, dtype, device_type, device_index, &
+    if (present(permute_dims)) then
+      ! permute shape of torch tensor to match permutation requested ('transpose')
+      do i = 1, ndims
+          torch_shape(i) = fortran_shape(permute_dims(i))
+          torch_strides(i) = fortran_strides(permute_dims(i))
+      end do
+    else
+      ! Keep Torch shape and strides same as Fortran
+      torch_shape = fortran_shape
+      torch_strides = fortran_strides
+    end if
+
+    call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
+                                 torch_strides, dtype, device_type, device_index, &
                                  requires_grad)
 
    end subroutine torch_tensor_from_array_real64_5d
