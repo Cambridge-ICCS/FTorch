@@ -372,6 +372,7 @@ contains
   end subroutine test_torch_from_array_3d
 
   ! Basic smoke test for the torch_tensor_from_array_permuted subroutine functionality
+  ! Note that the only possible permutation in 2D is an involution/transpose.
   @test(testParameters={get_parameters_simple()})
   subroutine test_torch_permuted_2d(this)
     use ftorch_tensor, only: torch_tensor_from_array_permuted
@@ -419,12 +420,140 @@ contains
 
     ! Compare the data in tensor2 to the (permuted) input data
     ! Perform the permutation in Fortran and compare to that resulting from torch.
-    expected(:,:) = reshape(in_data, [3,2], order=permute_dims)
+    ! Here we use order=permute_dims as a special case for 2D/involution.
+    expected(:,:) = reshape(in_data, expected_shape, order=permute_dims)
     @assertTrue(allclose(out_data, expected, test_name="test_from_array_permuted"))
 
   end subroutine test_torch_from_array_permuted_2d
 
-  ! Unit test for the torch_tensor_from_blob subroutine
+  ! Basic smoke test for the torch_tensor_from_array_permuted subroutine in the 3D case
+  ! for an involution/transpose permutation
+  @test(testParameters={get_parameters_simple()})
+  subroutine test_torch_permuted_3d_involution(this)
+    use ftorch_tensor, only: torch_tensor_from_array_permuted
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    integer, parameter :: ndims = 3
+    integer(ftorch_int), parameter :: permute_dims(ndims) = [3, 2, 1]
+    integer(c_int64_t), parameter :: expected_shape(ndims) = [4, 3, 2]
+    integer(c_int64_t), parameter :: expected_stride(ndims) = [6, 2, 1]
+    real(wp), dimension(2,3,4), target :: in_data
+    real(wp), dimension(4,3,2), target :: out_data
+    real(wp), dimension(4,3,2) :: expected
+
+    ! Create input array
+    in_data(:,:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, &
+                              11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, &
+                              19.0, 20.0, 21.0, 22.0, 23.0, 24.0], [2,3,4])
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor1%p))
+
+    ! Create a tensor with permuted (reversed) dimensions
+    ! When queried we expect it to have different shape and strides to the Fortran
+    ! array in_data.
+    call torch_tensor_from_array_permuted(tensor1, in_data, device_type, device_index, &
+                                          permute_dims, requires_grad=this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor1%p))
+
+    ! Check the rank is preserved
+    @assertEqual(ndims, tensor1 % get_rank())
+
+    ! Check the shape and stride reflect the permutation
+    @assertEqual(expected_shape, tensor1 % get_shape())
+    @assertEqual(expected_stride, tensor1 % get_stride())
+
+    ! Create a second tensor associated to an output array, with permuted shape
+    call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
+
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
+
+    ! Compare the data in tensor2 to the (permuted) input data
+    ! Perform the permutation in Fortran and compare to that resulting from torch.
+    ! Here we use order=permute_dims as a special case for inversion that does not 
+    ! apply in general (see next test)
+    expected(:,:,:) = reshape(in_data, expected_shape, order=permute_dims)
+    @assertTrue(allclose(out_data, expected, test_name="test_from_array_permuted_3d"))
+
+  end subroutine test_torch_from_array_permuted_3d_involution
+
+  ! Smoke test for torch_tensor_from_array_permuted with a cyclic (not involution) permutation.
+  @test(testParameters={get_parameters_simple()})
+  subroutine test_torch_permuted_3d_cyclic(this)
+    use ftorch_tensor, only: torch_tensor_from_array_permuted
+
+    implicit none
+
+    class(TestCaseType), intent(inout) :: this
+    type(torch_tensor) :: tensor1, tensor2
+    integer, parameter :: ndims = 3
+    integer(ftorch_int), parameter :: permute_dims(ndims) = [2, 3, 1]
+    integer(c_int64_t), parameter :: expected_shape(ndims) = [3, 4, 2]
+    integer(c_int64_t), parameter :: expected_stride(ndims) = [2, 6, 1]
+    integer(c_int64_t)            :: permuted_order(ndims)
+    real(wp), dimension(2,3,4), target :: in_data
+    real(wp), dimension(3,4,2), target :: out_data
+    real(wp), dimension(3,4,2) :: expected
+    integer :: i
+
+    ! Create input array
+    in_data(:,:,:) = reshape([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, &
+                              11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, &
+                              19.0, 20.0, 21.0, 22.0, 23.0, 24.0], [2,3,4])
+
+    ! Check the tensor pointer is not associated
+    @assertFalse(c_associated(tensor1%p))
+
+    ! Create a tensor with a cyclically permuted view of in_data.
+    ! PyTorch dim 1 <- Fortran dim 2, 2 <- 3, 3 <- 1.
+    ! When queried we expect it to have different shape and strides to the Fortran
+    ! array in_data.
+    call torch_tensor_from_array_permuted(tensor1, in_data, device_type, device_index, &
+                                          permute_dims, requires_grad=this%param%requires_grad)
+
+    ! Check the tensor pointer is associated
+    @assertTrue(c_associated(tensor1%p))
+
+    ! Check the rank is preserved
+    @assertEqual(ndims, tensor1 % get_rank())
+
+    ! Check the shape and stride reflect the permutation.
+    ! Both generated by applying the permutation to the original shape and strides
+    @assertEqual(expected_shape, tensor1 % get_shape())
+    @assertEqual(expected_stride, tensor1 % get_stride())
+
+    ! Create a second tensor associated to an output array, with permuted shape
+    call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
+
+    ! Set the values of the second tensor to match those of the first using the overloaded
+    ! assignment operator
+    tensor2 = tensor1
+
+    ! Compare the data in tensor2 to the (permuted) input data we expect.
+    ! Achieved with a reshape to the expected shape, but the fill order is permuted by
+    ! the INVERSE of the permutation ([3, 1, 2]).
+    ! I.e. The permutation is interpreted as telling the original filling order [1, 2, 3]
+    ! where to go [3, 1, 2] rather than where it came from (as is the case for shape and strides).
+    ! This is spelled out in the following loop which should produce permuted_order = [3, 1, 2]
+    do i = 1, ndims
+      permuted_order(permute_dims(i)) = i
+    end do
+
+    ! Manually permute to produce expected(i, j, k) = in_data(k, i, j)
+    expected(:,:,:) = reshape(in_data, expected_shape, order=permuted_order)
+
+    @assertTrue(allclose(out_data, expected, test_name="test_from_array_permuted_3d_noninvolution"))
+
+  end subroutine test_torch_permuted_3d_cyclic
+
+  ! Unit test for the torch_tensor_from_blob subroutine (no permutation)
   @test(testParameters={get_parameters_requires_grad()})
   subroutine test_torch_from_blob(this)
     use ftorch_tensor, only: torch_tensor_from_blob
@@ -436,7 +565,7 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
-    integer, parameter :: layout(ndims) = [1, 2]
+    integer(kind=c_int64_t), parameter :: strides(ndims) = [1, 2]
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
 
@@ -447,14 +576,14 @@ contains
     @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor based off an input array
-    call torch_tensor_from_blob(tensor1, c_loc(in_data), ndims, tensor_shape, layout, dtype, &
+    call torch_tensor_from_blob(tensor1, c_loc(in_data), ndims, tensor_shape, strides, dtype, &
                                 device_type, device_index, this%param%requires_grad)
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
 
     ! Create a tensor based off an output array
-    call torch_tensor_from_array(tensor2, out_data, device_type, device_index, layout)
+    call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
 
     ! Set the values of the second tensor to match those of the first using the overloaded
     ! assignment operator
