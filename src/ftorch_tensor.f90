@@ -463,8 +463,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int8_1d
 
@@ -525,8 +525,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int8_2d
 
@@ -587,8 +587,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int8_3d
 
@@ -649,8 +649,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int8_4d
 
@@ -711,8 +711,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int8_5d
 
@@ -773,8 +773,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int16_1d
 
@@ -835,8 +835,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int16_2d
 
@@ -897,8 +897,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int16_3d
 
@@ -959,8 +959,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int16_4d
 
@@ -1021,8 +1021,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int16_5d
 
@@ -1083,8 +1083,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int32_1d
 
@@ -1145,8 +1145,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int32_2d
 
@@ -1207,8 +1207,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int32_3d
 
@@ -1269,8 +1269,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int32_4d
 
@@ -1331,8 +1331,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int32_5d
 
@@ -1393,8 +1393,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int64_1d
 
@@ -1455,8 +1455,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int64_2d
 
@@ -1517,8 +1517,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int64_3d
 
@@ -1579,8 +1579,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int64_4d
 
@@ -1641,8 +1641,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_int64_5d
 
@@ -1703,8 +1703,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_real32_1d
 
@@ -1765,8 +1765,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_real32_2d
 
@@ -1827,8 +1827,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_real32_3d
 
@@ -1889,8 +1889,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_real32_4d
 
@@ -1951,8 +1951,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_real32_5d
 
@@ -2013,8 +2013,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_real64_1d
 
@@ -2075,8 +2075,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_real64_2d
 
@@ -2137,8 +2137,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_real64_3d
 
@@ -2199,8 +2199,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_real64_4d
 
@@ -2261,8 +2261,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_real64_5d
 

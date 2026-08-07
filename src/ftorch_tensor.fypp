@@ -431,8 +431,8 @@ contains
     end if
 
     call torch_tensor_from_blob(tensor, c_loc(data_in), ndims, torch_shape, &
-                                 torch_strides, dtype, device_type, device_index, &
-                                 requires_grad)
+                                torch_strides, dtype, device_type, device_index, &
+                                requires_grad)
 
    end subroutine torch_tensor_from_array_${PREC}$_${RANK}$d
 
