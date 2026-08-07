@@ -86,3 +86,16 @@ demonstrate how to make use of optimizers to compute optimization steps as part 
 training process.
 Equivalent Python and Fortran codes demonstrate the 'training' of a tensor to map input
 data to target data, including a demonstration that the results are identical.
+
+#### 11) Training
+
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/11_Training)
+demonstrates a complete training loop in Fortran, building on the optimizer
+examples to fit a simple model to data.
+
+#### 12) Permutation
+
+[This worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/12_Permutation)
+demonstrates how to permute tensor dimensions when constructing tensors from
+Fortran arrays using the `permute_dims` argument. It covers carefully how to use this
+option, and the relationship between Fortran column-major and Torch row-major memory layout.
