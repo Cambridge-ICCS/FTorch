@@ -35,20 +35,6 @@ module ftorch_test_utils
     #:endfor
   end interface
 
-  interface assert_isclose
-    #:for PREC in PRECISIONS
-    module procedure assert_isclose_${PREC}$
-    #:endfor
-  end interface
-
-  interface assert_allclose
-    #:for PREC in PRECISIONS
-    #:for RANK in RANKS
-    module procedure assert_allclose_${PREC}$_${RANK}$d
-    #:endfor
-    #:endfor
-  end interface
-
   contains
 
     !> Print the result of a test to the terminal
@@ -154,54 +140,6 @@ module ftorch_test_utils
       endif
 
     end function allclose_${PREC}$_${RANK}$d
-
-    #:endfor
-    #:endfor
-
-    #:for PREC in PRECISIONS
-    !| Alias for isclose_${PREC}$
-    !
-    !  This version is deprecated and is only included for backwards compatibility. It will be
-    !  removed in FTorch version 2.0.
-    function assert_isclose_${PREC}$(got, expect, test_name, rtol, print_result) result(test_pass)
-
-      character(len=*), intent(in) :: test_name                      !! Name of the test being run
-      ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: got             !! The value to be tested
-      ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: expect          !! The expected value
-      ${f_type(PREC)}$(kind=${PREC}$), intent(in), optional :: rtol  !! Optional relative tolerance (defaults to 1e-5)
-      logical, intent(in), optional :: print_result                  !! Optionally print test result to screen (defaults to .true.)
-
-      logical :: test_pass  !! Did the assertion pass?
-
-      write(*,*) "Warning: assert_isclose is deprecated and will be removed in FTorch version 2.0. Please use isclose instead."
-
-      test_pass = isclose_${PREC}$(got, expect, test_name, rtol, print_result)
-
-    end function assert_isclose_${PREC}$
-
-    #:endfor
-
-    #:for PREC in PRECISIONS
-    #:for RANK in RANKS
-    !| Alias for allclose_${PREC}$_${RANK}$d
-    !
-    !  This version is deprecated and is only included for backwards compatibility. It will be
-    !  removed in FTorch version 2.0.
-    function assert_allclose_${PREC}$_${RANK}$d(got, expect, test_name, rtol, print_result) result(test_pass)
-
-      character(len=*), intent(in) :: test_name                                             !! Name of the test being run
-      ${f_type(PREC)}$(kind=${PREC}$), intent(in), dimension${ranksuffix(RANK)}$ :: got     !! The array of values to be tested
-      ${f_type(PREC)}$(kind=${PREC}$), intent(in), dimension${ranksuffix(RANK)}$ :: expect  !! The array of expected values
-      ${f_type(PREC)}$(kind=${PREC}$), intent(in), optional :: rtol                         !! Optional relative tolerance (defaults to 1e-5)
-      logical, intent(in), optional :: print_result                                         !! Optionally print test result to screen (defaults to .true.)
-
-      logical :: test_pass  !! Did the assertion pass?
-
-      write(*,*) "Warning: assert_allclose is deprecated and will be removed in FTorch version 2.0. Please use allclose instead."
-
-      test_pass = allclose_${PREC}$_${RANK}$d(got, expect, test_name, rtol, print_result)
-
-    end function assert_allclose_${PREC}$_${RANK}$d
 
     #:endfor
     #:endfor
