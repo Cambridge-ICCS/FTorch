@@ -18,6 +18,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Removed
 
+- Dropped `assert_isclose` and `assert_allclose` legacy versions of `isclose`
+  and `allclose` in [#621](https://github.com/Cambridge-ICCS/FTorch/pull/621)
+
 ### Fixed
 
 ### Patch Releases
