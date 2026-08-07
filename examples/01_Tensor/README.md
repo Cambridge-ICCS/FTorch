@@ -10,7 +10,19 @@ type is designed to have a similar API to PyTorch's `torch.Tensor` class.
 ## Description
 
 A Fortran file `tensor_manipulation.f90` is provided that demonstrates handling
-of the `torch_tensor` derived type.
+of the `torch_tensor` derived type, including:
+
+* creating tensors from ones and from Fortran arrays;
+* interrogating tensor shape, stride, and rank;
+* performing arithmetic with overloaded operators and taking the mean;
+* permuting tensor dimensions with the `permute_dims` argument, extracting
+  permuted data into a Fortran array with matching shape, and the safeguard
+  against invalid permutations;
+* demonstrating that permuting both into and out of Torch recovers the original
+  Fortran array layout, and that tensor assignment copies values and shape but
+  not strides (the output tensor keeps its own memory layout);
+* comparing Fortran column-major and Torch row-major memory layout via printed
+  output.
 
 ## Dependencies
 
