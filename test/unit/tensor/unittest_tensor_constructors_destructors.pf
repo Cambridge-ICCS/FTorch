@@ -137,8 +137,8 @@ contains
     @assertTrue(c_associated(tensor%p))
 
     ! Check the stride and shape
-    @assertEqual(expected_stride, tensor % get_stride())
-    @assertEqual(tensor_shape, tensor % get_shape())
+    @assertEqual(expected_stride, tensor%get_stride())
+    @assertEqual(tensor_shape, tensor%get_shape())
 
   end subroutine test_empty
 
@@ -168,8 +168,8 @@ contains
     @assertTrue(c_associated(tensor1%p))
 
     ! Check the stride and shape
-    @assertEqual(expected_stride, tensor1 % get_stride())
-    @assertEqual(tensor_shape, tensor1 % get_shape())
+    @assertEqual(expected_stride, tensor1%get_stride())
+    @assertEqual(tensor_shape, tensor1%get_shape())
 
     ! Create a tensor based off an output array
     call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
@@ -210,8 +210,8 @@ contains
     @assertTrue(c_associated(tensor1%p))
 
     ! Check the stride and shape
-    @assertEqual(expected_stride, tensor1 % get_stride())
-    @assertEqual(tensor_shape, tensor1 % get_shape())
+    @assertEqual(expected_stride, tensor1%get_stride())
+    @assertEqual(tensor_shape, tensor1%get_shape())
 
     ! Create a tensor based off an output array
     call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
@@ -249,8 +249,8 @@ contains
                                   requires_grad=this%param%requires_grad)
 
     ! Check the stride and shape
-    @assertEqual([1], tensor1 % get_stride())
-    @assertEqual([6], tensor1 % get_shape())
+    @assertEqual([1], tensor1%get_stride())
+    @assertEqual([6], tensor1%get_shape())
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
@@ -312,8 +312,8 @@ contains
                                   requires_grad=this%param%requires_grad)
 
     ! Verify the stride and shape
-    @assertEqual(expected_stride, tensor1 % get_stride())
-    @assertEqual(expected_shape, tensor1 % get_shape())
+    @assertEqual(expected_stride, tensor1%get_stride())
+    @assertEqual(expected_shape, tensor1%get_shape())
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
@@ -376,8 +376,8 @@ contains
                                   requires_grad=this%param%requires_grad)
 
     ! Verify the stride and shape
-    @assertEqual(expected_stride, tensor1 % get_stride())
-    @assertEqual(expected_shape, tensor1 % get_shape())
+    @assertEqual(expected_stride, tensor1%get_stride())
+    @assertEqual(expected_shape, tensor1%get_shape())
 
     ! Check the tensor pointer is associated
     @assertTrue(c_associated(tensor1%p))
@@ -428,11 +428,11 @@ contains
     @assertTrue(c_associated(tensor1%p))
 
     ! Check the rank is preserved
-    @assertEqual(ndims, tensor1 % get_rank())
+    @assertEqual(ndims, tensor1%get_rank())
 
     ! Check the shape and stride reflect the permutation
-    @assertEqual(expected_shape, tensor1 % get_shape())
-    @assertEqual(expected_stride, tensor1 % get_stride())
+    @assertEqual(expected_shape, tensor1%get_shape())
+    @assertEqual(expected_stride, tensor1%get_stride())
 
     ! Create a second tensor associated to an output array, with permuted shape
     call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
@@ -442,7 +442,7 @@ contains
     tensor2 = tensor1
 
     ! Compare the data in tensor2 to the (permuted) input data
-    ! Perform the permutation in Fortran and compare to that resulting from torch.
+    ! Perform the permutation in Fortran and compare to that resulting from Torch.
     ! Here we use order=permute_dims as a special case for 2D/involution.
     expected(:,:) = reshape(in_data, expected_shape, order=permute_dims)
     @assertTrue(allclose(out_data, expected, test_name="test_from_array_permuted"))
@@ -484,11 +484,11 @@ contains
     @assertTrue(c_associated(tensor1%p))
 
     ! Check the rank is preserved
-    @assertEqual(ndims, tensor1 % get_rank())
+    @assertEqual(ndims, tensor1%get_rank())
 
     ! Check the shape and stride reflect the permutation
-    @assertEqual(expected_shape, tensor1 % get_shape())
-    @assertEqual(expected_stride, tensor1 % get_stride())
+    @assertEqual(expected_shape, tensor1%get_shape())
+    @assertEqual(expected_stride, tensor1%get_stride())
 
     ! Create a second tensor associated to an output array, with permuted shape
     call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
@@ -498,7 +498,7 @@ contains
     tensor2 = tensor1
 
     ! Compare the data in tensor2 to the (permuted) input data
-    ! Perform the permutation in Fortran and compare to that resulting from torch.
+    ! Perform the permutation in Fortran and compare to that resulting from Torch.
     ! Here we use order=permute_dims as a special case for inversion that does not 
     ! apply in general (see next test)
     expected(:,:,:) = reshape(in_data, expected_shape, order=permute_dims)
@@ -533,7 +533,7 @@ contains
     @assertFalse(c_associated(tensor1%p))
 
     ! Create a tensor with a cyclically permuted view of in_data.
-    ! PyTorch dim 1 <- Fortran dim 2, 2 <- 3, 3 <- 1.
+    ! Torch dim 1 <- Fortran dim 2, 2 <- 3, 3 <- 1.
     ! When queried we expect it to have different shape and strides to the Fortran
     ! array in_data.
     call torch_tensor_from_array(tensor1, in_data, device_type, device_index, &
@@ -543,12 +543,12 @@ contains
     @assertTrue(c_associated(tensor1%p))
 
     ! Check the rank is preserved
-    @assertEqual(ndims, tensor1 % get_rank())
+    @assertEqual(ndims, tensor1%get_rank())
 
     ! Check the shape and stride reflect the permutation.
     ! Both generated by applying the permutation to the original shape and strides
-    @assertEqual(expected_shape, tensor1 % get_shape())
-    @assertEqual(expected_stride, tensor1 % get_stride())
+    @assertEqual(expected_shape, tensor1%get_shape())
+    @assertEqual(expected_stride, tensor1%get_stride())
 
     ! Create a second tensor associated to an output array, with permuted shape
     call torch_tensor_from_array(tensor2, out_data, device_type, device_index)
@@ -560,7 +560,7 @@ contains
     ! Compare the data in tensor2 to the (permuted) input data we expect.
     ! Achieved with a reshape to the expected shape, but the fill order is permuted by
     ! the INVERSE of the permutation ([3, 1, 2]).
-    ! I.e. The permutation is interpreted as telling the original filling order [1, 2, 3]
+    ! i.e. The permutation is interpreted as telling the original filling order [1, 2, 3]
     ! where to go [3, 1, 2] rather than where it came from (as is the case for shape and strides).
     ! This is spelled out in the following loop which should produce permuted_order = [3, 1, 2]
     do i = 1, ndims
@@ -761,7 +761,7 @@ contains
 
     ! Verify tensor was created correctly
     @assertTrue(c_associated(tensor%p))
-    @assertEqual([2, 3], tensor % get_shape())
+    @assertEqual([2, 3], tensor%get_shape())
 
   end subroutine test_legacy_interface
 
