@@ -437,6 +437,7 @@ contains
     integer(c_int64_t)        :: torch_strides(1)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    logical                   :: permute_valid(1)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -451,11 +452,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 1 and contain numbers 1 to 1.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 1]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -499,6 +514,7 @@ contains
     integer(c_int64_t)        :: torch_strides(2)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    logical                   :: permute_valid(2)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -513,11 +529,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 2 and contain numbers 1 to 2.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 2]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -561,6 +591,7 @@ contains
     integer(c_int64_t)        :: torch_strides(3)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    logical                   :: permute_valid(3)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -575,11 +606,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 3 and contain numbers 1 to 3.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 3]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -623,6 +668,7 @@ contains
     integer(c_int64_t)        :: torch_strides(4)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    logical                   :: permute_valid(4)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -637,11 +683,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 4 and contain numbers 1 to 4.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 4]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -685,6 +745,7 @@ contains
     integer(c_int64_t)        :: torch_strides(5)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    logical                   :: permute_valid(5)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -699,11 +760,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 5 and contain numbers 1 to 5.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 5]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -747,6 +822,7 @@ contains
     integer(c_int64_t)        :: torch_strides(1)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    logical                   :: permute_valid(1)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -761,11 +837,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 1 and contain numbers 1 to 1.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 1]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -809,6 +899,7 @@ contains
     integer(c_int64_t)        :: torch_strides(2)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    logical                   :: permute_valid(2)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -823,11 +914,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 2 and contain numbers 1 to 2.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 2]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -871,6 +976,7 @@ contains
     integer(c_int64_t)        :: torch_strides(3)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    logical                   :: permute_valid(3)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -885,11 +991,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 3 and contain numbers 1 to 3.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 3]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -933,6 +1053,7 @@ contains
     integer(c_int64_t)        :: torch_strides(4)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    logical                   :: permute_valid(4)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -947,11 +1068,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 4 and contain numbers 1 to 4.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 4]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -995,6 +1130,7 @@ contains
     integer(c_int64_t)        :: torch_strides(5)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    logical                   :: permute_valid(5)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1009,11 +1145,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 5 and contain numbers 1 to 5.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 5]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1057,6 +1207,7 @@ contains
     integer(c_int64_t)        :: torch_strides(1)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    logical                   :: permute_valid(1)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1071,11 +1222,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 1 and contain numbers 1 to 1.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 1]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1119,6 +1284,7 @@ contains
     integer(c_int64_t)        :: torch_strides(2)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    logical                   :: permute_valid(2)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1133,11 +1299,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 2 and contain numbers 1 to 2.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 2]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1181,6 +1361,7 @@ contains
     integer(c_int64_t)        :: torch_strides(3)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    logical                   :: permute_valid(3)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1195,11 +1376,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 3 and contain numbers 1 to 3.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 3]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1243,6 +1438,7 @@ contains
     integer(c_int64_t)        :: torch_strides(4)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    logical                   :: permute_valid(4)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1257,11 +1453,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 4 and contain numbers 1 to 4.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 4]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1305,6 +1515,7 @@ contains
     integer(c_int64_t)        :: torch_strides(5)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    logical                   :: permute_valid(5)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1319,11 +1530,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 5 and contain numbers 1 to 5.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 5]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1367,6 +1592,7 @@ contains
     integer(c_int64_t)        :: torch_strides(1)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    logical                   :: permute_valid(1)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1381,11 +1607,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 1 and contain numbers 1 to 1.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 1]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1429,6 +1669,7 @@ contains
     integer(c_int64_t)        :: torch_strides(2)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    logical                   :: permute_valid(2)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1443,11 +1684,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 2 and contain numbers 1 to 2.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 2]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1491,6 +1746,7 @@ contains
     integer(c_int64_t)        :: torch_strides(3)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    logical                   :: permute_valid(3)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1505,11 +1761,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 3 and contain numbers 1 to 3.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 3]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1553,6 +1823,7 @@ contains
     integer(c_int64_t)        :: torch_strides(4)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    logical                   :: permute_valid(4)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1567,11 +1838,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 4 and contain numbers 1 to 4.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 4]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1615,6 +1900,7 @@ contains
     integer(c_int64_t)        :: torch_strides(5)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    logical                   :: permute_valid(5)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1629,11 +1915,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 5 and contain numbers 1 to 5.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 5]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1677,6 +1977,7 @@ contains
     integer(c_int64_t)        :: torch_strides(1)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    logical                   :: permute_valid(1)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1691,11 +1992,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 1 and contain numbers 1 to 1.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 1]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1739,6 +2054,7 @@ contains
     integer(c_int64_t)        :: torch_strides(2)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    logical                   :: permute_valid(2)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1753,11 +2069,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 2 and contain numbers 1 to 2.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 2]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1801,6 +2131,7 @@ contains
     integer(c_int64_t)        :: torch_strides(3)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    logical                   :: permute_valid(3)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1815,11 +2146,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 3 and contain numbers 1 to 3.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 3]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1863,6 +2208,7 @@ contains
     integer(c_int64_t)        :: torch_strides(4)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    logical                   :: permute_valid(4)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1877,11 +2223,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 4 and contain numbers 1 to 4.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 4]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1925,6 +2285,7 @@ contains
     integer(c_int64_t)        :: torch_strides(5)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    logical                   :: permute_valid(5)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -1939,11 +2300,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 5 and contain numbers 1 to 5.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 5]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -1987,6 +2362,7 @@ contains
     integer(c_int64_t)        :: torch_strides(1)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     integer(c_int), parameter :: ndims = 1                  !! Number of dimension of input data
+    logical                   :: permute_valid(1)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -2001,11 +2377,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 1 and contain numbers 1 to 1.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 1]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -2049,6 +2439,7 @@ contains
     integer(c_int64_t)        :: torch_strides(2)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     integer(c_int), parameter :: ndims = 2                  !! Number of dimension of input data
+    logical                   :: permute_valid(2)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -2063,11 +2454,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 2 and contain numbers 1 to 2.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 2]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -2111,6 +2516,7 @@ contains
     integer(c_int64_t)        :: torch_strides(3)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     integer(c_int), parameter :: ndims = 3                  !! Number of dimension of input data
+    logical                   :: permute_valid(3)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -2125,11 +2531,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 3 and contain numbers 1 to 3.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 3]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -2173,6 +2593,7 @@ contains
     integer(c_int64_t)        :: torch_strides(4)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     integer(c_int), parameter :: ndims = 4                  !! Number of dimension of input data
+    logical                   :: permute_valid(4)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -2187,11 +2608,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 4 and contain numbers 1 to 4.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 4]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
@@ -2235,6 +2670,7 @@ contains
     integer(c_int64_t)        :: torch_strides(5)          !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
     integer(c_int), parameter :: ndims = 5                  !! Number of dimension of input data
+    logical                   :: permute_valid(5)           !! Array to check supplied permutation is valid
     integer :: i
 
     fortran_shape = shape(data_in)
@@ -2249,11 +2685,25 @@ contains
     end do
 
     if (present(permute_dims)) then
+      ! Check that the supplied permutation is valid and raise an error if not.
+      ! Should be of length 5 and contain numbers 1 to 5.
+      permute_valid = .false.
+      do i = 1, ndims
+        if (permute_dims(i) < 1 .or. permute_dims(i) > ndims) then
+          error stop "Invalid permute_dims: element out of range [1, 5]"
+        end if
+        if (permute_valid(permute_dims(i))) then
+          error stop "Invalid permute_dims: duplicate dimension"
+        end if
+        permute_valid(permute_dims(i)) = .true.
+      end do
+
       ! permute shape of torch tensor to match permutation requested ('transpose')
       do i = 1, ndims
           torch_shape(i) = fortran_shape(permute_dims(i))
           torch_strides(i) = fortran_strides(permute_dims(i))
       end do
+
     else
       ! Keep Torch shape and strides same as Fortran
       torch_shape = fortran_shape
