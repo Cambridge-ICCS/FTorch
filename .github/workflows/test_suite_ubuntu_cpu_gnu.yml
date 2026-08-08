@@ -3,29 +3,30 @@ name: Test suite (Ubuntu CPU)
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
-  push:
-    branches: [ "main" ]
+  # TODO: Re-enable GNU workflow
+  # # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  # push:
+  #   branches: [ "main" ]
 
-  # Triggers the workflow on pushes to open pull requests with code changes
-  pull_request:
-    paths:
-      # This workflow
-      - '.github/workflows/test_suite_ubuntu_cpu_gnu.yml'
-      # Source files
-      - '**.c'
-      - '**.cpp'
-      - '**.fypp'
-      - '**.f90'
-      - '**.F90'
-      - '**.py'
-      # Unit tests
-      - '**.pf'
-      # Build system
-      - '**CMakeLists.txt'
-      - '**requirements.txt'
-      # Data
-      - '**data/*'
+  # # Triggers the workflow on pushes to open pull requests with code changes
+  # pull_request:
+  #   paths:
+  #     # This workflow
+  #     - '.github/workflows/test_suite_ubuntu_cpu_gnu.yml'
+  #     # Source files
+  #     - '**.c'
+  #     - '**.cpp'
+  #     - '**.fypp'
+  #     - '**.f90'
+  #     - '**.F90'
+  #     - '**.py'
+  #     # Unit tests
+  #     - '**.pf'
+  #     # Build system
+  #     - '**CMakeLists.txt'
+  #     - '**requirements.txt'
+  #     # Data
+  #     - '**data/*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

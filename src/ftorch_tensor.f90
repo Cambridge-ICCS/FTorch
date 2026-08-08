@@ -235,7 +235,7 @@ contains
       device_index_value = -1
     else
       device_index_value = 0
-    endif
+    end if
 
     if (.not. present(requires_grad)) then
       requires_grad_value = logical(.false., c_bool)
@@ -286,7 +286,7 @@ contains
       device_index_value = -1
     else
       device_index_value = 0
-    endif
+    end if
 
     if (.not. present(requires_grad)) then
       requires_grad_value = logical(.false., c_bool)
@@ -337,7 +337,7 @@ contains
       device_index_value = -1
     else
       device_index_value = 0
-    endif
+    end if
 
     if (.not. present(requires_grad)) then
       requires_grad_value = logical(.false., c_bool)
@@ -398,7 +398,7 @@ contains
       device_index_value = -1
     else
       device_index_value = 0
-    endif
+    end if
 
     tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype,    &
                                  device_type, device_index_value,              &
