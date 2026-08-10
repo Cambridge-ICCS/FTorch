@@ -1,6 +1,6 @@
 title: Tensor API
 author: Joe Wallwork
-date: Last Updated: October 2025
+date: Last Updated: August 2026
 
 ## Tensor API Documentation
 
@@ -47,11 +47,15 @@ We provide several subroutines for constructing
   be pointed to even when operations are applied to the tensor, so this
   subroutine can be used 'in advance' to set up an array for outputting data.
   [[ftorch_tensor(module):torch_tensor_from_array(interface)]] may be called
-  with or without the optional `layout` argument, which appears after
-  `device_type` and specifies the order in which indices should be looped over.
-  The default `layout` is `[1,2,...,n]` which implies that data will be read
-  into the same indices by Torch. (See the
-  [transposing user guide page](|page|/usage/transposing.html) for more details.)
+  with or without an optional `permute_dims` argument, which appears after
+  `device_type` and specifies a permutation of the dimensions to be applied to
+  the Fortran data in the resulting tensor. It matches the semantics of
+  PyTorch's [`torch.permute()`](https://docs.pytorch.org/docs/stable/generated/torch.permute.html)
+  but indexing from 1: element `i` indicates which dimension of the Fortran array
+  appears as dimension `i` on the Torch tensor.
+  The default (no `permute_dims` argument) leaves the dimensions in their natural order
+  (see the [transposing data user guide page](|page|/usage/transposing.html) for
+  more details).
 
 It is *compulsory* to call one of the constructors before interacting with it in
 any of the ways described in the following. Each of the constructors sets the

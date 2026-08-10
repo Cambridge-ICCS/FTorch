@@ -1,6 +1,6 @@
 title: When to transpose data
 author: Jack Atkinson
-date: Last Updated: October 2025
+date: Last Updated: August 2026
 
 ## When to transpose data
 
@@ -11,6 +11,9 @@ allows you to index a tensor in Torch in **exactly the same way** as you would i
 
 If you wish to do something different to this then there are more complex functions
 available and we describe here how and when to use them.
+However, to be clear, we recommend sticking with the default behaviour unless you have
+good reason not to. The defaults are likely to be efficient, are the least bug prone,
+and cover the majority of user cases.
 
 
 ### Introduction - row- vs. column-major
@@ -68,8 +71,8 @@ To do this the Fortran data that will be used in Torch is stored in memory and a
 [pointer](https://en.wikipedia.org/wiki/Pointer_(computer_programming)) to the first
 element, \(a\) provided to Torch.
 
-Now, if Torch were to take this block of memory and interpret it as as a 2x2 matrix it
-would be read in as
+Now, if Torch were to take this block of memory and na&iuml;vely interpret it as a
+2x2 matrix it would be read in as
 $$
 \begin{pmatrix}
 a & c \\
@@ -82,79 +85,87 @@ matrix we had in Fortran; likely not what we were expecting!
 This means we need to be careful when passing data to make sure that what we read in
 to our Torch net is correct as we expect.
 
+FTorch handles this by constructing all tensors associated with Fortran data using
+column-major strides. This means that data can be transferred without any copying or
+rearranging, and indexed in exactly the same way in both Fortran and Torch - the most
+predictable behaviour, with the fewest opportunities for bugs.
 
-### What can we do?
 
-There are a few approaches we can take to address this.
-The first two of these are listed for conceptual purposes, whilst in practice we
-advise handling this using the
-[[ftorch_tensor(module):torch_tensor_from_array(interface)]] subroutine
-described in [3) below](#3-use-the-layout-argument-in-torch_tensor_from_array).
+### When might you want the transpose?
 
-#### 1) Transpose before passing
-As seen from the above example, writing out from Fortran and reading directly in to
-Torch results in us receiving the transpose.
+The price of FTorch matching the indexing is that tensor data is strided (non-contiguous)
+from Torch's row-major perspective.
+This has the potential to increase cache-misses when accessing the data.
+Torch handles strided tensors well, and this penalty is often smaller than the cost
+of rearranging the data, so the default behaviour in FTorch is the best choice for most users.
 
-Therefore we could transpose our Fortran data immediately before passing it to Torch.
-As a result we will read in to Torch indexed the same as in Fortran pre-transposition.
+Sometimes you may genuinely want row-major (contiguous) data in Torch however.
+For example if profiling shows data access to be a bottleneck, or to interoperate
+with nets that expect it.
 
-For arrays of dimension 2 this can be done using the intrinsic
+The only way to achieve this (without copying or re-arranging memory) is for Torch to
+interpret the data as the transpose of the Fortran array:
+the memory \(a, c, b, d\) read contiguously in row-major order is
+$$
+A^T =
+\begin{pmatrix}
+a & c \\
+b & d
+\end{pmatrix}
+$$
+The options below describe the ways to do this and their associated costs.
+
+
+### What are the options?
+
+#### 1) Transpose in Fortran before passing
+
+The most direct way to control the memory layout is to rearrange the data
+in Fortran before passing it to Torch.
+
+For rank-2 arrays this can be done using the intrinsic
 [`transpose()`](https://gcc.gnu.org/onlinedocs/gcc-12.1.0/gfortran/TRANSPOSE.html)
 function.
 
-For larger arrays we are required to use the
+For higher ranks use the
 ['reshape()'](https://gcc.gnu.org/onlinedocs/gfortran/RESHAPE.html) intrinsic to swap
 the order of the indices.
-For example, if we had a 3x4x5 matrix \(A\) we would need to call
+For example, if we had a 3x4x5 array \(A\) we would call
 ```
 A_to_torch = reshape(A, shape=[5, 4, 3], order=[3, 2, 1])
 ```
-which could then be read by Torch as a 3x4x5 tensor.
+Passing the result with `permute_dims=[n, ..., 1]` (see option 2 below) then gives
+a Torch tensor that is indexed exactly like the original Fortran array _and_ is
+contiguous row-major in memory - the best of both worlds.
 
-We would, of course, need to remember to transpose/reshape any output of the model
-as required.
+However, transposition copies all of the data which for large arrays is expensive.
+Doing this will likely cost more than the cache-misses incurred by FTorch's default
+strided access.
+This also requires permuting and transposing to get the same conceptual indexing result
+as the default behaviour, increasing the potential for bugs.
 
-However, the transposition process involves creating a copy of the Fortran data.
-For large matrices/tensors this can become expensive.
-It would be better if we can pass data without having to transpose beforehand.
+#### 2) Use `permute_dims` to pass the transpose
 
-#### 2) Design nets to use transpose
-Alternatively we could design our net to use
+Alternatively, we could design our net so that its input is the transpose of our
+Fortran data
 $$
 \begin{pmatrix}
 a & c \\
 b & d
 \end{pmatrix}
 $$
-as its input tensor meaning we can simply write from Fortran and read to Torch.
+Reading the shared memory contiguously with Torch's row-major strides then gives the net
+what it expects with no data copying required.
 
-However, this requires foresight and may not be intuitive - we would like to be indexing
-data in the same way in both Fortran and Torch.
-Not doing so could leave us open to introducing bugs.
-
-#### 3) Use the `layout` argument in `torch_tensor_from_array`
-
-By far the easiest way to deal with the issue is not to worry about it at all!
-
-As described at the top of this page, the
-[[ftorch_tensor(module):torch_tensor_from_array(interface)]] function
-provides functionality for handling this through its optional `layout` argument.
-This allows us to take data from Fortran and send it to Torch to be indexed in exactly
-the same way by using strided access based on the shape of the array.
-
-It takes the form of an array specifying which order to read the indices in.
-i.e. `[1, 2]` will read `i` then `j`.
-By passing `layout = [1, 2]` the data will be read into the correct indices by
-Torch. The natural ordering `[1, 2, ..., n]` (where `n` is the dimension of the
-array) is the default used by
-[[ftorch_tensor(module):torch_tensor_from_array(interface)]]. In cases where
-your tensors are indexed the same way in both Fortran and Torch, it should be
-sufficient to just use the default value, in which case you don't need to pass
-a `layout` argument at all.
-
-The strided access is achieved by wrapping the `torch_tensor_from_blob` function
-to automatically generate strides, assuming that a straightforward conversion
-between row- and column-major is what should happen.
+The practical way to achieve this is to use the optional `permute_dims` argument of
+[[ftorch_tensor(module):torch_tensor_from_array(interface)]].
+This takes an array specifying a permutation of the dimensions and matches the
+semantics of PyTorch's
+[`torch.permute()`](https://docs.pytorch.org/docs/stable/generated/torch.permute.html)
+with element `i` indicating which dimension of the Fortran array becomes dimension `i` of
+the Torch tensor.
+FTorch permutes the shape and strides of the tensor accordingly, so passing
+`permute_dims=[n, ..., 1]` exposes the data contiguously as the transpose of the Fortran array.
 
 i.e. if the Fortran array `A`
 $$
@@ -163,27 +174,31 @@ a & b \\
 c & d
 \end{pmatrix}
 $$
-is passed as `torch_tensor_from_array(tensor, A, torch_device, layout=[1, 2])`
-the resulting Tensor will be read by Torch as 
+is passed as `torch_tensor_from_array(tensor, A, torch_device, permute_dims=[2, 1])`
+the resulting tensor will be indexed by Torch as
 $$
 \begin{pmatrix}
-a & b \\
-c & d
+a & c \\
+b & d
 \end{pmatrix}
 $$
+with contiguous strides `[2, 1]`.
 
-> Note: _If, for some reason, we did want a different, transposed layout in Torch we
-> could use `torch_tensor_from_array(tensor, A, torch_device, layout=[2, 1])` to get:_
-> $$
-> \begin{pmatrix}
-> a & c \\
-> b & d
-> \end{pmatrix}
-> $$
+Torch code therefore needs to work with the transposed indexing compared to Fortran.
+This requires foresight to design code with the expectation of coupling, and indexing
+differently between your Fortran and Torch code can be a source of bugs, so beware.
+
+@Note
+Permutations beyond axis-reversal, e.g. a cyclic `[3, 1, 2]`, are also possible.
+These produce tensors that are neither row- nor column-major strided, but can be
+useful for remapping data between conventions - for example moving a channel
+dimension from first to last position.
+@endnote
 
 
 ### Advanced use with `torch_tensor_from_blob`
 
 For more advanced options for manipulating and controlling data access when passing
 between Fortran and Torch see the more powerful but more complex
-[[ftorch_tensor(module):torch_tensor_from_blob(subroutine)]] subroutine.
+[[ftorch_tensor(module):torch_tensor_from_blob(subroutine)]] subroutine which allows
+users to directly specify the shape and strides with which to construct tensors.
