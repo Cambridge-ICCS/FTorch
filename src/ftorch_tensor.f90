@@ -440,9 +440,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -528,9 +529,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -616,9 +618,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -704,9 +707,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -792,9 +796,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -880,9 +885,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -968,9 +974,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1056,9 +1063,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1144,9 +1152,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1232,9 +1241,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1320,9 +1330,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1408,9 +1419,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1496,9 +1508,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1584,9 +1597,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1672,9 +1686,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1760,9 +1775,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1848,9 +1864,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -1936,9 +1953,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2024,9 +2042,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2112,9 +2131,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2200,9 +2220,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2288,9 +2309,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2376,9 +2398,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2464,9 +2487,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2552,9 +2576,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2640,9 +2665,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2728,9 +2754,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2816,9 +2843,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2904,9 +2932,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -2992,9 +3021,10 @@ contains
     integer(ftorch_int), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
-        !! is the `rank`. The elements indicate the new location for a dimension on the
-        !! original array e.g. an array of shape [10, 20, 30] permuted by [2, 3, 1] will
-        !! result in shape [20, 30, 10]. This matches behaviour of `torch.permute()`
+        !! is the `rank`. Element `i` indicates which dimension of the Fortran array
+        !! appears as dimension `i` on the Torch tensor.
+        !! e.g. a Fortran array of shape [10, 20, 30] permuted by [2, 3, 1] will result
+        !! in Torch shape [20, 30, 10]. This matches behaviour of `torch.permute()`,
         !! noting that this is Fortran so we index from 1!
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3091,9 +3121,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3144,9 +3174,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3197,9 +3227,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3250,9 +3280,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3303,9 +3333,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3356,9 +3386,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3409,9 +3439,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3462,9 +3492,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3515,9 +3545,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3568,9 +3598,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3621,9 +3651,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3674,9 +3704,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3727,9 +3757,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3780,9 +3810,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3833,9 +3863,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3886,9 +3916,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3939,9 +3969,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -3992,9 +4022,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4045,9 +4075,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4098,9 +4128,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4151,9 +4181,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4204,9 +4234,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4257,9 +4287,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4310,9 +4340,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4363,9 +4393,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4416,9 +4446,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4469,9 +4499,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4522,9 +4552,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4575,9 +4605,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
@@ -4628,9 +4658,9 @@ contains
         !! Strides for accessing data appropriately
     integer :: i
 
-    write(*,*) "Warning: The layout-first signature of torch_tensor_from_array is deprecated"
-    write(*,*) "and will be removed in a future version of FTorch. Please use the new signature"
-    write(*,*) "with layout being an optional argument after device_type."
+    write(*,*) "Warning: torch_tensor_from_array_legacy is deprecated and will be "
+    write(*,*) "removed in a future version of FTorch. Please use torch_tensor_from_array, "
+    write(*,*) "passing permute_dims as an optional argument after device_type, where possible."
 
     tensor_shape = shape(data_in)
 
