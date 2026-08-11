@@ -31,7 +31,7 @@ module ftorch_tensor
   use, intrinsic :: iso_fortran_env, only: int32
   use ftorch_devices, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
   use ftorch_types, only: torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
-                          torch_kFloat32, torch_kFloat64, ftorch_int
+                          torch_kFloat32, torch_kFloat64
 
   implicit none
 
@@ -384,7 +384,7 @@ contains
 
     ! inputs
     ${f_type(PREC)}$(kind=${PREC}$), intent(in), pointer, contiguous :: data_in${ranksuffix(RANK)}$  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(${RANK}$)  !! Control order of indices
+    integer(int32), intent(in) :: layout(${RANK}$)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -427,7 +427,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(${RANK}$)  !! Order of indices
+    integer(int32)       :: layout(${RANK}$)  !! Order of indices
     integer(c_int), parameter :: ndims = ${RANK}$  !! Number of dimension of input data
     integer :: i
 

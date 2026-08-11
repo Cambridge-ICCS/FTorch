@@ -9,7 +9,6 @@ module ftorch_optim
 
   use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
 
-  use ftorch_types, only: ftorch_int
   use ftorch_tensor, only: torch_tensor
 
   implicit none
@@ -109,7 +108,7 @@ contains
     real(kind=real64) :: weight_decay_value  !! Resolved weight_decay value to be passed to the C interface
     logical :: nesterov_value  !! Resolved nesterov value to be passed to the C interface
 
-    integer(ftorch_int) :: i
+    integer(c_int) :: i
     integer(c_int)      :: n_params
     type(c_ptr), dimension(size(parameters)), target  :: parameter_ptrs
 
@@ -190,7 +189,7 @@ contains
     real(kind=real64) :: weight_decay_value  !! Resolved weight_decay value to be passed to the C interface
     logical :: amsgrad_value  !! Resolved amsgrad value to be passed to the C interface
 
-    integer(ftorch_int) :: i
+    integer(c_int) :: i
     integer(c_int)      :: n_params
     type(c_ptr), dimension(size(parameters)), target  :: parameter_ptrs
 
@@ -277,7 +276,7 @@ contains
     real(kind=real64) :: weight_decay_value  !! Resolved weight_decay value to be passed to the C interface
     logical :: amsgrad_value  !! Resolved amsgrad value to be passed to the C interface
 
-    integer(ftorch_int) :: i
+    integer(c_int) :: i
     integer(c_int)      :: n_params
     type(c_ptr), dimension(size(parameters)), target  :: parameter_ptrs
 
