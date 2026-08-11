@@ -7,7 +7,7 @@
 module unittest_tensor_operator_overloads_autograd
   use funit
   use ftorch_devices, only: torch_kCPU
-  use ftorch_types, only: ftorch_int, torch_kFloat32
+  use ftorch_types, only: torch_kFloat32
   use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_backward, &
                            torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
                            torch_tensor_ones, torch_tensor_get_gradient
