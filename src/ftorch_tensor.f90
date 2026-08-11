@@ -12,7 +12,7 @@ module ftorch_tensor
   use, intrinsic :: iso_fortran_env, only: int32
   use ftorch_devices, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
   use ftorch_types, only: torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
-                          torch_kFloat32, torch_kFloat64, ftorch_int
+                          torch_kFloat32, torch_kFloat64
 
   implicit none
 
@@ -436,8 +436,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -525,8 +525,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -614,8 +614,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -703,8 +703,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -792,8 +792,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -881,8 +881,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -970,8 +970,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1059,8 +1059,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1148,8 +1148,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1237,8 +1237,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1326,8 +1326,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1415,8 +1415,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1504,8 +1504,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1593,8 +1593,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1682,8 +1682,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1771,8 +1771,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1860,8 +1860,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -1949,8 +1949,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2038,8 +2038,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2127,8 +2127,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2216,8 +2216,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2305,8 +2305,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2394,8 +2394,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2483,8 +2483,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2572,8 +2572,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2661,8 +2661,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(1)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(1)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2750,8 +2750,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(2)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(2)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2839,8 +2839,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(3)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(3)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -2928,8 +2928,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(4)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(4)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -3017,8 +3017,8 @@ contains
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index
-       !! Device index for GPU devices
-    integer(ftorch_int), optional, intent(in) :: permute_dims(5)
+        !! Device index for GPU devices
+    integer(int32), optional, intent(in) :: permute_dims(5)
         !! Permutation of dimensions to be applied to Fortran data in the resulting tensor.
         !! Takes the form of an array of length `n` with elements `1` to `n`, where `n`
         !! is the `rank`. Element `i` indicates which dimension of the Fortran array
@@ -3105,7 +3105,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3158,7 +3158,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3211,7 +3211,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3264,7 +3264,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3317,7 +3317,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3370,7 +3370,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3423,7 +3423,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3476,7 +3476,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3529,7 +3529,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3582,7 +3582,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3635,7 +3635,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3688,7 +3688,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3741,7 +3741,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3794,7 +3794,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3847,7 +3847,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3900,7 +3900,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -3953,7 +3953,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4006,7 +4006,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4059,7 +4059,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4112,7 +4112,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4165,7 +4165,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4218,7 +4218,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4271,7 +4271,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4324,7 +4324,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4377,7 +4377,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4430,7 +4430,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4483,7 +4483,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4536,7 +4536,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4589,7 +4589,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
@@ -4642,7 +4642,7 @@ contains
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
