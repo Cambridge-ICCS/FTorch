@@ -7,11 +7,11 @@
 module unittest_tensor_constructors_destructors
   use funit
   use ftorch_devices, only: torch_kCPU
-  use ftorch_types, only: torch_kFloat32, ftorch_int
+  use ftorch_types, only: torch_kFloat32
   use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_delete, torch_tensor_from_array, &
                            torch_tensor_from_array_legacy
   use ftorch_test_utils, only: allclose
-  use, intrinsic :: iso_fortran_env, only: sp => real32
+  use, intrinsic :: iso_fortran_env, only: sp => real32, int32
   use iso_c_binding, only: c_associated, c_int64_t
 
   implicit none
@@ -405,7 +405,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(ftorch_int), parameter :: permute_dims(ndims) = [2, 1]
+    integer(int32),     parameter :: permute_dims(ndims) = [2, 1]
     integer(c_int64_t), parameter :: expected_shape(ndims) = [3, 2]
     integer(c_int64_t), parameter :: expected_stride(ndims) = [2, 1]
     real(wp), dimension(2,3), target :: in_data
@@ -459,7 +459,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 3
-    integer(ftorch_int), parameter :: permute_dims(ndims) = [3, 2, 1]
+    integer(int32),     parameter :: permute_dims(ndims) = [3, 2, 1]
     integer(c_int64_t), parameter :: expected_shape(ndims) = [4, 3, 2]
     integer(c_int64_t), parameter :: expected_stride(ndims) = [6, 2, 1]
     real(wp), dimension(2,3,4), target :: in_data
@@ -515,7 +515,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 3
-    integer(ftorch_int), parameter :: permute_dims(ndims) = [2, 3, 1]
+    integer(int32),     parameter :: permute_dims(ndims) = [2, 3, 1]
     integer(c_int64_t), parameter :: expected_shape(ndims) = [3, 4, 2]
     integer(c_int64_t), parameter :: expected_stride(ndims) = [2, 6, 1]
     integer(c_int64_t)            :: permuted_order(ndims)

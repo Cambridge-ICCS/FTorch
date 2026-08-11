@@ -5,7 +5,6 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module ftorch_types
-  use, intrinsic :: iso_fortran_env, only: int32
 
   implicit none
 
@@ -24,9 +23,6 @@ module ftorch_types
     enumerator :: torch_kFloat32 = 6
     enumerator :: torch_kFloat64 = 7
   end enum
-
-  ! Set integer size for FTorch library
-  integer, parameter :: ftorch_int = int32
 
   !| Enumerator for Torch reduction types
   !  From c_torch.h (torch_reduction_t)
