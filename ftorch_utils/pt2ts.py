@@ -147,7 +147,7 @@ def main_cli():
         validate_input_tensor_file(input_tensor_file)
     model_weights = parsed_args.model_weights
     precision = getattr(torch, parsed_args.precision)
-    device = parse_args.device
+    device = parsed_args.device
 
     # Set working precision
     torch.set_default_dtype(precision)
