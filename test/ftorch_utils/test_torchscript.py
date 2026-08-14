@@ -139,7 +139,7 @@ def test_load_pytorch_cuda_device(filename):
         "SimpleNet",
         model_definition_file=os.path.abspath(__file__),
         saved_model_file=filename,
-        device="cuda"
+        device="cuda",
     )
     # NOTE: models don't have a device attribute themselves so you have to query params
     params = next(model.parameters())
