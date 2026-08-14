@@ -54,7 +54,7 @@ program tensor_permutation
   ! Here we create a tensor from in_data (shape [2, 3]) with permute_dims=[2, 1],
   ! which is an involution (i.e. a transpose). The resulting tensor has shape
   ! [3, 2]. FTorch achieves this without changing memory by setting the strides for
-  ! the Torch tensor to be row-major in nature:
+  ! the Torch tensor in a row-major fashion:
   call torch_tensor_from_array(b, in_data, torch_kCPU, permute_dims=[2, 1])
   write(*,*) "Torch tensor b constructed from in_data with permutation [2, 1]:"
   call torch_tensor_print(b)
@@ -67,10 +67,10 @@ program tensor_permutation
   ! call torch_tensor_from_array(b, in_data, torch_kCPU, permute_dims=[3, 1])  ! out of range
   ! call torch_tensor_from_array(b, in_data, torch_kCPU, permute_dims=[1, 1])  ! duplicate
 
-  ! To extract the permuted data back into a Fortran array, the output array
-  ! MUST be declared with the PERMUTED shape. Here out_data_permuted has shape
-  ! [3, 2] to match the tensor. Using the original shape [2, 3] would cause a
-  ! memory layout mismatch.
+  ! To extract the permuted data back into a Fortran array, the most straightforward
+  ! option is to declare the output array with the permuted shape.
+  ! Here out_data_permuted has shape [3, 2] to match the tensor.
+  ! Using the original shape [2, 3] would cause a memory layout mismatch.
   call torch_tensor_from_array(c, out_data_permuted, torch_kCPU)
   c = b
   write(*,*) "Permuted tensor data extracted to Fortran array, out_data_permuted:"
@@ -79,9 +79,8 @@ program tensor_permutation
   end do
   write(*,*)
 
-  ! Note when we say MUST be declared with the PERMUTED shape that is not strictly true.
-  ! We could have declared the tensor we copy back to to also be permuted from its host
-  ! array in the same way as the following shows:
+  ! Alternatively, we could have declared the tensor associated with the output data
+  ! to to also be permuted from its host array in the same way as the following shows:
   call torch_tensor_from_array(d, out_data, torch_kCPU, permute_dims=[2, 1])
   d = b
   write(*,*) "Permuted tensor data extracted to Fortran array, out_data, via a permutation:"
@@ -89,6 +88,8 @@ program tensor_permutation
     write(*,fmt='(3F6.1)') out_data(i, :)
   end do
   ! We recover our original [2, 3] Fortran array in_data via permuting both into and out of Torch!"
+  ! This is useful if your Fortran and Torch spaces are a transpose of one another
+  ! and you need the output in subsequent calculations in Fortran.
   write(*,*)
 
   ! Note that when using the assignment operator the LHS tensor will NOT copy over the
@@ -120,7 +121,7 @@ program tensor_permutation
   !   4. As it appears in Torch permuted: achieved by taking row-major strides
 
   ! 1. Logical matrix view: print one row per line.
-  !    This is how we think about the data conceptually.
+  !    This is how we typically think about an array or matrix conceptually.
   write(*,*) "Fortran [2, 3] array in_data, printed row by row:"
   do i = 1, 2
     write(*,fmt='(3F6.1)') in_data(i, :)
