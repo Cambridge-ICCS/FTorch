@@ -11,7 +11,6 @@ module unittest_tensor_manipulation_cuda
   use ftorch_tensor, only: torch_tensor, torch_tensor_delete, torch_tensor_print, &
                            torch_tensor_from_array, torch_tensor_empty, torch_tensor_to
   use ftorch_test_utils, only: allclose
-  use, intrinsic :: iso_c_binding, only : c_int64_t
 
   implicit none
 

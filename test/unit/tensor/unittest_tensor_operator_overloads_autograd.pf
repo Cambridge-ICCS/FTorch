@@ -12,8 +12,8 @@ module unittest_tensor_operator_overloads_autograd
                            torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
                            torch_tensor_ones, torch_tensor_get_gradient
   use ftorch_test_utils, only: allclose
-  use, intrinsic :: iso_fortran_env, only: sp => real32
-  use, intrinsic :: iso_c_binding, only : c_associated, c_int64_t
+  use, intrinsic :: iso_fortran_env, only: int64, sp => real32
+  use, intrinsic :: iso_c_binding, only : c_associated
 
   implicit none
 
@@ -27,8 +27,8 @@ module unittest_tensor_operator_overloads_autograd
 
   ! All unit tests in this module use 2x3 arrays with float32 precision
   integer, parameter :: ndims = 2
-  integer(c_int64_t), parameter, dimension(1) :: scalar_shape = [1]
-  integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [2, 3]
+  integer(int64), parameter, dimension(1) :: scalar_shape = [1]
+  integer(int64), parameter, dimension(ndims) :: tensor_shape = [2, 3]
   integer, parameter :: dtype = torch_kFloat32
 
   ! Typedef holding a set of parameter values

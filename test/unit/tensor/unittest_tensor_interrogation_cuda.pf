@@ -9,7 +9,7 @@ module unittest_tensor_interrogation_cuda
   use ftorch_devices, only: torch_kCUDA
   use ftorch_types, only: torch_kFloat32
   use ftorch_tensor, only: torch_tensor, torch_tensor_empty
-  use iso_c_binding, only: c_int64_t
+  use iso_fortran_env, only: int64
 
   implicit none
 
@@ -31,7 +31,7 @@ contains
 
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer(int64), parameter, dimension(ndims) :: tensor_shape = [1]
     integer, parameter :: expected = torch_kCUDA
 
     ! Create an empty tensor on the CUDA device and check that torch_tensor_get_device_type can get
@@ -50,7 +50,7 @@ contains
 
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer(int64), parameter, dimension(ndims) :: tensor_shape = [1]
     integer, parameter :: expected = 0
 
     ! Create an empty tensor on the CUDA device with the default device index and check that

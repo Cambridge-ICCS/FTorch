@@ -13,7 +13,6 @@ module unittest_loss_cross_entropy
   use ftorch_test_utils, only: allclose
   use ftorch_types, only: torch_kNone, torch_kMean, torch_kSum
   use, intrinsic :: iso_fortran_env, only: sp => real32
-  use, intrinsic :: iso_c_binding, only : c_int64_t
 
   implicit none
 
