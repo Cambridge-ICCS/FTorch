@@ -54,8 +54,9 @@ We provide several subroutines for constructing
   but indexing from 1: element `i` indicates which dimension of the Fortran array
   appears as dimension `i` on the Torch tensor.
   The default (no `permute_dims` argument) leaves the dimensions in their natural order
-  (see the [transposing data user guide page](|page|/usage/transposing.html) for
-  more details).
+  (see the [transposing data user guide page](|page|/usage/transposing.html) and
+  [tensor permutation worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/12_Permutation)
+  for more details).
 
 It is *compulsory* to call one of the constructors before interacting with it in
 any of the ways described in the following. Each of the constructors sets the

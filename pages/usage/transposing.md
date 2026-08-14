@@ -195,6 +195,12 @@ useful for remapping data between conventions - for example moving a channel
 dimension from first to last position.
 @endnote
 
+@note
+For a detailed exercise demonstrating `permute_dims` and its effect on shape, strides,
+and memory layout, see the
+[tensor permutation worked example](https://github.com/Cambridge-ICCS/FTorch/tree/main/examples/12_Permutation).
+@endnote
+
 
 ### Advanced use with `torch_tensor_from_blob`
 
