@@ -1,10 +1,7 @@
 program training
 
   ! Import precision info from iso
-  use, intrinsic :: iso_fortran_env, only : sp => real32, dp => real64
-
-  ! Import c_int64_t
-  use, intrinsic :: iso_c_binding, only: c_int64_t
+  use, intrinsic :: iso_fortran_env, only : int64, sp => real32, dp => real64
 
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only: assignment(=), operator(-), operator(*), operator(/), operator(**), &
@@ -41,7 +38,7 @@ program training
   type(torch_tensor), dimension(1) :: out_tensors
   type(torch_tensor), dimension(1) :: target_tensors
   integer, parameter :: ndims = 2
-  integer(c_int64_t), dimension(ndims), parameter :: weights_shape = [n, n]
+  integer(int64), dimension(ndims), parameter :: weights_shape = [n, n]
   type(torch_tensor), dimension(1) :: weights_tensors
   type(torch_tensor) :: weights_grad
   type(torch_tensor) :: loss
