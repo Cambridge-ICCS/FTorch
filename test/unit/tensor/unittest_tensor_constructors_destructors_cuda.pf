@@ -12,8 +12,8 @@ module unittest_tensor_constructors_destructors_cuda
   use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_delete, &
                            torch_tensor_from_array, torch_tensor_to
   use ftorch_test_utils, only: allclose
-  use, intrinsic :: iso_fortran_env, only: sp => real32
-  use iso_c_binding, only: c_associated, c_int64_t
+  use, intrinsic :: iso_fortran_env, only: int64, sp => real32
+  use iso_c_binding, only: c_associated
 
   implicit none
 
@@ -95,8 +95,8 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: gpu_tensor
     integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
-    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+    integer(int64), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(int64), parameter :: expected_stride(ndims) = [3, 1]
 
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(gpu_tensor%p))
@@ -126,8 +126,8 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: cpu_tensor, gpu_tensor
     integer, parameter :: ndims = 2
-    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
-    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+    integer(int64), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(int64), parameter :: expected_stride(ndims) = [3, 1]
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
 
@@ -169,8 +169,8 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: cpu_tensor, gpu_tensor
     integer, parameter :: ndims = 2
-    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
-    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+    integer(int64), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(int64), parameter :: expected_stride(ndims) = [3, 1]
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
 
@@ -213,7 +213,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(int64), dimension(2), parameter :: tensor_shape = [2, 3]
     integer :: i
 
     do i = 1, this%param%iterations
