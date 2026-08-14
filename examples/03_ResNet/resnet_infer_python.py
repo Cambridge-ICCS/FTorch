@@ -39,7 +39,7 @@ def deploy(
     input_tensor = torch.from_numpy(np_data)
 
     # Load saved TorchScript model
-    model = torch.jit.load(saved_model)
+    model = torch.jit.load(saved_model).to(device)
 
     # Propagate
     output = model.forward(input_tensor).to("cpu")
