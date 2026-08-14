@@ -9,7 +9,7 @@
 
 module ftorch_tensor
   use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
-  use, intrinsic :: iso_fortran_env, only: int32
+  use, intrinsic :: iso_fortran_env, only: int32, int64
   use ftorch_devices, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
   use ftorch_types, only: torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
                           torch_kFloat32, torch_kFloat64
@@ -209,14 +209,16 @@ contains
                                 device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
-    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
+    integer(int32), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(int64), intent(in)      :: tensor_shape(ndims)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
+    integer(c_int)                  :: ndims_c        !! C-type ndims
+    integer(c_int64_t)              :: tensor_shape_c(ndims)  !! C-type tensor_shape
     integer(c_int)                  :: device_index_value  !! device index used
     logical(c_bool)                 :: requires_grad_value
         !! Whether gradients need to be computed for the created tensor
@@ -254,7 +256,11 @@ contains
       requires_grad_value = requires_grad
     end if
 
-    tensor%p = torch_empty_c(ndims, tensor_shape, dtype, device_type,          &
+    ! Convert public arguments to C-types
+    ndims_c = ndims
+    tensor_shape_c(:) = tensor_shape(:)
+
+    tensor%p = torch_empty_c(ndims_c, tensor_shape_c, dtype, device_type,          &
                              device_index_value, requires_grad_value)
   end subroutine torch_tensor_empty
 
@@ -263,14 +269,16 @@ contains
                                 device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
-    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
+    integer(int32), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(int64), intent(in)      :: tensor_shape(ndims)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
+    integer(c_int)                  :: ndims_c        !! C-type ndims
+    integer(c_int64_t)              :: tensor_shape_c(ndims)  !! C-type tensor_shape
     integer(c_int)                  :: device_index_value   !! device index used
     logical(c_bool)                 :: requires_grad_value
         !! Whether gradients need to be computed for the created tensor
@@ -308,7 +316,11 @@ contains
       requires_grad_value = requires_grad
     end if
 
-    tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device_type,          &
+    ! Convert public arguments to C-types
+    ndims_c = ndims
+    tensor_shape_c(:) = tensor_shape(:)
+
+    tensor%p = torch_zeros_c(ndims_c, tensor_shape_c, dtype, device_type,          &
                              device_index_value, requires_grad_value)
   end subroutine torch_tensor_zeros
 
@@ -317,14 +329,16 @@ contains
                                device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
-    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
+    integer(int32), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(int64), intent(in)      :: tensor_shape(ndims)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype        !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad
         !! Whether gradients need to be computed for the created tensor
+    integer(c_int)                  :: ndims_c            !! C-type ndims
+    integer(c_int64_t)              :: tensor_shape_c(ndims)  !! C-type tensor_shape
     integer(c_int)                  :: device_index_value    !! device index used
     logical(c_bool)                 :: requires_grad_value
         !! Whether gradients need to be computed for the created tensor
@@ -362,7 +376,11 @@ contains
       requires_grad_value = requires_grad
     end if
 
-    tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device_type,           &
+    ! Convert public arguments to C-types
+    ndims_c = ndims
+    tensor_shape_c(:) = tensor_shape(:)
+
+    tensor%p = torch_ones_c(ndims_c, tensor_shape_c, dtype, device_type,           &
                             device_index_value, requires_grad_value)
   end subroutine torch_tensor_ones
 
@@ -381,9 +399,9 @@ contains
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     type(c_ptr), intent(in)         :: data       !! Pointer to data
-    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(:)  !! Shape of the returned tensor
-    integer(c_int64_t), intent(in)  :: tensor_strides(:)
+    integer(int32), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(int64), intent(in)      :: tensor_shape(ndims)  !! Shape of the returned tensor
+    integer(int64), intent(in)      :: tensor_strides(ndims)
         !! Strides for accessing data in the returned tensor. Note that these are integers
         !! representing the number of items of type `dtype` and NOT bytes/memory.
     integer(c_int), intent(in)      :: dtype      !! Data type of the input data and tensor
@@ -394,6 +412,9 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
+    integer(c_int)                  :: ndims_c            !! C-type ndims
+    integer(c_int64_t)              :: tensor_shape_c(ndims)  !! C-type tensor_shape
+    integer(c_int64_t)              :: tensor_strides_c(ndims)  !! C-type strides
     integer(c_int)                  :: device_index_value   !! device index used
     logical(c_bool)                 :: requires_grad_value
         !! Whether gradients need to be computed for the created tensor
@@ -413,7 +434,12 @@ contains
       device_index_value = 0
     end if
 
-    tensor%p = torch_from_blob_c(data, ndims, tensor_shape, tensor_strides, dtype,    &
+    ! Convert public arguments to C-types
+    ndims_c = ndims
+    tensor_shape_c(:) = tensor_shape(:)
+    tensor_strides_c(:) = tensor_strides(:)
+
+    tensor%p = torch_from_blob_c(data, ndims_c, tensor_shape_c, tensor_strides_c, dtype, &
                                  device_type, device_index_value,              &
                                  requires_grad_value)
   end subroutine torch_tensor_from_blob
@@ -449,16 +475,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
+    integer(int64)        :: fortran_shape(1)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
+    integer(int64)        :: fortran_strides(1)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
+    integer(int64)        :: torch_shape(1)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
+    integer(int64)        :: torch_strides(1)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 1
+    integer(int32), parameter :: ndims = 1
         !! Number of dimension of input data
     logical                   :: permute_valid(1)
         !! Array to check supplied permutation is valid
@@ -469,7 +495,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -538,16 +564,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
+    integer(int64)        :: fortran_shape(2)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
+    integer(int64)        :: fortran_strides(2)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
+    integer(int64)        :: torch_shape(2)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
+    integer(int64)        :: torch_strides(2)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 2
+    integer(int32), parameter :: ndims = 2
         !! Number of dimension of input data
     logical                   :: permute_valid(2)
         !! Array to check supplied permutation is valid
@@ -558,7 +584,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -627,16 +653,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
+    integer(int64)        :: fortran_shape(3)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
+    integer(int64)        :: fortran_strides(3)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
+    integer(int64)        :: torch_shape(3)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
+    integer(int64)        :: torch_strides(3)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 3
+    integer(int32), parameter :: ndims = 3
         !! Number of dimension of input data
     logical                   :: permute_valid(3)
         !! Array to check supplied permutation is valid
@@ -647,7 +673,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -716,16 +742,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
+    integer(int64)        :: fortran_shape(4)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
+    integer(int64)        :: fortran_strides(4)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
+    integer(int64)        :: torch_shape(4)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
+    integer(int64)        :: torch_strides(4)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 4
+    integer(int32), parameter :: ndims = 4
         !! Number of dimension of input data
     logical                   :: permute_valid(4)
         !! Array to check supplied permutation is valid
@@ -736,7 +762,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -805,16 +831,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
+    integer(int64)        :: fortran_shape(5)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
+    integer(int64)        :: fortran_strides(5)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
+    integer(int64)        :: torch_shape(5)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
+    integer(int64)        :: torch_strides(5)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt8  !! Data type
-    integer(c_int), parameter :: ndims = 5
+    integer(int32), parameter :: ndims = 5
         !! Number of dimension of input data
     logical                   :: permute_valid(5)
         !! Array to check supplied permutation is valid
@@ -825,7 +851,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -894,16 +920,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
+    integer(int64)        :: fortran_shape(1)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
+    integer(int64)        :: fortran_strides(1)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
+    integer(int64)        :: torch_shape(1)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
+    integer(int64)        :: torch_strides(1)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 1
+    integer(int32), parameter :: ndims = 1
         !! Number of dimension of input data
     logical                   :: permute_valid(1)
         !! Array to check supplied permutation is valid
@@ -914,7 +940,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -983,16 +1009,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
+    integer(int64)        :: fortran_shape(2)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
+    integer(int64)        :: fortran_strides(2)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
+    integer(int64)        :: torch_shape(2)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
+    integer(int64)        :: torch_strides(2)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 2
+    integer(int32), parameter :: ndims = 2
         !! Number of dimension of input data
     logical                   :: permute_valid(2)
         !! Array to check supplied permutation is valid
@@ -1003,7 +1029,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1072,16 +1098,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
+    integer(int64)        :: fortran_shape(3)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
+    integer(int64)        :: fortran_strides(3)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
+    integer(int64)        :: torch_shape(3)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
+    integer(int64)        :: torch_strides(3)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 3
+    integer(int32), parameter :: ndims = 3
         !! Number of dimension of input data
     logical                   :: permute_valid(3)
         !! Array to check supplied permutation is valid
@@ -1092,7 +1118,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1161,16 +1187,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
+    integer(int64)        :: fortran_shape(4)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
+    integer(int64)        :: fortran_strides(4)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
+    integer(int64)        :: torch_shape(4)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
+    integer(int64)        :: torch_strides(4)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 4
+    integer(int32), parameter :: ndims = 4
         !! Number of dimension of input data
     logical                   :: permute_valid(4)
         !! Array to check supplied permutation is valid
@@ -1181,7 +1207,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1250,16 +1276,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
+    integer(int64)        :: fortran_shape(5)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
+    integer(int64)        :: fortran_strides(5)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
+    integer(int64)        :: torch_shape(5)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
+    integer(int64)        :: torch_strides(5)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt16  !! Data type
-    integer(c_int), parameter :: ndims = 5
+    integer(int32), parameter :: ndims = 5
         !! Number of dimension of input data
     logical                   :: permute_valid(5)
         !! Array to check supplied permutation is valid
@@ -1270,7 +1296,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1339,16 +1365,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
+    integer(int64)        :: fortran_shape(1)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
+    integer(int64)        :: fortran_strides(1)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
+    integer(int64)        :: torch_shape(1)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
+    integer(int64)        :: torch_strides(1)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 1
+    integer(int32), parameter :: ndims = 1
         !! Number of dimension of input data
     logical                   :: permute_valid(1)
         !! Array to check supplied permutation is valid
@@ -1359,7 +1385,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1428,16 +1454,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
+    integer(int64)        :: fortran_shape(2)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
+    integer(int64)        :: fortran_strides(2)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
+    integer(int64)        :: torch_shape(2)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
+    integer(int64)        :: torch_strides(2)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 2
+    integer(int32), parameter :: ndims = 2
         !! Number of dimension of input data
     logical                   :: permute_valid(2)
         !! Array to check supplied permutation is valid
@@ -1448,7 +1474,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1517,16 +1543,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
+    integer(int64)        :: fortran_shape(3)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
+    integer(int64)        :: fortran_strides(3)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
+    integer(int64)        :: torch_shape(3)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
+    integer(int64)        :: torch_strides(3)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 3
+    integer(int32), parameter :: ndims = 3
         !! Number of dimension of input data
     logical                   :: permute_valid(3)
         !! Array to check supplied permutation is valid
@@ -1537,7 +1563,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1606,16 +1632,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
+    integer(int64)        :: fortran_shape(4)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
+    integer(int64)        :: fortran_strides(4)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
+    integer(int64)        :: torch_shape(4)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
+    integer(int64)        :: torch_strides(4)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 4
+    integer(int32), parameter :: ndims = 4
         !! Number of dimension of input data
     logical                   :: permute_valid(4)
         !! Array to check supplied permutation is valid
@@ -1626,7 +1652,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1695,16 +1721,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
+    integer(int64)        :: fortran_shape(5)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
+    integer(int64)        :: fortran_strides(5)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
+    integer(int64)        :: torch_shape(5)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
+    integer(int64)        :: torch_strides(5)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt32  !! Data type
-    integer(c_int), parameter :: ndims = 5
+    integer(int32), parameter :: ndims = 5
         !! Number of dimension of input data
     logical                   :: permute_valid(5)
         !! Array to check supplied permutation is valid
@@ -1715,7 +1741,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1784,16 +1810,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
+    integer(int64)        :: fortran_shape(1)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
+    integer(int64)        :: fortran_strides(1)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
+    integer(int64)        :: torch_shape(1)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
+    integer(int64)        :: torch_strides(1)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 1
+    integer(int32), parameter :: ndims = 1
         !! Number of dimension of input data
     logical                   :: permute_valid(1)
         !! Array to check supplied permutation is valid
@@ -1804,7 +1830,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1873,16 +1899,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
+    integer(int64)        :: fortran_shape(2)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
+    integer(int64)        :: fortran_strides(2)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
+    integer(int64)        :: torch_shape(2)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
+    integer(int64)        :: torch_strides(2)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 2
+    integer(int32), parameter :: ndims = 2
         !! Number of dimension of input data
     logical                   :: permute_valid(2)
         !! Array to check supplied permutation is valid
@@ -1893,7 +1919,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -1962,16 +1988,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
+    integer(int64)        :: fortran_shape(3)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
+    integer(int64)        :: fortran_strides(3)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
+    integer(int64)        :: torch_shape(3)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
+    integer(int64)        :: torch_strides(3)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 3
+    integer(int32), parameter :: ndims = 3
         !! Number of dimension of input data
     logical                   :: permute_valid(3)
         !! Array to check supplied permutation is valid
@@ -1982,7 +2008,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2051,16 +2077,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
+    integer(int64)        :: fortran_shape(4)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
+    integer(int64)        :: fortran_strides(4)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
+    integer(int64)        :: torch_shape(4)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
+    integer(int64)        :: torch_strides(4)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 4
+    integer(int32), parameter :: ndims = 4
         !! Number of dimension of input data
     logical                   :: permute_valid(4)
         !! Array to check supplied permutation is valid
@@ -2071,7 +2097,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2140,16 +2166,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
+    integer(int64)        :: fortran_shape(5)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
+    integer(int64)        :: fortran_strides(5)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
+    integer(int64)        :: torch_shape(5)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
+    integer(int64)        :: torch_strides(5)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kInt64  !! Data type
-    integer(c_int), parameter :: ndims = 5
+    integer(int32), parameter :: ndims = 5
         !! Number of dimension of input data
     logical                   :: permute_valid(5)
         !! Array to check supplied permutation is valid
@@ -2160,7 +2186,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2229,16 +2255,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
+    integer(int64)        :: fortran_shape(1)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
+    integer(int64)        :: fortran_strides(1)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
+    integer(int64)        :: torch_shape(1)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
+    integer(int64)        :: torch_strides(1)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 1
+    integer(int32), parameter :: ndims = 1
         !! Number of dimension of input data
     logical                   :: permute_valid(1)
         !! Array to check supplied permutation is valid
@@ -2249,7 +2275,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2318,16 +2344,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
+    integer(int64)        :: fortran_shape(2)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
+    integer(int64)        :: fortran_strides(2)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
+    integer(int64)        :: torch_shape(2)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
+    integer(int64)        :: torch_strides(2)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 2
+    integer(int32), parameter :: ndims = 2
         !! Number of dimension of input data
     logical                   :: permute_valid(2)
         !! Array to check supplied permutation is valid
@@ -2338,7 +2364,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2407,16 +2433,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
+    integer(int64)        :: fortran_shape(3)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
+    integer(int64)        :: fortran_strides(3)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
+    integer(int64)        :: torch_shape(3)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
+    integer(int64)        :: torch_strides(3)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 3
+    integer(int32), parameter :: ndims = 3
         !! Number of dimension of input data
     logical                   :: permute_valid(3)
         !! Array to check supplied permutation is valid
@@ -2427,7 +2453,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2496,16 +2522,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
+    integer(int64)        :: fortran_shape(4)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
+    integer(int64)        :: fortran_strides(4)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
+    integer(int64)        :: torch_shape(4)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
+    integer(int64)        :: torch_strides(4)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 4
+    integer(int32), parameter :: ndims = 4
         !! Number of dimension of input data
     logical                   :: permute_valid(4)
         !! Array to check supplied permutation is valid
@@ -2516,7 +2542,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2585,16 +2611,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
+    integer(int64)        :: fortran_shape(5)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
+    integer(int64)        :: fortran_strides(5)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
+    integer(int64)        :: torch_shape(5)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
+    integer(int64)        :: torch_strides(5)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat32  !! Data type
-    integer(c_int), parameter :: ndims = 5
+    integer(int32), parameter :: ndims = 5
         !! Number of dimension of input data
     logical                   :: permute_valid(5)
         !! Array to check supplied permutation is valid
@@ -2605,7 +2631,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2674,16 +2700,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(1)
+    integer(int64)        :: fortran_shape(1)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(1)
+    integer(int64)        :: fortran_strides(1)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(1)
+    integer(int64)        :: torch_shape(1)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(1)
+    integer(int64)        :: torch_strides(1)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 1
+    integer(int32), parameter :: ndims = 1
         !! Number of dimension of input data
     logical                   :: permute_valid(1)
         !! Array to check supplied permutation is valid
@@ -2694,7 +2720,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2763,16 +2789,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(2)
+    integer(int64)        :: fortran_shape(2)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(2)
+    integer(int64)        :: fortran_strides(2)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(2)
+    integer(int64)        :: torch_shape(2)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(2)
+    integer(int64)        :: torch_strides(2)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 2
+    integer(int32), parameter :: ndims = 2
         !! Number of dimension of input data
     logical                   :: permute_valid(2)
         !! Array to check supplied permutation is valid
@@ -2783,7 +2809,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2852,16 +2878,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(3)
+    integer(int64)        :: fortran_shape(3)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(3)
+    integer(int64)        :: fortran_strides(3)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(3)
+    integer(int64)        :: torch_shape(3)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(3)
+    integer(int64)        :: torch_strides(3)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 3
+    integer(int32), parameter :: ndims = 3
         !! Number of dimension of input data
     logical                   :: permute_valid(3)
         !! Array to check supplied permutation is valid
@@ -2872,7 +2898,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -2941,16 +2967,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(4)
+    integer(int64)        :: fortran_shape(4)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(4)
+    integer(int64)        :: fortran_strides(4)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(4)
+    integer(int64)        :: torch_shape(4)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(4)
+    integer(int64)        :: torch_strides(4)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 4
+    integer(int32), parameter :: ndims = 4
         !! Number of dimension of input data
     logical                   :: permute_valid(4)
         !! Array to check supplied permutation is valid
@@ -2961,7 +2987,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -3030,16 +3056,16 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int64_t)        :: fortran_shape(5)
+    integer(int64)        :: fortran_shape(5)
         !! Shape of the unpermuted Fortran array
-    integer(c_int64_t)        :: fortran_strides(5)
+    integer(int64)        :: fortran_strides(5)
         !! Strides for the Fortran array
-    integer(c_int64_t)        :: torch_shape(5)
+    integer(int64)        :: torch_shape(5)
         !! Shape of the Torch tensor
-    integer(c_int64_t)        :: torch_strides(5)
+    integer(int64)        :: torch_strides(5)
         !! Strides for the Torch tensor
     integer(c_int), parameter :: dtype = torch_kFloat64  !! Data type
-    integer(c_int), parameter :: ndims = 5
+    integer(int32), parameter :: ndims = 5
         !! Number of dimension of input data
     logical                   :: permute_valid(5)
         !! Array to check supplied permutation is valid
@@ -3050,7 +3076,7 @@ contains
     ! Compute native Fortran strides
     do i = 1, ndims
       if (i == 1) then
-        fortran_strides(1) = 1_c_int64_t
+        fortran_strides(1) = 1_int64
       else
         fortran_strides(i) = fortran_strides(i - 1) * fortran_shape(i-1)
       end if
@@ -3111,13 +3137,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 1
+    integer(int32), parameter     :: ndims = 1
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt8
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(1)
+    integer(int64)                :: tensor_shape(1)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(1)
+    integer(int64)                :: tensor_strides(1)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3130,7 +3156,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3164,13 +3190,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 2
+    integer(int32), parameter     :: ndims = 2
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt8
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(2)
+    integer(int64)                :: tensor_shape(2)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(2)
+    integer(int64)                :: tensor_strides(2)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3183,7 +3209,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3217,13 +3243,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 3
+    integer(int32), parameter     :: ndims = 3
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt8
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(3)
+    integer(int64)                :: tensor_shape(3)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(3)
+    integer(int64)                :: tensor_strides(3)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3236,7 +3262,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3270,13 +3296,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 4
+    integer(int32), parameter     :: ndims = 4
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt8
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(4)
+    integer(int64)                :: tensor_shape(4)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(4)
+    integer(int64)                :: tensor_strides(4)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3289,7 +3315,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3323,13 +3349,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 5
+    integer(int32), parameter     :: ndims = 5
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt8
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(5)
+    integer(int64)                :: tensor_shape(5)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(5)
+    integer(int64)                :: tensor_strides(5)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3342,7 +3368,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3376,13 +3402,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 1
+    integer(int32), parameter     :: ndims = 1
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt16
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(1)
+    integer(int64)                :: tensor_shape(1)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(1)
+    integer(int64)                :: tensor_strides(1)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3395,7 +3421,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3429,13 +3455,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 2
+    integer(int32), parameter     :: ndims = 2
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt16
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(2)
+    integer(int64)                :: tensor_shape(2)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(2)
+    integer(int64)                :: tensor_strides(2)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3448,7 +3474,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3482,13 +3508,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 3
+    integer(int32), parameter     :: ndims = 3
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt16
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(3)
+    integer(int64)                :: tensor_shape(3)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(3)
+    integer(int64)                :: tensor_strides(3)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3501,7 +3527,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3535,13 +3561,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 4
+    integer(int32), parameter     :: ndims = 4
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt16
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(4)
+    integer(int64)                :: tensor_shape(4)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(4)
+    integer(int64)                :: tensor_strides(4)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3554,7 +3580,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3588,13 +3614,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 5
+    integer(int32), parameter     :: ndims = 5
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt16
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(5)
+    integer(int64)                :: tensor_shape(5)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(5)
+    integer(int64)                :: tensor_strides(5)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3607,7 +3633,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3641,13 +3667,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 1
+    integer(int32), parameter     :: ndims = 1
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt32
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(1)
+    integer(int64)                :: tensor_shape(1)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(1)
+    integer(int64)                :: tensor_strides(1)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3660,7 +3686,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3694,13 +3720,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 2
+    integer(int32), parameter     :: ndims = 2
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt32
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(2)
+    integer(int64)                :: tensor_shape(2)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(2)
+    integer(int64)                :: tensor_strides(2)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3713,7 +3739,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3747,13 +3773,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 3
+    integer(int32), parameter     :: ndims = 3
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt32
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(3)
+    integer(int64)                :: tensor_shape(3)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(3)
+    integer(int64)                :: tensor_strides(3)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3766,7 +3792,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3800,13 +3826,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 4
+    integer(int32), parameter     :: ndims = 4
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt32
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(4)
+    integer(int64)                :: tensor_shape(4)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(4)
+    integer(int64)                :: tensor_strides(4)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3819,7 +3845,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3853,13 +3879,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 5
+    integer(int32), parameter     :: ndims = 5
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt32
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(5)
+    integer(int64)                :: tensor_shape(5)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(5)
+    integer(int64)                :: tensor_strides(5)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3872,7 +3898,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3906,13 +3932,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 1
+    integer(int32), parameter     :: ndims = 1
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt64
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(1)
+    integer(int64)                :: tensor_shape(1)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(1)
+    integer(int64)                :: tensor_strides(1)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3925,7 +3951,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -3959,13 +3985,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 2
+    integer(int32), parameter     :: ndims = 2
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt64
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(2)
+    integer(int64)                :: tensor_shape(2)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(2)
+    integer(int64)                :: tensor_strides(2)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -3978,7 +4004,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4012,13 +4038,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 3
+    integer(int32), parameter     :: ndims = 3
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt64
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(3)
+    integer(int64)                :: tensor_shape(3)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(3)
+    integer(int64)                :: tensor_strides(3)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4031,7 +4057,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4065,13 +4091,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 4
+    integer(int32), parameter     :: ndims = 4
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt64
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(4)
+    integer(int64)                :: tensor_shape(4)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(4)
+    integer(int64)                :: tensor_strides(4)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4084,7 +4110,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4118,13 +4144,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 5
+    integer(int32), parameter     :: ndims = 5
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kInt64
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(5)
+    integer(int64)                :: tensor_shape(5)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(5)
+    integer(int64)                :: tensor_strides(5)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4137,7 +4163,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4171,13 +4197,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 1
+    integer(int32), parameter     :: ndims = 1
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kFloat32
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(1)
+    integer(int64)                :: tensor_shape(1)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(1)
+    integer(int64)                :: tensor_strides(1)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4190,7 +4216,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4224,13 +4250,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 2
+    integer(int32), parameter     :: ndims = 2
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kFloat32
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(2)
+    integer(int64)                :: tensor_shape(2)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(2)
+    integer(int64)                :: tensor_strides(2)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4243,7 +4269,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4277,13 +4303,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 3
+    integer(int32), parameter     :: ndims = 3
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kFloat32
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(3)
+    integer(int64)                :: tensor_shape(3)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(3)
+    integer(int64)                :: tensor_strides(3)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4296,7 +4322,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4330,13 +4356,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 4
+    integer(int32), parameter     :: ndims = 4
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kFloat32
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(4)
+    integer(int64)                :: tensor_shape(4)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(4)
+    integer(int64)                :: tensor_strides(4)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4349,7 +4375,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4383,13 +4409,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 5
+    integer(int32), parameter     :: ndims = 5
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kFloat32
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(5)
+    integer(int64)                :: tensor_shape(5)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(5)
+    integer(int64)                :: tensor_strides(5)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4402,7 +4428,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4436,13 +4462,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 1
+    integer(int32), parameter     :: ndims = 1
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kFloat64
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(1)
+    integer(int64)                :: tensor_shape(1)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(1)
+    integer(int64)                :: tensor_strides(1)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4455,7 +4481,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4489,13 +4515,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 2
+    integer(int32), parameter     :: ndims = 2
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kFloat64
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(2)
+    integer(int64)                :: tensor_shape(2)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(2)
+    integer(int64)                :: tensor_strides(2)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4508,7 +4534,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4542,13 +4568,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 3
+    integer(int32), parameter     :: ndims = 3
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kFloat64
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(3)
+    integer(int64)                :: tensor_shape(3)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(3)
+    integer(int64)                :: tensor_strides(3)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4561,7 +4587,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4595,13 +4621,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 4
+    integer(int32), parameter     :: ndims = 4
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kFloat64
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(4)
+    integer(int64)                :: tensor_shape(4)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(4)
+    integer(int64)                :: tensor_strides(4)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4614,7 +4640,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
@@ -4648,13 +4674,13 @@ contains
         !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(c_int), parameter     :: ndims = 5
+    integer(int32), parameter     :: ndims = 5
         !! Number of dimension of input data
     integer(c_int), parameter     :: dtype = torch_kFloat64
         !! Data type
-    integer(c_int64_t)            :: tensor_shape(5)
+    integer(int64)                :: tensor_shape(5)
         !! Shape of the input tensor
-    integer(c_int64_t)            :: tensor_strides(5)
+    integer(int64)                :: tensor_strides(5)
         !! Strides for accessing data appropriately
     integer :: i
 
@@ -4667,7 +4693,7 @@ contains
     tensor_strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        tensor_strides(layout(i)) = 1
+        tensor_strides(layout(i)) = 1_int64
       else
         tensor_strides(layout(i)) = tensor_strides(layout(i - 1)) * tensor_shape(layout(i - 1))
       end if
