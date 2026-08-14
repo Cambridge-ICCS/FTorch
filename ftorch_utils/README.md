@@ -50,3 +50,5 @@ accepts several command line arguments:
 * `--input_tensor_file </path/to/saved/tensor>`, which is required (if `--trace`
   or `--test` was passed) to specify the file name of a local PyTorch tensor of
   appropriate input dimensions (including its path).
+* `--device`, which is required to specify the device that the model should
+  reside on (if not CPU).

@@ -1,6 +1,6 @@
 title: GPU Support
 author: Jack Atkinson
-date: Last Updated: June 2026
+date: Last Updated: August 2026
 
 ## GPU Support
 
@@ -68,44 +68,18 @@ cmake .. -DGPU_DEVICE=NONE
 ```
 i.e., CPU-only.
 
-**2) Save PyTorch models on the target device**  
-When saving a model in PyTorch format, ensure that it has the desired GPU device
-type. For example, in
-[`examples/02_SimpleNet/simplenet.py`](https://github.com/Cambridge-ICCS/FTorch/blob/main/examples/02_SimpleNet/simplenet.py),
-this is done in the following lines:
-```python
-    model = SimpleNet().to(device_type)
-```
-and
-```python
-    input_tensor = torch.Tensor([0.0, 1.0, 2.0, 3.0, 4.0]).to(device_type)
-```
-The first line transfers the model to the specified GPU device, while the second
-line does the same for any input arrays used in tracing or testing. Having
-transferred the model and any input tensors to the GPU device, write them out
-using `torch.save`. In the SimpleNet example above, this is done with
-```python
-    torch.save(model.state_dict(), f"saved_simplenet_model_{device_type}.pt")
-```
-and
-```python
-    torch.save(input_tensor, f"saved_simplenet_input_tensor_{device_type}.pt")
-```
-
-**3) Convert PyTorch model to TorchScript model**  
+**2) Convert PyTorch model to TorchScript model**  
 When converting a PyTorch model to a TorchScript model using the `pt2ts` script,
-the device type will be inherited. As such, if the PyTorch model is saved using
-a particular device type then this will be preserved in the resulting
-TorchScript model. For further details on the `pt2ts` script, call
-`pt2ts --help` or read the
+the device type should be specified via the `--device` option. For further
+details on the `pt2ts` script, call `pt2ts --help` or read the
 [ftorch-utils README](https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils/README.md).
 
-**4) Specify the target device from FTorch**  
+**3) Specify the target device from FTorch**  
 When calling [[ftorch_tensor(module):torch_tensor_from_array(interface)]] and
 [[ftorch_model(module):torch_model_load(subroutine)]] in Fortran, the device
-for the input tensor(s) and model should be set to the same device type that
-they were written out using (`torch_kCUDA`, `torch_kHIP`, `torch_kXPU`, or
-`torch_kMPS`) rather than `torch_kCPU`.
+for the input model should be set to the same device type that it was written
+out using (`torch_kCUDA`, `torch_kHIP`, `torch_kXPU`, or `torch_kMPS`) rather
+than `torch_kCPU`. Tensors should also be created on the appropriate device.
 
 The following snippet shows how you would load a model to a CUDA device, create tensors,
 and run inference:
