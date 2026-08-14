@@ -118,6 +118,35 @@ def test_load_pytorch_missing_saved_model_file(filename):
         load_pytorch("SimpleNet", model_definition_file=os.path.abspath(__file__))
 
 
+def test_load_pytorch_default_device(filename):
+    """Check that `load_pytorch` loads models on CPU by default."""
+    torch.save(SimpleNet().state_dict(), filename)
+    model = load_pytorch(
+        "SimpleNet",
+        model_definition_file=os.path.abspath(__file__),
+        saved_model_file=filename,
+    )
+    # NOTE: models don't have a device attribute themselves so you have to query params
+    assert next(model.parameters()).device.type == "cpu"
+
+
+def test_load_pytorch_cuda_device(filename):
+    """Check that `load_pytorch` is able to load a model on a CUDA device on request."""
+    if torch.cuda.device_count() == 0:
+        pytest.skip("No CUDA devices available, skipping test.")
+    torch.save(SimpleNet().state_dict(), filename)
+    model = load_pytorch(
+        "SimpleNet",
+        model_definition_file=os.path.abspath(__file__),
+        saved_model_file=filename,
+        device="cuda"
+    )
+    # NOTE: models don't have a device attribute themselves so you have to query params
+    params = next(model.parameters())
+    assert params.device.type == "cuda"
+    assert params.device.index == 0
+
+
 def test_load_torchscript(filename):
     """Check that `load_torchscript` is able to load a file in TorchScript format."""
     test_script_to_torchscript_creates_file(filename)

@@ -97,6 +97,7 @@ if(CMAKE_BUILD_TESTS)
           ${PROJECT_BINARY_DIR}/pytorch_simplenet_input_tensor_${DEVICE_LOW}.pt
           --output_model_file
           ${PROJECT_BINARY_DIR}/torchscript_multigpu_model_${DEVICE_LOW}.pt
+          --device ${DEVICE_LOW}
           --test)
 
   # 3. Check the model can be loaded from file and run on the specified devices

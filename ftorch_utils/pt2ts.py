@@ -110,6 +110,12 @@ def parse_user_input():
         type=str,
         default="float32",
     )
+    parser.add_argument(
+        "--device",
+        help="Device that the model should reside on.",
+        type=str,
+        default="cpu",
+    )
     parsed_args = parser.parse_args()
     if parsed_args.input_tensor_file is None and parsed_args.trace:
         value_error = "An input tensor must be provided to use --trace."
@@ -141,13 +147,14 @@ def main_cli():
         validate_input_tensor_file(input_tensor_file)
     model_weights = parsed_args.model_weights
     precision = getattr(torch, parsed_args.precision)
+    device = parse_args.device
 
     # Set working precision
     torch.set_default_dtype(precision)
 
     # Load the input PyTorch model
     model = load_pytorch(
-        model_name, model_definition_file, input_model_file, model_weights
+        model_name, model_definition_file, input_model_file, model_weights, device
     )
 
     if test or trace:
@@ -165,9 +172,6 @@ def main_cli():
 
     if test:
         validate_file_exists(output_model_file, "Saved TorchScript output model")
-
-        # Transfer model to the same device as the input tensor
-        model = model.to(input_tensors[0].device)
         validate_model_device_types(model)
         validate_model_device_indices(model)
         validate_device_types(model, input_tensors)
@@ -180,8 +184,8 @@ def main_cli():
         # Load the TorchScript model, propagate the same input tensor, and check the
         # results match
         ts_model = load_torchscript(output_model_file)
-        ts_model = ts_model.to(input_tensors[0].device)
         ts_model_outputs = ts_model(*input_tensors)
+        validate_model_device_types(ts_model)
         validate_output_tensors(pt_model_outputs, ts_model_outputs)
         print("Saved TorchScript model working as expected in a basic test.")
         print("Users should perform further validation as appropriate.")

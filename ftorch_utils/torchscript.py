@@ -58,6 +58,7 @@ def load_pytorch(
     model_definition_file: Optional[str] = None,
     saved_model_file: Optional[str] = None,
     model_weights: Optional[str] = None,
+    device: Optional[str] = None,
 ) -> torch.nn.Module:
     """
     Load a PyTorch model from file or from TorchVision's pre-trained models.
@@ -73,6 +74,8 @@ def load_pytorch(
         name of file containing saved PyTorch model if not loading a pre-trained model
     model_weights : str
         name of model weights if loading a pretrained model
+    device : str
+        device type to load the model onto (defaults to 'cpu')
 
     Returns
     -------
@@ -112,6 +115,10 @@ def load_pytorch(
     elif model_weights is None:
         with torch.inference_mode():
             model.load_state_dict(torch.load(saved_model_file, weights_only=True))
+
+    # Move the model to the requested device
+    if device is not None and device != "cpu":
+        model.to(device)
 
     # Switch-off some specific layers/parts of the model that behave
     # differently during training and inference
