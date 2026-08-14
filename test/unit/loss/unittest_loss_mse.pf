@@ -12,7 +12,6 @@ module unittest_loss_mse
   use ftorch_loss, only: torch_loss_mse
   use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
-  use, intrinsic :: iso_c_binding, only : c_int64_t
 
   implicit none
 

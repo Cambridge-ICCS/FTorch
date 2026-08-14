@@ -9,7 +9,7 @@ module unittest_tensor_interrogation
   use ftorch_devices, only: torch_kCPU
   use ftorch_types, only: torch_kFloat32
   use ftorch_tensor, only: torch_tensor, torch_tensor_empty
-  use iso_c_binding, only: c_int64_t
+  use iso_fortran_env, only: int64
 
   implicit none
 
@@ -74,7 +74,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
-    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [6]
+    integer(kind=int64), parameter :: tensor_shape(ndims) = [6]
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
@@ -89,7 +89,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
+    integer(kind=int64), parameter :: tensor_shape(ndims) = [2,3]
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
@@ -104,7 +104,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
-    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1,2,3]
+    integer(kind=int64), parameter :: tensor_shape(ndims) = [1,2,3]
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
     ! identify its rank
@@ -119,7 +119,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
-    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [6]
+    integer(kind=int64), parameter :: tensor_shape(ndims) = [6]
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
@@ -134,7 +134,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(kind=int64), parameter :: tensor_shape(ndims) = [2, 3]
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
@@ -149,7 +149,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
-    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1, 2, 3]
+    integer(kind=int64), parameter :: tensor_shape(ndims) = [1, 2, 3]
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
     ! identify its shape
@@ -164,8 +164,8 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
-    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [6]
-    integer(kind=c_int64_t), parameter :: expected_stride(ndims) = [1]
+    integer(kind=int64), parameter :: tensor_shape(ndims) = [6]
+    integer(kind=int64), parameter :: expected_stride(ndims) = [1]
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_stride can correctly
     ! identify its stride pattern
@@ -180,8 +180,8 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
-    integer(kind=c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+    integer(kind=int64), parameter :: tensor_shape(ndims) = [2,3]
+    integer(kind=int64), parameter :: expected_stride(ndims) = [3, 1]
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_stride can correctly
     ! identify its stride pattern
@@ -196,8 +196,8 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
-    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [1,2,3]
-    integer(kind=c_int64_t), parameter :: expected_stride(ndims) = [6, 3, 1]
+    integer(kind=int64), parameter :: tensor_shape(ndims) = [1,2,3]
+    integer(kind=int64), parameter :: expected_stride(ndims) = [6, 3, 1]
 
     ! Create a tensor with uninitialised values and check torch_tensor_get_stride can correctly
     ! identify its stride pattern
@@ -212,7 +212,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer(int64), parameter, dimension(ndims) :: tensor_shape = [1]
     integer, parameter :: expected = torch_kFloat32
 
     ! Create an empty tensor for 32-bit floats and check that torch_tensor_get_dtype can get the
@@ -228,7 +228,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer(int64), parameter, dimension(ndims) :: tensor_shape = [1]
     integer, parameter :: expected = torch_kCPU
 
     ! Create an empty tensor on the CPU with the default device type and check that
@@ -244,7 +244,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer(int64), parameter, dimension(ndims) :: tensor_shape = [1]
     integer, parameter :: expected = -1
 
     ! Create an empty tensor on the CPU with the default device index and check that
@@ -260,7 +260,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer(int64), parameter, dimension(ndims) :: tensor_shape = [1]
 
     ! Create an empty tensor on the CPU with the default requires_grad option
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
@@ -274,7 +274,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter, dimension(ndims) :: tensor_shape = [1]
+    integer(int64), parameter, dimension(ndims) :: tensor_shape = [1]
 
     ! Create an empty tensor on the CPU with the default requires_grad option
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type, &
