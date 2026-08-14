@@ -10,7 +10,6 @@ module unittest_tensor_manipulation
   use ftorch_types, only: torch_kFloat32
   use ftorch_tensor, only: torch_tensor, torch_tensor_from_array
   use ftorch_test_utils, only: allclose
-  use, intrinsic :: iso_c_binding, only : c_int64_t
 
   implicit none
 

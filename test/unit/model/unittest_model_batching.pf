@@ -13,8 +13,7 @@ module unittest_model_batching
   use ftorch_model, only: torch_model, torch_model_load, torch_model_forward
   use ftorch_tensor, only: torch_tensor
   use ftorch_test_utils, only: allclose
-  use, intrinsic :: iso_fortran_env, only : sp => real32
-  use iso_c_binding, only: c_int64_t
+  use, intrinsic :: iso_fortran_env, only : int64, sp => real32
 
   implicit none
 
@@ -44,7 +43,7 @@ contains
     type(torch_model) :: model
     type(torch_tensor) :: input_tensors(1), output_tensors(1)
     integer, parameter :: ndims = 1
-    integer(c_int64_t), parameter :: tensor_shape(ndims) = [5]
+    integer(int64), parameter :: tensor_shape(ndims) = [5]
     real(wp), dimension(5), target :: output_array
     real(wp), dimension(5) :: expected
 
