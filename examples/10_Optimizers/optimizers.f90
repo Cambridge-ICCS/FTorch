@@ -1,10 +1,7 @@
 program foptimizer
 
   ! Import precision info from iso
-  use, intrinsic :: iso_fortran_env, only : sp => real32
-
-  ! Import c_int64_t
-  use, intrinsic :: iso_c_binding, only: c_int64_t
+  use, intrinsic :: iso_fortran_env, only : int64, sp => real32
 
   ! Import our library for interfacing with PyTorch's Autograd module
   use ftorch, only: assignment(=), operator(-), operator(*), operator(/), operator(**), &
@@ -31,7 +28,7 @@ program foptimizer
   real(wp), dimension(1), target :: loss_data
 
   ! Set up Torch data structures
-  integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
+  integer(int64), dimension(1), parameter :: tensor_shape = [4]
   type(torch_tensor) :: input_vec, output_vec, target_vec, scaling_tensor, scaling_grad, loss
   type(torch_optim) :: optimizer
 
