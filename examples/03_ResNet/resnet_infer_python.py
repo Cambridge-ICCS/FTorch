@@ -36,7 +36,7 @@ def deploy(
     np_data = np.fromfile(os.path.join(data_dir, "image_tensor.dat"), dtype=precision)
     np_data = np_data.reshape(transposed_shape)
     np_data = np_data.transpose()
-    input_tensor = torch.from_numpy(np_data)
+    input_tensor = torch.from_numpy(np_data).to(device)
 
     # Load saved TorchScript model
     model = torch.jit.load(saved_model).to(device)

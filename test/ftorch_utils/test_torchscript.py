@@ -132,7 +132,7 @@ def test_load_pytorch_default_device(filename):
 
 def test_load_pytorch_cuda_device(filename):
     """Check that `load_pytorch` is able to load a model on a CUDA device on request."""
-    if torch.cuda.device_count() == 0:
+    if not torch.cuda.is_available():
         pytest.skip("No CUDA devices available, skipping test.")
     torch.save(SimpleNet().state_dict(), filename)
     model = load_pytorch(
