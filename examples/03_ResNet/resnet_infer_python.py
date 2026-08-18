@@ -7,9 +7,7 @@ import torch
 from resnet18 import check_results, print_top_results
 
 
-def deploy(
-    saved_model: str, data_dir: str, batch_size: int = 1
-) -> torch.Tensor:
+def deploy(saved_model: str, data_dir: str, batch_size: int = 1) -> torch.Tensor:
     """
     Load TorchScript ResNet-18 and run inference with Tensor from example image.
 
