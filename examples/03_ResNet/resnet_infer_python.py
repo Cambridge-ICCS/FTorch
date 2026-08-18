@@ -8,7 +8,7 @@ from resnet18 import check_results, print_top_results
 
 
 def deploy(
-    saved_model: str, device: str, data_dir: str, batch_size: int = 1
+    saved_model: str, data_dir: str, batch_size: int = 1
 ) -> torch.Tensor:
     """
     Load TorchScript ResNet-18 and run inference with Tensor from example image.
@@ -17,8 +17,6 @@ def deploy(
     ----------
     saved_model : str
         location of ResNet-18 saved to Torchscript
-    device : str
-        Torch device to run model on, e.g., 'cpu' or 'cuda'
     data_dir : str
         Path to data directory
     batch_size : int
@@ -32,14 +30,15 @@ def deploy(
     transposed_shape = [224, 224, 3, batch_size]
     precision = np.float32
 
+    # Load saved TorchScript model
+    model = torch.jit.load(saved_model)
+    device = next(model.parameters()).device
+
     # Setup input tensor
     np_data = np.fromfile(os.path.join(data_dir, "image_tensor.dat"), dtype=precision)
     np_data = np_data.reshape(transposed_shape)
     np_data = np_data.transpose()
     input_tensor = torch.from_numpy(np_data).to(device)
-
-    # Load saved TorchScript model
-    model = torch.jit.load(saved_model).to(device)
 
     # Propagate
     output = model.forward(input_tensor).to("cpu")
@@ -81,6 +80,6 @@ if __name__ == "__main__":
     batch_size_to_run = 1
 
     with torch.inference_mode():
-        result = deploy(saved_model_file, device_type, data_dir, batch_size_to_run)
+        result = deploy(saved_model_file, data_dir, batch_size_to_run)
     print_top_results(result, data_dir)
     check_results(result)
