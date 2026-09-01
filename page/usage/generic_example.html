@@ -222,7 +222,7 @@ before writing your own code to fully explore the features.</p>
 <span class="kt">real</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="k">target</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="n">output</span>
 
 <span class="c">! Initialise the Torch model to be used</span>
-<span class="n">torch_model_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/path/to/saved/model.pt&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+<span class="n">torch_model_load</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="s2">"/path/to/saved/model.pt"</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
 
 <span class="c">! Initialise the inputs as Fortran array of ones</span>
 <span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
@@ -255,7 +255,7 @@ file to find the FTorch installation and link it to the executable.</p>
 <p>This can be done by adding the following to the <code>CMakeLists.txt</code> file:</p>
 <div class="codehilite"><pre><span></span><code><span class="nb">find_package</span><span class="p">(</span><span class="s">FTorch</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 <span class="nb">target_link_libraries</span><span class="p">(</span><span class="w"> </span><span class="s">&lt;executable&gt;</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">FTorch::ftorch</span><span class="w"> </span><span class="p">)</span>
-<span class="nb">message</span><span class="p">(</span><span class="s">STATUS</span><span class="w"> </span><span class="s2">&quot;Building with Fortran PyTorch coupling&quot;</span><span class="p">)</span>
+<span class="nb">message</span><span class="p">(</span><span class="s">STATUS</span><span class="w"> </span><span class="s2">"Building with Fortran PyTorch coupling"</span><span class="p">)</span>
 </code></pre></div>
 
 <p>and using the <code>-DCMAKE_PREFIX_PATH=&lt;/path/to/install/location&gt;</code> flag when running CMake.  </p>

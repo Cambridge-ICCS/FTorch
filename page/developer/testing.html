@@ -176,7 +176,7 @@ default. To build only one test family, disable the other.</p>
 <a href="https://github.com/Goddard-Fortran-Ecosystem/pFUnit">pFUnit</a> and provide its
 install location to the <code>CMAKE_PREFIX_PATH</code> or as the environment variable <code>PFUNIT_DIR</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1"># Update `CMAKE_PREFIX_PATH` explicitly with pFUnit install directory</span>
-cmake<span class="w"> </span>-DCMAKE_PREFIX_PATH<span class="o">=</span><span class="s2">&quot;&lt;/path/to/pFUnit/build/installed/PFUNIT-VERSION&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+cmake<span class="w"> </span>-DCMAKE_PREFIX_PATH<span class="o">=</span><span class="s2">"&lt;/path/to/pFUnit/build/installed/PFUNIT-VERSION&gt;"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>True<span class="w"> </span>-S<span class="w"> </span>&lt;/path/to/FTorch&gt;<span class="w"> </span>-B<span class="w"> </span>&lt;/path/to/FTorch/build&gt;
 </code></pre></div>
 

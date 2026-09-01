@@ -177,17 +177,17 @@ directory (see the <a href="https://www.intel.com/content/www/us/en/docs/oneapi/
 docs</a>)
 for more details.</p>
 <p>From PowerShell this can be done with:</p>
-<div class="codehilite"><pre><span></span><code><span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="p">&amp;</span> <span class="s2">"C:\Program Files (x86)\Intel\oneAPI\setvars.bat"</span>
 </code></pre></div>
 
 <p>If you are using the legacy <code>cmd</code> shell, instead use</p>
-<div class="codehilite"><pre><span></span><code><span class="n">call</span><span class="w"> </span><span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="n">call</span><span class="w"> </span><span class="s2">"C:\Program Files (x86)\Intel\oneAPI\setvars.bat"</span>
 </code></pre></div>
 
 <p>FTorch can then be built according to the <a href="general.html">regular CMake instructions</a>,
 with the addition of <code>-G "Ninja"</code>.</p>
 <p>So the basic command to build (with either PowerShell or <code>cmd</code>) becomes:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">cmake</span> <span class="n">-G</span> <span class="s2">&quot;Ninja&quot;</span> <span class="n">-DCMAKE_PREFIX_PATH</span><span class="p">=</span><span class="s2">&quot;C:\Users\&lt;path-to-libtorch-download&gt;\libtorch&quot;</span> <span class="n">-DCMAKE_BUILD_TYPE</span><span class="p">=</span><span class="n">Release</span> <span class="p">..</span>
+<div class="codehilite"><pre><span></span><code><span class="n">cmake</span> <span class="n">-G</span> <span class="s2">"Ninja"</span> <span class="n">-DCMAKE_PREFIX_PATH</span><span class="p">=</span><span class="s2">"C:\Users\&lt;path-to-libtorch-download&gt;\libtorch"</span> <span class="n">-DCMAKE_BUILD_TYPE</span><span class="p">=</span><span class="n">Release</span> <span class="p">..</span>
 <span class="n">cmake</span> <span class="p">-</span><span class="n">-build</span> <span class="p">.</span>
 <span class="n">cmake</span> <span class="p">-</span><span class="n">-install</span> <span class="p">.</span>
 </code></pre></div>
@@ -198,7 +198,7 @@ with the addition of <code>-G "Ninja"</code>.</p>
 <p>The following is an example PowerShell script that installs FTorch and runs the integration tests. It assumes you have already installed CMake, git, the Intel
 compilers, and Visual Studio.</p>
 <div class="codehilite"><pre><span></span><code><span class="c"># Load intel compilers</span>
-<span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
+<span class="p">&amp;</span> <span class="s2">"C:\Program Files (x86)\Intel\oneAPI\setvars.bat"</span>
 
 <span class="c"># Download ftorch</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">Cambridge-ICCS</span><span class="p">/</span><span class="n">FTorch</span><span class="p">.</span><span class="n">git</span>
@@ -214,23 +214,23 @@ compilers, and Visual Studio.</p>
 <span class="n">pip</span> <span class="n">install</span> <span class="p">.</span><span class="no">[examples]</span>
 
 <span class="c"># Find torch location</span>
-<span class="nv">$Torch_DIR</span> <span class="p">=</span> <span class="p">(</span><span class="n">pip</span> <span class="n">show</span> <span class="n">torch</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s2">&quot;^Location&quot;</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Line</span> <span class="o">-replace</span> <span class="s2">&quot;^Location:\s*&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span> <span class="p">})</span>
+<span class="nv">$Torch_DIR</span> <span class="p">=</span> <span class="p">(</span><span class="n">pip</span> <span class="n">show</span> <span class="n">torch</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s2">"^Location"</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Line</span> <span class="o">-replace</span> <span class="s2">"^Location:\s*"</span><span class="p">,</span> <span class="s2">""</span> <span class="p">})</span>
 
 <span class="c"># Run CMake to generate build scripts</span>
 <span class="c"># (Update CMAKE_PREFIX_PATH depending on location of ftorch venv)</span>
 <span class="n">cmake</span> <span class="p">`</span>
   <span class="n">-Bbuild</span> <span class="p">`</span>
-  <span class="n">-G</span> <span class="s2">&quot;Ninja&quot;</span> <span class="p">`</span>
-  <span class="n">-DPython_EXECUTABLE</span><span class="p">=</span><span class="s2">&quot;$PYTHON_EXECUTABLE&quot;</span> <span class="p">`</span>
-  <span class="n">-DCMAKE_Fortran_FLAGS</span><span class="p">=</span><span class="s2">&quot;/fpscomp:logicals&quot;</span> <span class="p">`</span>
-  <span class="n">-DCMAKE_CXX_FLAGS</span><span class="p">=</span><span class="s2">&quot;/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH&quot;</span> <span class="p">`</span>
-  <span class="n">-DCMAKE_PREFIX_PATH</span><span class="p">=</span><span class="s2">&quot;$Torch_DIR\torch&quot;</span> <span class="p">`</span>
+  <span class="n">-G</span> <span class="s2">"Ninja"</span> <span class="p">`</span>
+  <span class="n">-DPython_EXECUTABLE</span><span class="p">=</span><span class="s2">"$PYTHON_EXECUTABLE"</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_Fortran_FLAGS</span><span class="p">=</span><span class="s2">"/fpscomp:logicals"</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_CXX_FLAGS</span><span class="p">=</span><span class="s2">"/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH"</span> <span class="p">`</span>
+  <span class="n">-DCMAKE_PREFIX_PATH</span><span class="p">=</span><span class="s2">"$Torch_DIR\torch"</span> <span class="p">`</span>
   <span class="n">-DCMAKE_BUILD_TYPE</span><span class="p">=</span><span class="n">Release</span> <span class="p">`</span>
   <span class="n">-DCMAKE_Fortran_COMPILER</span><span class="p">=</span><span class="n">ifx</span> <span class="p">`</span>
   <span class="n">-DCMAKE_C_COMPILER</span><span class="p">=</span><span class="n">icx</span> <span class="p">`</span>
   <span class="n">-DCMAKE_CXX_COMPILER</span><span class="p">=</span><span class="n">icx</span> <span class="p">`</span>
   <span class="n">-DCMAKE_BUILD_TESTS</span><span class="p">=</span><span class="n">TRUE</span> <span class="p">`</span>
-  <span class="n">-DCMAKE_INSTALL_PREFIX</span><span class="p">=</span><span class="s2">&quot;$FTORCH_INSTALL_DIR&quot;</span>
+  <span class="n">-DCMAKE_INSTALL_PREFIX</span><span class="p">=</span><span class="s2">"$FTORCH_INSTALL_DIR"</span>
 
 <span class="c"># Build and install FTorch</span>
 <span class="n">cmake</span> <span class="p">-</span><span class="n">-build</span> <span class="n">build</span>
@@ -238,7 +238,7 @@ compilers, and Visual Studio.</p>
 
 <span class="c"># Add FTorch and PyTorch libs to path</span>
 <span class="c"># (Update the first one depending on where you installed FTorch)</span>
-<span class="nv">$env:PATH</span> <span class="p">=</span> <span class="s2">&quot;$FTORCH_INSTALL_DIR\bin;$Torch_DIR\torch\lib;$env:PATH&quot;</span>
+<span class="nv">$env:PATH</span> <span class="p">=</span> <span class="s2">"$FTORCH_INSTALL_DIR\bin;$Torch_DIR\torch\lib;$env:PATH"</span>
 
 <span class="c"># Run integration tests</span>
 <span class="nb">cd </span><span class="n">build</span>
@@ -266,7 +266,7 @@ with the install then it may be helpful to set <code>ECHO ON</code> throughout.<
 <span class="n">ECHO</span><span class="w"> </span><span class="n">OFF</span>
 
 <span class="n">rem</span><span class="w"> </span><span class="n">Load</span><span class="w"> </span><span class="n">intel</span><span class="w"> </span><span class="n">compilers</span>
-<span class="n">call</span><span class="w"> </span><span class="s2">&quot;C:\Program Files (x86)\Intel\oneAPI\setvars.bat&quot;</span>
+<span class="n">call</span><span class="w"> </span><span class="s2">"C:\Program Files (x86)\Intel\oneAPI\setvars.bat"</span>
 
 <span class="n">rem</span><span class="w"> </span><span class="n">Download</span><span class="w"> </span><span class="n">ftorch</span>
 <span class="n">git</span><span class="w"> </span><span class="n">clone</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Cambridge</span><span class="o">-</span><span class="n">ICCS</span><span class="o">/</span><span class="n">FTorch</span><span class="o">.</span><span class="n">git</span>
@@ -285,19 +285,19 @@ with the install then it may be helpful to set <code>ECHO ON</code> throughout.<
 <span class="n">ECHO</span><span class="w"> </span><span class="n">ON</span>
 
 <span class="n">rem</span><span class="w"> </span><span class="n">Find</span><span class="w"> </span><span class="n">Torch</span><span class="w"> </span><span class="n">location</span>
-<span class="k">for</span><span class="w"> </span><span class="o">/</span><span class="n">f</span><span class="w"> </span><span class="s2">&quot;tokens=2*&quot;</span><span class="w"> </span><span class="o">%%</span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;pip show torch ^| findstr /R &quot;^Location&quot;&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">torch_path</span><span class="o">=%%</span><span class="n">i</span>
+<span class="k">for</span><span class="w"> </span><span class="o">/</span><span class="n">f</span><span class="w"> </span><span class="s2">"tokens=2*"</span><span class="w"> </span><span class="o">%%</span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="p">(</span><span class="s1">'pip show torch ^| findstr /R "^Location"'</span><span class="p">)</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">torch_path</span><span class="o">=%%</span><span class="n">i</span>
 
 <span class="n">rem</span><span class="w"> </span><span class="n">Run</span><span class="w"> </span><span class="n">CMake</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="n">build</span><span class="w"> </span><span class="n">scripts</span>
 <span class="n">rem</span><span class="w"> </span><span class="p">(</span><span class="n">Update</span><span class="w"> </span><span class="n">CMAKE_PREFIX_PATH</span><span class="w"> </span><span class="n">depending</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">location</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">ftorch</span><span class="w"> </span><span class="n">venv</span><span class="p">)</span>
-<span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">Bbuild</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">&quot;Ninja&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_FLAGS</span><span class="o">=</span><span class="s2">&quot;/fpscomp:logicals&quot;</span><span class="w"> </span><span class="o">^</span>
-<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">&quot;%torch_path%&quot;</span><span class="w"> </span><span class="o">^</span>
+<span class="n">cmake</span><span class="w"> </span><span class="o">-</span><span class="n">Bbuild</span><span class="w"> </span><span class="o">-</span><span class="n">G</span><span class="w"> </span><span class="s2">"Ninja"</span><span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_FLAGS</span><span class="o">=</span><span class="s2">"/fpscomp:logicals"</span><span class="w"> </span><span class="o">^</span>
+<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=</span><span class="s2">"%torch_path%"</span><span class="w"> </span><span class="o">^</span>
 <span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span><span class="w"> </span><span class="o">^</span>
 <span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_BUILD_TESTS</span><span class="o">=</span><span class="n">True</span><span class="w"> </span><span class="o">^</span>
 <span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_COMPILER</span><span class="o">=</span><span class="n">ifx</span><span class="w"> </span><span class="o">^</span>
 <span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_C_COMPILER</span><span class="o">=</span><span class="n">icx</span><span class="w"> </span><span class="o">^</span>
 <span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_CXX_COMPILER</span><span class="o">=</span><span class="n">icx</span>
-<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_FLAGS</span><span class="o">=</span><span class="s2">&quot;/fpscomp:logicals&quot;</span><span class="w"> </span><span class="o">^</span>
-<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_CXX_FLAGS</span><span class="o">=</span><span class="s2">&quot;/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH&quot;</span>
+<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_Fortran_FLAGS</span><span class="o">=</span><span class="s2">"/fpscomp:logicals"</span><span class="w"> </span><span class="o">^</span>
+<span class="w"> </span><span class="o">-</span><span class="n">DCMAKE_CXX_FLAGS</span><span class="o">=</span><span class="s2">"/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH"</span>
 
 <span class="n">rem</span><span class="w"> </span><span class="n">Build</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">FTorch</span>
 <span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">build</span><span class="w"> </span><span class="n">build</span>
@@ -355,7 +355,7 @@ If using homebrew you can set this to <code>$(brew --prefix libomp)</code>.</p>
 <span class="w">  </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>clang++<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DCMAKE_Fortran_COMPILER<span class="o">=</span>gfortran<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DCMAKE_BUILD_TESTS<span class="o">=</span>TRUE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DOpenMP_ROOT<span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>brew<span class="w"> </span>--prefix<span class="w"> </span>libomp<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DOpenMP_ROOT<span class="o">=</span><span class="s2">"</span><span class="k">$(</span>brew<span class="w"> </span>--prefix<span class="w"> </span>libomp<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DGPU_DEVICE<span class="o">=</span>MPS
 cmake<span class="w"> </span>--build<span class="w"> </span>.
 cmake<span class="w"> </span>--install<span class="w"> </span>.

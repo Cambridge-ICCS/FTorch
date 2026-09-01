@@ -166,8 +166,8 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -710,7 +710,7 @@ implementation in a submodule of an interface in a parent module.
 
 <span class="w">    </span><span class="k">interface</span>
 <span class="k">      subroutine </span><span class="n">torch_tensor_power_float_c</span><span class="p">(</span><span class="n">output_c</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_c</span><span class="p">,</span><span class="w"> </span><span class="n">power_c</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
-<span class="w">          </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;torch_tensor_power_float&#39;</span><span class="p">)</span>
+<span class="w">          </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'torch_tensor_power_float'</span><span class="p">)</span>
 <span class="w">        </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_ptr</span>
 <span class="kt">        </span><span class="k">implicit none</span>
 <span class="k">        type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">output_c</span>

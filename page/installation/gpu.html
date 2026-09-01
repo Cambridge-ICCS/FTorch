@@ -85,7 +85,7 @@
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
               <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
-              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: August 2026</li>
           </ul>
         </div>
         <div class="col">
@@ -206,46 +206,21 @@ When building FTorch, specify the target GPU architecture using the
 </code></pre></div>
 
 <p>i.e., CPU-only.</p>
-<p><strong>2) Save PyTorch models on the target device</strong><br>
-When saving a model in PyTorch format, ensure that it has the desired GPU device
-type. For example, in
-<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/examples/02_SimpleNet/simplenet.py"><code>examples/02_SimpleNet/simplenet.py</code></a>,
-this is done in the following lines:</p>
-<div class="codehilite"><pre><span></span><code>    <span class="n">model</span> <span class="o">=</span> <span class="n">SimpleNet</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
-</code></pre></div>
-
-<p>and</p>
-<div class="codehilite"><pre><span></span><code>    <span class="n">input_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_type</span><span class="p">)</span>
-</code></pre></div>
-
-<p>The first line transfers the model to the specified GPU device, while the second
-line does the same for any input arrays used in tracing or testing. Having
-transferred the model and any input tensors to the GPU device, write them out
-using <code>torch.save</code>. In the SimpleNet example above, this is done with</p>
-<div class="codehilite"><pre><span></span><code>    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;saved_simplenet_model_</span><span class="si">{</span><span class="n">device_type</span><span class="si">}</span><span class="s2">.pt&quot;</span><span class="p">)</span>
-</code></pre></div>
-
-<p>and</p>
-<div class="codehilite"><pre><span></span><code>    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;saved_simplenet_input_tensor_</span><span class="si">{</span><span class="n">device_type</span><span class="si">}</span><span class="s2">.pt&quot;</span><span class="p">)</span>
-</code></pre></div>
-
-<p><strong>3) Convert PyTorch model to TorchScript model</strong><br>
+<p><strong>2) Convert PyTorch model to TorchScript model</strong><br>
 When converting a PyTorch model to a TorchScript model using the <code>pt2ts</code> script,
-the device type will be inherited. As such, if the PyTorch model is saved using
-a particular device type then this will be preserved in the resulting
-TorchScript model. For further details on the <code>pt2ts</code> script, call
-<code>pt2ts --help</code> or read the
+the device type should be specified via the <code>--device</code> option. For further
+details on the <code>pt2ts</code> script, call <code>pt2ts --help</code> or read the
 <a href="https://github.com/Cambridge-ICCS/FTorch/tree/main/ftorch_utils/README.md">ftorch-utils README</a>.</p>
-<p><strong>4) Specify the target device from FTorch</strong><br>
+<p><strong>3) Specify the target device from FTorch</strong><br>
 When calling <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> and
-<a href="../../proc/torch_model_load.html">torch_model_load</a>  in Fortran,
-the device type for the input tensor(s) and model should be set to the appropriate
-device type (<code>torch_kCUDA</code>, <code>torch_kHIP</code>, <code>torch_kXPU</code>, or <code>torch_kMPS</code>) rather
-than <code>torch_kCPU</code>.</p>
+<a href="../../proc/torch_model_load.html">torch_model_load</a> in Fortran, the device
+for the input model should be set to the same device type that it was written
+out using (<code>torch_kCUDA</code>, <code>torch_kHIP</code>, <code>torch_kXPU</code>, or <code>torch_kMPS</code>) rather
+than <code>torch_kCPU</code>. Tensors should also be created on the appropriate device.</p>
 <p>The following snippet shows how you would load a model to a CUDA device, create tensors,
 and run inference:</p>
 <div class="codehilite"><pre><span></span><code><span class="c">! Load in from Torchscript to device</span>
-<span class="k">call </span><span class="n">torch_model_load</span><span class="p">(</span><span class="n">torch_net</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;path/to/saved/model.pt&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">)</span>
+<span class="k">call </span><span class="n">torch_model_load</span><span class="p">(</span><span class="n">torch_net</span><span class="p">,</span><span class="w"> </span><span class="s1">'path/to/saved/model.pt'</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">)</span>
 
 <span class="c">! Cast Fortran data to Tensors</span>
 <span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">input_tensors</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">in_data</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCUDA</span><span class="p">)</span>
