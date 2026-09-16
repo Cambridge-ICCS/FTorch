@@ -304,7 +304,7 @@ contains
 
     interface
       function torch_optim_AdamW_c(parameters_c, n_params_c, learning_rate_c, &
-                                   beta_1_c, beta_2_c, weight_decay_c, eps_c, amsgrad_c) &
+                                   beta_1_c, beta_2_c, eps_c, weight_decay_c, amsgrad_c) &
           result(optim_c) bind(c, name = "torch_optim_AdamW")
         use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_bool
         implicit none
