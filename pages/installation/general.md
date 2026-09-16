@@ -18,7 +18,7 @@ This is controlled by the `CMakeLists.txt` file in the root FTorch directory.
 To install FTorch requires the following to be installed on the system:
 
 - [CMake](https://cmake.org/) >= 3.18
-- Fortran (2008 standard compliant), C++ (must fully support C++17), and C compilers
+- Fortran (2008 standard compliant), C++ (must fully support C++20), and C compilers
 - [LibTorch](https://pytorch.org/cppdocs/installing.html)[^1] or [PyTorch](https://pytorch.org/)
 - TorchVision and NumPy (required for examples)
 

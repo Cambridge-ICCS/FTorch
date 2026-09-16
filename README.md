@@ -66,7 +66,7 @@ See our [presentations page](https://cambridge-iccs.github.io/FTorch/page/commun
 ### Dependencies
 
 * CMake >= 3.18
-* Fortran 2008, C++17, and C compilers
+* Fortran 2008, C++20, and C compilers
 * [LibTorch](https://pytorch.org/cppdocs/installing.html) or [PyTorch](https://pytorch.org/)
 
 ### Build and Install
