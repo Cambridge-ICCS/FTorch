@@ -67,7 +67,7 @@ program inference
    in_data = [(rank + i, i = 0, 4)]
    write(unit=stdout, fmt="('input on rank ',i1,': ')", advance="no") rank
    write(unit=stdout, fmt=100) in_data(:)
-   100 format('[',4(f5.1,','),f5.1,']')
+   100 format("[",4(f5.1,","),f5.1,"]")
 
    ! Create Torch input/output tensors from the above arrays
    call torch_tensor_from_array(in_tensors(1), in_data, torch_kCPU)
