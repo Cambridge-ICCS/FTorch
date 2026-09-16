@@ -2257,10 +2257,11 @@ contains
   function torch_tensor_get_shape(self) result(sizes)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_int64_t, c_ptr
     class(torch_tensor), intent(in) :: self         !! Tensor to get the shape of
-    integer(kind=c_int64_t), pointer :: sizes(:)       !! Pointer to tensor data
+    integer(kind=int64), allocatable :: sizes(:)    !! Array holding the shape of the tensor
 
     ! Local data
     integer(kind=int32) :: ndims(1)
+    integer(kind=c_int64_t), pointer :: sizes_ptr(:)  !! Temporary pointer to Torch-owned memory
     type(c_ptr) :: cptr
 
     interface
@@ -2279,17 +2280,23 @@ contains
     end if
     ndims(1) = self%get_rank()
     cptr = torch_tensor_get_sizes_c(self%p)
-    call c_f_pointer(cptr, sizes, ndims)
+    call c_f_pointer(cptr, sizes_ptr, ndims)
+
+    ! Copy out of the Torch-owned memory so the result remains valid even if
+    ! the tensor is subsequently deleted
+    allocate(sizes(ndims(1)))
+    sizes(:) = sizes_ptr(:)
   end function torch_tensor_get_shape
 
   !> Return the strides of the tensor
   function torch_tensor_get_stride(self) result(strides)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_int64_t, c_ptr
     class(torch_tensor), intent(in) :: self         !! Tensor to get the strides of
-    integer(kind=c_int64_t), pointer :: strides(:)      !! Pointer to tensor data
+    integer(kind=int64), allocatable :: strides(:)  !! Array holding the strides of the tensor
 
     ! Local data
     integer(kind=int32) :: ndims(1)
+    integer(kind=c_int64_t), pointer :: strides_ptr(:)  !! Temporary pointer to Torch-owned memory
     type(c_ptr) :: cptr
 
     interface
@@ -2309,7 +2316,12 @@ contains
 
     ndims(1) = self%get_rank()
     cptr = torch_tensor_get_stride_c(self%p)
-    call c_f_pointer(cptr, strides, ndims)
+    call c_f_pointer(cptr, strides_ptr, ndims)
+
+    ! Copy out of the Torch-owned memory so the result remains valid even if
+    ! the tensor is subsequently deleted
+    allocate(strides(ndims(1)))
+    strides(:) = strides_ptr(:)
 
   end function torch_tensor_get_stride
 
@@ -2453,13 +2465,13 @@ contains
 
   !> Moves a source_tensor tensor to a target tensor's device and dtype
   subroutine torch_tensor_to(source_tensor, target_tensor, non_blocking)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int
     type(torch_tensor), intent(in) :: source_tensor      !! Source tensor to be moved
     type(torch_tensor), intent(inout) :: target_tensor   !! Target tensor with the desired device and dtype
     logical, optional, intent(in) :: non_blocking        !! Whether to perform asynchronous copy
     logical(c_bool) :: non_blocking_value
     integer(c_int) :: source_rank, target_rank, i
-    integer(c_int64_t), pointer :: source_shape(:), target_shape(:)
+    integer(int64), allocatable :: source_shape(:), target_shape(:)
 
     interface
       subroutine torch_tensor_to_c(source_tensor_c, target_tensor_c, non_blocking_c) &
@@ -2482,8 +2494,8 @@ contains
       stop 1
     end if
 
-    source_shape => source_tensor%get_shape()
-    target_shape => target_tensor%get_shape()
+    source_shape = source_tensor%get_shape()
+    target_shape = target_tensor%get_shape()
 
     do i = 1, source_rank
       if (source_shape(i) /= target_shape(i)) then
@@ -2957,13 +2969,13 @@ contains
 
   !> Performs back-propagation on a Torch Tensor, with an assumed external_gradient of ones.
   subroutine torch_tensor_backward_without_external_gradient(tensor, retain_graph)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int64_t
+    use, intrinsic :: iso_c_binding, only : c_bool
     type(torch_tensor), intent(in) :: tensor       !! Tensor to compute gradients of
     logical, optional, intent(in)  :: retain_graph !! Should the computational graph be retained?
 
     ! Local arguments
     logical(c_bool) :: retain_graph_value
-    integer(c_int64_t) :: sizes(1)
+    integer(int64) :: sizes(1)
 
     interface
       subroutine torch_tensor_backward_without_external_gradient_c(tensor_c, retain_graph_c) &
