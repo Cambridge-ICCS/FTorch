@@ -48,35 +48,23 @@ jobs:
       fail-fast: false
       matrix:
         std: ["f2008", "f2018"]
-        gcc_version: [9, 10, 11, 12, 13]
-        pfunit_version: ["4.12.0", "4.18.2"]
+        gcc_version: [11, 12, 13, 14, 15]
+        pfunit_version: ["4.18.2"]
         exclude:
-          # Always run gcc 9 and 10 with pFUnit 4.12.0
-          - gcc_version: 9
-            pfunit_version: 4.18.2
-          - gcc_version: 10
-            pfunit_version: 4.18.2
-          # Always run gcc 11, 12, and 13 with pFUnit 4.18.2
-          - gcc_version: 11
-            pfunit_version: 4.12.0
-          - gcc_version: 12
-            pfunit_version: 4.12.0
-          - gcc_version: 13
-            pfunit_version: 4.12.0
           # Configuration for pushes to main
-          - gcc_version: ${{ github.event_name == 'push' && 9 }}
-            std: f2018
-          - gcc_version: ${{ github.event_name == 'push' && 10 }}
-            std: f2018
           - gcc_version: ${{ github.event_name == 'push' && 11 }}
             std: f2018
           - gcc_version: ${{ github.event_name == 'push' && 12 }}
             std: f2018
+          - gcc_version: ${{ github.event_name == 'push' && 13 }}
+            std: f2018
+          - gcc_version: ${{ github.event_name == 'push' && 14 }}
+            std: f2018
           # Configuration for pull requests etc.
-          - gcc_version: ${{ github.event_name != 'push' && 9 }}
-          - gcc_version: ${{ github.event_name != 'push' && 10 }}
           - gcc_version: ${{ github.event_name != 'push' && 11 }}
           - gcc_version: ${{ github.event_name != 'push' && 12 }}
+          - gcc_version: ${{ github.event_name != 'push' && 13 }}
+          - gcc_version: ${{ github.event_name != 'push' && 14 }}
 
     # Terminate the job if it runs for more than 15 minutes
     timeout-minutes: 15
