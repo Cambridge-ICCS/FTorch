@@ -13,6 +13,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Raised the minimum required C++ standard from C++17 to C++20, as required
+  by latest PyTorch versions (3.14) in [#625](https://github.com/Cambridge-ICCS/FTorch/pull/625)
 - Guidance around OpenMP on MacOS and building updated (along with MacOS workflow) in
   [#618](https://github.com/Cambridge-ICCS/FTorch/pull/618)
 
