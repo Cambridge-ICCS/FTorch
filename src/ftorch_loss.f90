@@ -33,7 +33,7 @@ contains
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
-    integer, optional, intent(in) :: reduction_type
+    integer(c_int), optional, intent(in) :: reduction_type
         !! Reduction type to use over batches (default: torch_kMean)
 
     integer(c_int) :: reduction_type_value
@@ -84,7 +84,7 @@ contains
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
-    integer, optional, intent(in) :: reduction_type
+    integer(c_int), optional, intent(in) :: reduction_type
         !! Optional reduction type (default: torch_kMean)
 
     integer(c_int) :: reduction_type_value
