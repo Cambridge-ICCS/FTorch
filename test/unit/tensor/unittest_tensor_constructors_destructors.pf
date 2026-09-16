@@ -10,8 +10,8 @@ module unittest_tensor_constructors_destructors
   use ftorch_types, only: torch_kFloat32
   use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_delete, torch_tensor_from_array
   use ftorch_test_utils, only: allclose
-  use, intrinsic :: iso_fortran_env, only: sp => real32
-  use iso_c_binding, only: c_associated, c_int64_t
+  use, intrinsic :: iso_fortran_env, only: int64, sp => real32
+  use iso_c_binding, only: c_associated
 
   implicit none
 
@@ -121,8 +121,8 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
-    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+    integer(int64), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(int64), parameter :: expected_stride(ndims) = [3, 1]
 
     ! Check the tensor pointer is not associated
     @assertFalse(c_associated(tensor%p))
@@ -150,8 +150,8 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
-    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+    integer(int64), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(int64), parameter :: expected_stride(ndims) = [3, 1]
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
 
@@ -192,8 +192,8 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
-    integer(c_int64_t), parameter :: expected_stride(ndims) = [3, 1]
+    integer(int64), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(int64), parameter :: expected_stride(ndims) = [3, 1]
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
 
@@ -275,7 +275,7 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
     integer :: tensor_layout(ndims)
-    integer(c_int64_t) :: expected_stride(ndims)
+    integer(int64) :: expected_stride(ndims)
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
     real(wp), dimension(2,3) :: expected
@@ -327,7 +327,7 @@ contains
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 3
     integer :: tensor_layout(ndims)
-    integer(c_int64_t) :: expected_stride(ndims)
+    integer(int64) :: expected_stride(ndims)
     real(wp), dimension(1,2,3), target :: in_data
     real(wp), dimension(1,2,3), target :: out_data
     real(wp), dimension(1,2,3) :: expected
@@ -380,7 +380,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor1, tensor2
     integer, parameter :: ndims = 2
-    integer(kind=c_int64_t), parameter :: tensor_shape(ndims) = [2,3]
+    integer(kind=int64), parameter :: tensor_shape(ndims) = [2,3]
     integer, parameter :: layout(ndims) = [1, 2]
     real(wp), dimension(2,3), target :: in_data
     real(wp), dimension(2,3), target :: out_data
@@ -421,7 +421,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(int64), dimension(2), parameter :: tensor_shape = [2, 3]
     integer :: i
 
     do i = 1, this%param%iterations
@@ -457,7 +457,7 @@ contains
     integer :: i
     integer, parameter :: ndims = 2
     integer, parameter :: n_tensors = 5
-    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(int64), parameter :: tensor_shape(ndims) = [2, 3]
     type(torch_tensor) :: tensor_array(n_tensors)
 
     ! Create array of tensors and confirm all pointers associated
@@ -501,7 +501,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: single_array(1)
     integer, parameter :: ndims = 2
-    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(int64), parameter :: tensor_shape(ndims) = [2, 3]
 
     call torch_tensor_zeros(single_array(1), ndims, tensor_shape, dtype, device_type, device_index)
     @assertTrue(c_associated(single_array(1)%p))
@@ -519,7 +519,7 @@ contains
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: mixed_array(3)
     integer, parameter :: ndims = 2
-    integer(c_int64_t), parameter :: tensor_shape(ndims) = [2, 3]
+    integer(int64), parameter :: tensor_shape(ndims) = [2, 3]
 
     ! Allocate elements 1 and 3, mixed_array(2) remains unallocated
     call torch_tensor_zeros(mixed_array(1), ndims, tensor_shape, dtype, device_type, device_index)

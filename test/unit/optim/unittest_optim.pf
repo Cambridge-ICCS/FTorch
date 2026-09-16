@@ -14,8 +14,8 @@ module unittest_optim
                           torch_optim_delete, torch_optim_SGD, torch_optim_Adam, &
                           torch_optim_AdamW
   use ftorch_test_utils, only: allclose
-  use, intrinsic :: iso_c_binding, only: c_associated, c_int64_t
-  use, intrinsic :: iso_fortran_env, only : sp => real32
+  use, intrinsic :: iso_c_binding, only: c_associated
+  use, intrinsic :: iso_fortran_env, only : int64, sp => real32
 
   implicit none
 
@@ -80,7 +80,7 @@ contains
     type(torch_optim) :: optimizer
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
-    integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+    integer(int64), dimension(2), parameter :: tensor_shape = [2, 3]
     integer, parameter :: dtype = torch_kFloat32
 
     ! Check the optimizer pointer is not associated
@@ -126,7 +126,7 @@ contains
     type(torch_tensor) :: tensor, tensor_sq, grad, external_gradient
     integer, parameter :: ndims = 1
     integer, parameter :: tensor_layout(ndims) = [1]
-    integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
+    integer(int64), dimension(1), parameter :: tensor_shape = [4]
     real(sp), dimension(4), target :: tensor_data, grad_data
     real(sp), dimension(4), parameter :: expected_zero = [0.0, 0.0, 0.0, 0.0]
     integer, parameter :: dtype = torch_kFloat32
@@ -209,8 +209,8 @@ contains
     type(torch_tensor) :: tensor, target_tensor, loss, grad
     integer, parameter :: ndims = 1
     integer, parameter :: tensor_layout(ndims) = [1]
-    integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
-    integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
+    integer(int64), dimension(1), parameter :: tensor_shape = [4]
+    integer(int64), dimension(1), parameter :: scalar_shape = [1]
     real(sp), dimension(4), target :: target_data, tensor_data, expected
     integer, parameter :: dtype = torch_kFloat32
 
@@ -279,8 +279,8 @@ contains
     type(torch_tensor) :: tensor, target_tensor, loss, grad
     integer, parameter :: ndims = 1
     integer, parameter :: tensor_layout(ndims) = [1]
-    integer(c_int64_t), dimension(1), parameter :: tensor_shape = [4]
-    integer(c_int64_t), dimension(1), parameter :: scalar_shape = [1]
+    integer(int64), dimension(1), parameter :: tensor_shape = [4]
+    integer(int64), dimension(1), parameter :: scalar_shape = [1]
     real(sp), dimension(4), target :: target_data, tensor_data, expected
     integer, parameter :: dtype = torch_kFloat32
     integer :: i
