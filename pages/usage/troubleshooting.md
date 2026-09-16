@@ -1,6 +1,6 @@
 title: Troubleshooting
 author: Jack Atkinson
-date: Last Updated: October 2025
+date: Last Updated: August 2026
 
 ## FAQ
 
@@ -45,7 +45,7 @@ for [[ftorch_tensor(module):torch_tensor_from_array(interface)]] and
 
 ### Common Errors
 
-#### No specific subroutine
+#### No specific subroutine - using temporaries
 
 FTorch makes heavy use of Fortran `interfaces` to `module procedure`s to achieve
 [overloading of subroutines](https://fortran-lang.org/learn/oop_features_in_fortran/object_based_programming_techniques/)
@@ -55,13 +55,13 @@ of tensor.
 If you make a call to a subroutine that fails to match anything in the interface
 you will face a compile-time error of the form:
 ```
-   42 |   call torch_tensor_from_array(tensor, in_data, tensor_layout, torch_kCPU)
-      |                                                                          1
-Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+    42 |   call torch_tensor_from_array(tensor, in_data, torch_kCPU, permute_dims=tensor_permute)
+       |                                                                            1
+Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
 ```
 
 The first thing to do in this instance is to inspect the interface you are trying to
-call, and instead attempt to call the specific procedure you expect to use.
+call, and instead attempt to call the specific procedure (rank and dtype) you expect to use.
 This can often provide more instructive error messages about what you are doing
 incorrectly.
 
@@ -83,10 +83,72 @@ Error: There is no specific subroutine for the generic ‘torch_tensor_from_arra
 ```
 and slices such as
 ```
-   36 |   call torch_tensor_from_array(a, in_data1(1,:), torch_kCPU, requires_grad=.true.)
-      |                                                                                  1
-Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+    36 |   call torch_tensor_from_array(a, in_data1(1,:), torch_kCPU, requires_grad=.true.)
+       |                                                                                  1
+Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
 ```
+
+@note
+If you recently upgraded FTorch and your call used `layout` as the third argument,
+see the [Deprecated signature](#no-specific-subroutine-deprecated-torch_tensor_from_array-signature)
+section below.
+@endnote
+
+#### No specific subroutine - Deprecated `torch_tensor_from_array` signature
+
+The update of FTorch to v2.0 brought in a breaking API change to
+[[ftorch_tensor(module):torch_tensor_from_array(interface)]].
+If you see this error after upgrading FTorch:
+```
+Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
+```
+and you are passing `layout` as the third argument after `data`, the interface
+has changed.
+The `layout` argument has been deprecated and superseded by `permute_dims`,
+which appears after `device_type`, and is optional. The old layout signature and
+functionality has been moved to a separate interface
+[[ftorch_tensor(module):torch_tensor_from_array_legacy(interface)]], which
+is deprecated and will be removed in a future version.
+
+@note
+If the error is for a different reason (e.g., passing a temporary array, expression,
+or slice as an argument), see the [No specific subroutine](#no-specific-subroutine-using-temporaries)
+section above.
+@endnote
+
+The recommended fix is to update your calls to the new signature in one of the following ways:
+
+1) If your Fortran and Torch arrays used the default layout indexing (`[1, 2, ..., n]`)
+   you can omit `layout` and `permute_dims` entirely:
+   ```fortran
+   ! Old
+   call torch_tensor_from_array(tensor, data, [1, ..., n], torch_kCPU)
+
+   ! New
+   call torch_tensor_from_array(tensor, data, torch_kCPU)
+   ```
+2) If you were doing a transpose of a square tensor update your call to use `permute_dims`:
+   ```fortran
+   ! Old
+   call torch_tensor_from_array(tensor, data, [n, ..., 1], torch_kCPU)
+   
+   ! New
+   call torch_tensor_from_array(tensor, data, torch_kCPU, permute_dims=[n, ..., 1])
+   ```
+3) If you rely on unintended behaviour of `layout` then the old call is still available
+   through [[ftorch_tensor(module):torch_tensor_from_array_legacy(interface)]], but
+   note that this will be removed completely in the future:
+   ```fortran
+   ! Old
+   call torch_tensor_from_array(tensor, data, tensor_layout, torch_kCPU)
+   
+   ! New
+   call torch_tensor_from_array_legacy(tensor, data, tensor_layout, torch_kCPU)
+   ```
+4) If you need deeper control over exactly how you want the data to appear in Torch
+   (the shape and strides) and know what you are doing with memory and array layouts,
+   you can use [[ftorch_tensor(module):torch_tensor_from_blob(subroutine)]].
+
 
 #### `int64` versions of `ftorch` for large tensors
 

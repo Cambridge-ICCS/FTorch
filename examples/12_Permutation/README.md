@@ -1,20 +1,25 @@
-# Example 1 - Tensor manipulation
+# Example 12 - Tensor permutation
 
-This example provides a simple demonstration of how to create, manipulate,
-interrogate, and destroy instances of the `torch_tensor` derived type. This is
-one of the core derived types in the FTorch library, providing an interface to
-the `torch::Tensor` C++ class. Like `torch::Tensor`, the `torch_tensor` derived
-type is designed to have a similar API to PyTorch's `torch.Tensor` class.
+This example demonstrates how to permute tensor dimensions when constructing
+tensors from Fortran arrays, and how Fortran's column-major memory layout
+relates to Torch's row-major layout.
 
 
 ## Description
 
-A Fortran file `tensor_manipulation.f90` is provided that demonstrates handling
-of the `torch_tensor` derived type, including:
+A Fortran file `tensor_permutation.f90` is provided that demonstrates:
 
-* creating tensors from ones and from Fortran arrays;
-* interrogating tensor shape, stride, and rank;
-* performing arithmetic with overloaded operators and taking the mean.
+* constructing a Torch tensor from a Fortran array and inspecting its shape
+  and strides;
+* permuting tensor dimensions with the `permute_dims` argument (an involution
+  / transpose), and the safeguard against invalid permutations;
+* extracting permuted data back into a Fortran array with matching shape, and
+  how permuting both into and out of Torch recovers the original array layout;
+* demonstrating that tensor assignment copies values and shape but not strides
+  (the output tensor keeps its own memory layout);
+* comparing Fortran column-major and Torch row-major memory layout via printed
+  output, showing the same data as it appears in memory, in Fortran, and in
+  Torch.
 
 ## Dependencies
 
@@ -47,16 +52,7 @@ locally build FTorch.)
 
 To run the compiled code, simply run the executable from the command line:
 ```
-./tensor_manipulation
-```
-
-Alternatively we can use `make`, instead of CMake, with the included Makefile.
-However, to do this you will need to modify `Makefile` to link to and include
-your installation of FTorch as described in the main documentation. Also check
-that the compiler is the same as the one you built the Library with.
-```
-make
-./tensor_manipulation
+./tensor_permutation
 ```
 
 You will also likely need to add the location of the dynamic library files
@@ -65,7 +61,7 @@ You will also likely need to add the location of the dynamic library files
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:</path/to/library/installation>/lib
 ```
-or `DYLD_LIBRARY_PATH` on Mac:  
+or `DYLD_LIBRARY_PATH` on Mac:
 ```
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:</path/to/library/installation>/lib
 ```
