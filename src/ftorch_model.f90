@@ -35,10 +35,13 @@ contains
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_null_char
     type(torch_model), intent(out) :: model    !! Returned deserialized model
     character(*), intent(in) :: filename       !! Filename of saved TorchScript model
-    integer(c_int), intent(in) :: device_type  !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
+    integer(c_int), intent(in) :: device_type
+        !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer(c_int), optional, intent(in) :: device_index  !! Device index for GPU devices
-    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-    logical, optional, intent(in) :: is_training    !! Whether the model is being trained, rather than evaluated
+    logical, optional, intent(in) :: requires_grad
+        !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: is_training
+        !! Whether the model is being trained, rather than evaluated
     integer(c_int) :: device_index_value
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
     logical :: is_training_value  !! Whether the model is being trained, rather than evaluated
@@ -46,7 +49,7 @@ contains
     interface
       function torch_jit_load_c(filename_c, device_type_c, device_index_c, &
                                 requires_grad_c, is_training_c) result(model_c) &
-          bind(c, name = 'torch_jit_load')
+          bind(c, name = "torch_jit_load")
         use, intrinsic :: iso_c_binding, only : c_bool, c_char, c_int, c_ptr
         implicit none
         character(c_char), intent(in) :: filename_c(*)
@@ -65,7 +68,7 @@ contains
       device_index_value = -1
     else
       device_index_value = 0
-    endif
+    end if
 
     if (.not. present(requires_grad)) then
       requires_grad_value = .false.
@@ -92,7 +95,7 @@ contains
     character(*), intent(in) :: filename    !! Filename for saved TorchScript model
 
     interface
-      subroutine torch_jit_save_c(model_c, filename_c) bind(c, name = 'torch_jit_save')
+      subroutine torch_jit_save_c(model_c, filename_c) bind(c, name = "torch_jit_save")
         use, intrinsic :: iso_c_binding, only : c_char, c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: model_c
@@ -119,7 +122,8 @@ contains
     type(torch_model), intent(in) :: model  !! Model
     type(torch_tensor), intent(in), dimension(:) :: input_tensors   !! Array of Input tensors
     type(torch_tensor), intent(in), dimension(:) :: output_tensors  !! Returned output tensors
-    logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    logical, optional, intent(in) :: requires_grad
+        !! Whether gradients need to be computed for the created tensor
     logical :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
     integer(ftorch_int) :: i
@@ -131,7 +135,7 @@ contains
     interface
       subroutine torch_jit_model_forward_c(model_c, input_tensors_c, n_inputs_c, &
                                            output_tensors_c, n_outputs_c, requires_grad_c) &
-          bind(c, name = 'torch_jit_module_forward')
+          bind(c, name = "torch_jit_module_forward")
         use, intrinsic :: iso_c_binding, only : c_bool, c_ptr, c_int
         implicit none
         type(c_ptr), value, intent(in) :: model_c
@@ -180,7 +184,7 @@ contains
 
     interface
       subroutine torch_jit_model_print_parameters_c(model_c) &
-          bind(c, name = 'torch_jit_module_print_parameters')
+          bind(c, name = "torch_jit_module_print_parameters")
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: model_c
@@ -197,7 +201,7 @@ contains
 
     interface
       function torch_jit_model_is_training_c(model_c) result(is_training_c) &
-          bind(c, name = 'torch_jit_module_is_training')
+          bind(c, name = "torch_jit_module_is_training")
         use, intrinsic :: iso_c_binding, only : c_bool, c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: model_c
@@ -220,7 +224,7 @@ contains
 
     interface
       subroutine torch_jit_model_parameters_c(model_c, output_tensors_c, n_outputs_c) &
-          bind(c, name = 'torch_jit_module_parameters')
+          bind(c, name = "torch_jit_module_parameters")
         use, intrinsic :: iso_c_binding, only : c_ptr, c_int
         implicit none
         type(c_ptr), value, intent(in) :: model_c
@@ -258,7 +262,7 @@ contains
 
     interface
       subroutine torch_jit_model_delete_c(model_c) &
-          bind(c, name = 'torch_jit_module_delete')
+          bind(c, name = "torch_jit_module_delete")
         use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: model_c
