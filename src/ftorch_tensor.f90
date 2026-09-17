@@ -9,10 +9,10 @@
 
 module ftorch_tensor
   use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
-  use, intrinsic :: iso_fortran_env, only: int32
+  use, intrinsic :: iso_fortran_env, only: int32, int64
   use ftorch_devices, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
   use ftorch_types, only: torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
-                          torch_kFloat32, torch_kFloat64, ftorch_int
+                          torch_kFloat32, torch_kFloat64
 
   implicit none
 
@@ -201,12 +201,14 @@ contains
                                 device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
-    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
+    integer(int32), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(int64), intent(in)      :: tensor_shape(:)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    integer(c_int)                  :: ndims_c_int        !! C-type ndims
+    integer(c_int64_t), allocatable :: tensor_shape_c_int(:)  !! C-type tensor_shape
     integer(c_int)                  :: device_index_value  !! device index used
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -243,7 +245,12 @@ contains
       requires_grad_value = requires_grad
     end if
 
-    tensor%p = torch_empty_c(ndims, tensor_shape, dtype, device_type,          &
+    ! Convert public arguments to C-types (arrays deallocated at end of subroutine)
+    ndims_c_int = ndims
+    allocate(tensor_shape_c_int(size(tensor_shape)))
+    tensor_shape_c_int(:) = tensor_shape(:)
+
+    tensor%p = torch_empty_c(ndims_c_int, tensor_shape_c_int, dtype, device_type,   &
                              device_index_value, requires_grad_value)
   end subroutine torch_tensor_empty
 
@@ -252,12 +259,14 @@ contains
                                 device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
-    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
+    integer(int32), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(int64), intent(in)      :: tensor_shape(:)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    integer(c_int)                  :: ndims_c_int        !! C-type ndims
+    integer(c_int64_t), allocatable :: tensor_shape_c_int(:)  !! C-type tensor_shape
     integer(c_int)                  :: device_index_value   !! device index used
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -294,7 +303,12 @@ contains
       requires_grad_value = requires_grad
     end if
 
-    tensor%p = torch_zeros_c(ndims, tensor_shape, dtype, device_type,          &
+    ! Convert public arguments to C-types (arrays deallocated at end of subroutine)
+    ndims_c_int = ndims
+    allocate(tensor_shape_c_int(size(tensor_shape)))
+    tensor_shape_c_int(:) = tensor_shape(:)
+
+    tensor%p = torch_zeros_c(ndims_c_int, tensor_shape_c_int, dtype, device_type,     &
                              device_index_value, requires_grad_value)
   end subroutine torch_tensor_zeros
 
@@ -303,12 +317,14 @@ contains
                                device_type, device_index, requires_grad)
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
-    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(:)   !! Shape of the tensor
+    integer(int32), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(int64), intent(in)      :: tensor_shape(:)   !! Shape of the tensor
     integer(c_int), intent(in)      :: dtype        !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
+    integer(c_int)                  :: ndims_c_int        !! C-type ndims
+    integer(c_int64_t), allocatable :: tensor_shape_c_int(:)  !! C-type tensor_shape
     integer(c_int)                  :: device_index_value    !! device index used
     logical(c_bool)                 :: requires_grad_value   !! Whether gradients need to be computed for the created tensor
 
@@ -345,7 +361,12 @@ contains
       requires_grad_value = requires_grad
     end if
 
-    tensor%p = torch_ones_c(ndims, tensor_shape, dtype, device_type,           &
+    ! Convert public arguments to C-types (arrays deallocated at end of subroutine)
+    ndims_c_int = ndims
+    allocate(tensor_shape_c_int(size(tensor_shape)))
+    tensor_shape_c_int(:) = tensor_shape(:)
+
+    tensor%p = torch_ones_c(ndims_c_int, tensor_shape_c_int, dtype, device_type,      &
                             device_index_value, requires_grad_value)
   end subroutine torch_tensor_ones
 
@@ -363,16 +384,19 @@ contains
     use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_ptr
     type(torch_tensor), intent(out) :: tensor     !! Returned tensor
     type(c_ptr), intent(in)         :: data       !! Pointer to data
-    integer(c_int), intent(in)      :: ndims      !! Number of dimensions of the tensor
-    integer(c_int64_t), intent(in)  :: tensor_shape(:)  !! Shape of the tensor
-    integer(c_int), intent(in)      :: layout(:)  !! Layout for strides for accessing data
+    integer(int32), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(int64), intent(in)      :: tensor_shape(:)  !! Shape of the tensor
+    integer(int32), intent(in)      :: layout(:)  !! Layout for strides for accessing data
     integer(c_int), intent(in)      :: dtype      !! Data type of the tensor
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
-    integer(c_int)                  :: i                    !! loop index
-    integer(c_int64_t)              :: strides(ndims)       !! Strides for accessing data
+    integer(int32)                  :: i                !! loop index
+    integer(c_int)                  :: ndims_c            !! C-type ndims
+    integer(c_int64_t), allocatable :: tensor_shape_c(:)  !! C-type tensor_shape
+    integer(c_int), allocatable     :: layout_c(:)        !! C-type layout
+    integer(c_int64_t)              :: strides(ndims)     !! Strides for accessing data
     integer(c_int)                  :: device_index_value   !! device index used
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -382,12 +406,19 @@ contains
       requires_grad_value = requires_grad
     end if
 
+    ! Convert public arguments to C-types (arrays deallocated at end of subroutine)
+    ndims_c = ndims
+    allocate(tensor_shape_c(size(tensor_shape)))
+    tensor_shape_c(:) = tensor_shape(:)
+    allocate(layout_c(size(layout)))
+    layout_c(:) = layout(:)
+
     strides(:) = 0
     do i = 1, ndims
       if (i == 1) then
-        strides(layout(i)) = 1
+        strides(layout_c(i)) = 1
       else
-        strides(layout(i)) = strides(layout(i - 1)) * tensor_shape(layout(i - 1))
+        strides(layout_c(i)) = strides(layout_c(i - 1)) * tensor_shape_c(layout_c(i - 1))
       end if
     end do
 
@@ -400,8 +431,8 @@ contains
       device_index_value = 0
     endif
 
-    tensor%p = torch_from_blob_c(data, ndims, tensor_shape, strides, dtype,    &
-                                 device_type, device_index_value,              &
+    tensor%p = torch_from_blob_c(data, ndims_c, tensor_shape_c, strides, dtype,    &
+                                 device_type, device_index_value,                  &
                                  requires_grad_value)
   end subroutine torch_tensor_from_blob
 
@@ -416,7 +447,7 @@ contains
 
     ! inputs
     integer(kind=int8), intent(in), pointer, contiguous :: data_in(:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -445,7 +476,7 @@ contains
 
     ! inputs
     integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -474,7 +505,7 @@ contains
 
     ! inputs
     integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -503,7 +534,7 @@ contains
 
     ! inputs
     integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -532,7 +563,7 @@ contains
 
     ! inputs
     integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -561,7 +592,7 @@ contains
 
     ! inputs
     integer(kind=int16), intent(in), pointer, contiguous :: data_in(:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -590,7 +621,7 @@ contains
 
     ! inputs
     integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -619,7 +650,7 @@ contains
 
     ! inputs
     integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -648,7 +679,7 @@ contains
 
     ! inputs
     integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -677,7 +708,7 @@ contains
 
     ! inputs
     integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -706,7 +737,7 @@ contains
 
     ! inputs
     integer(kind=int32), intent(in), pointer, contiguous :: data_in(:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -735,7 +766,7 @@ contains
 
     ! inputs
     integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -764,7 +795,7 @@ contains
 
     ! inputs
     integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -793,7 +824,7 @@ contains
 
     ! inputs
     integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -822,7 +853,7 @@ contains
 
     ! inputs
     integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -851,7 +882,7 @@ contains
 
     ! inputs
     integer(kind=int64), intent(in), pointer, contiguous :: data_in(:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -880,7 +911,7 @@ contains
 
     ! inputs
     integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -909,7 +940,7 @@ contains
 
     ! inputs
     integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -938,7 +969,7 @@ contains
 
     ! inputs
     integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -967,7 +998,7 @@ contains
 
     ! inputs
     integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -996,7 +1027,7 @@ contains
 
     ! inputs
     real(kind=real32), intent(in), pointer, contiguous :: data_in(:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1025,7 +1056,7 @@ contains
 
     ! inputs
     real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1054,7 +1085,7 @@ contains
 
     ! inputs
     real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1083,7 +1114,7 @@ contains
 
     ! inputs
     real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1112,7 +1143,7 @@ contains
 
     ! inputs
     real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1141,7 +1172,7 @@ contains
 
     ! inputs
     real(kind=real64), intent(in), pointer, contiguous :: data_in(:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(1)  !! Control order of indices
+    integer(int32), intent(in) :: layout(1)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1170,7 +1201,7 @@ contains
 
     ! inputs
     real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(2)  !! Control order of indices
+    integer(int32), intent(in) :: layout(2)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1199,7 +1230,7 @@ contains
 
     ! inputs
     real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(3)  !! Control order of indices
+    integer(int32), intent(in) :: layout(3)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1228,7 +1259,7 @@ contains
 
     ! inputs
     real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(4)  !! Control order of indices
+    integer(int32), intent(in) :: layout(4)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1257,7 +1288,7 @@ contains
 
     ! inputs
     real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)  !! Input data that tensor will point at
-    integer(ftorch_int), intent(in) :: layout(5)  !! Control order of indices
+    integer(int32), intent(in) :: layout(5)  !! Control order of indices
     integer(c_int), intent(in)    :: device_type    !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
@@ -1296,7 +1327,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(int32)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
     integer :: i
 
@@ -1326,7 +1357,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(int32)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
     integer :: i
 
@@ -1356,7 +1387,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(int32)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
     integer :: i
 
@@ -1386,7 +1417,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(int32)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
     integer :: i
 
@@ -1416,7 +1447,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(int32)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
     integer :: i
 
@@ -1446,7 +1477,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(int32)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
     integer :: i
 
@@ -1476,7 +1507,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(int32)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
     integer :: i
 
@@ -1506,7 +1537,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(int32)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
     integer :: i
 
@@ -1536,7 +1567,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(int32)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
     integer :: i
 
@@ -1566,7 +1597,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(int32)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
     integer :: i
 
@@ -1596,7 +1627,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(int32)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
     integer :: i
 
@@ -1626,7 +1657,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(int32)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
     integer :: i
 
@@ -1656,7 +1687,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(int32)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
     integer :: i
 
@@ -1686,7 +1717,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(int32)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
     integer :: i
 
@@ -1716,7 +1747,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(int32)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
     integer :: i
 
@@ -1746,7 +1777,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(int32)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
     integer :: i
 
@@ -1776,7 +1807,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(int32)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
     integer :: i
 
@@ -1806,7 +1837,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(int32)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
     integer :: i
 
@@ -1836,7 +1867,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(int32)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
     integer :: i
 
@@ -1866,7 +1897,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(int32)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
     integer :: i
 
@@ -1896,7 +1927,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(int32)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
     integer :: i
 
@@ -1926,7 +1957,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(int32)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
     integer :: i
 
@@ -1956,7 +1987,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(int32)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
     integer :: i
 
@@ -1986,7 +2017,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(int32)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
     integer :: i
 
@@ -2016,7 +2047,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(int32)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
     integer :: i
 
@@ -2046,7 +2077,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(1)  !! Order of indices
+    integer(int32)       :: layout(1)  !! Order of indices
     integer(c_int), parameter :: ndims = 1  !! Number of dimension of input data
     integer :: i
 
@@ -2076,7 +2107,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(2)  !! Order of indices
+    integer(int32)       :: layout(2)  !! Order of indices
     integer(c_int), parameter :: ndims = 2  !! Number of dimension of input data
     integer :: i
 
@@ -2106,7 +2137,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(3)  !! Order of indices
+    integer(int32)       :: layout(3)  !! Order of indices
     integer(c_int), parameter :: ndims = 3  !! Number of dimension of input data
     integer :: i
 
@@ -2136,7 +2167,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(4)  !! Order of indices
+    integer(int32)       :: layout(4)  !! Order of indices
     integer(c_int), parameter :: ndims = 4  !! Number of dimension of input data
     integer :: i
 
@@ -2166,7 +2197,7 @@ contains
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
 
     ! local data
-    integer(ftorch_int)       :: layout(5)  !! Order of indices
+    integer(int32)       :: layout(5)  !! Order of indices
     integer(c_int), parameter :: ndims = 5  !! Number of dimension of input data
     integer :: i
 
@@ -2226,10 +2257,11 @@ contains
   function torch_tensor_get_shape(self) result(sizes)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_int64_t, c_ptr
     class(torch_tensor), intent(in) :: self         !! Tensor to get the shape of
-    integer(kind=c_int64_t), pointer :: sizes(:)       !! Pointer to tensor data
+    integer(kind=int64), allocatable :: sizes(:)    !! Array holding the shape of the tensor
 
     ! Local data
     integer(kind=int32) :: ndims(1)
+    integer(kind=c_int64_t), pointer :: sizes_ptr(:)  !! Temporary pointer to Torch-owned memory
     type(c_ptr) :: cptr
 
     interface
@@ -2248,17 +2280,23 @@ contains
     end if
     ndims(1) = self%get_rank()
     cptr = torch_tensor_get_sizes_c(self%p)
-    call c_f_pointer(cptr, sizes, ndims)
+    call c_f_pointer(cptr, sizes_ptr, ndims)
+
+    ! Copy out of the Torch-owned memory so the result remains valid even if
+    ! the tensor is subsequently deleted
+    allocate(sizes(ndims(1)))
+    sizes(:) = sizes_ptr(:)
   end function torch_tensor_get_shape
 
   !> Return the strides of the tensor
   function torch_tensor_get_stride(self) result(strides)
     use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_int64_t, c_ptr
     class(torch_tensor), intent(in) :: self         !! Tensor to get the strides of
-    integer(kind=c_int64_t), pointer :: strides(:)      !! Pointer to tensor data
+    integer(kind=int64), allocatable :: strides(:)  !! Array holding the strides of the tensor
 
     ! Local data
     integer(kind=int32) :: ndims(1)
+    integer(kind=c_int64_t), pointer :: strides_ptr(:)  !! Temporary pointer to Torch-owned memory
     type(c_ptr) :: cptr
 
     interface
@@ -2278,7 +2316,12 @@ contains
 
     ndims(1) = self%get_rank()
     cptr = torch_tensor_get_stride_c(self%p)
-    call c_f_pointer(cptr, strides, ndims)
+    call c_f_pointer(cptr, strides_ptr, ndims)
+
+    ! Copy out of the Torch-owned memory so the result remains valid even if
+    ! the tensor is subsequently deleted
+    allocate(strides(ndims(1)))
+    strides(:) = strides_ptr(:)
 
   end function torch_tensor_get_stride
 
@@ -2422,13 +2465,13 @@ contains
 
   !> Moves a source_tensor tensor to a target tensor's device and dtype
   subroutine torch_tensor_to(source_tensor, target_tensor, non_blocking)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int
     type(torch_tensor), intent(in) :: source_tensor      !! Source tensor to be moved
     type(torch_tensor), intent(inout) :: target_tensor   !! Target tensor with the desired device and dtype
     logical, optional, intent(in) :: non_blocking        !! Whether to perform asynchronous copy
     logical(c_bool) :: non_blocking_value
     integer(c_int) :: source_rank, target_rank, i
-    integer(c_int64_t), pointer :: source_shape(:), target_shape(:)
+    integer(int64), allocatable :: source_shape(:), target_shape(:)
 
     interface
       subroutine torch_tensor_to_c(source_tensor_c, target_tensor_c, non_blocking_c) &
@@ -2451,8 +2494,8 @@ contains
       stop 1
     end if
 
-    source_shape => source_tensor%get_shape()
-    target_shape => target_tensor%get_shape()
+    source_shape = source_tensor%get_shape()
+    target_shape = target_tensor%get_shape()
 
     do i = 1, source_rank
       if (source_shape(i) /= target_shape(i)) then
@@ -2926,13 +2969,13 @@ contains
 
   !> Performs back-propagation on a Torch Tensor, with an assumed external_gradient of ones.
   subroutine torch_tensor_backward_without_external_gradient(tensor, retain_graph)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int64_t
+    use, intrinsic :: iso_c_binding, only : c_bool
     type(torch_tensor), intent(in) :: tensor       !! Tensor to compute gradients of
     logical, optional, intent(in)  :: retain_graph !! Should the computational graph be retained?
 
     ! Local arguments
     logical(c_bool) :: retain_graph_value
-    integer(c_int64_t) :: sizes(1)
+    integer(int64) :: sizes(1)
 
     interface
       subroutine torch_tensor_backward_without_external_gradient_c(tensor_c, retain_graph_c) &

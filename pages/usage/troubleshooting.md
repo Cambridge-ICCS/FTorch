@@ -88,30 +88,6 @@ and slices such as
 Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
 ```
 
-#### `int64` versions of `ftorch` for large tensors
-
-An alternative cause of the 'no specific subroutine' error can occur if your tensor
-dimension is larger than FTorch supports by default.
-Currently FTorch represents the number of elements in an array dimension using
-32-bit integers. For most users this will be more than enough, but if your code
-uses large tensors (where large means more than 2,147,483,647 elements
-in any one dimension (the maximum value of a 32-bit integer)), you may you may
-need to compile `ftorch` with 64-bit integers. If you do not, you may receive a
-compile time error like the following:
-
-To fix this, rebuild FTorch with 64-bit integers by modifying the following line in
-`src/ftorch.fypp`
-```fortran
-integer, parameter :: ftorch_int = int32 ! set integer size for FTorch library
-```
-to instead use 64-bit integers:
-```fortran
-integer, parameter :: ftorch_int = int64 ! set integer size for FTorch library
-```
-Note: _You will need to re-run `fypp` to regenerate the source files as described in the 
-[developer documentation](|page|/developer/developer.html)_
-
-
 #### Segmentation faults
 
 ##### Missing import for overloaded assignment operator
