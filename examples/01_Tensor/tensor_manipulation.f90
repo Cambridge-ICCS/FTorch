@@ -5,10 +5,8 @@ program tensor_manipulation
                     torch_tensor_delete, torch_tensor_empty, torch_tensor_from_array, &
                     torch_tensor_mean, torch_tensor_ones, torch_tensor_print
 
-  use, intrinsic :: iso_c_binding, only: c_int64_t
-
-  ! Import the real32 type for 32-bit floating point numbers
-  use, intrinsic :: iso_fortran_env, only: sp => real32
+  ! Import the int64 type for tensor shapes and real32 type for 32-bit floating point numbers
+  use, intrinsic :: iso_fortran_env, only: int64, sp => real32
 
   implicit none
 
@@ -20,7 +18,7 @@ program tensor_manipulation
 
   ! Variables for constructing tensors with torch_tensor_ones
   integer, parameter :: ndims = 2
-  integer(c_int64_t), dimension(2), parameter :: tensor_shape = [2, 3]
+  integer(int64), dimension(2), parameter :: tensor_shape = [2, 3]
 
   ! Variables for constructing tensors with torch_tensor_from_array
   real(wp), dimension(2,3), target :: in_data, out_data
