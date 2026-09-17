@@ -17,6 +17,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   by latest PyTorch versions (3.14) in [#625](https://github.com/Cambridge-ICCS/FTorch/pull/625)
 - Guidance around OpenMP on MacOS and building updated (along with MacOS workflow) in
   [#618](https://github.com/Cambridge-ICCS/FTorch/pull/618)
+- Fortitude linting bumped to latest version (0.9.2) in
+  [632](https://github.com/Cambridge-ICCS/FTorch/pull/632)
 
 ### Removed
 
