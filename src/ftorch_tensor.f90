@@ -207,8 +207,8 @@ contains
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-    integer(c_int)                  :: ndims_c        !! C-type ndims
-    integer(c_int64_t), allocatable :: tensor_shape_c(:)  !! C-type tensor_shape
+    integer(c_int)                  :: ndims_c_int        !! C-type ndims
+    integer(c_int64_t), allocatable :: tensor_shape_c_int(:)  !! C-type tensor_shape
     integer(c_int)                  :: device_index_value  !! device index used
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -246,11 +246,11 @@ contains
     end if
 
     ! Convert public arguments to C-types (arrays deallocated at end of subroutine)
-    ndims_c = ndims
-    allocate(tensor_shape_c(size(tensor_shape)))
-    tensor_shape_c(:) = tensor_shape(:)
+    ndims_c_int = ndims
+    allocate(tensor_shape_c_int(size(tensor_shape)))
+    tensor_shape_c_int(:) = tensor_shape(:)
 
-    tensor%p = torch_empty_c(ndims_c, tensor_shape_c, dtype, device_type,          &
+    tensor%p = torch_empty_c(ndims_c_int, tensor_shape_c_int, dtype, device_type,   &
                              device_index_value, requires_grad_value)
   end subroutine torch_tensor_empty
 
@@ -265,8 +265,8 @@ contains
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-    integer(c_int)                  :: ndims_c        !! C-type ndims
-    integer(c_int64_t), allocatable :: tensor_shape_c(:)  !! C-type tensor_shape
+    integer(c_int)                  :: ndims_c_int        !! C-type ndims
+    integer(c_int64_t), allocatable :: tensor_shape_c_int(:)  !! C-type tensor_shape
     integer(c_int)                  :: device_index_value   !! device index used
     logical(c_bool)                 :: requires_grad_value  !! Whether gradients need to be computed for the created tensor
 
@@ -304,11 +304,11 @@ contains
     end if
 
     ! Convert public arguments to C-types (arrays deallocated at end of subroutine)
-    ndims_c = ndims
-    allocate(tensor_shape_c(size(tensor_shape)))
-    tensor_shape_c(:) = tensor_shape(:)
+    ndims_c_int = ndims
+    allocate(tensor_shape_c_int(size(tensor_shape)))
+    tensor_shape_c_int(:) = tensor_shape(:)
 
-    tensor%p = torch_zeros_c(ndims_c, tensor_shape_c, dtype, device_type,          &
+    tensor%p = torch_zeros_c(ndims_c_int, tensor_shape_c_int, dtype, device_type,     &
                              device_index_value, requires_grad_value)
   end subroutine torch_tensor_zeros
 
@@ -323,8 +323,8 @@ contains
     integer(c_int), intent(in)      :: device_type  !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
     integer, optional, intent(in) :: device_index   !! Device index for GPU devices
     logical, optional, intent(in) :: requires_grad  !! Whether gradients need to be computed for the created tensor
-    integer(c_int)                  :: ndims_c        !! C-type ndims
-    integer(c_int64_t), allocatable :: tensor_shape_c(:)  !! C-type tensor_shape
+    integer(c_int)                  :: ndims_c_int        !! C-type ndims
+    integer(c_int64_t), allocatable :: tensor_shape_c_int(:)  !! C-type tensor_shape
     integer(c_int)                  :: device_index_value    !! device index used
     logical(c_bool)                 :: requires_grad_value   !! Whether gradients need to be computed for the created tensor
 
@@ -362,11 +362,11 @@ contains
     end if
 
     ! Convert public arguments to C-types (arrays deallocated at end of subroutine)
-    ndims_c = ndims
-    allocate(tensor_shape_c(size(tensor_shape)))
-    tensor_shape_c(:) = tensor_shape(:)
+    ndims_c_int = ndims
+    allocate(tensor_shape_c_int(size(tensor_shape)))
+    tensor_shape_c_int(:) = tensor_shape(:)
 
-    tensor%p = torch_ones_c(ndims_c, tensor_shape_c, dtype, device_type,           &
+    tensor%p = torch_ones_c(ndims_c_int, tensor_shape_c_int, dtype, device_type,      &
                             device_index_value, requires_grad_value)
   end subroutine torch_tensor_ones
 
