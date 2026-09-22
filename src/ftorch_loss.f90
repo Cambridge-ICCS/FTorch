@@ -23,8 +23,8 @@ contains
   !
   !  Note that the reduction type relates to the operation to perform within a (mini)batch. With
   !  torch_kNone, no reduction is applied and the loss tensor will have the same dimensions as the
-  !  input tensor. If torch_kMean (default) or torch_kSum is applied then the loss tensor will differ
-  !  in the first dimension (for the batch), which will be collapsed.
+  !  input tensor. If torch_kMean (default) or torch_kSum is applied then the loss tensor will
+  !  differ in the first dimension (for the batch), which will be collapsed.
   !
   !  We refer to the PyTorch docs for the specifics of how this works for MSELoss
   !  https://docs.pytorch.org/docs/main/nn.functional.html#torch.nn.functional.mse_loss
@@ -33,13 +33,14 @@ contains
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
-    integer, optional, intent(in) :: reduction_type  !! Reduction type to use over batches (default: torch_kMean)
+    integer, optional, intent(in) :: reduction_type
+        !! Reduction type to use over batches (default: torch_kMean)
 
     integer(c_int) :: reduction_type_value
 
     interface
       subroutine torch_loss_mse_c(loss_tensor_c, input_tensor_c, target_tensor_c, &
-          reduction_type_c) bind(c, name = 'torch_loss_mse')
+          reduction_type_c) bind(c, name = "torch_loss_mse")
         use, intrinsic :: iso_c_binding, only : c_ptr, c_int
         implicit none
         type(c_ptr), value, intent(in) :: loss_tensor_c
@@ -67,13 +68,14 @@ contains
   !
   !  Note that the reduction type relates to the operation to perform within a (mini)batch. With
   !  torch_kNone, no reduction is applied and the loss tensor will have the same dimensions as the
-  !  input tensor. If torch_kMean (default) or torch_kSum is applied then the loss tensor will differ
-  !  in the first dimension (for the batch), which will be collapsed.
+  !  input tensor. If torch_kMean (default) or torch_kSum is applied then the loss tensor will
+  !  differ in the first dimension (for the batch), which will be collapsed.
   !
   !  Note also that, by definition, the result of CrossEntropyLoss will collapse across the
   !  class dimension. This is true even for reduction torch_kNone. This is important to
   !  consider if setting the size/shape of a Fortran array to hold these results.
-  !  For more details see https://docs.pytorch.org/docs/main/generated/torch.nn.CrossEntropyLoss.html
+  !  For more details see
+  !  https://docs.pytorch.org/docs/main/generated/torch.nn.CrossEntropyLoss.html
   !
   !  We refer to the PyTorch docs for the specifics of how this works for CrossEntropyLoss
   !  https://docs.pytorch.org/docs/main/nn.functional.html#torch.nn.functional.cross_entropy
@@ -82,13 +84,14 @@ contains
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
-    integer, optional, intent(in) :: reduction_type  !! Optional reduction type (default: torch_kMean)
+    integer, optional, intent(in) :: reduction_type
+        !! Optional reduction type (default: torch_kMean)
 
     integer(c_int) :: reduction_type_value
 
     interface
       subroutine torch_loss_cross_entropy_c(loss_tensor_c, input_tensor_c, target_tensor_c, &
-          reduction_type_c) bind(c, name = 'torch_loss_cross_entropy')
+          reduction_type_c) bind(c, name = "torch_loss_cross_entropy")
         use, intrinsic :: iso_c_binding, only : c_ptr, c_int
         implicit none
         type(c_ptr), value, intent(in) :: loss_tensor_c

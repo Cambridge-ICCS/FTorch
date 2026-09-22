@@ -72,7 +72,8 @@ contains
       filename = trim(data_dir)//"/image_tensor.dat"
       filename_cats =  trim(data_dir)//"/categories.txt"
 
-      ! Allocate one-dimensional input/output arrays, based on multiplication of all input/output dimension sizes
+      ! Allocate one-dimensional input/output arrays, based on multiplication of all
+      ! input/output dimension sizes
       allocate(in_data(in_shape(1), in_shape(2), in_shape(3), in_shape(4)))
       allocate(out_data(out_shape(1), out_shape(2)))
       allocate(probabilities(out_shape(1), out_shape(2)))
@@ -134,7 +135,7 @@ contains
       character(len=100) :: ioerrmsg
 
       ! Read input tensor from Python script
-      open(unit=10, file=filename, status='old', access='stream', form='unformatted', &
+      open(unit=10, file=filename, status="old", access="stream", form="unformatted", &
            action="read", iostat=ios, iomsg=ioerrmsg)
       if (ios /= 0) then
       print *, ioerrmsg
@@ -164,14 +165,14 @@ contains
       integer :: ios
       character(len=100) :: ioerrmsg
 
-      open (unit=11, file=filename_cats, form='formatted', access='stream', action='read', &
+      open (unit=11, file=filename_cats, form="formatted", access="stream", action="read", &
             iostat=ios, iomsg=ioerrmsg)
       if (ios /= 0) then
         print *, ioerrmsg
         stop 1
       end if
 
-      read(11, '(a)') categories
+      read(11, "(a)") categories
       close(11)
 
    end subroutine load_categories
