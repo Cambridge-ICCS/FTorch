@@ -85,7 +85,7 @@
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
               <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
-              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: October 2025</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: August 2026</li>
           </ul>
         </div>
         <div class="col">
@@ -187,20 +187,20 @@ in the Fortran interface. See the <a href="../../lists/procedures.html">API proc
 for <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> and
 <a href="../../proc/torch_model_load.html">torch_model_load</a> etc. for details.</p>
 <h3 id="common-errors">Common Errors</h3>
-<h4 id="no-specific-subroutine">No specific subroutine</h4>
+<h4 id="no-specific-subroutine-using-temporaries">No specific subroutine - using temporaries</h4>
 <p>FTorch makes heavy use of Fortran <code>interfaces</code> to <code>module procedure</code>s to achieve
 <a href="https://fortran-lang.org/learn/oop_features_in_fortran/object_based_programming_techniques/">overloading of subroutines</a>
 such that for users do not need to call a different subroutine for each rank or type
 of tensor.</p>
 <p>If you make a call to a subroutine that fails to match anything in the interface
 you will face a compile-time error of the form:</p>
-<div class="codehilite"><pre><span></span><code>   42 |   call torch_tensor_from_array(tensor, in_data, tensor_layout, torch_kCPU)
-      |                                                                          1
-Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+<div class="codehilite"><pre><span></span><code>    42 |   call torch_tensor_from_array(tensor, in_data, torch_kCPU, permute_dims=tensor_permute)
+       |                                                                            1
+Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
 </code></pre></div>
 
 <p>The first thing to do in this instance is to inspect the interface you are trying to
-call, and instead attempt to call the specific procedure you expect to use.
+call, and instead attempt to call the specific procedure (rank and dtype) you expect to use.
 This can often provide more instructive error messages about what you are doing
 incorrectly.</p>
 <p>Such errors can also occur if you pass a temporary array where the procedure expects
@@ -220,11 +220,61 @@ Error: There is no specific subroutine for the generic ‘torch_tensor_from_arra
 </code></pre></div>
 
 <p>and slices such as</p>
-<div class="codehilite"><pre><span></span><code>   36 |   call torch_tensor_from_array(a, in_data1(1,:), torch_kCPU, requires_grad=.true.)
-      |                                                                                  1
-Error: There is no specific subroutine for the generic ‘torch_tensor_from_array’ at (1)
+<div class="codehilite"><pre><span></span><code>    36 |   call torch_tensor_from_array(a, in_data1(1,:), torch_kCPU, requires_grad=.true.)
+       |                                                                                  1
+Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
 </code></pre></div>
 
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>If you recently upgraded FTorch and your call used <code>layout</code> as the third argument,
+see the <a href="#no-specific-subroutine-deprecated-torch_tensor_from_array-signature">Deprecated signature</a>
+section below.</p>
+</div>
+<h4 id="no-specific-subroutine-deprecated-torch_tensor_from_array-signature">No specific subroutine - Deprecated <code>torch_tensor_from_array</code> signature</h4>
+<p>The update of FTorch to v2.0 brought in a breaking API change to
+<a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a>.
+If you see this error after upgrading FTorch:</p>
+<div class="codehilite"><pre><span></span><code>Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
+</code></pre></div>
+
+<p>and you are passing <code>layout</code> as the third argument after <code>data</code>, the interface
+has changed.
+The <code>layout</code> argument has been deprecated and superseded by <code>permute_dims</code>,
+which appears after <code>device_type</code>, and is optional. The old layout signature and
+functionality has been moved to a separate interface
+<a href="../../interface/torch_tensor_from_array_legacy.html">torch_tensor_from_array_legacy</a>, which
+is deprecated and will be removed in a future version.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>If the error is for a different reason (e.g., passing a temporary array, expression,
+or slice as an argument), see the <a href="#no-specific-subroutine-using-temporaries">No specific subroutine</a>
+section above.</p>
+</div>
+<p>The recommended fix is to update your calls to the new signature in one of the following ways:</p>
+<p>1) If your Fortran and Torch arrays used the default layout indexing (<code>[1, 2, ..., n]</code>)
+   you can omit <code>layout</code> and <code>permute_dims</code> entirely:
+   ```fortran
+   ! Old
+   call torch_tensor_from_array(tensor, data, [1, ..., n], torch_kCPU)</p>
+<p>! New
+   call torch_tensor_from_array(tensor, data, torch_kCPU)
+   <code>2) If you were doing a transpose of a square tensor update your call to use `permute_dims`:</code>fortran
+   ! Old
+   call torch_tensor_from_array(tensor, data, [n, ..., 1], torch_kCPU)</p>
+<p>! New
+   call torch_tensor_from_array(tensor, data, torch_kCPU, permute_dims=[n, ..., 1])
+   <code>3) If you rely on unintended behaviour of `layout` then the old call is still available
+   through [[ftorch_tensor(module):torch_tensor_from_array_legacy(interface)]], but
+   note that this will be removed completely in the future:</code>fortran
+   ! Old
+   call torch_tensor_from_array(tensor, data, tensor_layout, torch_kCPU)</p>
+<p>! New
+   call torch_tensor_from_array_legacy(tensor, data, tensor_layout, torch_kCPU)
+   ```
+4) If you need deeper control over exactly how you want the data to appear in Torch
+   (the shape and strides) and know what you are doing with memory and array layouts,
+   you can use <a href="../../proc/torch_tensor_from_blob.html">torch_tensor_from_blob</a>.</p>
 <h4 id="int64-versions-of-ftorch-for-large-tensors"><code>int64</code> versions of <code>ftorch</code> for large tensors</h4>
 <p>An alternative cause of the 'no specific subroutine' error can occur if your tensor
 dimension is larger than FTorch supports by default.
