@@ -11,8 +11,17 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Introduced torch_tensor_from_array_legacy interface preserving the old layout-required
+  signature of torch_tensor_from_array (deprecated) in
+  [#604](https://github.com/Cambridge-ICCS/FTorch/pull/604)
+
 ### Changed
 
+- Refactored torch_tensor_from_array with `layout` replaced by optional `permute_dims` argument
+  matching the semantics of `torch.permute()` permuting the tensor shape and strides
+  in [#604](https://github.com/Cambridge-ICCS/FTorch/pull/604).
+  This is a breaking change.
+  Tests and examples are added and updated accordingly.
 - Raised the minimum required C++ standard from C++17 to C++20, as required
   by latest PyTorch versions (2.14) in [#625](https://github.com/Cambridge-ICCS/FTorch/pull/625)
 - Dropped gfortran versions 9 and 10 from CI testing and added versions 14 and 15,
