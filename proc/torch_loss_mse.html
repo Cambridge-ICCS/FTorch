@@ -283,8 +283,8 @@ modules which it uses.
     <p>Evaluate MSELoss</p>
 <p>Note that the reduction type relates to the operation to perform within a (mini)batch. With
  torch_kNone, no reduction is applied and the loss tensor will have the same dimensions as the
- input tensor. If torch_kMean (default) or torch_kSum is applied then the loss tensor will differ
- in the first dimension (for the batch), which will be collapsed.</p>
+ input tensor. If torch_kMean (default) or torch_kSum is applied then the loss tensor will
+ differ in the first dimension (for the batch), which will be collapsed.</p>
 <p>We refer to the PyTorch docs for the specifics of how this works for MSELoss
  https://docs.pytorch.org/docs/main/nn.functional.html#torch.nn.functional.mse_loss</p>
 
@@ -332,7 +332,7 @@ modules which it uses.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-target_tensor"></span>
+              <span class="anchor" id="variable-target_tensor~2"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -382,13 +382,14 @@ modules which it uses.
 <span class="kt">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">loss_tensor</span><span class="w">  </span><span class="c">!! Tensor to hold the loss value</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">input_tensor</span><span class="w">  </span><span class="c">!! Input tensor to evaluate loss at</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">target_tensor</span><span class="w">  </span><span class="c">!! Target tensor to evaluate loss against</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">reduction_type</span><span class="w">  </span><span class="c">!! Reduction type to use over batches (default: torch_kMean)</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">reduction_type</span>
+<span class="w">        </span><span class="c">!! Reduction type to use over batches (default: torch_kMean)</span>
 
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">reduction_type_value</span>
 
 <span class="w">    </span><span class="k">interface</span>
 <span class="k">      subroutine </span><span class="n">torch_loss_mse_c</span><span class="p">(</span><span class="n">loss_tensor_c</span><span class="p">,</span><span class="w"> </span><span class="n">input_tensor_c</span><span class="p">,</span><span class="w"> </span><span class="n">target_tensor_c</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
-<span class="w">          </span><span class="n">reduction_type_c</span><span class="p">)</span><span class="w"> </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'torch_loss_mse'</span><span class="p">)</span>
+<span class="w">          </span><span class="n">reduction_type_c</span><span class="p">)</span><span class="w"> </span><span class="k">bind</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"torch_loss_mse"</span><span class="p">)</span>
 <span class="w">        </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_ptr</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int</span>
 <span class="kt">        </span><span class="k">implicit none</span>
 <span class="k">        type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">loss_tensor_c</span>

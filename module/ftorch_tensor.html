@@ -312,8 +312,8 @@
             <li class="list-group-item">
               <ul class="list-inline">
                   <li class="list-inline-item"><a href='ftorch_devices.html'>ftorch_devices</a></li>
-                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
                   <li class="list-inline-item"><a href='ftorch_types.html'>ftorch_types</a></li>
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
               </ul>
             </li>
@@ -1425,7 +1425,7 @@ modules which it uses.
     <ul class="list-group">
         <li class="list-group-item">
               <h3>
-    public  function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device_type, device_index, requires_grad) result(tensor_p) bind(c, name = 'torch_from_blob')  
+    public  function torch_from_blob_c(data, ndims, tensor_shape, strides, dtype, device_type, device_index, requires_grad) result(tensor_p) bind(c, name = "torch_from_blob")  
 
     </h3>
   
@@ -1716,7 +1716,7 @@ modules which it uses.
     <ul class="list-group">
         <li class="list-group-item">
               <h3>
-    public  subroutine torch_tensor_divide_c(output_c, tensor1_c, tensor2_c) bind(c, name = 'torch_tensor_divide')  
+    public  subroutine torch_tensor_divide_c(output_c, tensor1_c, tensor2_c) bind(c, name = "torch_tensor_divide")  
 
     </h3>
   
@@ -5221,7 +5221,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int8</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int8</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -5320,7 +5321,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int8</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int8</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -5419,7 +5421,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int8</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int8</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -5518,7 +5521,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int8</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int8</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -5617,7 +5621,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int8</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int8</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -5716,7 +5721,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int16</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int16</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -5815,7 +5821,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int16</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int16</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -5914,7 +5921,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int16</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int16</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -6013,7 +6021,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int16</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int16</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -6112,7 +6121,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int16</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int16</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -6211,7 +6221,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -6310,7 +6321,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -6409,7 +6421,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -6508,7 +6521,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -6607,7 +6621,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -6706,7 +6721,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -6805,7 +6821,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -6904,7 +6921,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7003,7 +7021,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7102,7 +7121,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7201,7 +7221,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>real32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>real32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7300,7 +7321,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>real32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>real32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7399,7 +7421,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>real32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>real32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7498,7 +7521,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>real32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>real32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7597,7 +7621,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>real32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>real32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7696,7 +7721,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>real64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>real64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7795,7 +7821,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>real64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>real64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7894,7 +7921,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>real64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>real64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -7993,7 +8021,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>real64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>real64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -8092,7 +8121,8 @@ modules which it uses.
 
     </h3>
     
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>real64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>real64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -8197,7 +8227,7 @@ modules which it uses.
     <ul class="list-group">
         <li class="list-group-item">
               <h3>
-    public  subroutine torch_tensor_multiply_c(output_c, tensor1_c, tensor2_c) bind(c, name = 'torch_tensor_multiply')  
+    public  subroutine torch_tensor_multiply_c(output_c, tensor1_c, tensor2_c) bind(c, name = "torch_tensor_multiply")  
 
     </h3>
   
@@ -8297,7 +8327,7 @@ modules which it uses.
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-p~3"></span>
+              <span class="anchor" id="variable-p~2"></span>
               type(c_ptr),
             </td>
               <td>public</td>
@@ -8377,7 +8407,7 @@ modules which it uses.
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='../type/torch_tensor.html#boundprocedure-zero_grad~2'>zero_grad</a></strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_zero_grad.html'>torch_tensor_zero_grad</a></td>
+  <strong><a href='../type/torch_tensor.html#boundprocedure-zero_grad'>zero_grad</a></strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_zero_grad.html'>torch_tensor_zero_grad</a></td>
                   <td></td>
               </tr>
           </tbody>
@@ -9827,7 +9857,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int16</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int16</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -10042,7 +10073,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int16</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int16</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -10257,7 +10289,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int16</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int16</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -10472,7 +10505,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int16</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int16</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -10687,7 +10721,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int16</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int16</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -10902,7 +10937,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -11117,7 +11153,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -11332,7 +11369,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -11547,7 +11585,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -11762,7 +11801,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -11977,7 +12017,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -12192,7 +12233,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -12407,7 +12449,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -12622,7 +12665,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -12837,7 +12881,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -13052,7 +13097,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int8</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>int8</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -13267,7 +13313,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int8</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>int8</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -13482,7 +13529,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int8</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>int8</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -13697,7 +13745,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int8</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>int8</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -13912,7 +13961,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int8</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>int8</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -14127,7 +14177,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>real32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>real32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -14342,7 +14393,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>real32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>real32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -14557,7 +14609,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>real32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>real32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -14772,7 +14825,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>real32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>real32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -14987,7 +15041,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>real32</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>real32</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -15202,7 +15257,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>real64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 1 containing data of type <code>real64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -15417,7 +15473,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>real64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 2 containing data of type <code>real64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -15632,7 +15689,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>real64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 3 containing data of type <code>real64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -15847,7 +15905,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>real64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 4 containing data of type <code>real64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -16062,7 +16121,8 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
 </h3></div>
     <div class="card-body">
           
-  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>real64</code> with default layout [1, 2, ..., n].</p>
+  <p>Return a Torch tensor pointing to data_in array of rank 5 containing data of type <code>real64</code>
+with default layout [1, 2, ..., n].</p>
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -16688,7 +16748,7 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-target_tensor~3"></span>
+              <span class="anchor" id="variable-target_tensor"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(inout)</td>
