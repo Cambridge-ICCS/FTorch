@@ -59,7 +59,7 @@ module ftorch
   use ftorch_loss, only: torch_loss_mse, &
                          torch_loss_cross_entropy
 
-  use ftorch_test_utils, only: assert, isclose, test_print
+  use ftorch_test_utils, only: allclose, isclose, test_print
 
   implicit none
 
@@ -74,6 +74,6 @@ module ftorch
   end interface
 
   ! Mark test utils as private
-  private :: assert, isclose, test_print
+  private :: allclose, isclose, test_print
 
 end module ftorch
