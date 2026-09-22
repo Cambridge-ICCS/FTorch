@@ -59,8 +59,11 @@ module ftorch
   use ftorch_loss, only: torch_loss_mse, &
                          torch_loss_cross_entropy
 
+  use ftorch_test_utils, only: assert, isclose, test_print
+
   implicit none
 
+  ! Members public by default
   public
 
   !> Interface for deleting generic torch objects
@@ -69,5 +72,8 @@ module ftorch
     module procedure torch_model_delete
     module procedure torch_optim_delete
   end interface
+
+  ! Mark test utils as private
+  private :: assert, isclose, test_print
 
 end module ftorch
