@@ -163,7 +163,10 @@ For specific details see the <a href="https://cambridge-iccs.github.io/FTorch/pa
 <h3 id="changed">Changed</h3>
 <ul>
 <li>Raised the minimum required C++ standard from C++17 to C++20, as required
-  by latest PyTorch versions (3.14) in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/625">#625</a></li>
+  by latest PyTorch versions (2.14) in <a href="https://github.com/Cambridge-ICCS/FTorch/pull/625">#625</a></li>
+<li>Dropped gfortran versions 9 and 10 from CI testing and added versions 14 and 15,
+  since GCC &lt; 11 cannot satisfy the C++20 requirement of recent PyTorch in
+  <a href="https://github.com/Cambridge-ICCS/FTorch/pull/631">#631</a></li>
 <li>Guidance around OpenMP on MacOS and building updated (along with MacOS workflow) in
   <a href="https://github.com/Cambridge-ICCS/FTorch/pull/618">#618</a></li>
 </ul>
