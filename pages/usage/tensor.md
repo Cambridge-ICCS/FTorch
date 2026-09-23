@@ -1,6 +1,6 @@
 title: Tensor API
 author: Joe Wallwork
-date: Last Updated: August 2026
+date: Last Updated: September 2026
 
 ## Tensor API Documentation
 
@@ -63,6 +63,14 @@ any of the ways described in the following. Each of the constructors sets the
 pointer attribute of the [[ftorch_tensor(module):torch_tensor(type)]]; without
 this being set, most of the other operations are meaningless.
 
+@note
+For all constructors, shape and stride arguments are passed as arrays of 64-bit
+integers (kind `int64` from the `iso_fortran_env` intrinsic module).
+This matches how Torch represents sizes internally.
+Dimension counts (`ndims`), `device_index`, and `permute_dims` use default (32-bit)
+integers alllowing literals such as `permute_dims=[2, 1]` to be passed directly.
+If in doubt check the API documentation for types.
+@endnote
 
 #### Interrogation
 
@@ -73,6 +81,8 @@ We provide several subroutines for interrogating
   rank (i.e., dimensionality) of the tensor.
 * [[ftorch_tensor(module):torch_tensor_get_shape(function)]] which determines
   the shape (i.e., extent in each dimension) of the tensor.
+* [[ftorch_tensor(module):torch_tensor_get_stride(function)]] which determines
+  the strides between consecutive entries in each dimension of the tensor.
 * [[ftorch_tensor(module):torch_tensor_get_dtype(function)]] which determines
   the data type of the tensor in terms of the enums `torch_kInt8`,
   `torch_kFloat32`, etc.
@@ -83,6 +93,14 @@ We provide several subroutines for interrogating
   determines the index of the device that the tensor resides on as an integer.
   For a CPU device, this index should be set to `-1` (the default).
   For GPU devices, the index should be non-negative (defaulting to `0`).
+
+@note
+[[ftorch_tensor(module):torch_tensor_get_shape(function)]] and
+[[ftorch_tensor(module):torch_tensor_get_stride(function)]] return freshly
+allocated `int64` Fortran arrays with a copy of the shape or strides at
+the time of the call. This array remains valid even if the tensor is subsequently
+deleted, but it will not reflect any later changes to the shape of the tensor.
+@endnote
 
 Procedures for interrogation are implemented as methods as well as stand-alone
 procedures. For example, `tensor%get_rank` can be used in place of
