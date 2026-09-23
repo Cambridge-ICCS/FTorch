@@ -450,7 +450,7 @@ contains
   subroutine torch_tensor_from_array_int8_1d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -539,7 +539,7 @@ contains
   subroutine torch_tensor_from_array_int8_2d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -628,7 +628,7 @@ contains
   subroutine torch_tensor_from_array_int8_3d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -717,7 +717,7 @@ contains
   subroutine torch_tensor_from_array_int8_4d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -806,7 +806,7 @@ contains
   subroutine torch_tensor_from_array_int8_5d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -895,7 +895,7 @@ contains
   subroutine torch_tensor_from_array_int16_1d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -984,7 +984,7 @@ contains
   subroutine torch_tensor_from_array_int16_2d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -1073,7 +1073,7 @@ contains
   subroutine torch_tensor_from_array_int16_3d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -1162,7 +1162,7 @@ contains
   subroutine torch_tensor_from_array_int16_4d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -1251,7 +1251,7 @@ contains
   subroutine torch_tensor_from_array_int16_5d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -1340,7 +1340,7 @@ contains
   subroutine torch_tensor_from_array_int32_1d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -1429,7 +1429,7 @@ contains
   subroutine torch_tensor_from_array_int32_2d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -1518,7 +1518,7 @@ contains
   subroutine torch_tensor_from_array_int32_3d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -1607,7 +1607,7 @@ contains
   subroutine torch_tensor_from_array_int32_4d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -1696,7 +1696,7 @@ contains
   subroutine torch_tensor_from_array_int32_5d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -1785,7 +1785,7 @@ contains
   subroutine torch_tensor_from_array_int64_1d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -1874,7 +1874,7 @@ contains
   subroutine torch_tensor_from_array_int64_2d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -1963,7 +1963,7 @@ contains
   subroutine torch_tensor_from_array_int64_3d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -2052,7 +2052,7 @@ contains
   subroutine torch_tensor_from_array_int64_4d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -2141,7 +2141,7 @@ contains
   subroutine torch_tensor_from_array_int64_5d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -2230,7 +2230,7 @@ contains
   subroutine torch_tensor_from_array_real32_1d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -2319,7 +2319,7 @@ contains
   subroutine torch_tensor_from_array_real32_2d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -2408,7 +2408,7 @@ contains
   subroutine torch_tensor_from_array_real32_3d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -2497,7 +2497,7 @@ contains
   subroutine torch_tensor_from_array_real32_4d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -2586,7 +2586,7 @@ contains
   subroutine torch_tensor_from_array_real32_5d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -2675,7 +2675,7 @@ contains
   subroutine torch_tensor_from_array_real64_1d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -2764,7 +2764,7 @@ contains
   subroutine torch_tensor_from_array_real64_2d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -2853,7 +2853,7 @@ contains
   subroutine torch_tensor_from_array_real64_3d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -2942,7 +2942,7 @@ contains
   subroutine torch_tensor_from_array_real64_4d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -3031,7 +3031,7 @@ contains
   subroutine torch_tensor_from_array_real64_5d(tensor, data_in, &
                                                          device_type, device_index, permute_dims, &
                                                          requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -3120,7 +3120,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int8_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -3173,7 +3173,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int8_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -3226,7 +3226,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int8_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -3279,7 +3279,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int8_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -3332,7 +3332,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int8_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int8
 
     ! output tensor
@@ -3385,7 +3385,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int16_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -3438,7 +3438,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int16_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -3491,7 +3491,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int16_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -3544,7 +3544,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int16_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -3597,7 +3597,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int16_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int16
 
     ! output tensor
@@ -3650,7 +3650,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int32_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -3703,7 +3703,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int32_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -3756,7 +3756,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int32_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -3809,7 +3809,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int32_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -3862,7 +3862,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int32_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int32
 
     ! output tensor
@@ -3915,7 +3915,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int64_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -3968,7 +3968,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int64_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -4021,7 +4021,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int64_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -4074,7 +4074,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int64_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -4127,7 +4127,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_int64_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : int64
 
     ! output tensor
@@ -4180,7 +4180,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real32_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -4233,7 +4233,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real32_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -4286,7 +4286,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real32_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -4339,7 +4339,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real32_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -4392,7 +4392,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real32_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real32
 
     ! output tensor
@@ -4445,7 +4445,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real64_1d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -4498,7 +4498,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real64_2d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -4551,7 +4551,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real64_3d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -4604,7 +4604,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real64_4d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -4657,7 +4657,7 @@ contains
   !> Use `torch_tensor_from_array` instead. This will be removed in a future release.
   subroutine torch_tensor_from_array_real64_5d_legacy(tensor, data_in, layout, &
                                                     device_type, device_index, requires_grad)
-    use, intrinsic :: iso_c_binding, only : c_int, c_int64_t, c_loc
+    use, intrinsic :: iso_c_binding, only : c_int, c_loc
     use, intrinsic :: iso_fortran_env, only : real64
 
     ! output tensor
@@ -4750,7 +4750,7 @@ contains
 
   !> Determines the shape of a tensor.
   function torch_tensor_get_shape(self) result(sizes)
-    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_int64_t, c_ptr
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int64_t, c_ptr
     class(torch_tensor), intent(in) :: self         !! Tensor to get the shape of
     integer(kind=int64), allocatable :: sizes(:)    !! Array holding the shape of the tensor
 
@@ -4763,7 +4763,7 @@ contains
     interface
       function torch_tensor_get_sizes_c(tensor_c) result(sizes_c) &
           bind(c, name = "torch_tensor_get_sizes")
-        use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
+        use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: sizes_c
@@ -4786,7 +4786,7 @@ contains
 
   !> Return the strides of the tensor
   function torch_tensor_get_stride(self) result(strides)
-    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int, c_int64_t, c_ptr
+    use, intrinsic :: iso_c_binding, only : c_f_pointer, c_int64_t, c_ptr
     class(torch_tensor), intent(in) :: self         !! Tensor to get the strides of
     integer(kind=int64), allocatable :: strides(:)  !! Array holding the strides of the tensor
 
@@ -4799,7 +4799,7 @@ contains
     interface
       function torch_tensor_get_stride_c(tensor_c) result(strides_c) &
           bind(c, name = "torch_tensor_get_stride")
-        use, intrinsic :: iso_c_binding, only : c_int, c_long, c_ptr
+        use, intrinsic :: iso_c_binding, only : c_ptr
         implicit none
         type(c_ptr), value, intent(in) :: tensor_c
         type(c_ptr) :: strides_c
@@ -5418,7 +5418,6 @@ contains
 
   !> Resets a tensor's gradient to zero.
   subroutine torch_tensor_zero_grad(tensor)
-    use, intrinsic :: iso_c_binding, only : c_associated
     class(torch_tensor), intent(inout) :: tensor  !! Tensor to zero the gradient of
 
     interface

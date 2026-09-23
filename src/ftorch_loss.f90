@@ -5,7 +5,6 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module ftorch_loss
-  use, intrinsic :: iso_c_binding, only : c_null_ptr, c_ptr
   use ftorch_types, only: torch_kNone, torch_kMean, torch_kSum
   use ftorch_tensor, only: torch_tensor
 
