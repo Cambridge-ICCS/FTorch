@@ -17,6 +17,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Changed
 
+- Refactored the FTorch API to explicitly take Fortran types instead of C types and
+  remove the `ftorch_int` internal type in
+  [#628](https://github.com/Cambridge-ICCS/FTorch/pull/628)
 - Refactored torch_tensor_from_array with `layout` replaced by optional `permute_dims` argument
   matching the semantics of `torch.permute()` permuting the tensor shape and strides
   in [#604](https://github.com/Cambridge-ICCS/FTorch/pull/604).
@@ -34,6 +37,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Removed
 
+- Removed the `ftorch_int` internal type in [#628](https://github.com/Cambridge-ICCS/FTorch/pull/628)
 - Dropped `assert_isclose` and `assert_allclose` legacy versions of `isclose`
   and `allclose` in [#621](https://github.com/Cambridge-ICCS/FTorch/pull/621)
 
