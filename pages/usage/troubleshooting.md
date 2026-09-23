@@ -1,6 +1,6 @@
 title: Troubleshooting
 author: Jack Atkinson
-date: Last Updated: August 2026
+date: Last Updated: September 2026
 
 ## FAQ
 
@@ -94,6 +94,48 @@ see the [Deprecated signature](#no-specific-subroutine-deprecated-torch_tensor_f
 section below.
 @endnote
 
+#### No specific subroutine - Integer kinds used by FTorch
+
+Another possible cause of compile-time errors is passing integers of the wrong
+kind. FTorch uses explicit integer kinds from the `iso_fortran_env` intrinsic module:
+
+* Tensor shapes and strides (e.g., the `tensor_shape` and `tensor_strides`
+  arguments of the tensor constructors, and the return values of
+  [[ftorch_tensor(module):torch_tensor_get_shape(function)]] and
+  [[ftorch_tensor(module):torch_tensor_get_stride(function)]]) use 64-bit
+  integers (`int64`).
+* Tensor ranks, dimension counts (`ndims`), `device_index`, and `permute_dims`
+  use 32-bit integers (`int32`). As this is the default integer kind on all
+  supported platforms, plain integer literals and default integer variables can
+  be used for these arguments.
+
+For example, passing a default kind integer array as `tensor_shape` will raise:
+```
+   5 |   call torch_tensor_ones(a, 2, [10, 20], torch_kFloat32, torch_kCPU)
+     |                                                                    1
+Error: Type mismatch in argument 'tensor_shape' at (1); passed INTEGER(4) to INTEGER(8)
+```
+To fix this, declare shape arrays using `int64`:
+```fortran
+use, intrinsic :: iso_fortran_env, only: int64
+integer(int64), parameter :: tensor_shape(2) = [10, 20]
+```
+
+Conversely, `permute_dims` expects a default (32-bit) integer array, so passing
+an `int64` array will raise the 'no specific subroutine' error described above:
+```
+   8 |   call torch_tensor_from_array(b, in_data, torch_kCPU, permute_dims=perm)
+     |                                                                         1
+Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
+```
+Use a default integer array for `permute_dims`, e.g., `permute_dims=[2, 1]`.
+
+@note
+If you recently upgraded FTorch and your call used `layout` as the third argument,
+see the [Deprecated signature](#no-specific-subroutine-deprecated-torch_tensor_from_array-signature)
+section below.
+@endnote
+
 #### No specific subroutine - Deprecated `torch_tensor_from_array` signature
 
 The update of FTorch to v2.0 brought in a breaking API change to
@@ -112,8 +154,7 @@ is deprecated and will be removed in a future version.
 
 @note
 If the error is for a different reason (e.g., passing a temporary array, expression,
-or slice as an argument), see the [No specific subroutine](#no-specific-subroutine-using-temporaries)
-section above.
+or slice as an argument, or mismatching integer kinds), see the sections above.
 @endnote
 
 The recommended fix is to update your calls to the new signature in one of the following ways:
@@ -148,30 +189,6 @@ The recommended fix is to update your calls to the new signature in one of the f
 4) If you need deeper control over exactly how you want the data to appear in Torch
    (the shape and strides) and know what you are doing with memory and array layouts,
    you can use [[ftorch_tensor(module):torch_tensor_from_blob(subroutine)]].
-
-
-#### `int64` versions of `ftorch` for large tensors
-
-An alternative cause of the 'no specific subroutine' error can occur if your tensor
-dimension is larger than FTorch supports by default.
-Currently FTorch represents the number of elements in an array dimension using
-32-bit integers. For most users this will be more than enough, but if your code
-uses large tensors (where large means more than 2,147,483,647 elements
-in any one dimension (the maximum value of a 32-bit integer)), you may you may
-need to compile `ftorch` with 64-bit integers. If you do not, you may receive a
-compile time error like the following:
-
-To fix this, rebuild FTorch with 64-bit integers by modifying the following line in
-`src/ftorch.fypp`
-```fortran
-integer, parameter :: ftorch_int = int32 ! set integer size for FTorch library
-```
-to instead use 64-bit integers:
-```fortran
-integer, parameter :: ftorch_int = int64 ! set integer size for FTorch library
-```
-Note: _You will need to re-run `fypp` to regenerate the source files as described in the 
-[developer documentation](|page|/developer/developer.html)_
 
 
 #### Segmentation faults
