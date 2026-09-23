@@ -4756,7 +4756,8 @@ contains
 
     ! Local data
     integer(kind=int32) :: ndims(1)
-    integer(kind=c_int64_t), pointer :: sizes_ptr(:)  !! Temporary pointer to Torch-owned memory
+    integer(kind=c_int64_t), pointer :: sizes_c_int64_ptr(:)
+        !! Temporary pointer to Torch-owned memory containing c_int64
     type(c_ptr) :: cptr
 
     interface
@@ -4775,12 +4776,12 @@ contains
     end if
     ndims(1) = self%get_rank()
     cptr = torch_tensor_get_sizes_c(self%p)
-    call c_f_pointer(cptr, sizes_ptr, ndims)
+    call c_f_pointer(cptr, sizes_c_int64_ptr, ndims)
 
     ! Copy out of the Torch-owned memory so the result remains valid even if
     ! the tensor is subsequently deleted
     allocate(sizes(ndims(1)))
-    sizes(:) = sizes_ptr(:)
+    sizes(:) = sizes_c_int64_ptr(:)
   end function torch_tensor_get_shape
 
   !> Return the strides of the tensor
@@ -4791,7 +4792,8 @@ contains
 
     ! Local data
     integer(kind=int32) :: ndims(1)
-    integer(kind=c_int64_t), pointer :: strides_ptr(:)  !! Temporary pointer to Torch-owned memory
+    integer(kind=c_int64_t), pointer :: strides_c_int64_ptr(:)
+        !! Temporary pointer to Torch-owned memory containing c_int64
     type(c_ptr) :: cptr
 
     interface
@@ -4811,12 +4813,12 @@ contains
 
     ndims(1) = self%get_rank()
     cptr = torch_tensor_get_stride_c(self%p)
-    call c_f_pointer(cptr, strides_ptr, ndims)
+    call c_f_pointer(cptr, strides_c_int64_ptr, ndims)
 
     ! Copy out of the Torch-owned memory so the result remains valid even if
     ! the tensor is subsequently deleted
     allocate(strides(ndims(1)))
-    strides(:) = strides_ptr(:)
+    strides(:) = strides_c_int64_ptr(:)
 
   end function torch_tensor_get_stride
 
