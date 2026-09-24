@@ -166,8 +166,8 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -473,7 +473,7 @@ modules which it uses.
 <span class="w">        </span><span class="c">!! Resolved weight_decay value to be passed to the C interface</span>
 <span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">amsgrad_value</span><span class="w">  </span><span class="c">!! Resolved amsgrad value to be passed to the C interface</span>
 
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ftorch_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">n_params</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">parameters</span><span class="p">)),</span><span class="w"> </span><span class="k">target</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">parameter_ptrs</span>
 

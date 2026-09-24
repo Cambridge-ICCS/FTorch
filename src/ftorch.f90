@@ -8,7 +8,7 @@ module ftorch
   use ftorch_devices, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
 
   use ftorch_types, only: torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
-                          torch_kFloat32, torch_kFloat64, ftorch_int
+                          torch_kFloat32, torch_kFloat64
 
   use ftorch_tensor, only: torch_tensor, &  !--------------- (type)
                            torch_tensor_from_array, &  !---- (constructors)

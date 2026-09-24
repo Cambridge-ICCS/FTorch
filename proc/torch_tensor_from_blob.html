@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.7% of total for procedures.">27 statements</a>
+                 title=" 0.9% of total for procedures.">33 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -334,7 +334,7 @@ implicit procedure before calling this routine.</p>
         <tr>
             <td>
               <span class="anchor" id="variable-ndims~5"></span>
-              integer(kind=c_int),
+              integer(kind=int32),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -349,14 +349,14 @@ implicit procedure before calling this routine.</p>
         <tr>
             <td>
               <span class="anchor" id="variable-tensor_shape~5"></span>
-              integer(kind=c_int64_t),
+              integer(kind=int64),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
               
             </td>
             <td>::</td>
-            <td><strong>tensor_shape</strong>(:)</td>
+            <td><strong>tensor_shape</strong>(ndims)</td>
             <td>
                 <p>Shape of the returned tensor</p>
             </td>
@@ -364,14 +364,14 @@ implicit procedure before calling this routine.</p>
         <tr>
             <td>
               <span class="anchor" id="variable-tensor_strides"></span>
-              integer(kind=c_int64_t),
+              integer(kind=int64),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
               
             </td>
             <td>::</td>
-            <td><strong>tensor_strides</strong>(:)</td>
+            <td><strong>tensor_strides</strong>(ndims)</td>
             <td>
                 <p>Strides for accessing data in the returned tensor. Note that these are integers
 representing the number of items of type <code>dtype</code> and NOT bytes/memory.</p>
@@ -394,7 +394,7 @@ representing the number of items of type <code>dtype</code> and NOT bytes/memory
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device_type~6"></span>
+              <span class="anchor" id="variable-device_type~5"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -409,7 +409,7 @@ representing the number of items of type <code>dtype</code> and NOT bytes/memory
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device_index~6"></span>
+              <span class="anchor" id="variable-device_index~5"></span>
               integer,
             </td>
 <td>intent(in),</td>
@@ -424,7 +424,7 @@ representing the number of items of type <code>dtype</code> and NOT bytes/memory
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-requires_grad~8"></span>
+              <span class="anchor" id="variable-requires_grad~6"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1964,9 +1964,9 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int64_t</span><span class="p">,</span><span class="w"> </span><span class="kt">c_ptr</span>
 <span class="kt">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w">     </span><span class="c">!! Returned tensor</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">         </span><span class="kd">::</span><span class="w"> </span><span class="k">data</span><span class="w">       </span><span class="c">!! Pointer to data</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">ndims</span><span class="w">      </span><span class="c">!! Number of dimensions of the tensor</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int64_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(:)</span><span class="w">  </span><span class="c">!! Shape of the returned tensor</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int64_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_strides</span><span class="p">(:)</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">ndims</span><span class="w">      </span><span class="c">!! Number of dimensions of the tensor</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(</span><span class="n">ndims</span><span class="p">)</span><span class="w">  </span><span class="c">!! Shape of the returned tensor</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_strides</span><span class="p">(</span><span class="n">ndims</span><span class="p">)</span>
 <span class="w">        </span><span class="c">!! Strides for accessing data in the returned tensor. Note that these are integers</span>
 <span class="w">        </span><span class="c">!! representing the number of items of type `dtype` and NOT bytes/memory.</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">dtype</span><span class="w">      </span><span class="c">!! Data type of the input data and tensor</span>
@@ -1977,6 +1977,9 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">        </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
 
 <span class="w">    </span><span class="c">! local data</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w">                  </span><span class="kd">::</span><span class="w"> </span><span class="n">ndims_c</span><span class="w">            </span><span class="c">!! C-type ndims</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int64_t</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_shape_c</span><span class="p">(</span><span class="n">ndims</span><span class="p">)</span><span class="w">  </span><span class="c">!! C-type tensor_shape</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int64_t</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_strides_c</span><span class="p">(</span><span class="n">ndims</span><span class="p">)</span><span class="w">  </span><span class="c">!! C-type strides</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w">                  </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index_value</span><span class="w">   </span><span class="c">!! device index used</span>
 <span class="w">    </span><span class="kt">logical</span><span class="p">(</span><span class="kt">c_bool</span><span class="p">)</span><span class="w">                 </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad_value</span>
 <span class="w">        </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
@@ -1996,7 +1999,12 @@ implementation in a submodule of an interface in a parent module.
 <span class="k">      </span><span class="n">device_index_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">    </span><span class="k">end if</span>
 
-<span class="k">    </span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_from_blob_c</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">ndims</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_strides</span><span class="p">,</span><span class="w"> </span><span class="n">dtype</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span>
+<span class="w">    </span><span class="c">! Convert public arguments to C-types</span>
+<span class="w">    </span><span class="n">ndims_c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ndims</span>
+<span class="w">    </span><span class="n">tensor_shape_c</span><span class="p">(:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(:)</span>
+<span class="w">    </span><span class="n">tensor_strides_c</span><span class="p">(:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tensor_strides</span><span class="p">(:)</span>
+
+<span class="w">    </span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_from_blob_c</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">ndims_c</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_shape_c</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_strides_c</span><span class="p">,</span><span class="w"> </span><span class="n">dtype</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">                                 </span><span class="n">device_type</span><span class="p">,</span><span class="w"> </span><span class="n">device_index_value</span><span class="p">,</span><span class="w">              </span><span class="p">&amp;</span>
 <span class="w">                                 </span><span class="n">requires_grad_value</span><span class="p">)</span>
 <span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_tensor_from_blob</span>

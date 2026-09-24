@@ -85,7 +85,7 @@
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
               <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Joe Wallwork</li>
-              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: August 2026</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: September 2026</li>
           </ul>
         </div>
         <div class="col">
@@ -210,6 +210,15 @@ copies between C++ and Fortran.</p>
 any of the ways described in the following. Each of the constructors sets the
 pointer attribute of the <a href="../../type/torch_tensor.html">torch_tensor</a>; without
 this being set, most of the other operations are meaningless.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>For all constructors, shape and stride arguments are passed as arrays of 64-bit
+integers (kind <code>int64</code> from the <code>iso_fortran_env</code> intrinsic module).
+This matches how Torch represents sizes internally.
+Dimension counts (<code>ndims</code>), <code>device_index</code>, and <code>permute_dims</code> use default (32-bit)
+integers alllowing literals such as <code>permute_dims=[2, 1]</code> to be passed directly.
+If in doubt check the API documentation for types.</p>
+</div>
 <h4 id="interrogation">Interrogation</h4>
 <p>We provide several subroutines for interrogating
 <a href="../../type/torch_tensor.html">torch_tensor</a> objects. These include:</p>
@@ -218,6 +227,8 @@ this being set, most of the other operations are meaningless.</p>
   rank (i.e., dimensionality) of the tensor.</li>
 <li><a href="../../proc/torch_tensor_get_shape.html">torch_tensor_get_shape</a> which determines
   the shape (i.e., extent in each dimension) of the tensor.</li>
+<li><a href="../../proc/torch_tensor_get_stride.html">torch_tensor_get_stride</a> which determines
+  the strides between consecutive entries in each dimension of the tensor.</li>
 <li><a href="../../proc/torch_tensor_get_dtype.html">torch_tensor_get_dtype</a> which determines
   the data type of the tensor in terms of the enums <code>torch_kInt8</code>,
   <code>torch_kFloat32</code>, etc.</li>
@@ -229,6 +240,14 @@ this being set, most of the other operations are meaningless.</p>
   For a CPU device, this index should be set to <code>-1</code> (the default).
   For GPU devices, the index should be non-negative (defaulting to <code>0</code>).</li>
 </ul>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p><a href="../../proc/torch_tensor_get_shape.html">torch_tensor_get_shape</a> and
+<a href="../../proc/torch_tensor_get_stride.html">torch_tensor_get_stride</a> return freshly
+allocated <code>int64</code> Fortran arrays with a copy of the shape or strides at
+the time of the call. This array remains valid even if the tensor is subsequently
+deleted, but it will not reflect any later changes to the shape of the tensor.</p>
+</div>
 <p>Procedures for interrogation are implemented as methods as well as stand-alone
 procedures. For example, <code>tensor%get_rank</code> can be used in place of
 <a href="../../proc/torch_tensor_get_rank.html">torch_tensor_get_rank</a>, omitting the first

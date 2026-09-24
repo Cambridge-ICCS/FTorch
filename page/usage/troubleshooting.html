@@ -85,7 +85,7 @@
         <div class="col">
           <ul class="list-inline" style="margin-bottom:0px; display:inline">
               <li class="list-inline-item" id="author"><i class="fa fa-pencil"></i> Jack Atkinson</li>
-              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: August 2026</li>
+              <li class="list-inline-item" id="date"><i class="fa fa-calendar-o"></i> Last Updated: September 2026</li>
           </ul>
         </div>
         <div class="col">
@@ -231,6 +231,45 @@ Error: There is no specific subroutine for the generic 'torch_tensor_from_array'
 see the <a href="#no-specific-subroutine-deprecated-torch_tensor_from_array-signature">Deprecated signature</a>
 section below.</p>
 </div>
+<h4 id="no-specific-subroutine-integer-kinds-used-by-ftorch">No specific subroutine - Integer kinds used by FTorch</h4>
+<p>Another possible cause of compile-time errors is passing integers of the wrong
+kind. FTorch uses explicit integer kinds from the <code>iso_fortran_env</code> intrinsic module:</p>
+<ul>
+<li>Tensor shapes and strides (e.g., the <code>tensor_shape</code> and <code>tensor_strides</code>
+  arguments of the tensor constructors, and the return values of
+  <a href="../../proc/torch_tensor_get_shape.html">torch_tensor_get_shape</a> and
+  <a href="../../proc/torch_tensor_get_stride.html">torch_tensor_get_stride</a>) use 64-bit
+  integers (<code>int64</code>).</li>
+<li>Tensor ranks, dimension counts (<code>ndims</code>), <code>device_index</code>, and <code>permute_dims</code>
+  use 32-bit integers (<code>int32</code>). As this is the default integer kind on all
+  supported platforms, plain integer literals and default integer variables can
+  be used for these arguments.</li>
+</ul>
+<p>For example, passing a default kind integer array as <code>tensor_shape</code> will raise:</p>
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="nt">5</span><span class="w"> </span><span class="o">|</span><span class="w">   </span><span class="nt">call</span><span class="w"> </span><span class="nt">torch_tensor_ones</span><span class="o">(</span><span class="nt">a</span><span class="o">,</span><span class="w"> </span><span class="nt">2</span><span class="o">,</span><span class="w"> </span><span class="cp">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="cp">]</span><span class="o">,</span><span class="w"> </span><span class="nt">torch_kFloat32</span><span class="o">,</span><span class="w"> </span><span class="nt">torch_kCPU</span><span class="o">)</span>
+<span class="w">     </span><span class="o">|</span><span class="w">                                                                    </span><span class="nt">1</span>
+<span class="nt">Error</span><span class="o">:</span><span class="w"> </span><span class="nt">Type</span><span class="w"> </span><span class="nt">mismatch</span><span class="w"> </span><span class="nt">in</span><span class="w"> </span><span class="nt">argument</span><span class="w"> </span><span class="s1">'tensor_shape'</span><span class="w"> </span><span class="nt">at</span><span class="w"> </span><span class="o">(</span><span class="nt">1</span><span class="o">);</span><span class="w"> </span><span class="nt">passed</span><span class="w"> </span><span class="nt">INTEGER</span><span class="o">(</span><span class="nt">4</span><span class="o">)</span><span class="w"> </span><span class="nt">to</span><span class="w"> </span><span class="nt">INTEGER</span><span class="o">(</span><span class="nt">8</span><span class="o">)</span>
+</code></pre></div>
+
+<p>To fix this, declare shape arrays using <code>int64</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iso_fortran_env</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">int64</span>
+<span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">]</span>
+</code></pre></div>
+
+<p>Conversely, <code>permute_dims</code> expects a default (32-bit) integer array, so passing
+an <code>int64</code> array will raise the 'no specific subroutine' error described above:</p>
+<div class="codehilite"><pre><span></span><code>   8 |   call torch_tensor_from_array(b, in_data, torch_kCPU, permute_dims=perm)
+     |                                                                         1
+Error: There is no specific subroutine for the generic 'torch_tensor_from_array' at (1)
+</code></pre></div>
+
+<p>Use a default integer array for <code>permute_dims</code>, e.g., <code>permute_dims=[2, 1]</code>.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>If you recently upgraded FTorch and your call used <code>layout</code> as the third argument,
+see the <a href="#no-specific-subroutine-deprecated-torch_tensor_from_array-signature">Deprecated signature</a>
+section below.</p>
+</div>
 <h4 id="no-specific-subroutine-deprecated-torch_tensor_from_array-signature">No specific subroutine - Deprecated <code>torch_tensor_from_array</code> signature</h4>
 <p>The update of FTorch to v2.0 brought in a breaking API change to
 <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a>.
@@ -248,8 +287,7 @@ is deprecated and will be removed in a future version.</p>
 <div class="alert alert-info">
 <p class="alert-title h4">Note</p>
 <p>If the error is for a different reason (e.g., passing a temporary array, expression,
-or slice as an argument), see the <a href="#no-specific-subroutine-using-temporaries">No specific subroutine</a>
-section above.</p>
+or slice as an argument, or mismatching integer kinds), see the sections above.</p>
 </div>
 <p>The recommended fix is to update your calls to the new signature in one of the following ways:</p>
 <p>1) If your Fortran and Torch arrays used the default layout indexing (<code>[1, 2, ..., n]</code>)
@@ -275,26 +313,6 @@ section above.</p>
 4) If you need deeper control over exactly how you want the data to appear in Torch
    (the shape and strides) and know what you are doing with memory and array layouts,
    you can use <a href="../../proc/torch_tensor_from_blob.html">torch_tensor_from_blob</a>.</p>
-<h4 id="int64-versions-of-ftorch-for-large-tensors"><code>int64</code> versions of <code>ftorch</code> for large tensors</h4>
-<p>An alternative cause of the 'no specific subroutine' error can occur if your tensor
-dimension is larger than FTorch supports by default.
-Currently FTorch represents the number of elements in an array dimension using
-32-bit integers. For most users this will be more than enough, but if your code
-uses large tensors (where large means more than 2,147,483,647 elements
-in any one dimension (the maximum value of a 32-bit integer)), you may you may
-need to compile <code>ftorch</code> with 64-bit integers. If you do not, you may receive a
-compile time error like the following:</p>
-<p>To fix this, rebuild FTorch with 64-bit integers by modifying the following line in
-<code>src/ftorch.fypp</code></p>
-<div class="codehilite"><pre><span></span><code><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ftorch_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">int32</span><span class="w"> </span><span class="c">! set integer size for FTorch library</span>
-</code></pre></div>
-
-<p>to instead use 64-bit integers:</p>
-<div class="codehilite"><pre><span></span><code><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ftorch_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">int64</span><span class="w"> </span><span class="c">! set integer size for FTorch library</span>
-</code></pre></div>
-
-<p>Note: <em>You will need to re-run <code>fypp</code> to regenerate the source files as described in the 
-<a href="../developer/developer.html">developer documentation</a></em></p>
 <h4 id="segmentation-faults">Segmentation faults</h4>
 <h5 id="missing-import-for-overloaded-assignment-operator">Missing import for overloaded assignment operator</h5>
 <p>Whenever you execute code involving

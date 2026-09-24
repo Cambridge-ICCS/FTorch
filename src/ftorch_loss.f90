@@ -5,7 +5,6 @@
 !    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
 !    file for details.
 module ftorch_loss
-  use, intrinsic :: iso_c_binding, only : c_null_ptr, c_ptr
   use ftorch_types, only: torch_kNone, torch_kMean, torch_kSum
   use ftorch_tensor, only: torch_tensor
 
@@ -33,7 +32,7 @@ contains
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
-    integer, optional, intent(in) :: reduction_type
+    integer(c_int), optional, intent(in) :: reduction_type
         !! Reduction type to use over batches (default: torch_kMean)
 
     integer(c_int) :: reduction_type_value
@@ -84,7 +83,7 @@ contains
     type(torch_tensor), intent(inout) :: loss_tensor  !! Tensor to hold the loss value
     type(torch_tensor), intent(in) :: input_tensor  !! Input tensor to evaluate loss at
     type(torch_tensor), intent(in) :: target_tensor  !! Target tensor to evaluate loss against
-    integer, optional, intent(in) :: reduction_type
+    integer(c_int), optional, intent(in) :: reduction_type
         !! Optional reduction type (default: torch_kMean)
 
     integer(c_int) :: reduction_type_value

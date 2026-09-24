@@ -166,8 +166,8 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_c_binding'>iso_c_binding</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -344,7 +344,7 @@ Use <code>torch_tensor_from_array</code> instead. This will be removed in a futu
         <tr>
             <td>
               <span class="anchor" id="variable-layout~14"></span>
-              integer(kind=ftorch_int),
+              integer(kind=int32),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -358,7 +358,7 @@ Use <code>torch_tensor_from_array</code> instead. This will be removed in a futu
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device_type~50"></span>
+              <span class="anchor" id="variable-device_type~49"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -373,7 +373,7 @@ Use <code>torch_tensor_from_array</code> instead. This will be removed in a futu
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device_index~50"></span>
+              <span class="anchor" id="variable-device_index~49"></span>
               integer,
             </td>
 <td>intent(in),</td>
@@ -388,7 +388,7 @@ Use <code>torch_tensor_from_array</code> instead. This will be removed in a futu
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-requires_grad~52"></span>
+              <span class="anchor" id="variable-requires_grad~50"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -672,7 +672,7 @@ implementation in a submodule of an interface in a parent module.
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">torch_tensor_from_array_int32_4d_legacy</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="n">data_in</span><span class="p">,</span><span class="w"> </span><span class="n">layout</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">                                                    </span><span class="n">device_type</span><span class="p">,</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">)</span>
-<span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int64_t</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span>
+<span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="nb">c_loc</span>
 <span class="nb">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iso_fortran_env</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">int32</span>
 
 <span class="w">    </span><span class="c">! output tensor</span>
@@ -683,19 +683,19 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">        </span><span class="c">!! Input data that tensor will point at</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">device_type</span>
 <span class="w">        </span><span class="c">!! Device type the tensor will live on (`torch_kCPU` or a GPU device type)</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ftorch_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">layout</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w">  </span><span class="c">!! Control order of indices</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">layout</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w">  </span><span class="c">!! Control order of indices</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index</span><span class="w">   </span><span class="c">!! Device index for GPU devices</span>
 <span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span>
 <span class="w">        </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
 
 <span class="w">    </span><span class="c">! local data</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="n">ndims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="n">ndims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
 <span class="w">        </span><span class="c">!! Number of dimension of input data</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="n">dtype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_kInt32</span>
 <span class="w">        </span><span class="c">!! Data type</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int64_t</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w">                </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="w">        </span><span class="c">!! Shape of the input tensor</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int64_t</span><span class="p">)</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_strides</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w">                </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_strides</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="w">        </span><span class="c">!! Strides for accessing data appropriately</span>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
 
@@ -708,7 +708,7 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">    </span><span class="n">tensor_strides</span><span class="p">(:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">ndims</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">        </span><span class="n">tensor_strides</span><span class="p">(</span><span class="n">layout</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">        </span><span class="n">tensor_strides</span><span class="p">(</span><span class="n">layout</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_int64</span>
 <span class="w">      </span><span class="k">else</span>
 <span class="k">        </span><span class="n">tensor_strides</span><span class="p">(</span><span class="n">layout</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tensor_strides</span><span class="p">(</span><span class="n">layout</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(</span><span class="n">layout</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
 <span class="w">      </span><span class="k">end if</span>

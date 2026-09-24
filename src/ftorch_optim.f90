@@ -9,7 +9,6 @@ module ftorch_optim
 
   use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
 
-  use ftorch_types, only: ftorch_int
   use ftorch_tensor, only: torch_tensor
 
   implicit none
@@ -117,7 +116,7 @@ contains
         !! Resolved weight_decay value to be passed to the C interface
     logical :: nesterov_value  !! Resolved nesterov value to be passed to the C interface
 
-    integer(ftorch_int) :: i
+    integer(c_int) :: i
     integer(c_int)      :: n_params
     type(c_ptr), dimension(size(parameters)), target  :: parameter_ptrs
 
@@ -205,7 +204,7 @@ contains
         !! Resolved weight_decay value to be passed to the C interface
     logical :: amsgrad_value  !! Resolved amsgrad value to be passed to the C interface
 
-    integer(ftorch_int) :: i
+    integer(c_int) :: i
     integer(c_int)      :: n_params
     type(c_ptr), dimension(size(parameters)), target  :: parameter_ptrs
 
@@ -299,13 +298,13 @@ contains
         !! Resolved weight_decay value to be passed to the C interface
     logical :: amsgrad_value  !! Resolved amsgrad value to be passed to the C interface
 
-    integer(ftorch_int) :: i
+    integer(c_int) :: i
     integer(c_int)      :: n_params
     type(c_ptr), dimension(size(parameters)), target  :: parameter_ptrs
 
     interface
       function torch_optim_AdamW_c(parameters_c, n_params_c, learning_rate_c, &
-                                   beta_1_c, beta_2_c, weight_decay_c, eps_c, amsgrad_c) &
+                                   beta_1_c, beta_2_c, eps_c, weight_decay_c, amsgrad_c) &
           result(optim_c) bind(c, name = "torch_optim_AdamW")
         use, intrinsic :: iso_c_binding, only : c_ptr, c_int, c_double, c_bool
         implicit none

@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.0% of total for procedures.">38 statements</a>
+                 title=" 1.1% of total for procedures.">42 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -312,7 +312,7 @@ modules which it uses.
         <tr>
             <td>
               <span class="anchor" id="variable-ndims~2"></span>
-              integer(kind=c_int),
+              integer(kind=int32),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
@@ -327,14 +327,14 @@ modules which it uses.
         <tr>
             <td>
               <span class="anchor" id="variable-tensor_shape~2"></span>
-              integer(kind=c_int64_t),
+              integer(kind=int64),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
               
             </td>
             <td>::</td>
-            <td><strong>tensor_shape</strong>(:)</td>
+            <td><strong>tensor_shape</strong>(ndims)</td>
             <td>
                 <p>Shape of the tensor</p>
             </td>
@@ -356,7 +356,7 @@ modules which it uses.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device_type~3"></span>
+              <span class="anchor" id="variable-device_type~2"></span>
               integer(kind=c_int),
             </td>
 <td>intent(in)</td>
@@ -371,7 +371,7 @@ modules which it uses.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-device_index~3"></span>
+              <span class="anchor" id="variable-device_index~2"></span>
               integer,
             </td>
 <td>intent(in),</td>
@@ -386,7 +386,7 @@ modules which it uses.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-requires_grad~5"></span>
+              <span class="anchor" id="variable-requires_grad~3"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -830,14 +830,16 @@ implementation in a submodule of an interface in a parent module.
 <span class="w">                                </span><span class="n">device_type</span><span class="p">,</span><span class="w"> </span><span class="n">device_index</span><span class="p">,</span><span class="w"> </span><span class="n">requires_grad</span><span class="p">)</span>
 <span class="w">    </span><span class="k">use</span><span class="p">,</span><span class="w"> </span><span class="k">intrinsic</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">iso_c_binding</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">c_bool</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int</span><span class="p">,</span><span class="w"> </span><span class="kt">c_int64_t</span>
 <span class="kt">    </span><span class="k">type</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor</span><span class="w">     </span><span class="c">!! Returned tensor</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">ndims</span><span class="w">      </span><span class="c">!! Number of dimensions of the tensor</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int64_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(:)</span><span class="w">   </span><span class="c">!! Shape of the tensor</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">ndims</span><span class="w">      </span><span class="c">!! Number of dimensions of the tensor</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(</span><span class="n">ndims</span><span class="p">)</span><span class="w">   </span><span class="c">!! Shape of the tensor</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">dtype</span><span class="w">      </span><span class="c">!! Data type of the tensor</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">      </span><span class="kd">::</span><span class="w"> </span><span class="n">device_type</span>
 <span class="w">        </span><span class="c">!! Device type the tensor will live on (`torch_kCPU` or a GPU device type)</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index</span><span class="w">   </span><span class="c">!! Device index for GPU devices</span>
 <span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">optional</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span>
 <span class="w">        </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w">                  </span><span class="kd">::</span><span class="w"> </span><span class="n">ndims_c_int</span><span class="w">  </span><span class="c">!! C-type ndims</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int64_t</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">tensor_shape_c_int</span><span class="p">(</span><span class="n">ndims</span><span class="p">)</span><span class="w">  </span><span class="c">!! C-type tensor_shape</span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="kt">c_int</span><span class="p">)</span><span class="w">                  </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index_value</span><span class="w">  </span><span class="c">!! device index used</span>
 <span class="w">    </span><span class="kt">logical</span><span class="p">(</span><span class="kt">c_bool</span><span class="p">)</span><span class="w">                 </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad_value</span>
 <span class="w">        </span><span class="c">!! Whether gradients need to be computed for the created tensor</span>
@@ -875,7 +877,11 @@ implementation in a submodule of an interface in a parent module.
 <span class="k">      </span><span class="n">requires_grad_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">requires_grad</span>
 <span class="w">    </span><span class="k">end if</span>
 
-<span class="k">    </span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_empty_c</span><span class="p">(</span><span class="n">ndims</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">,</span><span class="w"> </span><span class="n">dtype</span><span class="p">,</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span><span class="w">          </span><span class="p">&amp;</span>
+<span class="w">    </span><span class="c">! Convert public arguments to C-types</span>
+<span class="w">    </span><span class="n">ndims_c_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ndims</span>
+<span class="w">    </span><span class="n">tensor_shape_c_int</span><span class="p">(:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tensor_shape</span><span class="p">(:)</span>
+
+<span class="w">    </span><span class="n">tensor</span><span class="p">%</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">torch_empty_c</span><span class="p">(</span><span class="n">ndims_c_int</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_shape_c_int</span><span class="p">,</span><span class="w"> </span><span class="n">dtype</span><span class="p">,</span><span class="w"> </span><span class="n">device_type</span><span class="p">,</span><span class="w">   </span><span class="p">&amp;</span>
 <span class="w">                             </span><span class="n">device_index_value</span><span class="p">,</span><span class="w"> </span><span class="n">requires_grad_value</span><span class="p">)</span>
 <span class="w">  </span><span class="k">end subroutine </span><span class="n">torch_tensor_empty</span>
 </pre></div>
