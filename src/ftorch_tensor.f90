@@ -22,11 +22,17 @@ module ftorch_tensor
   type torch_tensor
     type(c_ptr) :: p = c_null_ptr  !! pointer to the tensor in memory
   contains
+    procedure :: rank => torch_tensor_get_rank
     procedure :: get_rank => torch_tensor_get_rank
+    procedure :: shape => torch_tensor_get_shape
     procedure :: get_shape => torch_tensor_get_shape
+    procedure :: stride => torch_tensor_get_stride
     procedure :: get_stride => torch_tensor_get_stride
+    procedure :: dtype => torch_tensor_get_dtype
     procedure :: get_dtype => torch_tensor_get_dtype
+    procedure :: device_type => torch_tensor_get_device_type
     procedure :: get_device_type => torch_tensor_get_device_type
+    procedure :: device_index => torch_tensor_get_device_index
     procedure :: get_device_index => torch_tensor_get_device_index
     procedure :: requires_grad => torch_tensor_requires_grad
     procedure :: zero => torch_tensor_zero
@@ -4774,7 +4780,7 @@ contains
       write(*,*) "Error :: tensor has not been constructed so its shape is unset"
       stop 1
     end if
-    ndims(1) = self%get_rank()
+    ndims(1) = self%rank()
     cptr = torch_tensor_get_sizes_c(self%p)
     call c_f_pointer(cptr, sizes_c_int64_ptr, ndims)
 
@@ -4811,7 +4817,7 @@ contains
       stop 1
     end if
 
-    ndims(1) = self%get_rank()
+    ndims(1) = self%rank()
     cptr = torch_tensor_get_stride_c(self%p)
     call c_f_pointer(cptr, strides_c_int64_ptr, ndims)
 
@@ -4983,8 +4989,8 @@ contains
     end interface
 
     ! Check for rank and shape consistency between the source and target tensors
-    source_rank = source_tensor%get_rank()
-    target_rank = target_tensor%get_rank()
+    source_rank = source_tensor%rank()
+    target_rank = target_tensor%rank()
 
     if (source_rank /= target_rank) then
       write(*,*) "Error in torch_tensor_to :: Cannot move source_tensor to target_tensor &
@@ -4993,8 +4999,8 @@ contains
       stop 1
     end if
 
-    source_shape = source_tensor%get_shape()
-    target_shape = target_tensor%get_shape()
+    source_shape = source_tensor%shape()
+    target_shape = target_tensor%shape()
 
     do i = 1, source_rank
       if (source_shape(i) /= target_shape(i)) then
@@ -5037,15 +5043,15 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, input%get_rank(), input%get_shape(), input%get_dtype(), &
-                              input%get_device_type(), device_index=input%get_device_index(), &
+      call torch_tensor_empty(output, input%rank(), input%shape(), input%dtype(), &
+                              input%device_type(), device_index=input%device_index(), &
                               requires_grad=input%requires_grad())
     else
-      if (input%get_device_type() /= output%get_device_type()) then
+      if (input%device_type() /= output%device_type()) then
         write(*,*) "Error :: cannot assign tensors with different device types"
         stop 1
       end if
-      if (input%get_device_index() /= output%get_device_index()) then
+      if (input%device_index() /= output%device_index()) then
         write(*,*) "Error :: cannot assign tensors with different device indices"
         stop 1
       end if
@@ -5071,19 +5077,19 @@ contains
       end subroutine torch_tensor_add_c
     end interface
 
-    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+    if (tensor1%device_type() /= tensor2%device_type()) then
       write(*,*) "Error :: cannot add tensors with different device types"
       stop 1
     end if
-    if (tensor1%get_device_index() /= tensor2%get_device_index()) then
+    if (tensor1%device_index() /= tensor2%device_index()) then
       write(*,*) "Error :: cannot add tensors with different device indices"
       stop 1
     end if
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
-                              tensor1%get_dtype(), tensor1%get_device_type(), &
-                              device_index=tensor1%get_device_index(), &
+      call torch_tensor_empty(output, tensor1%rank(), tensor1%shape(), &
+                              tensor1%dtype(), tensor1%device_type(), &
+                              device_index=tensor1%device_index(), &
                               requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_add_c(output%p,tensor1%p, tensor2%p)
@@ -5105,8 +5111,8 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+      call torch_tensor_empty(output, tensor%rank(), tensor%shape(), tensor%dtype(), &
+                              tensor%device_type(), device_index=tensor%device_index(), &
                               requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_negative_c(output%p, tensor%p)
@@ -5130,19 +5136,19 @@ contains
       end subroutine torch_tensor_subtract_c
     end interface
 
-    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+    if (tensor1%device_type() /= tensor2%device_type()) then
       write(*,*) "Error :: cannot subtract tensors with different device types"
       stop 1
     end if
-    if (tensor1%get_device_index() /= tensor2%get_device_index()) then
+    if (tensor1%device_index() /= tensor2%device_index()) then
       write(*,*) "Error :: cannot subtract tensors with different device indices"
       stop 1
     end if
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
-                              tensor1%get_dtype(), tensor1%get_device_type(), &
-                              device_index=tensor1%get_device_index(), &
+      call torch_tensor_empty(output, tensor1%rank(), tensor1%shape(), &
+                              tensor1%dtype(), tensor1%device_type(), &
+                              device_index=tensor1%device_index(), &
                               requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_subtract_c(output%p, tensor1%p, tensor2%p)
@@ -5155,19 +5161,19 @@ contains
     type(torch_tensor), intent(in) :: tensor2  !! Second tensor to be multiplied
     type(torch_tensor) :: output               !! Tensor to hold the product
 
-    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+    if (tensor1%device_type() /= tensor2%device_type()) then
       write(*,*) "Error :: cannot multiply tensors with different device types"
       stop 1
     end if
-    if (tensor1%get_device_index() /= tensor2%get_device_index()) then
+    if (tensor1%device_index() /= tensor2%device_index()) then
       write(*,*) "Error :: cannot multiply tensors with different device indices"
       stop 1
     end if
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
-                              tensor1%get_dtype(), tensor1%get_device_type(), &
-                              device_index=tensor1%get_device_index(), &
+      call torch_tensor_empty(output, tensor1%rank(), tensor1%shape(), &
+                              tensor1%dtype(), tensor1%device_type(), &
+                              device_index=tensor1%device_index(), &
                               requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_multiply_c(output%p, tensor1%p, tensor2%p)
@@ -5180,19 +5186,19 @@ contains
     type(torch_tensor), intent(in) :: tensor2  !! Second tensor for the division
     type(torch_tensor) :: output               !! Tensor to hold the quotient
 
-    if (tensor1%get_device_type() /= tensor2%get_device_type()) then
+    if (tensor1%device_type() /= tensor2%device_type()) then
       write(*,*) "Error :: cannot divide tensors with different device types"
       stop 1
     end if
-    if (tensor1%get_device_index() /= tensor2%get_device_index()) then
+    if (tensor1%device_index() /= tensor2%device_index()) then
       write(*,*) "Error :: cannot divide tensors with different device indices"
       stop 1
     end if
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor1%get_rank(), tensor1%get_shape(), &
-                              tensor1%get_dtype(), tensor1%get_device_type(), &
-                              device_index=tensor1%get_device_index(), &
+      call torch_tensor_empty(output, tensor1%rank(), tensor1%shape(), &
+                              tensor1%dtype(), tensor1%device_type(), &
+                              device_index=tensor1%device_index(), &
                               requires_grad=tensor1%requires_grad())
     end if
     call torch_tensor_divide_c(output%p, tensor1%p, tensor2%p)
@@ -5218,8 +5224,8 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+      call torch_tensor_empty(output, tensor%rank(), tensor%shape(), tensor%dtype(), &
+                              tensor%device_type(), device_index=tensor%device_index(), &
                               requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
@@ -5245,8 +5251,8 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+      call torch_tensor_empty(output, tensor%rank(), tensor%shape(), tensor%dtype(), &
+                              tensor%device_type(), device_index=tensor%device_index(), &
                               requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
@@ -5272,8 +5278,8 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+      call torch_tensor_empty(output, tensor%rank(), tensor%shape(), tensor%dtype(), &
+                              tensor%device_type(), device_index=tensor%device_index(), &
                               requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
@@ -5299,8 +5305,8 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+      call torch_tensor_empty(output, tensor%rank(), tensor%shape(), tensor%dtype(), &
+                              tensor%device_type(), device_index=tensor%device_index(), &
                               requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_int_c(output%p, tensor%p, c_loc(power))
@@ -5327,8 +5333,8 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+      call torch_tensor_empty(output, tensor%rank(), tensor%shape(), tensor%dtype(), &
+                              tensor%device_type(), device_index=tensor%device_index(), &
                               requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_float_c(output%p, tensor%p, c_loc(power))
@@ -5354,8 +5360,8 @@ contains
     end interface
 
     if (.not. c_associated(output%p)) then
-      call torch_tensor_empty(output, tensor%get_rank(), tensor%get_shape(), tensor%get_dtype(), &
-                              tensor%get_device_type(), device_index=tensor%get_device_index(), &
+      call torch_tensor_empty(output, tensor%rank(), tensor%shape(), tensor%dtype(), &
+                              tensor%device_type(), device_index=tensor%device_index(), &
                               requires_grad=tensor%requires_grad())
     end if
     call torch_tensor_power_float_c(output%p, tensor%p, c_loc(power))
@@ -5487,14 +5493,14 @@ contains
       end subroutine torch_tensor_backward_without_external_gradient_c
     end interface
 
-    if (tensor%get_rank() == 1) then
+    if (tensor%rank() == 1) then
       ! Accept rank-1 tensors so long as they only have a single entry
-      sizes(:) = tensor%get_shape()
+      sizes(:) = tensor%shape()
       if (sizes(1) /= 1) then
         write(*,*) "Error :: external gradient can only be implicitly created for scalar fields"
         stop 1
       end if
-    else if (tensor%get_rank() /= 0) then
+    else if (tensor%rank() /= 0) then
       ! Disallow anything else except rank-0 tensors (i.e., 0-dim PyTorch scalars)
       write(*,*) "Error :: external gradient can only be implicitly created for scalar fields"
       stop 1
