@@ -3,6 +3,7 @@ author: Jack Atkinson
 date: Last Updated: March 2026
 ordered_subpage: generic_example.md
 ordered_subpage: worked_examples.md
+ordered_subpage: api_equivalents.md
 ordered_subpage: tensor.md
 ordered_subpage: optimizers.md
 ordered_subpage: transposing.md
@@ -11,23 +12,22 @@ ordered_subpage: offline.md
 ordered_subpage: online.md
 ordered_subpage: troubleshooting.md
 
-
 ## Usage
 
 - [Examples](#examples)
-    - [Generic Example](|page|/usage/generic_example.html)
-    - [Worked Examples](|page|/usage/worked_examples.html)
+  - [Generic Example](|page|/usage/generic_example.html)
+  - [Worked Examples](|page|/usage/worked_examples.html)
 - [API Documentation](#api-documentation)
-    - [Tensor API](|page|/usage/tensor.html)
-        - [Transposing data](|page|/usage/transposing.html)
-    - Model API (WIP)
-        - [Batching inference](|page|/usage/batching.html)
-    - [Optimizers API](|page|/usage/optimizers.html)
+  - [API Equivalents](|page|/usage/api_equivalents.html)
+  - [Tensor API](|page|/usage/tensor.html)
+    - [Transposing data](|page|/usage/transposing.html)
+  - Model API (WIP)
+    - [Batching inference](|page|/usage/batching.html)
+  - [Optimizers API](|page|/usage/optimizers.html)
 - [Training](#training)
-    - [Offline](|page|/usage/offline.html)
-    - [Online](|page|/usage/online.html)
+  - [Offline](|page|/usage/offline.html)
+  - [Online](|page|/usage/online.html)
 - [Troubleshooting](|page|/installation/troubleshooting.html)
-
 
 ### Examples
 
@@ -43,15 +43,15 @@ acceleration, with MPI, and more.
 It is advised to work through some of these to check your installation and better
 understand how to use FTorch.
 
-
 ### API Documentation
 
 These pages contain detailed documentation of the various component APIs included in FTorch.
+The [API equivalents table](|page|/usage/api_equivalents.html) provides a
+quick mapping between common PyTorch, libtorch, and FTorch operations.
 Currently there is detail for [Tensors](|page|/usage/tensor.html) and
 [Optimizers](|page|/usage/optimizers.html), with Models being work in progress.
 There is also a page explaining how [batched inference](|page|/usage/batching.html)
 works in FTorch, including key tips.
-
 
 ### Training
 
