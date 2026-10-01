@@ -60,7 +60,7 @@ installed with pip as part of the `dev` dependency group:
 - Python: [ruff](https://docs.astral.sh/ruff/)
 - Shell: [ShellCheck](https://github.com/koalaman/shellcheck)
 - CMake: cmake-lint from [cmake-format](https://github.com/cheshirekow/cmake_format)
-- GitHub Actions workflows: [zizmor](https://woodruffw.github.io/zizmor)
+- GitHub Actions workflows: [zizmor](https://zizmor.sh/)
 
 If you believe a particular rule should not apply to your change, please
 justify this in the pull request.
