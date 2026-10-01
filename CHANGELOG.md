@@ -11,6 +11,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Added a CONTRIBUTING.md to the repository, including policy on use of generative AI
+  in [#636](https://github.com/Cambridge-ICCS/FTorch/pull/636)
 - Introduced torch_tensor_from_array_legacy interface preserving the old layout-required
   signature of torch_tensor_from_array (deprecated) in
   [#604](https://github.com/Cambridge-ICCS/FTorch/pull/604)

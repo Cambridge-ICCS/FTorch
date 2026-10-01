@@ -1,6 +1,6 @@
 title: Developer Guide
 author: Jack Atkinson
-date: Last Updated: October 2025
+date: Last Updated: October 2026
 
 ## Developer Guide
 
@@ -139,6 +139,9 @@ For further information see the
 
 Contributions for new features, bugfixes, or improvements should be raised in a pull
 request.
+General expectations for contributions, including our policy on the use of
+generative AI, are set out in
+[CONTRIBUTING.md](https://github.com/Cambridge-ICCS/FTorch/blob/main/CONTRIBUTING.md).
 
 In addition to making code contributions as [described above](#extending-the-api)
 users should also include [documentation](#documentation), in-code and written if

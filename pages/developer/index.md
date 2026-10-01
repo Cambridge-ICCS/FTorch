@@ -1,6 +1,6 @@
 title: Developer Guide
 author: Jack Atkinson
-date: Last Updated: October 2025
+date: Last Updated: October 2026
 ordered_subpage: developer.md
 ordered_subpage: testing.md
 ordered_subpage: release_checklist.md
@@ -34,6 +34,11 @@ If you have built something that would be useful to others, or can
 address an [open issue](https://github.com/Cambridge-ICCS/FTorch/issues), please
 [fork the repository](https://github.com/Cambridge-ICCS/FTorch/fork) and open a
 [pull request](https://github.com/Cambridge-ICCS/FTorch/pulls).
+
+Before contributing, please read
+[CONTRIBUTING.md](https://github.com/Cambridge-ICCS/FTorch/blob/main/CONTRIBUTING.md),
+which sets out our expectations of pull requests, including our policy on the
+use of generative AI.
 
 #### Code of Conduct
 

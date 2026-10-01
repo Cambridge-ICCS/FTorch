@@ -169,6 +169,9 @@ Copyright &copy; ICCS
 
 Contributions and collaborations are welcome.
 
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details of how to contribute,
+including our expectations of pull requests and policy on the use of generative AI.
+
 For bugs, feature requests, and clear suggestions for improvement please
 [open an issue](https://github.com/Cambridge-ICCS/FTorch/issues).
 
