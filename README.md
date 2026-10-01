@@ -169,6 +169,9 @@ Copyright &copy; ICCS
 
 Contributions and collaborations are welcome.
 
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details of how to contribute,
+including our expectations of pull requests and policy on the use of generative AI.
+
 For bugs, feature requests, and clear suggestions for improvement please
 [open an issue](https://github.com/Cambridge-ICCS/FTorch/issues).
 
@@ -188,6 +191,8 @@ Everyone participating in the _FTorch_ project, and in particular in the
 issue tracker, pull requests, and social media activity, is expected to treat other
 people with respect and, more generally, to follow the guidelines articulated in the
 [Python Community Code of Conduct](https://www.python.org/psf/codeofconduct/).
+
+Please see [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for full details.
 
 
 ## Authors and Acknowledgment
