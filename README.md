@@ -192,6 +192,8 @@ issue tracker, pull requests, and social media activity, is expected to treat ot
 people with respect and, more generally, to follow the guidelines articulated in the
 [Python Community Code of Conduct](https://www.python.org/psf/codeofconduct/).
 
+Please see [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for full details.
+
 
 ## Authors and Acknowledgment
 

@@ -20,7 +20,7 @@ For anything beyond a small fix we encourage you to open (or comment on) an
 issue before starting work, so that the approach can be agreed in advance.
 
 Everyone participating in the project is expected to follow the
-[code of conduct](README.md#code-of-conduct).
+[code of conduct](CODE_OF_CONDUCT.md).
 
 
 ## Development quick reference
