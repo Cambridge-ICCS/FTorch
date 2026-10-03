@@ -14,6 +14,7 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 - Introduced torch_tensor_from_array_legacy interface preserving the old layout-required
   signature of torch_tensor_from_array (deprecated) in
   [#604](https://github.com/Cambridge-ICCS/FTorch/pull/604)
+- Added a PyTorch, libtorch, and FTorch API equivalents reference page in [#635](https://github.com/Cambridge-ICCS/FTorch/pull/635).
 
 ### Changed
 
