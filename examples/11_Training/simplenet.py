@@ -4,7 +4,6 @@ import torch
 
 from ftorch_utils.models import SimpleNet
 
-
 if __name__ == "__main__":
     import argparse
 

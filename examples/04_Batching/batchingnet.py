@@ -6,7 +6,6 @@ import torch
 
 from ftorch_utils.models import BatchingNet
 
-
 if __name__ == "__main__":
     import argparse
 
