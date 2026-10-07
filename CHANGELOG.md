@@ -22,6 +22,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 - Refactored the FTorch API to explicitly take Fortran types instead of C types and
   remove the `ftorch_int` internal type in
   [#628](https://github.com/Cambridge-ICCS/FTorch/pull/628)
+- Dropped `get_` from the `torch_tensor` type-bound methods `get_rank`, `get_shape` etc.
+  to match the Torch API, in [#634](https://github.com/Cambridge-ICCS/FTorch/pull/634).
+  This is a breaking change.
 - Refactored torch_tensor_from_array with `layout` replaced by optional `permute_dims` argument
   matching the semantics of `torch.permute()` permuting the tensor shape and strides
   in [#604](https://github.com/Cambridge-ICCS/FTorch/pull/604).

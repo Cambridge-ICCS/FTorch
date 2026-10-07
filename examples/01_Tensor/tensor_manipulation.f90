@@ -38,8 +38,8 @@ program tensor_manipulation
 
   ! Note that the tensor had memory allocated on the Torch side hence it is represented
   ! in row-major order.
-  write(*,*) "Shape of the ones tensor:", a%get_shape()
-  write(*,*) "Stride of the ones tensor:", a%get_stride()  ! Expected 3, 1 (row-major)
+  write(*,*) "Shape of the ones tensor:", a%shape()
+  write(*,*) "Stride of the ones tensor:", a%stride()  ! Expected 3, 1 (row-major)
 
   ! Print the contents of the tensor
   ! --------------------------------
@@ -63,8 +63,8 @@ program tensor_manipulation
   ! Since FTorch performs no copies, the strides of the tensor will also correspond to column-major
   ! order. This is different from the default behaviour of Torch which builds tensors with row-major
   ! order by default.
-  write(*,*) "Shape of the second tensor from Fortran array:", b%get_shape()   ! Expected: 2 3
-  write(*,*) "Stride of the second tensor from Fortran array:", b%get_stride() ! Expected: 1 2
+  write(*,*) "Shape of the second tensor from Fortran array:", b%shape()   ! Expected: 2 3
+  write(*,*) "Stride of the second tensor from Fortran array:", b%stride() ! Expected: 1 2
   write(*,*)
 
   ! Extract data from the tensor as a Fortran array

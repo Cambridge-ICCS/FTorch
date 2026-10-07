@@ -23,9 +23,9 @@ module unittest_tensor_interrogation_cuda
 
 contains
 
-  ! Unit test for the torch_tensor_get_device_type function applied to a tensor on a CUDA device
+  ! Unit test for the device_type method applied to a tensor on a CUDA device
   @test
-  subroutine test_get_device_type()
+  subroutine test_device_type()
 
     implicit none
 
@@ -34,17 +34,17 @@ contains
     integer(int64), parameter, dimension(ndims) :: tensor_shape = [1]
     integer, parameter :: expected = torch_kCUDA
 
-    ! Create an empty tensor on the CUDA device and check that torch_tensor_get_device_type can get
+    ! Create an empty tensor on the CUDA device and check that the device_type method can get
     ! the device type
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(expected, tensor%get_device_type())
+    @assertEqual(expected, tensor%device_type())
 
-  end subroutine test_get_device_type
+  end subroutine test_device_type
 
-  ! Unit test for the torch_tensor_get_device_index function applied to a tensor on a CUDA device
+  ! Unit test for the device_index method applied to a tensor on a CUDA device
   ! Tensor is created without specifying a device_index so should default to device 0
   @test
-  subroutine test_get_device_index_default()
+  subroutine test_device_index_default()
 
     implicit none
 
@@ -54,10 +54,10 @@ contains
     integer, parameter :: expected = 0
 
     ! Create an empty tensor on the CUDA device with the default device index and check that
-    ! torch_tensor_get_device_index can get the device index
+    ! the device_index method can get the device index
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(expected, tensor%get_device_index())
+    @assertEqual(expected, tensor%device_index())
 
-  end subroutine test_get_device_index_default
+  end subroutine test_device_index_default
 
 end module unittest_tensor_interrogation_cuda

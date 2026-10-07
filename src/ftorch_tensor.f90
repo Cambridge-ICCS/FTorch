@@ -23,17 +23,11 @@ module ftorch_tensor
     type(c_ptr) :: p = c_null_ptr  !! pointer to the tensor in memory
   contains
     procedure :: rank => torch_tensor_get_rank
-    procedure :: get_rank => torch_tensor_get_rank
     procedure :: shape => torch_tensor_get_shape
-    procedure :: get_shape => torch_tensor_get_shape
     procedure :: stride => torch_tensor_get_stride
-    procedure :: get_stride => torch_tensor_get_stride
     procedure :: dtype => torch_tensor_get_dtype
-    procedure :: get_dtype => torch_tensor_get_dtype
     procedure :: device_type => torch_tensor_get_device_type
-    procedure :: get_device_type => torch_tensor_get_device_type
     procedure :: device_index => torch_tensor_get_device_index
-    procedure :: get_device_index => torch_tensor_get_device_index
     procedure :: requires_grad => torch_tensor_requires_grad
     procedure :: zero => torch_tensor_zero
     procedure :: zero_grad => torch_tensor_zero_grad

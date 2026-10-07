@@ -109,10 +109,10 @@ contains
     @assertTrue(c_associated(gpu_tensor%p))
 
     ! Check the tensor properties
-    @assertEqual(expected_stride, gpu_tensor%get_stride())
-    @assertEqual(tensor_shape, gpu_tensor%get_shape())
-    @assertEqual(device_type, gpu_tensor%get_device_type())
-    @assertEqual(device_index, gpu_tensor%get_device_index())
+    @assertEqual(expected_stride, gpu_tensor%stride())
+    @assertEqual(tensor_shape, gpu_tensor%shape())
+    @assertEqual(device_type, gpu_tensor%device_type())
+    @assertEqual(device_index, gpu_tensor%device_index())
 
   end subroutine test_empty
 
@@ -142,10 +142,10 @@ contains
     @assertTrue(c_associated(gpu_tensor%p))
 
     ! Check the tensor properties
-    @assertEqual(expected_stride, gpu_tensor%get_stride())
-    @assertEqual(tensor_shape, gpu_tensor%get_shape())
-    @assertEqual(device_type, gpu_tensor%get_device_type())
-    @assertEqual(device_index, gpu_tensor%get_device_index())
+    @assertEqual(expected_stride, gpu_tensor%stride())
+    @assertEqual(tensor_shape, gpu_tensor%shape())
+    @assertEqual(device_type, gpu_tensor%device_type())
+    @assertEqual(device_index, gpu_tensor%device_index())
 
     ! Create a tensor based off an output array on the CPU host
     call torch_tensor_from_array(cpu_tensor, out_data, host_type)
@@ -185,10 +185,10 @@ contains
     @assertTrue(c_associated(gpu_tensor%p))
 
     ! Check the tensor properties
-    @assertEqual(expected_stride, gpu_tensor%get_stride())
-    @assertEqual(tensor_shape, gpu_tensor%get_shape())
-    @assertEqual(device_type, gpu_tensor%get_device_type())
-    @assertEqual(device_index, gpu_tensor%get_device_index())
+    @assertEqual(expected_stride, gpu_tensor%stride())
+    @assertEqual(tensor_shape, gpu_tensor%shape())
+    @assertEqual(device_type, gpu_tensor%device_type())
+    @assertEqual(device_index, gpu_tensor%device_index())
 
     ! Create a tensor based off an output array on the CPU host
     call torch_tensor_from_array(cpu_tensor, out_data, host_type)

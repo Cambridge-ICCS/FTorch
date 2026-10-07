@@ -103,10 +103,10 @@ deleted, but it will not reflect any later changes to the shape of the tensor.
 @endnote
 
 Procedures for interrogation are implemented as methods as well as stand-alone
-procedures. For example, `tensor%get_rank` can be used in place of
+procedures. For example, `tensor%rank` can be used in place of
 [[ftorch_tensor(module):torch_tensor_get_rank(function)]], omitting the first
 argument (which would be the tensor itself). The naming pattern is similar for
-the other methods (simply drop the preceding `torch_tensor_`).
+the other methods (simply drop the preceding `torch_tensor_get_`).
 
 
 #### Deallocation
