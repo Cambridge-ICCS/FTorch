@@ -249,10 +249,10 @@ the time of the call. This array remains valid even if the tensor is subsequentl
 deleted, but it will not reflect any later changes to the shape of the tensor.</p>
 </div>
 <p>Procedures for interrogation are implemented as methods as well as stand-alone
-procedures. For example, <code>tensor%get_rank</code> can be used in place of
+procedures. For example, <code>tensor%rank</code> can be used in place of
 <a href="../../proc/torch_tensor_get_rank.html">torch_tensor_get_rank</a>, omitting the first
 argument (which would be the tensor itself). The naming pattern is similar for
-the other methods (simply drop the preceding <code>torch_tensor_</code>).</p>
+the other methods (simply drop the preceding <code>torch_tensor_get_</code>).</p>
 <h4 id="deallocation">Deallocation</h4>
 <p>We provide a subroutine for deallocating the memory associated with a
 <a href="../../type/torch_tensor.html">torch_tensor</a> object:

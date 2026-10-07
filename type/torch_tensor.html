@@ -171,14 +171,14 @@
       </a>
       <div id="boundprocs-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_device_index">get_device_index</a>
-            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_device_type">get_device_type</a>
-            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_dtype">get_dtype</a>
-            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_rank">get_rank</a>
-            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_shape">get_shape</a>
-            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-get_stride">get_stride</a>
+            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-device_index">device_index</a>
+            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-device_type">device_type</a>
+            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-dtype">dtype</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-print">print</a>
+            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-rank">rank</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-requires_grad">requires_grad</a>
+            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-shape">shape</a>
+            <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-stride">stride</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-zero">zero</a>
             <a class="list-group-item" href="../type/torch_tensor.html#boundprocedure-zero_grad">zero_grad</a>
         </div>
@@ -391,10 +391,10 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-get_device_index"></span>
+      <span class="anchor" id="boundprocedure-device_index"></span>
       <h3>
           procedure, public ::
-  <strong>get_device_index</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_device_index.html'>torch_tensor_get_device_index</a>
+  <strong>device_index</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_device_index.html'>torch_tensor_get_device_index</a>
         
       </h3>
     </div>
@@ -450,10 +450,10 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-get_device_type"></span>
+      <span class="anchor" id="boundprocedure-device_type"></span>
       <h3>
           procedure, public ::
-  <strong>get_device_type</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_device_type.html'>torch_tensor_get_device_type</a>
+  <strong>device_type</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_device_type.html'>torch_tensor_get_device_type</a>
         
       </h3>
     </div>
@@ -509,10 +509,10 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-get_dtype"></span>
+      <span class="anchor" id="boundprocedure-dtype"></span>
       <h3>
           procedure, public ::
-  <strong>get_dtype</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_dtype.html'>torch_tensor_get_dtype</a>
+  <strong>dtype</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_dtype.html'>torch_tensor_get_dtype</a>
         
       </h3>
     </div>
@@ -559,183 +559,6 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
     <small>integer(kind=c_int)</small>
     </h4>
     <p>Data type of tensor</p>
-
-          </li>
-      </ul>
-  </div>
-
-          </div>
-          <div class="row">
-              <div class="card mt-3">
-    <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-get_rank"></span>
-      <h3>
-          procedure, public ::
-  <strong>get_rank</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_rank.html'>torch_tensor_get_rank</a>
-        
-      </h3>
-    </div>
-      <ul class="list-group">
-          <li class="list-group-item">
-                    <h3>
-    public  function <a href='../proc/torch_tensor_get_rank.html'>torch_tensor_get_rank</a>(self) result(rank)  
-</h3>
-    
-
-  <p>Determines the rank of a tensor.</p>
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" ></span>
-              class(<a href='torch_tensor.html'>torch_tensor</a>),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>self</strong></td>
-            <td>
-<p>Tensor to get the rank of</p>
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>integer(kind=int32)</small>
-    </h4>
-    <p>Rank of tensor</p>
-
-          </li>
-      </ul>
-  </div>
-
-          </div>
-          <div class="row">
-              <div class="card mt-3">
-    <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-get_shape"></span>
-      <h3>
-          procedure, public ::
-  <strong>get_shape</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_shape.html'>torch_tensor_get_shape</a>
-        
-      </h3>
-    </div>
-      <ul class="list-group">
-          <li class="list-group-item">
-                    <h3>
-    public  function <a href='../proc/torch_tensor_get_shape.html'>torch_tensor_get_shape</a>(self) result(sizes)  
-</h3>
-    
-
-  <p>Determines the shape of a tensor.</p>
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" ></span>
-              class(<a href='torch_tensor.html'>torch_tensor</a>),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>self</strong></td>
-            <td>
-<p>Tensor to get the shape of</p>
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>integer(kind=int64), allocatable, (:)</small>
-    </h4>
-    <p>Array holding the shape of the tensor</p>
-
-          </li>
-      </ul>
-  </div>
-
-          </div>
-          <div class="row">
-              <div class="card mt-3">
-    <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-get_stride"></span>
-      <h3>
-          procedure, public ::
-  <strong>get_stride</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_stride.html'>torch_tensor_get_stride</a>
-        
-      </h3>
-    </div>
-      <ul class="list-group">
-          <li class="list-group-item">
-                    <h3>
-    public  function <a href='../proc/torch_tensor_get_stride.html'>torch_tensor_get_stride</a>(self) result(strides)  
-</h3>
-    
-
-  <p>Return the strides of the tensor</p>
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" ></span>
-              class(<a href='torch_tensor.html'>torch_tensor</a>),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>self</strong></td>
-            <td>
-<p>Tensor to get the strides of</p>
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>integer(kind=int64), allocatable, (:)</small>
-    </h4>
-    <p>Array holding the strides of the tensor</p>
 
           </li>
       </ul>
@@ -799,6 +622,65 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-rank"></span>
+      <h3>
+          procedure, public ::
+  <strong>rank</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_rank.html'>torch_tensor_get_rank</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  function <a href='../proc/torch_tensor_get_rank.html'>torch_tensor_get_rank</a>(self) result(rank)  
+</h3>
+    
+
+  <p>Determines the rank of a tensor.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+<p>Tensor to get the rank of</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    <p>Rank of tensor</p>
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
       <span class="anchor" id="boundprocedure-requires_grad"></span>
       <h3>
           procedure, public ::
@@ -849,6 +731,124 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
     <small>logical</small>
     </h4>
     <p>Whether the tensor requires autograd</p>
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-shape"></span>
+      <h3>
+          procedure, public ::
+  <strong>shape</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_shape.html'>torch_tensor_get_shape</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  function <a href='../proc/torch_tensor_get_shape.html'>torch_tensor_get_shape</a>(self) result(sizes)  
+</h3>
+    
+
+  <p>Determines the shape of a tensor.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+<p>Tensor to get the shape of</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64), allocatable, (:)</small>
+    </h4>
+    <p>Array holding the shape of the tensor</p>
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-stride"></span>
+      <h3>
+          procedure, public ::
+  <strong>stride</strong> => <a href='/home/runner/work/FTorch/FTorch/doc/proc/torch_tensor_get_stride.html'>torch_tensor_get_stride</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  function <a href='../proc/torch_tensor_get_stride.html'>torch_tensor_get_stride</a>(self) result(strides)  
+</h3>
+    
+
+  <p>Return the strides of the tensor</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+<p>Tensor to get the strides of</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64), allocatable, (:)</small>
+    </h4>
+    <p>Array holding the strides of the tensor</p>
 
           </li>
       </ul>
@@ -970,12 +970,12 @@ conceptally pure (deletion of a specific C++ Tensor object).</p>
     <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">type </span><span class="n">torch_tensor</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="kt">c_ptr</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">c_null_ptr</span><span class="w">  </span><span class="c">!! pointer to the tensor in memory</span>
 <span class="w">  </span><span class="k">contains</span>
-<span class="k">    procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_rank</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_rank</span>
-<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_shape</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_shape</span>
-<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_stride</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_stride</span>
-<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_dtype</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_dtype</span>
-<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_device_type</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_device_type</span>
-<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_device_index</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_device_index</span>
+<span class="k">    procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_rank</span>
+<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="nb">shape</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_shape</span>
+<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">stride</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_stride</span>
+<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dtype</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_dtype</span>
+<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_type</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_device_type</span>
+<span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">device_index</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_get_device_index</span>
 <span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">requires_grad</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_requires_grad</span>
 <span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_zero</span>
 <span class="w">    </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">zero_grad</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">torch_tensor_zero_grad</span>
