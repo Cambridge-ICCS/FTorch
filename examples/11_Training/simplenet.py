@@ -1,45 +1,8 @@
-"""Module defining a simple PyTorch 'Net' for coupling to Fortran."""
+"""Example using the reusable SimpleNet model from ftorch-utils."""
 
 import torch
-from torch import nn
 
-
-class SimpleNet(nn.Module):
-    """PyTorch module multiplying an input vector by 2."""
-
-    def __init__(
-        self,
-    ) -> None:
-        """
-        Initialize the SimpleNet model.
-
-        Consists of a single Linear layer with weights predefined to
-        multiply the input by 2.
-        """
-        super().__init__()
-        self._fwd_seq = nn.Sequential(
-            nn.Linear(5, 5, bias=False),
-        )
-        with torch.inference_mode():
-            self._fwd_seq[0].weight = nn.Parameter(2.0 * torch.eye(5))
-
-    def forward(self, batch: torch.Tensor) -> torch.Tensor:
-        """
-        Pass ``batch`` through the model.
-
-        Parameters
-        ----------
-        batch : torch.Tensor
-            A mini-batch of input vectors of length 5.
-
-        Returns
-        -------
-        torch.Tensor
-            batch scaled by 2.
-
-        """
-        return self._fwd_seq(batch)
-
+from ftorch_utils.models import SimpleNet
 
 if __name__ == "__main__":
     import argparse
