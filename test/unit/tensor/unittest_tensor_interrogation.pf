@@ -68,163 +68,163 @@ contains
     string = str
   end function toString
 
-  ! Unit test for the torch_tensor_get_rank method of a 1D tensor
+  ! Unit test for the rank method of a 1D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_rank_1D(this)
+  subroutine test_rank_1D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(kind=int64), parameter :: tensor_shape(ndims) = [6]
 
-    ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
+    ! Create a tensor with uninitialised values and check the rank method can correctly
     ! identify its rank
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(ndims, tensor%get_rank())
+    @assertEqual(ndims, tensor%rank())
 
-  end subroutine test_get_rank_1D
+  end subroutine test_rank_1D
 
-  ! Unit test for the torch_tensor_get_rank method of a 2D tensor
+  ! Unit test for the rank method of a 2D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_rank_2D(this)
+  subroutine test_rank_2D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(kind=int64), parameter :: tensor_shape(ndims) = [2,3]
 
-    ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
+    ! Create a tensor with uninitialised values and check the rank method can correctly
     ! identify its rank
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(ndims, tensor%get_rank())
+    @assertEqual(ndims, tensor%rank())
 
-  end subroutine test_get_rank_2D
+  end subroutine test_rank_2D
 
-  ! Unit test for the torch_tensor_get_rank method of a 3D tensor
+  ! Unit test for the rank method of a 3D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_rank_3D(this)
+  subroutine test_rank_3D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
     integer(kind=int64), parameter :: tensor_shape(ndims) = [1,2,3]
 
-    ! Create a tensor with uninitialised values and check torch_tensor_get_rank can correctly
+    ! Create a tensor with uninitialised values and check the rank method can correctly
     ! identify its rank
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(ndims, tensor%get_rank())
+    @assertEqual(ndims, tensor%rank())
 
-  end subroutine test_get_rank_3D
+  end subroutine test_rank_3D
 
-  ! Unit test for the torch_tensor_get_shape method of a 1D tensor
+  ! Unit test for the shape method of a 1D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_shape_1D(this)
+  subroutine test_shape_1D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(kind=int64), parameter :: tensor_shape(ndims) = [6]
 
-    ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
+    ! Create a tensor with uninitialised values and check the shape method can correctly
     ! identify its shape
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertTrue(all(tensor_shape == tensor%get_shape()))
+    @assertTrue(all(tensor_shape == tensor%shape()))
 
-  end subroutine test_get_shape_1D
+  end subroutine test_shape_1D
 
-  ! Unit test for the torch_tensor_get_shape method of a 2D tensor
+  ! Unit test for the shape method of a 2D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_shape_2D(this)
+  subroutine test_shape_2D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(kind=int64), parameter :: tensor_shape(ndims) = [2, 3]
 
-    ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
+    ! Create a tensor with uninitialised values and check the shape method can correctly
     ! identify its shape
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertTrue(all(tensor_shape == tensor%get_shape()))
+    @assertTrue(all(tensor_shape == tensor%shape()))
 
-  end subroutine test_get_shape_2D
+  end subroutine test_shape_2D
 
-  ! Unit test for the torch_tensor_get_shape method of a 3D tensor
+  ! Unit test for the shape method of a 3D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_shape_3D(this)
+  subroutine test_shape_3D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
     integer(kind=int64), parameter :: tensor_shape(ndims) = [1, 2, 3]
 
-    ! Create a tensor with uninitialised values and check torch_tensor_get_shape can correctly
+    ! Create a tensor with uninitialised values and check the shape method can correctly
     ! identify its shape
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertTrue(all(tensor_shape == tensor%get_shape()))
+    @assertTrue(all(tensor_shape == tensor%shape()))
 
-  end subroutine test_get_shape_3D
+  end subroutine test_shape_3D
 
-  ! Unit test for the torch_tensor_get_stride method of a 1D tensor
+  ! Unit test for the stride method of a 1D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_stride_1D(this)
+  subroutine test_stride_1D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(kind=int64), parameter :: tensor_shape(ndims) = [6]
     integer(kind=int64), parameter :: expected_stride(ndims) = [1]
 
-    ! Create a tensor with uninitialised values and check torch_tensor_get_stride can correctly
+    ! Create a tensor with uninitialised values and check the stride method can correctly
     ! identify its stride pattern
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(expected_stride, tensor%get_stride())
+    @assertEqual(expected_stride, tensor%stride())
 
-  end subroutine test_get_stride_1D
+  end subroutine test_stride_1D
 
-  ! Unit test for the torch_tensor_get_stride method of a 2D tensor
+  ! Unit test for the stride method of a 2D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_stride_2D(this)
+  subroutine test_stride_2D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 2
     integer(kind=int64), parameter :: tensor_shape(ndims) = [2,3]
     integer(kind=int64), parameter :: expected_stride(ndims) = [3, 1]
 
-    ! Create a tensor with uninitialised values and check torch_tensor_get_stride can correctly
+    ! Create a tensor with uninitialised values and check the stride method can correctly
     ! identify its stride pattern
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(expected_stride, tensor%get_stride())
+    @assertEqual(expected_stride, tensor%stride())
 
-  end subroutine test_get_stride_2D
+  end subroutine test_stride_2D
 
-  ! Unit test for the torch_tensor_get_stride method of a 3D tensor
+  ! Unit test for the stride method of a 3D tensor
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_stride_3D(this)
+  subroutine test_stride_3D(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 3
     integer(kind=int64), parameter :: tensor_shape(ndims) = [1,2,3]
     integer(kind=int64), parameter :: expected_stride(ndims) = [6, 3, 1]
 
-    ! Create a tensor with uninitialised values and check torch_tensor_get_stride can correctly
+    ! Create a tensor with uninitialised values and check the stride method can correctly
     ! identify its stride pattern
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(expected_stride, tensor%get_stride())
+    @assertEqual(expected_stride, tensor%stride())
 
-  end subroutine test_get_stride_3D
+  end subroutine test_stride_3D
 
-  ! Unit test for the torch_tensor_get_dtype function
+  ! Unit test for the dtype method
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_dtype(this)
+  subroutine test_dtype(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
     integer(int64), parameter, dimension(ndims) :: tensor_shape = [1]
     integer, parameter :: expected = torch_kFloat32
 
-    ! Create an empty tensor for 32-bit floats and check that torch_tensor_get_dtype can get the
-    ! device type
+    ! Create an empty tensor for 32-bit floats and check that the dtype method can get the
+    ! data type
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(expected, tensor%get_dtype())
+    @assertEqual(expected, tensor%dtype())
 
-  end subroutine test_get_dtype
+  end subroutine test_dtype
 
-  ! Unit test for the torch_tensor_get_device_type function applied to a tensor on the CPU
+  ! Unit test for the device_type method applied to a tensor on the CPU
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_device_type(this)
+  subroutine test_device_type(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -232,15 +232,15 @@ contains
     integer, parameter :: expected = torch_kCPU
 
     ! Create an empty tensor on the CPU with the default device type and check that
-    ! torch_tensor_get_device_type can get the device type
+    ! the device_type method can get the device type
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(expected, tensor%get_device_type())
+    @assertEqual(expected, tensor%device_type())
 
-  end subroutine test_get_device_type
+  end subroutine test_device_type
 
-  ! Unit test for the torch_tensor_get_device_index function applied to a tensor on the CPU
+  ! Unit test for the device_index method applied to a tensor on the CPU
   @test(testparameters={get_parameters_short()})
-  subroutine test_get_device_index_default(this)
+  subroutine test_device_index_default(this)
     class(TestCaseType), intent(inout) :: this
     type(torch_tensor) :: tensor
     integer, parameter :: ndims = 1
@@ -248,11 +248,11 @@ contains
     integer, parameter :: expected = -1
 
     ! Create an empty tensor on the CPU with the default device index and check that
-    ! torch_tensor_get_device_index can get the device index
+    ! the device_index method can get the device index
     call torch_tensor_empty(tensor, ndims, tensor_shape, dtype, device_type)
-    @assertEqual(expected, tensor%get_device_index())
+    @assertEqual(expected, tensor%device_index())
 
-  end subroutine test_get_device_index_default
+  end subroutine test_device_index_default
 
   ! Unit test for the default value of the torch_tensor_requires_grad function
   @test(testparameters={get_parameters_short()})

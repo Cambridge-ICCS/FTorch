@@ -38,8 +38,8 @@ program tensor_permutation
   write(*,*) "Corresponding Torch tensor a constructed from in_data:"
   call torch_tensor_print(a)
 
-  write(*,*) "Shape of tensor, a, from in_data:", a%get_shape()   ! Expected: 2 3
-  write(*,*) "Stride of tensor, a, from in_data:", a%get_stride() ! Expected: 1 2 (column-major)
+  write(*,*) "Shape of tensor, a, from in_data:", a%shape()   ! Expected: 2 3
+  write(*,*) "Stride of tensor, a, from in_data:", a%stride() ! Expected: 1 2 (column-major)
   write(*,*)
 
   ! Permuting tensors
@@ -58,8 +58,8 @@ program tensor_permutation
   call torch_tensor_from_array(b, in_data, torch_kCPU, permute_dims=[2, 1])
   write(*,*) "Torch tensor b constructed from in_data with permutation [2, 1]:"
   call torch_tensor_print(b)
-  write(*,*) "Shape of permuted tensor, b:", b%get_shape()   ! Expected: 3 2
-  write(*,*) "Stride of permuted tensor, b:", b%get_stride() ! Expected: 2 1 (row-major)
+  write(*,*) "Shape of permuted tensor, b:", b%shape()   ! Expected: 3 2
+  write(*,*) "Stride of permuted tensor, b:", b%stride() ! Expected: 2 1 (row-major)
   write(*,*)
 
   ! Note that the permute_dims argument is validated: it must be a permutation of
@@ -96,12 +96,12 @@ program tensor_permutation
   ! strides from the RHS and will be constructed with C-style row-major ordering.
   ! The shape and values of each element are copied.
   e = a  ! Create Torch tensor e not associated to a Fortran array
-  write(*,*) "Shape of FTorch-constructed tensor, a:", a%get_shape()   ! Expected: 2 3
-  write(*,*) "Stride of FTorch-constructed tensor, a:", a%get_stride() ! Expected: 1 2
+  write(*,*) "Shape of FTorch-constructed tensor, a:", a%shape()   ! Expected: 2 3
+  write(*,*) "Stride of FTorch-constructed tensor, a:", a%stride() ! Expected: 1 2
   write(*,*) "Contents of Torch tensor a:"
   call torch_tensor_print(a)
-  write(*,*) "Shape of copied Torch tensor, e:", e%get_shape()   ! Expected: 2 3
-  write(*,*) "Stride of copied Torch tensor, e:", e%get_stride() ! Expected: 3 1
+  write(*,*) "Shape of copied Torch tensor, e:", e%shape()   ! Expected: 2 3
+  write(*,*) "Stride of copied Torch tensor, e:", e%stride() ! Expected: 3 1
   write(*,*) "Contents of Torch tensor e:"
   call torch_tensor_print(e)
   write(*,*)
@@ -142,7 +142,7 @@ program tensor_permutation
   !    For details on implementation see the source code and torch_tensor_from_blob.
   write(*,*) "Torch tensor a appearing identical to the Fortran array:"
   call a%print()
-  write(*,*) "Stride of tensor a:", a%get_stride()
+  write(*,*) "Stride of tensor a:", a%stride()
   write(*,*)
 
   ! 4. If we wanted, instead, for the Torch tensor to be constructed with native
@@ -152,7 +152,7 @@ program tensor_permutation
   write(*,*) "Permuted Torch tensor b (involution, appearing to Torch as a transpose &
              &of the Fortran array):"
   call b%print()
-  write(*,*) "Stride of tensor b:", b%get_stride()
+  write(*,*) "Stride of tensor b:", b%stride()
   write(*,*)
 
   ! Clean up

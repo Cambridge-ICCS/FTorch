@@ -40,8 +40,8 @@ program autograd_simplenet
   call torch_tensor_from_array(in_tensors(1), in_array, torch_kCPU, requires_grad=.true.)
 
   ! Initialise Torch Tensors for the model outputs, typically referred to as the model loss
-  call torch_tensor_empty(loss_tensors(1), ndims, in_tensors(1)%get_shape(), &
-                          in_tensors(1)%get_dtype(), torch_kCPU)
+  call torch_tensor_empty(loss_tensors(1), ndims, in_tensors(1)%shape(), &
+                          in_tensors(1)%dtype(), torch_kCPU)
 
   ! Load the model from file
   call torch_model_load(model, trim(filename), torch_kCPU)
@@ -71,8 +71,8 @@ program autograd_simplenet
   ! the full gradient in one backpropagation by choosing a tensor filled with ones.
   ! NOTE: An external gradient is required when calling backpropagation on a torch_tensor, except
   !       when it is scalar-valued. In that case, the external gradient defaults to one.
-  call torch_tensor_ones(external_gradient, ndims, loss_tensors(1)%get_shape(), &
-                         loss_tensors(1)%get_dtype(), torch_kCPU)
+  call torch_tensor_ones(external_gradient, ndims, loss_tensors(1)%shape(), &
+                         loss_tensors(1)%dtype(), torch_kCPU)
 
   ! Run the backpropagation operator
   ! This will perform backpropogation on the computational graph from x to y, setting the `grad`
