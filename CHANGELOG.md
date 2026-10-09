@@ -34,6 +34,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 - Introduced torch_tensor_from_array_legacy interface preserving the old layout-required
   signature of torch_tensor_from_array (deprecated) in
   [#604](https://github.com/Cambridge-ICCS/FTorch/pull/604)
+- Added an example (13_GPUPointer) using CUDA Fortran to check whether a
+  torch_tensor can be constructed directly on the GPU by passing a GPU device
+  pointer to torch_tensor_from_blob
 
 ### Changed
 

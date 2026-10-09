@@ -39,6 +39,22 @@ This directory contains a number of examples of how to use the library:
       demonstrate automatic differentiation in FTorch by leveraging PyTorch's
       Autograd module.
 
+10. Optimizers
+    - Demonstrates how to use FTorch's interface to PyTorch optimizers.
+
+11. Training
+    - End-to-end training of a neural net from Fortran using FTorch.
+
+12. Permutation
+    - Demonstrates permuting tensor dimensions with `permute_dims` and how
+      Fortran's column-major memory layout relates to Torch's row-major layout.
+
+13. GPUPointer
+    - Explores whether a `torch_tensor` can be constructed directly on the GPU
+      by passing a GPU device pointer to `torch_tensor_from_blob`, using an
+      array defined with CUDA Fortran. Requires an NVIDIA GPU, a CUDA Fortran
+      capable compiler, and an FTorch build with `-DGPU_DEVICE=CUDA`.
+
 To run select examples as integration tests, use the CMake argument
 ```
 -DCMAKE_BUILD_TESTS=TRUE
