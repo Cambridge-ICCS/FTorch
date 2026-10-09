@@ -26,4 +26,12 @@ if(CMAKE_BUILD_TESTS)
   add_subdirectory(10_Optimizers)
   add_subdirectory(11_Training)
   add_subdirectory(12_Permutation)
+  # NOTE: This example is built only when CUDA support is enabled since it
+  #       uses CUDA Fortran to allocate arrays on the GPU and requires a
+  #       CUDA Fortran capable compiler (e.g. nvfortran)
+  if("${GPU_DEVICE}" STREQUAL "CUDA")
+    add_subdirectory(13_GPUPointer)
+  else()
+    message(STATUS "Skipping GPU pointer integration tests (no CUDA support)")
+  endif()
 endif()
