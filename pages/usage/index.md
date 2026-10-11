@@ -5,6 +5,7 @@ ordered_subpage: generic_example.md
 ordered_subpage: worked_examples.md
 ordered_subpage: tensor.md
 ordered_subpage: optimizers.md
+ordered_subpage: api_equivalents.md
 ordered_subpage: transposing.md
 ordered_subpage: batching.md
 ordered_subpage: offline.md
@@ -23,6 +24,7 @@ ordered_subpage: troubleshooting.md
     - Model API (WIP)
         - [Batching inference](|page|/usage/batching.html)
     - [Optimizers API](|page|/usage/optimizers.html)
+    - [API Equivalents](|page|/usage/api_equivalents.html)
 - [Training](#training)
     - [Offline](|page|/usage/offline.html)
     - [Online](|page|/usage/online.html)
@@ -51,6 +53,8 @@ Currently there is detail for [Tensors](|page|/usage/tensor.html) and
 [Optimizers](|page|/usage/optimizers.html), with Models being work in progress.
 There is also a page explaining how [batched inference](|page|/usage/batching.html)
 works in FTorch, including key tips.
+The [API equivalents table](|page|/usage/api_equivalents.html) provides a
+quick mapping between common PyTorch, libtorch, and FTorch types and operations.
 
 
 ### Training
