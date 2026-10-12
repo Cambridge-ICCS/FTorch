@@ -12,6 +12,7 @@ module ftorch
 
   use ftorch_tensor, only: torch_tensor, &  !--------------- (type)
                            torch_tensor_from_array, &  !---- (constructors)
+                           torch_tensor_from_array_legacy, &
                            torch_tensor_from_blob, &
                            torch_tensor_empty, &
                            torch_tensor_zeros, &
