@@ -7,7 +7,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For specific details see the [FTorch online documentation](https://cambridge-iccs.github.io/FTorch/page/developer.html#versioning-and-changelog).
 
-## [Unreleased](https://github.com/Cambridge-ICCS/FTorch/compare/v1.2.0...HEAD)
+## [Unreleased](https://github.com/Cambridge-ICCS/FTorch/compare/v2.0.0...HEAD)
+
+### Added
+
+### Changed
+
+### Removed
+
+### Fixed
+
+### Patch Releases
+
+
+## [2.0.0](https://github.com/Cambridge-ICCS/FTorch/releases/tag/v2.0.0) - 2026-10-12
+
+[GitHub diff with v1.2.0](https://github.com/Cambridge-ICCS/FTorch/compare/v1.2.0...v2.0.0)
 
 ### Added
 
