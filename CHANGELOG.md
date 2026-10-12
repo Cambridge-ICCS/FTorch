@@ -48,6 +48,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Fixed
 
+- Fixed internal argument order when calling the AdamW optimizer from C in
+  [#628](https://github.com/Cambridge-ICCS/FTorch/pull/628)
+
 ### Patch Releases
 
 
