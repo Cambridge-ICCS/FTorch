@@ -31,6 +31,9 @@ consistently and correctly.
 1. Update the `pyproject.toml`
     1. Change `version = "X.Y.Z"`
     1. Add the `pyproject.toml` to the git staging index
+1. Update the `CITATION.cff`
+    1. Set `version: X.Y.Z` and `date-released: yyyy-mm-dd`
+    1. Add the `CITATION.cff` to the git staging index
 1. Update code on the git remote:
     1. Commit the updated version files with message:
        `Update version number for release vX.Y.Z`
