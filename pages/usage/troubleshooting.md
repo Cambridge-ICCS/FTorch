@@ -160,36 +160,40 @@ or slice as an argument, or mismatching integer kinds), see the sections above.
 
 The recommended fix is to update your calls to the new signature in one of the following ways:
 
-1) If your Fortran and Torch arrays used the default layout indexing (`[1, 2, ..., n]`)
-   you can omit `layout` and `permute_dims` entirely:
-   ```fortran
-   ! Old
-   call torch_tensor_from_array(tensor, data, [1, ..., n], torch_kCPU)
+If your Fortran and Torch arrays used the default layout indexing (`[1, 2, ..., n]`)
+you can omit `layout` and `permute_dims` entirely:
+```fortran
+! Old
+call torch_tensor_from_array(tensor, data, [1, ..., n], torch_kCPU)
 
-   ! New
-   call torch_tensor_from_array(tensor, data, torch_kCPU)
-   ```
-2) If you were doing a transpose of a square tensor update your call to use `permute_dims`:
-   ```fortran
-   ! Old
-   call torch_tensor_from_array(tensor, data, [n, ..., 1], torch_kCPU)
-   
-   ! New
-   call torch_tensor_from_array(tensor, data, torch_kCPU, permute_dims=[n, ..., 1])
-   ```
-3) If you rely on unintended behaviour of `layout` then the old call is still available
-   through [[ftorch_tensor(module):torch_tensor_from_array_legacy(interface)]], but
-   note that this will be removed completely in the future:
-   ```fortran
-   ! Old
-   call torch_tensor_from_array(tensor, data, tensor_layout, torch_kCPU)
-   
-   ! New
-   call torch_tensor_from_array_legacy(tensor, data, tensor_layout, torch_kCPU)
-   ```
-4) If you need deeper control over exactly how you want the data to appear in Torch
-   (the shape and strides) and know what you are doing with memory and array layouts,
-   you can use [[ftorch_tensor(module):torch_tensor_from_blob(subroutine)]].
+! New
+call torch_tensor_from_array(tensor, data, torch_kCPU)
+```
+
+If you were doing a transpose of a square tensor update your call to use `permute_dims`:
+```fortran
+! Old
+call torch_tensor_from_array(tensor, data, [n, ..., 1], torch_kCPU)
+
+! New
+call torch_tensor_from_array(tensor, data, torch_kCPU, permute_dims=[n, ..., 1])
+```
+
+If you rely on unintended behaviour of `layout` then the old call is still available
+through [[ftorch_tensor(module):torch_tensor_from_array_legacy(interface)]], but
+note that this will be removed completely in the future:
+
+```fortran
+! Old
+call torch_tensor_from_array(tensor, data, tensor_layout, torch_kCPU)
+
+! New
+call torch_tensor_from_array_legacy(tensor, data, tensor_layout, torch_kCPU)
+```
+
+If you need deeper control over exactly how you want the data to appear in Torch
+(the shape and strides) and know what you are doing with memory and array layouts,
+you can use [[ftorch_tensor(module):torch_tensor_from_blob(subroutine)]].
 
 
 #### Segmentation faults
