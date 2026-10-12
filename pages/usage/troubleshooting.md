@@ -12,6 +12,7 @@ If you are experiencing problems building or using FTorch please see below for g
     - [Segmentation faults](#segmentation-faults)
      - [Unit test segfaults with flang](#unit-test-segfaults-with-flang)
 - [Common warnings](#common-warnings)
+- [Migrating from v1 to v2](#migrating-from-v1-to-v2)
 
 
 ### Usage
@@ -258,3 +259,63 @@ See the [tensor documentation](|page|/usage/tensor.html#deallocation) for more
 details on the memory management of tensors and the use of the finalizer. For
 technical details on `f08/0011`, we refer to
 [https://wg5-fortran.org/N2001-N2050/N2006.txt](https://wg5-fortran.org/N2001-N2050/N2006.txt).
+
+
+## Migrating from v1 to v2
+
+FTorch v2.0 introduced a small number of breaking changes to the Fortran API.
+If you are upgrading an existing codebase from FTorch v1.x you may need to make
+the following updates.
+
+#### Renamed `torch_tensor` type-bound methods
+
+The type-bound methods of the
+[[ftorch_tensor(module):torch_tensor(type)]] type were renamed to match the
+Torch API, dropping the `get_` prefix:
+
+| Old (v1)              | New (v2)          |
+|-----------------------|-------------------|
+| `tensor%get_rank()`   | `tensor%rank()`   |
+| `tensor%get_shape()`  | `tensor%shape()`  |
+| `tensor%get_stride()` | `tensor%stride()` |
+| `tensor%get_dtype()`  | `tensor%dtype()`  |
+| `tensor%get_device_type()`  | `tensor%device_type()`  |
+| `tensor%get_device_index()` | `tensor%device_index()` |
+
+Note that only the type-bound (i.e., `%`) method names changed. The standalone
+procedures such as
+[[ftorch_tensor(module):torch_tensor_get_rank(function)]] and
+[[ftorch_tensor(module):torch_tensor_get_shape(function)]] retain their
+original names and are unaffected.
+
+If you see compile errors reporting that a tensor has no type-bound procedure
+named, e.g., `get_rank` after upgrading, apply the rename above.
+
+#### `layout` argument of `torch_tensor_from_array` replaced by `permute_dims`
+
+The positional `layout` argument of
+[[ftorch_tensor(module):torch_tensor_from_array(interface)]] has been replaced
+by an optional `permute_dims` keyword argument with semantics matching
+`torch.permute()`. In many cases the `layout` argument can simply be dropped. See the
+[detailed migration guidance](#no-specific-subroutine-deprecated-torch_tensor_from_array-signature)
+above for solutions covering various cases.
+
+The old `layout` signature remains available via the deprecated
+[[ftorch_tensor(module):torch_tensor_from_array_legacy(interface)]], which can
+be imported from the `ftorch` module and will be removed in a future release.
+
+#### Integer kinds
+
+FTorch now uses explicit Fortran integer kinds from `iso_fortran_env` rather
+than C types. Tensor shapes and strides use 64-bit integers (`int64`), whilst
+dimension counts, `device_index`, and `permute_dims` use default (32-bit)
+integers. See the
+[integer kinds guidance](#no-specific-subroutine-integer-kinds-used-by-ftorch)
+above for details and common error messages.
+
+#### Build requirements
+
+FTorch now requires a C++ compiler with full C++20 support, as required by
+recent PyTorch versions. As a result, gfortran versions 9 and 10 are no longer
+supported; please use GCC 11 or newer. See the
+[installation documentation](|page|/installation/general.html) for details.
