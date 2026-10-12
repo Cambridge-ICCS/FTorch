@@ -68,7 +68,7 @@ For all constructors, shape and stride arguments are passed as arrays of 64-bit
 integers (kind `int64` from the `iso_fortran_env` intrinsic module).
 This matches how Torch represents sizes internally.
 Dimension counts (`ndims`), `device_index`, and `permute_dims` use default (32-bit)
-integers alllowing literals such as `permute_dims=[2, 1]` to be passed directly.
+integers allowing literals such as `permute_dims=[2, 1]` to be passed directly.
 If in doubt check the API documentation for types.
 @endnote
 
