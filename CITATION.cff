@@ -3,14 +3,14 @@ authors:
 - family-names: Atkinson
   given-names: Jack
   orcid: "https://orcid.org/0000-0001-5001-4812"
+- family-names: Wallwork
+  given-names: Joseph G.
+  orcid: "https://orcid.org/0000-0002-3646-091X"
 - family-names: Elafrou
   given-names: Athena
 - family-names: Kasoar
   given-names: Elliott
   orcid: "https://orcid.org/0009-0005-2015-9478"
-- family-names: Wallwork
-  given-names: Joseph G.
-  orcid: "https://orcid.org/0000-0002-3646-091X"
 - family-names: Meltzer
   given-names: Thomas
   orcid: "https://orcid.org/0000-0003-1740-9550"
@@ -27,7 +27,9 @@ contact:
 - family-names: Atkinson
   given-names: Jack
   orcid: "https://orcid.org/0000-0001-5001-4812"
-doi: 10.5281/zenodo.14968153
+doi: 10.5281/zenodo.12594776
+version: 2.0.0
+date-released: 2026-10-12
 message: If you use this software, please cite our article in the
   Journal of Open Source Software.
 preferred-citation:
