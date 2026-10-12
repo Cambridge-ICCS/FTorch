@@ -164,6 +164,7 @@
 </ul>
 </li>
 <li><a href="#common-warnings">Common warnings</a></li>
+<li><a href="#migrating-from-v1-to-v2">Migrating from v1 to v2</a></li>
 </ul>
 <h3 id="usage">Usage</h3>
 <h5 id="why-are-inputsoutputs-tofrom-torch-models-arrays">Why are inputs/outputs to/from torch models arrays?</h5>
@@ -290,29 +291,36 @@ is deprecated and will be removed in a future version.</p>
 or slice as an argument, or mismatching integer kinds), see the sections above.</p>
 </div>
 <p>The recommended fix is to update your calls to the new signature in one of the following ways:</p>
-<p>1) If your Fortran and Torch arrays used the default layout indexing (<code>[1, 2, ..., n]</code>)
-   you can omit <code>layout</code> and <code>permute_dims</code> entirely:
-   ```fortran
-   ! Old
-   call torch_tensor_from_array(tensor, data, [1, ..., n], torch_kCPU)</p>
-<p>! New
-   call torch_tensor_from_array(tensor, data, torch_kCPU)
-   <code>2) If you were doing a transpose of a square tensor update your call to use `permute_dims`:</code>fortran
-   ! Old
-   call torch_tensor_from_array(tensor, data, [n, ..., 1], torch_kCPU)</p>
-<p>! New
-   call torch_tensor_from_array(tensor, data, torch_kCPU, permute_dims=[n, ..., 1])
-   <code>3) If you rely on unintended behaviour of `layout` then the old call is still available
-   through [[ftorch_tensor(module):torch_tensor_from_array_legacy(interface)]], but
-   note that this will be removed completely in the future:</code>fortran
-   ! Old
-   call torch_tensor_from_array(tensor, data, tensor_layout, torch_kCPU)</p>
-<p>! New
-   call torch_tensor_from_array_legacy(tensor, data, tensor_layout, torch_kCPU)
-   ```
-4) If you need deeper control over exactly how you want the data to appear in Torch
-   (the shape and strides) and know what you are doing with memory and array layouts,
-   you can use <a href="../../proc/torch_tensor_from_blob.html">torch_tensor_from_blob</a>.</p>
+<p>If your Fortran and Torch arrays used the default layout indexing (<code>[1, 2, ..., n]</code>)
+you can omit <code>layout</code> and <code>permute_dims</code> entirely:</p>
+<div class="codehilite"><pre><span></span><code><span class="c">! Old</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">...,</span><span class="w"> </span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+
+<span class="c">! New</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+</code></pre></div>
+
+<p>If you were doing a transpose of a square tensor update your call to use <code>permute_dims</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c">! Old</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="p">...,</span><span class="w"> </span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+
+<span class="c">! New</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">,</span><span class="w"> </span><span class="n">permute_dims</span><span class="o">=</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="p">...,</span><span class="w"> </span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
+
+<p>If you rely on unintended behaviour of <code>layout</code> then the old call is still available
+through <a href="../../interface/torch_tensor_from_array_legacy.html">torch_tensor_from_array_legacy</a>, but
+note that this will be removed completely in the future:</p>
+<div class="codehilite"><pre><span></span><code><span class="c">! Old</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+
+<span class="c">! New</span>
+<span class="k">call </span><span class="n">torch_tensor_from_array_legacy</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">tensor_layout</span><span class="p">,</span><span class="w"> </span><span class="n">torch_kCPU</span><span class="p">)</span>
+</code></pre></div>
+
+<p>If you need deeper control over exactly how you want the data to appear in Torch
+(the shape and strides) and know what you are doing with memory and array layouts,
+you can use <a href="../../proc/torch_tensor_from_blob.html">torch_tensor_from_blob</a>.</p>
 <h4 id="segmentation-faults">Segmentation faults</h4>
 <h5 id="missing-import-for-overloaded-assignment-operator">Missing import for overloaded assignment operator</h5>
 <p>Whenever you execute code involving
@@ -369,6 +377,77 @@ associated warning.</p>
 details on the memory management of tensors and the use of the finalizer. For
 technical details on <code>f08/0011</code>, we refer to
 <a href="https://wg5-fortran.org/N2001-N2050/N2006.txt">https://wg5-fortran.org/N2001-N2050/N2006.txt</a>.</p>
+<h2 id="migrating-from-v1-to-v2">Migrating from v1 to v2</h2>
+<p>FTorch v2.0 introduced a small number of breaking changes to the Fortran API.
+If you are upgrading an existing codebase from FTorch v1.x you may need to make
+the following updates.</p>
+<h4 id="renamed-torch_tensor-type-bound-methods">Renamed <code>torch_tensor</code> type-bound methods</h4>
+<p>The type-bound methods of the
+<a href="../../type/torch_tensor.html">torch_tensor</a> type were renamed to match the
+Torch API, dropping the <code>get_</code> prefix:</p>
+<table>
+<thead>
+<tr>
+<th>Old (v1)</th>
+<th>New (v2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tensor%get_rank()</code></td>
+<td><code>tensor%rank()</code></td>
+</tr>
+<tr>
+<td><code>tensor%get_shape()</code></td>
+<td><code>tensor%shape()</code></td>
+</tr>
+<tr>
+<td><code>tensor%get_stride()</code></td>
+<td><code>tensor%stride()</code></td>
+</tr>
+<tr>
+<td><code>tensor%get_dtype()</code></td>
+<td><code>tensor%dtype()</code></td>
+</tr>
+<tr>
+<td><code>tensor%get_device_type()</code></td>
+<td><code>tensor%device_type()</code></td>
+</tr>
+<tr>
+<td><code>tensor%get_device_index()</code></td>
+<td><code>tensor%device_index()</code></td>
+</tr>
+</tbody>
+</table>
+<p>Note that only the type-bound (i.e., <code>%</code>) method names changed. The standalone
+procedures such as
+<a href="../../proc/torch_tensor_get_rank.html">torch_tensor_get_rank</a> and
+<a href="../../proc/torch_tensor_get_shape.html">torch_tensor_get_shape</a> retain their
+original names and are unaffected.</p>
+<p>If you see compile errors reporting that a tensor has no type-bound procedure
+named, e.g., <code>get_rank</code> after upgrading, apply the rename above.</p>
+<h4 id="layout-argument-of-torch_tensor_from_array-replaced-by-permute_dims"><code>layout</code> argument of <code>torch_tensor_from_array</code> replaced by <code>permute_dims</code></h4>
+<p>The positional <code>layout</code> argument of
+<a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> has been replaced
+by an optional <code>permute_dims</code> keyword argument with semantics matching
+<code>torch.permute()</code>. In many cases the <code>layout</code> argument can simply be dropped. See the
+<a href="#no-specific-subroutine-deprecated-torch_tensor_from_array-signature">detailed migration guidance</a>
+above for solutions covering various cases.</p>
+<p>The old <code>layout</code> signature remains available via the deprecated
+<a href="../../interface/torch_tensor_from_array_legacy.html">torch_tensor_from_array_legacy</a>, which can
+be imported from the <code>ftorch</code> module and will be removed in a future release.</p>
+<h4 id="integer-kinds">Integer kinds</h4>
+<p>FTorch now uses explicit Fortran integer kinds from <code>iso_fortran_env</code> rather
+than C types. Tensor shapes and strides use 64-bit integers (<code>int64</code>), whilst
+dimension counts, <code>device_index</code>, and <code>permute_dims</code> use default (32-bit)
+integers. See the
+<a href="#no-specific-subroutine-integer-kinds-used-by-ftorch">integer kinds guidance</a>
+above for details and common error messages.</p>
+<h4 id="build-requirements">Build requirements</h4>
+<p>FTorch now requires a C++ compiler with full C++20 support, as required by
+recent PyTorch versions. As a result, gfortran versions 9 and 10 are no longer
+supported; please use GCC 11 or newer. See the
+<a href="../installation/general.html">installation documentation</a> for details.</p>
     </div>
   </div>
       <hr>
