@@ -19,6 +19,7 @@ on:
       - '**.f90'
       - '**.F90'
       - '**.py'
+      - '**.sh'
       # Unit tests
       - '**.pf'
       # Build system
