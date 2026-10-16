@@ -1,4 +1,4 @@
-# Workflow to run the FTorch test suite on a CUDA enabled runner with the GNU compiler
+# Workflow to run the FTorch test suite on a CUDA enabled runner with the GNU compiler (and NVIDIA compiler for CUDA Fortran examples)
 name: Test suite (Ubuntu CUDA)
 
 # Controls when the workflow will run
@@ -35,6 +35,8 @@ on:
       - 'examples/07_MultiGPU/*.py'
       - 'examples/07_MultiGPU/*.f90'
       - 'examples/07_MultiGPU/CMakeLists.txt'
+      - 'examples/13_GPUPointer/*.f90'
+      - 'examples/13_GPUPointer/CMakeLists.txt'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -148,3 +150,37 @@ jobs:
           . ftorch/bin/activate
           cd build
           ctest --verbose --tests-regex example_multigpu
+
+      # NOTE: The GPU pointer example uses CUDA Fortran, which requires the NVIDIA
+      #       compiler. Fortran module files are compiler-specific, so FTorch is
+      #       rebuilt with nvfortran (without unit tests) for this example.
+      - name: Install NVIDIA HPC SDK
+        run: |
+          curl -fsSL https://developer.download.nvidia.com/hpc-sdk/ubuntu/DEB-GPG-KEY-NVIDIA-HPC-SDK \
+            | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-hpcsdk-archive-keyring.gpg
+          echo 'deb [signed-by=/usr/share/keyrings/nvidia-hpcsdk-archive-keyring.gpg] https://developer.download.nvidia.com/hpc-sdk/ubuntu/amd64 /' \
+            | sudo tee /etc/apt/sources.list.d/nvhpc.list
+          sudo apt update
+          sudo apt install -y nvhpc-25-9
+
+      - name: Build FTorch with nvfortran and run GPU pointer example
+        run: |
+          export NVHPC_BIN=$(ls -d /opt/nvidia/hpc_sdk/Linux_x86_64/*/compilers/bin | tail -n 1)
+          export PATH=/usr/local/cuda/bin:${NVHPC_BIN}:$PATH
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
+          export BUILD_DIR=$(pwd)/build_nvfortran
+          mkdir -p ${BUILD_DIR}
+          cd ${BUILD_DIR}
+          cmake .. \
+            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_Fortran_COMPILER=nvfortran \
+            -DFTORCH_BUILD_UNIT_TESTS=OFF \
+            -DFTORCH_BUILD_INTEGRATION_TESTS=ON \
+            -DGPU_DEVICE=CUDA \
+            -DMULTI_GPU=OFF \
+            -DCMAKE_PREFIX_PATH="${Torch_DIR}"
+          cmake --build . -j 4
+          ctest --verbose --tests-regex example_gpu_tensor_pointer
