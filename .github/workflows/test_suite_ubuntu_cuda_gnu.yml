@@ -35,6 +35,8 @@ on:
       - 'examples/07_MultiGPU/*.py'
       - 'examples/07_MultiGPU/*.f90'
       - 'examples/07_MultiGPU/CMakeLists.txt'
+      - 'examples/13_GPUPointer/*.f90'
+      - 'examples/13_GPUPointer/CMakeLists.txt'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
