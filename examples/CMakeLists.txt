@@ -29,9 +29,13 @@ if(CMAKE_BUILD_TESTS)
   # NOTE: This example is built only when CUDA support is enabled since it
   #       uses CUDA Fortran to allocate arrays on the GPU and requires a
   #       CUDA Fortran capable compiler (e.g. nvfortran)
-  if("${GPU_DEVICE}" STREQUAL "CUDA")
+  if("${GPU_DEVICE}" STREQUAL "CUDA" AND CMAKE_Fortran_COMPILER_ID MATCHES
+                                         "NVHPC|PGI")
     add_subdirectory(13_GPUPointer)
   else()
-    message(STATUS "Skipping GPU pointer integration tests (no CUDA support)")
+    message(
+      STATUS
+        "Skipping GPU pointer integration tests (requires CUDA support and nvfortran)"
+    )
   endif()
 endif()
