@@ -1,0 +1,84 @@
+!| Unit tests for FTorch's L1 loss (mean absolute error).
+!
+!  * License
+!    FTorch is released under an MIT license.
+!    See the [LICENSE](https://github.com/Cambridge-ICCS/FTorch/blob/main/LICENSE)
+!    file for details.
+module unittest_loss_l1
+  use funit
+  use ftorch_devices, only: torch_kCPU
+  use ftorch_types, only: torch_kNone, torch_kMean, torch_kSum
+  use ftorch_tensor, only: torch_tensor, torch_tensor_from_array
+  use ftorch_loss, only: torch_loss_l1
+  use ftorch_test_utils, only: allclose
+  use, intrinsic :: iso_fortran_env, only: sp => real32
+
+  implicit none
+
+  public
+
+  integer, parameter :: wp = sp
+  integer, parameter :: device_type = torch_kCPU
+
+contains
+
+  @test
+  subroutine test_no_reduction()
+    type(torch_tensor) :: input_tensor, target_tensor, loss_tensor
+    real(wp), dimension(6), target :: input_data, target_data, loss_data
+    real(wp), dimension(6) :: expected
+
+    input_data = [1.0, -2.0, 3.0, -4.0, 5.0, -6.0]
+    target_data = 0.0
+    expected = abs(input_data)
+
+    call torch_tensor_from_array(input_tensor, input_data, device_type)
+    call torch_tensor_from_array(target_tensor, target_data, device_type)
+    call torch_tensor_from_array(loss_tensor, loss_data, device_type)
+
+    call torch_loss_l1(loss_tensor, input_tensor, target_tensor, torch_kNone)
+
+    @assertTrue(allclose(loss_data, expected, test_name="test_no_reduction"))
+  end subroutine test_no_reduction
+
+  @test
+  subroutine test_sum_reduction()
+    type(torch_tensor) :: input_tensor, target_tensor, loss_tensor
+    real(wp), dimension(6), target :: input_data, target_data
+    real(wp), dimension(1), target :: loss_data
+    real(wp), dimension(1) :: expected
+
+    input_data = [1.0, -2.0, 3.0, -4.0, 5.0, -6.0]
+    target_data = 0.0
+    expected = 21.0
+
+    call torch_tensor_from_array(input_tensor, input_data, device_type)
+    call torch_tensor_from_array(target_tensor, target_data, device_type)
+    call torch_tensor_from_array(loss_tensor, loss_data, device_type)
+
+    call torch_loss_l1(loss_tensor, input_tensor, target_tensor, torch_kSum)
+
+    @assertTrue(allclose(loss_data, expected, test_name="test_sum_reduction"))
+  end subroutine test_sum_reduction
+
+  @test
+  subroutine test_mean_reduction()
+    type(torch_tensor) :: input_tensor, target_tensor, loss_tensor
+    real(wp), dimension(6), target :: input_data, target_data
+    real(wp), dimension(1), target :: loss_data
+    real(wp), dimension(1) :: expected
+
+    input_data = [1.0, -2.0, 3.0, -4.0, 5.0, -6.0]
+    target_data = 0.0
+    expected = 3.5
+
+    call torch_tensor_from_array(input_tensor, input_data, device_type)
+    call torch_tensor_from_array(target_tensor, target_data, device_type)
+    call torch_tensor_from_array(loss_tensor, loss_data, device_type)
+
+    call torch_loss_l1(loss_tensor, input_tensor, target_tensor, torch_kMean)
+
+    @assertTrue(allclose(loss_data, expected, test_name="test_mean_reduction"))
+  end subroutine test_mean_reduction
+
+end module unittest_loss_l1

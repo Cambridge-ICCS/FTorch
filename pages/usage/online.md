@@ -246,9 +246,11 @@ is probably the best place to get started to see how to use the functionality.
 ### Loss functions
 
 A subset of the loss function classes defined in PyTorch/LibTorch have been
-exposed in FTorch. Currently, this only includes the
+exposed in FTorch. Currently, this includes the
 [[ftorch_loss(module):torch_loss_mse(subroutine)]] subroutine for the
 mean-square-error (MSE) and the
+[[ftorch_loss(module):torch_loss_l1(subroutine)]] subroutine for the
+mean absolute error (L1/MAE), as well as the
 [[ftorch_loss(module):torch_loss_cross_entropy(subroutine)]] subroutine for the
 Cross-Entropy loss, the latter of which is designed for classification problems.
 
