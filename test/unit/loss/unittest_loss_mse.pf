@@ -10,7 +10,7 @@ module unittest_loss_mse
   use ftorch_types, only: torch_kFloat32
   use ftorch_tensor, only: OPERATOR(**), torch_tensor, torch_tensor_from_array, torch_tensor_zeros
   use ftorch_loss, only: torch_loss_mse
-  use ftorch_test_utils, only: operator(.allclose.)
+  use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: sp => real32
 
   implicit none
@@ -56,7 +56,7 @@ contains
     call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kNone)
 
     ! Compare the data in the tensor to the negative of the input array
-    @assertTrue(mse_data .allclose. expected)
+    @assertTrue(allclose(mse_data, expected, test_name="test_no_reduction"))
 
   end subroutine test_no_reduction
 
@@ -90,7 +90,7 @@ contains
     call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kSum)
 
     ! Compare the data in the tensor to the negative of the input array
-    @assertTrue(mse_data .allclose. sum_data)
+    @assertTrue(allclose(mse_data, sum_data, test_name="test_sum_reduction"))
 
   end subroutine test_sum_reduction
 
@@ -124,7 +124,7 @@ contains
     call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kMean)
 
     ! Compare the data in the tensor to the negative of the input array
-    @assertTrue(mse_data .allclose. mean_data)
+    @assertTrue(allclose(mse_data, mean_data, test_name="test_mean_reduction"))
 
   end subroutine test_mean_reduction
 

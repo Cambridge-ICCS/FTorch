@@ -10,7 +10,7 @@ module unittest_tensor_autograd
   use ftorch_types, only: torch_kFloat32
   use ftorch_tensor, only: assignment(=), torch_tensor, torch_tensor_backward, torch_tensor_empty, &
                            torch_tensor_from_array, torch_tensor_get_gradient, torch_tensor_ones
-  use ftorch_test_utils, only: allclose, operator(.allclose.)
+  use ftorch_test_utils, only: allclose
   use, intrinsic :: iso_fortran_env, only: int64, sp => real32
 
   implicit none
@@ -176,14 +176,14 @@ contains
     call torch_tensor_backward(Q, external_gradient)
     call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 1.0
-    @assertTrue(out_data .allclose. expected)
+    @assertTrue(allclose(out_data, expected, test_name="test_zero_grad1"))
 
     ! Call torch_tensor_zero_grad and check the gradient is indeed reset to zero. Note that we need
     ! to call torch_tensor_get_gradient again after zeroing out these values.
     call a%zero_grad()
     call torch_tensor_get_gradient(dQda, a)
     expected(:,:) = 0.0
-    @assertTrue(out_data .allclose. expected)
+    @assertTrue(allclose(out_data, expected, test_name="test_zero_grad2"))
 
   end subroutine test_zero_grad
 

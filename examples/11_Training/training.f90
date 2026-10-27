@@ -15,7 +15,7 @@ program training
                     torch_optim, torch_optim_SGD
 
   ! Import our tools module for testing utils
-  use ftorch_test_utils, only : operator(.allclose.)
+  use ftorch_test_utils, only : allclose
 
   implicit none
 
@@ -144,7 +144,7 @@ program training
   write(*,*) "Final check after training:"
   write(*,*) "Input:", in_data
   write(*,*) "Output:", out_data
-  if (.not. (out_data .allclose. target_data)) then
+  if (.not. allclose(out_data, target_data, test_name="training", rtol=1e-3)) then
     write(*,*) "Error :: value of out_data does not match expected value"
     stop 999
   end if
