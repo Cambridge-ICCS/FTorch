@@ -15,7 +15,7 @@ program training
                     torch_optim, torch_optim_SGD
 
   ! Import our tools module for testing utils
-  use ftorch_test_utils, only : allclose
+  use ftorch_test_utils, only : operator(.allclose.)
 
   implicit none
 

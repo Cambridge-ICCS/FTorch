@@ -10,7 +10,7 @@ module unittest_loss_mse
   use ftorch_types, only: torch_kFloat32
   use ftorch_tensor, only: OPERATOR(**), torch_tensor, torch_tensor_from_array, torch_tensor_zeros
   use ftorch_loss, only: torch_loss_mse
-  use ftorch_test_utils, only: allclose
+  use ftorch_test_utils, only: operator(.allclose.)
   use, intrinsic :: iso_fortran_env, only: sp => real32
 
   implicit none

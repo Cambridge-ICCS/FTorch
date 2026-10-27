@@ -7,7 +7,7 @@ program inference
                       torch_tensor_from_array, torch_model_load, torch_model_forward
 
    ! Import our tools module for testing utils
-   use ftorch_test_utils, only : isclose
+   use ftorch_test_utils, only : operator(.isclose.)
 
    implicit none
 
