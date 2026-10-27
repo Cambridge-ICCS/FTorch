@@ -58,7 +58,6 @@ jobs:
       fail-fast: true
       matrix:
         nvhpc_version: ["26.9"]
-        pfunit_version: ["4.18.2"]
 
     # Terminate the job if it runs for more than 20 minutes
     timeout-minutes: 20
@@ -126,20 +125,6 @@ jobs:
           . ftorch/bin/activate
           pytest --verbose test/ftorch_utils -k cuda
 
-      - name: Install pFUnit
-        run: |
-          # NOTE: version pin needed because version appears in install path
-          git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
-          mkdir pFUnit/build
-          cd pFUnit/build
-          # MPI support is currently not needed for the unit testing
-          cmake .. \
-            -DCMAKE_C_COMPILER=nvc \
-            -DCMAKE_Fortran_COMPILER=nvfortran \
-            -DSKIP_MPI=YES \
-            -DSKIP_OPENMP=YES
-          make -j 4 install
-
       - name: Build FTorch
         run: |
           . ftorch/bin/activate
@@ -149,9 +134,6 @@ jobs:
           # Install to /tmp/ to ensure independent from the CMake build in standalone check.
           export INSTALL_DIR=/tmp/ftorch-install
           mkdir -p ${INSTALL_DIR}
-          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
-          VN="${{ matrix.pfunit_version }}"
-          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
           mkdir -p ${BUILD_DIR}
           cd ${BUILD_DIR}
           # Point CMake's FindCUDA at the CUDA toolkit bundled inside the
@@ -186,18 +168,21 @@ jobs:
             -DCMAKE_BUILD_TESTS=TRUE \
             -DGPU_DEVICE=CUDA \
             -DMULTI_GPU=OFF \
-            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+            -DCMAKE_PREFIX_PATH="${Torch_DIR}" \
             -DCUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
             -DCMAKE_Fortran_FLAGS="-Mdetail" \
             -DCMAKE_CXX_FLAGS="-D__rdtsc=__builtin_ia32_rdtsc"
           cmake --build .
           cmake --install .
 
-      - name: Run GPU-enabled Fortran unit tests
+      # NOTE: The Nvidia compiler is currently incompatible with pFUnit so
+      #       we don't build or run Fortran unit tests here. See
+      #       https://github.com/Cambridge-ICCS/FTorch/pull/648.
+
+      - name: Run Python unit tests
         run: |
           . ftorch/bin/activate
-          cd build
-          ctest --verbose --tests-regex cuda
+          pytest --verbose test/ftorch_utils
 
       - name: Run Multi-GPU integration test
         run: |
