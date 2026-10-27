@@ -256,10 +256,10 @@ Notes:
 
 ##### Checking links
 
-External hyperlinks in the written documentation are checked by
-[`pages/checkmdlinks.sh`](https://github.com/Cambridge-ICCS/FTorch/blob/main/pages/checkmdlinks.sh).
+External hyperlinks in the written documentation are checked by the script
+`pages/checkmdlinks.sh`.
 This recursively scans the markdown files under `pages/` for markdown-style
-links (`[text](https://...)`) and probes each one with `curl`.
+links (of the form `[text](https://…)`) and probes each one with `curl`.
 
 The script runs as part of the `Build docs` GitHub workflow, but is
 **non-blocking**: the workflow step is marked `continue-on-error: true` and any
