@@ -59,7 +59,6 @@ the FTorch Fortran API the steps are generally as follows:
   that binds to the version in `ctorch.cpp`.
 
 Refer to the [LibTorch C++ Documentation](https://pytorch.org/cppdocs/)
-and [C++ API documentation](https://pytorch.org/cppdocs/api/library_root.html)
 for details of the available functions.
 
 The following guidelines should be followed whilst writing new routines:
