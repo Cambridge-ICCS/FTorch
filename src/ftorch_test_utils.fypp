@@ -176,10 +176,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      ${f_type(PREC)}$(kind=${PREC}$) :: rtol_value
-
-      rtol_value = 1.0e-5
-      test_pass = (abs(got - expect) <= rtol_value * abs(expect))
+      test_pass = isclose_${PREC}$(got, expect, "", rtol=1.0e-5_${PREC}$, print_result=.false.)
 
     end function isclose_operator_${PREC}$
 
@@ -196,18 +193,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      ${f_type(PREC)}$(kind=${PREC}$) :: rtol_value
-      integer :: shape_error
-
-      rtol_value = 1.0e-5
-
-      ! Check the shapes of the arrays match
-      shape_error = maxval(abs(shape(got) - shape(expect)))
-      test_pass = (shape_error == 0)
-
-      if (test_pass) then
-        test_pass = all(abs(got - expect) <= rtol_value * abs(expect))
-      end if
+      test_pass = allclose_${PREC}$_${RANK}$d(got, expect, "", rtol=1.0e-5_${PREC}$, print_result=.false.)
 
     end function allclose_operator_${PREC}$_${RANK}$d
 

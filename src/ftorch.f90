@@ -76,8 +76,6 @@ module ftorch
   end interface
 
   ! Mark test utils as private
-  private :: allclose, isclose, test_print
-
-  ! Note: operator(.allclose.) and operator(.isclose.) remain public
+  private :: allclose, isclose, test_print, operator(.allclose.), operator(.isclose.)
 
 end module ftorch
