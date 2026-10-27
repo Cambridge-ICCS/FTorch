@@ -252,6 +252,38 @@ Notes:
 - When writing new pages you can set `graph: false` in `FTorch.md` whilst prototyping
   to skip the time-consuming generation of dependency graphs.
 
+#### Checking links
+
+Links in the documentation (both external URLs and `|page|`/`|media|` macros
+in the markdown sources) are checked with
+[lychee](https://github.com/lycheeverse/lychee), using the configuration in
+[`lychee.toml`](https://github.com/Cambridge-ICCS/FTorch/blob/main/lychee.toml)
+at the repository root.
+The configuration remaps FORD's `|page|` and `|media|` macros to their source
+files so they can be validated without a full docs build.
+Note that `|url|` macros (the FORD-generated API index) cannot be checked from
+source since they only exist post-build; they are excluded.
+
+The CI check is non-blocking on pull requests (`continue-on-error: true`):
+some external sites are flaky or block automated requests, so failures are
+surfaced via the workflow's step summary rather than failing the build.
+A weekly scheduled run checks `main` and, on failure, files a GitHub Issue
+and notifies maintainers by email so regressions are not missed.
+
+lychee is a Rust binary and is not pip-installable, so it is not part of the
+`dev` dependency group. To install it locally either download a pre-built
+binary from the
+[GitHub releases page](https://github.com/lycheeverse/lychee/releases) or,
+if you have a Rust toolchain, run:
+```sh
+cargo install lychee
+```
+
+To run the same check as CI locally, run the following from the repository root:
+```sh
+lychee --config lychee.toml --no-progress 'pages/**/*.md'
+```
+
 #### Versioning and Changelog
 
 FTorch has follows [semantic versioning](https://semver.org/).
