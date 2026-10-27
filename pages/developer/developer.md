@@ -17,6 +17,7 @@ expected for submissions.
 - [Documentation](#documentation)
     - [In-code Documentation](#in-code-documentation)
     - [Written](#written-documentation)
+    - [Checking links](#checking-links)
     - [Versioning and Changelog](#versioning-and-changelog)
 
 
@@ -252,6 +253,31 @@ Notes:
   may build but be incomplete.
 - When writing new pages you can set `graph: false` in `FTorch.md` whilst prototyping
   to skip the time-consuming generation of dependency graphs.
+
+##### Checking links
+
+External hyperlinks in the written documentation are checked by
+[`pages/checkmdlinks.sh`](https://github.com/Cambridge-ICCS/FTorch/blob/main/pages/checkmdlinks.sh).
+This recursively scans the markdown files under `pages/` for markdown-style
+links (`[text](https://...)`) and probes each one with `curl`.
+
+The script runs as part of the `Build docs` GitHub workflow, but is
+**non-blocking**: the workflow step is marked `continue-on-error: true` and any
+failures are surfaced as an aggregated workflow notice rather than failing the
+build. This is because some external sites intermittently block automated
+requests or rate-limit, so a hard failure would be too brittle to gate CI on.
+
+Developers are encouraged to run the script manually when editing docs:
+
+```sh
+cd pages/
+./checkmdlinks.sh                    # check all pages
+./checkmdlinks.sh usage/online.md    # check a single file
+```
+
+Sites that return HTTP 403 (bot protection), HTTP 429 (rate limiting), or HTTP
+000 (connection failure) are usually fine in practice - please verify them by
+hand before changing or removing a link on the basis of a script failure.
 
 #### Versioning and Changelog
 
