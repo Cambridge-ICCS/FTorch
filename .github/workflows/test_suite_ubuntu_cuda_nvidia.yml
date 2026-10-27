@@ -158,6 +158,9 @@ jobs:
           #       `__rdtsc()` becomes `__builtin_ia32_rdtsc()` after macro
           #       expansion.
           # NOTE: -Mdetail required to handle pointers to contiguous arrays
+          # NOTE: The Nvidia compiler is currently incompatible with pFUnit so
+          #       we don't build or run Fortran unit tests here. See
+          #       https://github.com/Cambridge-ICCS/FTorch/pull/648.
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
@@ -165,7 +168,8 @@ jobs:
             -DCMAKE_CXX_COMPILER=nvc++ \
             -DCMAKE_Fortran_COMPILER=nvfortran \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
-            -DCMAKE_BUILD_TESTS=TRUE \
+            -DFTORCH_BUILD_UNIT_TESTS=FALSE \
+            -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE \
             -DGPU_DEVICE=CUDA \
             -DMULTI_GPU=OFF \
             -DCMAKE_PREFIX_PATH="${Torch_DIR}" \
@@ -174,10 +178,6 @@ jobs:
             -DCMAKE_CXX_FLAGS="-D__rdtsc=__builtin_ia32_rdtsc"
           cmake --build .
           cmake --install .
-
-      # NOTE: The Nvidia compiler is currently incompatible with pFUnit so
-      #       we don't build or run Fortran unit tests here. See
-      #       https://github.com/Cambridge-ICCS/FTorch/pull/648.
 
       - name: Run Python unit tests
         run: |
