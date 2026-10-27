@@ -74,7 +74,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        nvhpc_version: ["25.9"]
+        nvhpc_version: ["26.9"]
         pfunit_version: ["4.18.2"]
 
     # Terminate the job if it runs for more than 20 minutes
@@ -96,8 +96,8 @@ jobs:
       # the GPG keyring in a way that doesn't rely on sudo for gpg itself.
       - name: Install NVIDIA HPC SDK
         run: |
-          # Convert the version matrix entry (e.g. "25.9") to the package name
-          # form (e.g. "25-9")
+          # Convert the version matrix entry (e.g. "26.9") to the package name
+          # form (e.g. "26-9")
           nvhpc_pkg=nvhpc-$(echo "${{ matrix.nvhpc_version }}" | tr . -)
 
           # Install the NVIDIA HPC SDK GPG key into a location apt trusts. Run
