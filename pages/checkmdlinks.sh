@@ -34,6 +34,19 @@ URL_REGEX='s/.*(\(http.*\)).*/\1/p'
 # Accumulate failing URLs as "url file http_status" lines for the summary.
 FAILED_LINKS=()
 
+# Pace requests to avoid triggering rate limits (e.g. github.com returns 429 if
+# hit rapidly). Defaults to a short delay in CI where we're a known bot, none
+# locally. Override by setting CHECKLINK_DELAY (seconds, fractional allowed).
+CHECKLINK_DELAY=${CHECKLINK_DELAY:-$([[ "${GITHUB_ACTIONS:-false}" == "true" ]] && echo 1 || echo 0)}
+
+# Small helper: sleep only if a positive delay is configured, so local runs
+# stay fast.
+pace() {
+  if [[ "$CHECKLINK_DELAY" != "0" && "$CHECKLINK_DELAY" != "0.0" ]]; then
+    sleep "$CHECKLINK_DELAY"
+  fi
+}
+
 # Function to check URL availability and log number of errors
 check_url() {
   local url=$1
@@ -41,6 +54,7 @@ check_url() {
   echo "Checking URL: $url"
 
   # Try with GET request to get status code
+  pace
   status_code=$(curl --silent --fail --max-time 15 -L -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" -o /dev/null -w "%{http_code}" "$url")
 
   # Handle returned status codes
@@ -51,6 +65,7 @@ check_url() {
     echo "⚠️ Warning: $url returned HTTP $status_code (connection failed or timeout)."
   elif [[ "$status_code" -eq 403 ]]; then
     # Check if this might be a Cloudflare challenge or other similar security measure
+    pace
     response=$(curl --silent --max-time 10 -L -A "Mozilla/5.0" "$url" 2>/dev/null | grep -i "cloudflare\|just a moment\|enable javascript\|access denied" | head -1)
     if [[ -n "$response" ]]; then
       echo "⚠️ Warning: $url returned HTTP $status_code (likely protected by Cloudflare/bot protection)."
