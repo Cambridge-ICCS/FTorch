@@ -14,7 +14,7 @@ PyTorch features needed for calling TorchScript models from Fortran.
 | Concept | PyTorch (Python) | libtorch (C++) | FTorch (Fortran) |
 | ----------------- | ------------------------------ | ------------------------------ | ------------------------------ |
 | Tensor | [`torch.Tensor`](https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor) | [`torch::Tensor`](https://docs.pytorch.org/cppdocs/api/aten/tensor.html) | [[ftorch_tensor(module):torch_tensor(type)]] |
-| TorchScript model | [`torch.jit.ScriptModule`](https://docs.pytorch.org/docs/2.1/generated/torch.jit.ScriptModule.html) | [`torch::jit::Module`](https://github.com/pytorch/pytorch/blob/main/torch/csrc/jit/api/module.h) | [[ftorch_model(module):torch_model(type)]] |
+| TorchScript model | [`torch.jit.ScriptModule`](https://docs.pytorch.org/docs/2.10/generated/torch.jit.ScriptModule.html) | [`torch::jit::Module`](https://github.com/pytorch/pytorch/blob/main/torch/csrc/jit/api/module.h) | [[ftorch_model(module):torch_model(type)]] |
 | Optimizer | [`torch.optim.Optimizer`](https://docs.pytorch.org/docs/stable/optim.html#torch.optim.Optimizer) | [`torch::optim::Optimizer`](https://docs.pytorch.org/cppdocs/api/optim/index.html#optimizer-base-class) | [[ftorch_optim(module):torch_optim(type)]] |
 
 ### Tensors
@@ -32,7 +32,7 @@ PyTorch features needed for calling TorchScript models from Fortran.
 
 | Operation | PyTorch (Python) | libtorch (C++) | FTorch (Fortran) |
 | ------------------------ | ------------------------------ | ------------------------------ | ------------------------------ |
-| Load a TorchScript model | [`torch.jit.load`](https://docs.pytorch.org/docs/2.1/generated/torch.jit.load.html) | [`torch::jit::load`](https://github.com/pytorch/pytorch/blob/main/torch/csrc/jit/serialization/import.h) | [[ftorch_model(module):torch_model_load(subroutine)]] |
+| Load a TorchScript model | [`torch.jit.load`](https://docs.pytorch.org/docs/2.10/generated/torch.jit.load.html) | [`torch::jit::load`](https://github.com/pytorch/pytorch/blob/main/torch/csrc/jit/serialization/import.h) | [[ftorch_model(module):torch_model_load(subroutine)]] |
 | Run a forward pass | [`Module.forward`](https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.forward) | [`torch::jit::Module::forward`](https://github.com/pytorch/pytorch/blob/main/torch/csrc/jit/api/module.h) | [[ftorch_model(module):torch_model_forward(subroutine)]] |
 
 ### Optimizers
