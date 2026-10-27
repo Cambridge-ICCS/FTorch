@@ -144,7 +144,7 @@ program training
   write(*,*) "Final check after training:"
   write(*,*) "Input:", in_data
   write(*,*) "Output:", out_data
-  if (.not. allclose(out_data, target_data, test_name="training", rtol=1e-3)) then
+  if (.not. (out_data .allclose. target_data)) then
     write(*,*) "Error :: value of out_data does not match expected value"
     stop 999
   end if

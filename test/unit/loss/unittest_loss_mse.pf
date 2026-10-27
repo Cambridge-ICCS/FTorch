@@ -56,7 +56,7 @@ contains
     call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kNone)
 
     ! Compare the data in the tensor to the negative of the input array
-    @assertTrue(allclose(mse_data, expected, test_name="test_no_reduction"))
+    @assertTrue(mse_data .allclose. expected)
 
   end subroutine test_no_reduction
 
@@ -90,7 +90,7 @@ contains
     call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kSum)
 
     ! Compare the data in the tensor to the negative of the input array
-    @assertTrue(allclose(mse_data, sum_data, test_name="test_sum_reduction"))
+    @assertTrue(mse_data .allclose. sum_data)
 
   end subroutine test_sum_reduction
 
@@ -124,7 +124,7 @@ contains
     call torch_loss_mse(mse_tensor, in_tensor, zero_tensor, torch_kMean)
 
     ! Compare the data in the tensor to the negative of the input array
-    @assertTrue(allclose(mse_data, mean_data, test_name="test_mean_reduction"))
+    @assertTrue(mse_data .allclose. mean_data)
 
   end subroutine test_mean_reduction
 

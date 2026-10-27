@@ -62,9 +62,9 @@ program inference
 
    ! Check output tensors match expected values
    expected = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp]
-   test_pass = allclose(out_data1, expected, test_name="MultiIO array1", rtol=1e-5)
+   test_pass = (out_data1 .allclose. expected)
    expected = [0.0_wp, -3.0_wp, -6.0_wp, -9.0_wp]
-   test_pass = allclose(out_data2, expected, test_name="MultiIO array2", rtol=1e-5)
+   test_pass = (out_data2 .allclose. expected)
 
    ! Cleanup
    call torch_delete(model)

@@ -100,7 +100,7 @@ contains
       probability = maxval(probabilities)
 
       ! Check top probability matches expected value
-      test_pass = isclose(probability, expected_prob, test_name="Check probability", rtol=1e-5)
+      test_pass = (probability .isclose. expected_prob)
 
       write (*,*) "Top result"
       write (*,*) ""

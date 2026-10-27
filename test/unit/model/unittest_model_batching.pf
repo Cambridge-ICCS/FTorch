@@ -58,7 +58,7 @@ contains
     call torch_model_forward(model, input_tensors, output_tensors)
 
     expected = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
-    @assertTrue(allclose(output_array, expected, test_name="test_unbatched"))
+    @assertTrue(output_array .allclose. expected)
 
   end subroutine test_unbatched
 
@@ -88,7 +88,7 @@ contains
 
     expected(1,:) = [0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp]
     expected(2,:) = [0.0_wp, 2.0_wp, 4.0_wp, 6.0_wp, 8.0_wp]
-    @assertTrue(allclose(output_array, expected, test_name="test_batched_1d"))
+    @assertTrue(output_array .allclose. expected)
 
   end subroutine test_batched_1d
 
@@ -126,7 +126,7 @@ contains
     expected(2,1,:) = [0.0_wp, 10.0_wp, 20.0_wp, 30.0_wp, 40.0_wp]
     expected(2,2,:) = [0.0_wp, 20.0_wp, 40.0_wp, 60.0_wp, 80.0_wp]
     expected(2,3,:) = [0.0_wp, 30.0_wp, 60.0_wp, 90.0_wp, 120.0_wp]
-    @assertTrue(allclose(output_array, expected, test_name="test_batched_multi"))
+    @assertTrue(output_array .allclose. expected)
 
   end subroutine test_batched_multi
 
