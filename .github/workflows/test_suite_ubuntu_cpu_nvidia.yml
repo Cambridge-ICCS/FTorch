@@ -206,6 +206,7 @@ jobs:
             -DCMAKE_CXX_COMPILER=nvc++ \
             -DCMAKE_Fortran_COMPILER=nvfortran \
             -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
+            -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_CXX_FLAGS="-D__rdtsc=__builtin_ia32_rdtsc"
           cmake --build .
           ctest -V
