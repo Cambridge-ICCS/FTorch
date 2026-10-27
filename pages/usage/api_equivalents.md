@@ -41,8 +41,8 @@ PyTorch features needed for calling TorchScript models from Fortran.
 | Operation | PyTorch (Python) | libtorch (C++) | FTorch (Fortran) |
 | -------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
 | Create SGD optimizer | [`torch.optim.SGD`](https://docs.pytorch.org/docs/stable/generated/torch.optim.SGD.html) | [`torch::optim::SGD`](https://docs.pytorch.org/cppdocs/api/optim/gradient_descent.html) | [[ftorch_optim(module):torch_optim_SGD(subroutine)]] |
-| Create Adam optimizer | [`torch.optim.Adam`](https://docs.pytorch.org/docs/stable/generated/torch.optim.Adam.html) | [`torch::optim::Adam`](https://docs.pytorch.org/cppdocs/api/optim/adaptive.html) | [[ftorch_optim(module):torch_optim_Adam(subroutine)]] |
-| Create AdamW optimizer | [`torch.optim.AdamW`](https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html) | [`torch::optim::AdamW`](https://docs.pytorch.org/cppdocs/api/optim/adaptive.html) | [[ftorch_optim(module):torch_optim_AdamW(subroutine)]] |
+| Create Adam optimizer | [`torch.optim.Adam`](https://docs.pytorch.org/docs/stable/generated/torch.optim.Adam.html) | [`torch::optim::Adam`](https://docs.pytorch.org/cppdocs/api/optim/adaptive.html#torch::optim::Adam) | [[ftorch_optim(module):torch_optim_Adam(subroutine)]] |
+| Create AdamW optimizer | [`torch.optim.AdamW`](https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html) | [`torch::optim::AdamW`](https://docs.pytorch.org/cppdocs/api/optim/adaptive.html#torch::optim::AdamW) | [[ftorch_optim(module):torch_optim_AdamW(subroutine)]] |
 | Clear gradients | [`Optimizer.zero_grad`](https://docs.pytorch.org/docs/stable/generated/torch.optim.Optimizer.zero_grad.html) | [`Optimizer::zero_grad`](https://docs.pytorch.org/cppdocs/api/optim/index.html#optimizer-base-class) | [[ftorch_optim(module):torch_optim_zero_grad(subroutine)]] (`optimizer%zero_grad()`) |
 | Update parameters | [`Optimizer.step`](https://docs.pytorch.org/docs/stable/generated/torch.optim.Optimizer.step.html) | [`Optimizer::step`](https://docs.pytorch.org/cppdocs/api/optim/index.html#optimizer-base-class) | [[ftorch_optim(module):torch_optim_step(subroutine)]] (`optimizer%step()`) |
 
@@ -50,8 +50,8 @@ PyTorch features needed for calling TorchScript models from Fortran.
 
 | Operation | PyTorch (Python) | libtorch (C++) | FTorch (Fortran) |
 | ---------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
-| Mean-squared-error loss | [`torch.nn.MSELoss`](https://docs.pytorch.org/docs/stable/generated/torch.nn.MSELoss.html) | [`torch::nn::MSELoss`](https://docs.pytorch.org/cppdocs/api/nn/loss.html) | [[ftorch_loss(module):torch_loss_mse(subroutine)]] |
-| Cross-entropy loss | [`torch.nn.CrossEntropyLoss`](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html) | [`torch::nn::CrossEntropyLoss`](https://docs.pytorch.org/cppdocs/api/nn/loss.html) | [[ftorch_loss(module):torch_loss_cross_entropy(subroutine)]] |
+| Mean-squared-error loss | [`torch.nn.MSELoss`](https://docs.pytorch.org/docs/stable/generated/torch.nn.MSELoss.html) | [`torch::nn::MSELoss`](https://docs.pytorch.org/cppdocs/api/nn/loss.html#torch::nn::MSELoss) | [[ftorch_loss(module):torch_loss_mse(subroutine)]] |
+| Cross-entropy loss | [`torch.nn.CrossEntropyLoss`](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html) | [`torch::nn::CrossEntropyLoss`](https://docs.pytorch.org/cppdocs/api/nn/loss.html#torch::nn::CrossEntropyLoss) | [[ftorch_loss(module):torch_loss_cross_entropy(subroutine)]] |
 
 The model entries refer to TorchScript. Although TorchScript is deprecated in
 current PyTorch documentation, FTorch's model API currently uses TorchScript
