@@ -154,12 +154,27 @@ jobs:
           export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
           mkdir -p ${BUILD_DIR}
           cd ${BUILD_DIR}
-          # NOTE: nvc++ masquerades as __GNUC__ so PyTorch's <x86intrin.h> path
-          #       is taken, but it doesn't declare the MSVC-style `__rdtsc()`
-          #       intrinsic. Mapping it to the GNU `_rdtsc()` builtin (also in
-          #       <x86intrin.h>) resolves the resulting
-          #       "identifier \"__rdtsc\" is undefined" error from
-          #       c10/util/ApproximateClock.h.
+          # Point CMake's FindCUDA at the CUDA toolkit bundled inside the
+          # NVIDIA HPC SDK (standard lookups like /usr/local/cuda don't find
+          # it there, so the previous build failed with "CUDA cannot be found"
+          # despite nvcc being available). The SDK layout puts the bundled
+          # CUDA at /opt/nvidia/hpc_sdk/<platform>/<version>/cuda, so locate
+          # the versioned SDK install root and append `/cuda` directly.
+          # CUDA_TOOLKIT_ROOT_DIR is the hint CMake's legacy FindCUDA module
+          # uses.
+          SDK_ROOT=$(ls -dt /opt/nvidia/hpc_sdk/Linux_$(uname -m)/*/ \
+                       | head -n 1 | sed 's#/$##')
+          CUDA_HOME="${SDK_ROOT}/cuda"
+          echo "SDK_ROOT=${SDK_ROOT}"
+          echo "CUDA_HOME=${CUDA_HOME}"
+          # NOTE: nvc++ masquerades as __GNUC__ so PyTorch's <x86intrin.h>
+          #       path in c10/util/ApproximateClock.h is taken, but nvc++'s
+          #       <x86intrin.h> provides neither the MSVC-style `__rdtsc()`
+          #       nor the GNU `_rdtsc()` it expects. However, nvc++'s LLVM
+          #       frontend does expose `__builtin_ia32_rdtsc()`, so we map
+          #       `__rdtsc` to it via the command line. The result is that
+          #       `__rdtsc()` becomes `__builtin_ia32_rdtsc()` after macro
+          #       expansion.
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
@@ -171,7 +186,8 @@ jobs:
             -DGPU_DEVICE=CUDA \
             -DMULTI_GPU=OFF \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
-            -DCMAKE_CXX_FLAGS="-D__rdtsc=_rdtsc"
+            -DCUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
+            -DCMAKE_CXX_FLAGS="-D__rdtsc=__builtin_ia32_rdtsc"
           cmake --build .
           cmake --install .
 
