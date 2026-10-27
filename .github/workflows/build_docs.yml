@@ -62,10 +62,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install --group docs
 
+      # This check is non-blocking: some external sites are flaky or block
+      # automated requests, so failures are surfaced via a workflow notice
+      # rather than breaking the build. See pages/checkmdlinks.sh.
       - name: Check broken URLs
+        continue-on-error: true
         run: |
           cd pages/
-          chmod +x checkmdlinks.sh
           ./checkmdlinks.sh
 
       - name: Build docs with FORD
