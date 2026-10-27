@@ -7,10 +7,10 @@
 # relative links and bare plaintext URLs are ignored.
 #
 # Exit code is 0 if all links are reachable, 1 otherwise. In GitHub Actions
-# (`$GITHUB_ACTIONS == "true"`) a single aggregated `::notice` workflow command
-# is emitted listing any broken links; the workflow step that invokes this
-# script is marked `continue-on-error: true` so a flaky external site cannot
-# fail the build.
+# (`$GITHUB_ACTIONS == "true"`) failures are reported to $GITHUB_STEP_SUMMARY
+# as a markdown table plus a short ::notice annotation; the workflow step that
+# invokes this script is marked `continue-on-error: true` so a flaky external
+# site cannot fail the build.
 
 # Exit on non-zero exit code for any calls.
 set -e
@@ -127,16 +127,26 @@ for entry in "${FAILED_LINKS[@]}"; do
   echo "  - $url (HTTP $status) in $file"
 done
 
-# In GitHub Actions emit a single aggregated ::notice so the failure is visible
-# in the workflow summary without breaking the job (the step is set
-# continue-on-error: true). Escape newline as %0A per workflow-command syntax.
+# In GitHub Actions, surface the failures in two places:
+#  - A markdown report appended to $GITHUB_STEP_SUMMARY, rendered at the top
+#    of the run-summary page.
+#  - A short ::notice annotation pointing at the summary, so something is
+#    visible from the checks list too. A long aggregated ::notice gets
+#    attached to a phantom file/line and is easy to miss, so we keep it brief.
 if [[ "${GITHUB_ACTIONS:-false}" == "true" ]]; then
-  notice_msg="Possible broken links in documentation (this check is non-blocking - please verify manually):"
-  for entry in "${FAILED_LINKS[@]}"; do
-    IFS='|' read -r url file status <<< "$entry"
-    notice_msg+="%0A  - $url (HTTP $status) in $file"
-  done
-  echo "::notice title=Possibly broken documentation links::$notice_msg"
+  {
+    echo "## ⚠️ Possible broken links in documentation"
+    echo
+    echo "This check is **non-blocking** because some external sites are flaky"
+    echo "or block automated requests - please verify manually before changing any link."
+    echo
+    for entry in "${FAILED_LINKS[@]}"; do
+      IFS='|' read -r url file status <<< "$entry"
+      echo "- \`HTTP $status\` — $url (in \`$file\`)"
+    done
+  } >> "$GITHUB_STEP_SUMMARY"
+
+  echo "::notice title=Possibly broken documentation links::Found $overall_errors potentially broken link(s). See the run summary for details."
 fi
 
 exit 1
