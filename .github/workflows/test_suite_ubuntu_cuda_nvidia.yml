@@ -175,6 +175,7 @@ jobs:
           #       `__rdtsc` to it via the command line. The result is that
           #       `__rdtsc()` becomes `__builtin_ia32_rdtsc()` after macro
           #       expansion.
+          # NOTE: -Mdetail required to handle pointers to contiguous arrays
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
@@ -187,6 +188,7 @@ jobs:
             -DMULTI_GPU=OFF \
             -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
             -DCUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
+            -DCMAKE_Fortran_FLAGS="-Mdetail" \
             -DCMAKE_CXX_FLAGS="-D__rdtsc=__builtin_ia32_rdtsc"
           cmake --build .
           cmake --install .
