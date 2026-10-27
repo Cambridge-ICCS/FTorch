@@ -164,6 +164,12 @@ jobs:
           VN="${{ matrix.pfunit_version }}"
           export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
           cd ${BUILD_DIR}
+          # NOTE: nvc++ masquerades as __GNUC__ so PyTorch's <x86intrin.h> path
+          #       is taken, but it doesn't declare the MSVC-style `__rdtsc()`
+          #       intrinsic. Mapping it to the GNU `_rdtsc()` builtin (also in
+          #       <x86intrin.h>) resolves the resulting
+          #       "identifier \"__rdtsc\" is undefined" error from
+          #       c10/util/ApproximateClock.h.
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
             -DCMAKE_BUILD_TYPE=Release \
@@ -172,7 +178,8 @@ jobs:
             -DCMAKE_Fortran_COMPILER=nvfortran \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
             -DCMAKE_BUILD_TESTS=TRUE \
-            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}"
+            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}" \
+            -DCMAKE_CXX_FLAGS="-D__rdtsc=_rdtsc"
           cmake --build .
           cmake --install .
 
@@ -210,6 +217,7 @@ jobs:
             -DCMAKE_CXX_COMPILER=nvc++ \
             -DCMAKE_Fortran_COMPILER=nvfortran \
             -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
-            -DCMAKE_BUILD_TESTS=TRUE
+            -DCMAKE_BUILD_TESTS=TRUE \
+            -DCMAKE_CXX_FLAGS="-D__rdtsc=_rdtsc"
           cmake --build .
           ctest -V
