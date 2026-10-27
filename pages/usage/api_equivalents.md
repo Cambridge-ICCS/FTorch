@@ -22,6 +22,7 @@ PyTorch features needed for calling TorchScript models from Fortran.
 | Operation | PyTorch (Python) | libtorch (C++) | FTorch (Fortran) |
 | ------------------------ | ------------------------------ | ------------------------------ | ------------------------------ |
 | Create a tensor of zeros | [`torch.zeros`](https://docs.pytorch.org/docs/stable/generated/torch.zeros.html) | [`torch::zeros`](https://docs.pytorch.org/cppdocs/api/aten/creation.html) | [[ftorch_tensor(module):torch_tensor_zeros(subroutine)]] |
+| Create a tensor of ones | [`torch.ones`](https://docs.pytorch.org/docs/stable/generated/torch.ones.html) | [`torch::ones`](https://docs.pytorch.org/cppdocs/api/aten/creation.html) | [[ftorch_tensor(module):torch_tensor_ones(subroutine)]] |
 | Get shape | [`Tensor.size`](https://docs.pytorch.org/docs/stable/generated/torch.Tensor.size.html) | [`Tensor::sizes`](https://docs.pytorch.org/cppdocs/api/aten/tensor.html) | [[ftorch_tensor(module):torch_tensor_get_shape(function)]] |
 | Get strides | [`Tensor.stride`](https://docs.pytorch.org/docs/stable/generated/torch.Tensor.stride.html) | [`Tensor::strides`](https://docs.pytorch.org/cppdocs/api/aten/tensor.html) | [[ftorch_tensor(module):torch_tensor_get_stride(function)]] |
 | Get data type | [`Tensor.dtype`](https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.dtype) | [`Tensor::scalar_type`](https://docs.pytorch.org/cppdocs/api/aten/tensor.html) | [[ftorch_tensor(module):torch_tensor_get_dtype(function)]] |
@@ -40,8 +41,17 @@ PyTorch features needed for calling TorchScript models from Fortran.
 | Operation | PyTorch (Python) | libtorch (C++) | FTorch (Fortran) |
 | -------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
 | Create SGD optimizer | [`torch.optim.SGD`](https://docs.pytorch.org/docs/stable/generated/torch.optim.SGD.html) | [`torch::optim::SGD`](https://docs.pytorch.org/cppdocs/api/optim/gradient_descent.html) | [[ftorch_optim(module):torch_optim_SGD(subroutine)]] |
+| Create Adam optimizer | [`torch.optim.Adam`](https://docs.pytorch.org/docs/stable/generated/torch.optim.Adam.html) | [`torch::optim::Adam`](https://docs.pytorch.org/cppdocs/api/optim/adaptive.html) | [[ftorch_optim(module):torch_optim_Adam(subroutine)]] |
+| Create AdamW optimizer | [`torch.optim.AdamW`](https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html) | [`torch::optim::AdamW`](https://docs.pytorch.org/cppdocs/api/optim/adaptive.html) | [[ftorch_optim(module):torch_optim_AdamW(subroutine)]] |
 | Clear gradients | [`Optimizer.zero_grad`](https://docs.pytorch.org/docs/stable/generated/torch.optim.Optimizer.zero_grad.html) | [`Optimizer::zero_grad`](https://docs.pytorch.org/cppdocs/api/optim/index.html#optimizer-base-class) | [[ftorch_optim(module):torch_optim_zero_grad(subroutine)]] (`optimizer%zero_grad()`) |
 | Update parameters | [`Optimizer.step`](https://docs.pytorch.org/docs/stable/generated/torch.optim.Optimizer.step.html) | [`Optimizer::step`](https://docs.pytorch.org/cppdocs/api/optim/index.html#optimizer-base-class) | [[ftorch_optim(module):torch_optim_step(subroutine)]] (`optimizer%step()`) |
+
+### Loss functions
+
+| Operation | PyTorch (Python) | libtorch (C++) | FTorch (Fortran) |
+| ---------------------- | ------------------------------ | ------------------------------ | ------------------------------ |
+| Mean-squared-error loss | [`torch.nn.MSELoss`](https://docs.pytorch.org/docs/stable/generated/torch.nn.MSELoss.html) | [`torch::nn::MSELoss`](https://docs.pytorch.org/cppdocs/api/nn/loss.html) | [[ftorch_loss(module):torch_loss_mse(subroutine)]] |
+| Cross-entropy loss | [`torch.nn.CrossEntropyLoss`](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html) | [`torch::nn::CrossEntropyLoss`](https://docs.pytorch.org/cppdocs/api/nn/loss.html) | [[ftorch_loss(module):torch_loss_cross_entropy(subroutine)]] |
 
 The model entries refer to TorchScript. Although TorchScript is deprecated in
 current PyTorch documentation, FTorch's model API currently uses TorchScript
