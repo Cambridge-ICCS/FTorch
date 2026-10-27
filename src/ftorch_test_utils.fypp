@@ -176,7 +176,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      test_pass = isclose_${PREC}$(got, expect, "", rtol=1.0e-5_${PREC}$, print_result=.false.)
+      test_pass = isclose_${PREC}$(got, expect, "", rtol=1.0e-5, print_result=.false.)
 
     end function isclose_operator_${PREC}$
 
@@ -193,7 +193,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      test_pass = allclose_${PREC}$_${RANK}$d(got, expect, "", rtol=1.0e-5_${PREC}$, print_result=.false.)
+      test_pass = allclose_${PREC}$_${RANK}$d(got, expect, "", rtol=1.0e-5, print_result=.false.)
 
     end function allclose_operator_${PREC}$_${RANK}$d
 

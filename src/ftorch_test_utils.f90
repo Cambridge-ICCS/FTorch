@@ -450,7 +450,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      test_pass = isclose_real32(got, expect, "", rtol=1.0e-5_real32, print_result=.false.)
+      test_pass = isclose_real32(got, expect, "", rtol=1.0e-5, print_result=.false.)
 
     end function isclose_operator_real32
 
@@ -463,7 +463,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      test_pass = isclose_real64(got, expect, "", rtol=1.0e-5_real64, print_result=.false.)
+      test_pass = isclose_real64(got, expect, "", rtol=1.0e-5, print_result=.false.)
 
     end function isclose_operator_real64
 
@@ -477,7 +477,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      test_pass = allclose_real32_1d(got, expect, "", rtol=1.0e-5_real32, print_result=.false.)
+      test_pass = allclose_real32_1d(got, expect, "", rtol=1.0e-5, print_result=.false.)
 
     end function allclose_operator_real32_1d
 
@@ -490,7 +490,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      test_pass = allclose_real32_2d(got, expect, "", rtol=1.0e-5_real32, print_result=.false.)
+      test_pass = allclose_real32_2d(got, expect, "", rtol=1.0e-5, print_result=.false.)
 
     end function allclose_operator_real32_2d
 
@@ -503,7 +503,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      test_pass = allclose_real32_3d(got, expect, "", rtol=1.0e-5_real32, print_result=.false.)
+      test_pass = allclose_real32_3d(got, expect, "", rtol=1.0e-5, print_result=.false.)
 
     end function allclose_operator_real32_3d
 
@@ -516,7 +516,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      test_pass = allclose_real64_1d(got, expect, "", rtol=1.0e-5_real64, print_result=.false.)
+      test_pass = allclose_real64_1d(got, expect, "", rtol=1.0e-5, print_result=.false.)
 
     end function allclose_operator_real64_1d
 
@@ -529,7 +529,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      test_pass = allclose_real64_2d(got, expect, "", rtol=1.0e-5_real64, print_result=.false.)
+      test_pass = allclose_real64_2d(got, expect, "", rtol=1.0e-5, print_result=.false.)
 
     end function allclose_operator_real64_2d
 
@@ -542,7 +542,7 @@ module ftorch_test_utils
 
       logical :: test_pass  !! Did the comparison pass?
 
-      test_pass = allclose_real64_3d(got, expect, "", rtol=1.0e-5_real64, print_result=.false.)
+      test_pass = allclose_real64_3d(got, expect, "", rtol=1.0e-5, print_result=.false.)
 
     end function allclose_operator_real64_3d
 
