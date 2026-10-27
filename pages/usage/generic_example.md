@@ -7,7 +7,7 @@ date: Last Updated: October 2025
 This page provides abstract guidance to the general process of using FTorch.
 It covers the full process of saving a model from PyTorch and coupling it into a Fortran code.
 To see this process in context we strongly advise following the
-[Worked Examples](|page|/examples/worked_examples.html).
+[Worked Examples](|page|/usage/worked_examples.html).
 
 ### Overview of the interfacing process
 
