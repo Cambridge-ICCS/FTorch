@@ -85,7 +85,7 @@ FTorch's test suite has some additional dependencies.
 
 The following instructions assume a Unix system.
 For installation on Windows, Apple Silicon, Conda Environments, or Codespaces refer to
-the [system-specific guidance](|page|installation/systems.html) as the process may differ.
+the [system-specific guidance](|page|/installation/systems.html) as the process may differ.
 
 To build the library, first clone it from GitHub to your local machine using either ssh:
 ```bash
