@@ -1,0 +1,158 @@
+# Workflow to run the FTorch test suite on a CUDA enabled runner with the NVIDIA compiler
+name: Test suite (Ubuntu NVIDIA CUDA)
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+    paths:
+      # This workflow
+      - '.github/workflows/test_suite_ubuntu_cuda_nvidia.yml'
+      # Library source files
+      - 'src/*.fypp'
+      - 'src/*.f90'
+      - 'src/*.F90'
+      - 'src/*.c'
+      - 'src/*.cpp'
+      - 'src/*.h'
+      # Unit tests
+      - 'test/unit/**/*.pf'
+      - 'test/ftorch_utils/*.py'
+      # Specific integration tests
+      - 'examples/07_MultiGPU/*.py'
+      - 'examples/07_MultiGPU/*.f90'
+      - 'examples/07_MultiGPU/CMakeLists.txt'
+      # Build system
+      - '**CMakeLists.txt'
+      - 'pyproject.toml'
+
+  # Triggers the workflow on pushes to open pull requests with code changes
+  pull_request:
+    paths:
+      # This workflow
+      - '.github/workflows/test_suite_ubuntu_cuda_nvidia.yml'
+      # Specific integration tests
+      - 'examples/07_MultiGPU/*.py'
+      - 'examples/07_MultiGPU/*.f90'
+      - 'examples/07_MultiGPU/CMakeLists.txt'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Write permissions are not required
+permissions: {}
+
+# Workflow run - one or more jobs that can run sequentially or in parallel
+jobs:
+  test-suite:
+    name: nvfortran ${{ matrix.nvhpc_version }}
+    # The type of runner that the job will run on
+    runs-on: GPU-runner
+    strategy:
+      fail-fast: true
+      matrix:
+        nvhpc_version: ["25.9"]
+        pfunit_version: ["4.18.2"]
+
+    # Terminate the job if it runs for more than 20 minutes
+    timeout-minutes: 20
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout FTorch repository
+        with:
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
+
+      - name: Install ftorch_utils
+        run: |
+          python -m pip install --upgrade pip
+          python -m venv ftorch
+          . ftorch/bin/activate
+          pip install . --extra-index-url https://download.pytorch.org/whl/cu132 --group test
+
+      - name: Install cmake and m4
+        run: |
+          sudo apt update
+          sudo apt install -y cmake m4
+
+      # NOTE: We use the setup-fortran action to install the NVIDIA HPC SDK
+      #       (nvfortran, nvc, nvc++, and the bundled CUDA toolkit) rather than
+      #       hand-rolling NVIDIA's apt repository setup, which is error-prone
+      #       (see issue #598).
+      - name: Setup Fortran
+        uses: fortran-lang/setup-fortran@2a1b9c55897d827a9dfeb114408f3615e53b2b72 # v1.9.0
+        with:
+          compiler: nvidia-hpc
+          version: ${{ matrix.nvhpc_version }}
+
+      - name: Run GPU-specific FTorch-utils unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/ftorch_utils -k cuda
+
+      - name: Install pFUnit
+        run: |
+          # NOTE: version pin needed because version appears in install path
+          git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+          mkdir pFUnit/build
+          cd pFUnit/build
+          # MPI support is currently not needed for the unit testing
+          cmake .. \
+            -DCMAKE_C_COMPILER=nvc \
+            -DCMAKE_Fortran_COMPILER=nvfortran \
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=YES
+          make -j 4 install
+
+      - name: Build FTorch
+        run: |
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR=${VIRTUAL_ENV}/lib/python${VN}/site-packages
+          export BUILD_DIR=$(pwd)/build
+          # Install to /tmp/ to ensure independent from the CMake build in standalone check.
+          export INSTALL_DIR=/tmp/ftorch-install
+          mkdir -p ${INSTALL_DIR}
+          # NOTE: The pFUnit version (pinned during installation above) is used in the install path.
+          VN="${{ matrix.pfunit_version }}"
+          export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
+          mkdir -p ${BUILD_DIR}
+          cd ${BUILD_DIR}
+          cmake .. \
+            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=nvc \
+            -DCMAKE_CXX_COMPILER=nvc++ \
+            -DCMAKE_Fortran_COMPILER=nvfortran \
+            -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
+            -DCMAKE_BUILD_TESTS=TRUE \
+            -DGPU_DEVICE=CUDA \
+            -DMULTI_GPU=OFF \
+            -DCMAKE_PREFIX_PATH="${PFUNIT_DIR};${Torch_DIR}"
+          cmake --build .
+          cmake --install .
+
+      - name: Run GPU-enabled Fortran unit tests
+        run: |
+          . ftorch/bin/activate
+          cd build
+          ctest --verbose --tests-regex cuda
+
+      - name: Run Multi-GPU integration test
+        run: |
+          . ftorch/bin/activate
+          cd build
+          ctest --verbose --tests-regex example_multigpu
