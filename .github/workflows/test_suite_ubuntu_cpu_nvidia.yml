@@ -6,53 +6,11 @@ on:
   # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
   push:
     branches: [ "main" ]
-    paths:
-      # This workflow
-      - '.github/workflows/test_suite_ubuntu_cpu_nvidia.yml'
-      # Library source files
-      - 'src/*.fypp'
-      - 'src/*.f90'
-      - 'src/*.F90'
-      - 'src/*.c'
-      - 'src/*.cpp'
-      - 'src/*.h'
-      # Unit tests
-      - 'test/unit/**/*.pf'
-      - 'test/ftorch_utils/*.py'
-      # Integration tests
-      - 'examples/**/*.py'
-      - 'examples/**/*.f90'
-      - 'examples/**/CMakeLists.txt'
-      # Build system
-      - '**CMakeLists.txt'
-      - 'pyproject.toml'
-      # Data
-      - '**data/*'
 
-  # Triggers the workflow on pushes to open pull requests with code changes
+  # Triggers the workflow on pushes to open pull requests with changes to this workflow
   pull_request:
     paths:
-      # This workflow
       - '.github/workflows/test_suite_ubuntu_cpu_nvidia.yml'
-      # Library source files
-      - 'src/*.fypp'
-      - 'src/*.f90'
-      - 'src/*.F90'
-      - 'src/*.c'
-      - 'src/*.cpp'
-      - 'src/*.h'
-      # Unit tests
-      - 'test/unit/**/*.pf'
-      - 'test/ftorch_utils/*.py'
-      # Integration tests
-      - 'examples/**/*.py'
-      - 'examples/**/*.f90'
-      - 'examples/**/CMakeLists.txt'
-      # Build system
-      - '**CMakeLists.txt'
-      - 'pyproject.toml'
-      # Data
-      - '**data/*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
