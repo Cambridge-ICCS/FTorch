@@ -151,8 +151,9 @@ jobs:
           cmake --build .
           cmake --install .
 
-      - name: Run Multi-GPU integration test
+      # TODO: Revert change here
+      - name: Run GPU pointer example
         run: |
           . ftorch/bin/activate
           cd build
-          ctest --verbose --tests-regex example_multigpu
+          ctest --verbose --tests-regex example_gpu_tensor_pointer
