@@ -35,7 +35,7 @@ if(CMAKE_BUILD_TESTS)
   else()
     message(
       STATUS
-        "Skipping GPU pointer integration tests (requires CUDA support and nvfortran)"
+        "Skipping GPU pointer integration tests (requires CUDA and nvfortran)"
     )
   endif()
 endif()
