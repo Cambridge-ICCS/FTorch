@@ -188,6 +188,12 @@ else()
   # NOTE: stdc++ is not available on Windows
   target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES})
 endif()
+# Downstream executables get their own RPATH, so pass the compiler runtime
+# directory on to them as well (see above)
+if(GFORTRAN_RUNTIME_DIR)
+  target_link_options(${LIB_NAME} INTERFACE
+                      "LINKER:-rpath,${GFORTRAN_RUNTIME_DIR}")
+endif()
 # Include the Fortran mod files in the library
 target_include_directories(
   ${LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_Fortran_MODULE_DIRECTORY}>
