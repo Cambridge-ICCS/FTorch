@@ -250,6 +250,17 @@ When building FTorch with the NVIDIA compiler suite (a.k.a. NVHPC) - `nvc`,
    disable all tests with `-DCMAKE_BUILD_TESTS=FALSE`.
 
 
+##### Flang compiler
+
+When building FTorch with the `flang` compiler from the LLVM project, there is
+one gotcha to be aware of:
+
+1. **Use pFUnit version 4.18.2 or newer when building unit tests.**
+   See section on
+   [unit test segfaults with flang](#unit-test-segfaults-with-flang) for
+   details.
+
+
 ### Common warnings
 
 #### Structure constructor finalizer with Fortran 2008
