@@ -161,6 +161,7 @@
 <li><a href="#no-specific-subroutine">No specific subroutine</a></li>
 <li><a href="#segmentation-faults">Segmentation faults</a></li>
 <li><a href="#unit-test-segfaults-with-flang">Unit test segfaults with flang</a></li>
+<li><a href="#compiler-specific-issues">Compiler-specific issues</a></li>
 </ul>
 </li>
 <li><a href="#common-warnings">Common warnings</a></li>
@@ -335,6 +336,66 @@ older <code>pFUnit</code> version which then exposes a bug in <code>flang</code>
 <p>The solution is to use <code>pFUnit v4.18.2</code> or newer, then reconfigure and rebuild FTorch (and its unit
 tests), e.g., specifying to <code>cmake</code> an explicit path to the newer <code>pFUnit</code> (e.g.
 <code>-DCMAKE_INSTALL_PREFIX="path/pfunit-4.18.2</code>).</p>
+<h4 id="compiler-specific-issues">Compiler-specific issues</h4>
+<h5 id="intel-compiler">Intel compiler</h5>
+<p>When building FTorch with the LLVM-based or legacy Intel compilers - <code>ifx</code> or
+<code>ifort</code>, respectively - there are two gotchas to be aware of:</p>
+<ol>
+<li>
+<p><strong>Include <code>-fpscomp logicals</code> in the Fortran flags.</strong>
+   This ensures the Fortran logicals are compatible with those used by PyTorch.
+   To achieve this when building FTorch with CMake, pass
+   <code>-DCMAKE_Fortran_FLAGS="-fpscomp logicals"</code>.</p>
+</li>
+<li>
+<p><strong>Include <code>-D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH</code> in the C++ flags.</strong>
+   This suppresses warnings related to mismatched compiler versions between the
+   Intel compilers and those used to build LibTorch. To achieve this when
+   building FTorch with CMake, pass
+   <code>-DCMAKE_CXX_FLAGS="-D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH"</code>.</p>
+</li>
+</ol>
+<h5 id="nvidia-compiler">NVIDIA compiler</h5>
+<p>When building FTorch with the NVIDIA compiler suite (a.k.a. NVHPC) - <code>nvc</code>,
+<code>nvc++</code>, and <code>nvfortran</code> - there are several gotchas to be aware of:</p>
+<ol>
+<li>
+<p><strong>Include <code>-Mdetail</code> in the Fortran flags.</strong>
+   This is required to handle pointers to contiguous arrays in the way that
+   FTorch does. To achieve this when building FTorch with CMake, pass
+   <code>-DCMAKE_Fortran_FLAGS="-Mdetail"</code>.</p>
+</li>
+<li>
+<p><strong>Use version 26.1 or newer.</strong>
+   This was the version in which the <code>-Mdetail</code> flag was introduced. Without
+   this, the current version of FTorch will not compile under <code>nvfortran</code>.</p>
+</li>
+<li>
+<p><strong>Include <code>-D__rdtsc=__builtin_ia32_rdtsc</code> in the C++ flags.</strong>
+   This is required due to a quirk of how the <code>nvc++</code> compiler presents itself
+   and how this is interpreted by PyTorch in
+   <a href="https://github.com/pytorch/pytorch/blob/main/c10/util/ApproximateClock.h">https://github.com/pytorch/pytorch/blob/main/c10/util/ApproximateClock.h</a>.
+   To achieve this when building FTorch with CMake, pass
+   <code>-DCMAKE_CXX_FLAGS="-D__rdtsc=__builtin_ia32_rdtsc"</code>.</p>
+</li>
+<li>
+<p><strong>Disable FTorch's unit tests.</strong>
+   The Nvidia compiler is currently incompatible with pFUnit, which is used for
+   FTorch's unit test suite. To achieve this when building FTorch with CMake,
+   either disable the unit tests but keep the integration tests enabled with
+   <code>-DFTORCH_BUILD_UNIT_TESTS=FALSE -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE</code> or
+   disable all tests with <code>-DCMAKE_BUILD_TESTS=FALSE</code>.</p>
+</li>
+</ol>
+<h5 id="flang-compiler">Flang compiler</h5>
+<p>When building FTorch with the <code>flang</code> compiler from the LLVM project, there is
+one gotcha to be aware of:</p>
+<ol>
+<li><strong>Use pFUnit version 4.18.2 or newer when building unit tests.</strong>
+   See section on
+   <a href="#unit-test-segfaults-with-flang">unit test segfaults with flang</a> for
+   details.</li>
+</ol>
 <h3 id="common-warnings">Common warnings</h3>
 <h4 id="structure-constructor-finalizer-with-fortran-2008">Structure constructor finalizer with Fortran 2008</h4>
 <p>If you are building FTorch with gfortran and are specifying the Fortran 2008
