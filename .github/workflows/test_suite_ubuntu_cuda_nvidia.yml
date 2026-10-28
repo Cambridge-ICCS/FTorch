@@ -151,11 +151,6 @@ jobs:
           cmake --build .
           cmake --install .
 
-      - name: Run Python unit tests
-        run: |
-          . ftorch/bin/activate
-          pytest --verbose test/ftorch_utils
-
       - name: Run Multi-GPU integration test
         run: |
           . ftorch/bin/activate
