@@ -3,9 +3,12 @@ name: Test suite (Ubuntu NVIDIA CUDA)
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
-  push:
-    branches: [ "main" ]
+  # FIXME: Re-enable Nvidia CI once https://github.com/Cambridge-ICCS/FTorch/issues/650
+  # has been addressed
+  #
+  # # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  # push:
+  #   branches: [ "main" ]
 
   # Triggers the workflow on pushes to open pull requests with changes to this workflow
   pull_request:
