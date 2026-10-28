@@ -3,17 +3,14 @@ name: Test suite (Ubuntu NVIDIA CPU)
 
 # Controls when the workflow will run
 on:
-  # FIXME: Re-enable Nvidia CI once https://github.com/Cambridge-ICCS/FTorch/issues/650
-  # has been addressed
-  #
-  # # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
-  # push:
-  #   branches: [ "main" ]
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
 
-  # # Triggers the workflow on pushes to open pull requests with changes to this workflow
-  # pull_request:
-  #   paths:
-  #     - '.github/workflows/test_suite_ubuntu_cpu_nvidia.yml'
+  # Triggers the workflow on pushes to open pull requests with changes to this workflow
+  pull_request:
+    paths:
+      - '.github/workflows/test_suite_ubuntu_cpu_nvidia.yml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
