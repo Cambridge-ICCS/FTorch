@@ -18,7 +18,7 @@ endif()
 # NVIDIA GPU, a CUDA Fortran capable compiler (e.g. nvfortran), and an FTorch
 # installation built with -DGPU_DEVICE=CUDA
 if(CMAKE_Fortran_COMPILER_ID MATCHES "NVHPC|PGI")
-  set(CUDA_FORTRAN_FLAG "-Mcuda")
+  set(CUDA_FORTRAN_FLAG "-cuda")
 else()
   message(
     WARNING
