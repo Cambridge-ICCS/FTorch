@@ -444,6 +444,9 @@ contains
                                  requires_grad_value)
   end subroutine torch_tensor_from_blob
 
+  ! Note: `data_in` dummy argument below is marked both as `pointer` and `contiguous` in order to generate
+  !    compile time errors if called with non-contiguous argument (e.g. array section `a(1:20:2)`).
+
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
   !> This subroutine is part of an interface and should be accessed through
   !> `torch_tensor_from_array`.
