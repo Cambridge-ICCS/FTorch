@@ -11,6 +11,7 @@ If you are experiencing problems building or using FTorch please see below for g
     - [No specific subroutine](#no-specific-subroutine)
     - [Segmentation faults](#segmentation-faults)
      - [Unit test segfaults with flang](#unit-test-segfaults-with-flang)
+    - [Compiler-specific issues](#compiler-specific-issues)
 - [Common warnings](#common-warnings)
 - [Migrating from v1 to v2](#migrating-from-v1-to-v2)
 
@@ -216,6 +217,65 @@ The solution is to use `pFUnit v4.18.2` or newer, then reconfigure and rebuild F
 tests), e.g., specifying to `cmake` an explicit path to the newer `pFUnit` (e.g.
 `-DCMAKE_INSTALL_PREFIX="path/pfunit-4.18.2`).
 
+
+
+#### Compiler-specific issues
+
+##### Intel compiler
+
+When building FTorch with the LLVM-based or legacy Intel compilers - `ifx` or
+`ifort`, respectively - there are two gotchas to be aware of:
+
+1. **Include `-fpscomp logicals` in the Fortran flags.**
+   This ensures the Fortran logicals are compatible with those used by PyTorch.
+   To achieve this when building FTorch with CMake, pass
+   `-DCMAKE_Fortran_FLAGS="-fpscomp logicals"`.
+
+2. **Include `-D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH` in the C++ flags.**
+   This suppresses warnings related to mismatched compiler versions between the
+   Intel compilers and those used to build LibTorch. To achieve this when
+   building FTorch with CMake, pass
+   `-DCMAKE_CXX_FLAGS="-D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH"`.
+
+
+##### NVIDIA compiler
+
+When building FTorch with the NVIDIA compiler suite (a.k.a. NVHPC) - `nvc`,
+`nvc++`, and `nvfortran` - there are several gotchas to be aware of:
+
+1. **Include `-Mdetail` in the Fortran flags.**
+   This is required to handle pointers to contiguous arrays in the way that
+   FTorch does. To achieve this when building FTorch with CMake, pass
+   `-DCMAKE_Fortran_FLAGS="-Mdetail"`.
+
+2. **Use version 26.1 or newer.**
+   This was the version in which the `-Mdetail` flag was introduced. Without
+   this, the current version of FTorch will not compile under `nvfortran`.
+
+3. **Include `-D__rdtsc=__builtin_ia32_rdtsc` in the C++ flags.**
+   This is required due to a quirk of how the `nvc++` compiler presents itself
+   and how this is interpreted by PyTorch in
+   [https://github.com/pytorch/pytorch/blob/main/c10/util/ApproximateClock.h](https://github.com/pytorch/pytorch/blob/main/c10/util/ApproximateClock.h).
+   To achieve this when building FTorch with CMake, pass
+   `-DCMAKE_CXX_FLAGS="-D__rdtsc=__builtin_ia32_rdtsc"`.
+
+4. **Disable FTorch's unit tests.**
+   The Nvidia compiler is currently incompatible with pFUnit, which is used for
+   FTorch's unit test suite. To achieve this when building FTorch with CMake,
+   either disable the unit tests but keep the integration tests enabled with
+   `-DFTORCH_BUILD_UNIT_TESTS=FALSE -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE` or
+   disable all tests with `-DCMAKE_BUILD_TESTS=FALSE`.
+
+
+##### Flang compiler
+
+When building FTorch with the `flang` compiler from the LLVM project, there is
+one gotcha to be aware of:
+
+1. **Use pFUnit version 4.18.2 or newer when building unit tests.**
+   See section on
+   [unit test segfaults with flang](#unit-test-segfaults-with-flang) for
+   details.
 
 
 ### Common warnings

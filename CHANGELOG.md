@@ -11,6 +11,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Added CI test suite workflows using the Nvidia compiler (both CPU and CUDA)
+  in [#648](https://github.com/Cambridge-ICCS/FTorch/pull/648)
+
 ### Changed
 
 ### Removed

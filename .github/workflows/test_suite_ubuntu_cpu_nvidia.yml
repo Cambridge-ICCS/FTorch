@@ -1,0 +1,163 @@
+# Workflow to run the FTorch test suite on a CPU-only runner with the NVIDIA compiler
+name: Test suite (Ubuntu NVIDIA CPU)
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
+
+  # Triggers the workflow on pushes to open pull requests with changes to this workflow
+  pull_request:
+    paths:
+      - '.github/workflows/test_suite_ubuntu_cpu_nvidia.yml'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Write permissions are not required
+permissions: {}
+
+# Workflow run - one or more jobs that can run sequentially or in parallel
+jobs:
+  test-suite:
+    name: nvfortran ${{ matrix.nvhpc_version }}
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nvhpc_version: ["26.9"]
+
+    # Terminate the job if it runs for more than 20 minutes
+    timeout-minutes: 30
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout FTorch repository
+        with:
+          persist-credentials: true
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      # Install the NVIDIA HPC SDK (nvfortran, nvc, nvc++). We can't use the
+      # `fortran-lang/setup-fortran` action's `compiler: nvidia-hpc` option
+      # because its internal `sudo gpg --dearmor` step silently fails on the
+      # GitHub-hosted Ubuntu 24.04 runners, leaving apt unable to verify the
+      # HPC SDK repository (NO_PUBKEY F338EA0E0105AB24). Instead we install
+      # the GPG keyring in a way that doesn't rely on sudo for gpg itself.
+      - name: Install NVIDIA HPC SDK
+        run: |
+          # Convert the version matrix entry (e.g. "26.9") to the package name
+          # form (e.g. "26-9")
+          nvhpc_pkg=nvhpc-$(echo "${{ matrix.nvhpc_version }}" | tr . -)
+
+          # Install the NVIDIA HPC SDK GPG key into a location apt trusts. Run
+          # gpg as the runner user (so no /root/.gnupg initialisation is needed)
+          # and pipe to sudo tee, then make the keyring world-readable so the
+          # apt sandbox user (_apt) can read it.
+          sudo install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://developer.download.nvidia.com/hpc-sdk/ubuntu/DEB-GPG-KEY-NVIDIA-HPC-SDK \
+            | gpg --dearmor \
+            | sudo tee /etc/apt/keyrings/nvidia-hpcsdk.gpg > /dev/null
+          sudo chmod a+r /etc/apt/keyrings/nvidia-hpcsdk.gpg
+
+          # Add the HPC SDK apt repository and install the requested version
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/nvidia-hpcsdk.gpg] https://developer.download.nvidia.com/hpc-sdk/ubuntu/amd64 /" \
+            | sudo tee /etc/apt/sources.list.d/nvhpc.list
+          sudo apt-get update -y
+          sudo apt-get install -y "${nvhpc_pkg}"
+
+          # Expose the compilers to subsequent steps
+          nvhpc_bin=$(ls -d /opt/nvidia/hpc_sdk/Linux_x86_64/*/compilers/bin | tail -n 1)
+          echo "${nvhpc_bin}" >> "${GITHUB_PATH}"
+
+      - name: Install OpenMPI
+        run: |
+          sudo apt update
+          sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.13'  # Use 3.13 as no PyTorch wheels for 3.14 yet.
+
+      - name: Install ftorch_utils
+        run: |
+          python -m pip install --upgrade pip
+          python -m venv ftorch
+          . ftorch/bin/activate
+          pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
+
+      - name: Build FTorch
+        run: |
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages"
+          export BUILD_DIR="$(pwd)/build"
+          mkdir -p ${BUILD_DIR}
+          # Install to /tmp/ to ensure independent from the CMake build in standalone check.
+          export INSTALL_DIR="/tmp/ftorch-install"
+          mkdir -p ${INSTALL_DIR}
+          cd ${BUILD_DIR}
+          # NOTE:
+          #  * nvc++ masquerades as __GNUC__ so PyTorch's <x86intrin.h> path in
+          #    c10/util/ApproximateClock.h is taken. However, nvc++'s version
+          #    provides neither the `__rdtsc()` it expects, so we map that to
+          #    the `__builtin_ia32_rdtsc` provided by nvc++'s LLVM frontend.
+          #  * -Mdetail required to handle pointers to contiguous arrays
+          #  * The Nvidia compiler is currently incompatible with pFUnit so
+          #    we don't build or run Fortran unit tests here. See
+          #    https://github.com/Cambridge-ICCS/FTorch/pull/648.
+          cmake .. \
+            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=nvc \
+            -DCMAKE_CXX_COMPILER=nvc++ \
+            -DCMAKE_Fortran_COMPILER=nvfortran \
+            -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
+            -DFTORCH_BUILD_UNIT_TESTS=FALSE \
+            -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE \
+            -DCMAKE_PREFIX_PATH="${Torch_DIR}" \
+            -DCMAKE_Fortran_FLAGS="-Mdetail" \
+            -DCMAKE_CXX_FLAGS="-D__rdtsc=__builtin_ia32_rdtsc"
+          cmake --build .
+          cmake --install .
+
+      - name: Run Python unit tests
+        run: |
+          . ftorch/bin/activate
+          pytest --verbose test/ftorch_utils
+
+      - name: Run integration tests
+        run: |
+          . ftorch/bin/activate
+          cd build
+          ctest --verbose --tests-regex example
+
+      # Check that we can successfully build and run an example outside the main FTorch build process
+      - name: Standalone SimpleNet example
+        run: |
+          . ftorch/bin/activate
+          VN=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
+          export Torch_DIR="${VIRTUAL_ENV}/lib/python${VN}/site-packages/torch"
+          export FTORCH_INSTALL_DIR="/tmp/ftorch-install"
+          export EXAMPLE_BUILD_DIR="examples/02_SimpleNet/build"
+          mkdir "${EXAMPLE_BUILD_DIR}"
+          cd "${EXAMPLE_BUILD_DIR}"
+          cmake .. \
+            -DPython_EXECUTABLE="$(which python)" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=nvc \
+            -DCMAKE_CXX_COMPILER=nvc++ \
+            -DCMAKE_Fortran_COMPILER=nvfortran \
+            -DCMAKE_PREFIX_PATH="${FTORCH_INSTALL_DIR};${Torch_DIR}" \
+            -DCMAKE_BUILD_TESTS=TRUE \
+            -DCMAKE_CXX_FLAGS="-D__rdtsc=__builtin_ia32_rdtsc"
+          cmake --build .
+          ctest -V
