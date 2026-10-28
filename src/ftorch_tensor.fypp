@@ -410,8 +410,9 @@ contains
                                  requires_grad_value)
   end subroutine torch_tensor_from_blob
 
-  ! Note: `data_in` dummy argument below is marked both as `pointer` and `contiguous` in order to generate
-  !    compile time errors if called with non-contiguous argument (e.g. array section `a(1:20:2)`).
+  ! NOTE: `data_in` dummy argument below is marked both as `pointer` and `contiguous` in order to
+  !       generate compile time errors if called with non-contiguous argument (e.g. array section
+  !       `a(1:20:2)`).
 
   #:for PREC in PRECISIONS
   #:for RANK in RANKS
