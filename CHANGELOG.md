@@ -20,6 +20,10 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Fixed
 
+- Prioritise the gfortran runtime directory in the RPATH when Torch bundles its own
+  `libgfortran.so` (PyTorch 2.15), which otherwise shadows it,
+  in [#653](https://github.com/Cambridge-ICCS/FTorch/issues/653)
+
 ### Patch Releases
 
 

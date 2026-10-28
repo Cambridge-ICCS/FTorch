@@ -184,6 +184,15 @@ path to FTorch described above):
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path/to/Torch/installation>/lib
 ```
 
+Some Torch distributions (e.g., PyTorch 2.15 CPU wheels) bundle an old
+`libgfortran.so.5` in their `lib` directory. FTorch's CMake puts the runtime
+directory of your gfortran ahead of the Torch directory in the `RPATH` to avoid
+this, but directories in `LD_LIBRARY_PATH` are searched before the `RPATH`. If you
+see an error such as ``version `GFORTRAN_10' not found``, make sure the directory
+containing your compiler's `libgfortran.so` (see
+`gfortran -print-file-name=libgfortran.so`) comes before the Torch `lib` directory
+in `LD_LIBRARY_PATH`.
+
 @Note
 _Depending on your system and architecture `lib` may be `lib64` or something similar._
 _On MacOS devices you will need to set `DYLD_LIBRARY_PATH` rather than `LD_LIBRARY_PATH`._
