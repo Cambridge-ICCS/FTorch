@@ -221,6 +221,23 @@ tests), e.g., specifying to `cmake` an explicit path to the newer `pFUnit` (e.g.
 
 #### Compiler-specific issues
 
+##### Intel compiler
+
+When building FTorch with the LLVM-based or legacy Intel compilers - `ifx` or
+`ifort`, respectively - there are two gotchas to be aware of:
+
+1. **Include `-fpscomp logicals` in the Fortran flags.**
+   This ensures the Fortran logicals are compatible with those used by PyTorch.
+   To achieve this when building FTorch with CMake, pass
+   `-DCMAKE_Fortran_FLAGS="-fpscomp logicals"`.
+
+2. **Include `-D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH` in the C++ flags.**
+   This suppresses warnings related to mismatched compiler versions between the
+   Intel compilers and those used to build LibTorch. To achieve this when
+   building FTorch with CMake, pass
+   `-DCMAKE_CXX_FLAGS="-D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH"`.
+
+
 ##### NVIDIA compiler
 
 When building FTorch with the NVIDIA compiler suite (a.k.a. NVHPC) - `nvc`,
