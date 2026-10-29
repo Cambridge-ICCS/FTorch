@@ -104,8 +104,8 @@ program foptimizer
   close(unit=10)
 
   ! Check scaling tensor converges to the expected value
-  if (.not. allclose(output_data, target_data, "optimizers", rtol=1.0e-03_wp)) then
-    write(*,*) "Error :: Optimizer did not converge to expected values"
+  if (.not. allclose(scaling_data, target_data, test_name="optimizers", rtol=1e-3)) then
+    write(*,*) "Error :: value of scaling_data does not match expected value"
     stop 999
   end if
 
