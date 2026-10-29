@@ -452,7 +452,7 @@ module ftorch_test_utils
 
       real(kind=real32) :: rtol_value
 
-      rtol_value = 1e-5
+      rtol_value = real(1.0e-5, kind=real32)
       test_pass = (abs(got - expect) <= rtol_value * abs(expect))
 
     end function isclose_operator_real32
@@ -468,7 +468,7 @@ module ftorch_test_utils
 
       real(kind=real64) :: rtol_value
 
-      rtol_value = 1e-5
+      rtol_value = real(1.0e-5, kind=real64)
       test_pass = (abs(got - expect) <= rtol_value * abs(expect))
 
     end function isclose_operator_real64
@@ -486,7 +486,7 @@ module ftorch_test_utils
       real(kind=real32) :: rtol_value
       integer :: shape_error
 
-      rtol_value = 1.0e-5
+      rtol_value = real(1.0e-5, kind=real32)
 
       ! Check the shapes of the arrays match
       shape_error = maxval(abs(shape(got) - shape(expect)))
@@ -510,7 +510,7 @@ module ftorch_test_utils
       real(kind=real32) :: rtol_value
       integer :: shape_error
 
-      rtol_value = 1.0e-5
+      rtol_value = real(1.0e-5, kind=real32)
 
       ! Check the shapes of the arrays match
       shape_error = maxval(abs(shape(got) - shape(expect)))
@@ -534,7 +534,7 @@ module ftorch_test_utils
       real(kind=real32) :: rtol_value
       integer :: shape_error
 
-      rtol_value = 1.0e-5
+      rtol_value = real(1.0e-5, kind=real32)
 
       ! Check the shapes of the arrays match
       shape_error = maxval(abs(shape(got) - shape(expect)))
@@ -558,7 +558,7 @@ module ftorch_test_utils
       real(kind=real64) :: rtol_value
       integer :: shape_error
 
-      rtol_value = 1.0e-5
+      rtol_value = real(1.0e-5, kind=real64)
 
       ! Check the shapes of the arrays match
       shape_error = maxval(abs(shape(got) - shape(expect)))
@@ -582,7 +582,7 @@ module ftorch_test_utils
       real(kind=real64) :: rtol_value
       integer :: shape_error
 
-      rtol_value = 1.0e-5
+      rtol_value = real(1.0e-5, kind=real64)
 
       ! Check the shapes of the arrays match
       shape_error = maxval(abs(shape(got) - shape(expect)))
@@ -606,7 +606,7 @@ module ftorch_test_utils
       real(kind=real64) :: rtol_value
       integer :: shape_error
 
-      rtol_value = 1.0e-5
+      rtol_value = real(1.0e-5, kind=real64)
 
       ! Check the shapes of the arrays match
       shape_error = maxval(abs(shape(got) - shape(expect)))

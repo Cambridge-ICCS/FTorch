@@ -178,7 +178,7 @@ module ftorch_test_utils
 
       ${f_type(PREC)}$(kind=${PREC}$) :: rtol_value
 
-      rtol_value = 1e-5
+      rtol_value = real(1.0e-5, kind=${PREC}$)
       test_pass = (abs(got - expect) <= rtol_value * abs(expect))
 
     end function isclose_operator_${PREC}$
@@ -199,7 +199,7 @@ module ftorch_test_utils
       ${f_type(PREC)}$(kind=${PREC}$) :: rtol_value
       integer :: shape_error
 
-      rtol_value = 1.0e-5
+      rtol_value = real(1.0e-5, kind=${PREC}$)
 
       ! Check the shapes of the arrays match
       shape_error = maxval(abs(shape(got) - shape(expect)))
