@@ -12,6 +12,9 @@ exclude = ['\|url\|']
 remap = [
   '/pages/(\S*/)?\|page\|/(\S+)\.html(#\S+)?$ /pages/$2.md$3',
   '/pages/(\S*/)?\|media\|/(\S+)$ /pages/media/$2',
+  # docs.pytorch.org uses JavaScript to redirect /docs/stable/, so
+  # fragments cannot be verified by lychee. We strip them for checking purposes.
+  '(https://docs\.pytorch\.org/docs/stable/\S+)#\S+$ $1',
 ]
 
 # HTTP status codes treated as success for external links.
