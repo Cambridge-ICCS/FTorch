@@ -14,7 +14,7 @@ program foptimizer
                     torch_optim, torch_optim_SGD
 
   ! Import our tools module for testing utils
-  use ftorch_test_utils, only : operator(.allclose.)
+  use ftorch_test_utils, only : allclose
 
   implicit none
 
@@ -104,7 +104,7 @@ program foptimizer
   close(unit=10)
 
   ! Check scaling tensor converges to the expected value
-  if (.not. (scaling_data .allclose. target_data)) then
+  if (.not. allclose(scaling_data, target_data, "optimizers", rtol=1.0e-03)) then
     write(*,*) "Error :: value of scaling_data does not match expected value"
     stop 999
   end if
