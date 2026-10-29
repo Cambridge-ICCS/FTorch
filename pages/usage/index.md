@@ -28,7 +28,7 @@ ordered_subpage: troubleshooting.md
 - [Training](#training)
     - [Offline](|page|/usage/offline.html)
     - [Online](|page|/usage/online.html)
-- [Troubleshooting](|page|/installation/troubleshooting.html)
+- [Troubleshooting](|page|/usage/troubleshooting.html)
 
 
 ### Examples

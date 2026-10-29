@@ -1,0 +1,30 @@
+# FORD's auto-generated API index (|url| macro) has no source file, so skip it.
+exclude = ['\|url\|']
+
+# Rewrite FORD's page macros to their source files so they can be checked
+# against the local tree without building the docs:
+#   |page|/foo/bar.html(.html#frag)  ->  pages/foo/bar.md
+#   |media|/baz.png                  ->  pages/media/baz.png
+# The middle `(\S*/)?` group handles references with extra path segments
+# (same-dir and cross-dir links resolve to the same source file).
+# Fragments (#frag) are preserved so section anchors in the target markdown
+# file can be verified too (requires the --include-fragments flag).
+remap = [
+  '/pages/(\S*/)?\|page\|/(\S+)\.html(#\S+)?$ /pages/$2.md$3',
+  '/pages/(\S*/)?\|media\|/(\S+)$ /pages/media/$2',
+  # docs.pytorch.org uses JavaScript to redirect /docs/stable/, so
+  # fragments cannot be verified by lychee. We strip them for checking purposes.
+  '(https://docs\.pytorch\.org/docs/stable/\S+)#\S+$ $1',
+]
+
+# HTTP status codes treated as success for external links.
+# 403 and 429 are almost always bot protection / rate limiting; accepting them
+# avoids noise from flaky external sites.
+accept = [
+  '200..=204', # OK
+  301, 302, 307, 308, # redirects (lychee follows them anyway)
+  403, # bot protection
+  429, # rate limiting
+]
+
+format = "markdown"

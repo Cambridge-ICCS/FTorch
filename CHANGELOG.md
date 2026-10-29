@@ -13,6 +13,9 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 - Added CI test suite workflows using the Nvidia compiler (both CPU and CUDA)
   in [#648](https://github.com/Cambridge-ICCS/FTorch/pull/648)
+- Added automated link checking of the online documentation using
+  [lychee](https://lychee.cli.rs/) in
+  [#649](https://github.com/Cambridge-ICCS/FTorch/pull/649)
 
 ### Changed
 

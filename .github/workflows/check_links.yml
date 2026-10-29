@@ -1,0 +1,74 @@
+# Workflow to check for broken links in the FORD documentation using lychee
+name: Check links
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pull requests to main with documentation changes
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '.github/workflows/check_links.yml'
+      - '**.md'
+      - 'pages/**'
+
+  # Runs weekly on main so regressions are flagged even without doc PRs
+  schedule:
+    - cron: '0 9 * * MON'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Cancel jobs running if new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# No write permission by default
+permissions: {}
+
+jobs:
+  check-links:
+    name: check links
+    runs-on: ubuntu-latest
+
+    # Issue creation on scheduled runs needs to write to repository issues
+    permissions:
+      issues: write
+
+    # Terminate the job if it runs for more than 5 minutes
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout FTorch repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+
+      # The check is non-blocking on PR-level flakiness: some external sites
+      # are flaky or block automated requests, so failures are surfaced via
+      # the step summary rather than breaking the build. On scheduled runs the
+      # job is allowed to fail so that broken links are flagged by email and
+      # in the Actions tab.
+      - name: Link Checker
+        id: lychee
+        continue-on-error: true
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --no-progress --include-fragments 'pages/**/*.md'
+          format: markdown
+          output: lychee/out.md
+          jobSummary: true
+
+      # On scheduled runs with failure, raise the report as an open Issue.
+      - name: Create issue from report
+        if: failure() && github.event_name == 'schedule' && steps.lychee.outcome == 'failure'
+        uses: peter-evans/create-issue-from-file@fca9117c27cdc29c6c4db3b86c48e4115a786710 # v6.0.0
+        with:
+          title: Weekly link check found broken links
+          content-filepath: lychee/out.md
+          labels: documentation
+
+      # On scheduled runs that fail, fail the job so maintainers are notified.
+      - name: Fail scheduled run on broken links
+        if: failure() && github.event_name == 'schedule' && steps.lychee.outcome == 'failure'
+        run: exit 1
