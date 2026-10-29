@@ -159,7 +159,7 @@
 <ul>
 <li><a href="#usage">Usage</a></li>
 <li><a href="#common-errors">Common Errors</a><ul>
-<li><a href="#no-specific-subroutine">No specific subroutine</a></li>
+<li><a href="#no-specific-subroutine-using-temporaries">No specific subroutine</a></li>
 <li><a href="#segmentation-faults">Segmentation faults</a></li>
 <li><a href="#unit-test-segfaults-with-flang">Unit test segfaults with flang</a></li>
 <li><a href="#compiler-specific-issues">Compiler-specific issues</a></li>
@@ -190,7 +190,7 @@ in the Fortran interface. See the <a href="../../lists/procedures.html">API proc
 for <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a> and
 <a href="../../proc/torch_model_load.html">torch_model_load</a> etc. for details.</p>
 <h3 id="common-errors">Common Errors</h3>
-<h4 id="no-specific-subroutine-using-temporaries">No specific subroutine - using temporaries</h4>
+<h4 id="no-specific-subroutine-using-temporaries">No specific subroutine: using temporaries</h4>
 <p>FTorch makes heavy use of Fortran <code>interfaces</code> to <code>module procedure</code>s to achieve
 <a href="https://fortran-lang.org/learn/oop_features_in_fortran/object_based_programming_techniques/">overloading of subroutines</a>
 such that for users do not need to call a different subroutine for each rank or type
@@ -234,7 +234,7 @@ Error: There is no specific subroutine for the generic 'torch_tensor_from_array'
 see the <a href="#no-specific-subroutine-deprecated-torch_tensor_from_array-signature">Deprecated signature</a>
 section below.</p>
 </div>
-<h4 id="no-specific-subroutine-integer-kinds-used-by-ftorch">No specific subroutine - Integer kinds used by FTorch</h4>
+<h4 id="no-specific-subroutine-integer-kinds-used-by-ftorch">No specific subroutine: Integer kinds used by FTorch</h4>
 <p>Another possible cause of compile-time errors is passing integers of the wrong
 kind. FTorch uses explicit integer kinds from the <code>iso_fortran_env</code> intrinsic module:</p>
 <ul>
@@ -273,7 +273,7 @@ Error: There is no specific subroutine for the generic 'torch_tensor_from_array'
 see the <a href="#no-specific-subroutine-deprecated-torch_tensor_from_array-signature">Deprecated signature</a>
 section below.</p>
 </div>
-<h4 id="no-specific-subroutine-deprecated-torch_tensor_from_array-signature">No specific subroutine - Deprecated <code>torch_tensor_from_array</code> signature</h4>
+<h4 id="no-specific-subroutine-deprecated-torch_tensor_from_array-signature">No specific subroutine: Deprecated <code>torch_tensor_from_array</code> signature</h4>
 <p>The update of FTorch to v2.0 brought in a breaking API change to
 <a href="../../interface/torch_tensor_from_array.html">torch_tensor_from_array</a>.
 If you see this error after upgrading FTorch:</p>

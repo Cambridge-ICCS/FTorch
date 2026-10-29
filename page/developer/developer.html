@@ -177,8 +177,8 @@ expected for submissions.</p>
 </li>
 </ul>
 <h3 id="developer-requirements">Developer requirements</h3>
-<p>Development tools for <a href="#fortran-source-and-fypp">pre-processing</a>,
-<a href="#code-style">code styling</a> etc. are pip-installable using the <code>dev</code> dependency
+<p>Development tools for <a href="#fortran-source-generation-using-fypp">pre-processing</a>,
+<a href="#code-style-and-standards">code styling</a> etc. are pip-installable using the <code>dev</code> dependency
 group in the
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/pyproject.toml">pyproject.toml file</a>:</p>
 <div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>.<span class="w"> </span>--group<span class="w"> </span>dev
@@ -209,7 +209,6 @@ the FTorch Fortran API the steps are generally as follows:</p>
   that binds to the version in <code>ctorch.cpp</code>.</li>
 </ul>
 <p>Refer to the <a href="https://pytorch.org/cppdocs/">LibTorch C++ Documentation</a>
-and <a href="https://pytorch.org/cppdocs/api/library_root.html">C++ API documentation</a>
 for details of the available functions.</p>
 <p>The following guidelines should be followed whilst writing new routines:</p>
 <ul>
@@ -223,7 +222,7 @@ for details of the available functions.</p>
 but instead generated from <code>src/ftorch_tensor.fypp</code> by running the
 <a href="https://fypp.readthedocs.io/en/stable/index.html">Fypp</a> preprocessor.
 This is done to simplify the process of overloading functions for multiple data
-Fypp can be installed with the <a href="#installing-developer-requirements">developer requirements</a>.</p>
+Fypp can be installed with the <a href="#developer-requirements">developer requirements</a>.</p>
 <p>To generate the Fortran code run:</p>
 <div class="codehilite"><pre><span></span><code>fypp<span class="w"> </span>src/ftorch_tensor.fypp<span class="w"> </span>src/ftorch_tensor.f90
 </code></pre></div>
@@ -372,6 +371,36 @@ Additional pages are contained in <code>pages/</code> as markdown files.</p>
 <li>When writing new pages you can set <code>graph: false</code> in <code>FTorch.md</code> whilst prototyping
   to skip the time-consuming generation of dependency graphs.</li>
 </ul>
+<h4 id="checking-links">Checking links</h4>
+<p>Links in the documentation (both external URLs and <code>/home/runner/work/FTorch/FTorch/doc/page</code>/<code>/home/runner/work/FTorch/FTorch/doc/media</code> macros
+in the markdown sources) are checked with
+<a href="https://github.com/lycheeverse/lychee">lychee</a>, using the configuration in
+<a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/lychee.toml"><code>lychee.toml</code></a>
+at the repository root.
+The configuration remaps FORD's <code>/home/runner/work/FTorch/FTorch/doc/page</code> and <code>/home/runner/work/FTorch/FTorch/doc/media</code> macros to their source
+files so they can be validated without a full docs build.
+Note that <code>/home/runner/work/FTorch/FTorch/doc</code> macros (the FORD-generated API index) cannot be checked from
+source since they only exist post-build; they are excluded.
+Fragments (<code>#section-name</code>) are preserved and verified: links to a heading in
+another page must use the GitHub-style slug of that heading (lowercase, spaces
+replaced with hyphens, punctuation removed).</p>
+<p>The CI check is non-blocking on pull requests (<code>continue-on-error: true</code>):
+some external sites are flaky or block automated requests, so failures are
+surfaced via the workflow's step summary rather than failing the build.
+A weekly scheduled run checks <code>main</code> and, on failure, files a GitHub Issue
+and notifies maintainers by email so regressions are not missed.</p>
+<p>lychee is a Rust binary and is not pip-installable, so it is not part of the
+<code>dev</code> dependency group. To install it locally either download a pre-built
+binary from the
+<a href="https://github.com/lycheeverse/lychee/releases">GitHub releases page</a> or,
+if you have a Rust toolchain, run:</p>
+<div class="codehilite"><pre><span></span><code>cargo<span class="w"> </span>install<span class="w"> </span>lychee
+</code></pre></div>
+
+<p>To run the same check as CI locally, run the following from the repository root:</p>
+<div class="codehilite"><pre><span></span><code>lychee<span class="w"> </span>--config<span class="w"> </span>lychee.toml<span class="w"> </span>--no-progress<span class="w"> </span>--include-fragments<span class="w"> </span><span class="s1">'pages/**/*.md'</span>
+</code></pre></div>
+
 <h4 id="versioning-and-changelog">Versioning and Changelog</h4>
 <p>FTorch has follows <a href="https://semver.org/">semantic versioning</a>.</p>
 <ul>

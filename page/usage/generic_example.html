@@ -158,7 +158,7 @@
 <p>This page provides abstract guidance to the general process of using FTorch.
 It covers the full process of saving a model from PyTorch and coupling it into a Fortran code.
 To see this process in context we strongly advise following the
-<a href="../examples/worked_examples.html">Worked Examples</a>.</p>
+<a href="worked_examples.html">Worked Examples</a>.</p>
 <h3 id="overview-of-the-interfacing-process">Overview of the interfacing process</h3>
 <p>In order to use FTorch users will typically need to follow these steps:</p>
 <ol>
@@ -178,7 +178,7 @@ models and tensors. The <code>.pt</code> file extension should be used.</p>
 This can be done from within your code using the
 <a href="https://docs.pytorch.org/docs/2.10/generated/torch.jit.script.html#torch.jit.script"><code>jit.script</code></a>
 or
-<a href="https://docs.pytorch.org/docs/2.10/generated/torch.jit.script.html#torch.jit.trace"><code>jit.trace</code></a>
+<a href="https://docs.pytorch.org/docs/2.10/generated/torch.jit.trace.html#torch.jit.trace"><code>jit.trace</code></a>
 functionalities from within Python.</p>
 <p>If you are not familiar with these we provide a tool
 <a href="https://github.com/Cambridge-ICCS/FTorch/blob/main/ftorch_utils/pt2ts.py"><code>pt2ts</code></a>
@@ -270,7 +270,7 @@ then you should use the same path for <code>&lt;/path/to/install/location&gt;</c
 <p>To build with <code>make</code> we need to <em>include</em> the library and <em>link</em> the
 executable against it when compiling.</p>
 <p>For full details of the flags to set and the linking process see the
-<a href="../installation/hpc.html/#building-projects-and-linking-to-ftorch">HPC build pages</a>.</p>
+<a href="../installation/hpc.html#building-and-linking">HPC build pages</a>.</p>
 <h3 id="running-on-gpus">Running on GPUs</h3>
 <p>In order to run a model on GPU, two main changes to the above process are required:</p>
 <ol>
