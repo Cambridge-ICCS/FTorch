@@ -28,7 +28,7 @@ applications:
   at the University of Oxford<br>
   [Slides](https://jackatkinson.net/slides/Oxford-FTorch)
 * **Accelerating UKCA by predicting timesteps with FTorch**<br>
-  [HPC in Weather & Climate Research](https://durham.readthedocs.io/en/latest/hpcdays/workshops.html#Weather)
+  [HPC in Weather & Climate Research](https://durham.readthedocs.io/en/latest/hpcdays2025/workshops.html#hpc-in-weather-climate-research)
   session at
   [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/)
   University of Durham - June 2025<br>
@@ -42,7 +42,7 @@ applications:
 * **FTorch: Enabling Online Training for Large-Scale Fortran Models**<br>
   [CCfCS Polar Symposium 2025](https://polarnetwork.org/events/ccfcs-polar-symposium-2025/),
   British Antarctic Survey, Cambridge - May 2025<br>
-  [Poster](https://niccolozanotti.com/CCfCS-PolarSymposium25/poster.pdf)<br>
+  [Poster](https://niccolozanotti.github.io/CCfCSPolarSymposium2025/poster.pdf)<br>
 * **FTorch: A library to couple PyTorch ML models with Fortran climate models**<br>
   AI for Climate and Nature Community Day, Cambridge - May 2025<br>
   [Slides](https://niccolozanotti.github.io/ftorch-flash)

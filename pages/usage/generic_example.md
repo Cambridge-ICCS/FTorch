@@ -7,7 +7,7 @@ date: Last Updated: October 2025
 This page provides abstract guidance to the general process of using FTorch.
 It covers the full process of saving a model from PyTorch and coupling it into a Fortran code.
 To see this process in context we strongly advise following the
-[Worked Examples](|page|/examples/worked_examples.html).
+[Worked Examples](|page|/usage/worked_examples.html).
 
 ### Overview of the interfacing process
 
@@ -33,7 +33,7 @@ The trained PyTorch model needs to be exported to
 This can be done from within your code using the
 [`jit.script`](https://docs.pytorch.org/docs/2.10/generated/torch.jit.script.html#torch.jit.script)
 or
-[`jit.trace`](https://docs.pytorch.org/docs/2.10/generated/torch.jit.script.html#torch.jit.trace)
+[`jit.trace`](https://docs.pytorch.org/docs/2.10/generated/torch.jit.trace.html#torch.jit.trace)
 functionalities from within Python.
 
 If you are not familiar with these we provide a tool
@@ -138,7 +138,7 @@ To build with `make` we need to _include_ the library and _link_ the
 executable against it when compiling.
 
 For full details of the flags to set and the linking process see the
-[HPC build pages](|page|/installation/hpc.html/#building-projects-and-linking-to-ftorch).
+[HPC build pages](|page|/installation/hpc.html#building-and-linking).
 
 ### Running on GPUs
 
