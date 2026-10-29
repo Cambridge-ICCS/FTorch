@@ -3,14 +3,17 @@ name: Test suite (Ubuntu NVIDIA CUDA)
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
-  push:
-    branches: [ "main" ]
+  # TODO: Re-enable Nvidia CI once the following compiler bug has been addressed:
+  # https://forums.developer.nvidia.com/t/nvfortran-fails-to-accept-target-argument-to-pointer-dummy-argument-when-in-generic-interface/387225
+  #
+  # # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  # push:
+  #   branches: [ "main" ]
 
-  # Triggers the workflow on pushes to open pull requests with changes to this workflow
-  pull_request:
-    paths:
-      - '.github/workflows/test_suite_ubuntu_cuda_nvidia.yml'
+  # # Triggers the workflow on pushes to open pull requests with changes to this workflow
+  # pull_request:
+  #   paths:
+  #     - '.github/workflows/test_suite_ubuntu_cuda_nvidia.yml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
