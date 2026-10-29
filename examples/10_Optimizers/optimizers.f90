@@ -104,12 +104,12 @@ program foptimizer
   close(unit=10)
 
   ! Check scaling tensor converges to the expected value
-  ! Compute final output to populate output_data with scaling_tensor values
+  ! Need to run one final forward pass to get scaling_tensor values into an array
   call torch_tensor_from_array(output_vec, output_data, torch_kCPU)
   output_vec = input_vec * scaling_tensor
   
-  if (.not. allclose(output_data, target_data, "optimizers", rtol=1.0e-03)) then
-    write(*,*) "Error :: value of output_data does not match expected value"
+  if (.not. allclose(output_data, target_data, "optimizers", rtol=1.0e-03_wp)) then
+    write(*,*) "Error :: Optimizer did not converge to expected values"
     stop 999
   end if
 
