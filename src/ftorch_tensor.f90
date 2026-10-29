@@ -444,11 +444,9 @@ contains
                                  requires_grad_value)
   end subroutine torch_tensor_from_blob
 
-  ! Note: `data_in` is declared with the `target` (rather than `pointer`) attribute
-  ! so that plain `target` actual arguments are accepted. Some compilers (e.g. NVHPC)
-  ! reject a `target` actual argument for a `pointer` dummy during generic resolution,
-  ! whereas the Fortran standard permits any object (with or without `target`) to be
-  ! passed to a non-assigned `target` dummy argument.
+  ! NOTE: `data_in` dummy argument below is marked both as `pointer` and `contiguous` in order to
+  !       generate compile time errors if called with non-contiguous argument (e.g. array section
+  !       `a(1:20:2)`).
 
   !> Return a Torch tensor pointing to data_in array of rank 1 containing data of type `int8`
   !> This subroutine is part of an interface and should be accessed through
@@ -463,7 +461,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int8), intent(in), target, contiguous :: data_in(:)
+    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -552,7 +550,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int8), intent(in), target, contiguous :: data_in(:,:)
+    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -641,7 +639,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int8), intent(in), target, contiguous :: data_in(:,:,:)
+    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -730,7 +728,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int8), intent(in), target, contiguous :: data_in(:,:,:,:)
+    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -819,7 +817,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int8), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -908,7 +906,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int16), intent(in), target, contiguous :: data_in(:)
+    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -997,7 +995,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int16), intent(in), target, contiguous :: data_in(:,:)
+    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1086,7 +1084,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int16), intent(in), target, contiguous :: data_in(:,:,:)
+    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1175,7 +1173,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int16), intent(in), target, contiguous :: data_in(:,:,:,:)
+    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1264,7 +1262,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int16), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1353,7 +1351,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int32), intent(in), target, contiguous :: data_in(:)
+    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1442,7 +1440,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int32), intent(in), target, contiguous :: data_in(:,:)
+    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1531,7 +1529,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int32), intent(in), target, contiguous :: data_in(:,:,:)
+    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1620,7 +1618,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int32), intent(in), target, contiguous :: data_in(:,:,:,:)
+    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1709,7 +1707,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int32), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1798,7 +1796,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int64), intent(in), target, contiguous :: data_in(:)
+    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1887,7 +1885,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int64), intent(in), target, contiguous :: data_in(:,:)
+    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -1976,7 +1974,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int64), intent(in), target, contiguous :: data_in(:,:,:)
+    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2065,7 +2063,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int64), intent(in), target, contiguous :: data_in(:,:,:,:)
+    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2154,7 +2152,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int64), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2243,7 +2241,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real32), intent(in), target, contiguous :: data_in(:)
+    real(kind=real32), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2332,7 +2330,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real32), intent(in), target, contiguous :: data_in(:,:)
+    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2421,7 +2419,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real32), intent(in), target, contiguous :: data_in(:,:,:)
+    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2510,7 +2508,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real32), intent(in), target, contiguous :: data_in(:,:,:,:)
+    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2599,7 +2597,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real32), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2688,7 +2686,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real64), intent(in), target, contiguous :: data_in(:)
+    real(kind=real64), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2777,7 +2775,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real64), intent(in), target, contiguous :: data_in(:,:)
+    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2866,7 +2864,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real64), intent(in), target, contiguous :: data_in(:,:,:)
+    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -2955,7 +2953,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real64), intent(in), target, contiguous :: data_in(:,:,:,:)
+    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3044,7 +3042,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real64), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3133,7 +3131,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int8), intent(in), target, contiguous :: data_in(:)
+    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3186,7 +3184,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int8), intent(in), target, contiguous :: data_in(:,:)
+    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3239,7 +3237,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int8), intent(in), target, contiguous :: data_in(:,:,:)
+    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3292,7 +3290,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int8), intent(in), target, contiguous :: data_in(:,:,:,:)
+    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3345,7 +3343,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int8), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    integer(kind=int8), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3398,7 +3396,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int16), intent(in), target, contiguous :: data_in(:)
+    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3451,7 +3449,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int16), intent(in), target, contiguous :: data_in(:,:)
+    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3504,7 +3502,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int16), intent(in), target, contiguous :: data_in(:,:,:)
+    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3557,7 +3555,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int16), intent(in), target, contiguous :: data_in(:,:,:,:)
+    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3610,7 +3608,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int16), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    integer(kind=int16), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3663,7 +3661,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int32), intent(in), target, contiguous :: data_in(:)
+    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3716,7 +3714,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int32), intent(in), target, contiguous :: data_in(:,:)
+    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3769,7 +3767,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int32), intent(in), target, contiguous :: data_in(:,:,:)
+    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3822,7 +3820,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int32), intent(in), target, contiguous :: data_in(:,:,:,:)
+    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3875,7 +3873,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int32), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    integer(kind=int32), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3928,7 +3926,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int64), intent(in), target, contiguous :: data_in(:)
+    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -3981,7 +3979,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int64), intent(in), target, contiguous :: data_in(:,:)
+    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4034,7 +4032,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int64), intent(in), target, contiguous :: data_in(:,:,:)
+    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4087,7 +4085,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int64), intent(in), target, contiguous :: data_in(:,:,:,:)
+    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4140,7 +4138,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    integer(kind=int64), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    integer(kind=int64), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4193,7 +4191,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real32), intent(in), target, contiguous :: data_in(:)
+    real(kind=real32), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4246,7 +4244,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real32), intent(in), target, contiguous :: data_in(:,:)
+    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4299,7 +4297,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real32), intent(in), target, contiguous :: data_in(:,:,:)
+    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4352,7 +4350,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real32), intent(in), target, contiguous :: data_in(:,:,:,:)
+    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4405,7 +4403,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real32), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    real(kind=real32), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4458,7 +4456,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real64), intent(in), target, contiguous :: data_in(:)
+    real(kind=real64), intent(in), pointer, contiguous :: data_in(:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4511,7 +4509,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real64), intent(in), target, contiguous :: data_in(:,:)
+    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4564,7 +4562,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real64), intent(in), target, contiguous :: data_in(:,:,:)
+    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4617,7 +4615,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real64), intent(in), target, contiguous :: data_in(:,:,:,:)
+    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
@@ -4670,7 +4668,7 @@ contains
     type(torch_tensor), intent(out) :: tensor  !! Returned tensor
 
     ! inputs
-    real(kind=real64), intent(in), target, contiguous :: data_in(:,:,:,:,:)
+    real(kind=real64), intent(in), pointer, contiguous :: data_in(:,:,:,:,:)
         !! Input data that tensor will point at
     integer(c_int), intent(in)    :: device_type
         !! Device type the tensor will live on (`torch_kCPU` or a GPU device type)
