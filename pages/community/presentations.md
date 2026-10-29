@@ -28,7 +28,7 @@ applications:
   at the University of Oxford<br>
   [Slides](https://jackatkinson.net/slides/Oxford-FTorch)
 * **Accelerating UKCA by predicting timesteps with FTorch**<br>
-  [HPC in Weather & Climate Research](https://durham.readthedocs.io/en/latest/hpcdays/workshops.html#Weather)
+  [HPC in Weather & Climate Research](https://durham.readthedocs.io/en/latest/hpcdays2025/workshops.html#hpc-in-weather-climate-research)
   session at
   [Durham HPC Days](https://www.durham.ac.uk/research/institutes-and-centres/data-science/events-/durham---hpc-days/)
   University of Durham - June 2025<br>
