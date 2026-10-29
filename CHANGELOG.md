@@ -13,6 +13,10 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 - Added CI test suite workflows using the Nvidia compiler (both CPU and CUDA)
   in [#648](https://github.com/Cambridge-ICCS/FTorch/pull/648)
+- Reverted changes to `src/` from
+  [#648](https://github.com/Cambridge-ICCS/FTorch/pull/648) and temporarily
+  disabled Nvidia CI workflows in
+  [#652](https://github.com/Cambridge-ICCS/FTorch/pull/652)
 
 ### Changed
 
