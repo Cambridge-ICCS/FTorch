@@ -21,7 +21,7 @@ contains
     real(sp) :: value1, value2, value3
 
     value1 = 1.0_sp
-    value2 = 1.00001_sp
+    value2 = 1.000001_sp
     value3 = 2.0_sp
 
     ! Test that close values pass
@@ -38,7 +38,7 @@ contains
     real(dp) :: value1, value2, value3
 
     value1 = 1.0_dp
-    value2 = 1.00001_dp
+    value2 = 1.000001_dp
     value3 = 2.0_dp
 
     ! Test that close values pass
@@ -55,7 +55,7 @@ contains
     real(sp), dimension(3) :: array1, array2, array3
 
     array1 = [1.0_sp, 2.0_sp, 3.0_sp]
-    array2 = [1.00001_sp, 2.00001_sp, 3.00001_sp]
+    array2 = [1.000001_sp, 2.000001_sp, 3.000001_sp]
     array3 = [10.0_sp, 20.0_sp, 30.0_sp]
 
     ! Test that close arrays pass
@@ -72,7 +72,7 @@ contains
     real(sp), dimension(2,3) :: array1, array2, array3
 
     array1 = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp], [2, 3])
-    array2 = reshape([1.00001_sp, 2.00001_sp, 3.00001_sp, 4.00001_sp, 5.00001_sp, 6.00001_sp], [2, 3])
+    array2 = reshape([1.000001_sp, 2.000001_sp, 3.000001_sp, 4.000001_sp, 5.000001_sp, 6.00001_sp], [2, 3])
     array3 = reshape([10.0_sp, 20.0_sp, 30.0_sp, 40.0_sp, 50.0_sp, 60.0_sp], [2, 3])
 
     ! Test that close arrays pass
@@ -89,8 +89,8 @@ contains
     real(sp), dimension(2,2,2) :: array1, array2, array3
 
     array1 = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp], [2, 2, 2])
-    array2 = reshape([1.00001_sp, 2.00001_sp, 3.00001_sp, 4.00001_sp, &
-                      5.00001_sp, 6.00001_sp, 7.00001_sp, 8.00001_sp], [2, 2, 2])
+    array2 = reshape([1.000001_sp, 2.000001_sp, 3.000001_sp, 4.000001_sp, &
+                      5.000001_sp, 6.000001_sp, 7.000001_sp, 8.000001_sp], [2, 2, 2])
     array3 = reshape([10.0_sp, 20.0_sp, 30.0_sp, 40.0_sp, 50.0_sp, 60.0_sp, 70.0_sp, 80.0_sp], [2, 2, 2])
 
     ! Test that close arrays pass
@@ -107,7 +107,7 @@ contains
     real(dp), dimension(3) :: array1, array2, array3
 
     array1 = [1.0_dp, 2.0_dp, 3.0_dp]
-    array2 = [1.00001_dp, 2.00001_dp, 3.00001_dp]
+    array2 = [1.000001_dp, 2.000001_dp, 3.000001_dp]
     array3 = [10.0_dp, 20.0_dp, 30.0_dp]
 
     ! Test that close arrays pass
@@ -124,7 +124,7 @@ contains
     real(dp), dimension(2,3) :: array1, array2, array3
 
     array1 = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp], [2, 3])
-    array2 = reshape([1.00001_dp, 2.00001_dp, 3.00001_dp, 4.00001_dp, 5.00001_dp, 6.00001_dp], [2, 3])
+    array2 = reshape([1.000001_dp, 2.000001_dp, 3.000001_dp, 4.000001_dp, 5.000001_dp, 6.00001_dp], [2, 3])
     array3 = reshape([10.0_dp, 20.0_dp, 30.0_dp, 40.0_dp, 50.0_dp, 60.0_dp], [2, 3])
 
     ! Test that close arrays pass
@@ -141,8 +141,8 @@ contains
     real(dp), dimension(2,2,2) :: array1, array2, array3
 
     array1 = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp, 7.0_dp, 8.0_dp], [2, 2, 2])
-    array2 = reshape([1.00001_dp, 2.00001_dp, 3.00001_dp, 4.00001_dp, &
-                      5.00001_dp, 6.00001_dp, 7.00001_dp, 8.00001_dp], [2, 2, 2])
+    array2 = reshape([1.000001_dp, 2.000001_dp, 3.000001_dp, 4.000001_dp, &
+                      5.000001_dp, 6.000001_dp, 7.000001_dp, 8.000001_dp], [2, 2, 2])
     array3 = reshape([10.0_dp, 20.0_dp, 30.0_dp, 40.0_dp, 50.0_dp, 60.0_dp, 70.0_dp, 80.0_dp], [2, 2, 2])
 
     ! Test that close arrays pass
