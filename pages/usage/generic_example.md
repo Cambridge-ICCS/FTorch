@@ -33,7 +33,7 @@ The trained PyTorch model needs to be exported to
 This can be done from within your code using the
 [`jit.script`](https://docs.pytorch.org/docs/2.10/generated/torch.jit.script.html#torch.jit.script)
 or
-[`jit.trace`](https://docs.pytorch.org/docs/2.10/generated/torch.jit.script.html#torch.jit.trace)
+[`jit.trace`](https://docs.pytorch.org/docs/2.10/generated/torch.jit.trace.html#torch.jit.trace)
 functionalities from within Python.
 
 If you are not familiar with these we provide a tool
