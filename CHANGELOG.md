@@ -36,6 +36,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 
 ### Added
 
+- Added custom operators `.allclose.` and `.isclose.` for cleaner comparison syntax in tests
+  in [#606](https://github.com/Cambridge-ICCS/FTorch/issues/606)
 - Added a CONTRIBUTING.md to the repository, including policy on use of generative AI,
   and a CODE_OF_CONDUCT.md in [#636](https://github.com/Cambridge-ICCS/FTorch/pull/636)
 - Introduced torch_tensor_from_array_legacy interface preserving the old layout-required

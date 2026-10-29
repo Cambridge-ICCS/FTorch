@@ -35,6 +35,21 @@ module ftorch_test_utils
     #:endfor
   end interface
 
+  ! Custom operator interfaces
+  interface operator (.isclose.)
+    #:for PREC in PRECISIONS
+    module procedure isclose_operator_${PREC}$
+    #:endfor
+  end interface
+
+  interface operator (.allclose.)
+    #:for PREC in PRECISIONS
+    #:for RANK in RANKS
+    module procedure allclose_operator_${PREC}$_${RANK}$d
+    #:endfor
+    #:endfor
+  end interface
+
   contains
 
     !> Print the result of a test to the terminal
@@ -74,7 +89,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1e-5
+        rtol_value = 1.0e-5_${PREC}$
       else
         rtol_value = rtol
       end if
@@ -121,7 +136,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_${PREC}$
       else
         rtol_value = rtol
       end if
@@ -147,6 +162,40 @@ module ftorch_test_utils
       end if
 
     end function allclose_${PREC}$_${RANK}$d
+
+    #:endfor
+    #:endfor
+
+    #:for PREC in PRECISIONS
+    !> Custom operator for isclose comparison of two ${PREC}$ values
+    !! Uses default relative tolerance of 1e-5 and does not print results
+    function isclose_operator_${PREC}$(got, expect) result(test_pass)
+
+      ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: got      !! The value to be tested
+      ${f_type(PREC)}$(kind=${PREC}$), intent(in) :: expect   !! The expected value
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      test_pass = isclose_${PREC}$(got, expect, "unused", 1.0e-05_${PREC}$, .false.)
+
+    end function isclose_operator_${PREC}$
+
+    #:endfor
+
+    #:for PREC in PRECISIONS
+    #:for RANK in RANKS
+    !> Custom operator for allclose comparison of two ${PREC}$-valued ${RANK}$D arrays
+    !! Uses default relative tolerance of 1e-5 and does not print results
+    function allclose_operator_${PREC}$_${RANK}$d(got, expect) result(test_pass)
+
+      ${f_type(PREC)}$(kind=${PREC}$), intent(in), dimension${ranksuffix(RANK)}$ :: got     !! The array of values to be tested
+      ${f_type(PREC)}$(kind=${PREC}$), intent(in), dimension${ranksuffix(RANK)}$ :: expect  !! The array of expected values
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      test_pass = allclose_${PREC}$_${RANK}$d(got, expect, "unused", 1.0e-05_${PREC}$, .false.)
+
+    end function allclose_operator_${PREC}$_${RANK}$d
 
     #:endfor
     #:endfor

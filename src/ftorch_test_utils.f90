@@ -27,6 +27,21 @@ module ftorch_test_utils
     module procedure allclose_real64_3d
   end interface
 
+  ! Custom operator interfaces
+  interface operator (.isclose.)
+    module procedure isclose_operator_real32
+    module procedure isclose_operator_real64
+  end interface
+
+  interface operator (.allclose.)
+    module procedure allclose_operator_real32_1d
+    module procedure allclose_operator_real32_2d
+    module procedure allclose_operator_real32_3d
+    module procedure allclose_operator_real64_1d
+    module procedure allclose_operator_real64_2d
+    module procedure allclose_operator_real64_3d
+  end interface
+
   contains
 
     !> Print the result of a test to the terminal
@@ -65,7 +80,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1e-5
+        rtol_value = 1.0e-5_real32
       else
         rtol_value = rtol
       end if
@@ -104,7 +119,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1e-5
+        rtol_value = 1.0e-5_real64
       else
         rtol_value = rtol
       end if
@@ -148,7 +163,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real32
       else
         rtol_value = rtol
       end if
@@ -198,7 +213,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real32
       else
         rtol_value = rtol
       end if
@@ -248,7 +263,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real32
       else
         rtol_value = rtol
       end if
@@ -298,7 +313,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real64
       else
         rtol_value = rtol
       end if
@@ -348,7 +363,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real64
       else
         rtol_value = rtol
       end if
@@ -398,7 +413,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real64
       else
         rtol_value = rtol
       end if
@@ -424,6 +439,112 @@ module ftorch_test_utils
       end if
 
     end function allclose_real64_3d
+
+
+    !> Custom operator for isclose comparison of two real32 values
+    !! Uses default relative tolerance of 1e-5 and does not print results
+    function isclose_operator_real32(got, expect) result(test_pass)
+
+      real(kind=real32), intent(in) :: got      !! The value to be tested
+      real(kind=real32), intent(in) :: expect   !! The expected value
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      test_pass = isclose_real32(got, expect, "unused", 1.0e-05_real32, .false.)
+
+    end function isclose_operator_real32
+
+    !> Custom operator for isclose comparison of two real64 values
+    !! Uses default relative tolerance of 1e-5 and does not print results
+    function isclose_operator_real64(got, expect) result(test_pass)
+
+      real(kind=real64), intent(in) :: got      !! The value to be tested
+      real(kind=real64), intent(in) :: expect   !! The expected value
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      test_pass = isclose_real64(got, expect, "unused", 1.0e-05_real64, .false.)
+
+    end function isclose_operator_real64
+
+
+    !> Custom operator for allclose comparison of two real32-valued 1D arrays
+    !! Uses default relative tolerance of 1e-5 and does not print results
+    function allclose_operator_real32_1d(got, expect) result(test_pass)
+
+      real(kind=real32), intent(in), dimension(:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:) :: expect  !! The array of expected values
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      test_pass = allclose_real32_1d(got, expect, "unused", 1.0e-05_real32, .false.)
+
+    end function allclose_operator_real32_1d
+
+    !> Custom operator for allclose comparison of two real32-valued 2D arrays
+    !! Uses default relative tolerance of 1e-5 and does not print results
+    function allclose_operator_real32_2d(got, expect) result(test_pass)
+
+      real(kind=real32), intent(in), dimension(:,:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:,:) :: expect  !! The array of expected values
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      test_pass = allclose_real32_2d(got, expect, "unused", 1.0e-05_real32, .false.)
+
+    end function allclose_operator_real32_2d
+
+    !> Custom operator for allclose comparison of two real32-valued 3D arrays
+    !! Uses default relative tolerance of 1e-5 and does not print results
+    function allclose_operator_real32_3d(got, expect) result(test_pass)
+
+      real(kind=real32), intent(in), dimension(:,:,:) :: got     !! The array of values to be tested
+      real(kind=real32), intent(in), dimension(:,:,:) :: expect  !! The array of expected values
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      test_pass = allclose_real32_3d(got, expect, "unused", 1.0e-05_real32, .false.)
+
+    end function allclose_operator_real32_3d
+
+    !> Custom operator for allclose comparison of two real64-valued 1D arrays
+    !! Uses default relative tolerance of 1e-5 and does not print results
+    function allclose_operator_real64_1d(got, expect) result(test_pass)
+
+      real(kind=real64), intent(in), dimension(:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:) :: expect  !! The array of expected values
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      test_pass = allclose_real64_1d(got, expect, "unused", 1.0e-05_real64, .false.)
+
+    end function allclose_operator_real64_1d
+
+    !> Custom operator for allclose comparison of two real64-valued 2D arrays
+    !! Uses default relative tolerance of 1e-5 and does not print results
+    function allclose_operator_real64_2d(got, expect) result(test_pass)
+
+      real(kind=real64), intent(in), dimension(:,:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:,:) :: expect  !! The array of expected values
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      test_pass = allclose_real64_2d(got, expect, "unused", 1.0e-05_real64, .false.)
+
+    end function allclose_operator_real64_2d
+
+    !> Custom operator for allclose comparison of two real64-valued 3D arrays
+    !! Uses default relative tolerance of 1e-5 and does not print results
+    function allclose_operator_real64_3d(got, expect) result(test_pass)
+
+      real(kind=real64), intent(in), dimension(:,:,:) :: got     !! The array of values to be tested
+      real(kind=real64), intent(in), dimension(:,:,:) :: expect  !! The array of expected values
+
+      logical :: test_pass  !! Did the comparison pass?
+
+      test_pass = allclose_real64_3d(got, expect, "unused", 1.0e-05_real64, .false.)
+
+    end function allclose_operator_real64_3d
 
 
 end module ftorch_test_utils
