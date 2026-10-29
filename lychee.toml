@@ -7,8 +7,10 @@ exclude = ['\|url\|']
 #   |media|/baz.png                  ->  pages/media/baz.png
 # The middle `(\S*/)?` group handles references with extra path segments
 # (same-dir and cross-dir links resolve to the same source file).
+# Fragments (#frag) are preserved so section anchors in the target markdown
+# file can be verified too (requires the --include-fragments flag).
 remap = [
-  '/pages/(\S*/)?\|page\|/(\S+)\.html(#\S+)?$ /pages/$2.md',
+  '/pages/(\S*/)?\|page\|/(\S+)\.html(#\S+)?$ /pages/$2.md$3',
   '/pages/(\S*/)?\|media\|/(\S+)$ /pages/media/$2',
 ]
 

@@ -54,13 +54,12 @@ jobs:
         continue-on-error: true
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
-          args: --no-progress 'pages/**/*.md'
+          args: --no-progress --include-fragments 'pages/**/*.md'
           format: markdown
           output: lychee/out.md
           jobSummary: true
 
-      # On scheduled runs, surface the report as an open Issue so results are
-      # persistent, assignable and closeable.
+      # On scheduled runs with failure, raise the report as an open Issue.
       - name: Create issue from report
         if: failure() && github.event_name == 'schedule' && steps.lychee.outcome == 'failure'
         uses: peter-evans/create-issue-from-file@fca9117c27cdc29c6c4db3b86c48e4115a786710 # v6.0.0
@@ -69,8 +68,7 @@ jobs:
           content-filepath: lychee/out.md
           labels: documentation
 
-      # On scheduled runs, fail the job so maintainers are notified by email
-      # and the run shows as failed in the Actions tab.
+      # On scheduled runs that fail, fail the job so maintainers are notified.
       - name: Fail scheduled run on broken links
         if: failure() && github.event_name == 'schedule' && steps.lychee.outcome == 'failure'
         run: exit 1

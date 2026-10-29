@@ -263,6 +263,9 @@ The configuration remaps FORD's `|page|` and `|media|` macros to their source
 files so they can be validated without a full docs build.
 Note that `|url|` macros (the FORD-generated API index) cannot be checked from
 source since they only exist post-build; they are excluded.
+Fragments (`#section-name`) are preserved and verified: links to a heading in
+another page must use the GitHub-style slug of that heading (lowercase, spaces
+replaced with hyphens, punctuation removed).
 
 The CI check is non-blocking on pull requests (`continue-on-error: true`):
 some external sites are flaky or block automated requests, so failures are
@@ -281,7 +284,7 @@ cargo install lychee
 
 To run the same check as CI locally, run the following from the repository root:
 ```sh
-lychee --config lychee.toml --no-progress 'pages/**/*.md'
+lychee --config lychee.toml --no-progress --include-fragments 'pages/**/*.md'
 ```
 
 #### Versioning and Changelog
