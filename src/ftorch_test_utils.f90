@@ -452,7 +452,7 @@ module ftorch_test_utils
 
       real(kind=real32) :: rtol_value
 
-      rtol_value = real(1.0e-5, kind=real32)
+      rtol_value = 1e-5
       test_pass = (abs(got - expect) <= rtol_value * abs(expect))
 
     end function isclose_operator_real32
@@ -468,7 +468,7 @@ module ftorch_test_utils
 
       real(kind=real64) :: rtol_value
 
-      rtol_value = real(1.0e-5, kind=real64)
+      rtol_value = 1e-5
       test_pass = (abs(got - expect) <= rtol_value * abs(expect))
 
     end function isclose_operator_real64
