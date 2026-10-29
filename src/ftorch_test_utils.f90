@@ -80,7 +80,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1e-5
+        rtol_value = 1.0e-5_real32
       else
         rtol_value = rtol
       end if
@@ -119,7 +119,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1e-5
+        rtol_value = 1.0e-5_real64
       else
         rtol_value = rtol
       end if
@@ -163,7 +163,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real32
       else
         rtol_value = rtol
       end if
@@ -213,7 +213,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real32
       else
         rtol_value = rtol
       end if
@@ -263,7 +263,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real32
       else
         rtol_value = rtol
       end if
@@ -313,7 +313,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real64
       else
         rtol_value = rtol
       end if
@@ -363,7 +363,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real64
       else
         rtol_value = rtol
       end if
@@ -413,7 +413,7 @@ module ftorch_test_utils
       logical :: print_result_value
 
       if (.not. present(rtol)) then
-        rtol_value = 1.0e-5
+        rtol_value = 1.0e-5_real64
       else
         rtol_value = rtol
       end if
