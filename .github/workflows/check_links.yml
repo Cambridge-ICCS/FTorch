@@ -62,7 +62,7 @@ jobs:
       # On scheduled runs, surface the report as an open Issue so results are
       # persistent, assignable and closeable.
       - name: Create issue from report
-        if: github.event_name == 'schedule' && steps.lychee.outputs.exit_code != 0
+        if: failure() && github.event_name == 'schedule' && steps.lychee.outcome == 'failure'
         uses: peter-evans/create-issue-from-file@fca9117c27cdc29c6c4db3b86c48e4115a786710 # v6.0.0
         with:
           title: Weekly link check found broken links
@@ -72,5 +72,5 @@ jobs:
       # On scheduled runs, fail the job so maintainers are notified by email
       # and the run shows as failed in the Actions tab.
       - name: Fail scheduled run on broken links
-        if: github.event_name == 'schedule' && steps.lychee.outputs.exit_code != 0
+        if: failure() && github.event_name == 'schedule' && steps.lychee.outcome == 'failure'
         run: exit 1
