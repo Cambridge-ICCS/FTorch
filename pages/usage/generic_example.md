@@ -138,7 +138,7 @@ To build with `make` we need to _include_ the library and _link_ the
 executable against it when compiling.
 
 For full details of the flags to set and the linking process see the
-[HPC build pages](|page|/installation/hpc.html/#building-projects-and-linking-to-ftorch).
+[HPC build pages](|page|/installation/hpc.html#building-and-linking).
 
 ### Running on GPUs
 

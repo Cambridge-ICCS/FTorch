@@ -22,8 +22,8 @@ expected for submissions.
 
 ### Developer requirements
 
-Development tools for [pre-processing](#fortran-source-and-fypp),
-[code styling](#code-style) etc. are pip-installable using the `dev` dependency
+Development tools for [pre-processing](#fortran-source-generation-using-fypp),
+[code styling](#code-style-and-standards) etc. are pip-installable using the `dev` dependency
 group in the
 [pyproject.toml file](https://github.com/Cambridge-ICCS/FTorch/blob/main/pyproject.toml):
 ```sh
@@ -74,7 +74,7 @@ The Fortran source code in `src/ftorch_tensor.f90` should not be edited directly
 but instead generated from `src/ftorch_tensor.fypp` by running the
 [Fypp](https://fypp.readthedocs.io/en/stable/index.html) preprocessor.
 This is done to simplify the process of overloading functions for multiple data
-Fypp can be installed with the [developer requirements](#installing-developer-requirements).
+Fypp can be installed with the [developer requirements](#developer-requirements).
 
 To generate the Fortran code run:
 ```sh
