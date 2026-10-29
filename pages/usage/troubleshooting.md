@@ -47,7 +47,7 @@ for [[ftorch_tensor(module):torch_tensor_from_array(interface)]] and
 
 ### Common Errors
 
-#### No specific subroutine - using temporaries
+#### No specific subroutine: using temporaries
 
 FTorch makes heavy use of Fortran `interfaces` to `module procedure`s to achieve
 [overloading of subroutines](https://fortran-lang.org/learn/oop_features_in_fortran/object_based_programming_techniques/)
@@ -96,7 +96,7 @@ see the [Deprecated signature](#no-specific-subroutine-deprecated-torch_tensor_f
 section below.
 @endnote
 
-#### No specific subroutine - Integer kinds used by FTorch
+#### No specific subroutine: Integer kinds used by FTorch
 
 Another possible cause of compile-time errors is passing integers of the wrong
 kind. FTorch uses explicit integer kinds from the `iso_fortran_env` intrinsic module:
@@ -138,7 +138,7 @@ see the [Deprecated signature](#no-specific-subroutine-deprecated-torch_tensor_f
 section below.
 @endnote
 
-#### No specific subroutine - Deprecated `torch_tensor_from_array` signature
+#### No specific subroutine: Deprecated `torch_tensor_from_array` signature
 
 The update of FTorch to v2.0 brought in a breaking API change to
 [[ftorch_tensor(module):torch_tensor_from_array(interface)]].
