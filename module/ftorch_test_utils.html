@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 7.1% of total for modules and submodules.">280 statements</a>
+                 title=" 8.5% of total for modules and submodules.">340 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -141,6 +141,8 @@
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/ftorch_test_utils.html#interface-allclose">allclose</a>
             <a class="list-group-item" href="../module/ftorch_test_utils.html#interface-isclose">isclose</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#interface-operator%20%28.allclose.%29">operator (.allclose.)</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#interface-operator%20%28.isclose.%29">operator (.isclose.)</a>
         </div>
       </div>
     </div>
@@ -154,12 +156,20 @@
       </a>
       <div id="funcs-0" class="collapse">
         <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_operator_real32_1d">allclose_operator_real32_1d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_operator_real32_2d">allclose_operator_real32_2d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_operator_real32_3d">allclose_operator_real32_3d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_operator_real64_1d">allclose_operator_real64_1d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_operator_real64_2d">allclose_operator_real64_2d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_operator_real64_3d">allclose_operator_real64_3d</a>
             <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_real32_1d">allclose_real32_1d</a>
             <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_real32_2d">allclose_real32_2d</a>
             <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_real32_3d">allclose_real32_3d</a>
             <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_real64_1d">allclose_real64_1d</a>
             <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_real64_2d">allclose_real64_2d</a>
             <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-allclose_real64_3d">allclose_real64_3d</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-isclose_operator_real32">isclose_operator_real32</a>
+            <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-isclose_operator_real64">isclose_operator_real64</a>
             <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-isclose_real32">isclose_real32</a>
             <a class="list-group-item" href="../module/ftorch_test_utils.html#proc-isclose_real64">isclose_real64</a>
         </div>
@@ -1291,6 +1301,506 @@ modules which it uses.
     </ul>
   </div>
 
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-operator%20%28.allclose.%29"></span>
+      <h3>public        interface <a href='../interface/operator (.allclose.).html'>operator (.allclose.)</a> 
+      </h3>
+    </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/allclose_operator_real32_1d.html'>allclose_operator_real32_1d</a>(got, expect) result(test_pass)  
+
+    </h3>
+    
+  <p>Custom operator for allclose comparison of two real32-valued 1D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~11"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~11"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/allclose_operator_real32_2d.html'>allclose_operator_real32_2d</a>(got, expect) result(test_pass)  
+
+    </h3>
+    
+  <p>Custom operator for allclose comparison of two real32-valued 2D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~12"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~12"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/allclose_operator_real32_3d.html'>allclose_operator_real32_3d</a>(got, expect) result(test_pass)  
+
+    </h3>
+    
+  <p>Custom operator for allclose comparison of two real32-valued 3D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~13"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~13"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/allclose_operator_real64_1d.html'>allclose_operator_real64_1d</a>(got, expect) result(test_pass)  
+
+    </h3>
+    
+  <p>Custom operator for allclose comparison of two real64-valued 1D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~14"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~14"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/allclose_operator_real64_2d.html'>allclose_operator_real64_2d</a>(got, expect) result(test_pass)  
+
+    </h3>
+    
+  <p>Custom operator for allclose comparison of two real64-valued 2D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~15"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~15"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/allclose_operator_real64_3d.html'>allclose_operator_real64_3d</a>(got, expect) result(test_pass)  
+
+    </h3>
+    
+  <p>Custom operator for allclose comparison of two real64-valued 3D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~16"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~16"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-operator%20%28.isclose.%29"></span>
+      <h3>public        interface <a href='../interface/operator (.isclose.).html'>operator (.isclose.)</a> 
+      </h3>
+    </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/isclose_operator_real32.html'>isclose_operator_real32</a>(got, expect) result(test_pass)  
+
+    </h3>
+    
+  <p>Custom operator for isclose comparison of two real32 values
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~9"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The value to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~9"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The expected value</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    public  function <a href='../proc/isclose_operator_real64.html'>isclose_operator_real64</a>(got, expect) result(test_pass)  
+
+    </h3>
+    
+  <p>Custom operator for isclose comparison of two real64 values
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~10"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The value to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~10"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The expected value</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+          </li>
+    </ul>
+  </div>
+
         </section>
         <br>
 
@@ -1298,6 +1808,372 @@ modules which it uses.
 
         <section>
           <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-allclose_operator_real32_1d"></span> <h3>public  function <a href='../proc/allclose_operator_real32_1d.html'>allclose_operator_real32_1d</a>(got, expect) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Custom operator for allclose comparison of two real32-valued 1D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~11"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~11"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-allclose_operator_real32_2d"></span> <h3>public  function <a href='../proc/allclose_operator_real32_2d.html'>allclose_operator_real32_2d</a>(got, expect) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Custom operator for allclose comparison of two real32-valued 2D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~12"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~12"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-allclose_operator_real32_3d"></span> <h3>public  function <a href='../proc/allclose_operator_real32_3d.html'>allclose_operator_real32_3d</a>(got, expect) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Custom operator for allclose comparison of two real32-valued 3D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~13"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~13"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-allclose_operator_real64_1d"></span> <h3>public  function <a href='../proc/allclose_operator_real64_1d.html'>allclose_operator_real64_1d</a>(got, expect) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Custom operator for allclose comparison of two real64-valued 1D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~14"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~14"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-allclose_operator_real64_2d"></span> <h3>public  function <a href='../proc/allclose_operator_real64_2d.html'>allclose_operator_real64_2d</a>(got, expect) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Custom operator for allclose comparison of two real64-valued 2D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~15"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~15"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-allclose_operator_real64_3d"></span> <h3>public  function <a href='../proc/allclose_operator_real64_3d.html'>allclose_operator_real64_3d</a>(got, expect) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Custom operator for allclose comparison of two real64-valued 3D arrays
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~16"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The array of values to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~16"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:,:,:)
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The array of expected values</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+    </div>
+  </div>
+
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-allclose_real32_1d"></span> <h3>public  function <a href='../proc/allclose_real32_1d.html'>allclose_real32_1d</a>(got, expect, test_name, rtol, print_result) result(test_pass)  
 </h3></div>
@@ -1914,6 +2790,128 @@ modules which it uses.
             <td><strong>print_result</strong></td>
             <td>
 <p>Optionally print test result to screen (defaults to .true.)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-isclose_operator_real32"></span> <h3>public  function <a href='../proc/isclose_operator_real32.html'>isclose_operator_real32</a>(got, expect) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Custom operator for isclose comparison of two real32 values
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~9"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The value to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~9"></span>
+              real(kind=real32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The expected value</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Did the comparison pass?</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-isclose_operator_real64"></span> <h3>public  function <a href='../proc/isclose_operator_real64.html'>isclose_operator_real64</a>(got, expect) result(test_pass)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Custom operator for isclose comparison of two real64 values
+Uses default relative tolerance of 1e-5 and does not print results</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-got~10"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>got</strong></td>
+            <td>
+<p>The value to be tested</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expect~10"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>expect</strong></td>
+            <td>
+<p>The expected value</p>
             </td>
         </tr>
     </tbody>
