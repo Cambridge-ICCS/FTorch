@@ -103,12 +103,13 @@ program foptimizer
   end do
   close(unit=10)
 
-  ! Copy final scaling_tensor values back to scaling_data for verification
-  scaling_data = scaling_tensor
-
   ! Check scaling tensor converges to the expected value
-  if (.not. allclose(scaling_data, target_data, "optimizers", rtol=1.0e-03)) then
-    write(*,*) "Error :: value of scaling_data does not match expected value"
+  ! Compute final output to populate output_data with scaling_tensor values
+  call torch_tensor_from_array(output_vec, output_data, torch_kCPU)
+  output_vec = input_vec * scaling_tensor
+  
+  if (.not. allclose(output_data, target_data, "optimizers", rtol=1.0e-03)) then
+    write(*,*) "Error :: value of output_data does not match expected value"
     stop 999
   end if
 
