@@ -3,17 +3,14 @@ name: Test suite (Ubuntu NVIDIA CUDA)
 
 # Controls when the workflow will run
 on:
-  # TODO: Re-enable Nvidia CI once the following compiler bug has been addressed:
-  # https://forums.developer.nvidia.com/t/nvfortran-fails-to-accept-target-argument-to-pointer-dummy-argument-when-in-generic-interface/387225
-  #
-  # # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
-  # push:
-  #   branches: [ "main" ]
+  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  push:
+    branches: [ "main" ]
 
-  # # Triggers the workflow on pushes to open pull requests with changes to this workflow
-  # pull_request:
-  #   paths:
-  #     - '.github/workflows/test_suite_ubuntu_cuda_nvidia.yml'
+  # Triggers the workflow on pushes to open pull requests with changes to this workflow
+  pull_request:
+    paths:
+      - '.github/workflows/test_suite_ubuntu_cuda_nvidia.yml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -149,7 +146,7 @@ jobs:
             -DMULTI_GPU=OFF \
             -DCMAKE_PREFIX_PATH="${Torch_DIR}" \
             -DCUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
-            -DCMAKE_Fortran_FLAGS="-Mdetail" \
+            -DCMAKE_Fortran_FLAGS="-Mdetail -std f2018" \
             -DCMAKE_CXX_FLAGS="-D__rdtsc=__builtin_ia32_rdtsc"
           cmake --build .
           cmake --install .
