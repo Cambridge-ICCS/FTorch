@@ -8,7 +8,7 @@
 !    file for details.
 
 module ftorch_tensor
-  use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr
+  use, intrinsic :: iso_c_binding, only: c_associated, c_null_ptr, c_ptr, c_intptr_t
   use, intrinsic :: iso_fortran_env, only: int32, int64
   use ftorch_devices, only: torch_kCPU, torch_kCUDA, torch_kHIP, torch_kXPU, torch_kMPS
   use ftorch_types, only: torch_kInt8, torch_kInt16, torch_kInt32, torch_kInt64, &
@@ -129,9 +129,29 @@ module ftorch_tensor
       integer(c_int), value, intent(in) :: device_type
       integer(c_int), value, intent(in) :: device_index
       logical(c_bool), value, intent(in) :: requires_grad
-      type(c_ptr)                       :: tensor_p
+       type(c_ptr)                       :: tensor_p
     end function torch_from_blob_c
-  end interface
+
+    function torch_from_blob_device_c(data, ndims, tensor_shape, strides, dtype, &
+                                     device_type, device_index, &
+                                     requires_grad) result(tensor_p) &
+                                     bind(c, name = "torch_from_blob_device")
+       use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_intptr_t, c_ptr
+
+       implicit none
+
+       ! Arguments
+       integer(c_intptr_t), value, intent(in) :: data
+       integer(c_int), value, intent(in) :: ndims
+       integer(c_int64_t), intent(in)    :: tensor_shape(*)
+       integer(c_int64_t), intent(in)    :: strides(*)
+       integer(c_int), value, intent(in) :: dtype
+       integer(c_int), value, intent(in) :: device_type
+       integer(c_int), value, intent(in) :: device_index
+       logical(c_bool), value, intent(in) :: requires_grad
+       type(c_ptr)                       :: tensor_p
+    end function torch_from_blob_device_c
+   end interface
 
   ! ============================================================================
   ! --- Interfaces for overloaded operators acting on tensors
@@ -443,6 +463,66 @@ contains
                                  device_type, device_index_value,              &
                                  requires_grad_value)
   end subroutine torch_tensor_from_blob
+
+  !| Exposes data that already resides on the given device (e.g. GPU memory) as a
+  !  tensor without taking ownership of the original data and without any copy.
+  !  Unlike `torch_tensor_from_blob`, the data pointer is passed as a plain
+  !  integer address so that this routine can also be called with a GPU device
+  !  pointer (e.g. the result of CUDA Fortran's `c_devloc`, converted with
+  !  `transfer`), which cannot be represented as a `type(c_ptr)`.
+  !  The `data` argument must genuinely point to memory on `device_type`;
+  !  passing a host pointer together with a GPU device type is an error.
+  subroutine torch_tensor_from_blob_device(tensor, data, ndims, tensor_shape, tensor_strides, &
+                                           dtype, device_type, device_index, &
+                                           requires_grad)
+    use, intrinsic :: iso_c_binding, only : c_bool, c_int, c_int64_t, c_intptr_t, c_ptr
+    type(torch_tensor), intent(out) :: tensor     !! Returned tensor
+    integer(c_intptr_t), intent(in) :: data       !! Address of the data (device pointer
+                                                  !! for GPU devices)
+    integer(int32), intent(in)      :: ndims      !! Number of dimensions of the tensor
+    integer(int64), intent(in)      :: tensor_shape(ndims)  !! Shape of the returned tensor
+    integer(int64), intent(in)      :: tensor_strides(ndims)
+        !! Strides for accessing data in the returned tensor. Note that these are integers
+        !! representing the number of items of type `dtype` and NOT bytes/memory.
+    integer(c_int), intent(in)      :: dtype      !! Data type of the input data and tensor
+    integer(c_int), intent(in)      :: device_type
+        !! Device type the data already resides on (`torch_kCPU` or a GPU device type)
+    integer, optional, intent(in) :: device_index   !! Device index for GPU devices
+    logical, optional, intent(in) :: requires_grad
+        !! Whether gradients need to be computed for the created tensor
+
+    ! local data
+    integer(c_int)                  :: ndims_c            !! C-type ndims
+    integer(c_int64_t)              :: tensor_shape_c(ndims)  !! C-type tensor_shape
+    integer(c_int64_t)              :: tensor_strides_c(ndims)  !! C-type strides
+    integer(c_int)                  :: device_index_value   !! device index used
+    logical(c_bool)                 :: requires_grad_value
+        !! Whether gradients need to be computed for the created tensor
+
+    ! Process optional arguments
+    if (.not. present(requires_grad)) then
+      requires_grad_value = logical(.false., c_bool)
+    else
+      requires_grad_value = requires_grad
+    end if
+
+    if (present(device_index)) then
+      device_index_value = device_index
+    else if (device_type == torch_kCPU) then
+      device_index_value = -1
+    else
+      device_index_value = 0
+    end if
+
+    ! Convert public arguments to C-types
+    ndims_c = ndims
+    tensor_shape_c(:) = tensor_shape(:)
+    tensor_strides_c(:) = tensor_strides(:)
+
+    tensor%p = torch_from_blob_device_c(data, ndims_c, tensor_shape_c, tensor_strides_c, dtype, &
+                                       device_type, device_index_value,              &
+                                       requires_grad_value)
+  end subroutine torch_tensor_from_blob_device
 
   ! Note: `data_in` is declared with the `target` (rather than `pointer`) attribute
   ! so that plain `target` actual arguments are accepted. Some compilers (e.g. NVHPC)

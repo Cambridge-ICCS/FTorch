@@ -312,6 +312,37 @@ torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *shape,
   return tensor;
 }
 
+// Exposes data that already resides on the given device (e.g. GPU memory) as a
+// Tensor without taking ownership of the original data and without copying it
+torch_tensor_t torch_from_blob_device(intptr_t data, int ndim, const int64_t *shape,
+                                      const int64_t *strides, torch_data_t dtype,
+                                      torch_device_t device_type, int device_index,
+                                      const bool requires_grad) {
+  torch::AutoGradMode enable_grad(requires_grad);
+  auto tensor = new torch::Tensor;
+
+  try {
+    c10::IntArrayRef vshape(shape, ndim);
+    c10::IntArrayRef vstrides(strides, ndim);
+    // The device must be passed in the TensorOptions here: torch::from_blob
+    // wraps the given pointer in place on that device. Passing CPU options and
+    // calling .to(device) afterwards would treat the pointer as host memory
+    // and perform a (crashing) host-to-device copy instead.
+    auto options = torch::TensorOptions()
+                       .dtype(get_libtorch_dtype(dtype))
+                       .device(get_libtorch_device(device_type, device_index))
+                       .requires_grad(requires_grad);
+    *tensor =
+        torch::from_blob(reinterpret_cast<void *>(data), vshape, vstrides, options);
+
+  } catch (const torch::Error &e) {
+    ctorch_error(e.msg(), [&]() { delete tensor; });
+  } catch (const std::exception &e) {
+    ctorch_error(e.what(), [&]() { delete tensor; });
+  }
+  return tensor;
+}
+
 // =====================================================================================
 // --- Functions for interrogating tensors
 // =====================================================================================

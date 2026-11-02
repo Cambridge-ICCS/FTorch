@@ -50,10 +50,10 @@ This directory contains a number of examples of how to use the library:
       Fortran's column-major memory layout relates to Torch's row-major layout.
 
 13. GPUPointer
-    - Explores whether a `torch_tensor` can be constructed directly on the GPU
-      by passing a GPU device pointer to `torch_tensor_from_blob`, using an
-      array defined with CUDA Fortran. Requires an NVIDIA GPU, a CUDA Fortran
-      capable compiler, and an FTorch build with `-DGPU_DEVICE=CUDA`.
+    - Constructs a `torch_tensor` directly on the GPU by passing a GPU device
+      pointer to `torch_tensor_from_blob_device`, using an array defined with
+      CUDA Fortran. Requires an NVIDIA GPU, a CUDA Fortran capable compiler,
+      and an FTorch build with `-DGPU_DEVICE=CUDA`.
 
 To run select examples as integration tests, use the CMake argument
 ```

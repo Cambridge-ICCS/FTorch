@@ -2,29 +2,27 @@ program gpu_tensor_pointer
 
   ! This example checks whether it is possible to construct a `torch_tensor`
   ! directly on the GPU (i.e. without a host-to-device copy) by passing a GPU
-  ! device pointer to `torch_tensor_from_blob`. This contrasts with the two
+  ! device pointer to `torch_tensor_from_blob_device`. This contrasts with the two
   ! approaches normally used in FTorch: creating tensors on the CPU and moving
   ! them to the GPU with `torch_tensor_to` (or equivalently specifying a GPU
   ! device in one of the standard constructors such as `torch_tensor_ones`),
   ! and is motivated by codes in which data already lives on the GPU.
   !
   ! The array is defined using CUDA Fortran and a device pointer to it is
-  ! obtained with `c_devloc` from the `iso_c_binding` module.
+  ! obtained with `c_devloc` from the `cudafor` module. Since `c_devloc` returns
+  ! a `type(c_devptr)` (not a `type(c_ptr)`), it is converted to a plain
+  ! integer address with `transfer` and passed to the dedicated
+  ! `torch_tensor_from_blob_device` routine, which wraps the device memory
+  ! in place (via `torch::from_blob` with the device in the `TensorOptions`),
+  ! avoiding any host-to-device copy.
   !
   ! Notes:
   !  * `torch_tensor_from_array` cannot be used directly with CUDA Fortran
   !    arrays because it takes a regular Fortran data pointer, whereas `c_loc`
-  !    cannot be applied to a `device` variable. Instead, `torch_tensor_from_blob`
-  !    is used and the shape and strides are supplied explicitly, replicating
-  !    what `torch_tensor_from_array` does internally (contiguous, column-major
+  !    cannot be applied to a `device` variable. Instead, shape and stride
+  !    information is supplied explicitly, replicating what
+  !    `torch_tensor_from_array` does internally (contiguous, column-major
   !    order i.e. stride 1 in the leading dimension).
-  !  * When inspecting `torch_from_blob` in `src/ctorch.cpp` it will be seen
-  !    that `torch::from_blob` is called with CPU `TensorOptions`, with the GPU
-  !    device only applied afterwards via `.to(device)`. It is therefore not
-  !    obvious a priori whether a device pointer is respected (libtorch infers
-  !    the device of the data from its placement in memory) or whether host
-  !    memory is assumed (which would lead to a crash or garbage values).
-  !    Compiling and running this example answers that question.
   !
   ! The check proceeds in two stages:
   !  1. constructing the tensor, interrogating its device/shape/strides and
@@ -39,14 +37,15 @@ program gpu_tensor_pointer
   ! NVIDIA GPU, using a CUDA Fortran capable compiler (e.g. nvfortran) and an
   ! FTorch installation built with `-DGPU_DEVICE=CUDA`.
 
-  ! CUDA Fortran modules
-  use cudafor, only: c_devloc
-  use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+  use, intrinsic :: iso_c_binding, only: c_int, c_intptr_t
   use, intrinsic :: iso_fortran_env, only: int32, int64, sp => real32
+
+  ! CUDA Fortran module
+  use cudafor, only: c_devloc, c_devptr
 
   ! FTorch modules
   use ftorch, only: assignment(=), operator(+), torch_kCUDA, torch_kFloat32,     &
-                    torch_tensor, torch_tensor_delete, torch_tensor_from_blob, &
+                    torch_tensor, torch_tensor_delete, torch_tensor_from_blob_device, &
                     torch_tensor_print
   use ftorch_test_utils, only: allclose
 
@@ -64,11 +63,12 @@ program gpu_tensor_pointer
   real(wp), allocatable :: out_host(:,:), expected(:,:)
   integer :: i
 
-  ! Variables for constructing tensors with torch_tensor_from_blob
+  ! Variables for constructing tensors with torch_tensor_from_blob_device
   type(torch_tensor) :: a, b
   integer(int32), parameter :: ndims = 2
   integer(int64) :: tensor_shape(ndims), tensor_strides(ndims)
-  type(c_ptr) :: in_device_ptr, out_device_ptr
+  type(c_devptr) :: in_device_devptr, out_device_devptr
+  integer(c_intptr_t) :: in_device_ptr, out_device_ptr
 
   ! Flag for testing
   logical :: test_pass
@@ -94,16 +94,20 @@ program gpu_tensor_pointer
     tensor_strides(i) = tensor_strides(i - 1) * tensor_shape(i - 1)
   end do
 
-  ! Get the device pointers to the GPU arrays using c_devloc
-  in_device_ptr = c_devloc(in_device)
-  out_device_ptr = c_devloc(out_device)
+  ! Get the device pointers to the GPU arrays using c_devloc, and convert them
+  ! to plain integer addresses (c_devloc returns type(c_devptr), which cannot be
+  ! assigned to type(c_ptr) or passed to the c_ptr-based torch_tensor_from_blob)
+  in_device_devptr = c_devloc(in_device)
+  out_device_devptr = c_devloc(out_device)
+  in_device_ptr = transfer(in_device_devptr, 0_c_intptr_t)
+  out_device_ptr = transfer(out_device_devptr, 0_c_intptr_t)
 
   ! ----------------------------------------------------------------------
   ! Stage 1: construct a torch_tensor wrapping the GPU memory directly
   ! ----------------------------------------------------------------------
   write(*,*) "Stage 1: constructing a torch_tensor from a GPU device pointer..."
-  call torch_tensor_from_blob(a, in_device_ptr, ndims, tensor_shape, tensor_strides, &
-                              torch_kFloat32, torch_kCUDA, device_index=0)
+  call torch_tensor_from_blob_device(a, in_device_ptr, ndims, tensor_shape, tensor_strides, &
+                                     torch_kFloat32, torch_kCUDA, device_index=0)
   write(*,*) "  ... torch_tensor object constructed."
 
   ! Interrogate the tensor: its device indicates whether the data was wrapped
@@ -133,8 +137,8 @@ program gpu_tensor_pointer
   ! the output tensor up in advance means the result of the arithmetic below is
   ! written directly into the GPU array, from where it can be copied back to
   ! the host and verified
-  call torch_tensor_from_blob(b, out_device_ptr, ndims, tensor_shape, tensor_strides, &
-                              torch_kFloat32, torch_kCUDA, device_index=0)
+   call torch_tensor_from_blob_device(b, out_device_ptr, ndims, tensor_shape, tensor_strides, &
+                                      torch_kFloat32, torch_kCUDA, device_index=0)
 
   ! Perform arithmetic on the tensors using the overloaded addition operator.
   ! This should be computed on the GPU and the resulting values written into

@@ -123,6 +123,25 @@ EXPORT_C torch_tensor_t torch_from_blob(void *data, int ndim, const int64_t *sha
                                         torch_device_t device_type, int device_index,
                                         const bool requires_grad);
 
+/**
+ * Function to create a Torch Tensor wrapping memory that already resides on the
+ * given device (e.g. a GPU device pointer obtained from CUDA Fortran `c_devloc`),
+ * without any host-to-device copy.
+ * @param data address of the data as an integer (device pointer for GPU devices)
+ * @param number of dimensions of the Tensor
+ * @param shape of the Tensor
+ * @param strides to take through data
+ * @param data type of the elements of the Tensor
+ * @param device type the data already resides on (cpu, CUDA, etc.)
+ * @param device index for GPU devices
+ * @param whether gradient is required
+ * @return Torch Tensor interpretation of the data pointed at
+ */
+EXPORT_C torch_tensor_t torch_from_blob_device(
+    intptr_t data, int ndim, const int64_t *shape, const int64_t *strides,
+    torch_data_t dtype, torch_device_t device_type, int device_index,
+    const bool requires_grad);
+
 // =============================================================================
 // --- Functions for interrogating tensors
 // =============================================================================
