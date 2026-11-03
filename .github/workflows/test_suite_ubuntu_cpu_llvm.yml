@@ -1,4 +1,6 @@
 # Workflow to run the FTorch test suite using jobs for LLVM-based compilers
+#
+# NOTE: Unit tests do not run under LFortran due to lack of support by pFUnit
 name: Test suite (Ubuntu CPU)
 
 # Controls when the workflow will run
