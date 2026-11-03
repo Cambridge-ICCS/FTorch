@@ -277,6 +277,27 @@ one gotcha to be aware of:
    [unit test segfaults with flang](#unit-test-segfaults-with-flang) for
    details.
 
+##### LFortran compiler
+
+When building FTorch with the LFortran compiler, there are two gotchas to be
+aware of:
+
+1. **Use a commit from 3rd November 2026 or later**
+   This will allow you to pick up the fix for
+   [https://github.com/lfortran/lfortran/issues/16568](https://github.com/lfortran/lfortran/issues/16568)
+   in
+   [86ae6cc](https://github.com/lfortran/lfortran/commit/86ae6cc18f1ba304030f3b2922c40426ecf56b8c).
+
+2. **Disable FTorch's unit tests.**
+   Attempting to build pFUnit with LFortran currently gives an error:
+   `'Unrecognized Fortran compiler.  Please use ifort, gfortran, NAG, PGI, or XL.'`
+   This stops you from building FTorch's unit tests because they require pFUnit
+   and it is not possible to link unit tests compiled with LFortran to a pFUnit
+   installation built with a different compiler. To disable the unit tests when
+   building FTorch with CMake, either disable the unit tests but keep the
+   integration tests enabled with
+   `-DFTORCH_BUILD_UNIT_TESTS=FALSE -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE` or
+   disable all tests with `-DCMAKE_BUILD_TESTS=FALSE`.
 
 ### Common warnings
 

@@ -20,6 +20,8 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
   [#648](https://github.com/Cambridge-ICCS/FTorch/pull/648) and temporarily
   disabled Nvidia CI workflows in
   [#652](https://github.com/Cambridge-ICCS/FTorch/pull/652)
+- Added LFortran CI workflow in
+  [#601](https://github.com/Cambridge-ICCS/FTorch/pull/601)
 
 ### Changed
 
