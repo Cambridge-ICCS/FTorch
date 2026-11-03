@@ -106,21 +106,18 @@ jobs:
           sudo apt update
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
+        # NOTE: Attempting to build pFUnit with LFortran gives
+        #      'Unrecognized Fortran compiler.  Please use ifort, gfortran, NAG, PGI, or XL.'
       - name: Install pFUnit
+        if: ${{ matrix.compiler == 'flang' }}
         run: |
-          . ftorch/bin/activate
-          if [ "${{ matrix.compiler }}" == "flang" ]; then
-            FC="flang-${{ matrix.flang_version }}"
-          else
-            FC=lfortran
-          fi
           # TODO: Avoid version pinning (needed because version appears in install path)
           git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
           mkdir pFUnit/build
           cd pFUnit/build
           cmake .. \
             -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
-            -DCMAKE_Fortran_COMPILER="${FC}" \
+            -DCMAKE_Fortran_COMPILER="flang-${{ matrix.flang_version }}" \
             -DSKIP_MPI=YES \
             -DSKIP_OPENMP=YES
           make -j 4 install
@@ -205,6 +202,7 @@ jobs:
           fi
 
       - name: Run Fortran unit tests
+        if: ${{ matrix.compiler == 'flang' }}
         run: |
           . ftorch/bin/activate
           cd build
