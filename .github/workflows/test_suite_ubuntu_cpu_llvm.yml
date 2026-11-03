@@ -108,6 +108,7 @@ jobs:
 
       - name: Install pFUnit
         run: |
+          . ftorch/bin/activate
           if [ "${{ matrix.compiler }}" == "flang" ]; then
             FC="flang-${{ matrix.flang_version }}"
           else
