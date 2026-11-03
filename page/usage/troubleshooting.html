@@ -397,6 +397,30 @@ one gotcha to be aware of:</p>
    <a href="#unit-test-segfaults-with-flang">unit test segfaults with flang</a> for
    details.</li>
 </ol>
+<h5 id="lfortran-compiler">LFortran compiler</h5>
+<p>When building FTorch with the LFortran compiler, there are two gotchas to be
+aware of:</p>
+<ol>
+<li>
+<p><strong>Use a commit from 3rd November 2026 or later</strong>
+   This will allow you to pick up the fix for
+   <a href="https://github.com/lfortran/lfortran/issues/16568">https://github.com/lfortran/lfortran/issues/16568</a>
+   in
+   <a href="https://github.com/lfortran/lfortran/commit/86ae6cc18f1ba304030f3b2922c40426ecf56b8c">86ae6cc</a>.</p>
+</li>
+<li>
+<p><strong>Disable FTorch's unit tests.</strong>
+   Attempting to build pFUnit with LFortran currently gives an error:
+   <code>'Unrecognized Fortran compiler.  Please use ifort, gfortran, NAG, PGI, or XL.'</code>
+   This stops you from building FTorch's unit tests because they require pFUnit
+   and it is not possible to link unit tests compiled with LFortran to a pFUnit
+   installation built with a different compiler. To disable the unit tests when
+   building FTorch with CMake, either disable the unit tests but keep the
+   integration tests enabled with
+   <code>-DFTORCH_BUILD_UNIT_TESTS=FALSE -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE</code> or
+   disable all tests with <code>-DCMAKE_BUILD_TESTS=FALSE</code>.</p>
+</li>
+</ol>
 <h3 id="common-warnings">Common warnings</h3>
 <h4 id="structure-constructor-finalizer-with-fortran-2008">Structure constructor finalizer with Fortran 2008</h4>
 <p>If you are building FTorch with gfortran and are specifying the Fortran 2008
