@@ -107,7 +107,6 @@ jobs:
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
 
       - name: Install pFUnit
-        if: ${{ matrix.compiler == 'flang' }}
         run: |
           # TODO: Avoid version pinning (needed because version appears in install path)
           git clone -b "v${{ matrix.pfunit_version }}" https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
@@ -154,8 +153,7 @@ jobs:
             -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
             -DMPI_Fortran_COMPILER="${FC}" \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" \
-            -DFTORCH_BUILD_UNIT_TESTS="${{ matrix.compiler == 'flang' }}" \
-            -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE \
+            -DCMAKE_BUILD_TESTS=TRUE \
             -DCMAKE_PREFIX_PATH="${PREFIX}" \
             -DCMAKE_Fortran_FLAGS="${FFLAGS}"
           cmake --build .
@@ -202,7 +200,6 @@ jobs:
           fi
 
       - name: Run Fortran unit tests
-        if: ${{ matrix.compiler == 'flang' }}
         run: |
           . ftorch/bin/activate
           cd build
