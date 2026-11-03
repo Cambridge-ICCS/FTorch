@@ -102,7 +102,6 @@ jobs:
           echo "export PATH=$(pwd)/src/bin:\${PATH}" >> ../ftorch/bin/activate
 
       - name: Install OpenMPI
-        if: ${{ matrix.compiler == 'flang' }}
         run: |
           sudo apt update
           sudo apt install -y openmpi-bin openmpi-common libopenmpi-dev
