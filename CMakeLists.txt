@@ -124,6 +124,35 @@ file(RELATIVE_PATH relDir ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
 get_filename_component(TORCH_LIBRARY_DIR ${TORCH_LIBRARY} DIRECTORY)
 set(CMAKE_INSTALL_RPATH "$ORIGIN/${relDir};${TORCH_LIBRARY_DIR}")
 
+# Some Torch wheels (e.g. 2.15 CPU) bundle an old libgfortran.so.5 in the Torch
+# library directory. Since this directory is in the RPATH it would shadow the
+# runtime of the gfortran used to build FTorch, so put the compiler's own
+# runtime directory first.
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
+  file(GLOB _torch_libgfortran "${TORCH_LIBRARY_DIR}/libgfortran.so*")
+  if(_torch_libgfortran)
+    execute_process(
+      COMMAND ${CMAKE_Fortran_COMPILER} -print-file-name=libgfortran.so
+      OUTPUT_VARIABLE _compiler_libgfortran
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      RESULT_VARIABLE _libgfortran_result)
+    if(_libgfortran_result EQUAL 0 AND IS_ABSOLUTE "${_compiler_libgfortran}")
+      get_filename_component(
+        _compiler_libgfortran "${_compiler_libgfortran}" REALPATH)
+      get_filename_component(
+        GFORTRAN_RUNTIME_DIR "${_compiler_libgfortran}" DIRECTORY)
+      message(STATUS "Torch bundles libgfortran; "
+                     "prioritising ${GFORTRAN_RUNTIME_DIR} in RPATH")
+      list(PREPEND CMAKE_BUILD_RPATH "${GFORTRAN_RUNTIME_DIR}")
+      list(PREPEND CMAKE_INSTALL_RPATH "${GFORTRAN_RUNTIME_DIR}")
+    else()
+      message(WARNING "Torch bundles libgfortran but the compiler's "
+                      "libgfortran was not found; it may shadow the system "
+                      "runtime at load time.")
+    endif()
+  endif()
+endif()
+
 # Initialize Fortran module build output directory for all subsequent targets
 if(NOT DEFINED CMAKE_Fortran_MODULE_DIRECTORY)
   set(CMAKE_Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/modules")
@@ -158,6 +187,12 @@ if(UNIX)
 else()
   # NOTE: stdc++ is not available on Windows
   target_link_libraries(${LIB_NAME} PRIVATE ${TORCH_LIBRARIES})
+endif()
+# Downstream executables get their own RPATH, so pass the compiler runtime
+# directory on to them as well (see above)
+if(GFORTRAN_RUNTIME_DIR)
+  target_link_options(${LIB_NAME} INTERFACE
+                      "LINKER:-rpath,${GFORTRAN_RUNTIME_DIR}")
 endif()
 # Include the Fortran mod files in the library
 target_include_directories(
