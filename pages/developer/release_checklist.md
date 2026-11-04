@@ -1,12 +1,20 @@
 title: Release Checklist
 author: Jack Atkinson
-date: Last Updated: February 2026
+date: Last Updated: November 2026
 
 This guide covers how to prepare and push a release of FTorch.
 Follow this checklist to ensure that documentation, tags, archives etc. are all updated
 consistently and correctly.
 
 ## Release Checklist
+
+### Pre-release
+
+1. Review the CI workflows currently active in the repository.
+    1. Remove any workflows that are redundant.
+    1. Consider ways to improve the efficiency of computationally expensive workflows.
+
+### Release process
 
 1. Ensure that you are working from the `main` branch.
 1. Clarify the name of the release.
