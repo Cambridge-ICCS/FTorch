@@ -101,4 +101,23 @@ contains
     @assertTrue(allclose(loss_data, expected, test_name="test_mean_reduction_2d"))
   end subroutine test_mean_reduction_2d
 
+@test
+  subroutine test_no_reduction_2d()
+    type(torch_tensor) :: input_tensor, target_tensor, loss_tensor
+    real(wp), dimension(2, 3), target :: input_data, target_data, loss_data
+    real(wp), dimension(2, 3) :: expected
+
+    input_data = reshape([1.0, -2.0, 3.0, -4.0, 5.0, -6.0], [2, 3])
+    target_data = 0.0
+    expected = abs(input_data)
+
+    call torch_tensor_from_array(input_tensor, input_data, device_type)
+    call torch_tensor_from_array(target_tensor, target_data, device_type)
+    call torch_tensor_from_array(loss_tensor, loss_data, device_type)
+
+    call torch_loss_l1(loss_tensor, input_tensor, target_tensor, torch_kNone)
+
+    @assertTrue(allclose(loss_data, expected, test_name="test_no_reduction_2d"))
+  end subroutine test_no_reduction_2d
+
 end module unittest_loss_l1
