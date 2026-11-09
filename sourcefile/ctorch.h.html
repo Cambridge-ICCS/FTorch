@@ -661,17 +661,28 @@
 <a id="ln-504" name="ln-504" href="#ln-504"></a><span class="w">                             </span><span class="k">const</span><span class="w"> </span><span class="n">torch_reduction_t</span><span class="w"> </span><span class="n">reduction_type</span><span class="p">);</span>
 <a id="ln-505" name="ln-505" href="#ln-505"></a>
 <a id="ln-506" name="ln-506" href="#ln-506"></a><span class="cm">/**</span>
-<a id="ln-507" name="ln-507" href="#ln-507"></a><span class="cm"> * Function to create a CrossEntropyLoss and return a pointer to it</span>
+<a id="ln-507" name="ln-507" href="#ln-507"></a><span class="cm"> * Function to evaluate an L1Loss (mean absolute error)</span>
 <a id="ln-508" name="ln-508" href="#ln-508"></a><span class="cm"> * @param Tensor containing loss value(s)</span>
 <a id="ln-509" name="ln-509" href="#ln-509"></a><span class="cm"> * @param Input Torch tensor to evaluate the loss at</span>
 <a id="ln-510" name="ln-510" href="#ln-510"></a><span class="cm"> * @param Target Torch tensor to evaluate the loss against</span>
-<a id="ln-511" name="ln-511" href="#ln-511"></a><span class="cm"> * @param Optional reduction type</span>
+<a id="ln-511" name="ln-511" href="#ln-511"></a><span class="cm"> * @param Reduction type</span>
 <a id="ln-512" name="ln-512" href="#ln-512"></a><span class="cm"> */</span>
-<a id="ln-513" name="ln-513" href="#ln-513"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_loss_cross_entropy</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">loss</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">input</span><span class="p">,</span>
-<a id="ln-514" name="ln-514" href="#ln-514"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">target</span><span class="p">,</span>
-<a id="ln-515" name="ln-515" href="#ln-515"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_reduction_t</span><span class="w"> </span><span class="n">reduction_type</span><span class="p">);</span>
+<a id="ln-513" name="ln-513" href="#ln-513"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_loss_l1</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">loss</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">input</span><span class="p">,</span>
+<a id="ln-514" name="ln-514" href="#ln-514"></a><span class="w">                            </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">target</span><span class="p">,</span>
+<a id="ln-515" name="ln-515" href="#ln-515"></a><span class="w">                            </span><span class="k">const</span><span class="w"> </span><span class="n">torch_reduction_t</span><span class="w"> </span><span class="n">reduction_type</span><span class="p">);</span>
 <a id="ln-516" name="ln-516" href="#ln-516"></a>
-<a id="ln-517" name="ln-517" href="#ln-517"></a><span class="cp">#endif </span><span class="cm">/* C_TORCH_H*/</span>
+<a id="ln-517" name="ln-517" href="#ln-517"></a><span class="cm">/**</span>
+<a id="ln-518" name="ln-518" href="#ln-518"></a><span class="cm"> * Function to create a CrossEntropyLoss and return a pointer to it</span>
+<a id="ln-519" name="ln-519" href="#ln-519"></a><span class="cm"> * @param Tensor containing loss value(s)</span>
+<a id="ln-520" name="ln-520" href="#ln-520"></a><span class="cm"> * @param Input Torch tensor to evaluate the loss at</span>
+<a id="ln-521" name="ln-521" href="#ln-521"></a><span class="cm"> * @param Target Torch tensor to evaluate the loss against</span>
+<a id="ln-522" name="ln-522" href="#ln-522"></a><span class="cm"> * @param Optional reduction type</span>
+<a id="ln-523" name="ln-523" href="#ln-523"></a><span class="cm"> */</span>
+<a id="ln-524" name="ln-524" href="#ln-524"></a><span class="n">EXPORT_C</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">torch_loss_cross_entropy</span><span class="p">(</span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">loss</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">input</span><span class="p">,</span>
+<a id="ln-525" name="ln-525" href="#ln-525"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_tensor_t</span><span class="w"> </span><span class="n">target</span><span class="p">,</span>
+<a id="ln-526" name="ln-526" href="#ln-526"></a><span class="w">                                       </span><span class="k">const</span><span class="w"> </span><span class="n">torch_reduction_t</span><span class="w"> </span><span class="n">reduction_type</span><span class="p">);</span>
+<a id="ln-527" name="ln-527" href="#ln-527"></a>
+<a id="ln-528" name="ln-528" href="#ln-528"></a><span class="cp">#endif </span><span class="cm">/* C_TORCH_H*/</span>
 </pre></div>
 
       </section>

@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.6% of total for modules and submodules.">63 statements</a>
+                 title=" 2.3% of total for modules and submodules.">91 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -144,6 +144,7 @@
       <div id="subs-0" class="collapse">
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/ftorch_loss.html#proc-torch_loss_cross_entropy">torch_loss_cross_entropy</a>
+            <a class="list-group-item" href="../module/ftorch_loss.html#proc-torch_loss_l1">torch_loss_l1</a>
             <a class="list-group-item" href="../module/ftorch_loss.html#proc-torch_loss_mse">torch_loss_mse</a>
         </div>
       </div>
@@ -507,6 +508,91 @@ modules which it uses.
     <tbody>
         <tr>
             <td>
+              <span class="anchor" id="variable-loss_tensor~3"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>loss_tensor</strong></td>
+            <td>
+<p>Tensor to hold the loss value</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-input_tensor~3"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>input_tensor</strong></td>
+            <td>
+<p>Input tensor to evaluate loss at</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-target_tensor~3"></span>
+              type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>target_tensor</strong></td>
+            <td>
+<p>Target tensor to evaluate loss against</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-reduction_type~3"></span>
+              integer(kind=c_int),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>reduction_type</strong></td>
+            <td>
+<p>Optional reduction type (default: torch_kMean)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-torch_loss_l1"></span> <h3>public  subroutine <a href='../proc/torch_loss_l1.html'>torch_loss_l1</a>(loss_tensor, input_tensor, target_tensor, reduction_type)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Evaluate L1Loss (mean absolute error)</p><a href="../proc/torch_loss_l1.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
               <span class="anchor" id="variable-loss_tensor~2"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
@@ -537,7 +623,7 @@ modules which it uses.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-target_tensor~3"></span>
+              <span class="anchor" id="variable-target_tensor~2"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
@@ -562,7 +648,7 @@ modules which it uses.
             <td>::</td>
             <td><strong>reduction_type</strong></td>
             <td>
-<p>Optional reduction type (default: torch_kMean)</p>
+<p>Reduction type to use (default: torch_kMean)</p>
             </td>
         </tr>
     </tbody>
@@ -622,7 +708,7 @@ modules which it uses.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-target_tensor~2"></span>
+              <span class="anchor" id="variable-target_tensor"></span>
               type(<a href='../type/torch_tensor.html'>torch_tensor</a>),
             </td>
 <td>intent(in)</td>
