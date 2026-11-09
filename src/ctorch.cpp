@@ -900,6 +900,27 @@ void torch_loss_mse(torch_tensor_t loss, const torch_tensor_t input,
   }
 }
 
+void torch_loss_l1(torch_tensor_t loss, const torch_tensor_t input,
+                   const torch_tensor_t target,
+                   const torch_reduction_t reduction_type) {
+  try {
+    auto l = reinterpret_cast<torch::Tensor *>(loss);
+    auto t1 = reinterpret_cast<torch::Tensor *const>(input);
+    auto t2 = reinterpret_cast<torch::Tensor *const>(target);
+
+    validate_tensor(t1, "Input tensor");
+    validate_tensor(t2, "Target tensor");
+
+    namespace F = torch::nn::functional;
+    F::L1LossFuncOptions options;
+    options.reduction(get_libtorch_reduction_type(reduction_type));
+
+    std::move(*l) = F::l1_loss(*t1, *t2, options);
+  } catch (const std::exception &e) {
+    ctorch_error(std::string(e.what()) + " in torch_loss_l1");
+  }
+}
+
 void torch_loss_cross_entropy(torch_tensor_t loss, const torch_tensor_t input,
                               const torch_tensor_t target,
                               const torch_reduction_t reduction_type) {

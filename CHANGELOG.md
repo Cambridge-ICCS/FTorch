@@ -257,3 +257,6 @@ For specific details see the [FTorch online documentation](https://cambridge-icc
 - Documentation:
   - README.md and associated files in repository
   - Online API and comprehensive docs build using [FORD](https://forddocs.readthedocs.io/)
+
+### Added
+- Implemented L1 loss function in [#646](https://github.com/Cambridge-ICCS/FTorch/pull/646)
