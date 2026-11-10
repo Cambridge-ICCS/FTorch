@@ -1,6 +1,6 @@
 title: FTorch Case Studies
 author: Jack Atkinson
-date: Last Updated: January 2026
+date: Last Updated: November 2026
 
 FTorch has been deployed in a number of scientific projects.
 This page collates the examples we are aware of.
@@ -17,14 +17,36 @@ Atkinson et al., (2025). FTorch: a library for coupling PyTorch models to Fortra
 
 #### 2026
 
+* Recurrent neural network constitutive model for human rib cortical bone,
+  deployed in the `LS-DYNA` explicit FEM solver through user-defined material subroutines -
+  [DOI: 10.1016/j.cma.2026.119532](https://doi.org/10.1016/j.cma.2026.119532)
+* `GRIST-MPS` - ML physics parameterisation suite trained on storm-resolving simulations,
+  coupled to the `GRIST` GCM for stable six-year AMIP runs -
+  [DOI: 10.5194/gmd-19-5553-2026](https://doi.org/10.5194/gmd-19-5553-2026)
+* `NLML` neural network emulator of the exact nonlinear interactions, coupled online into
+  the `WAVEWATCH III` wave model -
+  [DOI: 10.1029/2025JH000699](https://doi.org/10.1029/2025JH000699)
+* From stable online coupling to decade-long climate simulations with an ML cloud
+  microphysics parameterisation in `ICON` -
+  [DOI: 10.1088/3049-4753/ae9e2e](https://doi.org/10.1088/3049-4753/ae9e2e)
+* Collaborative neural networks for global aerosol retrievals from multi-angle polarimeters,
+  interfaced with the Fortran-based `RemoTAP` retrieval core -
+  [DOI: 10.1109/TGRS.2026.3685881](https://doi.org/10.1109/TGRS.2026.3685881)
+* Testing winning parameterisation entries from the offline ClimSim Kaggle competition
+  for online performance in a multi-scale model, coupled with an FTorch binding -
+  [DOI: 10.1029/2025MS005643](https://doi.org/10.1029/2025MS005643)
+* Beyond the training data: confidence-guided mixing of parameterisations in a hybrid
+  AI-climate model (`ICON`) -
+  [DOI: 10.1029/2025MS005544](https://doi.org/10.1029/2025MS005544)
+* Finetuning AI foundation models for subgrid-scale parameterisations
+  (atmospheric gravity waves case study) -
+  [DOI: 10.1029/2025MS005075](https://doi.org/10.1029/2025MS005075)
 * Review paper of hybrid modelling approaches for cloud microphysics - [DOI: 10.1029/2025MS005341](https://doi.org/10.1029/2025MS005341)
 
 #### 2025
 
-* Testing winning parameterisation entries from the offline ClimSim Kaggle competition
-  for online performance in `E3SM` -
-  [DOI: 10.48550/arXiv.2511.20963](https://doi.org/10.48550/arXiv.2511.20963) (preprint)
-* Development of a data-driven boundary layer momentum scheme in single-column `CAM`.
+* Development of a data-driven boundary layer momentum scheme in single-column `CAM`,
+  imported from PyTorch via FTorch.
   Trained on LES schemes and outperforming existing parameterisations -
   [DOI: 10.48550/arXiv.2511.01766](https://doi.org/10.48550/arXiv.2511.01766) (preprint)
 * By [UKAEA](https://www.gov.uk/government/organisations/uk-atomic-energy-authority)
