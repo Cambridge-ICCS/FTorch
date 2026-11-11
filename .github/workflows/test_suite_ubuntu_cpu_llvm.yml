@@ -82,6 +82,7 @@ jobs:
         run: |
           . ftorch/bin/activate
           curl -fsSL https://pixi.sh/install.sh | sh
+          export PATH="$HOME/.pixi/bin:$PATH"
           pixi global install "lfortran=${{ matrix.lfortran_version }}" --channel conda-forge
           lfortran --version
           echo "export PATH=\"$HOME/.pixi/bin:\${PATH}\"" >> ftorch/bin/activate
