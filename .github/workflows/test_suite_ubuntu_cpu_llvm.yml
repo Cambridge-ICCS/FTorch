@@ -37,6 +37,7 @@ jobs:
         compiler: [flang, lfortran]
         std: [f2018]
         flang_version: [21]
+        lfortran_version: [0.69.0]
         pfunit_version: [4.18.2]
 
     # Terminate the job if it runs for more than 15 minutes
@@ -52,8 +53,9 @@ jobs:
 
       - name: Install Clang and Flang
         run: |
-          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo apt-add-repository "deb http://apt.llvm.org/$(lsb_release -cs)/ llvm-toolchain-$(lsb_release -cs)-${{ matrix.flang_version }} main"
+          sudo install -m 0755 -d /etc/apt/keyrings
+          wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/llvm-snapshot.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/$(lsb_release -cs)/ llvm-toolchain-$(lsb_release -cs)-${{ matrix.flang_version }} main" | sudo tee /etc/apt/sources.list.d/llvm.list > /dev/null
           sudo apt-get update
           sudo apt-get install -y "llvm-${{ matrix.flang_version }}-dev" \
                                   "clang-${{ matrix.flang_version }}" \
@@ -79,29 +81,10 @@ jobs:
         if: ${{ matrix.compiler == 'lfortran' }}
         run: |
           . ftorch/bin/activate
-          sudo apt-get install build-essential binutils-dev zlib1g-dev libzstd-dev libunwind-dev
-          pip install bison re2c
-          git clone https://github.com/lfortran/lfortran.git
-          cd lfortran
-          ./build0.sh
-          cmake . \
-              -G Ninja \
-              -DCMAKE_BUILD_TYPE=Debug \
-              -DWITH_LLVM=yes \
-              -DLFORTRAN_BUILD_ALL=yes \
-              -DWITH_STACKTRACE=yes \
-              -DWITH_RUNTIME_STACKTRACE=yes \
-              -DWITH_LSP=no \
-              -DWITH_INTERNAL_ALLOC_CHECK=yes \
-              -DUSE_DYNAMIC_ZSTD=no \
-              -DCMAKE_INSTALL_LIBDIR=share/lfortran/lib \
-              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-              -DCMAKE_C_COMPILER=clang \
-              -DCMAKE_CXX_COMPILER=clang++ \
-              -DCMAKE_C_FLAGS="-fdiagnostics-color=always" \
-              -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always"
-          cmake --build .
-          echo "export PATH=$(pwd)/src/bin:\${PATH}" >> ../ftorch/bin/activate
+          curl -fsSL https://pixi.sh/install.sh | sh
+          export PATH="$HOME/.pixi/bin:$PATH"
+          pixi global install "lfortran=${{ matrix.lfortran_version }}" --channel conda-forge
+          echo "export PATH=\"$HOME/.pixi/bin:\${PATH}\"" >> ftorch/bin/activate
 
       - name: Install OpenMPI
         run: |
@@ -144,10 +127,12 @@ jobs:
             VN="${{ matrix.pfunit_version }}"
             export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
             PREFIX="${PFUNIT_DIR};${Torch_DIR}"
+            SHARED_LINKER_FLAGS=""
           else
             FC=lfortran
             FFLAGS=""
             PREFIX="${Torch_DIR}"
+            SHARED_LINKER_FLAGS="-L/usr/lib/x86_64-linux-gnu" # Avoid picking up systen libs from Pixi
           fi
           cd ${BUILD_DIR}
           cmake .. \
@@ -161,7 +146,8 @@ jobs:
             -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE \
             -DFTORCH_BUILD_INTEGRATION_TESTS="${{ matrix.compiler == 'flang' }}" \
             -DCMAKE_PREFIX_PATH="${PREFIX}" \
-            -DCMAKE_Fortran_FLAGS="${FFLAGS}"
+            -DCMAKE_Fortran_FLAGS="${FFLAGS}" \
+            -DCMAKE_SHARED_LINKER_FLAGS="${SHARED_LINKER_FLAGS}"
           cmake --build .
           cmake --install .
 
@@ -238,9 +224,11 @@ jobs:
           if [ "${{ matrix.compiler }}" == "flang" ]; then
             FC="flang-${{ matrix.flang_version }}"
             FFLAGS="-std=${FORTRAN_STANDARD}"
+            SHARED_LINKER_FLAGS=""
           else
             FC=lfortran
             FFLAGS=""
+            SHARED_LINKER_FLAGS="-L/usr/lib/x86_64-linux-gnu" # Avoid picking up systen libs from Pixi
           fi
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
@@ -253,6 +241,7 @@ jobs:
             -DCMAKE_Fortran_COMPILER="${FC}" \
             -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
             -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
-            -DCMAKE_Fortran_FLAGS="${FFLAGS}"
+            -DCMAKE_Fortran_FLAGS="${FFLAGS}" \
+            -DCMAKE_SHARED_LINKER_FLAGS="${SHARED_LINKER_FLAGS}"
           cmake --build .
           ctest -V
