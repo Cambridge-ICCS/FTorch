@@ -84,9 +84,7 @@ jobs:
           curl -fsSL https://pixi.sh/install.sh | sh
           export PATH="$HOME/.pixi/bin:$PATH"
           pixi global install "lfortran=${{ matrix.lfortran_version }}" --channel conda-forge
-          lfortran --version
           echo "export PATH=\"$HOME/.pixi/bin:\${PATH}\"" >> ftorch/bin/activate
-          echo "export LIBRARY_PATH=\"/usr/lib/x86_64-linux-gnu:${LIBRARY_PATH}\"" >> ftorch/bin/activate
 
       - name: Install OpenMPI
         run: |
@@ -129,10 +127,12 @@ jobs:
             VN="${{ matrix.pfunit_version }}"
             export PFUNIT_DIR="$(pwd)/pFUnit/build/installed/PFUNIT-${VN::-2}"
             PREFIX="${PFUNIT_DIR};${Torch_DIR}"
+            SHARED_LINKER_FLAGS=""
           else
             FC=lfortran
             FFLAGS=""
             PREFIX="${Torch_DIR}"
+            SHARED_LINKER_FLAGS="-L/usr/lib/x86_64-linux-gnu"
           fi
           cd ${BUILD_DIR}
           cmake .. \
@@ -146,7 +146,8 @@ jobs:
             -DFTORCH_BUILD_INTEGRATION_TESTS=TRUE \
             -DFTORCH_BUILD_INTEGRATION_TESTS="${{ matrix.compiler == 'flang' }}" \
             -DCMAKE_PREFIX_PATH="${PREFIX}" \
-            -DCMAKE_Fortran_FLAGS="${FFLAGS}"
+            -DCMAKE_Fortran_FLAGS="${FFLAGS}" \
+            -DCMAKE_SHARED_LINKER_FLAGS="${SHARED_LINKER_FLAGS}"
           cmake --build .
           cmake --install .
 
@@ -223,9 +224,11 @@ jobs:
           if [ "${{ matrix.compiler }}" == "flang" ]; then
             FC="flang-${{ matrix.flang_version }}"
             FFLAGS="-std=${FORTRAN_STANDARD}"
+            SHARED_LINKER_FLAGS=""
           else
             FC=lfortran
             FFLAGS=""
+            SHARED_LINKER_FLAGS="-L/usr/lib/x86_64-linux-gnu"
           fi
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
@@ -238,6 +241,7 @@ jobs:
             -DCMAKE_Fortran_COMPILER="${FC}" \
             -DCMAKE_C_COMPILER="clang-${{ matrix.flang_version }}" \
             -DCMAKE_CXX_COMPILER="clang++-${{ matrix.flang_version }}" \
-            -DCMAKE_Fortran_FLAGS="${FFLAGS}"
+            -DCMAKE_Fortran_FLAGS="${FFLAGS}" \
+            -DCMAKE_SHARED_LINKER_FLAGS="${SHARED_LINKER_FLAGS}"
           cmake --build .
           ctest -V
