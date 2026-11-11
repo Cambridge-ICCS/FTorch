@@ -30,6 +30,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Start Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: start-measurement
+        continue-on-error: true
+
       - name: Install Graphviz (Required by FORD)
         run: |
           sudo apt-get update
@@ -61,6 +67,19 @@ jobs:
           folder: doc      # The folder the action should deploy.
           dry-run: true    # Don't actually push to pages, just test if we can
 
+      - name: Tests measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: get-measurement
+          label: 'pytest'
+        continue-on-error: true
+
+      - name: Show Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: display-results
+        continue-on-error: true
+
   # The second job in this workflow publishes the website in the case of a merge into main
   publish-website:
     name: publish website
@@ -79,6 +98,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Start Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: start-measurement
+        continue-on-error: true
+
       - name: Install Graphviz (Required by FORD)
         run: |
           sudo apt-get update
@@ -108,3 +133,16 @@ jobs:
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: doc      # The folder the action should deploy.
+
+      - name: Tests measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: get-measurement
+          label: 'pytest'
+        continue-on-error: true
+
+      - name: Show Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: display-results
+        continue-on-error: true

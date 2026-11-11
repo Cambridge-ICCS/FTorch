@@ -28,6 +28,12 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: Start Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: start-measurement
+        continue-on-error: true
+
       - name: Checkout FTorch repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -61,3 +67,16 @@ jobs:
       - name: Fail scheduled run on broken links
         if: failure() && github.event_name == 'schedule' && steps.lychee.outcome == 'failure'
         run: exit 1
+
+      - name: Tests measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: get-measurement
+          label: 'pytest'
+        continue-on-error: true
+
+      - name: Show Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: display-results
+        continue-on-error: true

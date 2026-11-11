@@ -27,6 +27,12 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: Start Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: start-measurement
+        continue-on-error: true
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout FTorch repository
         with:
@@ -39,6 +45,19 @@ jobs:
         with:
           journal: joss
           paper-path: paper/paper.md
+
+      - name: Tests measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: get-measurement
+          label: 'pytest'
+        continue-on-error: true
+
+      - name: Show Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: display-results
+        continue-on-error: true
 
   # The second job in this workflow uploads the rendered PDF to GitHub
   upload-draft:
@@ -56,8 +75,27 @@ jobs:
     permissions:
       id-token: write  # We trust the deploy action with write permissions
     steps:
+      - name: Start Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: start-measurement
+        continue-on-error: true
+
       - name: Upload draft PDF
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6
         with:
           name: paper
           path: paper/paper.pdf
+
+      - name: Tests measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: get-measurement
+          label: 'pytest'
+        continue-on-error: true
+
+      - name: Show Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: display-results
+        continue-on-error: true

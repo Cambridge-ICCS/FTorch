@@ -43,6 +43,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Start Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: start-measurement
+        continue-on-error: true
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout FTorch repository
         with:
@@ -159,3 +165,16 @@ jobs:
             -DCMAKE_Fortran_FLAGS="-stand ${FORTRAN_STANDARD} -fpscomp logicals"
           cmake --build .
           ctest -V
+
+      - name: Tests measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: get-measurement
+          label: 'pytest'
+        continue-on-error: true
+
+      - name: Show Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        with:
+          task: display-results
+        continue-on-error: true
