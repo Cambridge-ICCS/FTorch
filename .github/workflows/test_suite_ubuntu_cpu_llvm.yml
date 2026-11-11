@@ -132,7 +132,7 @@ jobs:
             FC=lfortran
             FFLAGS=""
             PREFIX="${Torch_DIR}"
-            SHARED_LINKER_FLAGS="-L/usr/lib/x86_64-linux-gnu"
+            SHARED_LINKER_FLAGS="-L/usr/lib/x86_64-linux-gnu" # Avoid picking up systen libs from Pixi
           fi
           cd ${BUILD_DIR}
           cmake .. \
@@ -228,7 +228,7 @@ jobs:
           else
             FC=lfortran
             FFLAGS=""
-            SHARED_LINKER_FLAGS="-L/usr/lib/x86_64-linux-gnu"
+            SHARED_LINKER_FLAGS="-L/usr/lib/x86_64-linux-gnu" # Avoid picking up systen libs from Pixi
           fi
           cmake .. \
             -DPython_EXECUTABLE="$(which python)" \
