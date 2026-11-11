@@ -37,6 +37,7 @@ jobs:
         compiler: [flang, lfortran]
         std: [f2018]
         flang_version: [21]
+        lfortran_version: [0.69.0]
         pfunit_version: [4.18.2]
 
     # Terminate the job if it runs for more than 15 minutes
@@ -75,33 +76,17 @@ jobs:
           . ftorch/bin/activate
           pip install . --extra-index-url https://download.pytorch.org/whl/cpu --group test
 
+      - name: Install Pixi
+        if: ${{ matrix.compiler == 'lfortran' }}
+        run: curl -fsSL https://pixi.sh/install.sh | sh
+
       - name: Install LFortran
         if: ${{ matrix.compiler == 'lfortran' }}
         run: |
           . ftorch/bin/activate
-          sudo apt-get install build-essential binutils-dev zlib1g-dev libzstd-dev libunwind-dev
-          pip install bison re2c
-          git clone https://github.com/lfortran/lfortran.git
-          cd lfortran
-          ./build0.sh
-          cmake . \
-              -G Ninja \
-              -DCMAKE_BUILD_TYPE=Debug \
-              -DWITH_LLVM=yes \
-              -DLFORTRAN_BUILD_ALL=yes \
-              -DWITH_STACKTRACE=yes \
-              -DWITH_RUNTIME_STACKTRACE=yes \
-              -DWITH_LSP=no \
-              -DWITH_INTERNAL_ALLOC_CHECK=yes \
-              -DUSE_DYNAMIC_ZSTD=no \
-              -DCMAKE_INSTALL_LIBDIR=share/lfortran/lib \
-              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-              -DCMAKE_C_COMPILER=clang \
-              -DCMAKE_CXX_COMPILER=clang++ \
-              -DCMAKE_C_FLAGS="-fdiagnostics-color=always" \
-              -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always"
-          cmake --build .
-          echo "export PATH=$(pwd)/src/bin:\${PATH}" >> ../ftorch/bin/activate
+          pixi global install "lfortran=${{ matrix.lfortran_version }}" --channel conda-forge
+          lfortran --version
+          echo "export PATH=\"$HOME/.pixi/bin:\${PATH}\"" >> ftorch/bin/activate
 
       - name: Install OpenMPI
         run: |
