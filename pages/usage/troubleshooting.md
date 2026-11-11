@@ -282,7 +282,7 @@ one gotcha to be aware of:
 When building FTorch with the LFortran compiler, there are two gotchas to be
 aware of:
 
-1. **Use a commit from 3rd November 2026 or later**
+1. **Use version v0.69.0 or later**
    This will allow you to pick up the fix for
    [https://github.com/lfortran/lfortran/issues/16568](https://github.com/lfortran/lfortran/issues/16568)
    in
