@@ -4,18 +4,9 @@ name: Test suite (macOS CPU)
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  # Triggers the workflow on pushes to the "ci-usage-study" branch, i.e., PR merges
   push:
-    branches: [ "main" ]
-
-  # Triggers the workflow on pushes to open pull requests with code changes
-  pull_request:
-    paths:
-      # This workflow
-      - '.github/workflows/test_suite_macos_cpu_clang.yml'
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches: [ "ci-usage-study"]
 
 # Cancel jobs running if new commits are pushed
 concurrency:

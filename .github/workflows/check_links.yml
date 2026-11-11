@@ -3,20 +3,9 @@ name: Check links
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on pull requests to main with documentation changes
-  pull_request:
-    branches: [ "main" ]
-    paths:
-      - '.github/workflows/check_links.yml'
-      - '**.md'
-      - 'pages/**'
-
-  # Runs weekly on main so regressions are flagged even without doc PRs
-  schedule:
-    - cron: '0 9 * * MON'
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  # Triggers the workflow on pushes to the "ci-usage-study" branch, i.e., PR merges
+  push:
+    branches: [ "ci-usage-study"]
 
 # Cancel jobs running if new commits are pushed
 concurrency:

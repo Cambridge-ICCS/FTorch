@@ -2,16 +2,9 @@
 name: Preprocessing
 
 on:
-  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  # Triggers the workflow on pushes to the "ci-usage-study" branch, i.e., PR merges
   push:
-    branches: [ "main" ]
-
-  # Triggers the workflow on pushes to open pull requests with Fortran changes
-  pull_request:
-    paths:
-      - '.github/workflows/preprocessing.yml'
-      - 'ftorch_tensor.f*'
-      - 'ftorch_test_utils.f*'
+    branches: [ "ci-usage-study"]
 
 # Cancel jobs running if new commits are pushed
 concurrency:

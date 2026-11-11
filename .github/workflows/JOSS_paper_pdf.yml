@@ -3,16 +3,9 @@ name: Render JOSS paper
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on pushes to the "main" branch, i.e., PR merges
+  # Triggers the workflow on pushes to the "ci-usage-study" branch, i.e., PR merges
   push:
-    branches: [ "main" ]
-
-  # Triggers the workflow on pushes to open pull requests to main with documentation changes
-  pull_request:
-    branches: [ "main" ]
-    paths:
-      - '.github/workflows/JOSS_paper_pdf.yml'
-      - 'paper/*'
+    branches: [ "ci-usage-study"]
 
 # Cancel jobs running if new commits are pushed
 concurrency:
