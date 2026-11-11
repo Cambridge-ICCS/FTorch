@@ -1,0 +1,25 @@
+Workflow,Total minutes,Workflow runs,Jobs,Runner type,Runtime OS
+.github/workflows/test_suite_ubuntu_cpu_gnu.yml,6904,585,24,hosted,linux
+.github/workflows/static_analysis.yml,2425,762,2,hosted,linux
+.github/workflows/test_suite_ubuntu_cpu_intel.yml,2214,191,16,hosted,linux
+.github/workflows/test_suite_macos_cpu_clang.yml,1731,141,5,hosted,macos
+.github/workflows/test_suite_ubuntu_cuda_gnu.yml,1344,170,3,hosted-larger,linux
+.github/workflows/test_suite_windows_cpu_intel.yml,1120,174,3,hosted,windows
+.github/workflows/test_suite_ubuntu.yml,574,33,24,hosted,linux
+.github/workflows/build_docs.yml,563,489,4,hosted,linux
+.github/workflows/test_suite_macos_cpu_gnu.yml,366,39,11,hosted,macos
+.github/workflows/test_suite_ubuntu_cpu_llvm.yml,318,24,2,hosted,linux
+dynamic/pages/pages-build-deployment,281,91,3,hosted,linux
+dynamic/copilot-swe-agent/copilot,226,41,1,hosted,linux
+.github/workflows/test_suite_ubuntu_cpu_flang.yml,213,43,3,hosted,linux
+.github/workflows/JOSS_paper_pdf.yml,209,104,4,hosted,linux
+.github/workflows/docker.yml,180,2,1,hosted,linux
+.github/workflows/test_suite_ubuntu_cuda_nvidia.yml,168,19,2,hosted-larger,linux
+.github/workflows/test_suite_ubuntu_cpu_nvidia.yml,160,17,2,hosted,linux
+.github/workflows/fypp_checks.yml,104,104,2,hosted,linux
+.github/workflows/spack_build.yml,94,3,18,hosted,linux
+.github/workflows/preprocessing.yml,86,86,1,hosted,linux
+.github/workflows/test_suite_ubuntu_cuda.yml,77,11,2,hosted-larger,linux
+.github/workflows/test_suite_ubuntu_cpu_lfortran.yml,26,7,1,hosted,linux
+.github/workflows/check_links.yml,24,24,1,hosted,linux
+dynamic/dependabot/update-graph,4,4,1,hosted,linux
