@@ -86,6 +86,7 @@ jobs:
           pixi global install "lfortran=${{ matrix.lfortran_version }}" --channel conda-forge
           lfortran --version
           echo "export PATH=\"$HOME/.pixi/bin:\${PATH}\"" >> ftorch/bin/activate
+          echo "export LIBRARY_PATH=\"/usr/lib/x86_64-linux-gnu:${LIBRARY_PATH}\"" >> ftorch/bin/activate
 
       - name: Install OpenMPI
         run: |
